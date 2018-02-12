@@ -70,7 +70,7 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 20865015a7c9ead9a8ed9dc820aeec5c68c212fa
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -79,7 +79,7 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                                               55782be904ac3ec25e73c22991b56275d8e9e3c6
                                               0c818c8ec7b7ccbd2a028f9b74876a7cb1424059)
         else()
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 612b2162b1f8eb4702b7daf837e89cde4a5b782e
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -89,14 +89,14 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                                               c8b210d87c34e146e2ae8b238b6a261f6170689f)
         endif()
     elseif(APPLE)
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 27f6a323b429a1601d93382a517b21a2ae954331
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES fe24cd5bd70535964ca3cb9d2108a4a180b0439b
                                           5ff4f89e9810e417093f4dc724e78df7771ba53a)
     else()
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} ca77cf7dec56a0a0c6b3c9d0f6321a1d246d9006
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}

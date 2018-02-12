@@ -62,14 +62,14 @@ if(USE_PREBUILT_NUMLAPI_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} a39db4db954fa9d7dc4ebe30d9bf3483d210cdc5
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES d7fca96349c39fce1db4f0a87780d1b75014a624
                                               119099b65ce3d3dfa7ad3cc419bf7a963d508420)
         else()
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 987483fe81c3f16b6b05914a6a488c3e8d85e9a1
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
@@ -77,13 +77,13 @@ if(USE_PREBUILT_NUMLAPI_PACKAGE)
                                               ce4925551c1759fa812b9441d37e4b331e2caf81)
         endif()
     elseif(APPLE)
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} ee9401bf34b1ce8dcdf95beca1a88dee3ab34a65
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES e915e99c817217be7a2562c6bc3656cc42558d6c)
     else()
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 5cdf38db5546509d211bcb964224c7490c9ff97a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}

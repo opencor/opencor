@@ -159,7 +159,7 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 036c8fa4f2e1a2c954986866879d4d79516a9068
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
@@ -183,7 +183,7 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
                                               afc3196b3d4f6093fd2f7fa4117377f25bd24558
                                               59725a3835fa48fec41e64ba750a991abeca6f02)
         else()
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} bbeab36f10ff7c95e5ddaa8239f66ba893a9798b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
@@ -208,7 +208,7 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
                                               3777514941def210af9a50138a3615dede71fdf0)
         endif()
     elseif(APPLE)
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 21cd963f01ae3e44ce89b380afe1f55e85feb263
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
@@ -223,7 +223,7 @@ if(USE_PREBUILT_CELLMLAPI_PACKAGE)
                                           96a683a58f2ae7cd62df1d953220fc2ac06039f6
                                           d8e0879cf3d30692fc4c89059a1e4cc685097487)
     else()
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} cfe1eaf66f3c22a3a095e8a90c7c8bf98db86dc1
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}

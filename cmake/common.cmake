@@ -1,4 +1,4 @@
-macro(KEEP_TRACK_OF_FILE FILE_NAME)
+macro(keep_track_of_file FILE_NAME)
     # Keep track of the given file
     # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
     #       and then used to build other files. Now, the 'problem' is that
@@ -11,7 +11,7 @@ endmacro()
 
 #===============================================================================
 
-macro(UPDATE_LANGUAGE_FILES TARGET_NAME)
+macro(update_language_files TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files, which will later on be embedded in the project
 
@@ -36,14 +36,14 @@ macro(UPDATE_LANGUAGE_FILES TARGET_NAME)
                                                           -qm ${QM_FILE}
                             OUTPUT_QUIET)
 
-            KEEP_TRACK_OF_file(${QM_FILE})
+            keep_track_of_file(${QM_FILE})
         endif()
     endforeach()
 endmacro()
 
 #===============================================================================
 
-macro(ADD_PLUGIN PLUGIN_NAME)
+macro(add_plugin PLUGIN_NAME)
     # Various initialisations
 
     set(PLUGIN_NAME ${PLUGIN_NAME})
@@ -124,19 +124,19 @@ macro(ADD_PLUGIN PLUGIN_NAME)
     if("${ARG_HEADERS_MOC}" STREQUAL "")
         set(SOURCES_MOC)
     else()
-        QT5_WRAP_CPP(SOURCES_MOC ${ARG_HEADERS_MOC})
+        qt5_wrap_cpp(SOURCES_MOC ${ARG_HEADERS_MOC})
     endif()
 
     if("${ARG_UIS}" STREQUAL "")
         set(SOURCES_UIS)
     else()
-        QT5_WRAP_UI(SOURCES_UIS ${ARG_UIS})
+        qt5_wrap_ui(SOURCES_UIS ${ARG_UIS})
     endif()
 
     if("${RESOURCES}" STREQUAL "")
         set(SOURCES_RCS)
     else()
-        QT5_ADD_RESOURCES(SOURCES_RCS ${RESOURCES})
+        qt5_add_resources(SOURCES_RCS ${RESOURCES})
     endif()
 
     add_library(${PROJECT_NAME} SHARED
@@ -154,7 +154,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
     # OpenCOR plugins
 
     foreach(ARG_PLUGIN ${ARG_PLUGINS})
-        TARGET_link_libraries(${PROJECT_NAME}
+        target_link_libraries(${PROJECT_NAME}
             ${ARG_PLUGIN}Plugin
         )
     endforeach()
@@ -164,7 +164,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
     foreach(ARG_QT_MODULE ${ARG_QT_MODULES})
         find_package(Qt5${ARG_QT_MODULE} REQUIRED)
 
-        TARGET_link_libraries(${PROJECT_NAME}
+        target_link_libraries(${PROJECT_NAME}
             Qt5::${ARG_QT_MODULE}
         )
     endforeach()
@@ -228,15 +228,15 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                 string(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                        IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
-                TARGET_link_libraries(${PROJECT_NAME}
+                target_link_libraries(${PROJECT_NAME}
                     ${IMPORT_EXTERNAL_BINARY}
                 )
             elseif(APPLE)
-                TARGET_link_libraries(${PROJECT_NAME}
+                target_link_libraries(${PROJECT_NAME}
                     ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                 )
             else()
-                TARGET_link_libraries(${PROJECT_NAME}
+                target_link_libraries(${PROJECT_NAME}
                     ${FULL_EXTERNAL_BINARY}
                 )
             endif()
@@ -281,7 +281,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
     # System binaries
 
     foreach(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
-        TARGET_link_libraries(${PROJECT_NAME}
+        target_link_libraries(${PROJECT_NAME}
             ${ARG_SYSTEM_BINARY}
         )
     endforeach()
@@ -368,8 +368,8 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                 #       initialise it, then it would include the information of
                 #       all the tests up to the one we want to build...
 
-                QT5_WRAP_CPP(TEST_SOURCES_MOC ${TEST_HEADER_MOC})
-                QT5_ADD_RESOURCES(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
+                qt5_wrap_cpp(TEST_SOURCES_MOC ${TEST_HEADER_MOC})
+                qt5_add_resources(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
                 add_executable(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
@@ -392,7 +392,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                 # OpenCOR plugins
 
                 foreach(ARG_PLUGIN ${ARG_PLUGINS})
-                    TARGET_link_libraries(${TEST_NAME}
+                    target_link_libraries(${TEST_NAME}
                         ${ARG_PLUGIN}Plugin
                     )
                 endforeach()
@@ -400,7 +400,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                 # Qt modules
 
                 foreach(ARG_QT_MODULE ${ARG_QT_MODULES} Test)
-                    TARGET_link_libraries(${TEST_NAME}
+                    target_link_libraries(${TEST_NAME}
                         Qt5::${ARG_QT_MODULE}
                     )
                 endforeach()
@@ -415,15 +415,15 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                             string(REGEX REPLACE "${CMAKE_SHARED_LIBRARY_SUFFIX}$" "${CMAKE_IMPORT_LIBRARY_SUFFIX}"
                                    IMPORT_EXTERNAL_BINARY "${FULL_EXTERNAL_BINARY}")
 
-                            TARGET_link_libraries(${TEST_NAME}
+                            target_link_libraries(${TEST_NAME}
                                 ${IMPORT_EXTERNAL_BINARY}
                             )
                         elseif(APPLE)
-                            TARGET_link_libraries(${TEST_NAME}
+                            target_link_libraries(${TEST_NAME}
                                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY}
                             )
                         else()
-                            TARGET_link_libraries(${TEST_NAME}
+                            target_link_libraries(${TEST_NAME}
                                 ${FULL_EXTERNAL_BINARY}
                             )
                         endif()
@@ -433,7 +433,7 @@ macro(ADD_PLUGIN PLUGIN_NAME)
                 # System binaries
 
                 foreach(ARG_SYSTEM_BINARY ${ARG_SYSTEM_BINARIES})
-                    TARGET_link_libraries(${TEST_NAME}
+                    target_link_libraries(${TEST_NAME}
                         ${ARG_SYSTEM_BINARY}
                     )
                 endforeach()
@@ -477,7 +477,7 @@ endmacro()
 
 #===============================================================================
 
-macro(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
+macro(copy_file_to_build_dir PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the file (renaming it, if needed) to the destination folder
     # Note: DIRECT is used to copy a file that doesn't first need to be built.
     #       This means that we can then use execute_process() rather than
@@ -508,7 +508,7 @@ endmacro()
 
 #===============================================================================
 
-macro(WINDOWS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
+macro(windows_deploy_qt_library LIBRARY_NAME)
     # Copy the Qt library to both the build and build/bin folders, so we can
     # test things both from within Qt Creator and without first having to deploy
     # OpenCOR
@@ -559,7 +559,7 @@ endmacro()
 
 #===============================================================================
 
-macro(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+macro(windows_deploy_qt_plugin PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
@@ -585,7 +585,7 @@ endmacro()
 
 #===============================================================================
 
-macro(RUNPATH2RPATH FILENAME)
+macro(runpath2rpath FILENAME)
     # Convert the RUNPATH value, if any, of the given ELF file to an RPATH value
 
     execute_process(COMMAND ${RUNPATH2RPATH} ${FILENAME}
@@ -598,7 +598,7 @@ endmacro()
 
 #===============================================================================
 
-macro(LINUX_DEPLOY_QT_LIBRARY DIRNAME FILENAME)
+macro(linux_deploy_qt_library DIRNAME FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
@@ -624,7 +624,7 @@ endmacro()
 
 #===============================================================================
 
-macro(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Copy the Qt plugin to the plugins folder
 
@@ -653,7 +653,7 @@ endmacro()
 
 #===============================================================================
 
-macro(MACOS_CLEAN_UP_FILE PROJECT_TARGET DIRNAME FILENAME)
+macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
     # Strip the file of all its local symbols
 
     set(FULL_FILENAME ${DIRNAME}/${FILENAME})
@@ -679,10 +679,10 @@ endmacro()
 
 #===============================================================================
 
-macro(MACOS_CLEAN_UP_FILE_WITH_QT_DEPENDENCIES PROJECT_TARGET DIRNAME FILENAME)
+macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
     # Clean up the file
 
-    MACOS_CLEAN_UP_file(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
+    macos_clean_up_file(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries,
     # but only if we are not on Travis CI (since we don't embed the Qt libraries
@@ -710,7 +710,7 @@ endmacro()
 
 #===============================================================================
 
-macro(MACOS_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
+macro(macos_deploy_qt_file ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
@@ -723,7 +723,7 @@ endmacro()
 
 #===============================================================================
 
-macro(MACOS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
+macro(macos_deploy_qt_library LIBRARY_NAME)
     # Deploy the Qt library
 
     set(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
@@ -735,7 +735,7 @@ macro(MACOS_DEPLOY_QT_LIBRARY LIBRARY_NAME)
         set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
     endif()
 
-    MACOS_DEPLOY_QT_file(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
+    macos_deploy_qt_file(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                          ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                          ${LIBRARY_NAME})
 
@@ -752,11 +752,11 @@ endmacro()
 
 #===============================================================================
 
-macro(MACOS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+macro(macos_deploy_qt_plugin PLUGIN_CATEGORY)
     foreach(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin
 
-        MACOS_DEPLOY_QT_file(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
+        macos_deploy_qt_file(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
                              ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
                              ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     endforeach()
@@ -764,7 +764,7 @@ endmacro()
 
 #===============================================================================
 
-macro(CREATE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME)
+macro(create_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME)
     # Various initialisations
 
     set(OPTIONS)
@@ -862,14 +862,14 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E tar -czf ${COMPRESSED_FILENAME} \$\{
 
 if(EXISTS ${COMPRESSED_FILENAME})
     # The compressed version of our package exists, so calculate its SHA-1 value
-    # and let people know how we should call the RETRIEVE_PACKAGE_file() macro
+    # and let people know how we should call the retrieve_package_file() macro
 
     file(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
     string(REPLACE \"\;\" \"\\n                                  \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     message(\"To retrieve the '${PACKAGE_NAME}' package, use:
-RETRIEVE_PACKAGE_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
+retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
                       \\$\\{RELATIVE_PROJECT_SOURCE_DIR\\} \$\{SHA1_VALUE\}")
 
     if(NOT "${ARG_PACKAGE_REPOSITORY}" STREQUAL "")
@@ -904,7 +904,7 @@ endmacro()
 
 #===============================================================================
 
-macro(CHECK_FILES DIRNAME FILENAMES SHA1_VALUES)
+macro(check_files DIRNAME FILENAMES SHA1_VALUES)
     # By default, everything is OK
 
     set(CHECK_FILES_OK TRUE)
@@ -955,7 +955,7 @@ endmacro()
 
 #===============================================================================
 
-macro(CHECK_FILE DIRNAME FILENAME SHA1_VALUE)
+macro(check_file DIRNAME FILENAME SHA1_VALUE)
     # Convenience macro
 
     check_files(${DIRNAME} ${FILENAME} ${SHA1_VALUE})
@@ -965,7 +965,7 @@ endmacro()
 
 #===============================================================================
 
-macro(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
+macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
     # Various initialisations
 
     set(OPTIONS)
@@ -1040,7 +1040,7 @@ macro(RETRIEVE_PACKAGE_FILE PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
         list(GET STATUS 0 STATUS_CODE)
 
         if(${STATUS_CODE} EQUAL 0)
-            CHECK_file(${REAL_DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
+            check_file(${REAL_DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
 
             if(NOT CHECK_FILE_OK)
                 message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
