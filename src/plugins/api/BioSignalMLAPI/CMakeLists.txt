@@ -76,7 +76,7 @@ if(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} e2ca2a020750760c611b72b35edfa956bc55c593
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
@@ -86,7 +86,7 @@ if(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
                                               c4bf89a74703d73220e7b8be29944c409fca1a06
                                               a10d81c681fae3efc41d7855c4250f7333821256)
         else()
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} f01b5c1219ab792476ae6eaadf3be0329784c948
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
@@ -97,7 +97,7 @@ if(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
                                               556aa50cf56cd0e934a5cd7c392cef4be1d01d1c)
         endif()
     elseif(APPLE)
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} a9842f187002c5b9bae273bc2cd3224592f87ef2
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
@@ -105,7 +105,7 @@ if(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
                               SHA1_VALUES 7141316b23d7cace02e72466808f6710ad40a4b8
                                           8e6ca96135ae670a53422a44827579740108d559)
     else()
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} b4f90f5dba99f87687b09685955e2fb4457892da
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}

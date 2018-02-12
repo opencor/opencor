@@ -202,7 +202,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
 
     if(WIN32)
         if(RELEASE_MODE)
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 8f9caff8c990fc763f91fd34bdddf35b70bdf9cf
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 048fe548f131b145e3a74e5b41b4ec49ca05e931
@@ -236,7 +236,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
                                               3e13e5a9d8074914169885364ff1a068fd9b66a5
                                               b32b73cf25f38ce5452468203b7815e57bc1a543)
         else()
-            RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} d4ea843e8f52c78d1ab4855234749718f97920ef
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 9faa146d7e890a1c026835ff45c8e4fecd0ebe91
@@ -271,7 +271,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
                                               9bc26a3235512e5e58e6090d34d62f730728a5a6)
         endif()
     elseif(APPLE)
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} c2ba5abe03c5fab7082bcd435154692a0d8d970c
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES d676c801951a67b09c461ab15871f22207e8d7d0
@@ -290,7 +290,7 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
                                           e7a89a68efde3019927eea418ccfe34a1de9272b
                                           65ceee05175b8bd5e92b1d3d19fcc2f24d15c8aa)
     else()
-        RETRIEVE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} cecc2b5af4badea17a2cfc1c842270d0f7c487e6
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 73b854cb7a3e89886ba6e47385adca78be0d3b7a
