@@ -1,4 +1,5 @@
-`OpenCOR <http://www.opencor.ws/>`_ is an `open source <http://www.opencor.ws/user/licensing.html>`_ cross-platform modelling environment. Here are a few links, which you might find useful:
+`OpenCOR <http://www.opencor.ws/>`_ is an `open source <http://www.opencor.ws/user/licensing.html>`_ cross-platform modelling environment.
+Here are a few links, which you might find useful:
 
 - `User documentation <http://www.opencor.ws/user/index.html>`_
 - `Developer documentation <http://www.opencor.ws/developer/index.html>`_
