@@ -1,4 +1,5 @@
-Support for the `ZIP format <https://en.wikipedia.org/wiki/Zip_(file_format)>`_ is done through `Qt <https://www.qt.io/>`_'s undocumented (and inaccessible, by default) ``QZipReader`` and ``QZipWriter`` classes. For this, we rely on the following files:
+Support for the `ZIP format <https://en.wikipedia.org/wiki/Zip_(file_format)>`_ is done through `Qt <https://www.qt.io/>`_'s undocumented (and inaccessible, by default) ``QZipReader`` and ``QZipWriter`` classes.
+For this, we rely on the following files:
 
 - |[QtSource]/qtbase/src/gui/text/qzip.cpp|_;
 - |[QtSource]/qtbase/src/gui/text/qzipreader_p.h|_;
