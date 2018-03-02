@@ -399,11 +399,16 @@ void SimulationData::reset(const bool &pInitialize)
         memcpy(mInitialStates, mStates, runtime->statesCount()*Solver::SizeOfDouble);
     }
 
-    // Let people know whether our data is 'cleaned', i.e. not modified
+    // Let people know whether our data is 'cleaned', i.e. not modified, and ask
+    // our simulation worker to reset itself
     // Note: no point in checking if we are initialising...
 
-    if (!pInitialize)
+    if (!pInitialize) {
         emit modified(isModified());
+
+        if (mSimulation->worker())
+            mSimulation->worker()->reset();
+    }
 }
 
 //==============================================================================
@@ -877,6 +882,15 @@ CellMLSupport::CellmlFileRuntime * Simulation::runtime() const
     // Return our runtime
 
     return mRuntime;
+}
+
+//==============================================================================
+
+SimulationWorker * Simulation::worker() const
+{
+    // Return our worker
+
+    return mWorker;
 }
 
 //==============================================================================
