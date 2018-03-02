@@ -232,6 +232,8 @@ public:
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
+    SimulationWorker * worker() const;
+
     Simulation::FileType fileType() const;
 
     CellMLSupport::CellmlFile * cellmlFile() const;
