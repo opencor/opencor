@@ -365,7 +365,7 @@ else()
 
     # Package our external project
 
-    CREATE_PACKAGE_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}

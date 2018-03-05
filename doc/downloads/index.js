@@ -37,8 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Simulation Experiment view:</strong> prevent the legend labels from disappearing upon clearing the simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1537\">#1537</a>). Prevent the clearing of simulation data from taking too long when we have several graph panels (see issue <a href=\"https://github.com/opencor/opencor/issues/1538\">#1538</a>)." }
-                       { "change": "<strong>Simulation support:</strong> a change in a model parameter now results in a solver being reinitialised (see issue <a href=\"https://github.com/opencor/opencor/issues/1549\">#1549</a>)." }
+                       { "change": "<strong>Simulation Experiment view:</strong> prevent the legend labels from disappearing upon clearing the simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1537\">#1537</a>). Prevent the clearing of simulation data from taking too long when we have several graph panels (see issue <a href=\"https://github.com/opencor/opencor/issues/1538\">#1538</a>)." },
+                       { "change": "<strong>Simulation support:</strong> a change in a model parameter now results in a solver being reinitialised (see issue <a href=\"https://github.com/opencor/opencor/issues/1549\">#1549</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1548\">#1548</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
