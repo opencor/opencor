@@ -2106,7 +2106,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
             QString importedFilePath = remoteCellmlFile?
                                            QString(importedFileName).remove(FileNameRegEx)+"/":
-                                           QFileInfo(importedFileName).canonicalPath()+QDir::separator();
+                                           QFileInfo(importedFileName).canonicalPath()+"/";
 
             for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
                 if (commonPath[i] != importedFilePath[i]) {

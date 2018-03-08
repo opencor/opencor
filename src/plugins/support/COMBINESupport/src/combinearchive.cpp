@@ -304,7 +304,7 @@ bool CombineArchive::save(const QString &pFileName)
         if (file.location().compare(".")) {
             QByteArray fileContents;
 
-            if (!Core::readFileContentsFromFile(mDirName+QDir::separator()+file.location(), fileContents))
+            if (!Core::readFileContentsFromFile(mDirName+"/"+file.location(), fileContents))
                 return false;
 
             zipWriter.addFile(file.location(), fileContents);
@@ -360,7 +360,7 @@ bool CombineArchive::isValid()
 
     // A COMBINE archive must contain a manifest at its root
 
-    QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
+    QString manifestFileName = mDirName+"/"+ManifestFileName;
 
     if (!QFile::exists(manifestFileName)) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
@@ -396,7 +396,7 @@ bool CombineArchive::isValid()
     for (QDomElement childElement = domDocument.documentElement().firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         QString location = childElement.attribute("location");
-        QString fileName = mDirName+QDir::separator()+location;
+        QString fileName = mDirName+"/"+location;
 
         if (!QFile::exists(fileName)) {
             mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
@@ -471,7 +471,7 @@ QString CombineArchive::location(const CombineArchiveFile &pFile) const
 {
     // Return the (full) location of the given file
 
-    return mDirName+QDir::separator()+pFile.location();
+    return mDirName+"/"+pFile.location();
 }
 
 //==============================================================================
@@ -531,7 +531,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     static QDir dir;
 
-    QString destFileName = Core::nativeCanonicalFileName(mDirName+QDir::separator()+pLocation);
+    QString destFileName = Core::nativeCanonicalFileName(mDirName+"/"+pLocation);
     QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
     if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))

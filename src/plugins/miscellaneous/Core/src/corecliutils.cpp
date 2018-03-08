@@ -662,7 +662,7 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
     if (!fileCanonicalPath.compare("."))
         fileCanonicalPath = QString();
     else
-        fileCanonicalPath += QDir::separator();
+        fileCanonicalPath += "/";
 
     if (!fileCompleteSuffix.isEmpty())
         fileCompleteSuffix.prepend('.');

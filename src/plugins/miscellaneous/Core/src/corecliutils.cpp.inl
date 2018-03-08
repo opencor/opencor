@@ -447,7 +447,7 @@ QString temporaryFileName(const QString &pExtension)
 {
     // Get and return a temporary file name
 
-    QTemporaryFile file(QDir::tempPath()+QDir::separator()+"XXXXXX"+pExtension);
+    QTemporaryFile file(QDir::tempPath()+"/XXXXXX"+pExtension);
 
     file.open();
 

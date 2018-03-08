@@ -232,7 +232,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     QFileInfo fileInfo = pFileName;
     QFileDialog dialog(qApp->activeWindow(), pCaption,
                        !fileInfo.canonicalPath().compare(".")?
-                           activeDirectory()+QDir::separator()+fileInfo.fileName():
+                           activeDirectory()+"/"+fileInfo.fileName():
                            pFileName,
                        allFilters(pFilters));
 

@@ -376,7 +376,7 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 {
     // Return the plugin's file name based on its name
 
-    return pPluginsDir+QDir::separator()+PluginPrefix+pName+PluginExtension;
+    return pPluginsDir+"/"+PluginPrefix+pName+PluginExtension;
     // Note: we must add the plugin prefix part to the plugin file name...
 }
 

@@ -49,7 +49,7 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     // Retrieve OpenCOR's plugins directory
     // Note: the plugin's directory is retrieved in main()...
 
-    mPluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+qAppName();
+    mPluginsDir = QCoreApplication::libraryPaths().first()+"/"+qAppName();
 
     // Retrieve the list of plugins available for loading
 

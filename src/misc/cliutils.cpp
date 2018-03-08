@@ -111,7 +111,7 @@ void initPluginsPath(const QString &pAppFileName)
     QString pluginsDir = QString();
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    pluginsDir = appDir+QDir::separator()+QString("..")+QDir::separator()+"plugins";
+    pluginsDir = appDir+"/../plugins";
 
     if (!QDir(pluginsDir).exists()) {
         // The plugins directory doesn't exist, which should only happen if we
@@ -122,10 +122,10 @@ void initPluginsPath(const QString &pAppFileName)
         // plugins are in [OpenCOR]/build/plugins/OpenCOR, we must skip the
         // "../" bit. So, yes, it's not neat, but is there another solution?...
 
-        pluginsDir = appDir+QDir::separator()+"plugins";
+        pluginsDir = appDir+"/plugins";
     }
 #elif defined(Q_OS_MAC)
-    pluginsDir = appDir+QDir::separator()+QString("..")+QDir::separator()+"PlugIns";
+    pluginsDir = appDir+"/../PlugIns";
 #else
     #error Unsupported platform
 #endif
