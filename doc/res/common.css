@@ -2,7 +2,7 @@ body {
     padding: 13px 0px 9px 0px;
     /* Note: the padding is determined from the height of div.header and */
     /*       div.copyright minus the same number of pixels each...       */
-    font-family: arial, sans-serif;
+    font-family: "Arial", "Sans-Serif";
     font-size: 10pt;
 }
 
@@ -164,7 +164,9 @@ pre {
     border: 1px solid rgba(103, 103, 103, 0.13);
     padding: 3px;
     background: rgba(103, 103, 103, 0.05);
-    white-space: pre-wrap;
+    font-family: "Consolas", "Menlo", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", "Monospace";
+    font-size: 9pt;
+    overflow-x: auto;
 }
 
 span.anchor {
