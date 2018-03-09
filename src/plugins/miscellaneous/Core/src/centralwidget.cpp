@@ -696,7 +696,7 @@ void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
                                              tabText:
                                              fileIsRemote?
                                                  url:
-                                                 fileName);
+                                                 QDir::toNativeSeparators(fileName));
 
         tabIcon = qobject_cast<ViewInterface *>(viewPlugin(pIndex)->instance())->fileTabIcon(mFileNames[pIndex]);
     }
@@ -2133,7 +2133,7 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
             // Update the file tab
 
             mFileTabs->setTabText(i, QFileInfo(pNewFileName).fileName());
-            mFileTabs->setTabToolTip(i, pNewFileName);
+            mFileTabs->setTabToolTip(i, QDir::toNativeSeparators(pNewFileName));
 
             // Let our plugins know about a file having been renamed
 

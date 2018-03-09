@@ -757,7 +757,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                            fileManagerInstance->isRemote(simulationFileName)?
                                fileManagerInstance->url(simulationFileName):
                                simulationFileName;
-    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
+    QString information = "<strong>"+QDir::toNativeSeparators(fileName)+"</strong>"+OutputBrLn;
     SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSimulation->sedmlFile()?
                                                         mSimulation->sedmlFile()->issues():
                                                         SEDMLSupport::SedmlFileIssues();
