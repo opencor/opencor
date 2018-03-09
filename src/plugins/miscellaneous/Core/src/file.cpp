@@ -42,7 +42,7 @@ static int gNewIndex = 0;
 //==============================================================================
 
 File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
-    mFileName(nativeCanonicalFileName(pFileName)),
+    mFileName(canonicalFileName(pFileName)),
     mUrl(pUrl)
 {
     // Initialise ourselves by 'resetting' ourselves
@@ -224,7 +224,7 @@ bool File::makeNew(const QString &pFileName)
 {
     // Make ourselves new
 
-    mFileName = nativeCanonicalFileName(pFileName);
+    mFileName = canonicalFileName(pFileName);
     mUrl = QString();
 
     reset();

@@ -83,7 +83,7 @@ StandardSupport::StandardFile * CellmlFileManager::create(const QString &pFileNa
 {
     // Create and return a new CellML file
 
-    return new CellmlFile(Core::nativeCanonicalFileName(pFileName));
+    return new CellmlFile(Core::canonicalFileName(pFileName));
 }
 
 //==============================================================================

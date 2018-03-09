@@ -476,9 +476,9 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
                       ||  fileNameOrUrl.host().isEmpty();
     pOutFileNameOrUrl = pOutIsLocalFile?
 #ifdef Q_OS_WIN
-                            nativeCanonicalFileName(QString(pInFileNameOrUrl).remove("file:///")):
+                            canonicalFileName(QString(pInFileNameOrUrl).remove("file:///")):
 #else
-                            nativeCanonicalFileName(QString(pInFileNameOrUrl).remove("file://")):
+                            canonicalFileName(QString(pInFileNameOrUrl).remove("file://")):
 #endif
                             fileNameOrUrl.url();
 }
@@ -662,7 +662,7 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
     if (!fileCanonicalPath.compare("."))
         fileCanonicalPath = QString();
     else
-        fileCanonicalPath += QDir::separator();
+        fileCanonicalPath += "/";
 
     if (!fileCompleteSuffix.isEmpty())
         fileCompleteSuffix.prepend('.');

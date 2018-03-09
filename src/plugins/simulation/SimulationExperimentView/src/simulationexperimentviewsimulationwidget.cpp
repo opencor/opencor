@@ -757,7 +757,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                            fileManagerInstance->isRemote(simulationFileName)?
                                fileManagerInstance->url(simulationFileName):
                                simulationFileName;
-    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
+    QString information = "<strong>"+QDir::toNativeSeparators(fileName)+"</strong>"+OutputBrLn;
     SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSimulation->sedmlFile()?
                                                         mSimulation->sedmlFile()->issues():
                                                         SEDMLSupport::SedmlFileIssues();
@@ -2040,7 +2040,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
         if (!createSedmlFile(sedmlFile, sedmlFileName, modelSource)) {
             Core::warningMessageBox(tr("Export To SED-ML File"),
-                                    tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
+                                    tr("The simulation could not be exported to <strong>%1</strong>.").arg(QDir::toNativeSeparators(sedmlFileName)));
         }
 
         if (isCellmlFile)
@@ -2106,7 +2106,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
             QString importedFilePath = remoteCellmlFile?
                                            QString(importedFileName).remove(FileNameRegEx)+"/":
-                                           QFileInfo(importedFileName).canonicalPath()+QDir::separator();
+                                           QFileInfo(importedFileName).canonicalPath()+"/";
 
             for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
                 if (commonPath[i] != importedFilePath[i]) {

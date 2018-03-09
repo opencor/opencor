@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDir>
 #include <QFileIconProvider>
 #include <QFileInfo>
 #include <QKeyEvent>
@@ -55,7 +56,7 @@ FileOrganiserWindowItem::FileOrganiserWindowItem(const QIcon &pIcon,
 
     setToolTip(pFolder?
                    pTextOrPath:
-                   Core::nativeCanonicalDirName(pTextOrPath));
+                   QDir::toNativeSeparators(Core::canonicalDirName(pTextOrPath)));
 }
 
 //==============================================================================

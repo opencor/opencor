@@ -405,7 +405,7 @@ void MainWindow::registerOpencorUrlScheme()
 
 #if defined(Q_OS_WIN)
     QSettings settings("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
-    QString applicationFileName = nativeCanonicalFileName(qApp->applicationFilePath());
+    QString applicationFileName = QDir::toNativeSeparators(canonicalFileName(qApp->applicationFilePath()));
 
     settings.setValue("opencor/Default", QString("URL:%1 link").arg(qApp->applicationName()));
     settings.setValue("opencor/Content Type", "x-scheme-handler/opencor");
@@ -417,9 +417,9 @@ void MainWindow::registerOpencorUrlScheme()
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
 #elif defined(Q_OS_LINUX)
     if (!exec("which", QStringList() << "xdg-mime")) {
-        QString iconPath = nativeCanonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
-                                                                                               qApp->organizationName(),
-                                                                                               qApp->applicationName()));
+        QString iconPath = canonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath(),
+                                                                                         qApp->organizationName(),
+                                                                                         qApp->applicationName()));
 
         writeResourceToFile(iconPath, ":/app_icon");
 
@@ -431,7 +431,7 @@ void MainWindow::registerOpencorUrlScheme()
                                         "Icon=%3\n"
                                         "Terminal=false\n"
                                         "MimeType=x-scheme-handler/opencor\n").arg(qApp->applicationName(),
-                                                                                   nativeCanonicalFileName(qApp->applicationFilePath()),
+                                                                                   canonicalFileName(qApp->applicationFilePath()),
                                                                                    iconPath));
 
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");

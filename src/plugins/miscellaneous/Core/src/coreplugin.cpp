@@ -801,7 +801,7 @@ void CorePlugin::reopenFile(const QString &pFileName)
             // The file doesn't exist anymore, so let the user know about it
 
             warningMessageBox(tr("Reopen File"),
-                              tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+                              tr("<strong>%1</strong> does not exist anymore.").arg(QDir::toNativeSeparators(fileNameOrUrl)));
         }
     } else {
         // Open the recent remote file

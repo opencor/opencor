@@ -97,11 +97,11 @@ void Tests::uncompressTests()
 
     // Make sure that its contents is what we expect
 
-    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+CppFileName),
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+"/"+CppFileName),
              OpenCOR::fileContents(CppFileName));
-    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+HFileName),
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+"/"+HFileName),
              OpenCOR::fileContents(HFileName));
-    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+TxtFileName),
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+"/"+TxtFileName),
              OpenCOR::fileContents(TxtFileName));
 }
 

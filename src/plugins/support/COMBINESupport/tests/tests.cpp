@@ -101,12 +101,12 @@ void Tests::doBasicTests(const QString &pFileName)
 
     QVERIFY(zipReader.extractAll(temporaryDir.path()));
 
-    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+QDir::separator()+"manifest.xml"),
+    QCOMPARE(OpenCOR::fileContents(temporaryDir.path()+"/manifest.xml"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/manifest.xml")));
 
     for (int i = 1; i <= 3; ++i) {
         for (int j = 1; j <= 3; ++j)
-            QVERIFY(QFile::exists(temporaryDir.path()+QDir::separator()+QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j))));
+            QVERIFY(QFile::exists(temporaryDir.path()+QString("/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j))));
     }
 }
 
