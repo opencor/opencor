@@ -128,7 +128,7 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
 {
     // Retrieve all the plugins that are available
 
-    QString pluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+qAppName();
+    QString pluginsDir = QCoreApplication::libraryPaths().first()+"/"+qAppName();
     QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList availablePluginNames = QStringList();
 

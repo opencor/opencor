@@ -32,9 +32,9 @@ QString CORE_EXPORT version();
 QString CORE_EXPORT pluginCategoryName(const PluginInfo::Category &pCategory);
 QString CORE_EXPORT pluginCategoryDescription(const PluginInfo::Category &pCategory);
 
-QString CORE_EXPORT nativeCanonicalDirName(const QString &pDirName);
-QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
-QStringList CORE_EXPORT nativeCanonicalFileNames(const QStringList &pFileNames);
+QString CORE_EXPORT canonicalDirName(const QString &pDirName);
+QString CORE_EXPORT canonicalFileName(const QString &pFileName);
+QStringList CORE_EXPORT canonicalFileNames(const QStringList &pFileNames);
 
 int CORE_EXPORT exec(const QString &pProgram, const QStringList &pArgs,
                      QString &pOutput);

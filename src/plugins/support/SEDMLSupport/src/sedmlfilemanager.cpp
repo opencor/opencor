@@ -85,7 +85,7 @@ StandardSupport::StandardFile * SedmlFileManager::create(const QString &pFileNam
 {
     // Create and return a new SED-ML file
 
-    return new SedmlFile(Core::nativeCanonicalFileName(pFileName));
+    return new SedmlFile(Core::canonicalFileName(pFileName));
 }
 
 //==============================================================================

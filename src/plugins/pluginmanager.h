@@ -59,8 +59,6 @@ public:
     Plugins loadedPlugins() const;
     Plugins sortedLoadedPlugins() const;
 
-    QString pluginsDir() const;
-
     Plugin * plugin(const QString &pName) const;
     Plugin * corePlugin() const;
 

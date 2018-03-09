@@ -81,7 +81,7 @@ void MathmlTests::tests(const QString &pCategory)
 {
     // Convert some Content MathML to Presentation MathML
 
-    QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+QDir::separator()+pCategory+QDir::separator();
+    QString dirName = OpenCOR::dirName("src/plugins/miscellaneous/Core/tests/data")+"/"+pCategory+"/";
     QXmlQuery xmlQuery(QXmlQuery::XSLT20);
     DummyMessageHandler dummyMessageHandler;
     QString actualOutput;

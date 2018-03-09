@@ -106,7 +106,7 @@ StandardFile * StandardFileManager::file(const QString &pFileName)
 {
     // Return the File object, if any, associated with the given file
 
-    return mFiles.value(Core::nativeCanonicalFileName(pFileName));
+    return mFiles.value(Core::canonicalFileName(pFileName));
 }
 
 //==============================================================================
@@ -117,7 +117,7 @@ void StandardFileManager::manage(const QString &pFileName)
     // dealing with a file that is not already managed,
 
     if (!file(pFileName) && doIsFile(pFileName))
-        mFiles.insert(Core::nativeCanonicalFileName(pFileName), create(pFileName));
+        mFiles.insert(Core::canonicalFileName(pFileName), create(pFileName));
 }
 
 //==============================================================================
@@ -132,7 +132,7 @@ void StandardFileManager::unmanage(const QString &pFileName)
 
         delete crtFile;
 
-        mFiles.remove(Core::nativeCanonicalFileName(pFileName));
+        mFiles.remove(Core::canonicalFileName(pFileName));
     }
 }
 
@@ -196,8 +196,8 @@ void StandardFileManager::rename(const QString &pOldFileName,
     if (!crtFile)
         return;
 
-    mFiles.insert(Core::nativeCanonicalFileName(pNewFileName), crtFile);
-    mFiles.remove(Core::nativeCanonicalFileName(pOldFileName));
+    mFiles.insert(Core::canonicalFileName(pNewFileName), crtFile);
+    mFiles.remove(Core::canonicalFileName(pOldFileName));
 
     // We also need to ensure that our file object has its file name updated
 

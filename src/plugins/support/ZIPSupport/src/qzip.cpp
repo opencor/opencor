@@ -1181,13 +1181,7 @@ bool QZipReader::extractAll(const QString &destinationDir) const
     }
 
 //---OPENCOR--- BEGIN
-#if defined(Q_OS_WIN)
-    static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
-#endif
 //---OPENCOR--- END
     for (const FileInfo &fi : allFiles) {
         const QString absPath = destinationDir + QDir::separator() + fi.filePath;

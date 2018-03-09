@@ -156,7 +156,7 @@ QString getOpenFileName(const QString &pCaption, const QStringList &pFilters,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QString res = nativeCanonicalFileName(dialog.selectedFiles().first());
+        QString res = canonicalFileName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved an open file name, so keep track of the folder
@@ -195,7 +195,7 @@ QStringList getOpenFileNames(const QString &pCaption,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QStringList res = nativeCanonicalFileNames(dialog.selectedFiles());
+        QStringList res = canonicalFileNames(dialog.selectedFiles());
 
         if (!res.isEmpty()) {
             // We have retrieved at least one open file name, so keep track of
@@ -232,7 +232,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     QFileInfo fileInfo = pFileName;
     QFileDialog dialog(qApp->activeWindow(), pCaption,
                        !fileInfo.canonicalPath().compare(".")?
-                           activeDirectory()+QDir::separator()+fileInfo.fileName():
+                           activeDirectory()+"/"+fileInfo.fileName():
                            pFileName,
                        allFilters(pFilters));
 
@@ -250,7 +250,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
         if (pSelectedFilter)
             *pSelectedFilter = dialog.selectedNameFilter();
 
-        QString res = nativeCanonicalFileName(dialog.selectedFiles().first());
+        QString res = canonicalFileName(dialog.selectedFiles().first());
 
         // Make sure that we have got a save file name
 
@@ -269,7 +269,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             if (FileManager::instance()->file(res)) {
                 warningMessageBox(pCaption,
-                                  QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res));
+                                  QObject::tr("<strong>%1</strong> already exists and is opened.").arg(QDir::toNativeSeparators(res)));
 
                 continue;
             }
@@ -278,7 +278,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             if (   resInfo.exists()
                 && questionMessageBox(pCaption,
-                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res)) == QMessageBox::No) {
+                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(QDir::toNativeSeparators(res))) == QMessageBox::No) {
                 continue;
             }
         }
@@ -320,7 +320,7 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
         if (dialog.exec() != QDialog::Accepted)
             break;
 
-        QString res = nativeCanonicalDirName(dialog.selectedFiles().first());
+        QString res = canonicalDirName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved a file name, so update our active directory
