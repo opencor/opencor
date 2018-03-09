@@ -2040,7 +2040,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
         if (!createSedmlFile(sedmlFile, sedmlFileName, modelSource)) {
             Core::warningMessageBox(tr("Export To SED-ML File"),
-                                    tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
+                                    tr("The simulation could not be exported to <strong>%1</strong>.").arg(QDir::toNativeSeparators(sedmlFileName)));
         }
 
         if (isCellmlFile)

@@ -1216,7 +1216,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
             // By default, our model source refers to a file name relative to
             // ourselves
 
-            QString cellmlFileName = Core::nativeCanonicalFileName(QFileInfo(mFileName).path()+"/"+modelSource);
+            QString cellmlFileName = Core::canonicalFileName(QFileInfo(mFileName).path()+"/"+modelSource);
 
 #ifdef Q_OS_WIN
             // On Windows, if our model source exists, it means that it refers

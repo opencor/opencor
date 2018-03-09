@@ -734,7 +734,9 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
             warningMessageBox(pUrl.isEmpty()?
                                   tr("Open File"):
                                   tr("Open Remote File"),
-                              tr("<strong>%1</strong> could not be opened.").arg(pFileName));
+                              tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
+                                                                                     QDir::toNativeSeparators(pFileName):
+                                                                                     pFileName));
         }
 
         return;
@@ -742,10 +744,10 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     // Check whether the file is already opened and, if so, select it and leave
 
-    QString nativeFileName = nativeCanonicalFileName(pFileName);
+    QString fileName = canonicalFileName(pFileName);
 
     for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
-        if (!mFileNames[i].compare(nativeFileName)) {
+        if (!mFileNames[i].compare(fileName)) {
             setTabBarCurrentIndex(mFileTabs, i);
 
             return;
@@ -754,13 +756,13 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     // Register the file with our file manager
 
-    FileManager::instance()->manage(nativeFileName, pType, pUrl);
+    FileManager::instance()->manage(fileName, pType, pUrl);
 
     // Keep track of the mapping between the remote file and its local version,
     // if needed
 
     if (!pUrl.isEmpty())
-        mRemoteLocalFileNames.insert(pUrl, nativeFileName);
+        mRemoteLocalFileNames.insert(pUrl, fileName);
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
@@ -777,7 +779,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     int fileTabIndex = mFileTabs->currentIndex()+1;
 
-    mFileNames.insert(fileTabIndex, nativeFileName);
+    mFileNames.insert(fileTabIndex, fileName);
     mFileTabs->insertTab(fileTabIndex, QString());
 
     updateFileTab(fileTabIndex);
@@ -792,7 +794,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
     //       settingsLoaded()...
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
-        qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(nativeFileName);
+        qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
 }
 
 //==============================================================================
@@ -958,7 +960,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                 // still wants to reload it
 
                 doReloadFile = questionMessageBox(tr("File Modified"),
-                                                  tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName)) == QMessageBox::Yes;
+                                                  tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(QDir::toNativeSeparators(fileName))) == QMessageBox::Yes;
             }
 
             // Reload the file, if needed, and consider it as non-modified
@@ -1050,8 +1052,13 @@ void CentralWidget::toggleLockedFile()
     bool fileLocked = fileManagerInstance->isLocked(fileName);
 
     if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet) {
-        warningMessageBox(fileLocked?tr("Unlock File"):tr("Lock File"),
-                          tr("<strong>%1</strong> could not be %2.").arg(fileName, fileLocked?tr("unlocked"):tr("locked")));
+        warningMessageBox(fileLocked?
+                              tr("Unlock File"):
+                              tr("Lock File"),
+                          tr("<strong>%1</strong> could not be %2.").arg(QDir::toNativeSeparators(fileName),
+                                                                         fileLocked?
+                                                                             tr("unlocked"):
+                                                                             tr("locked")));
     }
 }
 
@@ -1131,7 +1138,8 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         if (!fileHandlingInterface->saveFile(oldFileName, newFileName, needFeedback)) {
             if (needFeedback) {
                 warningMessageBox(tr("Save File"),
-                                  tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
+                                  tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(),
+                                                                                                             QDir::toNativeSeparators(newFileName)));
             }
 
             return false;
@@ -1243,8 +1251,8 @@ bool CentralWidget::canCloseFile(const int &pIndex)
                                        tr("New File"):
                                        tr("File Modified"),
                                    fileManagerInstance->isNew(fileName)?
-                                       tr("<strong>%1</strong> is new. Do you want to save it before closing it?").arg(mFileTabs->tabToolTip(pIndex)):
-                                       tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName))) {
+                                       tr("<strong>%1</strong> is new. Do you want to save it before closing it?").arg(QDir::toNativeSeparators(mFileTabs->tabToolTip(pIndex))):
+                                       tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(QDir::toNativeSeparators(fileName)))) {
         case QMessageBox::Yes:
             return saveFile(pIndex);
         case QMessageBox::No:
@@ -1933,9 +1941,9 @@ void CentralWidget::fileChanged(const QString &pFileName,
         if (questionMessageBox(tr("File Modified"),
                                fileChanged?
                                    pDependenciesChanged?
-                                       tr("<strong>%1</strong> and one or several of its dependencies has been modified. Do you want to reload it?").arg(pFileName):
-                                       tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName):
-                                   tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(pFileName)) == QMessageBox::Yes) {
+                                       tr("<strong>%1</strong> and one or several of its dependencies has been modified. Do you want to reload it?").arg(QDir::toNativeSeparators(pFileName)):
+                                       tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(QDir::toNativeSeparators(pFileName)):
+                                   tr("<strong>%1</strong> has had one or several of its dependencies modified. Do you want to reload it?").arg(QDir::toNativeSeparators(pFileName))) == QMessageBox::Yes) {
             // The user wants to reload the file, so find it and reload it
 
             for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
@@ -1968,7 +1976,7 @@ void CentralWidget::fileDeleted(const QString &pFileName)
     // The given file doesn't exist anymore, so ask the user whether to close it
 
     if (questionMessageBox(tr("File Deleted"),
-                           tr("<strong>%1</strong> does not exist anymore. Do you want to close it?").arg(pFileName)) == QMessageBox::Yes) {
+                           tr("<strong>%1</strong> does not exist anymore. Do you want to close it?").arg(QDir::toNativeSeparators(pFileName))) == QMessageBox::Yes) {
         // The user wants to close the file
 
         for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {

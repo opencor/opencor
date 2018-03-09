@@ -218,44 +218,6 @@ QStringList canonicalFileNames(const QStringList &pFileNames)
 
 //==============================================================================
 
-QString nativeCanonicalDirName(const QString &pDirName)
-{
-    // Return a native and canonical version of the given directory name or its
-    // native version, if the native and canonical version is empty (i.e. the
-    // directory doesn't exist (anymore?))
-
-    return QDir::toNativeSeparators(canonicalDirName(pDirName));
-}
-
-//==============================================================================
-
-QString nativeCanonicalFileName(const QString &pFileName)
-{
-    // Return a native and canonical version of the given file name or its
-    // native version, if the native and canonical version is empty (i.e. the
-    // file doesn't exist (anymore?))
-
-    return QDir::toNativeSeparators(canonicalFileName(pFileName));
-}
-
-//==============================================================================
-
-QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
-{
-    // Return a native and canonical version of the given file names or their
-    // native version, if the native and canonical version of the given file
-    // names is empty (i.e. the files don't exist (anymore?))
-
-    QStringList res = QStringList();
-
-    foreach (const QString &fileName, pFileNames)
-        res << nativeCanonicalFileName(fileName);
-
-    return res;
-}
-
-//==============================================================================
-
 bool SynchronousFileDownloader::download(const QString &pUrl,
                                          QByteArray &pContents,
                                          QString *pErrorMessage) const

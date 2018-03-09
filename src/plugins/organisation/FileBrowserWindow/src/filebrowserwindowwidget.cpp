@@ -492,7 +492,7 @@ bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 
-        setToolTip(Core::nativeCanonicalFileName(mModel->filePath(indexAt(helpEvent->pos()))));
+        setToolTip(QDir::toNativeSeparators(Core::canonicalFileName(mModel->filePath(indexAt(helpEvent->pos())))));
     }
 
     // Default handling of the event

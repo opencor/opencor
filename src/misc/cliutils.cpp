@@ -106,7 +106,7 @@ void initPluginsPath(const QString &pAppFileName)
     }
 #endif
 
-    appDir = nativeCanonicalDirName(appFileInfo.canonicalPath());
+    appDir = canonicalDirName(appFileInfo.canonicalPath());
 
     QString pluginsDir = QString();
 
@@ -130,7 +130,7 @@ void initPluginsPath(const QString &pAppFileName)
     #error Unsupported platform
 #endif
 
-    QCoreApplication::setLibraryPaths(QStringList() << nativeCanonicalDirName(pluginsDir));
+    QCoreApplication::setLibraryPaths(QStringList() << canonicalDirName(pluginsDir));
 }
 
 //==============================================================================

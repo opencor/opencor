@@ -531,7 +531,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     static QDir dir;
 
-    QString destFileName = Core::nativeCanonicalFileName(mDirName+"/"+pLocation);
+    QString destFileName = Core::canonicalFileName(mDirName+"/"+pLocation);
     QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
     if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))

@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDir>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLayout>
@@ -588,7 +589,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
                 && (Core::questionMessageBox(tr("Save File"),
-                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(pNewFileName,
+                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName),
                                                                                                                                                                                             CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
                                                                                                                                                                                             CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion()))) == QMessageBox::No)) {
                 pNeedFeedback = false;
@@ -627,7 +628,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // to save the contents of the view to a text file
 
             if (Core::questionMessageBox(tr("Save File"),
-                                         tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(pNewFileName)) == QMessageBox::Yes) {
+                                         tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(QDir::toNativeSeparators(pNewFileName))) == QMessageBox::Yes) {
                 QString fileName = Core::getSaveFileName(tr("Save File"),
                                                          Core::newFileName(pNewFileName, "txt"));
 
