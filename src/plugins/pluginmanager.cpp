@@ -254,15 +254,6 @@ Plugins PluginManager::sortedLoadedPlugins() const
 
 //==============================================================================
 
-QString PluginManager::pluginsDir() const
-{
-    // Return the plugins directory
-
-    return mPluginsDir;
-}
-
-//==============================================================================
-
 Plugin * PluginManager::plugin(const QString &pName) const
 {
     // Return the plugin, if any, which name is the one we have been passed
