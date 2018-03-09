@@ -521,13 +521,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
     //       that the given file and its destination are not the same and that
     //       its destination doesn't exist...
 
-#if defined(Q_OS_WIN)
-    static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
-#endif
 
     static QDir dir;
 
