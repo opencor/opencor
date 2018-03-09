@@ -177,37 +177,74 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
 
 //==============================================================================
 
+QString canonicalDirName(const QString &pDirName)
+{
+    // Return a canonical version of the given directory name or a native version, if the native and canonical version is empty (i.e. the
+    // directory doesn't exist (anymore?))
+
+    QString res = QDir(pDirName).canonicalPath();
+
+    return res.isEmpty()?pDirName:res;
+}
+
+//==============================================================================
+
+QString canonicalFileName(const QString &pFileName)
+{
+    // Return a canonical version of the given file name or the given file name
+    // itself, if the canonical version is empty (i.e. the file doesn't exist
+    // (anymore?))
+
+    QString res = QFileInfo(pFileName).canonicalFilePath();
+
+    return res.isEmpty()?pFileName:res;
+}
+
+//==============================================================================
+
+QStringList canonicalFileNames(const QStringList &pFileNames)
+{
+    // Return a canonical version of the given file names or the given file
+    // names themselves, if the canonical version of the given file names is
+    // empty (i.e. the files don't exist (anymore?))
+
+    QStringList res = QStringList();
+
+    foreach (const QString &fileName, pFileNames)
+        res << canonicalFileName(fileName);
+
+    return res;
+}
+
+//==============================================================================
+
 QString nativeCanonicalDirName(const QString &pDirName)
 {
-    // Return a native and canonical version of the given directory name or a
+    // Return a native and canonical version of the given directory name or its
     // native version, if the native and canonical version is empty (i.e. the
     // directory doesn't exist (anymore?))
 
-    QString res = QDir::toNativeSeparators(QDir(pDirName).canonicalPath());
-
-    return res.isEmpty()?QDir::toNativeSeparators(pDirName):res;
+    return QDir::toNativeSeparators(canonicalDirName(pDirName));
 }
 
 //==============================================================================
 
 QString nativeCanonicalFileName(const QString &pFileName)
 {
-    // Return a native and canonical version of the given file name or a native
-    // version, if the native and canonical version is empty (i.e. the file
-    // doesn't exist (anymore?))
+    // Return a native and canonical version of the given file name or its
+    // native version, if the native and canonical version is empty (i.e. the
+    // file doesn't exist (anymore?))
 
-    QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
-
-    return res.isEmpty()?QDir::toNativeSeparators(pFileName):res;
+    return QDir::toNativeSeparators(canonicalFileName(pFileName));
 }
 
 //==============================================================================
 
 QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
 {
-    // Return a native and canonical version of the given file names or a native
-    // version, if the native and canonical version of a given file name is
-    // empty (i.e. the file doesn't exist (anymore?))
+    // Return a native and canonical version of the given file names or their
+    // native version, if the native and canonical version of the given file
+    // names is empty (i.e. the files don't exist (anymore?))
 
     QStringList res = QStringList();
 
