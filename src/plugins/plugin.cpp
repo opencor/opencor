@@ -391,7 +391,7 @@ int Plugin::pluginInfoVersion(const QString &pFileName)
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+    QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
     QLibrary plugin(pFileName);
@@ -417,7 +417,7 @@ int Plugin::interfaceVersion(const QString &pFileName,
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+    QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
     QLibrary plugin(pFileName);
@@ -448,7 +448,7 @@ PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+    QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
     QLibrary plugin(pFileName);
