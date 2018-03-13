@@ -31,9 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
+    #include "qwt_legend.h"
     #include "qwt_plot.h"
     #include "qwt_plot_curve.h"
     #include "qwt_scale_draw.h"
+    #include "qwt_scale_widget.h"
+    #include "qwt_symbol.h"
     #include "qwt_text.h"
 #include "qwtend.h"
 
@@ -44,6 +47,7 @@ class QMenu;
 //==============================================================================
 
 class QwtPlotDirectPainter;
+class QwtPlotGrid;
 
 //==============================================================================
 
@@ -52,17 +56,95 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-static const double DefMinAxis =    0.0;
-static const double DefMaxAxis = 1000.0;
+static const double DefaultMinAxis    =    0.0;
+static const double DefaultMinLogAxis =    1.0;
+static const double DefaultMaxAxis    = 1000.0;
 
 //==============================================================================
 
-class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph : public QwtPlotCurve
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
+{
+public:
+    explicit GraphPanelPlotGraphProperties(const QString &pTitle = QString(),
+                                           const Qt::PenStyle &pLineStyle = Qt::SolidLine,
+                                           const int &pLineWidth = 1,
+                                           const QColor &pLineColor = Qt::darkBlue,
+                                           const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
+                                           const int &pSymbolSize = 8,
+                                           const QColor &pSymbolColor = Qt::darkBlue,
+                                           const bool &pSymbolFilled = true,
+                                           const QColor &pSymbolFillColor = Qt::white);
+
+    QString title() const;
+
+    Qt::PenStyle lineStyle() const;
+    int lineWidth() const;
+    QColor lineColor() const;
+
+    QwtSymbol::Style symbolStyle() const;
+    int symbolSize() const;
+    QColor symbolColor() const;
+    bool symbolFilled() const;
+    QColor symbolFillColor() const;
+
+private:
+    QString mTitle;
+
+    Qt::PenStyle mLineStyle;
+    int mLineWidth;
+    QColor mLineColor;
+
+    QwtSymbol::Style mSymbolStyle;
+    int mSymbolSize;
+    QColor mSymbolColor;
+    bool mSymbolFilled;
+    QColor mSymbolFillColor;
+};
+
+//==============================================================================
+
+class GraphPanelPlotGraph;
+
+//==============================================================================
+
+class GraphPanelPlotGraphRun : public QwtPlotCurve
+{
+public:
+    explicit GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner);
+
+    GraphPanelPlotGraph * owner() const;
+
+private:
+    GraphPanelPlotGraph *mOwner;
+};
+
+//==============================================================================
+
+typedef QList<GraphPanelPlotGraphRun *> GraphPanelPlotGraphRuns;
+
+//==============================================================================
+
+class GraphPanelPlotWidget;
+
+//==============================================================================
+
+class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph
 {
 public:
     explicit GraphPanelPlotGraph(void *pParameterX = 0, void *pParameterY = 0);
 
     bool isValid() const;
+
+    void attach(GraphPanelPlotWidget *pPlot);
+    void detach();
+
+    GraphPanelPlotWidget * plot() const;
+
+    int runsCount() const;
+
+    void addRun();
+    void removeRuns();
+    GraphPanelPlotGraphRun * lastRun() const;
 
     bool isSelected() const;
     void setSelected(const bool &pSelected);
@@ -76,6 +158,27 @@ public:
     void * parameterY() const;
     void setParameterY(void *pParameterY);
 
+    const QPen & pen() const;
+    void setPen(const QPen &pPen);
+
+    const QwtSymbol * symbol() const;
+    void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
+                   const QPen &pPen, const int &pSize);
+
+    void setTitle(const QString &pTitle);
+
+    bool isVisible() const;
+    void setVisible(const bool &pVisible);
+
+    bool hasData() const;
+    quint64 dataSize() const;
+
+    QwtSeriesData<QPointF> *data() const;
+    void setData(double *pDataX, double *pDataY, const int &pSize);
+
+    QRectF boundingRect();
+    QRectF boundingLogRect();
+
 private:
     bool mSelected;
 
@@ -83,15 +186,22 @@ private:
 
     void *mParameterX;
     void *mParameterY;
+
+    QRectF mBoundingRect;
+    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingRects;
+
+    QRectF mBoundingLogRect;
+    QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingLogRects;
+
+    GraphPanelPlotWidget *mPlot;
+
+    GraphPanelPlotGraphRun *mDummyRun;
+    GraphPanelPlotGraphRuns mRuns;
 };
 
 //==============================================================================
 
 typedef QList<GraphPanelPlotGraph *> GraphPanelPlotGraphs;
-
-//==============================================================================
-
-class GraphPanelPlotWidget;
 
 //==============================================================================
 
@@ -109,7 +219,7 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    enum Location {
+    enum Position {
         TopLeft,
         TopRight,
         BottomLeft,
@@ -125,9 +235,9 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor,
-                         const Location &pLocation,
-                         const bool &pCanMoveLocation = true);
+                         const QColor &pForegroundColor, const int &pLineWidth,
+                         const Position &pPosition,
+                         const bool &pCanMovePosition = true);
 };
 
 //==============================================================================
@@ -143,6 +253,63 @@ protected:
 
 //==============================================================================
 
+class GraphPanelPlotScaleWidget : public QwtScaleWidget
+{
+public:
+    void updateLayout();
+};
+
+//==============================================================================
+
+class GraphPanelPlotLegendWidget : public QwtLegend
+{
+    Q_OBJECT
+
+public:
+    explicit GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent);
+
+    bool isActive() const;
+    void setActive(const bool &pActive);
+
+    virtual bool isEmpty() const;
+
+    void setChecked(const int &pIndex, const bool &pChecked);
+
+    void setFontSize(const int &pFontSize);
+    void setBackgroundColor(const QColor &pBackgroundColor);
+    void setForegroundColor(const QColor &pForegroundColor);
+
+    void renderLegend(QPainter *pPainter, const QRectF &pRect,
+                      bool pFillBackground) const;
+
+    virtual QSize sizeHint() const;
+
+protected:
+    virtual void updateWidget(QWidget *pWidget,
+                              const QwtLegendData &pLegendData);
+
+private:
+    GraphPanelPlotWidget *mOwner;
+
+    bool mActive;
+
+    int mFontSize;
+    QColor mBackgroundColor;
+    QColor mForegroundColor;
+
+signals:
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+private slots:
+    void checked(const QVariant &pItemInfo);
+};
+
+//==============================================================================
+
+class GraphPanelWidget;
+
+//==============================================================================
+
 typedef QList<GraphPanelPlotWidget *> GraphPanelPlotWidgets;
 
 //==============================================================================
@@ -152,31 +319,125 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot,
 {
     Q_OBJECT
 
-    friend class GraphPanelPlotOverlayWidget;
-
 public:
+    enum Action {
+        None,
+        Pan,
+        ShowCoordinates,
+        Zoom,
+        ZoomRegion
+    };
+
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
-                                  QWidget *pParent);
+                                  GraphPanelWidget *pParent);
     ~GraphPanelPlotWidget();
 
     virtual void retranslateUi();
+
+    void setActive(const bool &pActive);
 
     GraphPanelPlotGraphs graphs() const;
 
     bool addGraph(GraphPanelPlotGraph *pGraph);
     bool removeGraph(GraphPanelPlotGraph *pGraph);
 
-    QRectF dataRect() const;
+    int graphIndex(GraphPanelPlotGraph *pGraph) const;
 
-    void optimiseAxisX(double &pMin, double &pMax) const;
-    void optimiseAxisY(double &pMin, double &pMax) const;
+    bool hasData() const;
+
+    bool dataRect(QRectF &pDataRect) const;
+    bool dataLogRect(QRectF &pDataLogRect) const;
+
+    void optimiseAxis(double &pMin, double &pMax) const;
 
     double minX() const;
     double maxX() const;
     double minY() const;
     double maxY() const;
+
+    QColor backgroundColor() const;
+    void setBackgroundColor(const QColor &pBackgroundColor);
+
+    int fontSize() const;
+    void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
+
+    QColor foregroundColor() const;
+    void setForegroundColor(const QColor &pForegroundColor);
+
+    Qt::PenStyle gridLinesStyle() const;
+    void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
+
+    int gridLinesWidth() const;
+    void setGridLinesWidth(const int &pGridLinesWidth);
+
+    QColor gridLinesColor() const;
+    void setGridLinesColor(const QColor &pGridLinesColor);
+
+    bool isLegendActive() const;
+    void setLegendActive(const bool &pLegendActive);
+
+    void setLegendWidth(const int &pLegendWidth);
+
+    Qt::PenStyle pointCoordinatesStyle() const;
+    void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
+
+    int pointCoordinatesWidth() const;
+    void setPointCoordinatesWidth(const int &pPointCoordinatesWidth);
+
+    QColor pointCoordinatesColor() const;
+    void setPointCoordinatesColor(const QColor &pPointCoordinatesColor);
+
+    QColor pointCoordinatesFontColor() const;
+    void setPointCoordinatesFontColor(const QColor &pPointCoordinatesFontColor);
+
+    QColor surroundingAreaBackgroundColor() const;
+    void setSurroundingAreaBackgroundColor(const QColor &pSurroundingAreaBackgroundColor);
+
+    QColor surroundingAreaForegroundColor() const;
+    void setSurroundingAreaForegroundColor(const QColor &pSurroundingAreaForegroundColor);
+
+    void setTitle(const QString &pTitle);
+
+    bool logAxisX() const;
+    void setLogAxisX(const bool &pLogAxisX);
+
+    QString titleAxisX() const;
+    void setTitleAxisX(const QString &pTitleAxisX);
+
+    bool logAxisY() const;
+    void setLogAxisY(const bool &pLogAxisY);
+
+    QString titleAxisY() const;
+    void setTitleAxisY(const QString &pTitleAxisY);
+
+    Qt::PenStyle zoomRegionStyle() const;
+    void setZoomRegionStyle(const Qt::PenStyle &pZoomRegionStyle);
+
+    int zoomRegionWidth() const;
+    void setZoomRegionWidth(const int &pZoomRegionWidth);
+
+    QColor zoomRegionColor() const;
+    void setZoomRegionColor(const QColor &pZoomRegionColor);
+
+    QColor zoomRegionFontColor() const;
+    void setZoomRegionFontColor(const QColor &pZoomRegionFontColor);
+
+    bool zoomRegionFilled() const;
+    void setZoomRegionFilled(const bool &pZoomRegionFilled);
+
+    QColor zoomRegionFillColor() const;
+    void setZoomRegionFillColor(const QColor &pZoomRegionFillColor);
+
+    void setDefaultAxesValues(const double &pDefaultMinX,
+                              const double &pDefaultMaxX,
+                              const double &pDefaultMinLogX,
+                              const double &pDefaultMaxLogX,
+                              const double &pDefaultMinY,
+                              const double &pDefaultMaxY,
+                              const double &pDefaultMinLogY,
+                              const double &pDefaultMaxLogY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  const bool &pSynchronizeAxes = true,
@@ -184,8 +445,7 @@ public:
                  const bool &pForceXAxisSetting = false,
                  const bool &pForceYAxisSetting = false);
 
-    bool drawGraphFrom(GraphPanelPlotGraph *pGraph,
-                       const qulonglong &pFrom);
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, const quint64 &pFrom);
 
     GraphPanelPlotWidgets neighbors() const;
 
@@ -195,6 +455,15 @@ public:
     void alignWithNeighbors(const bool &pCanReplot,
                             const bool &pForceAlignment = false);
     void forceAlignWithNeighbors();
+
+    Action action() const;
+
+    bool canZoomInX() const;
+    bool canZoomOutX() const;
+    bool canZoomInY() const;
+    bool canZoomOutY() const;
+
+    QPointF canvasPoint(const QPoint &pPoint) const;
 
 protected:
     virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
@@ -206,15 +475,38 @@ protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
 
 private:
-    enum Action {
-        None,
-        Pan,
-        ShowCoordinates,
-        Zoom,
-        ZoomRegion
+    enum Scaling {
+        BigScalingIn,
+        ScalingIn,
+        NoScaling,
+        ScalingOut,
+        BigScalingOut
     };
 
+    GraphPanelWidget *mOwner;
+
     QwtPlotDirectPainter *mDirectPainter;
+
+    QColor mBackgroundColor;
+    QColor mForegroundColor;
+
+    Qt::PenStyle mPointCoordinatesStyle;
+    int mPointCoordinatesWidth;
+    QColor mPointCoordinatesColor;
+    QColor mPointCoordinatesFontColor;
+
+    QColor mSurroundingAreaBackgroundColor;
+    QColor mSurroundingAreaForegroundColor;
+
+    Qt::PenStyle mZoomRegionStyle;
+    int mZoomRegionWidth;
+    QColor mZoomRegionColor;
+    QColor mZoomRegionFontColor;
+    bool mZoomRegionFilled;
+    QColor mZoomRegionFillColor;
+
+    bool mLogAxisX;
+    bool mLogAxisY;
 
     GraphPanelPlotGraphs mGraphs;
 
@@ -224,6 +516,8 @@ private:
     QPoint mPoint;
 
     GraphPanelPlotOverlayWidget *mOverlayWidget;
+
+    GraphPanelPlotLegendWidget *mLegend;
 
     bool mCanDirectPaint;
     bool mCanReplot;
@@ -238,9 +532,15 @@ private:
 
     bool mCanUpdateActions;
 
+    QAction *mExportToAction;
     QAction *mCopyToClipboardAction;
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
+    QAction *mGraphPanelSettingsAction;
+    QAction *mGraphsSettingsAction;
+    QAction *mLegendAction;
+    QAction *mLogarithmicXAxisAction;
+    QAction *mLogarithmicYAxisAction;
     QAction *mCustomAxesAction;
     QAction *mZoomInAction;
     QAction *mZoomOutAction;
@@ -249,50 +549,58 @@ private:
     GraphPanelPlotScaleDraw *mAxisX;
     GraphPanelPlotScaleDraw *mAxisY;
 
+    QwtPlotGrid *mGrid;
+
+    double mDefaultMinX;
+    double mDefaultMaxX;
+    double mDefaultMinY;
+    double mDefaultMaxY;
+
+    double mDefaultMinLogX;
+    double mDefaultMaxLogX;
+    double mDefaultMinLogY;
+    double mDefaultMaxLogY;
+
     GraphPanelPlotWidgets mNeighbors;
 
-    void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
-
-    void checkAxisValues(double &pMin, double &pMax);
-    void checkAxesValues(double &pMinX, double &pMaxX,
-                         double &pMinY, double &pMaxY);
+    void checkAxisValues(const bool &pLogAxis, double &pMin, double &pMax);
 
     void updateActions();
 
-    Action action() const;
-
     void resetAction();
 
-    bool canZoomInX() const;
-    bool canZoomOutX() const;
-    bool canZoomInY() const;
-    bool canZoomOutY() const;
+    QRectF realDataRect() const;
 
-    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
-
-    QRectF optimisedRect(const QRectF &pAxes) const;
-
-    void setAxis(const int &pAxis, double pMin, double pMax);
+    void setAxis(const int &pAxisId, double pMin, double pMax);
 
     bool resetAxes();
 
-    bool scaleAxis(const double &pScalingFactor,
-                   const bool &pCanZoomIn, const bool &pCanZoomOut,
-                   const double pOriginPoint, double &pMin, double &pMax);
-    void scaleAxes(const QPoint &pPoint,
-                   const double &pScalingFactorX,
-                   const double &pScalingFactorY);
+    bool scaleAxis(const Scaling &pScaling, const bool &pCanZoomIn,
+                   const bool &pCanZoomOut, const QwtScaleMap &pCanvasMap,
+                   const double &pPoint, double &pMin, double &pMax);
+    void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
+                   const Scaling &pScalingY);
 
-    QPointF canvasPoint(const QPoint &pPoint,
-                        const bool &pNeedOffset = true) const;
+    void setTitleAxis(const int &pAxisId, const QString &pTitleAxis);
 
 signals:
     void axesChanged(const double &pMinX, const double &pMaxX,
                      const double &pMinY, const double &pMaxY);
 
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
+
+    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+    void legendToggled();
+
+    void logarithmicXAxisToggled();
+    void logarithmicYAxisToggled();
+
 private slots:
     void cannotUpdateActions();
 
+    void exportTo();
     void copyToClipboard();
     void customAxes();
     void zoomIn();

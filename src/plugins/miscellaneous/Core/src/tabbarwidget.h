@@ -29,12 +29,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QProxyStyle>
 #include <QTabBar>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+class TabBarStyle : public QProxyStyle
+{
+    Q_OBJECT
+
+public:
+    virtual void drawControl(ControlElement pElement,
+                             const QStyleOption *pOption, QPainter *pPainter,
+                             const QWidget *pWidget = 0) const;
+
+    virtual QRect subElementRect(SubElement pElement,
+                                 const QStyleOption *pOption,
+                                 const QWidget *pWidget) const;
+
+private:
+    void tabLayout(const QStyleOptionTab *pOption, const QWidget *pWidget,
+                   QRect *pTextRect, QRect *pIconRect) const;
+};
 
 //==============================================================================
 
@@ -45,8 +66,16 @@ class CORE_EXPORT TabBarWidget : public QTabBar
 public:
     explicit TabBarWidget(QWidget *pParent);
 
+    int oldIndex() const;
+    void setOldIndex(const int &pOldIndex);
+
 protected:
     virtual void wheelEvent(QWheelEvent *pEvent);
+
+    virtual QSize tabSizeHint(int pIndex) const;
+
+private:
+    int mOldIndex;
 };
 
 //==============================================================================

@@ -82,7 +82,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     static const int UserIconWidth = UserIcon.availableSizes().first().width();
     static const int UserIconHeight = UserIcon.availableSizes().first().height();
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget(this);
+    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
     QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
     int plusIconSize = 0.57*folderIconSize;
@@ -173,8 +173,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(authenticationCancelled()),
             this, SLOT(updateGui()));
 
-    connect(mPmrWebService, SIGNAL(workspaces(const PMRSupport::PmrWorkspaces &)),
-            mPmrWorkspacesWindowWidget, SLOT(initialize(const PMRSupport::PmrWorkspaces &)));
+    connect(mPmrWebService, SIGNAL(workspaces(const OpenCOR::PMRSupport::PmrWorkspaces &)),
+            mPmrWorkspacesWindowWidget, SLOT(initialize(const OpenCOR::PMRSupport::PmrWorkspaces &)));
 
     // Connections to process requests from our PMR workspaces widget
 

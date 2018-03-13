@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreglobal.h"
+#include "coreguiutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -33,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QComboBox>
 #include <QLineEdit>
 #include <QStandardItem>
-#include <QStyledItemDelegate>
 
 //==============================================================================
 
@@ -77,12 +77,52 @@ public:
 
 //==============================================================================
 
+class IntegerGe0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit IntegerGe0EditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
+class IntegerGt0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit IntegerGt0EditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class DoubleEditorWidget : public TextEditorWidget
 {
     Q_OBJECT
 
 public:
     explicit DoubleEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
+class DoubleGe0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleGe0EditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
+class DoubleGt0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleGt0EditorWidget(QWidget *pParent);
 };
 
 //==============================================================================
@@ -116,12 +156,21 @@ public:
 
 //==============================================================================
 
-class Property;
+class ColorEditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit ColorEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class PropertyEditorWidget;
 
 //==============================================================================
 
-class PropertyItemDelegate : public QStyledItemDelegate
+class PropertyItemDelegate : public StyledItemDelegate
 {
     Q_OBJECT
 
@@ -153,6 +202,10 @@ private slots:
 
 //==============================================================================
 
+class Property;
+
+//==============================================================================
+
 class PropertyItem : public QStandardItem
 {
 public:
@@ -166,21 +219,32 @@ private:
 
 //==============================================================================
 
+typedef QList<Property *> Properties;
+
+//==============================================================================
+
 class CORE_EXPORT Property : public QObject
 {
     Q_OBJECT
 
 public:
     enum Type {
-        Section  = QStandardItem::UserType,
-        String   = QStandardItem::UserType+1,
-        Integer  = QStandardItem::UserType+2,
-        Double   = QStandardItem::UserType+3,
-        List     = QStandardItem::UserType+4,
-        Boolean  = QStandardItem::UserType+5
+        Section,
+        String,
+        Integer,
+        IntegerGe0,
+        IntegerGt0,
+        Double,
+        DoubleGe0,
+        DoubleGt0,
+        List,
+        Boolean,
+        Color
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
+
+    PropertyEditorWidget * owner() const;
 
     Type type() const;
 
@@ -191,7 +255,7 @@ public:
     Property * parentProperty() const;
     void setParentProperty(Property *pProperty);
 
-    QList<Property *> properties() const;
+    Properties properties() const;
 
     void add(Property *pProperty);
     void addTo(QStandardItem *pParent);
@@ -211,38 +275,46 @@ public:
     bool isEditable() const;
     void setEditable(const bool &pEditable);
 
-    QString name() const;
-    void setName(const QString &pName, const bool &pUpdateToolTip = true);
-
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
 
-    int integerValue() const;
-    void setIntegerValue(const int &pIntegerValue);
-
-    double doubleValue() const;
-    void setDoubleValue(const double &pDoubleValue,
-                        const bool &pEmitSignal = true);
+    QString name() const;
+    void setName(const QString &pName, const bool &pUpdateToolTip = true);
 
     QString value() const;
     void setValue(const QString &pValue, const bool &pForce = false,
                   const bool &pEmitSignal = true);
 
+    QVariant valueAsVariant() const;
+    QString valueAsString() const;
+
+    int integerValue() const;
+    void setIntegerValue(const int &pIntegerValue,
+                         const bool &pEmitSignal = true);
+
+    double doubleValue() const;
+    void setDoubleValue(const double &pDoubleValue,
+                        const bool &pEmitSignal = true);
+
     QStringList listValues() const;
-    void setListValues(const QStringList &pListValues,
-                       const QString &pListValue,
-                       const bool &pEmitSignal = true);
     void setListValues(const QStringList &pListValues,
                        const bool &pEmitSignal = true);
 
     QString listValue() const;
     void setListValue(const QString &pListValue);
 
+    int listValueIndex() const;
+    void setListValueIndex(const int &pListValueIndex);
+
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
 
     bool booleanValue() const;
     void setBooleanValue(const bool &pBooleanValue);
+
+    QColor colorValue() const;
+    void setColorValue(const QColor &pColorValue);
+    void setColorValue(const QPoint &pPoint = QPoint());
 
     QString unit() const;
     void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
@@ -276,7 +348,7 @@ private:
     QString mExtraInfo;
 
     Property * mParentProperty;
-    QList<Property *> mProperties;
+    Properties mProperties;
 
     QList<QStandardItem *> items() const;
 
@@ -284,10 +356,6 @@ signals:
     void visibilityChanged(const bool &pVisible);
     void valueChanged(const QString &pOldValue, const QString &pNewValue);
 };
-
-//==============================================================================
-
-typedef QList<Property *> Properties;
 
 //==============================================================================
 
@@ -313,14 +381,30 @@ public:
     Property * addSectionProperty(const QString &pName, Property *pParent = 0);
     Property * addSectionProperty(Property *pParent = 0);
 
+    Property * addStringProperty(const QString &pString, Property *pParent = 0);
+    Property * addStringProperty(Property *pParent = 0);
+
     Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
+
+    Property * addIntegerGe0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGe0Property(Property *pParent = 0);
+
+    Property * addIntegerGt0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGt0Property(Property *pParent = 0);
 
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
+    Property * addDoubleGe0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGe0Property(Property *pParent = 0);
+
+    Property * addDoubleGt0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGt0Property(Property *pParent = 0);
+
     Property * addListProperty(const QStringList &pValues,
-                               const QString &pValue, Property *pParent = 0);
+                               const QString &pDefaultValue,
+                               Property *pParent = 0);
     Property * addListProperty(const QStringList &pValues,
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
@@ -328,12 +412,13 @@ public:
     Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
     Property * addBooleanProperty(Property *pParent = 0);
 
-    Property * addStringProperty(const QString &pString, Property *pParent = 0);
-    Property * addStringProperty(Property *pParent = 0);
+    Property * addColorProperty(const QColor &pValue, Property *pParent = 0);
+    Property * addColorProperty(Property *pParent = 0);
 
     bool removeProperty(Property *pProperty);
 
     Properties properties() const;
+    Properties allProperties() const;
 
     Property * property(const QModelIndex &pIndex) const;
     Property * currentProperty() const;
@@ -346,6 +431,7 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
     virtual void mouseMoveEvent(QMouseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
     virtual void mouseReleaseEvent(QMouseEvent *pEvent);
@@ -360,6 +446,7 @@ private:
     QStandardItemModel *mModel;
 
     Properties mProperties;
+    Properties mAllProperties;
 
     Property *mProperty;
     QWidget *mPropertyEditor;
@@ -382,7 +469,7 @@ private:
     void deleteProperty(Property *pProperty);
 
 signals:
-    void propertyChanged(Core::Property *pProperty);
+    void propertyChanged(OpenCOR::Core::Property *pProperty);
 
 private slots:
     void updateHeight();

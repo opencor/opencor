@@ -1,8 +1,8 @@
-PROJECT(SampleToolsPlugin)
+project(SampleToolsPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SampleTools
+add_plugin(SampleTools
     SOURCES
         ../../cliinterface.cpp
         ../../guiinterface.cpp

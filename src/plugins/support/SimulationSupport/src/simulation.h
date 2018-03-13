@@ -79,7 +79,6 @@ public:
     double * rates() const;
     double * states() const;
     double * algebraic() const;
-    double * condVar() const;
 
     int delay() const;
     void setDelay(const int &pDelay);
@@ -102,14 +101,6 @@ public:
     Solver::Solver::Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
 
-    SolverInterface * daeSolverInterface() const;
-
-    QString daeSolverName() const;
-    void setDaeSolverName(const QString &pDaeSolverName);
-
-    Solver::Solver::Properties daeSolverProperties() const;
-    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
-
     SolverInterface * nlaSolverInterface() const;
 
     QString nlaSolverName() const;
@@ -123,7 +114,7 @@ public:
     void reset(const bool &pInitialize = true);
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                const bool &pInitialize = true);
+                                                const bool &pInitialize);
     void recomputeVariables(const double &pCurrentPoint);
 
     bool isModified() const;
@@ -131,8 +122,6 @@ public:
 
 private:
     Simulation *mSimulation;
-
-    CellMLSupport::CellmlFileRuntime *mRuntime;
 
     int mDelay;
 
@@ -154,7 +143,6 @@ private:
     double *mStates;
     double *mDummyStates;
     double *mAlgebraic;
-    double *mCondVar;
 
     double *mInitialConstants;
     double *mInitialStates;
@@ -183,11 +171,15 @@ public:
 
     void reload();
 
-    bool reset(const bool &pCreateDataStore = true);
+    void reset();
+
+    int runsCount() const;
+
+    bool addRun();
 
     void addPoint(const double &pPoint);
 
-    qulonglong size() const;
+    quint64 size() const;
 
     DataStore::DataStore * dataStore() const;
 
@@ -201,8 +193,6 @@ public:
 private:
     Simulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
@@ -212,7 +202,7 @@ private:
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
 
-    bool createDataStore();
+    void createDataStore();
     void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
@@ -234,10 +224,15 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation();
 
+    QString fileName() const;
+
+    void save();
     void reload();
     void rename(const QString &pFileName);
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
+
+    SimulationWorker * worker() const;
 
     Simulation::FileType fileType() const;
 
@@ -248,6 +243,10 @@ public:
     SimulationData * data() const;
     SimulationResults * results() const;
 
+    int runsCount() const;
+
+    bool addRun();
+
     bool isRunning() const;
     bool isPaused() const;
 
@@ -255,8 +254,6 @@ public:
 
     int delay() const;
     void setDelay(const int &pDelay);
-
-    double requiredMemory();
 
     double size();
 

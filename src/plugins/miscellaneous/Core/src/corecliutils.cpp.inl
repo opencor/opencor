@@ -177,42 +177,41 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
 
 //==============================================================================
 
-QString nativeCanonicalDirName(const QString &pDirName)
+QString canonicalDirName(const QString &pDirName)
 {
-    // Return a native and canonical version of the given directory name or a
-    // native version, if the native and canonical version is empty (i.e. the
+    // Return a canonical version of the given directory name or a native version, if the native and canonical version is empty (i.e. the
     // directory doesn't exist (anymore?))
 
-    QString res = QDir::toNativeSeparators(QDir(pDirName).canonicalPath());
+    QString res = QDir(pDirName).canonicalPath();
 
-    return res.isEmpty()?QDir::toNativeSeparators(pDirName):res;
+    return res.isEmpty()?pDirName:res;
 }
 
 //==============================================================================
 
-QString nativeCanonicalFileName(const QString &pFileName)
+QString canonicalFileName(const QString &pFileName)
 {
-    // Return a native and canonical version of the given file name or a native
-    // version, if the native and canonical version is empty (i.e. the file
-    // doesn't exist (anymore?))
+    // Return a canonical version of the given file name or the given file name
+    // itself, if the canonical version is empty (i.e. the file doesn't exist
+    // (anymore?))
 
-    QString res = QDir::toNativeSeparators(QFileInfo(pFileName).canonicalFilePath());
+    QString res = QFileInfo(pFileName).canonicalFilePath();
 
-    return res.isEmpty()?QDir::toNativeSeparators(pFileName):res;
+    return res.isEmpty()?pFileName:res;
 }
 
 //==============================================================================
 
-QStringList nativeCanonicalFileNames(const QStringList &pFileNames)
+QStringList canonicalFileNames(const QStringList &pFileNames)
 {
-    // Return a native and canonical version of the given file names or a native
-    // version, if the native and canonical version of a given file name is
-    // empty (i.e. the file doesn't exist (anymore?))
+    // Return a canonical version of the given file names or the given file
+    // names themselves, if the canonical version of the given file names is
+    // empty (i.e. the files don't exist (anymore?))
 
     QStringList res = QStringList();
 
     foreach (const QString &fileName, pFileNames)
-        res << nativeCanonicalFileName(fileName);
+        res << canonicalFileName(fileName);
 
     return res;
 }
@@ -447,7 +446,7 @@ QString temporaryFileName(const QString &pExtension)
 {
     // Get and return a temporary file name
 
-    QTemporaryFile file(QDir::tempPath()+QDir::separator()+"XXXXXX"+pExtension);
+    QTemporaryFile file(QDir::tempPath()+"/XXXXXX"+pExtension);
 
     file.open();
 
@@ -665,15 +664,11 @@ QString plainString(const QString &pString)
 QString urlArguments(const QUrl &pUrl)
 {
     // Return the arguments (path) of the given URL
-    // Note #1: we would normally retrieve the path using pUrl.path(), but this
-    //          doesn't work when there are spaces, so instead we adjust the URL
-    //          by removing its scheme and authority, and return it as a
-    //          string...
-    // Note #2: we use "|" to separate arguments, but they get converted to
-    //          "%7C" and there doesn't seem to be a way to convert them back,
-    //          so we do it ourselves...
+    // Note: we use "|" to separate arguments, but they get converted to "%7C"
+    //       and there doesn't seem to be a way to convert them back, so we do
+    //       it ourselves...
 
-    return pUrl.adjusted(QUrl::RemoveScheme|QUrl::RemoveAuthority).toString().remove(0, 1).replace("%7C", "|");
+    return pUrl.path().remove(0, 1).replace("%7C", "|");
 }
 
 //==============================================================================

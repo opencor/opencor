@@ -175,11 +175,9 @@ void SplashScreenWindow::closeAndDeleteAfter(QWidget *pWindow)
 
 void SplashScreenWindow::closeEvent(QCloseEvent *pEvent)
 {
-    // Accept the event
+    // Accept the event and ask for ourselves to be deleted later
 
     pEvent->accept();
-
-    // Ask for ourselves to be deleted later
 
     deleteLater();
 }
@@ -188,11 +186,9 @@ void SplashScreenWindow::closeEvent(QCloseEvent *pEvent)
 
 void SplashScreenWindow::mousePressEvent(QMouseEvent *pEvent)
 {
-    // Accept the event
+    // Accept the event and hide ourselves
 
     pEvent->accept();
-
-    // Hide ourselves
 
     hide();
 }

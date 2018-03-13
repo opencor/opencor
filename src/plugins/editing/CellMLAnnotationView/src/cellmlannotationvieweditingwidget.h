@@ -86,8 +86,8 @@ private:
     CellmlAnnotationViewCellmlListWidget *mCellmlList;
     CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
 
-    QString mModelQualifierSvg;
-    QString mBiologyQualifierSvg;
+    QByteArray mModelQualifierSvg;
+    QByteArray mBiologyQualifierSvg;
 
     QString mQualifierInformationTemplate;
 
@@ -97,11 +97,11 @@ signals:
 private slots:
     void emitSplitterMoved();
 
-    void updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                              const QString &pQualifier);
-    void updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                             const QString &pResource);
-    void updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
                                       const QString &pResource,
                                       const QString &pId);
 };

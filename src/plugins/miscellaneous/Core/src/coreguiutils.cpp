@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileDialog>
+#include <QFileSystemModel>
 #include <QFrame>
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsPixmapItem>
@@ -46,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 #include <QSettings>
 #include <QSizePolicy>
+#include <QStandardItemModel>
 
 //==============================================================================
 
@@ -154,7 +156,7 @@ QString getOpenFileName(const QString &pCaption, const QStringList &pFilters,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
+        QString res = canonicalFileName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved an open file name, so keep track of the folder
@@ -193,7 +195,7 @@ QStringList getOpenFileNames(const QString &pCaption,
         dialog.selectNameFilter(*pSelectedFilter);
 
     if (dialog.exec() == QDialog::Accepted) {
-        QStringList res = Core::nativeCanonicalFileNames(dialog.selectedFiles());
+        QStringList res = canonicalFileNames(dialog.selectedFiles());
 
         if (!res.isEmpty()) {
             // We have retrieved at least one open file name, so keep track of
@@ -230,7 +232,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     QFileInfo fileInfo = pFileName;
     QFileDialog dialog(qApp->activeWindow(), pCaption,
                        !fileInfo.canonicalPath().compare(".")?
-                           activeDirectory()+QDir::separator()+fileInfo.fileName():
+                           activeDirectory()+"/"+fileInfo.fileName():
                            pFileName,
                        allFilters(pFilters));
 
@@ -248,7 +250,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
         if (pSelectedFilter)
             *pSelectedFilter = dialog.selectedNameFilter();
 
-        QString res = Core::nativeCanonicalFileName(dialog.selectedFiles().first());
+        QString res = canonicalFileName(dialog.selectedFiles().first());
 
         // Make sure that we have got a save file name
 
@@ -265,9 +267,9 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             // Check whether the save file already exists and is opened
 
-            if (Core::FileManager::instance()->file(res)) {
+            if (FileManager::instance()->file(res)) {
                 warningMessageBox(pCaption,
-                                  QObject::tr("<strong>%1</strong> already exists and is opened.").arg(res));
+                                  QObject::tr("<strong>%1</strong> already exists and is opened.").arg(QDir::toNativeSeparators(res)));
 
                 continue;
             }
@@ -276,7 +278,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             if (   resInfo.exists()
                 && questionMessageBox(pCaption,
-                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res)) == QMessageBox::No) {
+                                      QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(QDir::toNativeSeparators(res))) == QMessageBox::No) {
                 continue;
             }
         }
@@ -285,6 +287,16 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     }
 
     return QString();
+}
+
+//==============================================================================
+
+QString getSaveFileName(const QString &pCaption, const QStringList &pFilters,
+                        QString *pSelectedFilter)
+{
+    // Retrieve and return a save file name
+
+    return getSaveFileName(pCaption, QString(), pFilters, pSelectedFilter);
 }
 
 //==============================================================================
@@ -308,7 +320,7 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
         if (dialog.exec() != QDialog::Accepted)
             break;
 
-        QString res = Core::nativeCanonicalDirName(dialog.selectedFiles().first());
+        QString res = canonicalDirName(dialog.selectedFiles().first());
 
         if (!res.isEmpty()) {
             // We have retrieved a file name, so update our active directory
@@ -526,6 +538,19 @@ QAction * newAction(QWidget *pParent)
     // Create and return an action
 
     return new QAction(pParent);
+}
+
+//==============================================================================
+
+QAction * newSeparator(QWidget *pParent)
+{
+    // Create and return a separator
+
+    QAction *res = new QAction(pParent);
+
+    res->setSeparator(true);
+
+    return res;
 }
 
 //==============================================================================
@@ -760,7 +785,7 @@ QColor lockedColor(const QColor &pColor)
 //==============================================================================
 
 QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    const bool &pCheckMimeTypes, const QStringList &pMimeTypes)
+                    const bool &pCheckMimeTypes, const QString &pMimeType)
 {
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces, using the given MIME types, if any
@@ -768,7 +793,7 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
     QStringList res = QStringList();
 
     foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
-        if (!pCheckMimeTypes || pMimeTypes.contains(fileTypeInterface->mimeType()))
+        if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
             res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
     }
 
@@ -782,18 +807,18 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces
 
-    return filters(pFileTypeInterfaces, false, QStringList());
+    return filters(pFileTypeInterfaces, false, QString());
 }
 
 //==============================================================================
 
 QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    const QStringList &pMimeTypes)
+                    const QString &pMimeType)
 {
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces, using the given MIME types
 
-    return filters(pFileTypeInterfaces, true, pMimeTypes);
+    return filters(pFileTypeInterfaces, true, pMimeType);
 }
 
 //==============================================================================

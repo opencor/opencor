@@ -1,8 +1,8 @@
-PROJECT(BioSignalMLDataStorePlugin)
+project(BioSignalMLDataStorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(BioSignalMLDataStore
+add_plugin(BioSignalMLDataStore
     SOURCES
         ../../datastoreinterface.cpp
         ../../i18ninterface.cpp

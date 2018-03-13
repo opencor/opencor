@@ -202,18 +202,11 @@ void SimulationWorker::started()
 
     emit running(false);
 
-    // Set up our ODE/DAE solver
+    // Set up our ODE solver
 
-    Solver::VoiSolver *voiSolver = 0;
-    Solver::OdeSolver *odeSolver = 0;
-    Solver::DaeSolver *daeSolver = 0;
+    Solver::OdeSolver *odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
 
-    if (mRuntime->needOdeSolver())
-        voiSolver = odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
-    else
-        voiSolver = daeSolver = static_cast<Solver::DaeSolver *>(mSimulation->data()->daeSolverInterface()->solverInstance());
-
-    // Set our NLA solver, if needed
+    // Set up our NLA solver, if needed
     // Note: we unset it at the end of this method...
 
     Solver::NlaSolver *nlaSolver = 0;
@@ -229,13 +222,8 @@ void SimulationWorker::started()
     mStopped = false;
     mError = false;
 
-    if (odeSolver) {
-        connect(odeSolver, SIGNAL(error(const QString &)),
-                this, SLOT(emitError(const QString &)));
-    } else {
-        connect(daeSolver, SIGNAL(error(const QString &)),
-                this, SLOT(emitError(const QString &)));
-    }
+    connect(odeSolver, SIGNAL(error(const QString &)),
+            this, SLOT(emitError(const QString &)));
 
     if (nlaSolver) {
         connect(nlaSolver, SIGNAL(error(const QString &)),
@@ -247,57 +235,36 @@ void SimulationWorker::started()
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-
-    bool increasingPoints = endingPoint > startingPoint;
     quint64 pointCounter = 0;
 
     mCurrentPoint = startingPoint;
 
-    // Initialise our ODE/DAE solver
+    // Initialise our ODE solver
 
-    if (odeSolver) {
-        odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
+    odeSolver->setProperties(mSimulation->data()->odeSolverProperties());
 
-        odeSolver->initialize(mCurrentPoint,
-                              mRuntime->statesCount(),
-                              mSimulation->data()->constants(),
-                              mSimulation->data()->rates(),
-                              mSimulation->data()->states(),
-                              mSimulation->data()->algebraic(),
-                              mRuntime->computeOdeRates());
-    } else {
-        daeSolver->setProperties(mSimulation->data()->daeSolverProperties());
+    odeSolver->initialize(mCurrentPoint, mRuntime->statesCount(),
+                          mSimulation->data()->constants(),
+                          mSimulation->data()->rates(),
+                          mSimulation->data()->states(),
+                          mSimulation->data()->algebraic(),
+                          mRuntime->computeRates());
 
-        daeSolver->initialize(mCurrentPoint, endingPoint,
-                              mRuntime->statesCount(),
-                              mRuntime->condVarCount(),
-                              mSimulation->data()->constants(),
-                              mSimulation->data()->rates(),
-                              mSimulation->data()->states(),
-                              mSimulation->data()->algebraic(),
-                              mSimulation->data()->condVar(),
-                              mRuntime->computeDaeEssentialVariables(),
-                              mRuntime->computeDaeResiduals(),
-                              mRuntime->computeDaeRootInformation(),
-                              mRuntime->computeDaeStateInformation());
-    }
-
-    // Initialise our NLA solver
+    // Initialise our NLA solver, if any
 
     if (nlaSolver)
         nlaSolver->setProperties(mSimulation->data()->nlaSolverProperties());
 
     // Now, we are ready to compute our model, but only if no error has occurred
     // so far
+    // Note: we use -1 as a way to indicate that something went wrong...
 
-    qint64 elapsedTime;
+    qint64 elapsedTime = 0;
 
     if (!mError) {
         // Start our timer
 
         QElapsedTimer timer;
-
-        elapsedTime = 0;
 
         timer.start();
 
@@ -318,14 +285,24 @@ void SimulationWorker::started()
         QMutex pausedMutex;
 
         forever {
+            // Reinitialise our solver, if we have an NLA solver or if the model
+            // got reset
+            // Note: indeed, with a solver such as CVODE, we need to update our
+            //       internals...
+
+            if (nlaSolver || mReset) {
+                odeSolver->reinitialize(mCurrentPoint);
+
+                mReset = false;
+            }
+
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
 
-            voiSolver->solve(mCurrentPoint,
-                             increasingPoints?
-                                 qMin(endingPoint, startingPoint+pointCounter*pointInterval):
-                                 qMax(endingPoint, startingPoint+pointCounter*pointInterval));
+            odeSolver->solve(mCurrentPoint,
+                             qMin(endingPoint,
+                                  startingPoint+pointCounter*pointInterval));
 
             // Make sure that no error occurred
 
@@ -339,91 +316,61 @@ void SimulationWorker::started()
 
             mSimulation->results()->addPoint(mCurrentPoint);
 
-            // Check whether we are done or whether we have been asked to stop
+            // Some post-processing, if needed
 
-            if ((mCurrentPoint == endingPoint) || mStopped)
+            if ((mCurrentPoint == endingPoint) || mStopped) {
+                // We have reached our ending point or we have been asked to
+                // stop, so leave our main work loop
+
                 break;
+            } else {
+                // Delay things a bit, if needed
 
-            // Delay things a bit, if (really) needed
+                if (mSimulation->delay())
+                    Core::doNothing(100*mSimulation->delay());
 
-            if (mSimulation->delay() && !mStopped)
-                Core::doNothing(100*mSimulation->delay());
+                // Pause ourselves, if needed
 
-            // Pause ourselves, if (really) needed
+                if (mPaused) {
+                    // We should be paused, so stop our timer
 
-            if (mPaused && !mStopped) {
-                // We should be paused, so stop our timer
+                    elapsedTime += timer.elapsed();
 
-                elapsedTime += timer.elapsed();
+                    // Let people know that we are paused
 
-                // Let people know that we are paused
+                    emit paused();
 
-                emit paused();
+                    // Actually pause ourselves
 
-                // Actually pause ourselves
+                    pausedMutex.lock();
+                        mPausedCondition.wait(&pausedMutex);
+                    pausedMutex.unlock();
 
-                pausedMutex.lock();
-                    mPausedCondition.wait(&pausedMutex);
-                pausedMutex.unlock();
+                    // We are not paused anymore
 
-                // We are not paused anymore
+                    mPaused = false;
 
-                mPaused = false;
+                    // Let people know that we are running again
 
-                // Let people know that we are running again
+                    emit running(true);
 
-                emit running(true);
+                    // (Re)start our timer
 
-                // (Re)start our timer
+                    timer.start();
 
-                timer.start();
-            }
-
-            // Reinitialise our solver, if (really) needed
-
-            if (mReset && !mStopped) {
-                if (odeSolver) {
-                    odeSolver->initialize(mCurrentPoint,
-                                          mRuntime->statesCount(),
-                                          mSimulation->data()->constants(),
-                                          mSimulation->data()->rates(),
-                                          mSimulation->data()->states(),
-                                          mSimulation->data()->algebraic(),
-                                          mRuntime->computeOdeRates());
-                } else {
-                    daeSolver->initialize(mCurrentPoint, endingPoint,
-                                          mRuntime->statesCount(),
-                                          mRuntime->condVarCount(),
-                                          mSimulation->data()->constants(),
-                                          mSimulation->data()->rates(),
-                                          mSimulation->data()->states(),
-                                          mSimulation->data()->algebraic(),
-                                          mSimulation->data()->condVar(),
-                                          mRuntime->computeDaeEssentialVariables(),
-                                          mRuntime->computeDaeResiduals(),
-                                          mRuntime->computeDaeRootInformation(),
-                                          mRuntime->computeDaeStateInformation());
                 }
-
-                mReset = false;
             }
         }
 
         // Retrieve the total elapsed time, should no error have occurred
 
-        if (mError)
-            elapsedTime = -1;
-            // Note: we use -1 as a way to indicate that something went wrong...
-        else
+        if (!mError)
             elapsedTime += timer.elapsed();
-    } else {
-        elapsedTime = -1;
-        // Note: we use -1 as a way to indicate that something went wrong...
     }
 
     // Delete our solver(s)
 
-    delete voiSolver;
+    delete odeSolver;
 
     if (nlaSolver) {
         delete nlaSolver;
@@ -440,18 +387,21 @@ void SimulationWorker::started()
 
     // Let people know that we are done and give them the elapsed time
 
-    emit finished(elapsedTime);
+    emit finished(mError?-1:elapsedTime);
 }
 
 //==============================================================================
 
 void SimulationWorker::emitError(const QString &pMessage)
 {
-    // A solver error occurred, so keep track of it and let people know about it
+    // A solver error occurred, so keep track of it and let people know about
+    // it, but only if another error hasn't already been received
 
-    mError = true;
+    if (!mError) {
+        mError = true;
 
-    emit error(pMessage);
+        emit error(pMessage);
+    }
 }
 
 //==============================================================================

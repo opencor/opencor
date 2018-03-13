@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Tree view widget
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -43,13 +44,14 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(this)
 {
-    // Set some properties
+    // Customise ourselves
 
     setAllColumnsShowFocus(true);
 #ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
     setFrameShape(QFrame::NoFrame);
+    setItemDelegate(new StyledItemDelegate(this));
 }
 
 //==============================================================================
@@ -71,16 +73,10 @@ void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
     QStandardItemModel *treeViewModel = qobject_cast<QStandardItemModel *>(model());
 
     if (treeViewModel) {
-        // The tree view has a model associated with it, so we can retrieve the
-        // requested item
-
         QStandardItem *treeViewItem = treeViewModel->invisibleRootItem()->child(pRow, pColumn);
 
-        if (treeViewItem) {
-            // The requested item exists, so select it...
-
+        if (treeViewItem)
             setCurrentIndex(treeViewItem->index());
-        }
     }
 }
 
@@ -132,8 +128,6 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
                 setExpanded(crtIndex, false);
 
-                // Accept the event
-
                 pEvent->accept();
             } else {
                 // Either the current item has no children or it is collapsed,
@@ -141,8 +135,6 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
                 if (crtIndex.parent() != QModelIndex()) {
                     setCurrentIndex(crtIndex.parent());
-
-                    // Accept the event
 
                     pEvent->accept();
                 } else {
@@ -169,15 +161,11 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
                     setExpanded(crtIndex, true);
 
-                    // Accept the event
-
                     pEvent->accept();
                 } else {
                     // The current item is expanded, so select its first child
 
                     setCurrentIndex(crtIndex.model()->index(0, 0, crtIndex));
-
-                    // Accept the event
 
                     pEvent->accept();
                 }
@@ -247,11 +235,11 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
             // column
             // Note: regarding the test on the column number, it is because we
             //       may have a model data that requires several columns (e.g.
-            //       QFileSystemModel) in which case selectedIndexes will return
-            //       a number of indexes equal to the number of rows times the
-            //       number of columns while we only want a number of indexes to
-            //       be equal to the number of rows (since we have a selection
-            //       mode of QAbstractItemView::ExtendedSelection)...
+            //       QFileSystemModel), in which case selectedIndexes will
+            //       return a number of indexes equal to the number of rows
+            //       times the number of columns while we only want a number of
+            //       indexes to be equal to the number of rows (since we have a
+            //       selection mode of QAbstractItemView::ExtendedSelection)...
 
             selectedDraggableIndexes.removeAt(i);
         }
@@ -297,7 +285,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
         if (drag->exec(pSupportedActions, realDefaultDropAction) == Qt::MoveAction) {
             // We want to move the items
             // Note: the following code is based on
-            //       QAbstractItemViewPrivate::clearOrRemove...
+            //       QAbstractItemViewPrivate::clearOrRemove()...
 
             const QItemSelection selection = selectionModel()->selection();
 
@@ -305,15 +293,12 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
                 foreach (const QItemSelectionRange &itemSelectionRange, selection) {
                     QModelIndex parent = itemSelectionRange.parent();
 
-                    if (itemSelectionRange.left())
-                        continue;
-
-                    if (itemSelectionRange.right() != (model()->columnCount(parent)-1))
-                        continue;
-
-                    model()->removeRows(itemSelectionRange.top(),
-                                        itemSelectionRange.bottom()-itemSelectionRange.top()+1,
-                                        parent);
+                    if (   !itemSelectionRange.left()
+                        && (itemSelectionRange.right() == (model()->columnCount(parent)-1))) {
+                        model()->removeRows(itemSelectionRange.top(),
+                                            itemSelectionRange.bottom()-itemSelectionRange.top()+1,
+                                            parent);
+                    }
                 }
             } else {
                 // We can't remove the rows so reset the items (i.e. the view

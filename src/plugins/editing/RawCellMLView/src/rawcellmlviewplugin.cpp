@@ -71,8 +71,8 @@ bool RawCellMLViewPlugin::validCellml(const QString &pFileName,
 {
     // Validate the given file
 
-//---GRY--- THE BELOW EXTRA INFORMATION SHOULD BE REMOVED ONCE WE USE libCellML
-//          AND ONCE WE CAN TRULY DO CellML VALIDATION...
+//---OPENCOR--- THE BELOW EXTRA INFORMATION SHOULD BE REMOVED ONCE WE USE
+//              libCellML AND ONCE WE CAN TRULY DO CellML VALIDATION...
     pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
 
     return mViewWidget->validate(pFileName);
@@ -162,16 +162,20 @@ void RawCellMLViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void RawCellMLViewPlugin::fileReloaded(const QString &pFileName,
-                                       const bool &pFileChanged,
-                                       const bool &pFileJustSaved)
+void RawCellMLViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    // The given file has been saved, so let our view widget know about it
 
+    mViewWidget->fileSaved(pFileName);
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged)
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -241,7 +245,7 @@ void RawCellMLViewPlugin::initializePlugin()
     // Hide our Raw CellML view widget since it may not initially be shown in
     // our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================
@@ -304,13 +308,22 @@ ViewInterface::Mode RawCellMLViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawCellMLViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList RawCellMLViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support
 
     return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
+//==============================================================================
+
+QString RawCellMLViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given CellML file
+
+    return CellMLSupport::CellmlMimeType;
 }
 
 //==============================================================================

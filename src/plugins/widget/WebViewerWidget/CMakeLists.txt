@@ -1,8 +1,8 @@
-PROJECT(WebViewerWidgetPlugin)
+project(WebViewerWidgetPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(WebViewerWidget
+add_plugin(WebViewerWidget
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

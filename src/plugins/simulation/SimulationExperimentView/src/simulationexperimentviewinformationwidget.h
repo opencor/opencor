@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "commonwidget.h"
+#include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
 
 //==============================================================================
 
@@ -47,7 +48,7 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-class SimulationExperimentViewInformationGraphsWidget;
+class SimulationExperimentViewInformationGraphPanelAndGraphsWidget;
 class SimulationExperimentViewInformationParametersWidget;
 class SimulationExperimentViewInformationSimulationWidget;
 class SimulationExperimentViewInformationSolversWidget;
@@ -72,7 +73,7 @@ public:
 
     SimulationExperimentViewInformationSimulationWidget * simulationWidget() const;
     SimulationExperimentViewInformationSolversWidget * solversWidget() const;
-    SimulationExperimentViewInformationGraphsWidget * graphsWidget() const;
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget * graphPanelAndGraphsWidget() const;
     SimulationExperimentViewInformationParametersWidget * parametersWidget() const;
 
     void finishEditing(const bool &pPausedSimulation);
@@ -82,8 +83,17 @@ private:
 
     SimulationExperimentViewInformationSimulationWidget *mSimulationWidget;
     SimulationExperimentViewInformationSolversWidget *mSolversWidget;
-    SimulationExperimentViewInformationGraphsWidget *mGraphsWidget;
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *mGraphPanelAndGraphsWidget;
     SimulationExperimentViewInformationParametersWidget *mParametersWidget;
+
+    QAction *mGraphPanelAction;
+    QAction *mGraphsAction;
+
+private slots:
+    void grapPanelPropertyEditor();
+    void graphsPropertyEditor();
+
+    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 };
 
 //==============================================================================

@@ -2,7 +2,87 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphsWidget</name>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget</name>
+    <message>
+        <source>Background colour</source>
+        <translation>Couleur d&apos;arrière-plan</translation>
+    </message>
+    <message>
+        <source>Font size</source>
+        <translation>Taille de la police</translation>
+    </message>
+    <message>
+        <source>Foreground colour</source>
+        <translation>Couleur de premier plan</translation>
+    </message>
+    <message>
+        <source>Grid lines</source>
+        <translation>Lignes de quadrillage</translation>
+    </message>
+    <message>
+        <source>Style</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <source>Legend</source>
+        <translation>Légende</translation>
+    </message>
+    <message>
+        <source>Point coordinates</source>
+        <translation>Coordonnées de point</translation>
+    </message>
+    <message>
+        <source>Font colour</source>
+        <translation>Couleur de la police</translation>
+    </message>
+    <message>
+        <source>Surrounding area</source>
+        <translation>Alentours</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>X axis</source>
+        <translation>Axe des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic scale</source>
+        <translation>Échelle logarithmique</translation>
+    </message>
+    <message>
+        <source>Y axis</source>
+        <translation>Axe des Y</translation>
+    </message>
+    <message>
+        <source>Zoom region</source>
+        <translation>Région de zoom</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation>Rempli</translation>
+    </message>
+    <message>
+        <source>Fill colour</source>
+        <translation>Couleur de remplissage</translation>
+    </message>
+    <message>
+        <source>Select Colour...</source>
+        <translation>Sélectionner Couleur...</translation>
+    </message>
+    <message>
+        <source>Select a colour</source>
+        <translation>Sélectionner une couleur</translation>
+    </message>
     <message>
         <source>Add Graph</source>
         <translation>Ajouter Courbe</translation>
@@ -48,8 +128,12 @@
         <translation>Actuel</translation>
     </message>
     <message>
-        <source>Model</source>
-        <translation>Modèle</translation>
+        <source>X</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation></translation>
     </message>
     <message>
         <source>does not exist</source>
@@ -60,12 +144,84 @@
         <translation>pas de modèle d&apos;exécution</translation>
     </message>
     <message>
-        <source>X</source>
+        <source>Model</source>
+        <translation>Modèle</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Ligne</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
+    <message>
+        <source>Solid</source>
+        <translation>Solide</translation>
+    </message>
+    <message>
+        <source>Dash</source>
+        <translation>Tiret</translation>
+    </message>
+    <message>
+        <source>Dot</source>
+        <translation>Point</translation>
+    </message>
+    <message>
+        <source>DashDot</source>
+        <translation>TiretPoint</translation>
+    </message>
+    <message>
+        <source>DashDotDot</source>
+        <translation>TiretPointPoint</translation>
+    </message>
+    <message>
+        <source>Symbol</source>
+        <translation>Symbole</translation>
+    </message>
+    <message>
+        <source>Circle</source>
+        <translation>Cercle</translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation>Carré</translation>
+    </message>
+    <message>
+        <source>Diamond</source>
+        <translation>Diamant</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
         <translation></translation>
     </message>
     <message>
-        <source>Y</source>
-        <translation></translation>
+        <source>Down Triangle</source>
+        <translation>Triangle Bas</translation>
+    </message>
+    <message>
+        <source>Cross</source>
+        <translation>Croix</translation>
+    </message>
+    <message>
+        <source>X Cross</source>
+        <translation>Croix en X</translation>
+    </message>
+    <message>
+        <source>Horizontal Line</source>
+        <translation>Ligne Horizontale</translation>
+    </message>
+    <message>
+        <source>Vertical Line</source>
+        <translation>Ligne Verticale</translation>
+    </message>
+    <message>
+        <source>Star</source>
+        <translation>Étoile</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>Taille</translation>
     </message>
 </context>
 <context>
@@ -133,10 +289,6 @@
         <translation>Aucun disponible</translation>
     </message>
     <message>
-        <source>DAE solver</source>
-        <translation>Solveur EAD</translation>
-    </message>
-    <message>
         <source>NLA solver</source>
         <translation>Solveur ANL</translation>
     </message>
@@ -152,12 +304,24 @@
         <translation>Solveurs</translation>
     </message>
     <message>
+        <source>Graph Panel</source>
+        <translation>Panneau Graphique</translation>
+    </message>
+    <message>
         <source>Graphs</source>
-        <translation>Courbes</translation>
+        <translation>Graphes</translation>
     </message>
     <message>
         <source>Parameters</source>
         <translation>Paramètres</translation>
+    </message>
+    <message>
+        <source>Graph panel settings</source>
+        <translation>Propriétés du panneau graphique</translation>
+    </message>
+    <message>
+        <source>Graphs settings</source>
+        <translation>Propriétés des graphes</translation>
     </message>
 </context>
 <context>
@@ -354,10 +518,6 @@
         <translation>Modèle d&apos;exécution :</translation>
     </message>
     <message>
-        <source>NLA system(s)</source>
-        <translation>Système(s) ANL</translation>
-    </message>
-    <message>
         <source>valid</source>
         <translation>valide</translation>
     </message>
@@ -366,12 +526,12 @@
         <translation>Type de modèle :</translation>
     </message>
     <message>
-        <source>ODE</source>
-        <translation>EDO</translation>
-    </message>
-    <message>
         <source>DAE</source>
         <translation>EAD</translation>
+    </message>
+    <message>
+        <source>ODE</source>
+        <translation>EDO</translation>
     </message>
     <message>
         <source>invalid</source>
@@ -394,28 +554,12 @@
         <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
     </message>
     <message>
-        <source>the model needs both a DAE and an NLA solver, but none are available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs both a DAE and an NLA solver, but no NLA solver is available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur ALN n&apos;est disponible</translation>
-    </message>
-    <message>
         <source>the model needs both an ODE and an NLA solver, but no ODE solver is available</source>
         <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun solveur EDO n&apos;est disponible</translation>
     </message>
     <message>
-        <source>the model needs both a DAE and an NLA solver, but no DAE solver is available</source>
-        <translation>le modèle a besoin à la fois d&apos;un solveur EAD et d&apos;un solveur ALN, mais aucun solveur EAD n&apos;est disponible</translation>
-    </message>
-    <message>
         <source>the model needs an ODE solver, but none is available</source>
         <translation>le modèle a besoin d&apos;un solveur EDO, mais aucun n&apos;est disponible</translation>
-    </message>
-    <message>
-        <source>the model needs a DAE solver, but none is available</source>
-        <translation>le modèle a besoin d&apos;un solveur EAD, mais aucun n&apos;est disponible</translation>
     </message>
     <message>
         <source>Save File</source>
@@ -426,12 +570,8 @@
         <translation>Les paramètres suivants sont importés et ne peuvent donc pas être sauvegardés :</translation>
     </message>
     <message>
-        <source>The simulation requires %1 of memory and you have only %2 left.</source>
-        <translation>La simulation requiert %1 de mémoire et il ne vous en reste que %2.</translation>
-    </message>
-    <message>
-        <source>We could not allocate the %1 of memory required for the simulation.</source>
-        <translation>Nous n&apos;avons pas pu allouer les %1 de mémoire nécessaires pour la simulation.</translation>
+        <source>We could not allocate the memory required for the simulation.</source>
+        <translation>Nous n&apos;avons pas pu allouer la mémoire nécessaire pour la simulation.</translation>
     </message>
     <message>
         <source>Export To SED-ML File</source>
@@ -440,6 +580,10 @@
     <message>
         <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;.</source>
         <translation>La simulation n&apos;a pas pu être exportée vers &lt;strong&gt;%1&lt;/strong&gt;.</translation>
+    </message>
+    <message>
+        <source>Export To COMBINE Archive</source>
+        <translation>Exporter Vers Archive COMBINE</translation>
     </message>
     <message>
         <source>The simulation could not be exported to &lt;strong&gt;%1&lt;/strong&gt;%2.</source>
@@ -452,10 +596,6 @@
     <message>
         <source>the master SED-ML file could not be added</source>
         <translation>le fichier SED-ML principal n&apos;a pas pu être ajouté</translation>
-    </message>
-    <message>
-        <source>Export To COMBINE Archive</source>
-        <translation>Exporter Vers Archive COMBINE</translation>
     </message>
     <message>
         <source>the requested solver (%1) could not be found</source>

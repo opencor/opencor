@@ -1,108 +1,108 @@
-PROJECT(ZincPlugin)
+project(ZincPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME Zinc)
-SET(PACKAGE_VERSION 3.1.1)
+set(PACKAGE_NAME Zinc)
+set(PACKAGE_VERSION 3.1.2)
 
 # Version of our library
 
-SET(MAJOR_LIBRARY_VERSION 3)
-SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.1)
+set(MAJOR_LIBRARY_VERSION 3)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.2)
 
 # Git tag for our library
 
-SET(GIT_TAG v3.1.1)
+set(GIT_TAG v3.1.2)
 
 # Specify where our local package will be installed
 
-SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
-IF(WIN32)
-    IF(RELEASE_MODE)
-        SET(DEBUG_TAG)
-    ELSE()
-        SET(DEBUG_TAG d)
-    ENDIF()
+if(WIN32)
+    if(RELEASE_MODE)
+        set(DEBUG_TAG)
+    else()
+        set(DEBUG_TAG d)
+    endif()
 
-    SET(SHARED_LIBRARY zinc${DEBUG_TAG}.${LIBRARY_VERSION}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(IMPORT_LIBRARY zinc${DEBUG_TAG}.${LIBRARY_VERSION}${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
-ELSE()
-    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}zinc${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
-ENDIF()
+    set(SHARED_LIBRARY zinc${DEBUG_TAG}.${LIBRARY_VERSION}${DEBUG_TAG}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(IMPORT_LIBRARY zinc${DEBUG_TAG}.${LIBRARY_VERSION}${DEBUG_TAG}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+else()
+    set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}zinc${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(IMPORT_LIBRARY ${SHARED_LIBRARY})
+endif()
 
 # Retrieve our package's binaries
 
-SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
-SET(EXTERNAL_BINARIES
+set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
 # Specify the files that need to have their SHA-1 value checked
 
-SET(SHA1_FILES
+set(SHA1_FILES
     lib/${SHARED_LIBRARY}
 )
 
-IF(WIN32)
-    LIST(APPEND SHA1_FILES
+if(WIN32)
+    list(APPEND SHA1_FILES
         lib/${IMPORT_LIBRARY}
     )
-ENDIF()
+endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_ZINC_PACKAGE)
+if(USE_PREBUILT_ZINC_PACKAGE)
     # Retrieve the plugin's package
 
-    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
+    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
-    IF(WIN32)
-        IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b2937c2f64355969b15d463b3ade6234cc964e17
+    if(WIN32)
+        if(RELEASE_MODE)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d7e08929a968a661bf8e9f00132929a4f3e244fb
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 54924312f20456a943cfd912919252c2ed5674d0
-                                              61e5ca43308c59f210e166f0d4098dc0e4b0020e)
-        ELSE()
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} fd91af3483e32c5d7271b8e48187635fd590c907
+                                  SHA1_VALUES 351e90a846ad08149c8799dc0888f4083a6f7ccc
+                                              7a8d19846bbc3fd281ec7f98581ea34174ce278a)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} dfe1440281818d30e0c38893b3824a5493f00222
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 5ab5426ed541a7db2d8940deabcdb4a40b22a470
-                                              03397dfe00eed08972790dc7f7684d5436dd524d)
-        ENDIF()
-    ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a38b5d939ab8df77d21366fa7d68f1a44c9b19cc
+                                  SHA1_VALUES 56c8d7c66b402561310b67e3e84f0efdac4b2bdf
+                                              04691b8f3b0f1fdb89d12e29ceb75bd23e7d60f3)
+        endif()
+    elseif(APPLE)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} fe7eec086dab717648db9de40aba27c884391ba6
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES c84deed9557ac34cbb4a14f307f3e64dbb112ec6)
-    ELSE()
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 696d2df0e7369175db42a00e665cd3b014ec6cff
+                              SHA1_VALUES 92e2830c0aca29686c32485e168e8ce79e12b81e)
+    else()
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5823b182beffc0f62d6847685f8d2a0643adf692
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 454eba67fbd1eb42e22c2cfdd18b7dfb5ed4f64e)
-    ENDIF()
-ELSE()
+                              SHA1_VALUES c2fce021cdecd03e24b43d0ae2a1c8ead65e1a3a)
+    endif()
+else()
     # Set platform specific configuration options
 
-    IF(WIN32)
-        MATH(EXPR MSVC_VERSION "${CMAKE_CXX_COMPILER_VERSION_MAJOR}-4")
+    if(WIN32)
+        math(EXPR MSVC_VERSION "${CMAKE_CXX_COMPILER_VERSION_MAJOR}-4")
 
-        SET(DEFINE_CMAKE_GENERATOR -G "Visual Studio 14 20${MSVC_VERSION} Win64")
-        SET(SHARED_lIBRARY_DIR bin)
-    ELSE()
-        SET(DEFINE_CMAKE_GENERATOR)
-        SET(SHARED_lIBRARY_DIR lib)
-    ENDIF()
+        set(DEFINE_CMAKE_GENERATOR -G "Visual Studio 14 20${MSVC_VERSION} Win64")
+        set(SHARED_lIBRARY_DIR bin)
+    else()
+        set(DEFINE_CMAKE_GENERATOR)
+        set(SHARED_lIBRARY_DIR lib)
+    endif()
 
     # Build Zinc as an external project
 
-    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+    set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -116,7 +116,7 @@ ELSE()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${CMAKE_COMMAND} ${DEFINE_CMAKE_GENERATOR} ${DEFINE_CMAKE_APPLE_OPTIONS} -DOPENCMISS_ROOT=<BINARY_DIR>/.. -DOPENCMISS_LIBRARIES=zinc <SOURCE_DIR>
+            ${CMAKE_COMMAND} ${DEFINE_CMAKE_GENERATOR} ${CMAKE_ARGS} -DOPENCMISS_ROOT=<BINARY_DIR>/.. -DOPENCMISS_LIBRARIES=zinc <SOURCE_DIR>
         BUILD_COMMAND
             ${CMAKE_COMMAND} --build . --config ${CMAKE_BUILD_TYPE}
         INSTALL_COMMAND
@@ -129,24 +129,24 @@ ELSE()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(DEPENDS_ON ${PACKAGE_BUILD})
-ENDIF()
+    set(DEPENDS_ON ${PACKAGE_BUILD})
+endif()
 
 # Allow other external projects to find our Zinc package
 
-SET(ZINC_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-SET(ZINC_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-SET(ZINC_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+set(ZINC_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(ZINC_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+set(ZINC_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
 
-ADD_PLUGIN(${PACKAGE_NAME}
+add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 

@@ -125,7 +125,8 @@ CombineArchive::CombineArchive(const QString &pFileName, const bool &pNew) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName()),
     mNew(pNew),
-    mSedmlFile(0)
+    mSedmlFile(0),
+    mUpdated(false)
 {
     // Reset ourselves
 
@@ -149,12 +150,19 @@ CombineArchive::~CombineArchive()
 
 void CombineArchive::reset()
 {
+    // Don't reset ourselves if we were updated
+
+    if (mUpdated) {
+        mUpdated = false;
+
+        return;
+    }
+
     // Reset all of our properties
 
     mLoadingNeeded = true;
 
     mFiles.clear();
-
     mIssues.clear();
 
     delete mSedmlFile;
@@ -294,18 +302,44 @@ bool CombineArchive::save(const QString &pFileName)
 
     foreach (const CombineArchiveFile &file, mFiles) {
         if (file.location().compare(".")) {
-            QByteArray combineArchiveFileContents;
+            QByteArray fileContents;
 
-            if (!Core::readFileContentsFromFile(mDirName+QDir::separator()+file.location(),
-                                                combineArchiveFileContents)) {
+            if (!Core::readFileContentsFromFile(mDirName+"/"+file.location(), fileContents))
                 return false;
-            }
 
-            zipWriter.addFile(file.location(), combineArchiveFileContents);
+            zipWriter.addFile(file.location(), fileContents);
         }
     }
 
-    return true;
+    mNew = false;
+
+    return StandardFile::save(pFileName);
+}
+
+//==============================================================================
+
+bool CombineArchive::update(const QString &pFileName)
+{
+    // Our COMBINE archive has been updated (e.g. through the Simulation
+    // Experiment view) and we want to update ourselves accordingly, so save
+    // ourselves and keep track of the fact that we were 'simply' updated
+
+    mUpdated = save(pFileName);
+
+    return mUpdated;
+}
+
+//==============================================================================
+
+void CombineArchive::forceNew()
+{
+    // Force our COMBINE archive to act as if it was 'new'
+
+    mNew = true;
+
+    mLoadingNeeded = true;
+
+    mFiles.clear();
 }
 
 //==============================================================================
@@ -326,7 +360,7 @@ bool CombineArchive::isValid()
 
     // A COMBINE archive must contain a manifest at its root
 
-    QString manifestFileName = mDirName+QDir::separator()+ManifestFileName;
+    QString manifestFileName = mDirName+"/"+ManifestFileName;
 
     if (!QFile::exists(manifestFileName)) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
@@ -337,8 +371,8 @@ bool CombineArchive::isValid()
 
     // Make sure that the manifest is a valid OMEX file
 
-    QString manifestContents;
-    QString schemaContents;
+    QByteArray manifestContents;
+    QByteArray schemaContents;
 
     Core::readFileContentsFromFile(manifestFileName, manifestContents);
     Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);
@@ -362,7 +396,7 @@ bool CombineArchive::isValid()
     for (QDomElement childElement = domDocument.documentElement().firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         QString location = childElement.attribute("location");
-        QString fileName = mDirName+QDir::separator()+location;
+        QString fileName = mDirName+"/"+location;
 
         if (!QFile::exists(fileName)) {
             mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
@@ -437,7 +471,7 @@ QString CombineArchive::location(const CombineArchiveFile &pFile) const
 {
     // Return the (full) location of the given file
 
-    return mDirName+QDir::separator()+pFile.location();
+    return mDirName+"/"+pFile.location();
 }
 
 //==============================================================================
@@ -483,25 +517,26 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     // Get a copy of the given file, after creating the sub-folder(s) in which
     // it is, if necessary
+    // Note: to ensure that a COMBINE archive can be updated, we need to check
+    //       that the given file and its destination are not the same and that
+    //       its destination doesn't exist...
 
-#if defined(Q_OS_WIN)
-    static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
-#endif
 
     static QDir dir;
 
-    QString destFileName = Core::nativeCanonicalFileName(mDirName+QDir::separator()+pLocation);
+    QString destFileName = Core::canonicalFileName(mDirName+"/"+pLocation);
     QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
     if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))
         return false;
 
-    if (!QFile::copy(pFileName, destFileName))
-        return false;
+    if (destFileName.compare(pFileName)) {
+        QFile::remove(destFileName);
+
+        if (!QFile::copy(pFileName, destFileName))
+            return false;
+    }
 
     return true;
 }

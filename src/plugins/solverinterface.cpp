@@ -31,31 +31,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void doNonLinearSolve(char *pRuntime,
                       void (*pFunction)(double *, double *, void *),
-                      double *pParameters, int *pRes, int pSize,
-                      void *pUserData)
+                      double *pParameters, int pSize, void *pUserData)
 {
-    // Retrieve the NLA solver which we should use
+    // Retrieve the NLA solver which we should use and solve our NLA system
+    // Note: we shouldn't always have an NLA solver, but better be safe than
+    //       sorry...
 
     OpenCOR::Solver::NlaSolver *nlaSolver = OpenCOR::Solver::nlaSolver(pRuntime);
 
-    if (nlaSolver) {
-        // We have found our NLA solver, so initialise it
-
-        nlaSolver->initialize(pFunction, pParameters, pSize, pUserData);
-
-        // Now, we can solve our NLA system
-
-        nlaSolver->solve();
-
-        *pRes = 1;
-    } else {
-        // We couldn't retrieve an NLA solver...
-        // Note: this should never happen, but we never know...
-
+    if (nlaSolver)
+        nlaSolver->solve(pFunction, pParameters, pSize, pUserData);
+    else
         qWarning("WARNING | %s:%d: no NLA solver could be found.", __FILE__, __LINE__);
-
-        *pRes = 0;
-    }
 }
 
 //==============================================================================
@@ -68,7 +55,7 @@ extern "C" Q_DECL_EXPORT int solverInterfaceVersion()
 {
     // Version of the solver interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================
@@ -115,32 +102,25 @@ void Solver::emitError(const QString &pErrorMessage)
 
 //==============================================================================
 
-VoiSolver::VoiSolver() :
+OdeSolver::OdeSolver() :
     Solver(),
     mRatesStatesCount(0),
     mConstants(0),
     mStates(0),
     mRates(0),
-    mAlgebraic(0)
-{
-}
-
-//==============================================================================
-
-OdeSolver::OdeSolver() :
-    VoiSolver(),
+    mAlgebraic(0),
     mComputeRates(0)
 {
 }
 
 //==============================================================================
 
-void OdeSolver::initialize(const double &pVoiStart,
-                           const int &pRatesStatesCount, double *pConstants,
-                           double *pRates, double *pStates, double *pAlgebraic,
+void OdeSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
+                           double *pConstants, double *pRates, double *pStates,
+                           double *pAlgebraic,
                            ComputeRatesFunction pComputeRates)
 {
-    Q_UNUSED(pVoiStart);
+    Q_UNUSED(pVoi);
 
     // Initialise the ODE solver
 
@@ -156,87 +136,11 @@ void OdeSolver::initialize(const double &pVoiStart,
 
 //==============================================================================
 
-DaeSolver::DaeSolver() :
-    VoiSolver(),
-    mCondVarCount(0),
-    mOldRates(0),
-    mOldStates(0),
-    mCondVar(0)
+void OdeSolver::reinitialize(const double &pVoi)
 {
-}
+    Q_UNUSED(pVoi);
 
-//==============================================================================
-
-DaeSolver::~DaeSolver()
-{
-    // Delete some internal objects
-
-    delete[] mOldRates;
-    delete[] mOldStates;
-}
-
-//==============================================================================
-
-void DaeSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
-                           const int &pRatesStatesCount,
-                           const int &pCondVarCount, double *pConstants,
-                           double *pRates, double *pStates, double *pAlgebraic,
-                           double *pCondVar,
-                           ComputeEssentialVariablesFunction pComputeEssentialVariables,
-                           ComputeResidualsFunction pComputeResiduals,
-                           ComputeRootInformationFunction pComputeRootInformation,
-                           ComputeStateInformationFunction pComputeStateInformation)
-{
-    Q_UNUSED(pVoiStart);
-    Q_UNUSED(pVoiEnd);
-    Q_UNUSED(pComputeEssentialVariables);
-    Q_UNUSED(pComputeResiduals);
-    Q_UNUSED(pComputeRootInformation);
-    Q_UNUSED(pComputeStateInformation);
-
-    // Initialise the DAE solver
-
-    mRatesStatesCount = pRatesStatesCount;
-    mCondVarCount = pCondVarCount;
-
-    mConstants = pConstants;
-    mRates = pRates;
-    mStates = pStates;
-    mAlgebraic = pAlgebraic;
-    mCondVar = pCondVar;
-
-    delete[] mOldRates;
-    delete[] mOldStates;
-
-    mOldRates = new double[pRatesStatesCount];
-    mOldStates = new double[pRatesStatesCount];
-
-    memcpy(mOldRates, pRates, pRatesStatesCount*SizeOfDouble);
-    memcpy(mOldStates, pStates, pRatesStatesCount*SizeOfDouble);
-}
-
-//==============================================================================
-
-NlaSolver::NlaSolver() :
-    mComputeSystem(0),
-    mParameters(0),
-    mSize(0),
-    mUserData(0)
-{
-}
-
-//==============================================================================
-
-void NlaSolver::initialize(ComputeSystemFunction pComputeSystem,
-                           double *pParameters, int pSize, void *pUserData)
-{
-    // Initialise ourselves
-
-    mComputeSystem = pComputeSystem;
-
-    mParameters = pParameters;
-    mSize = pSize;
-    mUserData = pUserData;
+    // Nothing to do by default...
 }
 
 //==============================================================================
@@ -257,7 +161,7 @@ void setNlaSolver(const QString &pRuntimeAddress, NlaSolver *pGlobalNlaSolver)
     // Keep track of the runtime's NLA solver
 
     qApp->setProperty(pRuntimeAddress.toUtf8().constData(),
-                      qulonglong(pGlobalNlaSolver));
+                      quint64(pGlobalNlaSolver));
 }
 
 //==============================================================================

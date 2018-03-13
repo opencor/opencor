@@ -72,8 +72,10 @@ public:
 
 private:
     QAction *mEditReformatAction;
+    QAction *mEditReformatSeparator;
 
     QAction *mToolsCellmlValidationAction;
+    QAction *mToolsCellmlValidationSeparator;
 
     QString mFileName;
     CellmlEditingViewInterface *mCellmlEditingViewInterface;

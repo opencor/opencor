@@ -199,7 +199,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     webViewerWidget->setLayout(webViewerLayout);
 
-    Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget(webViewerWidget);
+    Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget();
     QLabel *webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
     QWidget *webViewerSpacer = new QWidget(webViewerToolBarWidget);
     QAction *webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
@@ -388,14 +388,15 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check whether we are trying to quick synchronise
 
-    if (   (pEvent->modifiers() & Qt::ControlModifier)
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
         && (pEvent->key() == Qt::Key_Return)) {
         // Pretend that we clicked on the Ok button, if possible
 
         if (mButtonBox->button(QDialogButtonBox::Ok)->isEnabled())
             acceptSynchronization();
-
-        // Accept the event
 
         pEvent->accept();
     } else {
@@ -460,7 +461,7 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                     fileItem->setCheckable(true);
                     fileItem->setCheckState(Qt::Checked);
                     fileItem->setEditable(false);
-                    fileItem->setToolTip(fileName);
+                    fileItem->setToolTip(QDir::toNativeSeparators(fileName));
 
                     mModel->appendRow(fileItem);
 
@@ -899,13 +900,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     // Temporarily save the contents of the head version of the given file
 
     QString oldFileName = Core::temporaryFileName();
-    QString oldFileContents = mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName));
+    QByteArray oldFileContents = mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName));
 
     Core::writeFileContentsToFile(oldFileName, oldFileContents);
 
     // Retrieve the contents of the working version of the given file
 
-    QString newFileContents;
+    QByteArray newFileContents;
 
     Core::readFileContentsFromFile(pFileName, newFileContents);
 

@@ -72,8 +72,8 @@ bool CellMLTextViewPlugin::validCellml(const QString &pFileName,
 {
     // Validate the given file
 
-//---GRY--- THE BELOW EXTRA INFORMATION SHOULD BE REMOVED ONCE WE USE libCellML
-//          AND ONCE WE CAN TRULY DO CellML VALIDATION...
+//---OPENCOR--- THE BELOW EXTRA INFORMATION SHOULD BE REMOVED ONCE WE USE
+//              libCellML AND ONCE WE CAN TRULY DO CellML VALIDATION...
     pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> cannot be used in this view, so only validation against the <a href=\"http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.");
 
     return mViewWidget->validate(pFileName);
@@ -183,16 +183,20 @@ void CellMLTextViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLTextViewPlugin::fileReloaded(const QString &pFileName,
-                                        const bool &pFileChanged,
-                                        const bool &pFileJustSaved)
+void CellMLTextViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    // The given file has been saved, so let our view widget know about it
 
+    mViewWidget->fileSaved(pFileName);
+}
+
+//==============================================================================
+
+void CellMLTextViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged)
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -268,7 +272,7 @@ void CellMLTextViewPlugin::initializePlugin()
     // Hide our CellML Text view widget since it may not initially be shown in
     // our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================
@@ -343,13 +347,22 @@ ViewInterface::Mode CellMLTextViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList CellMLTextViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList CellMLTextViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support
 
     return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
+//==============================================================================
+
+QString CellMLTextViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given CellML file
+
+    return CellMLSupport::CellmlMimeType;
 }
 
 //==============================================================================
@@ -433,7 +446,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
 
-    QString fileContents;
+    QByteArray fileContents;
 
     if (isLocalFile) {
         if (!QFile::exists(fileNameOrUrl))
@@ -450,7 +463,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     if (errorMessage.isEmpty()) {
         if (pImport) {
-            CellMLTextView::CellMLTextViewConverter converter;
+            CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
                 errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(QString::number(converter.errorLine()),
@@ -460,7 +473,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 std::cout << converter.output().toUtf8().constData();
             }
         } else {
-            CellMLTextView::CellmlTextViewParser parser;
+            CellmlTextViewParser parser;
 
             if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";

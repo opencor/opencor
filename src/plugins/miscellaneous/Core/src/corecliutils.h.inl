@@ -32,9 +32,9 @@ QString CORE_EXPORT version();
 QString CORE_EXPORT pluginCategoryName(const PluginInfo::Category &pCategory);
 QString CORE_EXPORT pluginCategoryDescription(const PluginInfo::Category &pCategory);
 
-QString CORE_EXPORT nativeCanonicalDirName(const QString &pDirName);
-QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
-QStringList CORE_EXPORT nativeCanonicalFileNames(const QStringList &pFileNames);
+QString CORE_EXPORT canonicalDirName(const QString &pDirName);
+QString CORE_EXPORT canonicalFileName(const QString &pFileName);
+QStringList CORE_EXPORT canonicalFileNames(const QStringList &pFileNames);
 
 int CORE_EXPORT exec(const QString &pProgram, const QStringList &pArgs,
                      QString &pOutput);
@@ -86,19 +86,6 @@ QString CORE_EXPORT urlArguments(const QUrl &pUrl);
 
 QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
-
-template <typename T> void resetList(QList<T> &pList)
-{
-    // Reset the contents of the list
-    // Note: to have the implementation in corecliutils.cpp.inl results in the
-    //       linker telling us that reset() cannot be resolved (why?!), so have
-    //       it here instead...
-
-    for (int i = 0, iMax = pList.size(); i < iMax; ++i)
-        delete pList[i];
-
-    pList.clear();
-};
 
 //==============================================================================
 // End of file

@@ -81,11 +81,11 @@ bool SedmlFileManager::canLoad(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * SedmlFileManager::create(const QString &pFileName) const
+StandardSupport::StandardFile * SedmlFileManager::create(const QString &pFileName) const
 {
     // Create and return a new SED-ML file
 
-    return new SedmlFile(Core::nativeCanonicalFileName(pFileName));
+    return new SedmlFile(Core::canonicalFileName(pFileName));
 }
 
 //==============================================================================

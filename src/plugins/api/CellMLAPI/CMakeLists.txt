@@ -1,115 +1,115 @@
-PROJECT(CellMLAPIPlugin)
+project(CellMLAPIPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME CellMLAPI)
-SET(PACKAGE_VERSION 1.12)
+set(PACKAGE_NAME CellMLAPI)
+set(PACKAGE_VERSION 1.12)
 
 # Version of our package's libraries
 
-SET(MAJOR_ANNOTOOLS_LIBRARY_VERSION 2)
-SET(ANNOTOOLS_LIBRARY_VERSION 1.13)
+set(MAJOR_ANNOTOOLS_LIBRARY_VERSION 2)
+set(ANNOTOOLS_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_CCGS_LIBRARY_VERSION 3)
-SET(CCGS_LIBRARY_VERSION 1.13)
+set(MAJOR_CCGS_LIBRARY_VERSION 3)
+set(CCGS_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_CELEDS_LIBRARY_VERSION 1)
-SET(CELEDS_LIBRARY_VERSION 1.13)
+set(MAJOR_CELEDS_LIBRARY_VERSION 1)
+set(CELEDS_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_CELEDSEXPORTER_LIBRARY_VERSION 1)
-SET(CELEDSEXPORTER_LIBRARY_VERSION 1.13)
+set(MAJOR_CELEDSEXPORTER_LIBRARY_VERSION 1)
+set(CELEDSEXPORTER_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_CELLML_LIBRARY_VERSION 2)
-SET(CELLML_LIBRARY_VERSION 1.13)
+set(MAJOR_CELLML_LIBRARY_VERSION 2)
+set(CELLML_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_CEVAS_LIBRARY_VERSION 1)
-SET(CEVAS_LIBRARY_VERSION 1.13)
+set(MAJOR_CEVAS_LIBRARY_VERSION 1)
+set(CEVAS_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_CUSES_LIBRARY_VERSION 1)
-SET(CUSES_LIBRARY_VERSION 1.13)
+set(MAJOR_CUSES_LIBRARY_VERSION 1)
+set(CUSES_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_MALAES_LIBRARY_VERSION 1)
-SET(MALAES_LIBRARY_VERSION 1.13)
+set(MAJOR_MALAES_LIBRARY_VERSION 1)
+set(MALAES_LIBRARY_VERSION 1.13)
 
-SET(MAJOR_VACSS_LIBRARY_VERSION 1)
-SET(VACSS_LIBRARY_VERSION 1.13)
+set(MAJOR_VACSS_LIBRARY_VERSION 1)
+set(VACSS_LIBRARY_VERSION 1.13)
 
 # Git tag for our library
 
-SET(GIT_TAG 1.12)
+set(GIT_TAG 1.12)
 
 # Package repository and release tag
 
-SET(PACKAGE_REPOSITORY cellml-api)
-SET(RELEASE_TAG 1.12)
+set(PACKAGE_REPOSITORY cellml-api)
+set(RELEASE_TAG 1.12)
 
 # Specify where our local package will be installed
 
-SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
-IF(WIN32)
-    SET(ANNOTOOLS_SHARED_LIBRARY annotools${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(ANNOTOOLS_IMPORT_LIBRARY annotools${CMAKE_IMPORT_LIBRARY_SUFFIX})
+if(WIN32)
+    set(ANNOTOOLS_SHARED_LIBRARY annotools${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(ANNOTOOLS_IMPORT_LIBRARY annotools${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(CCGS_SHARED_LIBRARY ccgs${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CCGS_IMPORT_LIBRARY ccgs${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CCGS_SHARED_LIBRARY ccgs${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CCGS_IMPORT_LIBRARY ccgs${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(CELEDS_SHARED_LIBRARY celeds${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CELEDS_IMPORT_LIBRARY celeds${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CELEDS_SHARED_LIBRARY celeds${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CELEDS_IMPORT_LIBRARY celeds${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(CELEDSEXPORTER_SHARED_LIBRARY celedsexporter${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CELEDSEXPORTER_IMPORT_LIBRARY celedsexporter${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CELEDSEXPORTER_SHARED_LIBRARY celedsexporter${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CELEDSEXPORTER_IMPORT_LIBRARY celedsexporter${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(CELLML_SHARED_LIBRARY cellml${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CELLML_IMPORT_LIBRARY cellml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CELLML_SHARED_LIBRARY cellml${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CELLML_IMPORT_LIBRARY cellml${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(CEVAS_SHARED_LIBRARY cevas${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CEVAS_IMPORT_LIBRARY cevas${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CEVAS_SHARED_LIBRARY cevas${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CEVAS_IMPORT_LIBRARY cevas${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(CUSES_SHARED_LIBRARY cuses${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(CUSES_IMPORT_LIBRARY cuses${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CUSES_SHARED_LIBRARY cuses${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CUSES_IMPORT_LIBRARY cuses${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(MALAES_SHARED_LIBRARY malaes${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(MALAES_IMPORT_LIBRARY malaes${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(MALAES_SHARED_LIBRARY malaes${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(MALAES_IMPORT_LIBRARY malaes${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    SET(VACSS_SHARED_LIBRARY vacss${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(VACSS_IMPORT_LIBRARY vacss${CMAKE_IMPORT_LIBRARY_SUFFIX})
-ELSE()
-    SET(ANNOTOOLS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}annotools${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_ANNOTOOLS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(ANNOTOOLS_IMPORT_LIBRARY ${ANNOTOOLS_SHARED_LIBRARY})
+    set(VACSS_SHARED_LIBRARY vacss${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(VACSS_IMPORT_LIBRARY vacss${CMAKE_IMPORT_LIBRARY_SUFFIX})
+else()
+    set(ANNOTOOLS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}annotools${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_ANNOTOOLS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(ANNOTOOLS_IMPORT_LIBRARY ${ANNOTOOLS_SHARED_LIBRARY})
 
-    SET(CCGS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ccgs${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CCGS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(CCGS_IMPORT_LIBRARY ${CCGS_SHARED_LIBRARY})
+    set(CCGS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ccgs${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CCGS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(CCGS_IMPORT_LIBRARY ${CCGS_SHARED_LIBRARY})
 
-    SET(CELEDS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}celeds${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CELEDS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(CELEDS_IMPORT_LIBRARY ${CELEDS_SHARED_LIBRARY})
+    set(CELEDS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}celeds${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CELEDS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(CELEDS_IMPORT_LIBRARY ${CELEDS_SHARED_LIBRARY})
 
-    SET(CELEDSEXPORTER_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}celedsexporter${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CELEDSEXPORTER_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(CELEDSEXPORTER_IMPORT_LIBRARY ${CELEDSEXPORTER_SHARED_LIBRARY})
+    set(CELEDSEXPORTER_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}celedsexporter${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CELEDSEXPORTER_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(CELEDSEXPORTER_IMPORT_LIBRARY ${CELEDSEXPORTER_SHARED_LIBRARY})
 
-    SET(CELLML_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}cellml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CELLML_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(CELLML_IMPORT_LIBRARY ${CELLML_SHARED_LIBRARY})
+    set(CELLML_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}cellml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CELLML_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(CELLML_IMPORT_LIBRARY ${CELLML_SHARED_LIBRARY})
 
-    SET(CEVAS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}cevas${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CEVAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(CEVAS_IMPORT_LIBRARY ${CEVAS_SHARED_LIBRARY})
+    set(CEVAS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}cevas${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CEVAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(CEVAS_IMPORT_LIBRARY ${CEVAS_SHARED_LIBRARY})
 
-    SET(CUSES_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}cuses${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CUSES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(CUSES_IMPORT_LIBRARY ${CUSES_SHARED_LIBRARY})
+    set(CUSES_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}cuses${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_CUSES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(CUSES_IMPORT_LIBRARY ${CUSES_SHARED_LIBRARY})
 
-    SET(MALAES_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}malaes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_MALAES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(MALAES_IMPORT_LIBRARY ${MALAES_SHARED_LIBRARY})
+    set(MALAES_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}malaes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_MALAES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(MALAES_IMPORT_LIBRARY ${MALAES_SHARED_LIBRARY})
 
-    SET(VACSS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}vacss${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_VACSS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(VACSS_IMPORT_LIBRARY ${VACSS_SHARED_LIBRARY})
-ENDIF()
+    set(VACSS_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}vacss${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_VACSS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(VACSS_IMPORT_LIBRARY ${VACSS_SHARED_LIBRARY})
+endif()
 
 # Retrieve our package's binaries
 
-SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
-SET(EXTERNAL_BINARIES
+set(EXTERNAL_BINARIES
     ${ANNOTOOLS_SHARED_LIBRARY}
     ${CCGS_SHARED_LIBRARY}
     ${CELEDS_SHARED_LIBRARY}
@@ -123,7 +123,7 @@ SET(EXTERNAL_BINARIES
 
 # Specify the files that need to have their SHA-1 value checked
 
-SET(SHA1_FILES
+set(SHA1_FILES
     lib/${ANNOTOOLS_SHARED_LIBRARY}
     lib/${CCGS_SHARED_LIBRARY}
     lib/${CELEDS_SHARED_LIBRARY}
@@ -135,8 +135,8 @@ SET(SHA1_FILES
     lib/${VACSS_SHARED_LIBRARY}
 )
 
-IF(WIN32)
-    LIST(APPEND SHA1_FILES
+if(WIN32)
+    list(APPEND SHA1_FILES
         lib/${ANNOTOOLS_IMPORT_LIBRARY}
         lib/${CCGS_IMPORT_LIBRARY}
         lib/${CELEDS_IMPORT_LIBRARY}
@@ -147,110 +147,110 @@ IF(WIN32)
         lib/${MALAES_IMPORT_LIBRARY}
         lib/${VACSS_IMPORT_LIBRARY}
     )
-ENDIF()
+endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_CELLMLAPI_PACKAGE)
+if(USE_PREBUILT_CELLMLAPI_PACKAGE)
     # Retrieve the plugin's package
 
-    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
+    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
-    IF(WIN32)
-        IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b56132b99c3e34ef55b29050e7b120477b540fb7
+    if(WIN32)
+        if(RELEASE_MODE)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 036c8fa4f2e1a2c954986866879d4d79516a9068
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9a4cc1858159c1d94a2f4903b475c94c01b7a4e4
-                                              7b51afcf1f41860fbe1f49f00f7697e8a5cd99b5
-                                              6b6a0f6738552376919ea8361763e95e2d111a69
-                                              df00a32ebba74e9fc1ea7514a1b673e38707fbe8
-                                              1168550b38cbb21c7be6212b5816950facb5c509
-                                              9aab67a6ced0154f8138ebb8603a590d7a948b06
-                                              3c12d9755c92033ca0a8be07c456e4bc955945d5
-                                              6a8dc7bbdb3ead4c79bfebdabd068dd0338b3a90
-                                              248b0de4ea72f4039486a89c83df94a2077d2756
-                                              37a9094bc9c115ec4c1caf969ecf1c3b0d38b341
-                                              01d643c393032c5531c3fd028cf811bd0b9cf2f3
-                                              608777bce46fc7b618d3b6b2210a5408f703787e
-                                              7329d5ba7457c67a065852e546285722ebd24a98
-                                              44fa4da29fe7b860889a46ae7e9fef22fb99763a
-                                              2321414a5d222afe1f9ae748b9f95a913730cff6
-                                              11cc047c0bd5ba1787df8790cfc8ae5e2b486b9c
-                                              c7240bc6f89e57e489e16c757d209a8e7ce51758
-                                              7915bd55347d91c9d5636ec67a7e27cbe2de2df6)
-        ELSE()
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 361d744df1e868798b24d48ae62a68273ad97709
+                                  SHA1_VALUES 4db6996a4451d1e6f33d0936e7a8f2c8ce0c226f
+                                              989d9f0521f45e32ac394bedb26a30611dadbe7a
+                                              3d0ad5a0d3750f034aec31fd79dec9d54dab1f1c
+                                              7d22f75f0dc1688fbbe3855faa70458151f86c83
+                                              b9db37975c7d4ab13102b76d75fea5134d012cc4
+                                              5aa7e17afe43c5057d600c2e3bfb7dd39b6136b6
+                                              5ab85fb05cc552047053cb21597a85b26102cf3a
+                                              d9e8a46b594a35c8444702b7fa91d045c1298fba
+                                              50733dc364ae9328163673f27a2d1a478976e5c7
+                                              af5e5b2af39baf1bc22b063c21b0aefab3b35ce7
+                                              09844649086304c2baf4d81074eb4bd692e84836
+                                              10610205814740d1cbeb1b97ae69d07ff919664e
+                                              a04a78e53821f98658193739bd69b24d2e659909
+                                              03881e17dc36a4469350d2cc2632eecd461106df
+                                              1cc906956732a21fa65ac54069495220766330c3
+                                              8fd5b592d8a4eb4a6070861dcad80b31e7c738c8
+                                              afc3196b3d4f6093fd2f7fa4117377f25bd24558
+                                              59725a3835fa48fec41e64ba750a991abeca6f02)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} bbeab36f10ff7c95e5ddaa8239f66ba893a9798b
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES f40a1a1d3d79c56d413076135f3000e9ba3b23ae
-                                              1432e5d117bdab34546f8dba1e88a0e089e5b189
-                                              599c2734f0dca7395226d683a0cb4cda1a0904c6
-                                              a16f3bce6ef9193c57b191de615e47212195ed21
-                                              7589962c91d79833ca33dec1d43755a8b2e4ba09
-                                              d55020892796585c515a9667f8570f236732da60
-                                              2203e75c4c5c997f1049cfbe6d53ce10085fd6f7
-                                              3bd91da76a9563fcaa700d14aa499c75e030c94b
-                                              c6103bafccc26169dc5f81ce1df0c16f0e77b54e
-                                              2627604addc53caada2fcd544c34d20e9d058ffb
-                                              34b1868b55a8707f81b0c6386288d4402e3eb4b7
-                                              bc0cfccac187f4fecdf0698b8aa42cde7421f877
-                                              34ce015e75e002b4261e8fbdaa5d7a012094a751
-                                              1b024b6cf3b65b86db816b9b19bf365210272f2a
-                                              681d7aeda73057972712cf02b1cb6ff58e5c0e6f
-                                              b14de8c59650c5f311799cef9fa573ab143bf830
-                                              90b1c56d36c9b50767e033c25f886e273a7e3034
-                                              278b0aa29730c97ee27cdc9d64dd8339e6f3c23e)
-        ENDIF()
-    ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 5046db57bc3bf1af2daff77631311c04767fc020
+                                  SHA1_VALUES 764f7c4c609edde15d003fbaa0fe558808e9598a
+                                              e89a375c2b733dda530d518159de0f4613e2571c
+                                              b7bb749b6131336edde0ab6f2046aae46ebcd108
+                                              b75971b436563f54c7e6cdeb363549cf204fad3d
+                                              80ca0fb789b168644173819752c48bf44bfaf0d4
+                                              67970ff88619cdb5f34c86734e4049ff7cf91524
+                                              cdff4999cbe7eb9f5a6c46bc508df4d3f59752f5
+                                              c0fd4c03d35642dfbed3e00877788d442710db5b
+                                              46f7b9190cc5484bfed9abe9c0b14c7abd3fd64f
+                                              585b050c72c3a6adba15973001059cb0a8bff71b
+                                              2346c3ffe9deafddea53e82fda34d26956bf821b
+                                              1515276b59ded83b3889c2110178ea9bb2605d6a
+                                              551095e12ebf10d26563f9770173e8ced450269d
+                                              809a4de9397b96cc38d7ec95ac599e5ea82f63cd
+                                              9a1435eb8cc323a0d73496469fc373c61aa0874d
+                                              5514f543c45e03dbc2418974a493eaaff5cc8560
+                                              ddeab87421ebd810576bec2c4f1d55f866af23e0
+                                              3777514941def210af9a50138a3615dede71fdf0)
+        endif()
+    elseif(APPLE)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 21cd963f01ae3e44ce89b380afe1f55e85feb263
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 37380a773115647a87a2c3bb8aa7fc8f02182c22
-                                          37e9264ab6e88d392d4f5c30d80e58ed2f293cdb
-                                          c0b4920778643032150db5a54aff07f688058b90
-                                          b33810f5e4f7354189218ab810bf4e33cf0a7553
-                                          3cb6f6fbd91480553a5519157e47d7f2c831fa38
-                                          820081bd8c190c0c40a6bfccf974278d4f9368b2
-                                          baaa71a1a63cda4395d67068fe4605d1a320e2cf
-                                          2467dd28a8e263e7ef898ad29725f70311e06649
-                                          c5c3c5a6f5add63976c681fcd8ef4faea6c49bed)
-    ELSE()
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 192f9ec884bfb1bc33ea2460994dbbd1e4cde03d
+                              SHA1_VALUES 68b7129fab37f6fe6593563ab9165864665173e7
+                                          611978ebe2a599a5b2c4c91830155bdb532c1c7a
+                                          35848e330b50fbb8649d4be92f59dd14b8d153e4
+                                          214c2438603f1ffb1548e577d369784b4f20472e
+                                          357df21d83aa4f6d06de0aaec7044d8e22e48928
+                                          1333bde2bac7fefb431002c6ac7de6d644c84b1d
+                                          3ec0308673a528e536cd28fa21ecac8f6486d40d
+                                          96a683a58f2ae7cd62df1d953220fc2ac06039f6
+                                          d8e0879cf3d30692fc4c89059a1e4cc685097487)
+    else()
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} cfe1eaf66f3c22a3a095e8a90c7c8bf98db86dc1
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 49224745c95cd278958881d8d572c85171364dda
-                                          b9aa16ec5fe313d1e2b9e541108caff8cbec1cc7
-                                          026cbe3e1c2e5ae854656754f9ace487ebe3ada1
-                                          8d78cb1e721007132b482f7e383cca53ca702a22
-                                          a1b532baf66825ec61a1467bd8611bedb693d1ce
-                                          511578c9799f11bb70d3a78aaacf141b6605376b
-                                          3681647085696a2e139b048b698647abc19ba497
-                                          6084a26b5c09831daf6d39e018a8c5025e9e98d8
-                                          193184a48fa5ec1d061dcdd19406d91ae18247e1)
-    ENDIF()
-ELSE()
+                              SHA1_VALUES 43889db939b2d6827da653213cd6f66aee712d54
+                                          31890f300a1df480900760b30f0e5b24cf0fc67a
+                                          dae15535a1b35add6bc3ef0a8b6876e1843cf2cc
+                                          08b5b25b9d058023dc120f46eea72ef7805a33fd
+                                          e615434aad59a9e90be8c4f45206a2c157cfab9e
+                                          f383687f9b159f2796e89241646ec7bad161bee0
+                                          0a46ae93be3c0d0790e3cc48e4f41b73cec26987
+                                          288100ad0af7dd51600a98edc2c250708f10057c
+                                          c7aad25e0d35c3291981b9e60b792b08c577e251)
+    endif()
+else()
     # Set some compilation flags and/or ignore some warnings
 
-    IF(WIN32)
-        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
-        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4477 /wd4530 /wd4577")
-    ELSEIF(NOT APPLE)
-        SET(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-reorder -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable")
-    ENDIF()
+    if(WIN32)
+        set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} /wd4005 /wd4244 /wd4267 /wd4311 /wd4312")
+        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4477 /wd4530 /wd4577")
+    elseif(NOT APPLE)
+        set(PACKAGE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-reorder -Wno-unused-function -Wno-unused-parameter -Wno-unused-variable")
+    endif()
 
     # Build the CellML API as an external project
 
-    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+    set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -258,7 +258,7 @@ ELSE()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/cellml-api
+            https://github.com/opencor/${PACKAGE_REPOSITORY}
         GIT_TAG
             ${GIT_TAG}
         CMAKE_CACHE_ARGS
@@ -268,7 +268,7 @@ ELSE()
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
             -DBUILD_TESTING=OFF
-            ${DEFINE_CMAKE_APPLE_OPTIONS}
+            ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DENABLE_ANNOTOOLS=ON
@@ -295,7 +295,7 @@ ELSE()
 
     # Do some post-processing that is specific to each platform
 
-    IF(NOT WIN32)
+    if(NOT WIN32)
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
@@ -361,11 +361,11 @@ ELSE()
                                                                   ${VACSS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
-    ENDIF()
+    endif()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         RELEASE_TAG ${RELEASE_TAG}
@@ -373,23 +373,23 @@ ELSE()
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(DEPENDS_ON ${PACKAGE_BUILD})
-ENDIF()
+    set(DEPENDS_ON ${PACKAGE_BUILD})
+endif()
 
 # Allow other external projects to find our CellML API package
 
-SET(CELLMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-SET(CELLMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-SET(CELLMLAPI_ANNOTOOLS_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${ANNOTOOLS_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_CCGS_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CCGS_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_CELEDS_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CELEDS_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_CELEDSEXPORTER_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CELEDSEXPORTER_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_CELLML_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CELLML_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_CEVAS_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CEVAS_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_CUSES_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CUSES_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_MALAES_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${MALAES_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_VACSS_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${VACSS_IMPORT_LIBRARY} PARENT_SCOPE)
-SET(CELLMLAPI_LIBRARIES
+set(CELLMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(CELLMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+set(CELLMLAPI_ANNOTOOLS_LIBRARY ${EXTERNAL_BINARIES_DIR}/${ANNOTOOLS_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_CCGS_LIBRARY ${EXTERNAL_BINARIES_DIR}/${CCGS_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_CELEDS_LIBRARY ${EXTERNAL_BINARIES_DIR}/${CELEDS_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_CELEDSEXPORTER_LIBRARY ${EXTERNAL_BINARIES_DIR}/${CELEDSEXPORTER_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_CELLML_LIBRARY ${EXTERNAL_BINARIES_DIR}/${CELLML_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_CEVAS_LIBRARY ${EXTERNAL_BINARIES_DIR}/${CEVAS_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_CUSES_LIBRARY ${EXTERNAL_BINARIES_DIR}/${CUSES_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_MALAES_LIBRARY ${EXTERNAL_BINARIES_DIR}/${MALAES_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_VACSS_LIBRARY ${EXTERNAL_BINARIES_DIR}/${VACSS_IMPORT_LIBRARY} PARENT_SCOPE)
+set(CELLMLAPI_LIBRARIES
     ${EXTERNAL_BINARIES_DIR}/${CELLMLAPI_ANNOTOOLS_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${CELLMLAPI_CCGS_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${CELLMLAPI_CELEDS_LIBRARY}
@@ -404,7 +404,7 @@ SET(CELLMLAPI_LIBRARIES
 
 # Add the plugin
 
-ADD_PLUGIN(${PACKAGE_NAME}
+add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 

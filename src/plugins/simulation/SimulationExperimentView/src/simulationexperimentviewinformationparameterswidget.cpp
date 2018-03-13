@@ -52,8 +52,8 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
 
     // Keep track of when the user changes a property value
 
-    connect(this, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(propertyChanged(Core::Property *)));
+    connect(this, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(propertyChanged(OpenCOR::Core::Property *)));
 }
 
 //==============================================================================
@@ -125,12 +125,12 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
         mNeedClearing = false;
     }
 
-    // Check whether our model's variable of integration is among our model's
-    // parameters (i.e. it is defined in the main CellML file)
+    // Check whether our model's VOI is among our model's parameters (i.e. it is
+    // defined in the main CellML file)
 
     CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
 
-    mVoiAccessible = runtime->parameters().contains(runtime->variableOfIntegration());
+    mVoiAccessible = runtime->parameters().contains(runtime->voi());
 
     // Retranslate our core self, if needed
     // Note: part of reloading ourselves consists of finalising ourselves, which
@@ -173,7 +173,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(const
 {
     // Update our data
 
-    foreach (Core::Property *property, properties()) {
+    foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
@@ -214,7 +214,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(const
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::propertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationParametersWidget::propertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our simulation data
 
@@ -291,7 +291,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
                 if (parentSectionProperty) {
                     // We have a parent section, so go through its children and
-                    // keep track of its propeties that are a section
+                    // retrieve the one for our current component
 
                     foreach (QObject *object, parentSectionProperty->children()) {
                         Core::Property *property = qobject_cast<Core::Property *>(object);
@@ -305,8 +305,8 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                         }
                     }
                 } else {
-                    // We don't have a section, so go through our properties and
-                    // keep tack of those that are a section
+                    // We don't have a parent section, so go through our
+                    // properties and retrieve the one for our current component
 
                     foreach (Core::Property *property, properties()) {
                         if (    (property->type() == Core::Property::Section)
@@ -375,7 +375,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         property->setIcon(parameter->icon());
 
         property->setName(parameter->formattedName(), false);
-        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
+        property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
 
         // Keep track of the link between our property value and parameter
 
@@ -406,15 +406,14 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     retranslateContextMenu();
 
-    // Create a connection to handle the graph requirement against our variable
-    // of integration, and keep track of the parameter associated with our first
-    // main menu item
+    // Create a connection to handle the graph requirement against our VOI, and
+    // keep track of the parameter associated with our first main menu item
 
     if (mVoiAccessible) {
         connect(voiAction, SIGNAL(triggered(bool)),
                 this, SLOT(emitGraphRequired()));
 
-        mParameterActions.insert(voiAction, pRuntime->variableOfIntegration());
+        mParameterActions.insert(voiAction, pRuntime->voi());
     }
 
     // Populate our context menu with the parameters
@@ -501,7 +500,7 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 {
     // Update the extra info of all our properties
 
-    foreach (Core::Property *property, properties()) {
+    foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {

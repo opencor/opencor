@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDir>
 #include <QFileIconProvider>
 #include <QFileInfo>
 #include <QKeyEvent>
@@ -55,7 +56,7 @@ FileOrganiserWindowItem::FileOrganiserWindowItem(const QIcon &pIcon,
 
     setToolTip(pFolder?
                    pTextOrPath:
-                   Core::nativeCanonicalDirName(pTextOrPath));
+                   QDir::toNativeSeparators(Core::canonicalDirName(pTextOrPath)));
 }
 
 //==============================================================================
@@ -299,11 +300,9 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     mFileManager = new Core::FileManager();
 
-    // Create an instance of the data model that we want to view
+    // Customise ourselves
 
     mModel = new FileOrganiserWindowModel(this);
-
-    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::EditKeyPressed);

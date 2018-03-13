@@ -167,13 +167,18 @@ void CorePlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CorePlugin::fileReloaded(const QString &pFileName,
-                              const bool &pFileChanged,
-                              const bool &pFileJustSaved)
+void CorePlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pFileChanged);
-    Q_UNUSED(pFileJustSaved);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CorePlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
 
     // We don't handle this interface...
 }
@@ -244,7 +249,7 @@ Gui::Menus CorePlugin::guiMenus() const
 {
     // Return our menus
 
-    return Gui::Menus() << Gui::Menu(Gui::Menu::File, mOpenReloadSeparator, mFileReopenSubMenu);
+    return Gui::Menus() << Gui::Menu(Gui::Menu::File, mFileOpenReloadSeparator, mFileReopenSubMenu);
 }
 
 //==============================================================================
@@ -256,23 +261,23 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mOpenReloadSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenReloadSeparator)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileDuplicateAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileLockedAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAsAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFilePreviousAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileNextAction)
-                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAction)
                               << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File);
+                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()));
 }
 
 //==============================================================================
@@ -443,9 +448,7 @@ void CorePlugin::initializePlugin()
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    mOpenReloadSeparator = newAction(mainWindow());
-
-    mOpenReloadSeparator->setSeparator(true);
+    mFileOpenReloadSeparator = newSeparator(mainWindow());
 
     // Create our Reopen sub-menu
 
@@ -454,12 +457,9 @@ void CorePlugin::initializePlugin()
 
     mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
                                                 mainWindow());
-    mFileReopenSubMenuSeparator1 = newAction(mainWindow());
-    mFileReopenSubMenuSeparator2 = newAction(mainWindow());
+    mFileReopenSubMenuSeparator1 = newSeparator(mainWindow());
+    mFileReopenSubMenuSeparator2 = newSeparator(mainWindow());
     mFileClearReopenSubMenuAction = newAction(mainWindow());
-
-    mFileReopenSubMenuSeparator1->setSeparator(true);
-    mFileReopenSubMenuSeparator2->setSeparator(true);
 
     mFileReopenSubMenu->addAction(mFileReopenMostRecentFileAction);
     mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator1);
@@ -582,7 +582,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     static InterfacesData data(fileTypeInterfaces, solverInterfaces,
                                dataStoreInterfaces);
 
-    Core::globalInstance(InterfacesDataSignature, &data);
+    globalInstance(InterfacesDataSignature, &data);
 
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -616,7 +616,7 @@ void CorePlugin::loadSettings(QSettings *pSettings)
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (!mainWindow())
         return;
 
     // Retrieve the recent files
@@ -644,7 +644,7 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (!mainWindow())
         return;
 
     // Keep track of the recent files
@@ -695,7 +695,7 @@ void CorePlugin::newFile()
     // Make sure that the file has indeed been created
 
     if (createStatus != FileManager::Created)
-        qFatal("FATAL ERROR | %s:%d: the new file was not created.", __FILE__, __LINE__);
+        qFatal("FATAL ERROR | %s:%d: the new file did not get created.", __FILE__, __LINE__);
 #endif
 }
 
@@ -709,9 +709,6 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
         if (   (action != mFileReopenMostRecentFileAction)
             && (action != mFileReopenSubMenuSeparator1)
             && (action != mFileReopenSubMenuSeparator2)) {
-            disconnect(action, SIGNAL(triggered(bool)),
-                       this, SLOT(reopenRecentFile()));
-
             mFileReopenSubMenu->removeAction(action);
 
             delete action;
@@ -737,8 +734,12 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     // Enable/disable our reopen sub-menu actions depending on whether we have
     // recent file names
 
-    mFileReopenMostRecentFileAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
-    mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
+    bool hasRecentFileNamesOrUrls = !mRecentFileNamesOrUrls.isEmpty();
+
+    mFileReopenMostRecentFileAction->setEnabled(hasRecentFileNamesOrUrls);
+    mFileClearReopenSubMenuAction->setEnabled(hasRecentFileNamesOrUrls);
+
+    showEnableAction(mFileReopenSubMenuSeparator2, hasRecentFileNamesOrUrls);
 }
 
 //==============================================================================
@@ -800,7 +801,7 @@ void CorePlugin::reopenFile(const QString &pFileName)
             // The file doesn't exist anymore, so let the user know about it
 
             warningMessageBox(tr("Reopen File"),
-                              tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+                              tr("<strong>%1</strong> does not exist anymore.").arg(QDir::toNativeSeparators(fileNameOrUrl)));
         }
     } else {
         // Open the recent remote file

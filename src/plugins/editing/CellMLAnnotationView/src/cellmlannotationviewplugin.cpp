@@ -96,16 +96,20 @@ void CellMLAnnotationViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName,
-                                              const bool &pFileChanged,
-                                              const bool &pFileJustSaved)
+void CellMLAnnotationViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    // The given file has been saved, so let our view widget know about it
 
+    mViewWidget->fileSaved(pFileName);
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged)
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -175,7 +179,7 @@ void CellMLAnnotationViewPlugin::initializePlugin()
     // Hide our CellML Annotation view widget since it may not initially be
     // shown in our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================
@@ -238,13 +242,22 @@ ViewInterface::Mode CellMLAnnotationViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList CellMLAnnotationViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList CellMLAnnotationViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support
 
     return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
+//==============================================================================
+
+QString CellMLAnnotationViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given CellML file
+
+    return CellMLSupport::CellmlMimeType;
 }
 
 //==============================================================================

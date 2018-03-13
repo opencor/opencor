@@ -30,10 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QStyledItemDelegate>
-
-//==============================================================================
-
 class QLabel;
 class QSettings;
 class QStandardItem;
@@ -81,7 +77,7 @@ private:
 
 //==============================================================================
 
-class PreferencesItemDelegate : public QStyledItemDelegate
+class PreferencesItemDelegate : public StyledItemDelegate
 {
 public:
     explicit PreferencesItemDelegate(QObject *pParent);

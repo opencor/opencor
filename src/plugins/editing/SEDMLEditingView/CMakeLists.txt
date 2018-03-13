@@ -1,8 +1,8 @@
-PROJECT(SEDMLEditingViewPlugin)
+project(SEDMLEditingViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SEDMLEditingView
+add_plugin(SEDMLEditingView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../guiinterface.cpp

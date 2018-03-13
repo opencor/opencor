@@ -1,8 +1,8 @@
-PROJECT(FileBrowserWindowPlugin)
+project(FileBrowserWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(FileBrowserWindow
+add_plugin(FileBrowserWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

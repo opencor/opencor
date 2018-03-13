@@ -106,8 +106,7 @@ public:
     void addView(Plugin *pPlugin);
 
     TabBarWidget * newTabBarWidget(const QTabBar::Shape &pShape,
-                                   const bool &pMovable = false,
-                                   const bool &pTabsClosable = false);
+                                   const bool &pFileTabs = false);
 
     QString currentFileName() const;
 
@@ -189,8 +188,13 @@ private:
     QString viewKey(const int &pMode, const int &pView,
                     const QString &pFileName);
 
+    void fileReloadedOrSaved(const QString &pFileName,
+                             const bool &pFileReloaded);
+
+    void setTabBarCurrentIndex(TabBarWidget *pTabBar, const int &pIndex);
+
 signals:
-    void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
+    void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
     void atLeastOneView(const bool &pAtLeastOneView);
 
@@ -226,8 +230,7 @@ private slots:
     void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName);
 
-    void fileReloaded(const QString &pFileName, const bool &pFileChanged,
-                      const bool &pFileJustSaved = false);
+    void fileReloaded(const QString &pFileName);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileDuplicated(const QString &pFileName);

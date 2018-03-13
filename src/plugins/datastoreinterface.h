@@ -40,16 +40,49 @@ namespace DataStore {
 
 //==============================================================================
 
+class DataStoreVariableRun
+{
+public:
+    explicit DataStoreVariableRun(const quint64 &pCapacity, double *pValue);
+    ~DataStoreVariableRun();
+
+    quint64 size() const;
+
+    void addValue();
+    void addValue(const double &pValue);
+
+    double value(const quint64 &pPosition) const;
+    double * values() const;
+
+private:
+    quint64 mCapacity;
+    quint64 mSize;
+
+    double *mValue;
+    double *mValues;
+};
+
+//==============================================================================
+
+typedef QList<DataStoreVariableRun *> DataStoreVariableRuns;
+
+//==============================================================================
+
 class DataStoreVariable
 {
 public:
-    explicit DataStoreVariable(const qulonglong &pCapacity, double *pValue = 0);
+    explicit DataStoreVariable(double *pValue = 0);
     ~DataStoreVariable();
 
     static bool compare(DataStoreVariable *pVariable1,
                         DataStoreVariable *pVariable2);
 
     bool isVisible() const;
+
+    int runsCount() const;
+
+    void addRun(const quint64 &pCapacity);
+    void keepRuns(const int &pRunsCount);
 
 #ifndef CLI_VERSION
     QIcon icon() const;
@@ -65,13 +98,13 @@ public:
     QString unit() const;
     void setUnit(const QString &pUnit);
 
-    qulonglong size() const;
+    quint64 size(const int &pRun = -1) const;
 
     void addValue();
     void addValue(const double &pValue);
 
-    double value(const qulonglong &pPosition) const;
-    double * values() const;
+    double value(const quint64 &pPosition, const int &pRun = -1) const;
+    double * values(const int &pRun = -1) const;
 
 private:
 #ifndef CLI_VERSION
@@ -81,11 +114,9 @@ private:
     QString mName;
     QString mUnit;
 
-    const qulonglong mCapacity;
-    qulonglong mSize;
-
     double *mValue;
-    double *mValues;
+
+    DataStoreVariableRuns mRuns;
 };
 
 //==============================================================================
@@ -94,18 +125,24 @@ typedef QList<DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 
+class DataStore;
+
+//==============================================================================
+
 class DataStoreData
 {
 public:
-    explicit DataStoreData(const QString &pFileName,
-                           const DataStoreVariables &pSelectedVariables);
+    explicit DataStoreData(const QString &pFileName, DataStore *pDataStore,
+                           const DataStoreVariables &pVariables);
 
     QString fileName() const;
-    DataStoreVariables selectedVariables() const;
+    DataStore * dataStore() const;
+    DataStoreVariables variables() const;
 
 private:
     QString mFileName;
-    DataStoreVariables mSelectedVariables;
+    DataStore *mDataStore;
+    DataStoreVariables mVariables;
 };
 
 //==============================================================================
@@ -113,29 +150,28 @@ private:
 class DataStore
 {
 public:
-    explicit DataStore(const QString &pUri, const qulonglong &pCapacity);
+    explicit DataStore(const QString &pUri);
     ~DataStore();
 
     QString uri() const;
 
-    qulonglong size() const;
+    int runsCount() const;
 
-    DataStoreVariables voiAndVariables();
+    bool addRun(const quint64 &pCapacity);
+
+    quint64 size(const int &pRun = -1) const;
 
     DataStoreVariable * voi() const;
-    DataStoreVariable * addVoi();
-
     DataStoreVariables variables();
+    DataStoreVariables voiAndVariables();
+
     DataStoreVariable * addVariable(double *pValue = 0);
-    DataStoreVariables addVariables(const int &pCount, double *pValues);
+    DataStoreVariables addVariables(double *pValues, const int &pCount);
 
     void addValues(const double &pVoiValue);
 
 private:
-    QString mlUri;
-
-    const qulonglong mCapacity;
-    qulonglong mSize;
+    QString mUri;
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;
@@ -148,8 +184,7 @@ class DataStoreExporter : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStoreExporter(const QString &pFileName, DataStore *pDataStore,
-                               DataStoreData *pDataStoreData);
+    explicit DataStoreExporter(DataStoreData *pDataStoreData);
     ~DataStoreExporter();
 
     void start();
@@ -160,8 +195,6 @@ private:
     QThread *mThread;
 
 protected:
-    QString mFileName;
-    DataStore *mDataStore;
     DataStoreData *mDataStoreData;
 
 signals:

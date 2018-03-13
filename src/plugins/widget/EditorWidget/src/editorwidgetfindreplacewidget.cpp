@@ -409,17 +409,12 @@ void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 
     emit keyPressed(pEvent, handled);
 
-    // Carry on as normal, if the event wasn't handled
+    // Accept the event or carry on as normal, if the event wasn't handled
 
-    if (handled) {
-        // Accept the event
-
+    if (handled)
         pEvent->accept();
-    } else {
-        // Default handling of the event
-
+    else
         Core::Widget::keyPressEvent(pEvent);
-    }
 }
 
 //==============================================================================

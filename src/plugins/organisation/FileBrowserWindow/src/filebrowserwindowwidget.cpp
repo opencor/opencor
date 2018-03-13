@@ -50,11 +50,9 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
     mPreviousItems(QStringList()),
     mNextItems(QStringList())
 {
-    // Create an instance of the file system model that we want to view
+    // Customise ourselves
 
     mModel = new FileBrowserWindowModel(this);
-
-    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragOnly);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -160,7 +158,7 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     // Note: this is clearly not needed on Linux and macOS, but it doesn't
     //       harm doing it for these platforms too...
 
-    mInitPathDir = QDir(mInitPathDir+QDir::separator()).canonicalPath();
+    mInitPathDir = QDir(mInitPathDir+"/").canonicalPath();
 
     // Create a list of the different folders that need to be loaded to consider
     // that the loading of the settings is finished (see just below and the
@@ -494,7 +492,7 @@ bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
 
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 
-        setToolTip(Core::nativeCanonicalFileName(mModel->filePath(indexAt(helpEvent->pos()))));
+        setToolTip(QDir::toNativeSeparators(Core::canonicalFileName(mModel->filePath(indexAt(helpEvent->pos())))));
     }
 
     // Default handling of the event
@@ -562,11 +560,11 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
 
         // Remove the loaded directory from mInitPathDirs
 
-        mInitPathDirs.removeOne(QDir(pPath+QDir::separator()).canonicalPath());
-        // Note #1: it is very important, on Windows, to add QDir::separator()
-        //          to pPath. Indeed, say that mInitPathDir is on the C: drive,
-        //          then eventually pPath will be equal to "C:" while
-        //          mInitPathDirs will know about "C:/"...
+        mInitPathDirs.removeOne(QDir(pPath+"/").canonicalPath());
+        // Note #1: it is very important, on Windows, to add "/" to pPath.
+        //          Indeed, say that mInitPathDir is on the C: drive, then
+        //          eventually pPath will be equal to "C:" while mInitPathDirs
+        //          will know about "C:/"...
         // Note #2: this is clearly not needed on Linux and macOS, but it
         //          doesn't harm adding it for these platforms too...
 

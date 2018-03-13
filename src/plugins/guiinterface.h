@@ -82,7 +82,7 @@ public:
         Tools
     };
 
-    explicit MenuAction(const Type &pType, QAction *pAction = 0);
+    explicit MenuAction(const Type &pType, QAction *pAction);
 
     Type type() const;
     QAction * action() const;

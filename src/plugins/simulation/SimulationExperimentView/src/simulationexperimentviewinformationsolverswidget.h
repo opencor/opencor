@@ -83,18 +83,15 @@ public:
     void initialize(SimulationSupport::Simulation *pSimulation);
 
     QStringList odeSolvers() const;
-    QStringList daeSolvers() const;
     QStringList nlaSolvers() const;
 
     SimulationExperimentViewInformationSolversWidgetData * odeSolverData() const;
-    SimulationExperimentViewInformationSolversWidgetData * daeSolverData() const;
     SimulationExperimentViewInformationSolversWidgetData * nlaSolverData() const;
 
     void updateGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 
 private:
     SimulationExperimentViewInformationSolversWidgetData *mOdeSolverData;
-    SimulationExperimentViewInformationSolversWidgetData *mDaeSolverData;
     SimulationExperimentViewInformationSolversWidgetData *mNlaSolverData;
 
     QMap<Core::Property *, Descriptions> mDescriptions;
@@ -110,7 +107,7 @@ private:
                            const QString &pVoiUnit);
 
 private slots:
-    void solverChanged(Core::Property *pProperty);
+    void solverChanged(OpenCOR::Core::Property *pProperty);
 };
 
 //==============================================================================

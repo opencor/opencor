@@ -121,7 +121,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
 
-        QString fileContents;
+        QByteArray fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
@@ -215,6 +215,19 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 
         mEditingWidgets.remove(pFileName);
     }
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::fileSaved(const QString &pFileName)
+{
+    // The given file has been saved, so consider it reloaded, but only if it
+    // has a corresponding widget that is invisible
+
+    QWidget *crtWidget = widget(pFileName);
+
+    if (crtWidget && !crtWidget->isVisible())
+        fileReloaded(pFileName);
 }
 
 //==============================================================================

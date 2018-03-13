@@ -42,7 +42,7 @@ static int gNewIndex = 0;
 //==============================================================================
 
 File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
-    mFileName(nativeCanonicalFileName(pFileName)),
+    mFileName(canonicalFileName(pFileName)),
     mUrl(pUrl)
 {
     // Initialise ourselves by 'resetting' ourselves
@@ -147,7 +147,7 @@ QString File::sha1(const QString &pFileName)
     // Compute the SHA-1 value for the given file, if it still exists and can be
     // opened
 
-    QString fileContents;
+    QByteArray fileContents;
 
     if (readFileContentsFromFile(pFileName, fileContents))
         return Core::sha1(fileContents);
@@ -224,7 +224,7 @@ bool File::makeNew(const QString &pFileName)
 {
     // Make ourselves new
 
-    mFileName = nativeCanonicalFileName(pFileName);
+    mFileName = canonicalFileName(pFileName);
     mUrl = QString();
 
     reset();

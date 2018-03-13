@@ -74,15 +74,10 @@ namespace CellMLSupport {
 
 CellmlFile::CellmlFile(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
-    mModel(0),
-    mRdfApiRepresentation(0),
-    mRdfDataSource(0),
-    mRdfTriples(CellmlFileRdfTriples(this))
+    mRdfTriples(CellmlFileRdfTriples(this)),
+    mRuntime(new CellmlFileRuntime(this)),
+    mUpdated(false)
 {
-    // Instantiate our runtime object
-
-    mRuntime = new CellmlFileRuntime(this);
-
     // Reset ourselves
 
     reset();
@@ -105,6 +100,14 @@ CellmlFile::~CellmlFile()
 
 void CellmlFile::reset()
 {
+    // Don't reset ourselves if we were updated
+
+    if (mUpdated) {
+        mUpdated = false;
+
+        return;
+    }
+
     // Reset all of our properties
 
     mModel = 0;
@@ -112,8 +115,10 @@ void CellmlFile::reset()
     mRdfApiRepresentation = 0;
     mRdfDataSource = 0;
 
-    Core::resetList(mRdfTriples);
+    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+        delete rdfTriple;
 
+    mRdfTriples.clear();
     mIssues.clear();
 
     Core::FileManager::instance()->setDependencies(mFileName, QStringList());
@@ -406,9 +411,12 @@ void CellmlFile::clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
     // used
 
     static const QString CmetaId = "cmeta:id";
+    static const QString XmlnsCmeta = "xmlns:cmeta";
 
-    if (!pUsedCmetaIds.contains(pElement.attribute(CmetaId)))
+    if (!pUsedCmetaIds.contains(pElement.attribute(CmetaId))) {
         pElement.attributes().removeNamedItem(CmetaId);
+        pElement.attributes().removeNamedItem(XmlnsCmeta);
+    }
 
     // Do the same for all the child elements of the given CellML element
 
@@ -528,29 +536,25 @@ bool CellmlFile::save(const QString &pFileName)
 
     clearCmetaIdsFromCellmlElement(domElement, usedCmetaIds);
 
-    // Determine the file name to use for the CellML file
-
-    QString fileName = pFileName.isEmpty()?mFileName:pFileName;
-
     // Write out the contents of our DOM document to our CellML file
 
-    if (!Core::writeFileContentsToFile(fileName, Core::serialiseDomDocument(domDocument)))
-        return false;
+    return Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
+                                         Core::serialiseDomDocument(domDocument))?
+               StandardFile::save(pFileName):
+               false;
+}
 
-    // Our CellML file being saved, it cannot be modified (should it have been
-    // before)
-    // Note: we must do this before updating mFileName (should it be given a new
-    //       value) since we use it to update our modified status...
+//==============================================================================
 
-    setModified(false);
+bool CellmlFile::update(const QString &pFileName)
+{
+    // Our model parameters were modified (e.g. through the Simulation
+    // Experiment view) and we want to update ourselves accordingly, so save
+    // ourselves and keep track of the fact that we were 'simply' updated
 
-    // Make sure that mFileName is up to date
+    mUpdated = save(pFileName);
 
-    mFileName = fileName;
-
-    // Everything went fine
-
-    return true;
+    return mUpdated;
 }
 
 //==============================================================================
@@ -727,24 +731,6 @@ bool CellmlFile::isValid(const bool &pWithBusyWidget)
     // Return whether we are valid
 
     return doIsValid(QString(), &mModel, mIssues, pWithBusyWidget);
-}
-
-//==============================================================================
-
-bool CellmlFile::isModified() const
-{
-    // Return whether we have been modified
-
-    return Core::FileManager::instance()->isModified(mFileName);
-}
-
-//==============================================================================
-
-void CellmlFile::setModified(const bool &pModified) const
-{
-    // Set our modified status
-
-    Core::FileManager::instance()->setModified(mFileName, pModified);
 }
 
 //==============================================================================
@@ -1118,9 +1104,9 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Note: you would normally expect CeLEDSExporter to check this, but all
         //       it does in case of an invalid XML file is crash...
 
-        QString userDefinedFormatFileContents;
+        QByteArray fileContents;
 
-        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
+        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, fileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file could not be read"));
 
@@ -1129,7 +1115,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         QDomDocument domDocument;
 
-        if (!domDocument.setContent(userDefinedFormatFileContents)) {
+        if (!domDocument.setContent(fileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file is not a valid XML file"));
 
@@ -1144,7 +1130,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
         // Do the actual export
 
         ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
-        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(QString(userDefinedFormatFileContents).toStdWString());
+        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(QString(fileContents).toStdWString());
 
         if (celedsExporterBootstrap->loadError().length()) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -1235,8 +1221,8 @@ QString CellmlFile::versionAsString(const Version &pVersion)
     }
 
     return "???";
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================

@@ -40,10 +40,6 @@ namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, QObject *> Files;
-
-//==============================================================================
-
 class STANDARDSUPPORT_EXPORT StandardFileManager : public QObject
 {
     Q_OBJECT
@@ -51,26 +47,27 @@ class STANDARDSUPPORT_EXPORT StandardFileManager : public QObject
 public:
     bool isFile(const QString &pFileName);
 
-    QObject * file(const QString &pFileName);
+    StandardFile * file(const QString &pFileName);
 
 protected:
-    Files mFiles;
+    QMap<QString, StandardFile *> mFiles;
 
     explicit StandardFileManager();
     ~StandardFileManager();
 
     virtual bool canLoad(const QString &pFileName) const = 0;
 
-    virtual QObject * create(const QString &pFileName) const = 0;
+    virtual StandardFile * create(const QString &pFileName) const = 0;
+
+    bool doIsFile(const QString &pFileName, const bool &pForceChecking = false);
 
 private slots:
     void manage(const QString &pFileName);
     void unmanage(const QString &pFileName);
 
-    void reload(const QString &pFileName, const bool &pFileChanged);
-    void rename(const QString &pOldFileName, const QString &pNewFileName);
-
     void save(const QString &pFileName);
+    void reload(const QString &pFileName, const bool &pForceChecking = true);
+    void rename(const QString &pOldFileName, const QString &pNewFileName);
 };
 
 //==============================================================================

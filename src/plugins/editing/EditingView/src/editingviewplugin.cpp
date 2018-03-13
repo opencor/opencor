@@ -108,26 +108,20 @@ void EditingViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void EditingViewPlugin::fileReloaded(const QString &pFileName,
-                                     const bool &pFileChanged,
-                                     const bool &pFileJustSaved)
+void EditingViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    Q_UNUSED(pFileName);
 
-    // A file has been reloaded, so update our internals, if needed
-    // Note: we clearly still have an editor for the given file, but when
-    //       reloading it, fileReloaded() will first be called for this plugin
-    //       and then for the 'proper' editing plugins. In other words, we don't
-    //       know at this stage whether a new editor will have been assigned to
-    //       the given file. Indeed, upon reloading a file, a 'proper' editing
-    //       plugin may decide to 'close' and 'reopen' the file, meaning that
-    //       its original editor will be discarded and a new one assigned to
-    //       it, hence we need to reset things...
+    // We don't handle this interface...
+}
 
-    if (pFileChanged && !pFileName.compare(mFileName)) {
-        mEditor = 0;
-        mFileName = QString();
-    }
+//==============================================================================
+
+void EditingViewPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -135,22 +129,19 @@ void EditingViewPlugin::fileReloaded(const QString &pFileName,
 void EditingViewPlugin::fileRenamed(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
-    // A file has been renamed, so update our internals, if needed
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
 
-    if (!pOldFileName.compare(mFileName))
-        mFileName = pNewFileName;
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
 void EditingViewPlugin::fileClosed(const QString &pFileName)
 {
-    // A file has been closed, so update our internals, if needed
+    Q_UNUSED(pFileName);
 
-    if (!pFileName.compare(mFileName)) {
-        mEditor = 0;
-        mFileName = QString();
-    }
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -165,38 +156,35 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mEditingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
     if (mEditingViewInterface) {
-        // Reset our previous editor's connections
-
-        if (mEditor) {
-            disconnect(mEditor, SIGNAL(textChanged()),
-                       this, SLOT(updateUndoAndRedoActions()));
-            disconnect(mEditor, SIGNAL(copyAvailable(const bool &)),
-                       this, SLOT(updateEditingActions()));
-            disconnect(mEditor, SIGNAL(canFindReplace(const bool &)),
-                       this, SLOT(updateFindPreviousNextActions()));
-            disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
-                       this, SLOT(updateSelectAllAction()));
-        }
-
         // Retrieve our new editor widget
 
         mEditor = mEditingViewInterface->editorWidget(pFileName);
         mFileName = pFileName;
 
         // Set our new editor's context menu, connections and background
+        // Note: we pass Qt::UniqueConnection in our call to connect() so that
+        //       we don't end up with several identical connections (something
+        //       that might happen if we were to switch views and back)...
 
         if (mEditor) {
             mEditor->setContextMenu(mEditMenu->actions());
 
             connect(mEditor, SIGNAL(textChanged()),
-                    this, SLOT(updateUndoAndRedoActions()));
+                    this, SLOT(updateUndoAndRedoActions()),
+                    Qt::UniqueConnection);
             connect(mEditor, SIGNAL(copyAvailable(const bool &)),
-                    this, SLOT(updateEditingActions()));
+                    this, SLOT(updateEditingActions()),
+                    Qt::UniqueConnection);
             connect(mEditor, SIGNAL(canFindReplace(const bool &)),
-                    this, SLOT(updateFindPreviousNextActions()));
+                    this, SLOT(updateFindPreviousNextActions()),
+                    Qt::UniqueConnection);
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
-                    this, SLOT(updateSelectAllAction()));
+                    this, SLOT(updateSelectAllAction()),
+                    Qt::UniqueConnection);
         }
+    } else {
+        mEditor = 0;
+        mFileName = QString();
     }
 
     // Show/enable or hide/disable various actions, depending on whether the
@@ -249,22 +237,6 @@ void EditingViewPlugin::retranslateUi()
 
     retranslateMenu(mEditMenu, tr("Edit"));
 
-    // Unpopulate our Edit menu
-    // Note #1: this is required on macOS otherwise we get several console
-    //          messages that read
-    //              void QCocoaMenu::insertNative(QCocoaMenuItem *, QCocoaMenuItem *) Menu item is already in a menu, remove it from the other menu first before inserting
-    // Note #2: beforeAction is used to keep track of where our first action
-    //          should really be. Indeed, on macOS, our Edit menu gets
-    //          additional menu items (they are automatically added by macOS at
-    //          the end of our Edit menu, should in the system locale), so we
-    //          cannot just use mEditMenu->clear() to unpopulate our Edit menu
-    //          since otherwise when repopulating it those extra menu items will
-    //          end up before (rather than after) our menu items...
-
-    QAction *beforeAction = mEditMenu->insertSeparator(mEditUndoAction);
-
-    unpopulateEditMenu();
-
     // Retranslate our different Edit actions
 
     retranslateAction(mEditUndoAction, tr("Undo"),
@@ -290,12 +262,6 @@ void EditingViewPlugin::retranslateUi()
 
     retranslateAction(mEditSelectAllAction, tr("Select All"),
                       tr("Select all the text"));
-
-    // (Re)populate our Edit menu
-
-    populateEditMenu(beforeAction);
-
-    mEditMenu->removeAction(beforeAction);
 }
 
 //==============================================================================
@@ -358,7 +324,21 @@ void EditingViewPlugin::initializePlugin()
 
     mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, Core::mainWindow());
 
-    populateEditMenu();
+    // Populate our Edit menu
+
+    mEditMenu->addAction(mEditUndoAction);
+    mEditMenu->addAction(mEditRedoAction);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditCutAction);
+    mEditMenu->addAction(mEditCopyAction);
+    mEditMenu->addAction(mEditPasteAction);
+    mEditMenu->addAction(mEditDeleteAction);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditFindReplaceAction);
+    mEditMenu->addAction(mEditFindNextAction);
+    mEditMenu->addAction(mEditFindPreviousAction);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditSelectAllAction);
 
     // Keep track of changes to the clipboard
 
@@ -462,57 +442,12 @@ void EditingViewPlugin::updateGui(const QString &pFileName)
 
 //==============================================================================
 
-void EditingViewPlugin::unpopulateEditMenu()
-{
-    // Unpopulate our Edit menu
-    // Note: we do not want to use mEditMenu->clear() since we want to keep our
-    //       tracker, so we can repopulate our Edit menu without any problem...
-
-    mEditMenu->removeAction(mEditUndoAction);
-    mEditMenu->removeAction(mEditRedoAction);
-
-    mEditMenu->removeAction(mEditCutAction);
-    mEditMenu->removeAction(mEditCopyAction);
-    mEditMenu->removeAction(mEditPasteAction);
-    mEditMenu->removeAction(mEditDeleteAction);
-
-    mEditMenu->removeAction(mEditFindReplaceAction);
-    mEditMenu->removeAction(mEditFindNextAction);
-    mEditMenu->removeAction(mEditFindPreviousAction);
-
-    mEditMenu->removeAction(mEditSelectAllAction);
-}
-
-//==============================================================================
-
-void EditingViewPlugin::populateEditMenu(QAction *pBeforeAction)
-{
-    // Populate our Edit menu
-
-    mEditMenu->insertAction(pBeforeAction, mEditUndoAction);
-    mEditMenu->insertAction(pBeforeAction, mEditRedoAction);
-    mEditMenu->insertSeparator(pBeforeAction);
-    mEditMenu->insertAction(pBeforeAction, mEditCutAction);
-    mEditMenu->insertAction(pBeforeAction, mEditCopyAction);
-    mEditMenu->insertAction(pBeforeAction, mEditPasteAction);
-    mEditMenu->insertAction(pBeforeAction, mEditDeleteAction);
-    mEditMenu->insertSeparator(pBeforeAction);
-    mEditMenu->insertAction(pBeforeAction, mEditFindReplaceAction);
-    mEditMenu->insertAction(pBeforeAction, mEditFindNextAction);
-    mEditMenu->insertAction(pBeforeAction, mEditFindPreviousAction);
-    mEditMenu->insertSeparator(pBeforeAction);
-    mEditMenu->insertAction(pBeforeAction, mEditSelectAllAction);
-}
-
-//==============================================================================
-
 void EditingViewPlugin::clipboardDataChanged()
 {
     // Enable our paste action if the clipboard contains some text
 
     if (mEditingViewInterface) {
-        mEditPasteAction->setEnabled(    mEditor
-                                     &&  Core::FileManager::instance()->isReadableAndWritable(mFileName)
+        mEditPasteAction->setEnabled(    Core::FileManager::instance()->isReadableAndWritable(mFileName)
                                      && !QApplication::clipboard()->text().isEmpty());
     }
 }
@@ -526,14 +461,12 @@ void EditingViewPlugin::updateUndoAndRedoActions()
 
     if (mEditingViewInterface) {
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        bool editorAndFileReadableAndWritable =    mEditor
-                                                && fileManagerInstance->isReadableAndWritable(mFileName);
+        bool editorAndFileReadableAndWritable = mEditor && fileManagerInstance->isReadableAndWritable(mFileName);
 
         mEditUndoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isUndoAvailable());
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
 
-        fileManagerInstance->setModified(mFileName,
-                                         mEditor && mEditingViewInterface->isEditorWidgetContentsModified(mFileName));
+        fileManagerInstance->setModified(mFileName, mEditingViewInterface->isEditorWidgetContentsModified(mFileName));
     }
 }
 
@@ -544,14 +477,13 @@ void EditingViewPlugin::updateEditingActions()
     // Update our editing actions
 
     if (mEditingViewInterface) {
-        bool editorAndHasSelectedText =    mEditor
-                                        && mEditor->hasSelectedText();
+        bool hasSelectedText = mEditor && mEditor->hasSelectedText();
         bool fileReadableOrWritable = Core::FileManager::instance()->isReadableAndWritable(mFileName);
 
-        mEditCutAction->setEnabled(editorAndHasSelectedText && fileReadableOrWritable);
-        mEditCopyAction->setEnabled(editorAndHasSelectedText);
+        mEditCutAction->setEnabled(hasSelectedText && fileReadableOrWritable);
+        mEditCopyAction->setEnabled(hasSelectedText);
         clipboardDataChanged();
-        mEditDeleteAction->setEnabled(editorAndHasSelectedText && fileReadableOrWritable);
+        mEditDeleteAction->setEnabled(hasSelectedText && fileReadableOrWritable);
     }
 }
 
@@ -562,11 +494,10 @@ void EditingViewPlugin::updateFindPreviousNextActions()
     // Update our find previous and next actions
 
     if (mEditingViewInterface) {
-        bool canFindReplace =    mEditor
-                              && mEditor->isFindPreviousNextAvailable();
+        bool findPreviousNextAvailable = mEditor && mEditor->isFindPreviousNextAvailable();
 
-        mEditFindPreviousAction->setEnabled(canFindReplace);
-        mEditFindNextAction->setEnabled(canFindReplace);
+        mEditFindPreviousAction->setEnabled(findPreviousNextAvailable);
+        mEditFindNextAction->setEnabled(findPreviousNextAvailable);
     }
 }
 
@@ -576,10 +507,8 @@ void EditingViewPlugin::updateSelectAllAction()
 {
     // Update our select all action
 
-    if (mEditingViewInterface) {
-        mEditSelectAllAction->setEnabled(   mEditor
-                                         && mEditor->isSelectAllAvailable());
-    }
+    if (mEditingViewInterface)
+        mEditSelectAllAction->setEnabled(mEditor && mEditor->isSelectAllAvailable());
 }
 
 //==============================================================================
@@ -588,9 +517,6 @@ void EditingViewPlugin::doUndo()
 {
     // Undo the last action and update our undo/redo actions, should there be an
     // editor
-
-    if (!mEditor)
-        return;
 
     mEditor->undo();
 
@@ -604,9 +530,6 @@ void EditingViewPlugin::doRedo()
     // Redo the last action and update our undo/redo actions, should there be an
     // editor
 
-    if (!mEditor)
-        return;
-
     mEditor->redo();
 
     updateUndoAndRedoActions();
@@ -617,9 +540,6 @@ void EditingViewPlugin::doRedo()
 void EditingViewPlugin::doCut()
 {
     // Cut the text and update our undo/redo actions, should there be an editor
-
-    if (!mEditor)
-        return;
 
     mEditor->cut();
 
@@ -632,9 +552,6 @@ void EditingViewPlugin::doCopy()
 {
     // Copy the text and update our undo/redo actions, should there be an editor
 
-    if (!mEditor)
-        return;
-
     mEditor->copy();
 }
 
@@ -644,9 +561,6 @@ void EditingViewPlugin::doPaste()
 {
     // Paste the text and update our undo/redo actions, should there be an
     // editor
-
-    if (!mEditor)
-        return;
 
     mEditor->paste();
 
@@ -660,9 +574,6 @@ void EditingViewPlugin::doDelete()
     // Delete the text and update our undo/redo actions, should there be an
     // editor
 
-    if (!mEditor)
-        return;
-
     mEditor->del();
 
     updateUndoAndRedoActions();
@@ -674,8 +585,7 @@ void EditingViewPlugin::doFindReplace()
 {
     // Show/select the find/replace widget in our editor
 
-    if (mEditor)
-        mEditor->setFindReplaceVisible(true);
+    mEditor->setFindReplaceVisible(true);
 }
 
 //==============================================================================
@@ -684,8 +594,7 @@ void EditingViewPlugin::doFindNext()
 {
     // Find the next occurrence of the text in our editor
 
-    if (mEditor)
-        mEditor->findNext();
+    mEditor->findNext();
 }
 
 //==============================================================================
@@ -694,8 +603,7 @@ void EditingViewPlugin::doFindPrevious()
 {
     // Find the previous occurrence of the text in our editor
 
-    if (mEditor)
-        mEditor->findPrevious();
+    mEditor->findPrevious();
 }
 
 //==============================================================================
@@ -704,9 +612,6 @@ void EditingViewPlugin::doSelectAll()
 {
     // Select all the text and update our select all action, should there be an
     // editor
-
-    if (!mEditor)
-        return;
 
     mEditor->selectAll();
 

@@ -73,7 +73,7 @@ BusyWidget::BusyWidget(QWidget *pParent, const double &pProgress) :
 
     // Make ourselves visible and start our timer, if needed
 
-    setVisible(true);
+    show();
 
     if (pProgress == -1.0)
         mTimer->start();
@@ -397,19 +397,20 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
         Margin = 5
     };
 
-    painter.translate(0.5*width(), 0.5*height());
+    painter.translate(width() >> 1, height() >> 1);
 
     QPainterPath painterPath;
-    int backgroundSize = 2*(mRadius+mLength+Margin);
-    double backgroundCornerRadius = mBackgroundRoundness*(backgroundSize >> 1);
+    int halfBackgroundSize = mRadius+mLength+Margin;
+    int backgroundSize = halfBackgroundSize << 1;
+    double backgroundCornerRadius = mBackgroundRoundness*halfBackgroundSize;
 
-    painterPath.addRoundedRect(QRectF(-0.5*backgroundSize, -0.5*backgroundSize,
+    painterPath.addRoundedRect(QRectF(-halfBackgroundSize, -halfBackgroundSize,
                                       backgroundSize, backgroundSize),
                                backgroundCornerRadius, backgroundCornerRadius);
 
     painter.fillPath(painterPath, mBackgroundColor);
 
-    // Draw ourselves
+    // Draw ourselves and accept the event
 
     if (mProgress == -1.0) {
         double lineCornerRadius = mRoundness*(mThickness >> 1);
@@ -448,8 +449,6 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
                             90*16, -mProgress*360*16);
         }
     }
-
-    // Accept the event
 
     pEvent->accept();
 }

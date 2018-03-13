@@ -79,11 +79,11 @@ bool CellmlFileManager::canLoad(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * CellmlFileManager::create(const QString &pFileName) const
+StandardSupport::StandardFile * CellmlFileManager::create(const QString &pFileName) const
 {
     // Create and return a new CellML file
 
-    return new CellmlFile(Core::nativeCanonicalFileName(pFileName));
+    return new CellmlFile(Core::canonicalFileName(pFileName));
 }
 
 //==============================================================================

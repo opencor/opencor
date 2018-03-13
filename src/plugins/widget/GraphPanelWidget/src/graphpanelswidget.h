@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "corecliutils.h"
 #include "graphpanelwidget.h"
 #include "graphpanelwidgetglobal.h"
 #include "splitterwidget.h"
@@ -57,6 +58,9 @@ public:
 
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
+    QIntList sizes() const;
+    void setSizes(const QIntList &pSizes);
+
 private:
     GraphPanelWidgets mGraphPanels;
 
@@ -65,6 +69,9 @@ private:
     QAction *mSynchronizeXAxisAction;
     QAction *mSynchronizeYAxisAction;
 
+    QIntList mInternalSizes;
+    bool mUseInternalSizes;
+
     bool removeGraphPanel(GraphPanelWidget *pGraphPanel);
 
 signals:
@@ -72,16 +79,17 @@ signals:
                          const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void removeGraphPanelsEnabled(const bool &pEnabled);
-
     void graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 private slots:
+    void stopUsingInternalSizes();
+
     void updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void synchronizeXAxis();

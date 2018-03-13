@@ -1,8 +1,8 @@
-PROJECT(FileOrganiserWindowPlugin)
+project(FileOrganiserWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(FileOrganiserWindow
+add_plugin(FileOrganiserWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

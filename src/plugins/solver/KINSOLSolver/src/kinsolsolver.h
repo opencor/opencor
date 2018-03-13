@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "nvector/nvector_serial.h"
+#include "sundials/sundials_linearsolver.h"
+#include "sundials/sundials_matrix.h"
 
 //==============================================================================
 
@@ -38,42 +40,100 @@ namespace KINSOLSolver {
 
 //==============================================================================
 
-class KinsolSolverUserData
-{
-public:
-    explicit KinsolSolverUserData(void *pUserData,
-                                  Solver::NlaSolver::ComputeSystemFunction pComputeSystem);
+static const auto MaximumNumberOfIterationsId = QStringLiteral("MaximumNumberOfIterations");
+static const auto LinearSolverId              = QStringLiteral("LinearSolver");
+static const auto UpperHalfBandwidthId        = QStringLiteral("UpperHalfBandwidth");
+static const auto LowerHalfBandwidthId        = QStringLiteral("LowerHalfBandwidth");
 
-    void * userData() const;
+//==============================================================================
 
-    Solver::NlaSolver::ComputeSystemFunction computeSystem() const;
+static const auto DenseLinearSolver    = QStringLiteral("Dense");
+static const auto BandedLinearSolver   = QStringLiteral("Banded");
+static const auto GmresLinearSolver    = QStringLiteral("GMRES");
+static const auto BiCgStabLinearSolver = QStringLiteral("BiCGStab");
+static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
 
-private:
-    void *mUserData;
+//==============================================================================
 
-    Solver::NlaSolver::ComputeSystemFunction mComputeSystem;
+// Default KINSOL parameter values
+// Note: KINSOL's default maximum number of iterations is 200, which ought to be
+//       big enough in most cases...
+
+enum {
+    MaximumNumberOfIterationsDefaultValue = 200
+};
+
+static const auto LinearSolverDefaultValue = DenseLinearSolver;
+
+enum {
+    UpperHalfBandwidthDefaultValue = 0,
+    LowerHalfBandwidthDefaultValue = 0
 };
 
 //==============================================================================
 
-class KinsolSolver : public Solver::NlaSolver
+class KinsolSolverUserData
 {
+public:
+    explicit KinsolSolverUserData(Solver::NlaSolver::ComputeSystemFunction pComputeSystem,
+                                  void *pUserData);
+
+    Solver::NlaSolver::ComputeSystemFunction computeSystem() const;
+
+    void * userData() const;
+
+private:
+    Solver::NlaSolver::ComputeSystemFunction mComputeSystem;
+
+    void *mUserData;
+};
+
+//==============================================================================
+
+class KinsolSolverData
+{
+public:
+    explicit KinsolSolverData(void *pSolver, N_Vector pParametersVector,
+                              N_Vector pOnesVector, SUNMatrix pMatrix,
+                              SUNLinearSolver pLinearSolver,
+                              KinsolSolverUserData *pUserData);
+    ~KinsolSolverData();
+
+    void * solver() const;
+
+    N_Vector parametersVector() const;
+    N_Vector onesVector() const;
+
+    KinsolSolverUserData * userData() const;
+    void setUserData(KinsolSolverUserData *pUserData);
+
+private:
+    void *mSolver;
+
+    N_Vector mParametersVector;
+    N_Vector mOnesVector;
+
+    SUNMatrix mMatrix;
+    SUNLinearSolver mLinearSolver;
+
+    KinsolSolverUserData *mUserData;
+};
+
+//==============================================================================
+
+class KinsolSolver : public OpenCOR::Solver::NlaSolver
+{
+    Q_OBJECT
+
 public:
     explicit KinsolSolver();
     ~KinsolSolver();
 
-    virtual void initialize(ComputeSystemFunction pComputeSystem,
-                            double *pParameters, int pSize, void *pUserData);
-
-    virtual void solve() const;
+    virtual void solve(ComputeSystemFunction pComputeSystem,
+                       double *pParameters, const int &pSize, void *pUserData);
 
 private:
-    void *mSolver;
-    N_Vector mParametersVector;
-    N_Vector mOnesVector;
-    KinsolSolverUserData *mUserData;
-
-    void reset();
+    QMap<void *, KinsolSolverData *> mData;
 };
 
 //==============================================================================

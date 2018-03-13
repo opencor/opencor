@@ -1,8 +1,8 @@
-PROJECT(CellMLSupportPlugin)
+project(CellMLSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLSupport
+add_plugin(CellMLSupport
     SOURCES
         ../../filetypeinterface.cpp
         ../../guiinterface.cpp

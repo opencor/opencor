@@ -61,10 +61,10 @@ void SimulationManager::manage(const QString &pFileName)
     // Check whether we are already managing the corresponding simulation and,
     // if not, add it to our list of managed simulations
 
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+    QString fileName = Core::canonicalFileName(pFileName);
 
-    if (!simulation(nativeFileName))
-        mSimulations.insert(nativeFileName, new Simulation(nativeFileName));
+    if (!simulation(fileName))
+        mSimulations.insert(fileName, new Simulation(fileName));
 }
 
 //==============================================================================
@@ -80,8 +80,21 @@ void SimulationManager::unmanage(const QString &pFileName)
     if (crtSimulation) {
         delete crtSimulation;
 
-        mSimulations.remove(Core::nativeCanonicalFileName(pFileName));
+        mSimulations.remove(Core::canonicalFileName(pFileName));
     }
+}
+
+//==============================================================================
+
+void SimulationManager::save(const QString &pFileName)
+{
+    // Check whether we are already managing the corresponding simulation and,
+    // if so, save it
+
+    Simulation *crtSimulation = simulation(pFileName);
+
+    if (crtSimulation)
+        crtSimulation->save();
 }
 
 //==============================================================================
@@ -108,12 +121,12 @@ void SimulationManager::rename(const QString &pOldFileName,
     Simulation *crtSimulation = simulation(pOldFileName);
 
     if (crtSimulation) {
-        QString newNativeFileName = Core::nativeCanonicalFileName(pNewFileName);
+        QString newFileName = Core::canonicalFileName(pNewFileName);
 
-        mSimulations.insert(newNativeFileName, crtSimulation);
-        mSimulations.remove(Core::nativeCanonicalFileName(pOldFileName));
+        mSimulations.insert(newFileName, crtSimulation);
+        mSimulations.remove(Core::canonicalFileName(pOldFileName));
 
-        crtSimulation->rename(newNativeFileName);
+        crtSimulation->rename(newFileName);
     }
 }
 
@@ -123,7 +136,7 @@ Simulation * SimulationManager::simulation(const QString &pFileName) const
 {
     // Return the Simulation object, if any, associated with the given file
 
-    return mSimulations.value(Core::nativeCanonicalFileName(pFileName));
+    return mSimulations.value(Core::canonicalFileName(pFileName));
 }
 
 //==============================================================================

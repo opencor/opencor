@@ -104,15 +104,20 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SampleViewPlugin::fileReloaded(const QString &pFileName,
-                                    const bool &pFileChanged,
-                                    const bool &pFileJustSaved)
+void SampleViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    Q_UNUSED(pFileName);
 
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so update our view widget, if needed
 
-    if (pFileChanged && !pFileName.compare(mFileName))
+    if (!pFileName.compare(mFileName))
         mViewWidget->update(pFileName);
 }
 
@@ -248,13 +253,22 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList SampleViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList SampleViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
+}
+
+//==============================================================================
+
+QString SampleViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given file
+
+    return QString();
 }
 
 //==============================================================================

@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 // Core GUI utilities
+//------------------------------------------------------------------------------
+// Qt upgrade: make sure that StyledItemDelegate::sizeHint() still behaves as
+//             expected...
 //==============================================================================
 
 static const auto SettingsPosition = QStringLiteral("Position");
@@ -106,6 +109,44 @@ bool Dialog::hasPositionAndSize()
                    !mSettings->value(SettingsPosition).toPoint().isNull()
                 && !mSettings->value(SettingsSize).toSize().isNull():
                 false;
+}
+
+//==============================================================================
+
+StyledItemDelegate::StyledItemDelegate(QObject *pParent) :
+    QStyledItemDelegate(pParent)
+{
+}
+
+//==============================================================================
+
+QSize StyledItemDelegate::sizeHint(const QStyleOptionViewItem &pOption,
+                                   const QModelIndex &pIndex) const
+{
+    // Slightly reduce our height, on Windows and macOS, if possible and if we
+    // have an icon
+
+    QSize res = QStyledItemDelegate::sizeHint(pOption, pIndex);
+
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+    static const QSize ZeroSize = QSize(0, 0);
+    static const QSize SmallSize = QSize(0, 2);
+
+    const QStandardItemModel *standardItemModel = qobject_cast<const QStandardItemModel *>(pIndex.model());
+
+    if (standardItemModel) {
+        QStandardItem *item = standardItemModel->itemFromIndex(pIndex);
+
+        res -= (item && !item->icon().isNull())?SmallSize:ZeroSize;
+    }
+
+    const QFileSystemModel *fileSystemModel = qobject_cast<const QFileSystemModel *>(pIndex.model());
+
+    if (fileSystemModel)
+        res -= SmallSize;
+#endif
+
+    return res;
 }
 
 //==============================================================================
@@ -249,12 +290,12 @@ QColor borderColor()
     // Return the mid colour, which we consider as the colour to be used for a
     // 'normal' border
     // Note: this is not quite the correct colour, but nonetheless the one that
-    //       is closest to it. Indeed, to use a hidden widget of sorts to
-    //       retrieve the colour of a border works fine on all our supported
-    //       operating systems except Windows 10 (while it works fine on
-    //       previous versions of Windows) where it has a side effect that
-    //       prevents OpenCOR from retrieving the size of its main window. Not
-    //       only that, but we can still see the 'hidden' widget...
+    //       is closest to it. Indeed, to use a hidden widget to retrieve the
+    //       colour of a border works fine on all our supported operating
+    //       systems except Windows 10 (while it works fine on previous versions
+    //       of Windows) where it has a side effect that prevents OpenCOR from
+    //       retrieving the size of its main window. Not only that, but we can
+    //       still see the 'hidden' widget...
 
     return qApp->palette().color(QPalette::Mid);
 }
@@ -310,14 +351,14 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
     uint mask = QMessageBox::FirstButton;
 
     while (mask <= QMessageBox::LastButton) {
-        uint sb = pButtons & mask;
+        uint standardButton = pButtons & mask;
 
         mask <<= 1;
 
-        if (!sb)
+        if (!standardButton)
             continue;
 
-        QPushButton *button = messageBox.addButton((QMessageBox::StandardButton)sb);
+        QPushButton *button = messageBox.addButton((QMessageBox::StandardButton) standardButton);
 
         if (messageBox.defaultButton())
             continue;
@@ -325,12 +366,20 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
         if (   (   (pDefaultButton == QMessageBox::NoButton)
                 && (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole))
             || (   (pDefaultButton != QMessageBox::NoButton) &&
-                   (sb == uint(pDefaultButton)))) {
+                   (standardButton == uint(pDefaultButton)))) {
             messageBox.setDefaultButton(button);
         }
     }
 
-    if (messageBox.exec() == -1)
+    int res = messageBox.exec();
+
+    QCoreApplication::processEvents();
+    // Note: this ensures that the GUI is fully ready for whatever comes next
+    //       (e.g. reloading a file), which could otherwise result in some GUI
+    //       glitches (e.g. a quick black flash on macOS upon reloading a file
+    //       that has been modified outside of OpenCOR)...
+
+    if (res == -1)
         return QMessageBox::Cancel;
 
     return messageBox.standardButton(messageBox.clickedButton());

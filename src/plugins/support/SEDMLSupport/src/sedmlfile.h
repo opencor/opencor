@@ -35,6 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "sbmlapibegin.h"
+    #include "sbml/math/ASTNode.h"
+#include "sbmlapiend.h"
+
+//==============================================================================
+
 namespace libsedml {
     class SedAlgorithm;
     class SedDocument;
@@ -56,14 +62,37 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-static const auto OpencorNamespace    = QStringLiteral("http://www.opencor.ws/");
-static const auto VariableDegree      = QStringLiteral("variableDegree");
-static const auto SolverProperties    = QStringLiteral("solverProperties");
-static const auto SolverProperty      = QStringLiteral("solverProperty");
-static const auto SolverPropertyId    = QStringLiteral("id");
-static const auto SolverPropertyValue = QStringLiteral("value");
-static const auto NlaSolver           = QStringLiteral("nlaSolver");
-static const auto NlaSolverName       = QStringLiteral("name");
+static const auto OpencorNamespace = QStringLiteral("http://www.opencor.ws/");
+static const auto VariableDegree   = QStringLiteral("variableDegree");
+static const auto SolverProperties = QStringLiteral("solverProperties");
+static const auto SolverProperty   = QStringLiteral("solverProperty");
+static const auto Id               = QStringLiteral("id");
+static const auto Value            = QStringLiteral("value");
+static const auto NlaSolver        = QStringLiteral("nlaSolver");
+static const auto Name             = QStringLiteral("name");
+static const auto Properties       = QStringLiteral("properties");
+static const auto GridLines        = QStringLiteral("gridLines");
+static const auto PointCoordinates = QStringLiteral("pointCoordinates");
+static const auto SurroundingArea  = QStringLiteral("surroundingArea");
+static const auto XAxis            = QStringLiteral("xAxis");
+static const auto YAxis            = QStringLiteral("yAxis");
+static const auto ZoomRegion       = QStringLiteral("zoomRegion");
+static const auto Line             = QStringLiteral("line");
+static const auto Symbol           = QStringLiteral("symbol");
+static const auto BackgroundColor  = QStringLiteral("backgroundColor");
+static const auto Color            = QStringLiteral("color");
+static const auto FillColor        = QStringLiteral("fillColor");
+static const auto Filled           = QStringLiteral("filled");
+static const auto FontColor        = QStringLiteral("fontColor");
+static const auto FontSize         = QStringLiteral("fontSize");
+static const auto ForegroundColor  = QStringLiteral("foregroundColor");
+static const auto Height           = QStringLiteral("height");
+static const auto Legend           = QStringLiteral("legend");
+static const auto LogarithmicScale = QStringLiteral("logarithmicScale");
+static const auto Size             = QStringLiteral("size");
+static const auto Style            = QStringLiteral("style");
+static const auto Title            = QStringLiteral("title");
+static const auto Width            = QStringLiteral("width");
 
 //==============================================================================
 
@@ -90,6 +119,10 @@ public:
     virtual bool load();
     virtual bool save(const QString &pFileName = QString());
 
+    bool update(const QString &pFileName = QString());
+
+    void forceNew();
+
     bool isValid(const QString &pFileContents, SedmlFileIssues &pIssues);
     bool isValid();
     bool isSupported();
@@ -110,9 +143,17 @@ private:
 
     SedmlFileIssues mIssues;
 
+    bool mUpdated;
+
     virtual void reset();
 
-    bool algorithmSupported(const libsedml::SedAlgorithm *pSedmlAlgorithm);
+    bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                const QString &pPropertyNodeValue,
+                                const QString &pPropertyName,
+                                const QStringList &pValuesList);
+    bool validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
+                                 const QString &pPropertyNodeValue,
+                                 const QString &pPropertyName);
 };
 
 //==============================================================================

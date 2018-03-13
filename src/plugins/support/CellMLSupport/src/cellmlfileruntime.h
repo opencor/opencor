@@ -125,23 +125,10 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
     Q_OBJECT
 
 public:
-    enum ModelType {
-        Ode,
-        Dae
-    };
-
-    typedef int (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
-
-    typedef int (*ComputeComputedConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
-
-    typedef int (*ComputeOdeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef int (*ComputeOdeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-
-    typedef int (*ComputeDaeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef int (*ComputeDaeResidualsFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
-    typedef int (*ComputeDaeRootInformationFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef int (*ComputeDaeStateInformationFunction)(double *SI);
-    typedef int (*ComputeDaeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
+    typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
+    typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    typedef void (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime();
@@ -152,30 +139,17 @@ public:
 
     bool isValid() const;
 
-    ModelType modelType() const;
-
-    bool needOdeSolver() const;
-    bool needDaeSolver() const;
     bool needNlaSolver() const;
 
     int constantsCount() const;
     int statesCount() const;
     int ratesCount() const;
     int algebraicCount() const;
-    int condVarCount() const;
 
     InitializeConstantsFunction initializeConstants() const;
-
     ComputeComputedConstantsFunction computeComputedConstants() const;
-
-    ComputeOdeRatesFunction computeOdeRates() const;
-    ComputeOdeVariablesFunction computeOdeVariables() const;
-
-    ComputeDaeEssentialVariablesFunction computeDaeEssentialVariables() const;
-    ComputeDaeResidualsFunction computeDaeResiduals() const;
-    ComputeDaeRootInformationFunction computeDaeRootInformation() const;
-    ComputeDaeStateInformationFunction computeDaeStateInformation() const;
-    ComputeDaeVariablesFunction computeDaeVariables() const;
+    ComputeVariablesFunction computeVariables() const;
+    ComputeRatesFunction computeRates() const;
 
     CellmlFileIssues issues() const;
 
@@ -183,44 +157,32 @@ public:
 
     void update();
 
-    CellmlFileRuntimeParameter * variableOfIntegration() const;
+    CellmlFileRuntimeParameter * voi() const;
 
 private:
     CellmlFile *mCellmlFile;
 
-    ModelType mModelType;
     bool mAtLeastOneNlaSystem;
 
-    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
-    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
+    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
 
     int mConstantsCount;
     int mStatesRatesCount;
     int mAlgebraicCount;
-    int mCondVarCount;
 
     Compiler::CompilerEngine *mCompilerEngine;
 
     CellmlFileIssues mIssues;
 
-    CellmlFileRuntimeParameter *mVariableOfIntegration;
+    CellmlFileRuntimeParameter *mVoi;
     CellmlFileRuntimeParameters mParameters;
 
     InitializeConstantsFunction mInitializeConstants;
-
     ComputeComputedConstantsFunction mComputeComputedConstants;
+    ComputeVariablesFunction mComputeVariables;
+    ComputeRatesFunction mComputeRates;
 
-    ComputeOdeRatesFunction mComputeOdeRates;
-    ComputeOdeVariablesFunction mComputeOdeVariables;
-
-    ComputeDaeEssentialVariablesFunction mComputeDaeEssentialVariables;
-    ComputeDaeResidualsFunction mComputeDaeResiduals;
-    ComputeDaeRootInformationFunction mComputeDaeRootInformation;
-    ComputeDaeStateInformationFunction mComputeDaeStateInformation;
-    ComputeDaeVariablesFunction mComputeDaeVariables;
-
-    void resetOdeCodeInformation();
-    void resetDaeCodeInformation();
+    void resetCodeInformation();
 
     void resetFunctions();
 
@@ -231,14 +193,12 @@ private:
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
-    void retrieveOdeCodeInformation(iface::cellml_api::Model *pModel);
-    void retrieveDaeCodeInformation(iface::cellml_api::Model *pModel);
+    void retrieveCodeInformation(iface::cellml_api::Model *pModel);
 
     QString cleanCode(const std::wstring &pCode);
-
-    QString functionCode(const QString &pFunctionSignature,
-                         const QString &pFunctionBody,
-                         const bool &pHasDefines = false);
+    QString methodCode(const QString &pCodeSignature, const QString &pCodeBody);
+    QString methodCode(const QString &pCodeSignature,
+                       const std::wstring &pCodeBody);
 
     QStringList componentHierarchy(iface::cellml_api::CellMLElement *pElement);
 };

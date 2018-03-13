@@ -46,7 +46,7 @@ ProgressBarWidget::ProgressBarWidget(QWidget *pParent) :
 
 void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
 {
-    // Paint ourselves
+    // Draw ourselves and accept the event
 
     QPainter painter(this);
 
@@ -61,8 +61,6 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
     } else {
         painter.fillRect(0, 0, width(), height(), windowColor());
     }
-
-    // Accept the event
 
     pEvent->accept();
 }

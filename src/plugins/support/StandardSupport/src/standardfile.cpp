@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "filemanager.h"
 #include "standardfile.h"
 
 //==============================================================================
@@ -33,15 +34,9 @@ namespace StandardSupport {
 
 StandardFile::StandardFile(const QString &pFileName) :
     QObject(),
-    mFileName(Core::nativeCanonicalFileName(pFileName))
+    mFileName(Core::canonicalFileName(pFileName)),
+    mNew(Core::FileManager::instance()->isNew(pFileName))
 {
-}
-
-//==============================================================================
-
-void StandardFile::reset()
-{
-    // Nothing to do by default...
 }
 
 //==============================================================================
@@ -59,6 +54,27 @@ bool StandardFile::reload()
 
 //==============================================================================
 
+bool StandardFile::save(const QString &pFileName)
+{
+    // Our file being saved, so it cannot be new and cannot be modified (should
+    // it have been modified before)
+    // Note: we must do this before updating mFileName (should it be given a new
+    //       value) since we use it to update our modified status...
+
+    mNew = false;
+
+    setModified(false);
+
+    // Make sure that mFileName is up to date
+
+    if (!pFileName.isEmpty())
+        setFileName(pFileName);
+
+    return true;
+}
+
+//==============================================================================
+
 QString StandardFile::fileName() const
 {
     // Return the standard file's file name
@@ -72,7 +88,34 @@ void StandardFile::setFileName(const QString &pFileName)
 {
     // Set the standard file's file name
 
-    mFileName = pFileName;
+    mFileName = Core::canonicalFileName(pFileName);
+}
+
+//==============================================================================
+
+bool StandardFile::isNew() const
+{
+    // Return whether we are new
+
+    return mNew;
+}
+
+//==============================================================================
+
+bool StandardFile::isModified() const
+{
+    // Return whether we have been modified
+
+    return Core::FileManager::instance()->isModified(mFileName);
+}
+
+//==============================================================================
+
+void StandardFile::setModified(const bool &pModified) const
+{
+    // Set our modified status
+
+    Core::FileManager::instance()->setModified(mFileName, pModified);
 }
 
 //==============================================================================

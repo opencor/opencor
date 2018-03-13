@@ -1,8 +1,8 @@
-PROJECT(CellMLAnnotationViewPlugin)
+project(CellMLAnnotationViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLAnnotationView
+add_plugin(CellMLAnnotationView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp

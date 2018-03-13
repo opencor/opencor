@@ -1,8 +1,8 @@
-PROJECT(CSVDataStorePlugin)
+project(CSVDataStorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CSVDataStore
+add_plugin(CSVDataStore
     SOURCES
         ../../datastoreinterface.cpp
         ../../i18ninterface.cpp
@@ -13,6 +13,7 @@ ADD_PLUGIN(CSVDataStore
     HEADERS_MOC
         ../../datastoreinterface.h
 
+        src/csvdatastoreexporter.h
         src/csvdatastoreplugin.h
     PLUGINS
         DataStore

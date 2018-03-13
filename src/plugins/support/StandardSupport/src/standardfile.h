@@ -49,13 +49,19 @@ public:
     virtual bool load() = 0;
     bool reload();
 
-    virtual bool save(const QString &pFileName = QString()) = 0;
+    virtual bool save(const QString &pFileName = QString());
 
     QString fileName() const;
     void setFileName(const QString &pFileName);
 
+    bool isNew() const;
+
+    bool isModified() const;
+    void setModified(const bool &pModified) const;
+
 protected:
     QString mFileName;
+    bool mNew;
 
     virtual void reset() = 0;
 };

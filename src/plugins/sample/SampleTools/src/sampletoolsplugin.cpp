@@ -110,7 +110,7 @@ Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
     // Return our menu actions
 
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mAddTwoNumbersAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools);
+                              << Gui::MenuAction(Gui::MenuAction::Tools, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================

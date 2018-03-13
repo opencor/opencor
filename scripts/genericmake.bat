@@ -27,14 +27,7 @@ IF "!CMakeBuildType!" == "Release" (
 
 TITLE Making OpenCOR!TitleTests! (using !Generator!)...
 
-FOR /F "TOKENS=1,4" %%X IN ('qmake --version') DO (
-    IF "%%X" == "Using" (
-        SET FullQtVersion=%%Y
-        SET QtVersion=!FullQtVersion:~0,3!
-    )
-)
-
-CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
+CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
 
 CD build
 
@@ -49,12 +42,16 @@ cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!
 SET ExitCode=!ERRORLEVEL!
 
 IF !ExitCode! EQU 0 (
+    FOR /F "TOKENS=1,* DELIMS= " %%X IN ("%*") DO (
+        SET Args=%%Y
+    )
+
     IF DEFINED NinjaFound (
-        ninja
+        ninja !Args!
 
         SET ExitCode=!ERRORLEVEL!
     ) ELSE (
-        jom
+        jom !Args!
 
         SET ExitCode=!ERRORLEVEL!
     )

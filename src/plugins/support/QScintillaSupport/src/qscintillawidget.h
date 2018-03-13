@@ -136,8 +136,15 @@ signals:
 
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
+public slots:
+    virtual void zoomIn();
+    virtual void zoomOut();
+    virtual void zoomTo(int pSize);
+
 private slots:
     void updateUi();
+
+    void updateMarginLineNumbersWidth();
 
     void checkCanSelectAll();
 

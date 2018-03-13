@@ -1,3 +1,3 @@
 @ECHO OFF
 
-CALL scripts\genericmake Tests
+CALL scripts\genericmake Tests %*

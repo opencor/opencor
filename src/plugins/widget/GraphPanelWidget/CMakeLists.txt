@@ -1,8 +1,8 @@
-PROJECT(GraphPanelWidgetPlugin)
+project(GraphPanelWidgetPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(GraphPanelWidget
+add_plugin(GraphPanelWidget
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
@@ -23,4 +23,6 @@ ADD_PLUGIN(GraphPanelWidget
     PLUGINS
         Core
         Qwt
+    QT_MODULES
+        PrintSupport
 )

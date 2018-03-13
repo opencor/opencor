@@ -67,8 +67,9 @@ namespace CellMLSupport {
 //==============================================================================
 
 namespace Core {
-    class Property;
     class ProgressBarWidget;
+    class Property;
+    class PropertyEditorWidget;
     class SplitterWidget;
     class ToolBarWidget;
     class UserMessageWidget;
@@ -79,6 +80,12 @@ namespace Core {
 namespace GraphPanelWidget {
     class GraphPanelWidget;
 }   // namespace GraphPanelWidget
+
+//==============================================================================
+
+namespace SEDMLSupport {
+    class SedmlFile;
+}   // namespace SEDMLSupport
 
 //==============================================================================
 
@@ -103,6 +110,12 @@ class SimulationExperimentViewSimulationWidget : public Core::Widget
     Q_OBJECT
 
 public:
+    enum Task {
+        None,
+        ResetRuns,
+        AddRun
+    };
+
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
                                                       SimulationExperimentViewWidget *pViewWidget,
                                                       const QString &pFileName,
@@ -126,19 +139,19 @@ public:
     void fileModified();
     void fileReloaded();
 
-    QString fileName() const;
-    void setFileName(const QString &pFileName);
-
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     SimulationSupport::Simulation * simulation() const;
 
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 const qulonglong &pSimulationResultsSize,
-                                 const bool &pClearGraphs);
+                                 const quint64 &pSimulationResultsSize,
+                                 const Task &pTask = None);
 
     void resetSimulationProgress();
+
+protected:
+    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
     enum ErrorType {
@@ -150,8 +163,6 @@ private:
     SimulationExperimentViewPlugin *mPlugin;
 
     SimulationExperimentViewWidget *mViewWidget;
-
-    QString mFileName;
 
     QMap<QAction *, DataStoreInterface *> mDataStoreInterfaces;
 
@@ -201,8 +212,23 @@ private:
 
     ErrorType mErrorType;
 
+    bool mValidSimulationEnvironment;
+
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
     QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
+
+    QStringList mSimulationProperties;
+    QStringList mSolversProperties;
+    QMap<Core::PropertyEditorWidget *, QStringList> mGraphPanelProperties;
+    QMap<Core::PropertyEditorWidget *, QStringList> mGraphsProperties;
+
+    bool mSimulationPropertiesModified;
+    bool mSolversPropertiesModified;
+    QMap<Core::PropertyEditorWidget *, bool>  mGraphPanelPropertiesModified;
+    QMap<Core::PropertyEditorWidget *, bool>  mGraphsPropertiesModified;
+
+    QIntList mGraphPanelsWidgetSizes;
+    bool mGraphPanelsWidgetSizesModified;
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
@@ -210,7 +236,7 @@ private:
 
     bool mNeedUpdatePlots;
 
-    QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong> mOldDataSizes;
+    QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
     void reloadView();
 
@@ -226,28 +252,34 @@ private:
 
     void updateInvalidModelMessageWidget();
 
-    void checkAxisValue(double &pValue, const double &pOrigValue,
-                        const QList<double> &pTestValues);
-
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
+                    const bool &pCanSetAxes = true,
                     const bool &pForceReplot = false);
 
-    double * dataPoints(SimulationSupport::Simulation *pSimulation,
-                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
+    double * data(SimulationSupport::Simulation *pSimulation,
+                  CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         const qulonglong &pSize);
-
-    QVariant value(Core::Property *pProperty) const;
+                         const quint64 &pSize);
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
-    void updateSolversProperties(Core::Property *pProperty = 0);
+    void updateSolversProperties(Core::Property *pProperty,
+                                 const bool &pResetNlaSolver);
+    void updateSolversProperties(Core::Property *pProperty);
+    void updateSolversProperties(const bool &pResetNlaSolver);
+    void updateSolversProperties();
 
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
 
-    bool doFurtherInitialize();
+    bool furtherInitialize();
     void initializeGui(const bool &pValidSimulationEnvironment);
     void initializeSimulation();
+
+    void initialiseTrackers();
+
+    QString fileName(const QString &pFileName, const QString &pBaseFileName,
+                     const QString &pFileExtension, const QString &pCaption,
+                     const QStringList &pFileFilters);
 
     void addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                             libsedml::SedModel *pSedmlModel,
@@ -257,12 +289,18 @@ private:
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
-    bool createSedmlFile(const QString &pFileName, const QString &pModelSource);
+    bool createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
+                         const QString &pFileName, const QString &pModelSource);
 
-    void checkSimulationDataModified(const bool &pIsModified);
+    QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
+
+    void updateFileModifiedStatus();
 
 signals:
     void splitterMoved(const QIntList &pSizes);
+
+    void graphPanelSettingsRequested();
+    void graphsSettingsRequested();
 
 private slots:
     void runPauseResumeSimulation();
@@ -274,10 +312,8 @@ private slots:
     void removeAllGraphPanels();
     void resetModelParameters();
     void clearSimulationData();
-    void sedmlExportSedmlFile();
-    void sedmlExportCombineArchive();
-
-    void furtherInitialize();
+    void sedmlExportSedmlFile(const QString &pFileName = QString());
+    void sedmlExportCombineArchive(const QString &pFileName = QString());
 
     void emitSplitterMoved();
 
@@ -297,23 +333,24 @@ private slots:
 
     void simulationDataModified(const bool &pIsModified);
 
-    void simulationPropertyChanged(Core::Property *pProperty);
-    void solversPropertyChanged(Core::Property *pProperty);
+    void simulationPropertyChanged(OpenCOR::Core::Property *pProperty);
+    void solversPropertyChanged(OpenCOR::Core::Property *pProperty);
 
     void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                  CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                  OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
     void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
-    void graphsUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void openCellmlFile();
 
@@ -321,6 +358,10 @@ private slots:
 
     void dataStoreExportDone(const QString &pErrorMessage);
     void dataStoreExportProgress(const double &pProgress);
+
+    void checkSimulationProperties();
+    void checkSolversProperties();
+    void checkGraphPanelsAndGraphs();
 };
 
 //==============================================================================

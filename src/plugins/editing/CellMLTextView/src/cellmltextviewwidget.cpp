@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDir>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLayout>
@@ -262,7 +263,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // text version of the given CellML file
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        QString fileContents;
+        QByteArray fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
@@ -436,13 +437,26 @@ void CellmlTextViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
+void CellmlTextViewWidget::fileSaved(const QString &pFileName)
+{
+    // The given file has been saved, so consider it reloaded, but only if it
+    // has a corresponding widget that is invisible
+
+    QWidget *crtWidget = widget(pFileName);
+
+    if (crtWidget && !crtWidget->isVisible())
+        fileReloaded(pFileName);
+}
+
+//==============================================================================
+
 void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
     // Note: if the view for the given file is not the active view, then to call
-    //       finalize() and then initialize() would activate the contents of the
-    //       view (but the file tab would still point to the previously active
-    //       file). However, we want to the 'old' file to remain the active one,
+    //       finalize() and then initialize() will activate the contents of the
+    //       view (but the file tab will still point to the previously active
+    //       file). However, we want the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
@@ -575,7 +589,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
                 && (Core::questionMessageBox(tr("Save File"),
-                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(pNewFileName,
+                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName),
                                                                                                                                                                                             CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
                                                                                                                                                                                             CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion()))) == QMessageBox::No)) {
                 pNeedFeedback = false;
@@ -614,7 +628,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // to save the contents of the view to a text file
 
             if (Core::questionMessageBox(tr("Save File"),
-                                         tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(pNewFileName)) == QMessageBox::Yes) {
+                                         tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(QDir::toNativeSeparators(pNewFileName))) == QMessageBox::Yes) {
                 QString fileName = Core::getSaveFileName(tr("Save File"),
                                                          Core::newFileName(pNewFileName, "txt"));
 
@@ -1177,7 +1191,7 @@ void CellmlTextViewWidget::updateViewer()
 
 //==============================================================================
 
-void CellmlTextViewWidget::selectFirstItemInEditorList(EditorWidget::EditorListWidget *pEditorList)
+void CellmlTextViewWidget::selectFirstItemInEditorList(OpenCOR::EditorWidget::EditorListWidget *pEditorList)
 {
     // Select the first item in the given editor list
 
@@ -1193,7 +1207,7 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorWidget::EditorListW
 
         mEditorLists.removeFirst();
 
-        foreach (CellmlTextViewWidgetData *data, mData.values()) {
+        foreach (CellmlTextViewWidgetData *data, mData) {
             if (data->editingWidget()->editorListWidget() == editorList) {
                 editorList->selectFirstItem();
 

@@ -108,10 +108,6 @@
         <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
-    </message>
-    <message>
         <source>New File</source>
         <translation>Nouveau Fichier</translation>
     </message>
@@ -296,6 +292,10 @@
     <message>
         <source>: </source>
         <translation> : </translation>
+    </message>
+    <message>
+        <source>Select Colour</source>
+        <translation>Sélectionner Couleur</translation>
     </message>
 </context>
 <context>

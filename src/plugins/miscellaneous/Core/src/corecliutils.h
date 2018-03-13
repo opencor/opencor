@@ -57,6 +57,7 @@ namespace Core {
 
 typedef QList<bool> QBoolList;
 typedef QList<int> QIntList;
+typedef QList<double> QDoubleList;
 
 //==============================================================================
 
@@ -107,8 +108,8 @@ private slots:
 
 //==============================================================================
 
-qulonglong CORE_EXPORT totalMemory();
-qulonglong CORE_EXPORT freeMemory();
+quint64 CORE_EXPORT totalMemory();
+quint64 CORE_EXPORT freeMemory();
 
 QString CORE_EXPORT digitGroupNumber(const QString &pNumber);
 
@@ -157,7 +158,7 @@ QString CORE_EXPORT newFileName(const QString &pFileName,
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pFileExtension);
 
-bool CORE_EXPORT validXml(const QString &pXml, const QString &pSchema);
+bool CORE_EXPORT validXml(const QByteArray &pXml, const QByteArray &pSchema);
 bool CORE_EXPORT validXmlFile(const QString &pXmlFileName,
                               const QString &pSchemaFileName);
 

@@ -137,16 +137,20 @@ void RawSEDMLViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void RawSEDMLViewPlugin::fileReloaded(const QString &pFileName,
-                                      const bool &pFileChanged,
-                                      const bool &pFileJustSaved)
+void RawSEDMLViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    // The given file has been saved, so let our view widget know about it
 
+    mViewWidget->fileSaved(pFileName);
+}
+
+//==============================================================================
+
+void RawSEDMLViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged)
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -216,7 +220,7 @@ void RawSEDMLViewPlugin::initializePlugin()
     // Hide our Raw SED-ML view widget since it may not initially be shown in
     // our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================
@@ -302,13 +306,22 @@ ViewInterface::Mode RawSEDMLViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawSEDMLViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList RawSEDMLViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support
 
     return QStringList() << SEDMLSupport::SedmlMimeType;
+}
+
+//==============================================================================
+
+QString RawSEDMLViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given SED-ML file
+
+    return SEDMLSupport::SedmlMimeType;
 }
 
 //==============================================================================

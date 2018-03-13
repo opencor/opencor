@@ -48,22 +48,20 @@ PluginManager::PluginManager(const bool &pGuiMode) :
     mCorePlugin(0)
 {
     // Retrieve OpenCOR's plugins directory
-    // Note: the plugin's directory is retrieved in main()...
+    // Note #1: the plugin's directory is retrieved in main()...
+    // Note #2: we use QDir().canonicalPath() to ensure that our plugins
+    //          directory uses "/" (and not a mixture of "/" and "\"), which is
+    //          critical on Windows...
 
-    mPluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+qAppName();
+    mPluginsDir = QDir(QCoreApplication::libraryPaths().first()).canonicalPath()+"/"+qAppName();
 
     // Retrieve the list of plugins available for loading
 
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList fileNames = QStringList();
 
-    foreach (const QFileInfo &fileInfo, fileInfoList) {
-#ifdef OpenCOR_MAIN
-        fileNames << nativeCanonicalFileName(fileInfo.canonicalFilePath());
-#else
-        fileNames << Core::nativeCanonicalFileName(fileInfo.canonicalFilePath());
-#endif
-    }
+    foreach (const QFileInfo &fileInfo, fileInfoList)
+        fileNames << fileInfo.canonicalFilePath();
 
     // Retrieve and initialise some information about the plugins
 
@@ -219,11 +217,8 @@ PluginManager::~PluginManager()
 {
     // Delete some internal objects
 
-#ifdef OpenCOR_MAIN
-    resetList(mPlugins);
-#else
-    Core::resetList(mPlugins);
-#endif
+    foreach (Plugin *plugin, mPlugins)
+        delete plugin;
 }
 
 //==============================================================================
@@ -277,15 +272,6 @@ Plugins PluginManager::sortedLoadedPlugins() const
     std::sort(res.begin(), res.end(), Plugin::compare);
 
     return res;
-}
-
-//==============================================================================
-
-QString PluginManager::pluginsDir() const
-{
-    // Return the plugins directory
-
-    return mPluginsDir;
 }
 
 //==============================================================================

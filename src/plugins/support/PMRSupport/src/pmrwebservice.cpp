@@ -430,8 +430,8 @@ void PmrWebService::requestWorkspaceClone(PmrWorkspace *pWorkspace,
 
     connect(pWorkspace, SIGNAL(warning(const QString &)),
             this, SLOT(workspaceErrored()));
-    connect(pWorkspace, SIGNAL(workspaceCloned(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloneFinished(PMRSupport::PmrWorkspace *)));
+    connect(pWorkspace, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceCloneFinished(OpenCOR::PMRSupport::PmrWorkspace *)));
 
     QtConcurrent::run(pWorkspace, &PmrWorkspace::clone, pPath);
 }
@@ -447,7 +447,7 @@ void PmrWebService::workspaceErrored()
 
 //==============================================================================
 
-void PmrWebService::workspaceCloneFinished(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceCloneFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Let people know that we are not busy anymore and that a workspace has
     // been cloned
@@ -471,15 +471,15 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
 
     // Synchronise the given workspace
 
-    connect(pWorkspace, SIGNAL(workspaceSynchronized(PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *)));
+    connect(pWorkspace, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)),
+            this, SLOT(workspaceSynchronizeFinished(OpenCOR::PMRSupport::PmrWorkspace *)));
 
     QtConcurrent::run(pWorkspace, &PmrWorkspace::synchronize, pPush);
 }
 
 //==============================================================================
 
-void PmrWebService::workspaceSynchronizeFinished(PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceSynchronizeFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
 {
     // Let people know that we are not busy anymore and that the given workspace
     // has been synchronised

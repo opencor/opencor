@@ -1,4 +1,251 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 31, "month": 1, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.4 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1526\">#1526</a>). A new file (with no specific type) is not wrongly considered to be a COMBINE archive anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1530\">#1530</a>)." },
+                       { "change": "<strong>PMR window:</strong> properly refresh the list of public exposures when changing the PMR instance (see issue <a href=\"https://github.com/opencor/opencor/issues/1521\">#1521</a>)." },
+                       { "change": "<strong>Simulation support:</strong> addressed a problem with fixing and then saving a previously invalid simulation (see issue <a href=\"https://github.com/opencor/opencor/issues/1533\">#1533</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> added support for multiple runs (see issue <a href=\"https://github.com/opencor/opencor/issues/1523\">#1523</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 1, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> improved our support for <a href=\"https://en.wikipedia.org/wiki/Differential_algebraic_equation\">DAE</a> models (see issues <a href=\"https://github.com/opencor/opencor/issues/188\">#188</a> and <a href=\"https://github.com/opencor/opencor/issues/536\">#536</a>)." },
+                       { "change": "<strong>Solvers:</strong> can now parameterise the <a href=\"https://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver (see issue <a href=\"https://github.com/opencor/opencor/issues/1510\">#1510</a>). Don't reset the <a href=\"https://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver on consecutive runs and improved its implementation (see issue <a href=\"https://github.com/opencor/opencor/issues/1512\">#1512</a>). Removed the <a href=\"https://computation.llnl.gov/projects/sundials/idas\">IDAS</a> solver (see issue <a href=\"https://github.com/opencor/opencor/issues/1515\">#1515</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> don’t incorrectly mark a CellML file as modified (see issue <a href=\"https://github.com/opencor/opencor/issues/1513\">#1513</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1507\">#1507</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 12, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> addressed a problem with quickly changing files potentially resulting in the wrong view being shown (see issue <a href=\"https://github.com/opencor/opencor/issues/1481\">#1481</a>). Reworked our approach to the saving/reloading of a file (see issue <a href=\"https://github.com/opencor/opencor/issues/1491\">#1491</a>). Now pass `make[test].bat` arguments to `scripts/genericmake.bat` (see issue <a href=\"https://github.com/opencor/opencor/issues/1498\">#1498</a>)." },
+                       { "change": "<strong>CellML API:</strong> fixed a small problem that made OpenCOR crash if a metadata id contained \":\" (see issue <a href=\"https://github.com/opencor/opencor/issues/1487\">#1487</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> have the legend buttons use the same background as the plot area (see issue <a href=\"https://github.com/opencor/opencor/issues/1477\">#1477</a>). Got the legend context menu to work again (see issue <a href=\"https://github.com/opencor/opencor/issues/1478\">#1478</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> now allow the editing and saving of a SED-ML file / COMBINE archive (see issue <a href=\"https://github.com/opencor/opencor/issues/1366\">#1366</a>). To reload a CellML file when in development mode now actually reloads it (see issue <a href=\"https://github.com/opencor/opencor/issues/1488\">#1488</a>). Made the (re)loading of remote files and SED-ML files / COMBINE archives much smoother (see issue <a href=\"https://github.com/opencor/opencor/issues/1492\">#1492</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2n (see issue <a href=\"https://github.com/opencor/opencor/issues/1483\">#1483</a>). Upgraded <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.16.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1494\">#1494</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 5.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1502\">#1502</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 11, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>Graph panel widget:</strong> now prevent the plot canvas can from becoming black in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1475\">#1475</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> can now distinguish between the background colour of the plot area and that of the surrounding area (see issue <a href=\"https://github.com/opencor/opencor/issues/1473\">#1473</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 28, "month": 11, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.3 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1464\">#1464</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> axis labels are now rendered fine when exporting a graph panel to various formats (see issue <a href=\"https://github.com/opencor/opencor/issues/1448\">#1448</a>). Can now interact with a graph panel after it has been exported to a given format (see issue <a href=\"https://github.com/opencor/opencor/issues/1450\">#1450</a>)." },
+                       { "change": "<strong>SED-ML support:</strong> now track the relative height of a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/1461\">#1461</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> it is now possible to customise a graph panel and have it serialised to / retrieved from a SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1426\">#1426</a>). Can now show the legend of the different graphs shown in a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/1171\">#1171</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1453\">#1453</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2m (see issue <a href=\"https://github.com/opencor/opencor/issues/1458\">#1458</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1466\">#1466</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 10, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.2 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1311\">#1311</a>). Switched to QtWebKit Reloaded (see issue <a href=\"https://github.com/opencor/opencor/issues/1149\">#1149</a>)." },
+                       { "change": "<strong>Plugins dialog:</strong> make the value of the different fields selectable (see issue <a href=\"https://github.com/opencor/opencor/issues/1444\">#1444</a>)." },
+                       { "change": "<strong>PMR window:</strong> retrieve public exposures only when really needed." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 10, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>APIs:</strong> have HAVE_IEEEFP_H properly set in the libSBML, libNuML and libSEDML packages under Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1432\">#1432</a>). Upgraded the libSEDML package to version 0.4.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1433\">#1433</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> can now export a graph panel to various formats (e.g. PDF, PNG, SVG) (see issue <a href=\"https://github.com/opencor/opencor/issues/1123\">#1123</a>). Greatly improved our support for log scales (see issue <a href=\"https://github.com/opencor/opencor/issues/1412\">#1412</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> added support for the alpha channel in the colours used to customise a graph. Made sure that the GUI is properly initialised when (re)loading a SED-ML file." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 9, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>ZIP support:</strong> use 755 for directories and 644 for files, if no file permissions are set (see issue <a href=\"https://github.com/opencor/opencor/issues/1417\">#1417</a>)." },
+                       { "change": "<strong>Text-based editors:</strong> added line numbers (see issue <a href=\"https://github.com/opencor/opencor/issues/1413\">#1413</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> added the ability to customise a graph (see issue <a href=\"https://github.com/opencor/opencor/issues/591\">#591</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 9, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> use <a href=\"https://www.docker.com/\">Docker</a> with <a href=\"https://en.wikipedia.org/wiki/Ubuntu_(operating_system)\">Ubuntu</a> 16.04 LTS on <a href=\"https://travis-ci.org/\">Travis CI</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1395\">#1395</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> fixed and improved the synchronisation of axes. Added support for log scales (see issue <a href=\"https://github.com/opencor/opencor/issues/1299\">#1299</a>)." },
+                       { "change": "<strong>Solvers:</strong> reference <a href=\"https://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a>/<a href=\"https://computation.llnl.gov/projects/sundials/idas\">IDAS</a> rather than <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a>/<a href=\"https://computation.llnl.gov/projects/sundials/ida\">IDA</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1405\">#1405</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://khan.github.io/KaTeX/\">KaTeX</a> to version 0.8.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1401\">#1401</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 5.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1407\">#1407</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 8, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> make sure that we can find the plugin 'xcb' on some Linux machines (see issue <a href=\"https://github.com/opencor/opencor/issues/1383\">#1383</a>)." },
+                       { "change": "<strong>CSV data store:</strong> make sure that we can export to a (really) big CSV file (see issue <a href=\"https://github.com/opencor/opencor/issues/1394\">#1394</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> make sure that the runtime gets updated after having edited a CellML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1385\">#1385</a>). Don't check whether the memory associated with a simulation can be allocated (see issue <a href=\"https://github.com/opencor/opencor/issues/1389\">#1389</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1393\">#1393</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 7, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
@@ -21,7 +268,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>General:</strong> added a simulation support plugin (to separate out running of a simulation from its widget) (see issue <a href=\"https://github.com/opencor/opencor/issues/1266\">#1266</a>). Provide an error message when a plugin is considered to be invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1347\">#1347</a>). Make certain interfaces available to other plugins (see issue <a href=\"https://github.com/opencor/opencor/issues/1371\">#1371</a>)." },
                        { "change": "<strong>Text-based editors:</strong> don't reset the font size anymore when reloading a file (see issue <a href=\"https://github.com/opencor/opencor/issues/1369\">#1369</a>)." },
                        { "change": "<strong>Property Editor widget:</strong> disallow navigation using the (Shift+)Tab key(s) (see issue <a href=\"https://github.com/opencor/opencor/issues/1354\">#1354</a>)." },
-                       { "change": "<strong>SUNDIALS package:</strong> don't package <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> and <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> (to avoid conflicts with <a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> and <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a>; see issue <a href=\"https://github.com/opencor/opencor/issues/1367\">#1367</a>)." },
+                       { "change": "<strong>SUNDIALS package:</strong> don't package <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> and <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> anymore (to avoid conflicts with <a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> and <a href=\"http://computation.llnl.gov/projects/sundials/idas\">IDAS</a>; see issue <a href=\"https://github.com/opencor/opencor/issues/1367\">#1367</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> prevent the renaming of a file from messing up a locked graph (see issue <a href=\"https://github.com/opencor/opencor/issues/1365\">#1365</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 4.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1352\">#1352</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1358\">#1358</a>)." }
                      ]
@@ -46,7 +293,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>General:</strong> our API and third-party libraries are now taking advantage of our new packaging mechanism (see issue <a href=\"https://github.com/opencor/opencor/issues/1306\">#1306</a>). OpenGL now works in an Ubuntu virtual machine (see issue <a href=\"https://github.com/opencor/opencor/issues/1307\">#1307</a>). Added OpenSSL as a third-party plugin (see issues <a href=\"https://github.com/opencor/opencor/issues/1101\">#1101</a> and <a href=\"https://github.com/opencor/opencor/issues/1314\">#1314</a>). Can now open remote binary files (see issue <a href=\"https://github.com/opencor/opencor/issues/1319\">#1319</a>)." },
-                       { "change": "<strong>Graph Panel widget:</strong> improved the plotting of small values (see issue <a href=\"https://github.com/opencor/opencor/issues/1322\">#1322</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> improved the plotting of small values (see issue <a href=\"https://github.com/opencor/opencor/issues/1322\">#1322</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2l (see issue <a href=\"https://github.com/opencor/opencor/issues/1318\">#1318</a>)." }
                      ]
                    },

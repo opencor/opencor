@@ -135,16 +135,20 @@ void RawTextViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void RawTextViewPlugin::fileReloaded(const QString &pFileName,
-                                     const bool &pFileChanged,
-                                     const bool &pFileJustSaved)
+void RawTextViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    // The given file has been saved, so let our view widget know about it
 
+    mViewWidget->fileSaved(pFileName);
+}
+
+//==============================================================================
+
+void RawTextViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged)
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -214,7 +218,7 @@ void RawTextViewPlugin::initializePlugin()
     // Hide our Raw Text view widget since it may not initially be shown in our
     // central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================
@@ -277,13 +281,22 @@ ViewInterface::Mode RawTextViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawTextViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList RawTextViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
+}
+
+//==============================================================================
+
+QString RawTextViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given file
+
+    return QString();
 }
 
 //==============================================================================

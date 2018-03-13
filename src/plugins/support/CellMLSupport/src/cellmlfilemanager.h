@@ -54,7 +54,7 @@ public:
 protected:
     virtual bool canLoad(const QString &pFileName) const;
 
-    virtual QObject * create(const QString &pFileName) const;
+    virtual StandardSupport::StandardFile * create(const QString &pFileName) const;
 };
 
 //==============================================================================

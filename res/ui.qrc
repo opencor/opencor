@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file alias="app_splashscreen">splashscreen.png</file>
         <file alias="app_icon">OpenCOR.png</file>
+        <file>menu.png</file>
         <file>flags/ad.png</file>
         <file>flags/ae.png</file>
         <file>flags/af.png</file>
@@ -1368,7 +1369,6 @@
         <file>oxygen/mimetypes/text-x-csrc.png</file>
         <file>oxygen/mimetypes/text-x-dtd.png</file>
         <file>oxygen/mimetypes/text-x-generic.png</file>
-        <file>oxygen/mimetypes/text-x-generic.svapplicatiopn-x-awk.png</file>
         <file>oxygen/mimetypes/text-x-haskell.png</file>
         <file>oxygen/mimetypes/text-x-hex.png</file>
         <file>oxygen/mimetypes/text-x-install.png</file>

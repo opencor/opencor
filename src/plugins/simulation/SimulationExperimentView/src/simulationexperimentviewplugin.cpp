@@ -102,16 +102,20 @@ void SimulationExperimentViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SimulationExperimentViewPlugin::fileReloaded(const QString &pFileName,
-                                                  const bool &pFileChanged,
-                                                  const bool &pFileJustSaved)
+void SimulationExperimentViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    // The given file has been saved, so let our view widget know about it
 
+    mViewWidget->fileSaved(pFileName);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so let our view widget know about it
 
-    if (pFileChanged)
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -197,7 +201,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
         if (   viewInterface
             && (   (viewInterface->viewMode() == EditingMode)
                 || (viewInterface->viewMode() == SimulationMode))) {
-            QStringList viewMimeTypes = viewInterface->viewMimeTypes(OpenMimeTypeMode);
+            QStringList viewMimeTypes = viewInterface->viewMimeTypes();
 
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
@@ -228,7 +232,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     // Hide our Simulation Experiment view widget since it may not initially be
     // shown in  our central widget
 
-    mViewWidget->setVisible(false);
+    mViewWidget->hide();
 }
 
 //==============================================================================
@@ -275,17 +279,30 @@ ViewInterface::Mode SimulationExperimentViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList SimulationExperimentViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList SimulationExperimentViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    if (pMimeTypeMode == OpenMimeTypeMode) {
-        return QStringList() << CellMLSupport::CellmlMimeType
-                             << SEDMLSupport::SedmlMimeType
-                             << COMBINESupport::CombineMimeType;
-    } else {
-        return QStringList() << CellMLSupport::CellmlMimeType;
-    }
+    return QStringList() << CellMLSupport::CellmlMimeType
+                         << SEDMLSupport::SedmlMimeType
+                         << COMBINESupport::CombineMimeType;
+}
+
+//==============================================================================
+
+QString SimulationExperimentViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    // Return the MIME type for the given CellML file
+    // Note: we should never return an empty string...
+
+    if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return CellMLSupport::CellmlMimeType;
+    else if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
+        return SEDMLSupport::SedmlMimeType;
+    else if (COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))
+        return COMBINESupport::CombineMimeType;
+    else
+        return QString();
 }
 
 //==============================================================================

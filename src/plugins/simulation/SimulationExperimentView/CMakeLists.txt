@@ -1,8 +1,8 @@
-PROJECT(SimulationExperimentViewPlugin)
+project(SimulationExperimentViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SimulationExperimentView
+add_plugin(SimulationExperimentView
     SOURCES
         ../../datastoreinterface.cpp
         ../../filehandlinginterface.cpp
@@ -15,7 +15,7 @@ ADD_PLUGIN(SimulationExperimentView
         ../../viewinterface.cpp
 
         src/simulationexperimentviewcontentswidget.cpp
-        src/simulationexperimentviewinformationgraphswidget.cpp
+        src/simulationexperimentviewinformationgraphpanelandgraphswidget.cpp
         src/simulationexperimentviewinformationparameterswidget.cpp
         src/simulationexperimentviewinformationsimulationwidget.cpp
         src/simulationexperimentviewinformationsolverswidget.cpp
@@ -30,7 +30,7 @@ ADD_PLUGIN(SimulationExperimentView
         ../../solverinterface.h
 
         src/simulationexperimentviewcontentswidget.h
-        src/simulationexperimentviewinformationgraphswidget.h
+        src/simulationexperimentviewinformationgraphpanelandgraphswidget.h
         src/simulationexperimentviewinformationparameterswidget.h
         src/simulationexperimentviewinformationsimulationwidget.h
         src/simulationexperimentviewinformationsolverswidget.h

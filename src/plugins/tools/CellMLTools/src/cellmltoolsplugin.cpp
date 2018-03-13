@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
+#include <QDir>
 #include <QFile>
 #include <QMainWindow>
 #include <QMenu>
@@ -113,7 +114,7 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mExportToCellml11Action->setEnabled(   cellmlFile && cellmlFile->model()
                                         && (cellmlVersion != CellMLSupport::CellmlFile::Unknown)
                                         && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1));
-//---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
+//---OPENCOR--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
 Core::showEnableAction(mExportToCellml11Action, false);
 
     mExportToUserDefinedFormatAction->setEnabled(cellmlFile && cellmlFile->model());
@@ -139,7 +140,7 @@ Gui::MenuActions CellMLToolsPlugin::guiMenuActions() const
     // Return our menu actions
 
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mCellmlFileExportToMenu->menuAction())
-                              << Gui::MenuAction(Gui::MenuAction::Tools);
+                              << Gui::MenuAction(Gui::MenuAction::Tools, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================
@@ -300,7 +301,8 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
         }
 
         Core::warningMessageBox(tr("Export CellML File To %1").arg(format),
-                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
+                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
+                                                                                                              format, errorMessage));
     }
 }
 
@@ -347,7 +349,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     if (!isLocalFile) {
         // We are dealing with a remote file, so try to get a local copy of it
 
-        QString fileContents;
+        QByteArray fileContents;
 
         if (Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
@@ -508,7 +510,9 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
         }
 
         Core::warningMessageBox(tr("Export CellML File To User-Defined Format"),
-                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
+                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
+                                                                                                                                                   QDir::toNativeSeparators(userDefinedFormatFileName),
+                                                                                                                                                   errorMessage));
     }
 }
 

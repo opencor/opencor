@@ -100,7 +100,7 @@ void RawTextViewWidget::initialize(const QString &pFileName,
     if (!newEditor) {
         // No editor exists for the given file, so create one
 
-        QString fileContents;
+        QByteArray fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
@@ -181,6 +181,19 @@ void RawTextViewWidget::finalize(const QString &pFileName)
 
         mEditors.remove(pFileName);
     }
+}
+
+//==============================================================================
+
+void RawTextViewWidget::fileSaved(const QString &pFileName)
+{
+    // The given file has been saved, so consider it reloaded, but only if it
+    // has a corresponding widget that is invisible
+
+    QWidget *crtWidget = widget(pFileName);
+
+    if (crtWidget && !crtWidget->isVisible())
+        fileReloaded(pFileName);
 }
 
 //==============================================================================

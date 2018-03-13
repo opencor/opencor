@@ -70,7 +70,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
                                                         false, true, false, false);
 
-    mBorderedCategoryMessage->setVisible(false);
+    mBorderedCategoryMessage->hide();
 
     // Create and hide our unsupported metadata message widget
 
@@ -78,7 +78,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mBorderedUnsupportedMetadataMessage = new Core::BorderedWidget(mUnsupportedMetadataMessage,
                                                                    false, true, true, false);
 
-    mBorderedUnsupportedMetadataMessage->setVisible(false);
+    mBorderedUnsupportedMetadataMessage->hide();
 
     // Create our splitter widget
 
@@ -155,7 +155,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // and to have our metadata edit details widget update itself with regards
     // to possible terms (i.e. enable/disable add buttons)
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *)),
+    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(OpenCOR::CellMLSupport::CellmlFileRdfTriple *)),
             this, SLOT(updateMetadataEditDetails()));
 
     // A connection to handle the clicking of the link in the unsupported
