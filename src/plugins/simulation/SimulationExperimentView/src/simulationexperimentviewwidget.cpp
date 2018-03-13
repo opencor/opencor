@@ -530,17 +530,11 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
             r0Parameter = parameter;
     }
 
-    bool pendulumModel =    q1Parameter && thetaParameter && r0Parameter
-                         && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-                         && (thetaParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-                         && (r0Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant);
-
     // Update all of our simulation widgets' results, but only if needed
     // Note: to update only the given simulation widget's results is not enough
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     quint64 simulationResultsSize = simulation->results()->size();
 
     if (   (pTask != SimulationExperimentViewSimulationWidget::None)
@@ -549,6 +543,23 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
         foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
             currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pTask);
+
+        if (   q1Parameter && thetaParameter && r0Parameter
+            && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+            && (thetaParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
+            && (r0Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
+            if (pTask != SimulationExperimentViewSimulationWidget::None) {
+                mPlugin->pendulumWindowWindow()->initData(simulation->size(),
+                                                          simulation->data()->startingPoint(),
+                                                          simulation->data()->endingPoint(),
+                                                          simulation->data()->pointInterval(),
+                                                          simulation->results()->constants(r0Parameter->index()),
+                                                          simulation->results()->states(q1Parameter->index()),
+                                                          simulation->results()->states(thetaParameter->index()));
+            } else {
+                mPlugin->pendulumWindowWindow()->addData(simulationResultsSize);
+            }
+        }
     }
 
     // Ask to recheck our simulation widget's results, but only if its
