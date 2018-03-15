@@ -13,7 +13,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
 
 # Git tag for our library
 
-set(GIT_TAG v0.26.3)
+set(GIT_TAG maint/v0.26)
 
 # Specify where our local package will be installed
 
