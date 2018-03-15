@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Simulation Experiment view:</strong> fixed a small regression problem with nothing being shown when running a simulation and then asking for a graph to be plotted (see issue <a href=\"https://github.com/opencor/opencor/issues/1560\">#1560</a>)." }
+                       { "change": "<strong>Simulation Experiment view:</strong> fixed a small regression problem with nothing being shown when running a simulation and then asking for a graph to be plotted (see issue <a href=\"https://github.com/opencor/opencor/issues/1560\">#1560</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1557\">#1557</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
