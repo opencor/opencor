@@ -3300,10 +3300,9 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 {
     Q_UNUSED(pGraphProperties);
 
-    // A new graph has been added, so add a run to it, if our simulation has
-    // some
+    // A new graph has been added, so add runs to it, if our simulation has some
 
-    if (mSimulation->runsCount())
+    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
         pGraph->addRun();
 
     // Now, keep track of the graph and update its plot
@@ -3314,7 +3313,8 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    updateGraphData(pGraph, mSimulation->results()->size());
+    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
+        updateGraphData(pGraph, i, mSimulation->results()->size(i));
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
@@ -3561,22 +3561,23 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 //==============================================================================
 
 double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
+                                                        const int &pRun,
                                                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given parameter
 
     switch (pParameter->type()) {
     case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return pSimulation->results()->points();
+        return pSimulation->results()->points(pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return pSimulation->results()->constants(pParameter->index());
+        return pSimulation->results()->constants(pRun, pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return pSimulation->results()->rates(pParameter->index());
+        return pSimulation->results()->rates(pRun, pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return pSimulation->results()->states(pParameter->index());
+        return pSimulation->results()->states(pRun, pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return pSimulation->results()->algebraic(pParameter->index());
+        return pSimulation->results()->algebraic(pRun, pParameter->index());
     default:
         // Not a relevant type, so return null
         // Note: we should never reach this point...
@@ -3588,17 +3589,28 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                               const int &pRun,
                                                                const quint64 &pSize)
 {
-    // Update our graph's data
+    // Update our graph's data from the given run
 
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setData(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                        data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
-                        pSize);
+        pGraph->setData(data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
+                        data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+                        pRun, pSize);
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                               const quint64 &pSize)
+{
+    // Update our graph's data from the last run
+
+    updateGraphData(pGraph, -1, pSize);
 }
 
 //==============================================================================
