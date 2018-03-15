@@ -3300,7 +3300,13 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 {
     Q_UNUSED(pGraphProperties);
 
-    // A new graph has been added, so keep track of it and update its plot
+    // A new graph has been added, so add a run to it, if our simulation has
+    // some
+
+    if (mSimulation->runsCount())
+        pGraph->addRun();
+
+    // Now, keep track of the graph and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as a
     //       result, replot the graphs including our new one. On the other hand,
     //       if the plot's axes don't get updated, we need to draw our new
