@@ -207,7 +207,7 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mDummyRun(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
-    // Create both our dummy and first runs
+    // Create our dummy run
     // Note: a dummy run (i.e. a run that is never used, shown, etc.) is needed
     //       to ensure that our legend labels don't disappear (see
     //       https://github.com/opencor/opencor/issues/1537)...
@@ -520,11 +520,48 @@ quint64 GraphPanelPlotGraph::dataSize() const
 
 //==============================================================================
 
-QwtSeriesData<QPointF> * GraphPanelPlotGraph::data() const
+QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
 {
-    // Return the data, i.e. raw samples, of our current (i.e. last) run, if any
+    // Return the data, i.e. raw samples, of the given run, if it exists
 
-    return mRuns.isEmpty()?0:mRuns.last()->data();
+    if (mRuns.isEmpty()) {
+        return 0;
+    } else {
+        if (pRun == -1)
+            return mRuns.last()->data();
+        else
+            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->data():0;
+    }
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
+                                  const int &pRun, const int &pSize)
+{
+    // Set our data, i.e. raw samples, to the given run, if it exists
+
+    GraphPanelPlotGraphRun *run = 0;
+
+    if (!mRuns.isEmpty()) {
+        if (pRun == -1)
+            run = mRuns.last();
+        else
+            run = ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]:0;
+    }
+
+    if (!run)
+        return;
+
+    run->setRawSamples(pDataX, pDataY, pSize);
+
+    // Reset the cached version of our bounding rectangles
+
+    mBoundingRect = InvalidRect;
+    mBoundingLogRect = InvalidRect;
+
+    mBoundingRects.remove(run);
+    mBoundingLogRects.remove(run);
 }
 
 //==============================================================================
@@ -532,20 +569,9 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data() const
 void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
                                   const int &pSize)
 {
-    // Set our data, i.e. raw samples, to our current (i.e. last) run, if any
+    // Set our data, i.e. raw samples, to our current (i.e. last) run
 
-    if (mRuns.isEmpty())
-        return;
-
-    mRuns.last()->setRawSamples(pDataX, pDataY, pSize);
-
-    // Reset the cached version of our bounding rectangles
-
-    mBoundingRect = InvalidRect;
-    mBoundingLogRect = InvalidRect;
-
-    mBoundingRects.remove(mRuns.last());
-    mBoundingLogRects.remove(mRuns.last());
+    setData(pDataX, pDataY, -1, pSize);
 }
 
 //==============================================================================

@@ -256,9 +256,11 @@ private:
                     const bool &pCanSetAxes = true,
                     const bool &pForceReplot = false);
 
-    double * data(SimulationSupport::Simulation *pSimulation,
+    double * data(SimulationSupport::Simulation *pSimulation, const int &pRun,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
+    void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                         const int &pRun, const quint64 &pSize);
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          const quint64 &pSize);
 
