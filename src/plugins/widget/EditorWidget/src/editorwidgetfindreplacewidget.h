@@ -97,9 +97,6 @@ private:
     QAction *mWholeWordsOnlyAction;
     QAction *mRegularExpressionAction;
 
-    QAction *mClearFindTextAction;
-    QAction *mClearReplaceTextAction;
-
     bool mActive;
 
     void updateHeight();
@@ -128,9 +125,6 @@ private slots:
     void on_replaceAllButton_clicked();
 
     void searchOptionChanged();
-
-    void updateClearFindTextAction(const QString &pText);
-    void updateClearReplaceTextAction(const QString &pText);
 };
 
 //==============================================================================

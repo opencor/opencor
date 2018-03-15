@@ -89,25 +89,11 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
     connect(mRegularExpressionAction, SIGNAL(toggled(bool)),
             this, SLOT(searchOptionChanged()));
 
-    // Create and handle our clear find and replace text actions
-
-    mClearFindTextAction = Core::newAction(QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
-    mClearReplaceTextAction = Core::newAction(QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
-
-    connect(mClearFindTextAction, SIGNAL(triggered(bool)),
-            mGui->findEdit, SLOT(clear()));
-
-    connect(mClearReplaceTextAction, SIGNAL(triggered(bool)),
-            mGui->replaceEdit, SLOT(clear()));
-
     // Make our find edit widget our focus proxy
 
     setFocusProxy(mGui->findEdit);
 
     // Some connections for our find-related widgets
-
-    connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-            this, SLOT(updateClearFindTextAction(const QString &)));
 
     connect(this, SIGNAL(canFindReplace(const bool &)),
             mGui->findPreviousButton, SLOT(setEnabled(bool)));
@@ -120,11 +106,6 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
             mGui->replaceAndFindButton, SLOT(setEnabled(bool)));
     connect(this, SIGNAL(canFindReplace(const bool &)),
             mGui->replaceAllButton, SLOT(setEnabled(bool)));
-
-    // A connection for our replace widget
-
-    connect(mGui->replaceEdit, SIGNAL(textChanged(const QString &)),
-            this, SLOT(updateClearReplaceTextAction(const QString &)));
 
     // A few more things , so that we are properly initialised
 
@@ -172,11 +153,6 @@ void EditorWidgetFindReplaceWidget::retranslateUi()
                                      tr("The search is done on whole words only"));
     I18nInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"),
                                      tr("The search uses a regular expression"));
-
-    I18nInterface::retranslateAction(mClearFindTextAction, tr("Clear Text"),
-                                     tr("Clear the text"));
-    I18nInterface::retranslateAction(mClearReplaceTextAction, tr("Clear Text"),
-                                     tr("Clear the text"));
 }
 
 //==============================================================================
@@ -553,36 +529,6 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
     }
 
     mDropDownAction->setIcon(dropDownPixmap);
-}
-
-//==============================================================================
-
-void EditorWidgetFindReplaceWidget::updateClearFindTextAction(const QString &pText)
-{
-    // Show/hide our clear text action, based on whether our find widget
-    // contains some text
-
-    if (pText.isEmpty())
-        mGui->findEdit->removeAction(mClearFindTextAction);
-    else
-        mGui->findEdit->addAction(mClearFindTextAction, QLineEdit::TrailingPosition);
-
-    // Let people know whether we can find/replace
-
-    emit canFindReplace(!findText().isEmpty());
-}
-
-//==============================================================================
-
-void EditorWidgetFindReplaceWidget::updateClearReplaceTextAction(const QString &pText)
-{
-    // Show/hide our clear text action, based on whether our replace widget
-    // contains some text
-
-    if (pText.isEmpty())
-        mGui->replaceEdit->removeAction(mClearReplaceTextAction);
-    else
-        mGui->replaceEdit->addAction(mClearReplaceTextAction, QLineEdit::TrailingPosition);
 }
 
 //==============================================================================

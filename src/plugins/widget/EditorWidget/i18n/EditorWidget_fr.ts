@@ -101,13 +101,5 @@
         <source>The search uses a regular expression</source>
         <translation>La recherche utilise une expression régulière</translation>
     </message>
-    <message>
-        <source>Clear Text</source>
-        <translation>Effacer Texte</translation>
-    </message>
-    <message>
-        <source>Clear the text</source>
-        <translation>Effacer le texte</translation>
-    </message>
 </context>
 </TS>
