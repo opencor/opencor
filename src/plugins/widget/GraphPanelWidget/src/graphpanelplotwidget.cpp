@@ -207,7 +207,7 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mDummyRun(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
-    // Create both our dummy and first runs
+    // Create our dummy run
     // Note: a dummy run (i.e. a run that is never used, shown, etc.) is needed
     //       to ensure that our legend labels don't disappear (see
     //       https://github.com/opencor/opencor/issues/1537)...
