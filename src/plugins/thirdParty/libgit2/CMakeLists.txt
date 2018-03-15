@@ -63,27 +63,27 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5f28c301ae7bf081dc258f1e711a28c2ee14aa22
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b427305de4a94dc8e3ba6c31354eb90c0433bfad
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 54b87bd88ce9755257e57da40cebf7976f8aedb2
-                                              212980ce3400b85c78174dfcef7c7467702016f0)
+                                  SHA1_VALUES b5a9fa89c0aebe88527ae373ff7923b6673dbfff
+                                              23a10fc4e33ef4cfb5052385ec12717bbfa5c1f0)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 81c2035339fe5c7e12572308dc761ede33971def
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} ac61bd1a63add0ea666d59c40728ef4351b02ff2
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES be19ddf4deba80656d3d4b089911b5f2c7db0b85
-                                              5d38274e2e9e78bb6ed8bf685c2e7afc5f4a8a7b)
+                                  SHA1_VALUES 7211bc4b8031fae384df1bc025456728674cdc04
+                                              1dc22d269ad0be605639f2e7b93e46888817ed41)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 850da0019a5356c957d0c2a6565a1d5e955c8730
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7a60591bb9a5ddef44bd6eb614686a336bfcb87a
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 427bca7265c141d73f2ebc66e7089b999e30dde6)
+                              SHA1_VALUES 1f395e996a94bf227f11cf76cfa21814025c1652)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 304480c9e23bc69eac295e78cf5a69c26b40a809
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 39fe1dbf7899ef7516fc72f706ad6bec36d31c23
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e6d1c1c16fa8dac77f3186eb2c91d8e6891ee648)
+                              SHA1_VALUES 3b0a7df4c9e709b89dc3d9e230a2157d1972335a)
     endif()
 else()
     # Ignore some warnings
