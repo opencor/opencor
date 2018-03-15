@@ -1,4 +1,26 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 2, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>Simulation Experiment view:</strong> prevent the legend labels from disappearing upon clearing the simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1537\">#1537</a>). Prevent the clearing of simulation data from taking too long when we have several graph panels (see issue <a href=\"https://github.com/opencor/opencor/issues/1538\">#1538</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 31, "month": 1, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
