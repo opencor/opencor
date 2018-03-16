@@ -183,12 +183,12 @@ public:
 
     DataStore::DataStore * dataStore() const;
 
-    double * points(const int &pRun) const;
+    double * points(const int &pRun = -1) const;
 
-    double * constants(const int &pRun, const int &pIndex) const;
-    double * rates(const int &pRun, const int &pIndex) const;
-    double * states(const int &pRun, const int &pIndex) const;
-    double * algebraic(const int &pRun, const int &pIndex) const;
+    double * constants(const int &pIndex, const int &pRun = -1) const;
+    double * rates(const int &pIndex, const int &pRun = -1) const;
+    double * states(const int &pIndex, const int &pRun = -1) const;
+    double * algebraic(const int &pIndex, const int &pRun = -1) const;
 
 private:
     Simulation *mSimulation;
