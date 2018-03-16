@@ -271,7 +271,9 @@ private:
     void updateSolversProperties(const bool &pResetNlaSolver);
     void updateSolversProperties();
 
-    CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
+    CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
+                                                                 QString &pCellmlComponent,
+                                                                 QString &pCellmlVariable);
 
     bool furtherInitialize();
     void initializeGui(const bool &pValidSimulationEnvironment);
