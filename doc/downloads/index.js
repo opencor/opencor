@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>PMR support:</strong> fixed a problem with folders being potentially incorrectly tracked (see issue <a href=\"https://github.com/opencor/opencor/issues/1559\">#1559</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> fixed a small regression problem with nothing being shown when running a simulation and then asking for a graph to be plotted (see issue <a href=\"https://github.com/opencor/opencor/issues/1560\">#1560</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1557\">#1557</a>)." }
                      ]

@@ -540,6 +540,46 @@ CharPair PmrWorkspace::gitStatusChars(const int &pFlags) const
 
 //==============================================================================
 
+PmrWorkspaceFileNode * PmrWorkspace::parentFileNode(const QString &pPath,
+                                                    PmrWorkspaceFileNode *pParentFileNode)
+{
+    // Check whether the first folder in the path is a child of the given parent
+    // file node
+
+    PmrWorkspaceFileNode *realParentFileNode = pParentFileNode?pParentFileNode:mRootFileNode;
+    QStringList pathComponents = pPath.split('/');
+
+    if (pathComponents.count() == 1) {
+        // The path only consists of a file name, so return our parent file node
+
+        return realParentFileNode;
+    } else {
+        // The path contains some folders, so check whether the top folder is a
+        // child of our parent file node and, if so, use it to recursively
+        // retrieve the parent file node of the given path, otherwise create XXXXXXXXXXX
+
+        QString topFolder = pathComponents.first();
+        PmrWorkspaceFileNode *newParentFileNode = 0;
+
+        foreach (PmrWorkspaceFileNode *childFileNode, realParentFileNode->children()) {
+            if (!topFolder.compare(childFileNode->name())) {
+                newParentFileNode = childFileNode;
+
+                break;
+            }
+        }
+
+        if (!newParentFileNode)
+            newParentFileNode = realParentFileNode->addChild(topFolder);
+
+        pathComponents.removeFirst();
+
+        return parentFileNode(pathComponents.join('/'), newParentFileNode);
+    }
+}
+
+//==============================================================================
+
 void PmrWorkspace::refreshStatus()
 {
     // Keep track of our 'old' file nodes
@@ -568,12 +608,9 @@ void PmrWorkspace::refreshStatus()
         git_status_list *statusList;
 
         if (!git_status_list_new(&statusList, mGitRepository, &statusOptions)) {
-            PmrWorkspaceFileNodes fileNodes = PmrWorkspaceFileNodes();
-            PmrWorkspaceFileNode *currentFileNode = mRootFileNode;
-
-            fileNodes << currentFileNode;
-
-            // Go through the different entries
+            // Go through the different entries and keep track of every single
+            // one of them in mRepositoryStatusMap, as well as update
+            // mStagedCount and mUnstagedCount, if needed
 
             for (size_t i = 0, iMax = git_status_list_entrycount(statusList); i < iMax; ++i) {
                 const git_status_entry *status = git_status_byindex(statusList, i);
@@ -592,36 +629,7 @@ void PmrWorkspace::refreshStatus()
                     if (statusChars.second != ' ')
                         ++mUnstagedCount;
 
-                    // Find the correct place in the tree to add the file
-
-                    QStringList pathComponents = QString(filePath).split('/');
-                    int pathComponentsCount = pathComponents.count();
-                    int i = 0;
-                    int n = qMin(pathComponentsCount, fileNodes.count())-1;
-
-                    while (   (i < n)
-                           && pathComponents[i].compare(fileNodes[i+1]->name(), Qt::CaseInsensitive)) {
-                        ++i;
-                    }
-
-                    // Cut back the stack so that it matches the path component
-
-                    while (i+1 < fileNodes.count())
-                        fileNodes.removeLast();
-
-                    currentFileNode = fileNodes[i];
-
-                    // Add the directory nodes as required
-
-                    while (i < pathComponentsCount-1) {
-                        currentFileNode = currentFileNode->addChild(pathComponents[i]);
-
-                        fileNodes << currentFileNode;
-
-                        ++i;
-                    }
-
-                    mRepositoryStatusMap.insert(filePath, currentFileNode->addChild(pathComponents[i], statusChars));
+                    mRepositoryStatusMap.insert(filePath, parentFileNode(filePath)->addChild(QFileInfo(filePath).fileName(), statusChars));
                 }
             }
 
