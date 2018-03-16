@@ -37,6 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>PMR support:</strong> now provide a more meaningful error message when something goes wrong (see issue <a href=\"https://github.com/opencor/opencor/issues/1558\">#1558</a>). Fixed a problem with folders being potentially incorrectly tracked (see issue <a href=\"https://github.com/opencor/opencor/issues/1559\">#1559</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> improved the synchronisation with PMR in case the Internet connection drops (see issue <a href=\"https://github.com/opencor/opencor/issues/1566\">#1566</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> fixed a small regression problem with nothing being shown when running a simulation and then asking for a graph to be plotted (see issue <a href=\"https://github.com/opencor/opencor/issues/1560\">#1560</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1557\">#1557</a>)." }
                      ]
