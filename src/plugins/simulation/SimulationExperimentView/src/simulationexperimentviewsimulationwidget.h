@@ -256,9 +256,11 @@ private:
                     const bool &pCanSetAxes = true,
                     const bool &pForceReplot = false);
 
-    double * data(SimulationSupport::Simulation *pSimulation,
+    double * data(SimulationSupport::Simulation *pSimulation, const int &pRun,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
+    void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                         const int &pRun, const quint64 &pSize);
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          const quint64 &pSize);
 
@@ -269,7 +271,9 @@ private:
     void updateSolversProperties(const bool &pResetNlaSolver);
     void updateSolversProperties();
 
-    CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable);
+    CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
+                                                                 QString &pCellmlComponent,
+                                                                 QString &pCellmlVariable);
 
     bool furtherInitialize();
     void initializeGui(const bool &pValidSimulationEnvironment);

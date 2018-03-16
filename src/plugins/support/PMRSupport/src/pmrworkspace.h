@@ -155,6 +155,9 @@ private:
     bool merge();
     void push();
 
+    PmrWorkspaceFileNode *parentFileNode(const QString &pPath,
+                                         PmrWorkspaceFileNode *pParentFileNode = 0);
+
     void deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
                          PmrWorkspaceFileNodes &pFileNodes);
 

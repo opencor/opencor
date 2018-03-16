@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pmrsupport.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
+#include "pmrworkspace.h"
 #include "pmrworkspacemanager.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "pmrworkspaceswindowwidget.h"
@@ -1195,13 +1196,18 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
                                          tr("View the current workspace on the computer"):
                                          tr("View the current workspaces on the computer"));
 
+    PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspace->gitWorkspaceStatus();
+
     mViewWorkspaceInPmrAction->setEnabled(items.count());
     mViewWorkspaceOncomputerAction->setEnabled(nbOfWorkspacePaths && (nbOfWorkspacePaths == workspaces.count()));
     mCopyWorkspaceUrlAction->setEnabled(oneWorkspaceUrl);
     mCopyWorkspacePathAction->setEnabled(oneWorkspacePath);
     mMakeLocalWorkspaceCopyAction->setEnabled(oneItem && !nbOfWorkspacePaths);
     mSynchronizeWorkspaceAction->setEnabled(   oneWorkspacePath
-                                            && (currentItem()->workspace()->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged));
+                                            && (   (    workspace->isOwned()
+                                                    && (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead))
+                                                || (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)));
     mAboutWorkspaceAction->setEnabled(oneWorkspaceUrl);
 
     mContextMenu->exec(QCursor::pos());
@@ -1420,31 +1426,38 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
                                 tr("An <a href=\"opencor://openPreferencesDialog/PMRSupport\">email</a> must be set before you can synchronise with PMR."));
     } else {
         // Synchronise the current workspace, which involves letting the user
-        // decide which files should be staged, commit those files, pull things
-        // from PMR and, if we own the workspace, push things to PMR before
-        // refreshing our workspace
+        // decide which files should be staged (if they are not already staged),
+        // commit those files, pull things from PMR and, if we own the
+        // workspace, push things to PMR before refreshing our workspace
+        // Note: if we come here and the Internet connection is down, then we
+        //       will be able to do everything except pushing things to PMR,
+        //       which means that we will be 'ahead', hence we need to check our
+        //       current state...
 
-        QSettings settings;
+        PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
 
-        settings.beginGroup(mSettingsGroup);
-            settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
-                PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
-                PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, mTimer, Core::mainWindow());
+        if (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged) {
+            QSettings settings;
 
-                synchronizeDialog.exec(&settings);
+            settings.beginGroup(mSettingsGroup);
+                settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
+                    PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, mTimer, Core::mainWindow());
 
-                if (synchronizeDialog.result() == QMessageBox::Ok) {
-                    QStringList fileNames = synchronizeDialog.fileNames();
+                    synchronizeDialog.exec(&settings);
 
-                    for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-                        workspace->stageFile(fileNames[i], true);
+                    if (synchronizeDialog.result() == QMessageBox::Ok) {
+                        QStringList fileNames = synchronizeDialog.fileNames();
 
-                    workspace->commit(synchronizeDialog.message());
+                        for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+                            workspace->stageFile(fileNames[i], true);
 
-                    mPmrWebService->requestWorkspaceSynchronize(currentItem()->workspace(), workspace->isOwned());
-                }
+                        workspace->commit(synchronizeDialog.message());
+                    }
+                settings.endGroup();
             settings.endGroup();
-        settings.endGroup();
+        }
+
+        mPmrWebService->requestWorkspaceSynchronize(workspace, workspace->isOwned());
     }
 }
 

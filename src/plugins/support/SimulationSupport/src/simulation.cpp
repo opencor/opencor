@@ -689,11 +689,11 @@ void SimulationResults::addPoint(const double &pPoint)
 
 //==============================================================================
 
-quint64 SimulationResults::size() const
+quint64 SimulationResults::size(const int &pRun) const
 {
-    // Return the size of our data store
+    // Return the size of our data store for the given run
 
-    return mDataStore?mDataStore->size():0;
+    return mDataStore?mDataStore->size(pRun):0;
 }
 
 //==============================================================================
@@ -707,47 +707,47 @@ DataStore::DataStore * SimulationResults::dataStore() const
 
 //==============================================================================
 
-double * SimulationResults::points() const
+double * SimulationResults::points(const int &pRun) const
 {
-    // Return our points
+    // Return our points for the given run
 
-    return mPoints?mPoints->values():0;
+    return mPoints?mPoints->values(pRun):0;
 }
 
 //==============================================================================
 
-double * SimulationResults::constants(const int &pIndex) const
+double * SimulationResults::constants(const int &pRun, const int &pIndex) const
 {
-    // Return our constants data at the given index
+    // Return our constants data at the given index and for the given run
 
-    return mConstants.isEmpty()?0:mConstants[pIndex]->values();
+    return mConstants.isEmpty()?0:mConstants[pIndex]->values(pRun);
 }
 
 //==============================================================================
 
-double * SimulationResults::rates(const int &pIndex) const
+double * SimulationResults::rates(const int &pRun, const int &pIndex) const
 {
-    // Return our rates data at the given index
+    // Return our rates data at the given index and for the given run
 
-    return mRates.isEmpty()?0:mRates[pIndex]->values();
+    return mRates.isEmpty()?0:mRates[pIndex]->values(pRun);
 }
 
 //==============================================================================
 
-double * SimulationResults::states(const int &pIndex) const
+double * SimulationResults::states(const int &pRun, const int &pIndex) const
 {
-    // Return our states data at the given index
+    // Return our states data at the given index and for the given run
 
-    return mStates.isEmpty()?0:mStates[pIndex]->values();
+    return mStates.isEmpty()?0:mStates[pIndex]->values(pRun);
 }
 
 //==============================================================================
 
-double * SimulationResults::algebraic(const int &pIndex) const
+double * SimulationResults::algebraic(const int &pRun, const int &pIndex) const
 {
-    // Return our algebraic data at the given index
+    // Return our algebraic data at the given index and for the given run
 
-    return mAlgebraic.isEmpty()?0:mAlgebraic[pIndex]->values();
+    return mAlgebraic.isEmpty()?0:mAlgebraic[pIndex]->values(pRun);
 }
 
 //==============================================================================
