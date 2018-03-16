@@ -2352,7 +2352,9 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties()
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable)
+CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable,
+                                                                                                       QString &pCellmlComponent,
+                                                                                                       QString &pCellmlVariable)
 {
     // Retrieve the CellML runtime parameter corresponding to the given SED-ML
     // variable
@@ -2392,6 +2394,9 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
     // Go through the runtime parameters to see one of them correspond to our
     // given SED-ML variable
+
+    pCellmlComponent = componentName;
+    pCellmlVariable = variableName+QString(variableDegree, '\'');
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mSimulation->runtime()->parameters()) {
         if (   !componentName.compare(parameter->componentHierarchy().last())
@@ -2522,7 +2527,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
 
         if (!propertySet) {
-            simulationError(tr("the requested property (%1) could not be set").arg(kisaoId),
+            simulationError(tr("the requested solver property (%1) could not be set").arg(kisaoId),
                             InvalidSimulationEnvironment);
 
             return false;
@@ -2557,7 +2562,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                         }
 
                         if (!propertySet) {
-                            simulationError(tr("the requested property (%1) could not be set").arg(id),
+                            simulationError(tr("the requested solver property (%1) could not be set").arg(id),
                                             InvalidSimulationEnvironment);
 
                             return false;
@@ -2619,7 +2624,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             }
 
                             if (!propertySet) {
-                                simulationError(tr("the requested property (%1) could not be set").arg(id),
+                                simulationError(tr("the requested solver property (%1) could not be set").arg(id),
                                                 InvalidSimulationEnvironment);
 
                                 return false;
@@ -2836,11 +2841,29 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
 
-            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
-            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0));
+            libsedml::SedVariable *xVariable = sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0);
+            libsedml::SedVariable *yVariable = sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0);
+            QString xCellmlComponent;
+            QString yCellmlComponent;
+            QString xCellmlVariable;
+            QString yCellmlVariable;
+            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(xVariable, xCellmlComponent, xCellmlVariable);
+            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(yVariable, yCellmlComponent, yCellmlVariable);
 
-            if (!xParameter || !yParameter) {
-                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(sedmlCurve->getId())),
+            if (!xParameter) {
+                if (!yParameter) {
+                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), xCellmlVariable, xCellmlComponent, yCellmlVariable, yCellmlComponent),
+                                    InvalidSimulationEnvironment);
+
+                    return false;
+                } else {
+                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), xCellmlVariable, xCellmlComponent),
+                                    InvalidSimulationEnvironment);
+
+                    return false;
+                }
+            } else if (!yParameter) {
+                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), yCellmlVariable, yCellmlComponent),
                                 InvalidSimulationEnvironment);
 
                 return false;
