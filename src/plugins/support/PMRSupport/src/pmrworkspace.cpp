@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // PMR workspace
 //==============================================================================
 
+#include "corecliutils.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
@@ -1344,7 +1345,12 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
     // Let people know, through a warning, about our Git error
 
-    emit warning(pMessage);
+    const git_error *gitError = giterr_last();
+
+    if (gitError)
+        emit warning(tr("%1\n\nGit message: %2.").arg(pMessage, Core::formatMessage(gitError->message)));
+    else
+        emit warning(pMessage);
 }
 
 //==============================================================================
