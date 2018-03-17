@@ -716,7 +716,7 @@ double * SimulationResults::points(const int &pRun) const
 
 //==============================================================================
 
-double * SimulationResults::constants(const int &pRun, const int &pIndex) const
+double * SimulationResults::constants(const int &pIndex, const int &pRun) const
 {
     // Return our constants data at the given index and for the given run
 
@@ -725,7 +725,7 @@ double * SimulationResults::constants(const int &pRun, const int &pIndex) const
 
 //==============================================================================
 
-double * SimulationResults::rates(const int &pRun, const int &pIndex) const
+double * SimulationResults::rates(const int &pIndex, const int &pRun) const
 {
     // Return our rates data at the given index and for the given run
 
@@ -734,7 +734,7 @@ double * SimulationResults::rates(const int &pRun, const int &pIndex) const
 
 //==============================================================================
 
-double * SimulationResults::states(const int &pRun, const int &pIndex) const
+double * SimulationResults::states(const int &pIndex, const int &pRun) const
 {
     // Return our states data at the given index and for the given run
 
@@ -743,7 +743,7 @@ double * SimulationResults::states(const int &pRun, const int &pIndex) const
 
 //==============================================================================
 
-double * SimulationResults::algebraic(const int &pRun, const int &pIndex) const
+double * SimulationResults::algebraic(const int &pIndex, const int &pRun) const
 {
     // Return our algebraic data at the given index and for the given run
 

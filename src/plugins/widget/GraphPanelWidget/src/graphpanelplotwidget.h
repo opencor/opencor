@@ -174,9 +174,8 @@ public:
     quint64 dataSize() const;
 
     QwtSeriesData<QPointF> *data(const int &pRun = -1) const;
-    void setData(double *pDataX, double *pDataY, const int &pRun,
-                 const int &pSize);
-    void setData(double *pDataX, double *pDataY, const int &pSize);
+    void setData(double *pDataX, double *pDataY, const int &pSize,
+                 const int &pRun = -1);
 
     QRectF boundingRect();
     QRectF boundingLogRect();

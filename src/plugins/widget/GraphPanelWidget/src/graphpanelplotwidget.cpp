@@ -537,7 +537,7 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
 //==============================================================================
 
 void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
-                                  const int &pRun, const int &pSize)
+                                  const int &pSize, const int &pRun)
 {
     // Set our data, i.e. raw samples, to the given run, if it exists
 
@@ -562,16 +562,6 @@ void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
 
     mBoundingRects.remove(run);
     mBoundingLogRects.remove(run);
-}
-
-//==============================================================================
-
-void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
-                                  const int &pSize)
-{
-    // Set our data, i.e. raw samples, to our current (i.e. last) run
-
-    setData(pDataX, pDataY, -1, pSize);
 }
 
 //==============================================================================
