@@ -3594,13 +3594,13 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
         return pSimulation->results()->points(pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return pSimulation->results()->constants(pRun, pParameter->index());
+        return pSimulation->results()->constants(pParameter->index(), pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return pSimulation->results()->rates(pRun, pParameter->index());
+        return pSimulation->results()->rates(pParameter->index(), pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return pSimulation->results()->states(pRun, pParameter->index());
+        return pSimulation->results()->states(pParameter->index(), pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return pSimulation->results()->algebraic(pRun, pParameter->index());
+        return pSimulation->results()->algebraic(pParameter->index(), pRun);
     default:
         // Not a relevant type, so return null
         // Note: we should never reach this point...
@@ -3622,7 +3622,7 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
 
         pGraph->setData(data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
                         data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
-                        pRun, pSize);
+                        pSize, pRun);
     }
 }
 
