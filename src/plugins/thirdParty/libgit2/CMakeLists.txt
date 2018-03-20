@@ -13,7 +13,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
 
 # Git tag for our library
 
-set(GIT_TAG maint/v0.26)
+set(GIT_TAG opencor)
 
 # Specify where our local package will be installed
 
@@ -118,12 +118,17 @@ else()
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
+            -DAPPLESECURITY=OFF
             -DBUILD_CLAR=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${DEFINE_STATIC_CRT_ARG}
+            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
+            -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
+            -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
             -DUSE_SSH=OFF
+            -DWINHTTP=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )

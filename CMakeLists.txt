@@ -826,6 +826,9 @@ set(PLUGINS
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
+    # Plugins that other third party packages use
+    thirdParty/OpenSSL
+
     api/BioSignalMLAPI
     api/CellMLAPI
     api/SBMLAPI
@@ -877,7 +880,6 @@ set(PLUGINS
     thirdParty/LibXDiff
     thirdParty/LLVMClang
     thirdParty/OAuth
-    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
