@@ -63,22 +63,22 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b427305de4a94dc8e3ba6c31354eb90c0433bfad
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 700423133081a13b36adcbed68e53d074e4d2ba9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b5a9fa89c0aebe88527ae373ff7923b6673dbfff
-                                              23a10fc4e33ef4cfb5052385ec12717bbfa5c1f0)
+                                  SHA1_VALUES bd454e4a93e3a6b58cf2f7e3365dca6f9f5b4dd8
+                                              bc9b4c532c1993bef351ba36ab041b31c2797649)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} ac61bd1a63add0ea666d59c40728ef4351b02ff2
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 710cae96fd77bdad2b2169f64bee74198d07e1e6
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7211bc4b8031fae384df1bc025456728674cdc04
-                                              1dc22d269ad0be605639f2e7b93e46888817ed41)
+                                  SHA1_VALUES 786f8ae0bba2c9a8b7078c442229797e060b2545
+                                              8ea008b111d3674b5dec084f65d20d4a6a7e5ee2)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7a60591bb9a5ddef44bd6eb614686a336bfcb87a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 6e4edd17ac57fca922c34c7fc4288cd37ae1d951
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 1f395e996a94bf227f11cf76cfa21814025c1652)
+                              SHA1_VALUES 7a024ebb0d2876f86ec141d79e2c4ed20f462142)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 39fe1dbf7899ef7516fc72f706ad6bec36d31c23
