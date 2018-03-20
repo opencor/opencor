@@ -558,11 +558,11 @@ QString SimulationResults::uri(const QStringList &pComponentHierarchy,
 
 void SimulationResults::createDataStore()
 {
-    // Make sure that we have a runtime
+    // Make sure that we have a runtime and a VOI
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    if (!runtime)
+    if (!runtime || !runtime->voi())
         return;
 
     // Create our data store
