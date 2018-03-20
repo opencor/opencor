@@ -1171,7 +1171,18 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         }
     }
     case SimulationSupport::Simulation::SedmlFile:
-        sedmlExportSedmlFile(pFileName);
+        // Only export our simulation to a SED-ML file if we are not dealing
+        // with a new SED-ML file
+        // Note: indeed, if we were to do that, we would end up with an
+        //       unloadable SED-ML file (since since it doesn’t contain
+        //       everything it should). So, instead, we should just save our
+        //       default SED-ML template, i.e. as if we were to save the SED-ML
+        //       file using the Raw SED-ML or Raw Text view...
+
+        if (Core::FileManager::instance()->isNew(mSimulation->fileName()))
+            QFile::copy(mSimulation->fileName(), pFileName);
+        else
+            sedmlExportSedmlFile(pFileName);
 
         return true;
     case SimulationSupport::Simulation::CombineArchive:
@@ -1529,12 +1540,12 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     //       parameter using an annotation...
 
     libsedml::SedAlgorithm *sedmlAlgorithm = pSedmlSimulation->createAlgorithm();
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
     SolverInterface *odeSolverInterface = mSimulation->data()->odeSolverInterface();
     Solver::Solver::Properties odeSolverProperties = mSimulation->data()->odeSolverProperties();
     QString annotation = QString();
 
-    sedmlAlgorithm->setKisaoID(odeSolverInterface->kisaoId(mSimulation->data()->odeSolverName()).toStdString());
+    if (odeSolverInterface)
+        sedmlAlgorithm->setKisaoID(odeSolverInterface->kisaoId(mSimulation->data()->odeSolverName()).toStdString());
 
     foreach (const QString &odeSolverProperty, odeSolverProperties.keys()) {
         QString kisaoId = odeSolverInterface->kisaoId(odeSolverProperty);
@@ -1569,7 +1580,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     // SED-ML simulation know about it through an annotation (since we cannot
     // have more than one SED-ML algorithm per SED-ML simulation)
 
-    if (runtime->needNlaSolver()) {
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (runtime && runtime->needNlaSolver()) {
         QString annotation = QString();
         Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
 
@@ -1660,7 +1673,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->cellmlFile()->model());
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->cellmlFile()?
+                                                                                              mSimulation->cellmlFile()->model():
+                                                                                              0);
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                         CellMLSupport::Cellml_1_1_Namespace.toStdString():
@@ -1996,7 +2011,9 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
     // file name, if needed
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString localCellmlFileName = mSimulation->cellmlFile()->fileName();
+    QString localCellmlFileName = mSimulation->cellmlFile()?
+                                      mSimulation->cellmlFile()->fileName():
+                                      QString();
     bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
     QString cellmlFileName = remoteCellmlFile?
                                  fileManagerInstance->url(localCellmlFileName):

@@ -89,6 +89,7 @@ public:
     Plugins cellmlEditingViewPlugins() const;
     Plugins cellmlSimulationViewPlugins() const;
 
+    SimulationExperimentViewSimulationWidget * simulationWidget() const;
     SimulationExperimentViewSimulationWidget * simulationWidget(const QString &pFileName) const;
     SimulationSupport::Simulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;

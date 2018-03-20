@@ -443,20 +443,23 @@ void SimulationData::recomputeVariables(const double &pCurrentPoint)
 
 bool SimulationData::isModified() const
 {
-    // Check whether any of our constants or states has been modified
+    // Check whether any of our constants or states has been modified, if
+    // possible
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
-        if (mStates[i] != mInitialStates[i])
-            return true;
-    }
+    if (runtime) {
+        for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
+            if (mStates[i] != mInitialStates[i])
+                return true;
+        }
 
-    for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
-        if (mConstants[i] != mInitialConstants[i])
-            return true;
+        for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
+            if (mConstants[i] != mInitialConstants[i])
+                return true;
+        }
     }
 
     return false;
