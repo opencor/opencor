@@ -1171,7 +1171,18 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         }
     }
     case SimulationSupport::Simulation::SedmlFile:
-        sedmlExportSedmlFile(pFileName);
+        // Only export our simulation to a SED-ML file if we are not dealing
+        // with a new SED-ML file
+        // Note: indeed, if we were to do that, we would end up with an
+        //       unloadable SED-ML file (since since it doesn’t contain
+        //       everything it should). So, instead, we should just save our
+        //       default SED-ML template, i.e. as if we were to save the SED-ML
+        //       file using the Raw SED-ML or Raw Text view...
+
+        if (Core::FileManager::instance()->isNew(mSimulation->fileName()))
+            QFile::copy(mSimulation->fileName(), pFileName);
+        else
+            sedmlExportSedmlFile(pFileName);
 
         return true;
     case SimulationSupport::Simulation::CombineArchive:
