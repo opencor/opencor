@@ -796,12 +796,14 @@ if(ENABLE_TESTS)
 endif()
 
 # Build our plugins
-# Note: plugins can be listed in any order (dependencies are determined
-#       automatically). However, for this to work, all plugins must have
-#       [PLUGIN_DIR]/src as an include directory. In addition, all plugins
-#       linked to a packge (built using the ExternalProject module) must also
-#       have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
-#       directory...
+# Note #1: hard dependencies (e.g. OpenSSL) must be listed before any other
+#          plugins...
+# Note #2: soft dependencies are determined automatically, so plugins can be
+#          listed in any order. However, for this to work, all plugins must have
+#          [PLUGIN_DIR]/src as an include directory. In addition, all plugins
+#          linked to a packge (built using the ExternalProject module) must also
+#          have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
+#          directory...
 
 if(ENABLE_SAMPLE_PLUGINS)
     set(SAMPLE_PLUGINS
@@ -823,6 +825,8 @@ else()
 endif()
 
 set(PLUGINS
+    thirdParty/OpenSSL
+
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
@@ -877,7 +881,6 @@ set(PLUGINS
     thirdParty/LibXDiff
     thirdParty/LLVMClang
     thirdParty/OAuth
-    thirdParty/OpenSSL
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
