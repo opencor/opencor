@@ -990,32 +990,32 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             //       I and W values not to be '\0' (which would be the case for
             //       a folder that doesn't contain any files anymore)...
 
-            PMRSupport::CharPair status = fileNode->status();
+            QChar wStatus = fileNode->status().second;
 
-            if ((status.first == '\0') && (status.second == '\0'))
+            if ((iStatus == '\0') && (wStatus == '\0'))
                 continue;
 
             QIcon icon = mFileIcon;
 
-            if (status.second == 'A')
+            if (wStatus == 'A')
                 icon = mWaFileIcon;
-            else if (status.second == 'C')
+            else if (wStatus == 'C')
                 icon = mWcFileIcon;
-            else if (status.second == 'D')
+            else if (wStatus == 'D')
                 icon = mWdFileIcon;
-            else if (status.second == 'E')
+            else if (wStatus == 'E')
                 icon = mWeFileIcon;
-            else if (status.second == 'M')
+            else if (wStatus == 'M')
                 icon = mWmFileIcon;
-            else if (status.second == 'Q')
+            else if (wStatus == 'Q')
                 icon = mWqFileIcon;
-            else if (status.second == 'R')
+            else if (wStatus == 'R')
                 icon = mWrFileIcon;
-            else if (status.second == 'T')
+            else if (wStatus == 'T')
                 icon = mWtFileIcon;
 
-            pIsUnstaged = pIsUnstaged || ((status.second != ' ') && (status.second != 'C'));
-            pHasConflicts = pHasConflicts || (status.second == 'C');
+            pIsUnstaged = pIsUnstaged || ((wStatus != '\0') && (wStatus != ' ') && (wStatus != 'C'));
+            pHasConflicts = pHasConflicts || (wStatus == 'C');
 
             if (newItem) {
                 // We already have an item, so just update its icon
