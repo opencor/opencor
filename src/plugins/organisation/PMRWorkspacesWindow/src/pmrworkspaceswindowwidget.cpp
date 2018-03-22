@@ -290,6 +290,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     // Create our various non-owned workspace icons
 
+    static const QIcon StagedIcon = QIcon(":/PMRWorkspacesWindow/iQ.png");
     static const QIcon UnstagedIcon = QIcon(":/PMRWorkspacesWindow/wQ.png");
     static const QIcon ConflictIcon = QIcon(":/PMRWorkspacesWindow/wE.png");
 
@@ -298,6 +299,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
     int overlayIconSize = 0.57*folderIconSize;
+
+    mStagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, StagedIcon,
+                                                        folderIconSize, folderIconSize,
+                                                        0, 0, overlayIconSize, overlayIconSize);
+    mStagedExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, StagedIcon,
+                                                       folderIconSize, folderIconSize,
+                                                       0, 0, overlayIconSize, overlayIconSize);
 
     mUnstagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, UnstagedIcon,
                                                           folderIconSize, folderIconSize,
@@ -327,6 +335,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                       folderIconSize, folderIconSize,
                                                       overlayIconPos, overlayIconPos,
                                                       overlayIconSize, overlayIconSize);
+
+    mStagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, StagedIcon,
+                                                             folderIconSize, folderIconSize,
+                                                             0, 0, overlayIconSize, overlayIconSize);
+    mStagedExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon, StagedIcon,
+                                                            folderIconSize, folderIconSize,
+                                                            0, 0, overlayIconSize, overlayIconSize);
 
     mUnstagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, UnstagedIcon,
                                                                folderIconSize, folderIconSize,
@@ -818,6 +833,9 @@ void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace 
                                                        QIcon &pExpandedIcon)
 {
     // Retrieve the icons to use for the given workspace
+    // Note: we want to check for the unstaged status before the staged status
+    //       since a workspace may have both staged and unstaged files, so the
+    //       unstaged status should have precedence...
 
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
 
@@ -827,6 +845,9 @@ void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace 
     } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged) {
         pCollapsedIcon = pWorkspace->isOwned()?mUnstagedCollapsedOwnedWorkspaceIcon:mUnstagedCollapsedWorkspaceIcon;
         pExpandedIcon = pWorkspace->isOwned()?mUnstagedExpandedOwnedWorkspaceIcon:mUnstagedExpandedWorkspaceIcon;
+    } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged) {
+        pCollapsedIcon = pWorkspace->isOwned()?mStagedCollapsedOwnedWorkspaceIcon:mStagedCollapsedWorkspaceIcon;
+        pExpandedIcon = pWorkspace->isOwned()?mStagedExpandedOwnedWorkspaceIcon:mStagedExpandedWorkspaceIcon;
     } else {
         pCollapsedIcon = pWorkspace->isOwned()?mCollapsedOwnedWorkspaceIcon:mCollapsedWorkspaceIcon;
         pExpandedIcon = pWorkspace->isOwned()?mExpandedOwnedWorkspaceIcon:mExpandedWorkspaceIcon;

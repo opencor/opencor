@@ -214,6 +214,9 @@ private:
     QIcon mCollapsedWorkspaceIcon;
     QIcon mExpandedWorkspaceIcon;
 
+    QIcon mStagedCollapsedWorkspaceIcon;
+    QIcon mStagedExpandedWorkspaceIcon;
+
     QIcon mUnstagedCollapsedWorkspaceIcon;
     QIcon mUnstagedExpandedWorkspaceIcon;
 
@@ -222,6 +225,9 @@ private:
 
     QIcon mCollapsedOwnedWorkspaceIcon;
     QIcon mExpandedOwnedWorkspaceIcon;
+
+    QIcon mStagedCollapsedOwnedWorkspaceIcon;
+    QIcon mStagedExpandedOwnedWorkspaceIcon;
 
     QIcon mUnstagedCollapsedOwnedWorkspaceIcon;
     QIcon mUnstagedExpandedOwnedWorkspaceIcon;
