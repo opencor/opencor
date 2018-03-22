@@ -990,6 +990,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             //       I and W values not to be '\0' (which would be the case for
             //       a folder that doesn't contain any files anymore)...
 
+            QChar iStatus = fileNode->status().first;
             QChar wStatus = fileNode->status().second;
 
             if ((iStatus == '\0') && (wStatus == '\0'))
