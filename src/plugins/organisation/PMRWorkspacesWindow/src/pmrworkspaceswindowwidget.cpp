@@ -1505,7 +1505,8 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
         PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
         bool needRequestWorkspaceSynchronize = false;
 
-        if (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged) {
+        if (   (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusStaged)
+            || (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged)) {
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
