@@ -271,6 +271,7 @@ private:
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                PmrWorkspacesWindowItem *pFolderItem,
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                               bool &pIsStaged,
                                                bool &pIsUnstaged,
                                                bool &pHasConflicts);
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,

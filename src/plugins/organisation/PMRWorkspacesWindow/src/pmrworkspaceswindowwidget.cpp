@@ -962,6 +962,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                                       PmrWorkspacesWindowItem *pFolderItem,
                                                                       PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                                      bool &pIsStaged,
                                                                       bool &pIsUnstaged,
                                                                       bool &pHasConflicts)
 {
@@ -970,6 +971,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
     PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
 
+    pIsStaged = false;
     pIsUnstaged = false;
     pHasConflicts = false;
 
@@ -990,6 +992,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
         // Add a new item for the file node or use the one that already exists
         // for it
+        // Note: an unstaged status must have precedence over a staged status...
 
         if (fileNode->hasChildren()) {
             PmrWorkspacesWindowItem *folderItem = newItem?
@@ -1005,23 +1008,28 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             if (!newItem)
                 pFolderItem->appendRow(folderItem);
 
+            bool isStaged;
             bool isUnstaged;
             bool hasConflicts;
 
             res << folderItem
                 << populateWorkspace(pWorkspace, folderItem, fileNode,
-                                     isUnstaged, hasConflicts);
+                                     isStaged, isUnstaged, hasConflicts);
 
             folderItem->setCollapsedIcon(hasConflicts?
                                              mConflictCollapsedWorkspaceIcon:
                                              isUnstaged?
                                                  mUnstagedCollapsedWorkspaceIcon:
-                                                 mCollapsedWorkspaceIcon);
+                                                 isStaged?
+                                                     mStagedCollapsedWorkspaceIcon:
+                                                     mCollapsedWorkspaceIcon);
             folderItem->setExpandedIcon(hasConflicts?
                                             mConflictExpandedWorkspaceIcon:
                                             isUnstaged?
                                                 mUnstagedExpandedWorkspaceIcon:
-                                                mExpandedWorkspaceIcon);
+                                                isStaged?
+                                                    mStagedExpandedWorkspaceIcon:
+                                                    mExpandedWorkspaceIcon);
         } else {
             // We are dealing with a file, so retrieve its status and use the
             // corresponding icon for it, if needed
@@ -1038,7 +1046,19 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
             QIcon icon = mFileIcon;
 
-            if (wStatus == 'A')
+            if (iStatus == 'A')
+                icon = mIaFileIcon;
+            else if (iStatus == 'D')
+                icon = mIdFileIcon;
+            else if (iStatus == 'M')
+                icon = mImFileIcon;
+            else if (iStatus == 'Q')
+                icon = mIqFileIcon;
+            else if (iStatus == 'R')
+                icon = mIrFileIcon;
+            else if (iStatus == 'T')
+                icon = mItFileIcon;
+            else if (wStatus == 'A')
                 icon = mWaFileIcon;
             else if (wStatus == 'C')
                 icon = mWcFileIcon;
@@ -1055,7 +1075,11 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             else if (wStatus == 'T')
                 icon = mWtFileIcon;
 
-            pIsUnstaged = pIsUnstaged || ((wStatus != '\0') && (wStatus != ' ') && (wStatus != 'C'));
+            pIsStaged =    pIsStaged
+                        || (    (iStatus != '\0') && (iStatus != ' ')
+                            && ((wStatus == '\0') || (wStatus == ' ')));
+            pIsUnstaged =    pIsUnstaged
+                          || ((wStatus != '\0') && (wStatus != ' ') && (wStatus != 'C'));
             pHasConflicts = pHasConflicts || (wStatus == 'C');
 
             if (newItem) {
@@ -1088,10 +1112,12 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     // Populate the given folder item with its children, which are referenced in
     // the given file node
 
+    bool isStaged;
     bool isUnstaged;
     bool hasConflicts;
 
-    return populateWorkspace(pWorkspace, pFolderItem, pFileNode, isUnstaged, hasConflicts);
+    return populateWorkspace(pWorkspace, pFolderItem, pFileNode,
+                             isStaged, isUnstaged, hasConflicts);
 }
 
 //==============================================================================
