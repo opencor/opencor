@@ -1435,6 +1435,7 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
         //       current state...
 
         PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+        bool needRequestWorkspaceSynchronize = false;
 
         if (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged) {
             QSettings settings;
@@ -1452,12 +1453,15 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
                             workspace->stageFile(fileNames[i], true);
 
                         workspace->commit(synchronizeDialog.message());
+
+                        needRequestWorkspaceSynchronize = true;
                     }
                 settings.endGroup();
             settings.endGroup();
         }
 
-        mPmrWebService->requestWorkspaceSynchronize(workspace, workspace->isOwned());
+        if (needRequestWorkspaceSynchronize)
+            mPmrWebService->requestWorkspaceSynchronize(workspace, workspace->isOwned());
     }
 }
 
