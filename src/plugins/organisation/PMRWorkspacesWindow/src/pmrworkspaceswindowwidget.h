@@ -237,6 +237,13 @@ private:
 
     QIcon mFileIcon;
 
+    QIcon mIaFileIcon;
+    QIcon mIdFileIcon;
+    QIcon mImFileIcon;
+    QIcon mIqFileIcon;
+    QIcon mIrFileIcon;
+    QIcon mItFileIcon;
+
     QIcon mWaFileIcon;
     QIcon mWcFileIcon;
     QIcon mWdFileIcon;
