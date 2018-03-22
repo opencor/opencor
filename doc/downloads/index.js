@@ -39,7 +39,7 @@ var jsonData = { "versions": [
                      "changes": [
                        { "change": "<strong>Data store interface:</strong> fixed a problem with the returned size of a data store being wrong in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1579\">#1579</a>)." },
                        { "change": "<strong>SED-ML support:</strong> fixed a problem with OpenCOR crashing when saving an empty SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1572\">#1572</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> prevent a model with no ODEs/DAEs from crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1576\">#1576</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> fixed a problem with OpenCOR potentially crashing when reloading the view after a dependency file has been edited (see issue <a href=\"https://github.com/opencor/opencor/issues/1574\">#1574</a>). Prevent a model with no ODEs/DAEs from crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1576\">#1576</a>)." },
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
