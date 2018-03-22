@@ -1272,8 +1272,9 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
     mCopyWorkspacePathAction->setEnabled(oneWorkspacePath);
     mMakeLocalWorkspaceCopyAction->setEnabled(oneItem && !nbOfWorkspacePaths);
     mSynchronizeWorkspaceAction->setEnabled(   oneWorkspacePath
-                                            && (   (    workspace->isOwned()
-                                                    && (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead))
+                                            && (   (   workspace->isOwned()
+                                                    && (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)
+                                                        || (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged)))
                                                 || (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)));
     mAboutWorkspaceAction->setEnabled(oneWorkspaceUrl);
 
