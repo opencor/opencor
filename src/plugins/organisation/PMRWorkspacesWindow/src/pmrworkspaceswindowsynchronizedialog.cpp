@@ -102,6 +102,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     mSha1s(QMap<QString, QString>()),
     mDiffHtmls(QMap<QString, QString>()),
     mCellmlDiffHtmls(QMap<QString, QString>()),
+    mNbOfCheckableFiles(0),
     mPreviouslySelectedIndexes(QModelIndexList()),
     mInvalidCellmlCode(QStringList()),
     mNeedUpdateDiffInformation(false)
@@ -460,6 +461,8 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                 // Create a new item, if needed
 
                 if (!fileItem) {
+                    mNbOfCheckableFiles += unstagedFile;
+
                     fileItem = new PmrWorkspacesWindowSynchronizeDialogItem(fileNode);
 
                     fileItem->setCheckable(unstagedFile);
@@ -577,11 +580,15 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
 
     int nbOfCheckedFiles = 0;
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
-        nbOfCheckedFiles += mModel->invisibleRootItem()->child(i)->checkState() == Qt::Checked;
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
+
+        nbOfCheckedFiles +=     fileItem->isEnabled()
+                            && (fileItem->checkState() == Qt::Checked);
+    }
 
     mSelectAllChangesCheckBox->setCheckState(nbOfCheckedFiles?
-                                                 (nbOfCheckedFiles == mModel->rowCount())?
+                                                 (nbOfCheckedFiles == mNbOfCheckableFiles)?
                                                      Qt::Checked:
                                                      Qt::PartiallyChecked:
                                                  Qt::Unchecked);
@@ -601,8 +608,12 @@ void PmrWorkspacesWindowSynchronizeDialog::selectAllChangesCheckBoxClicked()
 
     Qt::CheckState checkState = mSelectAllChangesCheckBox->isChecked()?Qt::Checked:Qt::Unchecked;
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
-        mModel->invisibleRootItem()->child(i)->setCheckState(checkState);
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
+
+        if (fileItem->isEnabled())
+            fileItem->setCheckState(checkState);
+    }
 }
 
 //==============================================================================
