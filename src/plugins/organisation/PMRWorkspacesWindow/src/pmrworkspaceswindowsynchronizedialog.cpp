@@ -564,8 +564,10 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
         disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                    this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
 
-        foreach (const QModelIndex &fileIndex, mChangesValue->selectionModel()->selectedIndexes())
-            mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
+        if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(pItem->index()))) {
+            foreach (const QModelIndex &fileIndex, mChangesValue->selectionModel()->selectedIndexes())
+                mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
+        }
 
         connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                 this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
