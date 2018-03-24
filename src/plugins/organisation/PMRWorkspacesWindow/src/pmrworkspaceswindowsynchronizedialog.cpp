@@ -420,12 +420,16 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 
             res << populateModel(fileNode);
         } else {
-            // This is a file, so check whether it has changes
+            // This is a file, so check whether it has un/staged changes
 
-            QChar status = fileNode->status().second;
+            QChar iStatus = fileNode->status().first;
+            QChar wStatus = fileNode->status().second;
+            bool stagedFile =    ((iStatus != '\0') && (iStatus != ' '))
+                              && ((wStatus == '\0') || (wStatus == ' '));
+            bool unstagedFile = (wStatus != '\0') && (wStatus != ' ');
 
-            if ((status != '\0') && (status != ' ')) {
-                // This is a changed file, so check whether we already know
+            if (stagedFile || unstagedFile) {
+                // This is a un/staged file, so check whether we already know
                 // about it and, if so, whether its SHA-1 is still the same and
                 // if that's not the case then reset a few things
 
@@ -458,9 +462,10 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                 if (!fileItem) {
                     fileItem = new PmrWorkspacesWindowSynchronizeDialogItem(fileNode);
 
-                    fileItem->setCheckable(true);
+                    fileItem->setCheckable(unstagedFile);
                     fileItem->setCheckState(Qt::Checked);
                     fileItem->setEditable(false);
+                    fileItem->setEnabled(unstagedFile);
                     fileItem->setToolTip(QDir::toNativeSeparators(fileName));
 
                     mModel->appendRow(fileItem);
