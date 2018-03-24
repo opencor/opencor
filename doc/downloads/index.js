@@ -38,6 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>Data store interface:</strong> fixed a problem with the returned size of a data store being wrong in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1579\">#1579</a>)." },
+                       { "change": "<strong>PMR support:</strong> fixed a problem with the PMR Workspaces window potentially not reflecting the Git status of a folder (see issue <a href=\"https://github.com/opencor/opencor/issues/1582\">#1582</a>)." },
                        { "change": "<strong>SED-ML support:</strong> fixed a problem with OpenCOR crashing when saving an empty SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1572\">#1572</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> prevent a model with no ODEs/DAEs from crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1576\">#1576</a>)." },
                      ]

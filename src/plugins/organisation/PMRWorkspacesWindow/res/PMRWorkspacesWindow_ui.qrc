@@ -1,6 +1,12 @@
 <RCC>
     <qresource prefix="/PMRWorkspacesWindow">
         <file>diff.html</file>
+        <file>iA.png</file>
+        <file>iD.png</file>
+        <file>iM.png</file>
+        <file>iQ.png</file>
+        <file>iR.png</file>
+        <file>iT.png</file>
         <file>pull.png</file>
         <file>synchronize.png</file>
         <file>wA.png</file>

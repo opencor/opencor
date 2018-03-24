@@ -99,7 +99,7 @@ public:
         StatusBehind   = 2,
         StatusCurrent  = 4,
         StatusConflict = 32,
-        StatusCommit   = 64,
+        StatusStaged   = 64,
         StatusUnstaged = 128
     };
 
