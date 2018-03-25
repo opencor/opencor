@@ -104,7 +104,7 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                                           3fc75655ac2578da79d4da7f4ecea3ce22bd1b0c)
     endif()
 else()
-    # We require perl to build OpenSSL
+    # We require Perl to build OpenSSL
 
     find_package(Perl REQUIRED QUIET)
 
