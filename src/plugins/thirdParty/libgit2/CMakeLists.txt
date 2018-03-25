@@ -180,6 +180,8 @@ add_plugin(${PACKAGE_NAME}
         src/libgit2plugin.cpp
     HEADERS_MOC
         src/libgit2plugin.h
+    PLUGINS
+        OpenSSL
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
