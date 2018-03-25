@@ -100,6 +100,10 @@ else()
         set(DEFINE_STATIC_CRT_ARG -DSTATIC_CRT=OFF)
     endif()
 
+    if(APPLE)
+        set(DEFINE_APPLESECURITY_ARG -DAPPLESECURITY=OFF)
+    endif()
+
     # Build libgit2 as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -118,11 +122,11 @@ else()
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
-            -DAPPLESECURITY=OFF
             -DBUILD_CLAR=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            ${DEFINE_APPLESECURITY_ARG}
             ${DEFINE_STATIC_CRT_ARG}
             -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
             -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
@@ -180,6 +184,8 @@ add_plugin(${PACKAGE_NAME}
         src/libgit2plugin.cpp
     HEADERS_MOC
         src/libgit2plugin.h
+    PLUGINS
+        OpenSSL
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
