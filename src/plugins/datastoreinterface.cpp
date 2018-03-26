@@ -543,14 +543,17 @@ void DataStore::addValues(const double &pVoiValue)
 {
     // Set the value at the mSize position of all our variables including our
     // VOI, which value is directly given to us
-
-    if (mVoi)
-        mVoi->addValue(pVoiValue);
+    // Note: it is very important to add the VOI value last since our size()
+    //       method relies on it to determine our size. So, if we were to add
+    //       the VOI value first, we might in some cases (see issue #1579 for
+    //       example) end up with the wrong size...
 
     for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {
         (*variable)->addValue();
     }
+
+    mVoi->addValue(pVoiValue);
 }
 
 //==============================================================================

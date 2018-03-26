@@ -853,7 +853,7 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
                 res = WorkspaceStatus(res|StatusConflict);
             } else {
                 if (mStagedCount)
-                    res = WorkspaceStatus(res|StatusCommit);
+                    res = WorkspaceStatus(res|StatusStaged);
 
                 if (mUnstagedCount)
                     res = WorkspaceStatus(res|StatusUnstaged);

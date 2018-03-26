@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pendulumwindowwindow.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
+#include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
@@ -309,9 +310,12 @@ QString SimulationExperimentViewPlugin::viewMimeType(const QString &pFileName) c
 
 QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
 {
-    // Return the default file extension we support
+    // Return the default file extension we support, based on the file type of
+    // our simulation
 
-    return CellMLSupport::CellmlFileExtension;
+    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::CellmlFile)?
+               CellMLSupport::CellmlFileExtension:
+               SEDMLSupport::SedmlFileExtension;
 }
 
 //==============================================================================

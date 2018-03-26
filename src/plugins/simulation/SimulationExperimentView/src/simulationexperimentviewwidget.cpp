@@ -445,6 +445,15 @@ Plugins SimulationExperimentViewWidget::cellmlSimulationViewPlugins() const
 
 //==============================================================================
 
+SimulationExperimentViewSimulationWidget * SimulationExperimentViewWidget::simulationWidget() const
+{
+    // Return our simulation widget
+
+    return mSimulationWidget;
+}
+
+//==============================================================================
+
 SimulationExperimentViewSimulationWidget * SimulationExperimentViewWidget::simulationWidget(const QString &pFileName) const
 {
     // Return the requested simulation widget

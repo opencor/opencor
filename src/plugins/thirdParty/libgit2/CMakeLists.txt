@@ -13,7 +13,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
 
 # Git tag for our library
 
-set(GIT_TAG maint/v0.26)
+set(GIT_TAG opencor)
 
 # Specify where our local package will be installed
 
@@ -63,27 +63,27 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b427305de4a94dc8e3ba6c31354eb90c0433bfad
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 700423133081a13b36adcbed68e53d074e4d2ba9
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES b5a9fa89c0aebe88527ae373ff7923b6673dbfff
-                                              23a10fc4e33ef4cfb5052385ec12717bbfa5c1f0)
+                                  SHA1_VALUES bd454e4a93e3a6b58cf2f7e3365dca6f9f5b4dd8
+                                              bc9b4c532c1993bef351ba36ab041b31c2797649)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} ac61bd1a63add0ea666d59c40728ef4351b02ff2
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 710cae96fd77bdad2b2169f64bee74198d07e1e6
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7211bc4b8031fae384df1bc025456728674cdc04
-                                              1dc22d269ad0be605639f2e7b93e46888817ed41)
+                                  SHA1_VALUES 786f8ae0bba2c9a8b7078c442229797e060b2545
+                                              8ea008b111d3674b5dec084f65d20d4a6a7e5ee2)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7a60591bb9a5ddef44bd6eb614686a336bfcb87a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 6e4edd17ac57fca922c34c7fc4288cd37ae1d951
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 1f395e996a94bf227f11cf76cfa21814025c1652)
+                              SHA1_VALUES 7a024ebb0d2876f86ec141d79e2c4ed20f462142)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 39fe1dbf7899ef7516fc72f706ad6bec36d31c23
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 9e589182e21674026fd3a136c27a2d2f0656cbed
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3b0a7df4c9e709b89dc3d9e230a2157d1972335a)
+                              SHA1_VALUES e6d82389d591a41b372ff39a317cb48b47119936)
     endif()
 else()
     # Ignore some warnings
@@ -98,6 +98,10 @@ else()
 
     if(WIN32)
         set(DEFINE_STATIC_CRT_ARG -DSTATIC_CRT=OFF)
+    endif()
+
+    if(APPLE)
+        set(DEFINE_APPLESECURITY_ARG -DAPPLESECURITY=OFF)
     endif()
 
     # Build libgit2 as an external project
@@ -122,8 +126,13 @@ else()
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            ${DEFINE_APPLESECURITY_ARG}
             ${DEFINE_STATIC_CRT_ARG}
+            -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
+            -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
+            -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
             -DUSE_SSH=OFF
+            -DWINHTTP=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
@@ -175,6 +184,8 @@ add_plugin(${PACKAGE_NAME}
         src/libgit2plugin.cpp
     HEADERS_MOC
         src/libgit2plugin.h
+    PLUGINS
+        OpenSSL
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

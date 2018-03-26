@@ -214,6 +214,9 @@ private:
     QIcon mCollapsedWorkspaceIcon;
     QIcon mExpandedWorkspaceIcon;
 
+    QIcon mStagedCollapsedWorkspaceIcon;
+    QIcon mStagedExpandedWorkspaceIcon;
+
     QIcon mUnstagedCollapsedWorkspaceIcon;
     QIcon mUnstagedExpandedWorkspaceIcon;
 
@@ -223,6 +226,9 @@ private:
     QIcon mCollapsedOwnedWorkspaceIcon;
     QIcon mExpandedOwnedWorkspaceIcon;
 
+    QIcon mStagedCollapsedOwnedWorkspaceIcon;
+    QIcon mStagedExpandedOwnedWorkspaceIcon;
+
     QIcon mUnstagedCollapsedOwnedWorkspaceIcon;
     QIcon mUnstagedExpandedOwnedWorkspaceIcon;
 
@@ -230,6 +236,13 @@ private:
     QIcon mConflictExpandedOwnedWorkspaceIcon;
 
     QIcon mFileIcon;
+
+    QIcon mIaFileIcon;
+    QIcon mIdFileIcon;
+    QIcon mImFileIcon;
+    QIcon mIqFileIcon;
+    QIcon mIrFileIcon;
+    QIcon mItFileIcon;
 
     QIcon mWaFileIcon;
     QIcon mWcFileIcon;
@@ -258,6 +271,7 @@ private:
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                PmrWorkspacesWindowItem *pFolderItem,
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                               bool &pIsStaged,
                                                bool &pIsUnstaged,
                                                bool &pHasConflicts);
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,

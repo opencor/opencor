@@ -130,9 +130,9 @@ void PmrSupportPreferencesWidget::on_pmrUrlValue_currentTextChanged(const QStrin
     if (!pCurrentText.compare(SettingsPreferencesPmrUrlDefault))
         mGui->noteValue->setText(tr("the primary site is selected. Everything on this site is permanent and persistent. It is always up and always stable."));
     else if (!pCurrentText.compare(StagingInstance))
-        mGui->noteValue->setText(tr("the staging site is selected. It is used for public testing/preview of PMR developments. A warning is always sent before wiping clean and starting with a fresh copy of the primary site (workspaces, exposures and user accounts). The content of this site is never migrated to the primary site, but users can synchronise across if desired."));
+        mGui->noteValue->setText(tr("the staging site is selected. It is used for public testing/preview of PMR developments. Data on this site is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise."));
     else if (!pCurrentText.compare(TeachingInstance))
-        mGui->noteValue->setText(tr("the teaching site is selected. It is randomly wiped with little or no warning. It mostly matches the primary site in terms of functionality. It may be synchronised with the primary site (workspaces, exposures and user accounts) or it may simply be empty."));
+        mGui->noteValue->setText(tr("the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the cellml-discussion mailing list."));
     else
         mGui->noteValue->setText(QString());
 

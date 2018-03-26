@@ -8,12 +8,12 @@
         <translation>le site principal est sélectionné. Tout sur ce site est permanent et persistant. Il est toujours disponible et toujours stable.</translation>
     </message>
     <message>
-        <source>the staging site is selected. It is used for public testing/preview of PMR developments. A warning is always sent before wiping clean and starting with a fresh copy of the primary site (workspaces, exposures and user accounts). The content of this site is never migrated to the primary site, but users can synchronise across if desired.</source>
-        <translation>le site de test est sélectionné. Il est utilisé pour publiquement tester/consulter les développements de PMR. Un avertissement est toujours envoyé avant de nettoyer et réinitialiser à l&apos;aide du site principal (espaces de travail, expositions et comptes utilisateurs). Le contenu de ce site n&apos;est jamais migré vers le site principal, mais les utilisateurs peuvent synchroniser si nécessaire.</translation>
+        <source>the staging site is selected. It is used for public testing/preview of PMR developments. Data on this site is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise.</source>
+        <translation>le site de transit est sélectionné. Il est utilisé pour publiquement tester/prévisualiser les développements de PMR. Les données sur ce site sont effacées périodiquement chaque fois qu&apos;un nouveau test/aperçu public de la suite logicielle PMR est publié pour l&apos;exercice de test requis.</translation>
     </message>
     <message>
-        <source>the teaching site is selected. It is randomly wiped with little or no warning. It mostly matches the primary site in terms of functionality. It may be synchronised with the primary site (workspaces, exposures and user accounts) or it may simply be empty.</source>
-        <translation>le site d&apos;enseignement est sélectionné. Il est irrégulièrement nettoyé avec peu ou pas d&apos;avertissement. Il correspond essentiellement au site principal en termes de fonctionnalité. Il peut être synchronisé avec le site principal (espaces de travail, expositions et comptes utilisateurs) ou il peut tout simplement être vide.</translation>
+        <source>the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the cellml-discussion mailing list.</source>
+        <translation>le site d&apos;enseignement est sélectionné. Les fonctionnalités de ce site devraient correspondre à celles du site principal, mais sans les garanties de persistance des données. Bien que les données sur ce site ne soient pas non plus permanentes, tout effacement des données stockées sera annoncé sur la liste de discussion cellml-discussion.</translation>
     </message>
 </context>
 <context>
