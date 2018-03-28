@@ -63,27 +63,27 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 700423133081a13b36adcbed68e53d074e4d2ba9
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 03bc52f333f105834be8dab022cff21ccacdc5ae
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES bd454e4a93e3a6b58cf2f7e3365dca6f9f5b4dd8
-                                              bc9b4c532c1993bef351ba36ab041b31c2797649)
+                                  SHA1_VALUES 4ef2a22e45a82b960a995b6d0621e5cb7a8bb2c9
+                                              103d30a4064dd84fcdf690674b09f4b7cfcd0f2a)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 710cae96fd77bdad2b2169f64bee74198d07e1e6
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d6ed6a8b099cc3c5b71aaac575f7e8aff43e8549
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 786f8ae0bba2c9a8b7078c442229797e060b2545
-                                              8ea008b111d3674b5dec084f65d20d4a6a7e5ee2)
+                                  SHA1_VALUES 1f8d4b4272af08956be6f00c4b5c45baf9c75215
+                                              af27ad0b164a05a59580031728c3517f7070cec7)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 6e4edd17ac57fca922c34c7fc4288cd37ae1d951
+                              ${RELATIVE_PROJECT_SOURCE_DIR} d256519cb2fbbdca7ac71bfa7e13eba4e4baa860
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7a024ebb0d2876f86ec141d79e2c4ed20f462142)
+                              SHA1_VALUES 84b6d0f44d4332099c3e5e7d10b42f3137961e4b)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 9e589182e21674026fd3a136c27a2d2f0656cbed
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5a2a985699a449473345c99d30c3fe949c143852
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e6d82389d591a41b372ff39a317cb48b47119936)
+                              SHA1_VALUES 26bec7ef963e9791a96e6070dc6d864c38062f84)
     endif()
 else()
     # Ignore some warnings
@@ -133,6 +133,9 @@ else()
             -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
             -DUSE_SSH=OFF
             -DWINHTTP=OFF
+            -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+            -DZLIB_ROOT=${ZLIB_ROOT_DIR}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
@@ -186,6 +189,7 @@ add_plugin(${PACKAGE_NAME}
         src/libgit2plugin.h
     PLUGINS
         OpenSSL
+        zlib
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
