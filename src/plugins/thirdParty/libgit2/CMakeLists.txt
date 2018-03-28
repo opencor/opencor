@@ -133,6 +133,9 @@ else()
             -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
             -DUSE_SSH=OFF
             -DWINHTTP=OFF
+            -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+            -DZLIB_ROOT=${ZLIB_ROOT_DIR}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
@@ -186,6 +189,7 @@ add_plugin(${PACKAGE_NAME}
         src/libgit2plugin.h
     PLUGINS
         OpenSSL
+        zlib
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
