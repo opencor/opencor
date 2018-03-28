@@ -3,13 +3,13 @@ project(libgit2Plugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 0.26.3)
+set(PACKAGE_VERSION 0.27.0)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 0)
-set(MINOR_LIBRARY_VERSION 26)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
+set(MINOR_LIBRARY_VERSION 27)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tag for our library
 
