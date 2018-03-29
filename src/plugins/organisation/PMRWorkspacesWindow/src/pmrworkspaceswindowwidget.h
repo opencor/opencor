@@ -158,6 +158,13 @@ class PmrWorkspacesWindowWidget : public Core::TreeViewWidget
     Q_OBJECT
 
 public:
+    enum MessageType {
+        None,
+        Information,
+        Error,
+        Warning
+    };
+
     explicit PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                        PMRSupport::PmrWebService *pPmrWebService,
                                        PmrWorkspacesWindowWindow *pParent);
@@ -169,6 +176,9 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
     void update(const QString &pPmrUrl);
+
+    void initialize();
+    void initialize(const MessageType &pMessageType, const QString &pMessage);
 
     using QTreeView::reset;
 
@@ -186,7 +196,8 @@ private:
 
     bool mInitialized;
 
-    QString mErrorMessage;
+    MessageType mMessageType;
+    QString mMessage;
     bool mAuthenticated;
 
     QTimer *mTimer;
@@ -214,6 +225,9 @@ private:
     QIcon mCollapsedWorkspaceIcon;
     QIcon mExpandedWorkspaceIcon;
 
+    QIcon mStagedCollapsedWorkspaceIcon;
+    QIcon mStagedExpandedWorkspaceIcon;
+
     QIcon mUnstagedCollapsedWorkspaceIcon;
     QIcon mUnstagedExpandedWorkspaceIcon;
 
@@ -223,6 +237,9 @@ private:
     QIcon mCollapsedOwnedWorkspaceIcon;
     QIcon mExpandedOwnedWorkspaceIcon;
 
+    QIcon mStagedCollapsedOwnedWorkspaceIcon;
+    QIcon mStagedExpandedOwnedWorkspaceIcon;
+
     QIcon mUnstagedCollapsedOwnedWorkspaceIcon;
     QIcon mUnstagedExpandedOwnedWorkspaceIcon;
 
@@ -230,6 +247,13 @@ private:
     QIcon mConflictExpandedOwnedWorkspaceIcon;
 
     QIcon mFileIcon;
+
+    QIcon mIaFileIcon;
+    QIcon mIdFileIcon;
+    QIcon mImFileIcon;
+    QIcon mIqFileIcon;
+    QIcon mIrFileIcon;
+    QIcon mItFileIcon;
 
     QIcon mWaFileIcon;
     QIcon mWcFileIcon;
@@ -239,6 +263,10 @@ private:
     QIcon mWqFileIcon;
     QIcon mWrFileIcon;
     QIcon mWtFileIcon;
+
+    void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+                    const MessageType &pMessageType, const QString &pMessage,
+                    const bool &pAuthenticated);
 
     void reset(const QString &pPmrUrl);
 
@@ -258,6 +286,7 @@ private:
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                PmrWorkspacesWindowItem *pFolderItem,
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                               bool &pIsStaged,
                                                bool &pIsUnstaged,
                                                bool &pHasConflicts);
     PmrWorkspacesWindowItems populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
@@ -282,9 +311,7 @@ signals:
     void openFilesRequested(const QStringList &pFileNames);
 
 public slots:
-    void initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces,
-                    const QString &pErrorMessage = QString(),
-                    const bool &pAuthenticated = true);
+    void initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces);
 
 private slots:
     void showCustomContextMenu() const;

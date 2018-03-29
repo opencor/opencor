@@ -53,7 +53,7 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
     static const QIcon ErrorIcon       = QIcon(":/oxygen/emblems/emblem-important.png");
     static const QIcon WarningIcon     = QIcon(":/oxygen/status/task-attention.png");
     static const QIcon HintIcon        = QIcon(":/oxygen/actions/help-hint.png");
-    static const QIcon InformationIcon = QIcon(":/oxygen/status/dialog-information.png");
+    static const QIcon InformationIcon = QIcon(":/oxygen/actions/help-about.png");
     static const QIcon FatalIcon       = QIcon(":/oxygen/status/edit-bomb.png");
 
     if ((pLine == -1) && (pColumn == -1))

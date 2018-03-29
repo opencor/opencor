@@ -144,6 +144,8 @@ private:
     QMap<QString, QString> mDiffHtmls;
     QMap<QString, QString> mCellmlDiffHtmls;
 
+    int mNbOfCheckableFiles;
+
     QModelIndexList mPreviouslySelectedIndexes;
 
     QStringList mInvalidCellmlCode;
