@@ -713,7 +713,7 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces,
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
                                            const QString &pErrorMessage,
                                            const bool &pAuthenticated)
 {
@@ -801,6 +801,33 @@ void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspa
               && pErrorMessage.isEmpty() && !pAuthenticated);
 
     mInitialized = true;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces)
+{
+    // Initialise ourselves using the given workspaces
+
+    initialize(pWorkspaces, QString(), true);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize()
+{
+    // Initialise ourselves
+
+    initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize(const QString &pMessage)
+{
+    // Initialise ourselves using the given message
+
+    initialize(PMRSupport::PmrWorkspaces(), pMessage, true);
 }
 
 //==============================================================================

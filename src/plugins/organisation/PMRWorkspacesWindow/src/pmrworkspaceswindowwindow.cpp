@@ -279,7 +279,7 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
     if (pPmrUrl.compare(mPmrUrl)) {
         if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-            mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+            mPmrWorkspacesWindowWidget->initialize();
 
         mPmrUrl = pPmrUrl;
 
@@ -358,7 +358,7 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       startup...
 
     if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), pMessage);
+        mPmrWorkspacesWindowWidget->initialize(pMessage);
     else
         Core::criticalMessageBox(windowTitle(), pMessage);
 }
@@ -407,7 +407,7 @@ void PmrWorkspacesWindowWindow::updateGui()
     if (mAuthenticated)
         on_actionReload_triggered();
     else if (mInitialized)
-        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+        mPmrWorkspacesWindowWidget->initialize();
 }
 
 //==============================================================================

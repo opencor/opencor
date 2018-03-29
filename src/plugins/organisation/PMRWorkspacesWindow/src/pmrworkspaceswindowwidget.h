@@ -170,6 +170,9 @@ public:
 
     void update(const QString &pPmrUrl);
 
+    void initialize();
+    void initialize(const QString &pMessage);
+
     using QTreeView::reset;
 
 protected:
@@ -253,6 +256,9 @@ private:
     QIcon mWrFileIcon;
     QIcon mWtFileIcon;
 
+    void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+                    const QString &pErrorMessage, const bool &pAuthenticated);
+
     void reset(const QString &pPmrUrl);
 
     void updateGui(const bool &pForceUserMessageVisibility = false);
@@ -296,9 +302,7 @@ signals:
     void openFilesRequested(const QStringList &pFileNames);
 
 public slots:
-    void initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces,
-                    const QString &pErrorMessage = QString(),
-                    const bool &pAuthenticated = true);
+    void initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces);
 
 private slots:
     void showCustomContextMenu() const;
