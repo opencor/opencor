@@ -15,10 +15,6 @@
 <context>
     <name>OpenCOR::CellMLSupport::CellmlFile</name>
     <message>
-        <source>the imports could not be fully instantiated</source>
-        <translation>les importations n&apos;ont pas pu être complètement instanciées</translation>
-    </message>
-    <message>
         <source>the model could not be loaded (%1)</source>
         <translation>le modèle n&apos;a pas pu être lu (%1)</translation>
     </message>
@@ -45,6 +41,22 @@
     <message>
         <source>the output file could not be saved</source>
         <translation>le fichier de sortie n&apos;a pas pu être sauvegardé</translation>
+    </message>
+    <message>
+        <source>%1 cannot import itself</source>
+        <translation>%1 ne peut pas s&apos;auto-importer</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; imports &lt;strong&gt;%2&lt;/strong&gt;, which contents could not be retrieved</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; importe &lt;strong&gt;%2&lt;/strong&gt;, dont le contenu n&apos;a pas pu être retrouvé</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; imports &lt;strong&gt;%2&lt;/strong&gt;, which CellML object could not be retrieved</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; importe &lt;strong&gt;%2&lt;/strong&gt;, dont l&apos;objet CellML n&apos;a pas pu être retrouvé</translation>
+    </message>
+    <message>
+        <source>the imports could not be fully instantiated (%1)</source>
+        <translation>les importations n&apos;ont pas pu être complètement instanciées (%1)</translation>
     </message>
 </context>
 <context>
