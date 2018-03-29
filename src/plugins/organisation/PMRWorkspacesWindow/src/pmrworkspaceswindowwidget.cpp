@@ -1385,13 +1385,11 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspaces(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
     // Refresh our workspaces
 
-    PMRSupport::PmrWorkspaces workspaces = pWorkspaces.isEmpty()?
-                                               PMRSupport::PmrWorkspaceManager::instance()->workspaces():
-                                               pWorkspaces;
+    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaceManager::instance()->workspaces();
     int workspacesCount = workspaces.count();
     int workspaceNb = 0;
 
