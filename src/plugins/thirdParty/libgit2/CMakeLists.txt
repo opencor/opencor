@@ -3,13 +3,13 @@ project(libgit2Plugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 0.26.3)
+set(PACKAGE_VERSION 0.27.0)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 0)
-set(MINOR_LIBRARY_VERSION 26)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.3)
+set(MINOR_LIBRARY_VERSION 27)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tag for our library
 
@@ -63,27 +63,27 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 700423133081a13b36adcbed68e53d074e4d2ba9
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d287de45d7fff6bf9208454f36199a131691c091
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES bd454e4a93e3a6b58cf2f7e3365dca6f9f5b4dd8
-                                              bc9b4c532c1993bef351ba36ab041b31c2797649)
+                                  SHA1_VALUES 936367abcb42384aedf96d2f8faf183ace63a044
+                                              b2be22ad54e0bee0ab56ddb47e5bdb6a6789200a)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 710cae96fd77bdad2b2169f64bee74198d07e1e6
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} fa2703d5f8a187f0b44f0a650e5d9c3faed4de16
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 786f8ae0bba2c9a8b7078c442229797e060b2545
-                                              8ea008b111d3674b5dec084f65d20d4a6a7e5ee2)
+                                  SHA1_VALUES 317d10ee6abb340a71f0642042513e53f959e514
+                                              81748229236b0932cae4c1995298acd6f61a14ee)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 6e4edd17ac57fca922c34c7fc4288cd37ae1d951
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5b5a0205c4930549df787612ca5fc95c722010da
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7a024ebb0d2876f86ec141d79e2c4ed20f462142)
+                              SHA1_VALUES e9213ff9ff6ea8685859abfc96fc4c3ce5c1c933)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 9e589182e21674026fd3a136c27a2d2f0656cbed
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 95ca16c833f6e4ca723e0ecadd35084b0123e0f3
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e6d82389d591a41b372ff39a317cb48b47119936)
+                              SHA1_VALUES c5015ef415e460c961001b76ddbb640a1f77b75b)
     endif()
 else()
     # Ignore some warnings
@@ -118,7 +118,6 @@ else()
         CMAKE_GENERATOR
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
-            -DAPPLESECURITY=OFF
             -DBUILD_CLAR=OFF
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -127,8 +126,12 @@ else()
             -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_CRYPTO_LIBRARY}
             -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
             -DOPENSSL_SSL_LIBRARY=${OPENSSL_SSL_LIBRARY}
+            -DUSE_HTTPS=OpenSSL
             -DUSE_SSH=OFF
             -DWINHTTP=OFF
+            -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+            -DZLIB_ROOT=${ZLIB_ROOT_DIR}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
@@ -180,6 +183,9 @@ add_plugin(${PACKAGE_NAME}
         src/libgit2plugin.cpp
     HEADERS_MOC
         src/libgit2plugin.h
+    PLUGINS
+        OpenSSL
+        zlib
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

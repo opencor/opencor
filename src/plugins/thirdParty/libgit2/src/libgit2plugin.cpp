@@ -38,7 +38,7 @@ PLUGININFO_FUNC libgit2PluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://libgit2.github.com/\">libgit2</a>."));
 
     return new PluginInfo(PluginInfo::ThirdParty, false, false,
-                          QStringList(),
+                          QStringList() << "OpenSSL" << "zlib",
                           descriptions);
 }
 

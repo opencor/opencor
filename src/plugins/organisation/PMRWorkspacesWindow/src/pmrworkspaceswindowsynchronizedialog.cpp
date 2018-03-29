@@ -102,6 +102,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     mSha1s(QMap<QString, QString>()),
     mDiffHtmls(QMap<QString, QString>()),
     mCellmlDiffHtmls(QMap<QString, QString>()),
+    mNbOfCheckableFiles(0),
     mPreviouslySelectedIndexes(QModelIndexList()),
     mInvalidCellmlCode(QStringList()),
     mNeedUpdateDiffInformation(false)
@@ -420,12 +421,16 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 
             res << populateModel(fileNode);
         } else {
-            // This is a file, so check whether it has changes
+            // This is a file, so check whether it has un/staged changes
 
-            QChar status = fileNode->status().second;
+            QChar iStatus = fileNode->status().first;
+            QChar wStatus = fileNode->status().second;
+            bool stagedFile =    ((iStatus != '\0') && (iStatus != ' '))
+                              && ((wStatus == '\0') || (wStatus == ' '));
+            bool unstagedFile = (wStatus != '\0') && (wStatus != ' ');
 
-            if ((status != '\0') && (status != ' ')) {
-                // This is a changed file, so check whether we already know
+            if (stagedFile || unstagedFile) {
+                // This is a un/staged file, so check whether we already know
                 // about it and, if so, whether its SHA-1 is still the same and
                 // if that's not the case then reset a few things
 
@@ -456,11 +461,15 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                 // Create a new item, if needed
 
                 if (!fileItem) {
+                    mNbOfCheckableFiles += unstagedFile;
+
                     fileItem = new PmrWorkspacesWindowSynchronizeDialogItem(fileNode);
 
-                    fileItem->setCheckable(true);
+                    fileItem->setCheckable(unstagedFile);
                     fileItem->setCheckState(Qt::Checked);
                     fileItem->setEditable(false);
+                    fileItem->setEnabled(unstagedFile);
+                    fileItem->setSelectable(unstagedFile);
                     fileItem->setToolTip(QDir::toNativeSeparators(fileName));
 
                     mModel->appendRow(fileItem);
@@ -558,8 +567,10 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
         disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                    this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
 
-        foreach (const QModelIndex &fileIndex, mChangesValue->selectionModel()->selectedIndexes())
-            mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
+        if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(pItem->index()))) {
+            foreach (const QModelIndex &fileIndex, mChangesValue->selectionModel()->selectedIndexes())
+                mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
+        }
 
         connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
                 this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
@@ -569,11 +580,15 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
 
     int nbOfCheckedFiles = 0;
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
-        nbOfCheckedFiles += mModel->invisibleRootItem()->child(i)->checkState() == Qt::Checked;
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
+
+        nbOfCheckedFiles +=     fileItem->isEnabled()
+                            && (fileItem->checkState() == Qt::Checked);
+    }
 
     mSelectAllChangesCheckBox->setCheckState(nbOfCheckedFiles?
-                                                 (nbOfCheckedFiles == mModel->rowCount())?
+                                                 (nbOfCheckedFiles == mNbOfCheckableFiles)?
                                                      Qt::Checked:
                                                      Qt::PartiallyChecked:
                                                  Qt::Unchecked);
@@ -593,8 +608,12 @@ void PmrWorkspacesWindowSynchronizeDialog::selectAllChangesCheckBoxClicked()
 
     Qt::CheckState checkState = mSelectAllChangesCheckBox->isChecked()?Qt::Checked:Qt::Unchecked;
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
-        mModel->invisibleRootItem()->child(i)->setCheckState(checkState);
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
+        QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
+
+        if (fileItem->isEnabled())
+            fileItem->setCheckState(checkState);
+    }
 }
 
 //==============================================================================
