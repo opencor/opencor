@@ -47,8 +47,8 @@
         <translation>&lt;strong&gt;Note :&lt;/strong&gt; vous pourriez vouloir envoyer un message à &lt;a href=&quot;mailto: help@physiomeproject.org&quot;&gt;help@physiomeproject.org&lt;/a&gt; et demander pourquoi c&apos;est le cas.</translation>
     </message>
     <message>
-        <source>Access to %1 is forbidden.</source>
-        <translation>Accès à %1 est interdit.</translation>
+        <source>Access to &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt; is forbidden (you might need to reauthenticate).</source>
+        <translation>Accès à &lt;a href=&quot;%1&quot;&gt;%1&lt;/a&gt; est interdit (vous pourriez devoir vous réauthentifier).</translation>
     </message>
     <message>
         <source>No workspace could be found for %1.</source>

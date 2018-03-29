@@ -645,7 +645,7 @@ void PmrWebService::forbidden(const QString &pUrl)
 {
     // Let people know that access to the given URL is forbidden
 
-    emitInformation(tr("Access to %1 is forbidden.").arg(pUrl));
+    emitInformation(tr("Access to <a href=\"%1\">%1</a> is forbidden (you might need to reauthenticate).").arg(pUrl));
 }
 
 //==============================================================================
