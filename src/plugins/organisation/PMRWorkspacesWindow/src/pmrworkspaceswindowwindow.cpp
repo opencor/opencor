@@ -279,7 +279,7 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
     if (pPmrUrl.compare(mPmrUrl)) {
         if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-            mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+            mPmrWorkspacesWindowWidget->initialize();
 
         mPmrUrl = pPmrUrl;
 
@@ -328,7 +328,9 @@ void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
     //       information become available when trying to retrieve the list of
     //       workspaces at startup...
 
-    if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Information, pMessage);
+    else
         Core::informationMessageBox(windowTitle(), pMessage);
 }
 
@@ -342,7 +344,9 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
     //       warning occur when trying to retrieve the list of workspaces at
     //       startup...
 
-    if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Warning, pMessage);
+    else
         Core::warningMessageBox(windowTitle(), pMessage);
 }
 
@@ -358,7 +362,7 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       startup...
 
     if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), pMessage);
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Error, pMessage);
     else
         Core::criticalMessageBox(windowTitle(), pMessage);
 }
@@ -407,7 +411,7 @@ void PmrWorkspacesWindowWindow::updateGui()
     if (mAuthenticated)
         on_actionReload_triggered();
     else if (mInitialized)
-        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+        mPmrWorkspacesWindowWidget->initialize();
 }
 
 //==============================================================================

@@ -284,6 +284,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
 
+    mUserMessageWidget->setOpenExternalLinks(true);
     mUserMessageWidget->setScale(0.85);
 
     layout->addWidget(mUserMessageWidget);
@@ -679,7 +680,8 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
     mInitialized = false;
 
-    mErrorMessage = QString();
+    mMessageType = None;
+    mMessage = QString();
     mAuthenticated = false;
 }
 
@@ -693,7 +695,7 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
         mUserMessageWidget->setIconMessage(":/oxygen/actions/help-hint.png",
                                            tr("Authenticate yourself..."),
                                            tr("Click on the top-right button."));
-    } else if (mErrorMessage.isEmpty()) {
+    } else if (mMessage.isEmpty()) {
         if (!PMRSupport::PmrWorkspaceManager::instance()->count()) {
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("No workspaces were found..."));
@@ -701,8 +703,27 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
             mUserMessageWidget->resetMessage();
         }
     } else {
-        mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
-                                           Core::formatMessage(mErrorMessage, false, true));
+        switch (mMessageType) {
+        case Information:
+            mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
+                                               Core::formatMessage(mMessage, false, true));
+
+            break;
+        case Error:
+            mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
+                                               Core::formatMessage(mMessage, false, true));
+
+            break;
+        case Warning:
+            mUserMessageWidget->setIconMessage(":/oxygen/status/task-attention.png",
+                                               Core::formatMessage(mMessage, false, true));
+
+            break;
+        default:
+            // Not a relevant type, so do nothing
+
+            ;
+        }
     }
 
     // Show/hide our user message widget
@@ -713,8 +734,9 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces,
-                                           const QString &pErrorMessage,
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+                                           const MessageType &pMessageType,
+                                           const QString &pMessage,
                                            const bool &pAuthenticated)
 {
     // Initialise / keep track of some properties
@@ -723,10 +745,11 @@ void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspa
 
     workspaceManager->clearWorkspaces();
 
-    mErrorMessage = pErrorMessage;
+    mMessageType = pMessageType;
+    mMessage = pMessage;
     mAuthenticated = pAuthenticated;
 
-    if (pErrorMessage.isEmpty() && pAuthenticated) {
+    if (pMessage.isEmpty() && pAuthenticated) {
         // Reconcile the URLs of my-workspaces (on PMR) with those from our
         // workspace folders (in doing so, folders/URLs that don't correspond to
         // an actual PMR workspace are pruned from the relevant maps)
@@ -798,9 +821,37 @@ void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspa
         addWorkspace(workspace);
 
     updateGui(   (pWorkspaces == PMRSupport::PmrWorkspaces())
-              && pErrorMessage.isEmpty() && !pAuthenticated);
+              && pMessage.isEmpty() && !pAuthenticated);
 
     mInitialized = true;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces)
+{
+    // Initialise ourselves using the given workspaces
+
+    initialize(pWorkspaces, None, QString(), true);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize()
+{
+    // Initialise ourselves
+
+    initialize(PMRSupport::PmrWorkspaces(), None, QString(), false);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize(const MessageType &pMessageType,
+                                           const QString &pMessage)
+{
+    // Initialise ourselves using the given message
+
+    initialize(PMRSupport::PmrWorkspaces(), pMessageType, pMessage, true);
 }
 
 //==============================================================================

@@ -792,14 +792,10 @@ if(ENABLE_TESTS)
 endif()
 
 # Build our plugins
-# Note #1: hard dependencies (e.g. OpenSSL) must be listed before any other
-#          plugins...
+# Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
+#          other plugins...
 # Note #2: soft dependencies are determined automatically, so plugins can be
-#          listed in any order. However, for this to work, all plugins must have
-#          [PLUGIN_DIR]/src as an include directory. In addition, all plugins
-#          linked to a packge (built using the ExternalProject module) must also
-#          have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include as an include
-#          directory...
+#          listed in any order...
 
 if(ENABLE_SAMPLE_PLUGINS)
     set(SAMPLE_PLUGINS
@@ -822,6 +818,7 @@ endif()
 
 set(PLUGINS
     thirdParty/OpenSSL
+    thirdParty/zlib
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
@@ -882,7 +879,6 @@ set(PLUGINS
     thirdParty/Qwt
     thirdParty/SUNDIALS
     thirdParty/Zinc
-    thirdParty/zlib
 
     tools/CellMLTools
 
