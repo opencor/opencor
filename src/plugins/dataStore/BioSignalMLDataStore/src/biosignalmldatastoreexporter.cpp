@@ -154,11 +154,11 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
             delete[] data;
         }
-    } catch (bsml::data::Exception e) {
+    } catch (bsml::data::Exception &exception) {
         // Something went wrong, so retrieve the error message and delete our
         // BioSignalML file
 
-        pErrorMessage = tr("The data could not be exported to BioSignalML (%1).").arg(e.what());
+        pErrorMessage = tr("The data could not be exported to BioSignalML (%1).").arg(exception.what());
 
         QFile::remove(dataStoreData->fileName());
     }
