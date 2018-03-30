@@ -36,7 +36,7 @@ class QUrl;
 
 namespace Ui {
     class HelpWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 

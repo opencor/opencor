@@ -39,7 +39,7 @@ class QStandardItemModel;
 
 namespace Ui {
     class PluginsDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 

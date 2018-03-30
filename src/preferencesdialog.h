@@ -39,7 +39,7 @@ class QStandardItemModel;
 
 namespace Ui {
     class PreferencesDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 

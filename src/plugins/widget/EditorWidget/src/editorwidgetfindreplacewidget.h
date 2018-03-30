@@ -41,7 +41,7 @@ class QTextEdit;
 
 namespace Ui {
     class EditorWidgetFindReplaceWidget;
-}
+}   // namespace Ui
 
 //==============================================================================
 

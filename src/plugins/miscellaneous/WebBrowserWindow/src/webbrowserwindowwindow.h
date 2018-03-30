@@ -36,7 +36,7 @@ class QMenu;
 
 namespace Ui {
     class WebBrowserWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
