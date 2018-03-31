@@ -52,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef Q_OS_WIN
     #include <qt_windows.h>
 #else
-    #include <time.h>
+    #include <ctime>
 #endif
 
 //==============================================================================
