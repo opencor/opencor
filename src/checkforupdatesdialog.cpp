@@ -31,8 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QCoreApplication>
 #include <QCheckBox>
+#include <QCoreApplication>
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
