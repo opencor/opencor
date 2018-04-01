@@ -300,7 +300,7 @@ signals:
     void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
 private slots:
-    void checked(const QVariant &pItemInfo);
+    void legendChecked(const QVariant &pItemInfo);
 };
 
 //==============================================================================

@@ -1018,8 +1018,8 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
 
     // Check when someone clicks on a legend item
 
-    connect(this, SIGNAL(checked(const QVariant &, bool, int)),
-            this, SLOT(checked(const QVariant &)));
+    connect(this, &GraphPanelPlotLegendWidget::checked,
+            this, &GraphPanelPlotLegendWidget::legendChecked);
 }
 
 //==============================================================================
@@ -1260,7 +1260,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::checked(const QVariant &pItemInfo)
+void GraphPanelPlotLegendWidget::legendChecked(const QVariant &pItemInfo)
 {
     // Make sure that the corresponding graph panel is selected
     // Note: this makes it much easier to handle the graphToggled() signal
@@ -1352,8 +1352,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     //       involve updating our actions (see updateActions()), something that
     //       we cannot do when our grand parent gets destroyed...
 
-    connect(pParent->parent(), SIGNAL(destroyed(QObject *)),
-            this, SLOT(cannotUpdateActions()));
+    connect(pParent->parent(), &QObject::destroyed,
+            this, &GraphPanelPlotWidget::cannotUpdateActions);
 
     // Get ourselves a direct painter
 
@@ -1426,8 +1426,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     insertLegend(mLegend);
 
-    connect(mLegend, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(mLegend, &GraphPanelPlotLegendWidget::graphToggled,
+            this, &GraphPanelPlotWidget::graphToggled);
 
     // Create our context menu
 
@@ -1445,28 +1445,28 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
-    connect(mExportToAction, SIGNAL(triggered(bool)),
-            this, SLOT(exportTo()));
-    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyToClipboard()));
-    connect(mGraphPanelSettingsAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(graphPanelSettingsRequested()));
-    connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(graphsSettingsRequested()));
-    connect(mLegendAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(legendToggled()));
-    connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(logarithmicXAxisToggled()));
-    connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(logarithmicYAxisToggled()));
-    connect(mCustomAxesAction, SIGNAL(triggered(bool)),
-            this, SLOT(customAxes()));
-    connect(mZoomInAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomIn()));
-    connect(mZoomOutAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomOut()));
-    connect(mResetZoomAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetZoom()));
+    connect(mExportToAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::exportTo);
+    connect(mCopyToClipboardAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::copyToClipboard);
+    connect(mGraphPanelSettingsAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::graphPanelSettingsRequested);
+    connect(mGraphsSettingsAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::graphsSettingsRequested);
+    connect(mLegendAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::legendToggled);
+    connect(mLogarithmicXAxisAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::logarithmicXAxisToggled);
+    connect(mLogarithmicYAxisAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::logarithmicYAxisToggled);
+    connect(mCustomAxesAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::customAxes);
+    connect(mZoomInAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::zoomIn);
+    connect(mZoomOutAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::zoomOut);
+    connect(mResetZoomAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::resetZoom);
 
     mContextMenu->addAction(mExportToAction);
     mContextMenu->addSeparator();

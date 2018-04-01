@@ -54,8 +54,8 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mGui->buttonBox, &QDialogButtonBox::rejected,
+            this, &GraphPanelWidgetCustomAxesDialog::reject);
 
     // Create our 'special' settings
     // Note: special in the sense that we don't retrieve them from the plugin
