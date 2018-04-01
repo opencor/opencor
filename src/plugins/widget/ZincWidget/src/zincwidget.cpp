@@ -297,8 +297,8 @@ void ZincWidget::initializeGL()
 {
     // Forward the fact that our context is going to be destroyed
 
-    connect(QOpenGLWidget::context(), SIGNAL(aboutToBeDestroyed()),
-            this, SIGNAL(contextAboutToBeDestroyed()));
+    connect(QOpenGLWidget::context(), &QOpenGLContext::aboutToBeDestroyed,
+            this, &ZincWidget::contextAboutToBeDestroyed);
 
     // Create our scene viewer if we have a context
 

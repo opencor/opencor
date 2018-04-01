@@ -149,10 +149,10 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     mClearAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
 
-    connect(mClearAction, SIGNAL(triggered(bool)),
-            this, SLOT(clear()));
-    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyToClipboard()));
+    connect(mClearAction, &QAction::triggered,
+            this, &EditorListWidget::clear);
+    connect(mCopyToClipboardAction, &QAction::triggered,
+            this, &EditorListWidget::copyToClipboard);
 
     mContextMenu->addAction(mClearAction);
     mContextMenu->addSeparator();
@@ -164,8 +164,8 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
 
     // A connection to handle a double click on a given item
 
-    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(requestItem(const QModelIndex &)));
+    connect(this, &EditorListWidget::doubleClicked,
+            this, &EditorListWidget::requestItem);
 
     // Retranslate ourselves, so that our actions are properly initialised
 

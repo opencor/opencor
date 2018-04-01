@@ -87,54 +87,54 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     // Forward some signals that are emitted by our editor
 
-    connect(mEditor, SIGNAL(SCN_ZOOM()),
-            this, SLOT(zoomLevelChanged()));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::SCN_ZOOM,
+            this, &EditorWidget::emitZoomLevelChanged);
 
-    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SIGNAL(cursorPositionChanged(int, int)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::cursorPositionChanged,
+            this, &EditorWidget::cursorPositionChanged);
 
-    connect(mEditor, SIGNAL(textChanged()),
-            this, SIGNAL(textChanged()));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::textChanged,
+            this, &EditorWidget::textChanged);
 
-    connect(mEditor, SIGNAL(copyAvailable(bool)),
-            this, SIGNAL(copyAvailable(bool)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::copyAvailable,
+            this, &EditorWidget::copyAvailable);
 
-    connect(mEditor, SIGNAL(canSelectAll(bool)),
-            this, SIGNAL(canSelectAll(bool)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::canSelectAll,
+            this, &EditorWidget::canSelectAll);
 
     // Keep track of our position within our editor
 
-    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(keepTrackOfCursorPosition(int, int)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::cursorPositionChanged,
+            this, &EditorWidget::keepTrackOfCursorPosition);
 
     // Keep track of whenever a key is being pressed in our editor or
     // find/replace widget
 
-    connect(mEditor, SIGNAL(keyPressed(QKeyEvent *, bool &)),
-            this, SLOT(editorKeyPressed(QKeyEvent *, bool &)));
-    connect(mFindReplace, SIGNAL(keyPressed(QKeyEvent *, bool &)),
-            this, SLOT(findReplaceKeyPressed(QKeyEvent *, bool &)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::keyPressed,
+            this, &EditorWidget::editorKeyPressed);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::keyPressed,
+            this, &EditorWidget::findReplaceKeyPressed);
 
     // Keep track of whenever the find text changes
 
-    connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
-            this, SLOT(findTextChanged(const QString &)));
-    connect(mFindReplace, SIGNAL(canFindReplace(bool)),
-            this, SIGNAL(canFindReplace(bool)));
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findTextChanged,
+            this, &EditorWidget::findTextChanged);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::canFindReplace,
+            this, &EditorWidget::canFindReplace);
 
     // Keep track of the triggering of some actions in our find/replace widget
 
-    connect(mFindReplace, SIGNAL(findPreviousRequested()),
-            this, SLOT(findPrevious()));
-    connect(mFindReplace, SIGNAL(findNextRequested()),
-            this, SLOT(findNext()));
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findPreviousRequested,
+            this, &EditorWidget::findPrevious);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findNextRequested,
+            this, &EditorWidget::findNext);
 
-    connect(mFindReplace, SIGNAL(replaceRequested()),
-            this, SLOT(replace()));
-    connect(mFindReplace, SIGNAL(replaceAndFindRequested()),
-            this, SLOT(replaceAndFind()));
-    connect(mFindReplace, SIGNAL(replaceAllRequested()),
-            this, SLOT(replaceAll()));
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceRequested,
+            this, &EditorWidget::replace);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceAndFindRequested,
+            this, &EditorWidget::replaceAndFind);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceAllRequested,
+            this, &EditorWidget::replaceAll);
 
     // Add our editor and find/replace widgets to our layout
 
@@ -732,7 +732,7 @@ void EditorWidget::replaceAll()
 
 //==============================================================================
 
-void EditorWidget::zoomLevelChanged()
+void EditorWidget::emitZoomLevelChanged()
 {
     // Let people know that the zoom level has changed
 

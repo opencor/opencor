@@ -135,18 +135,18 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
     mDigitGroupingAction = newAction();
     mCopyToClipboardAction = Core::newAction(this);
 
-    connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
-            this, SLOT(update()));
+    connect(mOptimiseFontSizeAction, &QAction::toggled,
+            this, QOverload<>::of(&MathmlViewerWidget::update));
 
-    connect(mSubscriptsAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateMathmlViewerWidget()));
-    connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateMathmlViewerWidget()));
-    connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateMathmlViewerWidget()));
+    connect(mSubscriptsAction, &QAction::toggled,
+            this, &MathmlViewerWidget::updateMathmlViewerWidget);
+    connect(mGreekSymbolsAction, &QAction::toggled,
+            this, &MathmlViewerWidget::updateMathmlViewerWidget);
+    connect(mDigitGroupingAction, &QAction::toggled,
+            this, &MathmlViewerWidget::updateMathmlViewerWidget);
 
-    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyToClipboard()));
+    connect(mCopyToClipboardAction, &QAction::triggered,
+            this, &MathmlViewerWidget::copyToClipboard);
 
     mContextMenu->addAction(mOptimiseFontSizeAction);
     mContextMenu->addSeparator();

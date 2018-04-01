@@ -161,21 +161,21 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     // Some connections
 
-    connect(mWebView, SIGNAL(urlChanged(const QUrl &)),
-            this, SLOT(urlChanged(const QUrl &)));
+    connect(mWebView, &QWebView::urlChanged,
+            this, &WebViewerWidget::urlChanged);
 
-    connect(mWebView->pageAction(QWebPage::Back), SIGNAL(changed()),
-            this, SLOT(pageChanged()));
-    connect(mWebView->pageAction(QWebPage::Forward), SIGNAL(changed()),
-            this, SLOT(pageChanged()));
+    connect(mWebView->pageAction(QWebPage::Back), &QAction::changed,
+            this, &WebViewerWidget::pageChanged);
+    connect(mWebView->pageAction(QWebPage::Forward), &QAction::changed,
+            this, &WebViewerWidget::pageChanged);
 
-    connect(mWebView->page(), SIGNAL(selectionChanged()),
-            this, SLOT(selectionChanged()));
+    connect(mWebView->page(), &QWebPage::selectionChanged,
+            this, &WebViewerWidget::selectionChanged);
 
-    connect(mWebView, SIGNAL(loadProgress(int)),
-            this, SLOT(loadProgress(int)));
-    connect(mWebView, SIGNAL(loadFinished(bool)),
-            this, SLOT(loadFinished()));
+    connect(mWebView, &QWebView::loadProgress,
+            this, &WebViewerWidget::loadProgress);
+    connect(mWebView, &QWebView::loadFinished,
+            this, &WebViewerWidget::loadFinished);
 
     // Initially hide our progress bar
 
@@ -543,7 +543,7 @@ void WebViewerWidget::loadFinished()
         ResetDelay = 169
     };
 
-    QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+    QTimer::singleShot(ResetDelay, this, &WebViewerWidget::resetProgressBar);
 }
 
 //==============================================================================

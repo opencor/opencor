@@ -147,7 +147,7 @@ private slots:
 
     void checkCanSelectAll();
 
-    void cursorPositionChanged(int pLine, int pColumn);
+    void updateCursorPosition(int pLine, int pColumn);
 };
 
 //==============================================================================

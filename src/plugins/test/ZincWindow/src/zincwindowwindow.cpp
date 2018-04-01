@@ -61,12 +61,12 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
 
     mZincWidget = new ZincWidget::ZincWidget(this);
 
-    connect(mZincWidget, SIGNAL(contextAboutToBeDestroyed()),
-            this, SLOT(createAndSetZincContext()));
-    connect(mZincWidget, SIGNAL(graphicsInitialized()),
-            this, SLOT(graphicsInitialized()));
-    connect(mZincWidget, SIGNAL(devicePixelRatioChanged(int)),
-            this, SLOT(devicePixelRatioChanged(int)));
+    connect(mZincWidget, &ZincWidget::ZincWidget::contextAboutToBeDestroyed,
+            this, &ZincWindowWindow::createAndSetZincContext);
+    connect(mZincWidget, &ZincWidget::ZincWidget::graphicsInitialized,
+            this, &ZincWindowWindow::graphicsInitialized);
+    connect(mZincWidget, &ZincWidget::ZincWidget::devicePixelRatioChanged,
+            this, &ZincWindowWindow::devicePixelRatioChanged);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,

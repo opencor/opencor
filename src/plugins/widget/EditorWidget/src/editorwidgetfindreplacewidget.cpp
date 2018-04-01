@@ -82,23 +82,23 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
 
     mGui->findEdit->addAction(mDropDownAction, QLineEdit::LeadingPosition);
 
-    connect(mCaseSensitiveAction, SIGNAL(toggled(bool)),
-            this, SLOT(searchOptionChanged()));
-    connect(mWholeWordsOnlyAction, SIGNAL(toggled(bool)),
-            this, SLOT(searchOptionChanged()));
-    connect(mRegularExpressionAction, SIGNAL(toggled(bool)),
-            this, SLOT(searchOptionChanged()));
+    connect(mCaseSensitiveAction, &QAction::toggled,
+            this, &EditorWidgetFindReplaceWidget::searchOptionChanged);
+    connect(mWholeWordsOnlyAction, &QAction::toggled,
+            this, &EditorWidgetFindReplaceWidget::searchOptionChanged);
+    connect(mRegularExpressionAction, &QAction::toggled,
+            this, &EditorWidgetFindReplaceWidget::searchOptionChanged);
 
     // Create and handle our clear find and replace text actions
 
     mClearFindTextAction = Core::newAction(QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
     mClearReplaceTextAction = Core::newAction(QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
 
-    connect(mClearFindTextAction, SIGNAL(triggered(bool)),
-            mGui->findEdit, SLOT(clear()));
+    connect(mClearFindTextAction, &QAction::triggered,
+            mGui->findEdit, &QLineEdit::clear);
 
-    connect(mClearReplaceTextAction, SIGNAL(triggered(bool)),
-            mGui->replaceEdit, SLOT(clear()));
+    connect(mClearReplaceTextAction, &QAction::triggered,
+            mGui->replaceEdit, &QLineEdit::clear);
 
     // Make our find edit widget our focus proxy
 
@@ -106,25 +106,25 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
 
     // Some connections for our find-related widgets
 
-    connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-            this, SLOT(updateClearFindTextAction(const QString &)));
+    connect(mGui->findEdit, &QLineEdit::textChanged,
+            this, &EditorWidgetFindReplaceWidget::updateClearFindTextAction);
 
-    connect(this, SIGNAL(canFindReplace(bool)),
-            mGui->findPreviousButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(bool)),
-            mGui->findNextButton, SLOT(setEnabled(bool)));
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->findPreviousButton, &QToolButton::setEnabled);
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->findNextButton, &QToolButton::setEnabled);
 
-    connect(this, SIGNAL(canFindReplace(bool)),
-            mGui->replaceButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(bool)),
-            mGui->replaceAndFindButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(bool)),
-            mGui->replaceAllButton, SLOT(setEnabled(bool)));
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->replaceButton, &QToolButton::setEnabled);
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->replaceAndFindButton, &QToolButton::setEnabled);
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->replaceAllButton, &QToolButton::setEnabled);
 
     // A connection for our replace widget
 
-    connect(mGui->replaceEdit, SIGNAL(textChanged(const QString &)),
-            this, SLOT(updateClearReplaceTextAction(const QString &)));
+    connect(mGui->replaceEdit, &QLineEdit::textChanged,
+            this, &EditorWidgetFindReplaceWidget::updateClearReplaceTextAction);
 
     // A few more things , so that we are properly initialised
 
@@ -322,11 +322,11 @@ void EditorWidgetFindReplaceWidget::setActive(bool pActive)
     mActive = pActive;
 
     if (pActive) {
-        connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-                this, SIGNAL(findTextChanged(const QString &)));
+        connect(mGui->findEdit, &QLineEdit::textChanged,
+                this, &EditorWidgetFindReplaceWidget::findTextChanged);
     } else {
-        disconnect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-                   this, SIGNAL(findTextChanged(const QString &)));
+        disconnect(mGui->findEdit, &QLineEdit::textChanged,
+                   this, &EditorWidgetFindReplaceWidget::findTextChanged);
     }
 }
 
