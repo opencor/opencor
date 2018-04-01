@@ -384,15 +384,15 @@ void CorePlugin::initializePlugin()
     mFileOpenAction = newAction(QIcon(":/oxygen/actions/document-open.png"),
                                 QKeySequence::Open, mainWindow());
     mFileOpenRemoteAction = newAction(QIcon(":/oxygen/actions/document-open-remote.png"),
-                                      QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_O),
+                                      QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_O),
                                       mainWindow());
 
     mFileReloadAction = newAction(mainWindow());
 
-    mFileDuplicateAction = newAction(QKeySequence(Qt::CTRL|Qt::Key_D),
+    mFileDuplicateAction = newAction(QKeySequence(Qt::ControlModifier|Qt::Key_D),
                                      mainWindow());
 
-    mFileLockedAction = newAction(true, QKeySequence(Qt::CTRL|Qt::Key_L),
+    mFileLockedAction = newAction(true, QKeySequence(Qt::ControlModifier|Qt::Key_L),
                                   mainWindow());
 
     mFileSaveAction = newAction(QIcon(":/oxygen/actions/document-save.png"),
@@ -418,18 +418,18 @@ void CorePlugin::initializePlugin()
 
     mFilePreviousAction = newAction(QIcon(":/oxygen/actions/go-previous.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-                                    QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab),
+                                    QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_Tab),
 #elif defined(Q_OS_MAC)
-                                    QKeySequence(Qt::META|Qt::SHIFT|Qt::Key_Tab),
+                                    QKeySequence(Qt::MetaModifier|Qt::ShiftModifier|Qt::Key_Tab),
 #else
     #error Unsupported platform
 #endif
                                     mainWindow());
     mFileNextAction = newAction(QIcon(":/oxygen/actions/go-next.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-                                QKeySequence(Qt::CTRL|Qt::Key_Tab),
+                                QKeySequence(Qt::ControlModifier|Qt::Key_Tab),
 #elif defined(Q_OS_MAC)
-                                QKeySequence(Qt::META|Qt::Key_Tab),
+                                QKeySequence(Qt::MetaModifier|Qt::Key_Tab),
 #else
     #error Unsupported platform
 #endif
@@ -437,7 +437,7 @@ void CorePlugin::initializePlugin()
 
     mFileCloseAction = newAction(QIcon(":/oxygen/actions/document-close.png"),
 #if defined(Q_OS_WIN)
-                                 QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::CTRL|Qt::Key_W),
+                                 QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::ControlModifier|Qt::Key_W),
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
                                  QKeySequence::Close,
 #else
@@ -455,7 +455,7 @@ void CorePlugin::initializePlugin()
     mFileReopenSubMenu = newMenu(QIcon(":/oxygen/actions/document-open-recent.png"),
                                  mainWindow());
 
-    mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
+    mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_T),
                                                 mainWindow());
     mFileReopenSubMenuSeparator1 = newSeparator(mainWindow());
     mFileReopenSubMenuSeparator2 = newSeparator(mainWindow());

@@ -182,22 +182,22 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //          and then manually creating several QShortcut objects, but it
     //          doesn't work (bug?)...
 
-    mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
+    mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::ControlModifier|Qt::Key_Space));
 
     connect(mGui->actionDockedWindows, SIGNAL(triggered(bool)),
             this, SLOT(showDockedWindows(bool)));
 
-    new QShortcut(QKeySequence(Qt::META|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::MetaModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::MetaModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::META|Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::MetaModifier|Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::MetaModifier|Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
 
     // A connection to handle the status bar
@@ -222,8 +222,8 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       default key sequence doesn't, so we set them ourselves...
 
     mGui->actionQuit->setShortcuts(QList<QKeySequence>()
-                                       << QKeySequence(Qt::ALT|Qt::Key_F4)
-                                       << QKeySequence(Qt::CTRL|Qt::Key_Q));
+                                       << QKeySequence(Qt::AltModifier|Qt::Key_F4)
+                                       << QKeySequence(Qt::ControlModifier|Qt::Key_Q));
 #elif defined(Q_OS_MAC)
     mGui->actionQuit->setShortcut(QKeySequence::Quit);
 #else
@@ -235,7 +235,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Note: indeed, when pressing Cmd+M on macOS, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
 
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_M),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::Key_M),
                   this, SLOT(showMinimized()));
 #endif
 

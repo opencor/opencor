@@ -152,7 +152,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
-                                            QKeySequence(Qt::CTRL|Qt::Key_F2), mToolBarWidget);
+                                            QKeySequence(Qt::ControlModifier|Qt::Key_F2), mToolBarWidget);
     mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
                                                   mToolBarWidget);
     mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
