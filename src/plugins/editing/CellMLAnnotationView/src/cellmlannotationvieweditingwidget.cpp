@@ -87,23 +87,23 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     // Keep track of our splitter being moved
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(emitSplitterMoved()));
+    connect(this, &CellmlAnnotationViewEditingWidget::splitterMoved,
+            this, &CellmlAnnotationViewEditingWidget::emitSplitterMoved);
 
     // A connection to let our details widget know that we want to see the
     // metadata details of some CellML element
 
-    connect(mCellmlList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
-            mMetadataDetails, SLOT(updateGui(iface::cellml_api::CellMLElement *)));
+    connect(mCellmlList, &CellmlAnnotationViewCellmlListWidget::metadataDetailsRequested,
+            mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::updateGui);
 
     // Some connections to keep track of what our details widget wants
 
-    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(idDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &, const QString &)),
-            this, SLOT(updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &, const QString &)));
+    connect(mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::qualifierDetailsRequested,
+            this, &CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails);
+    connect(mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::resourceDetailsRequested,
+            this, &CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails);
+    connect(mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::idDetailsRequested,
+            this, &CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails);
 
     // Make our CellML list widget our focus proxy
 

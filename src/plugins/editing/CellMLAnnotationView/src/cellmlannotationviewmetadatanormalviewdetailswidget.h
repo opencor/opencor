@@ -145,10 +145,11 @@ signals:
 
     void rdfTripleRemoved(OpenCOR::CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
+public slots:
+    void disableLookUpInformation();
+
 private slots:
     void copy();
-
-    void disableLookUpInformation();
 
     void showLastRdfTriple();
 

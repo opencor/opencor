@@ -353,8 +353,8 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+    connect(mTreeViewWidget, &Core::TreeViewWidget::customContextMenuRequested,
+            this, &CellmlAnnotationViewCellmlListWidget::showCustomContextMenu);
 
     // Create our actions
 
@@ -366,28 +366,28 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mRemoveAllMetadataAction = Core::newAction(this);
     mOpenImportAction = Core::newAction(this);
 
-    connect(mExpandAllAction, SIGNAL(triggered(bool)),
-            this, SLOT(expandAll()));
-    connect(mCollapseAllAction, SIGNAL(triggered(bool)),
-            this, SLOT(collapseAll()));
-    connect(mRemoveCurrentMetadataAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeCurrentMetadata()));
-    connect(mRemoveAllMetadataAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeAllMetadata()));
-    connect(mOpenImportAction, SIGNAL(triggered(bool)),
-            this, SLOT(openImport()));
+    connect(mExpandAllAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::expandAll);
+    connect(mCollapseAllAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::collapseAll);
+    connect(mRemoveCurrentMetadataAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::removeCurrentMetadata);
+    connect(mRemoveAllMetadataAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::removeAllMetadata);
+    connect(mOpenImportAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::openImport);
 
     // Some connections to handle the expansion/collapse of a CellML element
 
-    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
+    connect(mTreeViewWidget, &Core::TreeViewWidget::expanded,
+            this, &CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents);
+    connect(mTreeViewWidget, &Core::TreeViewWidget::collapsed,
+            this, &CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents);
 
     // Some connections to handle the change of CellML element
 
-    connect(mTreeViewWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateMetadataDetails(const QModelIndex &, const QModelIndex &)));
+    connect(mTreeViewWidget->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &CellmlAnnotationViewCellmlListWidget::updateMetadataDetails);
 
     // Initialise our tree view widget
     // Note: we don't want to select first item of our tree view widget just yet

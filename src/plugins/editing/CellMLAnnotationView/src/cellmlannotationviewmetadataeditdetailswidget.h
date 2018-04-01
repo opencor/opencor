@@ -195,10 +195,10 @@ public slots:
                    bool pResetItemsGui = false,
                    bool pFilePermissionsChanged = false);
 
+    void disableLookUpInformation();
+
 private slots:
     void copy();
-
-    void disableLookUpInformation();
 
     void qualifierChanged(const QString &pQualifier);
 
