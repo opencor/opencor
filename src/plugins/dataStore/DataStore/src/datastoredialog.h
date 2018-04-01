@@ -85,12 +85,13 @@ private:
 
     DataStoreVariables doSelectedData(QStandardItem *pItem) const;
 
-    void updateDataSelectedState(QStandardItem *pItem,
-                                 const Qt::CheckState &pCheckState);
     void checkDataSelectedState(QStandardItem *pItem, int &pNbOfselectedData);
 
+    void doUpdateDataSelectedState(QStandardItem *pItem,
+                                   const Qt::CheckState &pCheckState);
+
 private slots:
-    void updateDataSelectedState(QStandardItem *pItem = 0);
+    void updateDataSelectedState(QStandardItem *pItem);
 
     void on_allDataCheckBox_clicked();
 };

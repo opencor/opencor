@@ -100,8 +100,8 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mGui->buttonBox, &QDialogButtonBox::rejected,
+            this, &PluginsDialog::reject);
 
     // Make sure that all the widgets in our form layout can be resized, if
     // necessary and if possible
@@ -198,7 +198,7 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
 
-    updatePluginsSelectedState(0, true);
+    doUpdatePluginsSelectedState(0, true);
 
     // Expand the whole tree view widget and make sure that it only takes as
     // much width as necessary
@@ -224,18 +224,18 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     // Connection to handle a plugin's information
 
-    connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateInformation(const QModelIndex &, const QModelIndex &)));
+    connect(mGui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &PluginsDialog::updateInformation);
 
     // Connection to handle the activation of a link in the description
 
-    connect(mGui->fieldThreeValue, SIGNAL(linkActivated(const QString &)),
-            this, SLOT(openLink(const QString &)));
+    connect(mGui->fieldThreeValue, &QLabel::linkActivated,
+            this, &PluginsDialog::openLink);
 
     // Connection to handle the dialog's buttons
 
-    connect(mGui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
-            this, SLOT(apply()));
+    connect(mGui->buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked,
+            this, &PluginsDialog::apply);
 
     // Retrieve whether to show selectable plugins
 
@@ -419,14 +419,14 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
 //==============================================================================
 
-void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
-                                               bool pInitializing)
+void PluginsDialog::doUpdatePluginsSelectedState(QStandardItem *pItem,
+                                                 bool pInitializing)
 {
     // Disable the connection that handles a change in a plugin's loading state
     // (otherwise what we are doing here is going to be completely uneffective)
 
-    disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-               this, SLOT(updatePluginsSelectedState(QStandardItem *)));
+    disconnect(mModel, &QStandardItemModel::itemChanged,
+               this, &PluginsDialog::updatePluginsSelectedState);
 
     // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
@@ -525,8 +525,17 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // Re-enable the connection that handles a change in a plugin's loading
     // state
 
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updatePluginsSelectedState(QStandardItem *)));
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, &PluginsDialog::updatePluginsSelectedState);
+}
+
+//==============================================================================
+
+void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem)
+{
+    // Update our plugins selected state
+
+    doUpdatePluginsSelectedState(pItem);
 }
 
 //==============================================================================

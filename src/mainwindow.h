@@ -134,6 +134,8 @@ private:
 
     void showPreferencesDialog(const QString &pPluginName = QString());
 
+    void doShowDockedWindows(bool pShow, bool pInitialisation = false);
+
 private slots:
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
     void handleMessage(const QString &pMessage);
@@ -150,7 +152,7 @@ private slots:
 
     void updateGui(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
-    void showDockedWindows(bool pShow, bool pInitialisation = false);
+    void showDockedWindows(bool pShow);
     void toggleDockedWindows();
 
     void updateDockWidgetsVisibility();

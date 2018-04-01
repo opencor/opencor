@@ -148,8 +148,8 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mGui->buttonBox, &QDialogButtonBox::rejected,
+            this, &PreferencesDialog::reject);
 
     // Customise our GUI's button box by having both a reset plugin settings and
     // reset all settings buttons
@@ -157,10 +157,10 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     mResetAllButton = mGui->buttonBox->addButton(tr("Reset All"), QDialogButtonBox::ActionRole);
     mResetPluginButton = mGui->buttonBox->addButton(tr("Reset Plugin"), QDialogButtonBox::ActionRole);
 
-    connect(mResetAllButton, SIGNAL(clicked(bool)),
-            this, SLOT(resetAll()));
-    connect(mResetPluginButton, SIGNAL(clicked(bool)),
-            this, SLOT(resetPlugin()));
+    connect(mResetAllButton, &QPushButton::clicked,
+            this, &PreferencesDialog::resetAll);
+    connect(mResetPluginButton, &QPushButton::clicked,
+            this, &PreferencesDialog::resetPlugin);
 
     // Create and add our plugin category widget
 
@@ -234,8 +234,8 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
 
     // Connection to handle the change of preferences widget
 
-    connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updatePreferencesWidget(const QModelIndex &, const QModelIndex &)));
+    connect(mGui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &PreferencesDialog::updatePreferencesWidget);
 
     // Select our first item or that of the given plugin, if any
 

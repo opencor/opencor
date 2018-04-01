@@ -109,10 +109,12 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // operating system), as well as a message sent by another instance of
     // itself
 
-    QObject::connect(qApp, SIGNAL(fileOpenRequest(const QString &)),
-                     this, SLOT(openFileOrHandleUrl(const QString &)));
-    QObject::connect(qApp, SIGNAL(messageReceived(const QString &)),
-                     this, SLOT(handleMessage(const QString &)));
+    GuiApplication *guiApplication = qobject_cast<GuiApplication *>(qApp);
+
+    connect(guiApplication, &GuiApplication::fileOpenRequest,
+            this, &MainWindow::openFileOrHandleUrl);
+    connect(guiApplication, &GuiApplication::messageReceived,
+            this, &MainWindow::handleMessage);
 
     // Handle OpenCOR URLs
     // Note: we should, through our GuiApplication class (see main.cpp), be able
@@ -184,8 +186,8 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::ControlModifier|Qt::Key_Space));
 
-    connect(mGui->actionDockedWindows, SIGNAL(triggered(bool)),
-            this, SLOT(showDockedWindows(bool)));
+    connect(mGui->actionDockedWindows, &QAction::triggered,
+            this, &MainWindow::showDockedWindows);
 
     new QShortcut(QKeySequence(Qt::MetaModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
@@ -202,15 +204,15 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // A connection to handle the status bar
 
-    connect(mGui->actionStatusBar, SIGNAL(toggled(bool)),
-            mGui->statusBar, SLOT(setVisible(bool)));
+    connect(mGui->actionStatusBar, &QAction::toggled,
+            mGui->statusBar, &QStatusBar::setVisible);
 
     // Some connections to handle our various menu items
 
-    connect(mGui->actionQuit, SIGNAL(triggered(bool)),
-            this, SLOT(close()));
-    connect(mGui->actionResetAll, SIGNAL(triggered(bool)),
-            this, SLOT(resetAll()));
+    connect(mGui->actionQuit, &QAction::triggered,
+            this, &MainWindow::close);
+    connect(mGui->actionResetAll, &QAction::triggered,
+            this, &MainWindow::resetAll);
 
     // Set the shortcuts of some actions
     // Note: we do it here, so that we can use standard shortcuts (whenever
@@ -267,8 +269,8 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Keep track of the showing/hiding of the different window widgets
 
     foreach (Plugin *plugin, mLoadedWindowPlugins) {
-        connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), SIGNAL(visibilityChanged(bool)),
-                this, SLOT(updateDockWidgetsVisibility()));
+        connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), &QDockWidget::visibilityChanged,
+                this, &MainWindow::updateDockWidgetsVisibility);
     }
 
     // Show/hide and enable/disable the windows action depending on whether
@@ -291,8 +293,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       can still receive files / OpenCOR URLs to open/handle while we
     //       start opening/handling those that we have in stock, and this in the
     //       correct order...
-
-    GuiApplication *guiApplication = qobject_cast<GuiApplication *>(qApp);
 
     while (guiApplication->hasFileNamesOrOpencorUrls())
         openFileOrHandleUrl(guiApplication->firstFileNameOrOpencorUrl());
@@ -572,6 +572,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         //       Core interface, so no need to check anything...
 
         // Also keep track of GUI updates in our central widget
+        // Note: we cannot use the new signal/slot mechanism since the signal
+        //       is located in our Core plugin...
 
         connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(OpenCOR::Plugin *, const QString &)),
                 this, SLOT(updateGui(OpenCOR::Plugin *, const QString &)));
@@ -603,10 +605,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Connect the action to the window
 
-        connect(windowInterface->windowAction(), SIGNAL(triggered(bool)),
-                windowInterface->windowWidget(), SLOT(setVisible(bool)));
-        connect(windowInterface->windowWidget()->toggleViewAction(), SIGNAL(toggled(bool)),
-                windowInterface->windowAction(), SLOT(setChecked(bool)));
+        connect(windowInterface->windowAction(), &QAction::triggered,
+                windowInterface->windowWidget(), &QDockWidget::setVisible);
+        connect(windowInterface->windowWidget()->toggleViewAction(), &QAction::toggled,
+                windowInterface->windowAction(), &QAction::setChecked);
     }
 }
 
@@ -649,7 +651,7 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the docked windows are to be shown
 
-    showDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
+    doShowDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
 
     // Retrieve the state of the docked windows
 
@@ -1278,7 +1280,7 @@ void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
 
 //==============================================================================
 
-void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
+void MainWindow::doShowDockedWindows(bool pShow, bool pInitialisation)
 {
     // Show/hide the docked windows
 
@@ -1304,6 +1306,15 @@ void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
     // Update the checked state of our docked windows action
 
     mGui->actionDockedWindows->setChecked(pShow);
+}
+
+//==============================================================================
+
+void MainWindow::showDockedWindows(bool pShow)
+{
+    // Show/hide the docked windows
+
+    doShowDockedWindows(pShow);
 }
 
 //==============================================================================
