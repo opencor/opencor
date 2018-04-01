@@ -58,7 +58,7 @@ public:
     explicit TextEditorWidget(QWidget *pParent);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 signals:
     void goToPreviousPropertyRequested();
@@ -135,9 +135,9 @@ public:
     explicit ListEditorWidget(QWidget *pParent);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
 signals:
     void goToPreviousPropertyRequested();
@@ -177,14 +177,14 @@ class PropertyItemDelegate : public StyledItemDelegate
 public:
     explicit PropertyItemDelegate(PropertyEditorWidget *pParent);
 
-    virtual QWidget *createEditor(QWidget *pParent,
-                                  const QStyleOptionViewItem &pOption,
-                                  const QModelIndex &pIndex) const;
+    QWidget *createEditor(QWidget *pParent,
+                          const QStyleOptionViewItem &pOption,
+                          const QModelIndex &pIndex) const override;
 
 protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    bool eventFilter(QObject *pObject, QEvent *pEvent) override;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 
 private:
     PropertyEditorWidget *mPropertyEditorWidget;
@@ -370,9 +370,9 @@ public:
     explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
                                   QWidget *pParent);
     explicit PropertyEditorWidget(QWidget *pParent);
-    ~PropertyEditorWidget();
+    ~PropertyEditorWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void clear();
 
@@ -430,14 +430,14 @@ public:
     void removeAllProperties();
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+    void mouseMoveEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
+    void mouseReleaseEvent(QMouseEvent *pEvent) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
 
-    virtual QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 private:
     bool mShowUnits;

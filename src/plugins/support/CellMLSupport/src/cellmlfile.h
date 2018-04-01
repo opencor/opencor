@@ -83,14 +83,14 @@ public:
     };
 
     explicit CellmlFile(const QString &pFileName);
-    ~CellmlFile();
+    ~CellmlFile() override;
 
     iface::cellml_api::Model * model();
 
     iface::rdf_api::DataSource * rdfDataSource();
 
-    virtual bool load();
-    virtual bool save(const QString &pFileName = QString());
+    bool load() override;
+    bool save(const QString &pFileName = QString()) override;
 
     bool update(const QString &pFileName = QString());
 
@@ -175,7 +175,7 @@ private:
 
     bool mUpdated;
 
-    virtual void reset();
+    void reset() override;
 
     void retrieveImports(const QString &pXmlBase,
                          iface::cellml_api::Model *pModel,

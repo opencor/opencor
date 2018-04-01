@@ -64,7 +64,7 @@ public:
 private:
     ZincWidget *mZincWidget;
 
-    virtual void operator()(const OpenCMISS::Zinc::Sceneviewerevent &pSceneViewerEvent);
+    void operator()(const OpenCMISS::Zinc::Sceneviewerevent &pSceneViewerEvent) override;
 };
 
 //==============================================================================
@@ -108,16 +108,16 @@ public:
     void viewAll();
 
 protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int pWidth, int pHeight);
+    void initializeGL() override;
+    void paintGL() override;
+    void resizeGL(int pWidth, int pHeight) override;
 
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    void mouseMoveEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
+    void mouseReleaseEvent(QMouseEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
-    virtual QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 private:
     bool mGraphicsInitialized;

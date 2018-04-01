@@ -45,7 +45,7 @@ class PMRSUPPORT_EXPORT PmrWorkspaceManager : public QObject
 
 public:
     explicit PmrWorkspaceManager();
-    ~PmrWorkspaceManager();
+    ~PmrWorkspaceManager() override;
 
     static PmrWorkspaceManager * instance();
 

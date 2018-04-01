@@ -54,7 +54,7 @@ public:
     explicit EditorListItem(const Type &pType, const int &pLine,
                             const int &pColumn, const QString &pMessage);
 
-    virtual int type() const;
+    int type() const override;
     int line() const;
     int column() const;
     QString message() const;
@@ -76,7 +76,7 @@ class EDITORWIDGET_EXPORT EditorListWidget : public QListView,
 public:
     explicit EditorListWidget(QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void addItem(const EditorListItem::Type &pType, const int &pLine,
                  const int &pColumn, const QString &pMessage);
@@ -89,8 +89,8 @@ public:
     void selectFirstItem();
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
     QStandardItemModel *mModel;

@@ -64,10 +64,10 @@ public:
                                             const Plugins &pCellmlSimulationViewPlugins,
                                             QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
@@ -94,7 +94,7 @@ public:
     SimulationSupport::Simulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName);
+    QWidget * widget(const QString &pFileName) override;
 
     quint64 simulationResultsSize(const QString &pFileName) const;
 

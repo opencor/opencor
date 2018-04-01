@@ -71,7 +71,7 @@ public:
                                                CellmlAnnotationViewWidget *pAnnotationWidget,
                                                QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     CellMLSupport::CellmlFile * cellmlFile() const;
 

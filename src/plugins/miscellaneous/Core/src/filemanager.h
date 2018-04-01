@@ -88,7 +88,7 @@ public:
     };
 
     explicit FileManager();
-    ~FileManager();
+    ~FileManager() override;
 
     static FileManager * instance();
 

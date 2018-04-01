@@ -73,10 +73,10 @@ public:
     explicit EditorWidget(const QString &pContents, const bool &pReadOnly,
                           QsciLexer *pLexer, QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateSettings(EditorWidget *pEditorWidget);
 

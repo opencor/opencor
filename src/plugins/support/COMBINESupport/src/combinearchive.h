@@ -93,10 +93,10 @@ class COMBINESUPPORT_EXPORT CombineArchive : public StandardSupport::StandardFil
 
 public:
     explicit CombineArchive(const QString &pFileName, const bool &pNew = false);
-    ~CombineArchive();
+    ~CombineArchive() override;
 
-    virtual bool load();
-    virtual bool save(const QString &pFileName = QString());
+    bool load() override;
+    bool save(const QString &pFileName = QString()) override;
 
     bool update(const QString &pFileName = QString());
 
@@ -130,7 +130,7 @@ private:
 
     bool mUpdated;
 
-    virtual void reset();
+    void reset() override;
 };
 
 //==============================================================================

@@ -60,12 +60,12 @@ class PmrSupportPreferencesWidget : public Preferences::PreferencesWidget
 
 public:
     explicit PmrSupportPreferencesWidget(QWidget *pParent);
-    ~PmrSupportPreferencesWidget();
+    ~PmrSupportPreferencesWidget() override;
 
-    virtual bool preferencesChanged() const;
+    bool preferencesChanged() const override;
 
-    virtual void resetPreferences();
-    virtual void savePreferences();
+    void resetPreferences() override;
+    void savePreferences() override;
 
 private:
     Ui::PmrSupportPreferencesWidget *mGui;

@@ -44,7 +44,7 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelsWidget : public Core::SplitterWidget
 public:
     explicit GraphPanelsWidget(QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize();
 

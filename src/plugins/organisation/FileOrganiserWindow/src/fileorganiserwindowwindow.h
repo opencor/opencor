@@ -58,12 +58,12 @@ class FileOrganiserWindowWindow : public Core::OrganisationWidget
 
 public:
     explicit FileOrganiserWindowWindow(QWidget *pParent);
-    ~FileOrganiserWindowWindow();
+    ~FileOrganiserWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
 private:
     Ui::FileOrganiserWindowWindow *mGui;

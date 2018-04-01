@@ -54,7 +54,7 @@ public:
     explicit CollapsibleHeaderTitleWidget(QWidget *pParent);
 
 protected:
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
 
 signals:
     void doubleClicked();

@@ -47,7 +47,7 @@ class PmrWorkspacesWindowNewWorkspaceDialog : public Core::Dialog
 public:
     explicit PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings,
                                                    QWidget *pParent);
-    ~PmrWorkspacesWindowNewWorkspaceDialog();
+    ~PmrWorkspacesWindowNewWorkspaceDialog() override;
 
     virtual void retranslateUi();
 

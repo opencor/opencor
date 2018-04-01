@@ -94,14 +94,14 @@ class CentralWidget : public Widget
 
 public:
     explicit CentralWidget(QWidget *pParent);
-    ~CentralWidget();
+    ~CentralWidget() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     void settingsLoaded(const Plugins &pLoadedPlugins);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void addView(Plugin *pPlugin);
 
@@ -123,9 +123,9 @@ public:
     bool selectView(const QString &pViewName);
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
-    virtual void dragMoveEvent(QDragMoveEvent *pEvent);
-    virtual void dropEvent(QDropEvent *pEvent);
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
 
 private:
     enum State {

@@ -64,7 +64,7 @@ public:
                           const QString &pOwner, PmrWebService *pParent);
     explicit PmrWorkspace(const bool &pOwned, const QString &pName,
                           const QString &pUrl, PmrWebService *pParent);
-    ~PmrWorkspace();
+    ~PmrWorkspace() override;
 
     static bool compare(PmrWorkspace *pWorkspace1, PmrWorkspace *pWorkspace2);
 

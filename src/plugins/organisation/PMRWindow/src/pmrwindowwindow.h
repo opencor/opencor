@@ -67,14 +67,14 @@ class PmrWindowWindow : public Core::OrganisationWidget
 
 public:
     explicit PmrWindowWindow(QWidget *pParent);
-    ~PmrWindowWindow();
+    ~PmrWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void update(const QString &pPmrUrl);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
     Ui::PmrWindowWindow *mGui;

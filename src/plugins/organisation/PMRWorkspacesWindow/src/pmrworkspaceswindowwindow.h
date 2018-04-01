@@ -68,19 +68,19 @@ class PmrWorkspacesWindowWindow : public Core::OrganisationWidget
 
 public:
     explicit PmrWorkspacesWindowWindow(QWidget *pParent);
-    ~PmrWorkspacesWindowWindow();
+    ~PmrWorkspacesWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     Ui::PmrWorkspacesWindowWindow * gui() const;
 
     void update(const QString &pPmrUrl);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
     Ui::PmrWorkspacesWindowWindow *mGui;

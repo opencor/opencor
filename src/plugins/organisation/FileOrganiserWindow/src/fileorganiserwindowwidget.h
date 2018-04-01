@@ -77,8 +77,8 @@ class FileOrganiserWindowModel : public QStandardItemModel
 public:
     explicit FileOrganiserWindowModel(QObject *pParent);
 
-    virtual QStringList mimeTypes() const;
-    virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
+    QStringList mimeTypes() const override;
+    QMimeData * mimeData(const QModelIndexList &pIndexes) const override;
 
     QByteArray encodeHierarchyData(const QModelIndex &pIndex) const;
 
@@ -103,10 +103,10 @@ class FileOrganiserWindowWidget : public Core::TreeViewWidget
 
 public:
     explicit FileOrganiserWindowWidget(QWidget *pParent);
-    ~FileOrganiserWindowWidget();
+    ~FileOrganiserWindowWidget() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     void newFolder();
     void deleteItems();
@@ -114,10 +114,10 @@ public:
     QString filePath(const QModelIndex &pFileIndex) const;
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
-    virtual void dragMoveEvent(QDragMoveEvent *pEvent);
-    virtual void dropEvent(QDropEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
     Core::FileManager *mFileManager;

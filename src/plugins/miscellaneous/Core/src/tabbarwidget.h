@@ -44,13 +44,11 @@ class TabBarStyle : public QProxyStyle
     Q_OBJECT
 
 public:
-    virtual void drawControl(ControlElement pElement,
-                             const QStyleOption *pOption, QPainter *pPainter,
-                             const QWidget *pWidget = 0) const;
+    void drawControl(ControlElement pElement, const QStyleOption *pOption,
+                     QPainter *pPainter, const QWidget *pWidget = 0) const override;
 
-    virtual QRect subElementRect(SubElement pElement,
-                                 const QStyleOption *pOption,
-                                 const QWidget *pWidget) const;
+    QRect subElementRect(SubElement pElement, const QStyleOption *pOption,
+                         const QWidget *pWidget) const override;
 
 private:
     void tabLayout(const QStyleOptionTab *pOption, const QWidget *pWidget,
@@ -70,9 +68,9 @@ public:
     void setOldIndex(const int &pOldIndex);
 
 protected:
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    void wheelEvent(QWheelEvent *pEvent) override;
 
-    virtual QSize tabSizeHint(int pIndex) const;
+    QSize tabSizeHint(int pIndex) const override;
 
 private:
     int mOldIndex;

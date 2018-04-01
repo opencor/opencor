@@ -85,7 +85,7 @@ public:
     void resize();
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     QWidget *mParent;

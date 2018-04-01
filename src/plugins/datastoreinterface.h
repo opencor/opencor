@@ -185,7 +185,7 @@ class DataStoreExporter : public QObject
 
 public:
     explicit DataStoreExporter(DataStoreData *pDataStoreData);
-    ~DataStoreExporter();
+    ~DataStoreExporter() override;
 
     void start();
 

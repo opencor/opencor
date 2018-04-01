@@ -61,10 +61,10 @@ class RawSedmlViewWidget : public Core::ViewWidget
 public:
     explicit RawSedmlViewWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool contains(const QString &pFileName) const;
 
@@ -77,9 +77,9 @@ public:
 
     EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName);
+    QWidget * widget(const QString &pFileName) override;
 
-    virtual QList<QWidget *> statusBarWidgets() const;
+    QList<QWidget *> statusBarWidgets() const override;
 
     void reformat(const QString &pFileName);
 

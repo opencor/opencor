@@ -217,7 +217,7 @@ public:
     QRect zoomRegion() const;
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     enum Position {
@@ -249,7 +249,7 @@ public:
     void retranslateUi();
 
 protected:
-    virtual QwtText label(double pValue) const;
+    QwtText label(double pValue) const override;
 };
 
 //==============================================================================
@@ -272,7 +272,7 @@ public:
     bool isActive() const;
     void setActive(const bool &pActive);
 
-    virtual bool isEmpty() const;
+    bool isEmpty() const override;
 
     void setChecked(const int &pIndex, const bool &pChecked);
 
@@ -281,13 +281,12 @@ public:
     void setForegroundColor(const QColor &pForegroundColor);
 
     void renderLegend(QPainter *pPainter, const QRectF &pRect,
-                      bool pFillBackground) const;
+                      bool pFillBackground) const override;
 
-    virtual QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 protected:
-    virtual void updateWidget(QWidget *pWidget,
-                              const QwtLegendData &pLegendData);
+    void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
 
 private:
     GraphPanelPlotWidget *mOwner;
@@ -333,9 +332,9 @@ public:
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
                                   GraphPanelWidget *pParent);
-    ~GraphPanelPlotWidget();
+    ~GraphPanelPlotWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void setActive(const bool &pActive);
 
@@ -467,13 +466,13 @@ public:
     QPointF canvasPoint(const QPoint &pPoint) const;
 
 protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void paintEvent(QPaintEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    bool eventFilter(QObject *pObject, QEvent *pEvent) override;
+    void mouseMoveEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
+    void mouseReleaseEvent(QMouseEvent *pEvent) override;
+    void paintEvent(QPaintEvent *pEvent) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
     enum Scaling {

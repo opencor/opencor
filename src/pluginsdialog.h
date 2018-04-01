@@ -52,8 +52,8 @@ class PluginItemDelegate : public StyledItemDelegate
 public:
     explicit PluginItemDelegate(QObject *pParent);
 
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================
@@ -69,7 +69,7 @@ class PluginsDialog : public Dialog
 public:
     explicit PluginsDialog(QSettings *pSettings, PluginManager *pPluginManager,
                            QWidget *pParent);
-    ~PluginsDialog();
+    ~PluginsDialog() override;
 
 private:
     Ui::PluginsDialog *mGui;

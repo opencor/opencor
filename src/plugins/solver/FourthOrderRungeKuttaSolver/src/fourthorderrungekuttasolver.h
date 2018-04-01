@@ -48,14 +48,13 @@ class FourthOrderRungeKuttaSolver : public OpenCOR::Solver::OdeSolver
 
 public:
     explicit FourthOrderRungeKuttaSolver();
-    ~FourthOrderRungeKuttaSolver();
+    ~FourthOrderRungeKuttaSolver() override;
 
-    virtual void initialize(const double &pVoi, const int &pRatesStatesCount,
-                            double *pConstants, double *pRates, double *pStates,
-                            double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates);
+    void initialize(const double &pVoi, const int &pRatesStatesCount,
+                    double *pConstants, double *pRates, double *pStates,
+                    double *pAlgebraic, ComputeRatesFunction pComputeRates) override;
 
-    virtual void solve(double &pVoi, const double &pVoiEnd) const;
+    void solve(double &pVoi, const double &pVoiEnd) const override;
 
 private:
     double mStep;

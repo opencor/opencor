@@ -57,7 +57,7 @@ class SimulationExperimentViewInformationParametersWidget : public Core::Propert
 public:
     explicit SimulationExperimentViewInformationParametersWidget(QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation,
                     const bool &pReloadingView = false);
@@ -66,7 +66,7 @@ public:
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
 
 private:
     QMenu *mContextMenu;

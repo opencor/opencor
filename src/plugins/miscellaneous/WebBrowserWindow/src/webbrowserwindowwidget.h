@@ -41,7 +41,7 @@ class WebBrowserWindowWidget : public WebViewerWidget::WebViewerWidget
 public:
     explicit WebBrowserWindowWidget(QWidget *pParent);
 
-    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
+    bool isUrlSchemeSupported(const QString &pUrlScheme) override;
 
     void clear();
 };

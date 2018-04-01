@@ -67,7 +67,7 @@ public:
                                                        SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                        QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     Core::CollapsibleWidget * collapsibleWidget() const;
 

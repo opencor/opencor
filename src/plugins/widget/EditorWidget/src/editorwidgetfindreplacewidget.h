@@ -56,9 +56,9 @@ class EditorWidgetFindReplaceWidget : public Core::Widget
 
 public:
     explicit EditorWidgetFindReplaceWidget(QWidget *pParent);
-    ~EditorWidgetFindReplaceWidget();
+    ~EditorWidgetFindReplaceWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool isCaseSensitive() const;
     bool searchWholeWordsOnly() const;
@@ -84,9 +84,9 @@ public:
     void setActive(const bool &pActive);
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
     Ui::EditorWidgetFindReplaceWidget *mGui;

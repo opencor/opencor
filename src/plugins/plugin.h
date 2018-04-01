@@ -85,7 +85,7 @@ public:
     explicit Plugin(const QString &pFileName, PluginInfo *pInfo,
                     const QString &pErrorMessage, const bool &pLoad,
                     PluginManager *pPluginManager);
-    ~Plugin();
+    ~Plugin() override;
 
     static bool compare(Plugin *pPlugin1, Plugin *pPlugin2);
 

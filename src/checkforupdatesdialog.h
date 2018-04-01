@@ -89,7 +89,7 @@ public:
                                    QWidget *pParent);
     explicit CheckForUpdatesDialog(QSettings *pSettings,
                                    CheckForUpdatesEngine *pEngine);
-    ~CheckForUpdatesDialog();
+    ~CheckForUpdatesDialog() override;
 
 private:
     Ui::CheckForUpdatesDialog *mGui;

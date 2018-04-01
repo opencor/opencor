@@ -50,7 +50,7 @@ class SimulationExperimentViewInformationSimulationWidget : public Core::Propert
 public:
     explicit SimulationExperimentViewInformationSimulationWidget(QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation);
 

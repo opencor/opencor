@@ -50,7 +50,7 @@ public:
     void setValue(const double &pValue);
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     double mValue;

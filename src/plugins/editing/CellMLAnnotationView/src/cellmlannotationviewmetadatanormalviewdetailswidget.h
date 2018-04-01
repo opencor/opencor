@@ -82,7 +82,7 @@ public:
     explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                  QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),

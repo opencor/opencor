@@ -54,10 +54,10 @@ class MATHMLVIEWERWIDGET_EXPORT MathmlViewerWidget : public Core::Widget
 public:
     explicit MathmlViewerWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateSettings(MathmlViewerWidget *pMathmlViewerWidget);
 
@@ -80,8 +80,8 @@ public:
     void setDigitGrouping(const bool &pDigitGrouping);
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     QwtMathMLDocument mMathmlDocument;

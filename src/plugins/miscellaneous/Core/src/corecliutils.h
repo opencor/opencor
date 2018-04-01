@@ -83,9 +83,9 @@ class CORE_EXPORT DummyMessageHandler : public QAbstractMessageHandler
     Q_OBJECT
 
 protected:
-    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
-                               const QUrl &pIdentifier,
-                               const QSourceLocation &pSourceLocation);
+    void handleMessage(QtMsgType pType, const QString &pDescription,
+                       const QUrl &pIdentifier,
+                       const QSourceLocation &pSourceLocation) override;
 };
 
 //==============================================================================

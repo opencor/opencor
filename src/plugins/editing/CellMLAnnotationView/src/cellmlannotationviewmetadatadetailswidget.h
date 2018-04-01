@@ -72,7 +72,7 @@ public:
                                                        CellMLSupport::CellmlFile *pCellmlFile,
                                                        QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     Core::SplitterWidget * splitter() const;
 

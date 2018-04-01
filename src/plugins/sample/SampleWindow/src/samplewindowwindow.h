@@ -46,7 +46,7 @@ class SampleWindowWindow : public Core::WindowWidget
 
 public:
     explicit SampleWindowWindow(QWidget *pParent);
-    ~SampleWindowWindow();
+    ~SampleWindowWindow() override;
 
 private:
     Ui::SampleWindowWindow *mGui;

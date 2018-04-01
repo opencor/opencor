@@ -52,8 +52,8 @@ class DataItemDelegate : public Core::StyledItemDelegate
 public:
     explicit DataItemDelegate(QObject *pParent);
 
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================
@@ -69,7 +69,7 @@ class DATASTORE_EXPORT DataStoreDialog : public Core::Dialog
 public:
     explicit DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
                              QWidget *pParent);
-    ~DataStoreDialog();
+    ~DataStoreDialog() override;
 
     void addWidget(QWidget *pWidget);
 

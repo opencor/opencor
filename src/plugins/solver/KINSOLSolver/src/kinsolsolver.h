@@ -127,10 +127,10 @@ class KinsolSolver : public OpenCOR::Solver::NlaSolver
 
 public:
     explicit KinsolSolver();
-    ~KinsolSolver();
+    ~KinsolSolver() override;
 
-    virtual void solve(ComputeSystemFunction pComputeSystem,
-                       double *pParameters, const int &pSize, void *pUserData);
+    void solve(ComputeSystemFunction pComputeSystem, double *pParameters,
+               const int &pSize, void *pUserData) override;
 
 private:
     QMap<void *, KinsolSolverData *> mData;

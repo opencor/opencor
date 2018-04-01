@@ -58,14 +58,14 @@ public:
 
     explicit CellmlTextViewLexer(QObject *pParent);
 
-    virtual const char * language() const;
+    const char * language() const override;
 
-    virtual QString description(int pStyle) const;
+    QString description(int pStyle) const override;
 
-    virtual QColor color(int pStyle) const;
-    virtual QFont font(int pStyle) const;
+    QColor color(int pStyle) const override;
+    QFont font(int pStyle) const override;
 
-    virtual void styleText(int pBytesStart, int pBytesEnd);
+    void styleText(int pBytesStart, int pBytesEnd) override;
 
 private:
     QString mFullText;

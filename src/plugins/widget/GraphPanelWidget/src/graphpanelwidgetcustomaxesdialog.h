@@ -54,7 +54,7 @@ public:
                                               const double &pMinY,
                                               const double &pMaxY,
                                               QWidget *pParent);
-    ~GraphPanelWidgetCustomAxesDialog();
+    ~GraphPanelWidgetCustomAxesDialog() override;
 
     double minX() const;
     double maxX() const;

@@ -65,8 +65,8 @@ public:
 
     void cursorPosition(int &pLine, int &pColumn);
 
-    virtual void setCursorPosition(int pLine, int pColumn);
-    virtual void setLexer(QsciLexer *pLexer);
+    void setCursorPosition(int pLine, int pColumn) override;
+    void setLexer(QsciLexer *pLexer) override;
 
     int currentPosition() const;
     void setCurrentPosition(const int &pCurrentPosition);
@@ -108,14 +108,14 @@ public:
     static QString specials(const QString &pString);
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
-    virtual bool event(QEvent *pEvent);
-    virtual void focusInEvent(QFocusEvent *pEvent);
-    virtual void focusOutEvent(QFocusEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    bool event(QEvent *pEvent) override;
+    void focusInEvent(QFocusEvent *pEvent) override;
+    void focusOutEvent(QFocusEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
     QFont mFont;
@@ -137,9 +137,9 @@ signals:
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
 public slots:
-    virtual void zoomIn();
-    virtual void zoomOut();
-    virtual void zoomTo(int pSize);
+    void zoomIn() override;
+    void zoomOut() override;
+    void zoomTo(int pSize) override;
 
 private slots:
     void updateUi();

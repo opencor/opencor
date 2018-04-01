@@ -120,9 +120,9 @@ public:
                                                       SimulationExperimentViewWidget *pViewWidget,
                                                       const QString &pFileName,
                                                       QWidget *pParent);
-    ~SimulationExperimentViewSimulationWidget();
+    ~SimulationExperimentViewSimulationWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(const bool &pReloadingView = false);
     void finalize();
@@ -151,7 +151,7 @@ public:
     void resetSimulationProgress();
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     enum ErrorType {

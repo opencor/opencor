@@ -83,7 +83,7 @@ public:
                                                                           SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                           QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation);
     void finalize();

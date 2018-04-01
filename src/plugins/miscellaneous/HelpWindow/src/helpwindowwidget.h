@@ -49,11 +49,11 @@ public:
                                     const QByteArray &pData,
                                     const QString &pMimeType);
 
-    virtual void abort();
-    virtual qint64 bytesAvailable() const;
+    void abort() override;
+    qint64 bytesAvailable() const override;
 
 protected:
-    virtual qint64 readData(char *pData, qint64 pMaxlen);
+    qint64 readData(char *pData, qint64 pMaxlen) override;
 
 private:
     QByteArray mData;
@@ -70,9 +70,9 @@ public:
                                             QObject *pParent);
 
 protected:
-    virtual QNetworkReply * createRequest(Operation pOperation,
-                                          const QNetworkRequest &pRequest,
-                                          QIODevice *pOutgoingData = 0);
+    QNetworkReply * createRequest(Operation pOperation,
+                                  const QNetworkRequest &pRequest,
+                                  QIODevice *pOutgoingData = 0) override;
 
 private:
     QHelpEngine *mHelpEngine;
@@ -88,14 +88,14 @@ class HelpWindowWidget : public WebViewerWidget::WebViewerWidget
 
 public:
     explicit HelpWindowWidget(QWidget *pParent);
-    ~HelpWindowWidget();
+    ~HelpWindowWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual bool isUrlSchemeSupported(const QString &pUrlScheme);
+    bool isUrlSchemeSupported(const QString &pUrlScheme) override;
 
 private:
     QHelpEngine *mHelpEngine;

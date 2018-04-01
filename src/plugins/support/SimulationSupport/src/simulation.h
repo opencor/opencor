@@ -69,7 +69,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 
 public:
     explicit SimulationData(Simulation *pSimulation);
-    ~SimulationData();
+    ~SimulationData() override;
 
     void reload();
 
@@ -167,7 +167,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
 
 public:
     explicit SimulationResults(Simulation *pSimulation);
-    ~SimulationResults();
+    ~SimulationResults() override;
 
     void reload();
 
@@ -222,7 +222,7 @@ public:
     };
 
     explicit Simulation(const QString &pFileName);
-    ~Simulation();
+    ~Simulation() override;
 
     QString fileName() const;
 

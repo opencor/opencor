@@ -54,10 +54,10 @@ public:
     bool isEditing() const;
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
-    virtual void startDrag(Qt::DropActions pSupportedActions);
+    void startDrag(Qt::DropActions pSupportedActions) override;
 };
 
 //==============================================================================

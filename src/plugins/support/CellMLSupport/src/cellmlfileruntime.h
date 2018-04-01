@@ -131,7 +131,7 @@ public:
     typedef void (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
-    ~CellmlFileRuntime();
+    ~CellmlFileRuntime() override;
 
     CellmlFile * cellmlFile();
 

@@ -69,15 +69,15 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(const QString &pApplicationDate);
-    ~MainWindow();
+    ~MainWindow() override;
 
     void handleArguments(const QStringList &pArguments);
 
     void showSelf();
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void closeEvent(QCloseEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void closeEvent(QCloseEvent *pEvent) override;
 
 private:
     Ui::MainWindow *mGui;

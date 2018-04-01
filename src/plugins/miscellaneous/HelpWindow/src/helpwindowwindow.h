@@ -55,12 +55,12 @@ class HelpWindowWindow : public Core::WindowWidget
 
 public:
     explicit HelpWindowWindow(QWidget *pParent);
-    ~HelpWindowWindow();
+    ~HelpWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
 private:
     Ui::HelpWindowWindow *mGui;

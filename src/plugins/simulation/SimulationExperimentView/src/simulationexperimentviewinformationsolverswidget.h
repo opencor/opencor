@@ -76,9 +76,9 @@ class SimulationExperimentViewInformationSolversWidget : public Core::PropertyEd
 
 public:
     explicit SimulationExperimentViewInformationSolversWidget(QWidget *pParent);
-    ~SimulationExperimentViewInformationSolversWidget();
+    ~SimulationExperimentViewInformationSolversWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation);
 

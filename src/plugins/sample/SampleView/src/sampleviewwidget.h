@@ -46,11 +46,11 @@ class SampleViewWidget : public Core::ViewWidget
 
 public:
     explicit SampleViewWidget(QWidget *pParent);
-    ~SampleViewWidget();
+    ~SampleViewWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual QWidget * widget(const QString &pFileName);
+    QWidget * widget(const QString &pFileName) override;
 
     void update(const QString &pFileName);
 

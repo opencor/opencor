@@ -64,9 +64,9 @@ public:
     explicit WebViewerPage(WebViewerWidget *pParent);
 
 protected:
-    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
-                                         const QNetworkRequest &pRequest,
-                                         QWebPage::NavigationType pType);
+    bool acceptNavigationRequest(QWebFrame *pFrame,
+                                 const QNetworkRequest &pRequest,
+                                 QWebPage::NavigationType pType) override;
 
 private:
     WebViewerWidget *mOwner;
@@ -82,8 +82,8 @@ class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWidget,
 public:
     explicit WebViewerWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     QWebView * webView() const;
     Core::ProgressBarWidget * progressBarWidget() const;
@@ -109,8 +109,8 @@ public:
     void showWebInspector();
 
 protected:
-    virtual bool event(QEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    bool event(QEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
     QString mToolTip;

@@ -47,7 +47,7 @@ public:
     explicit CellmlAnnotationViewMetadataRawViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                               QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateGui(iface::cellml_api::CellMLElement *pElement);
 

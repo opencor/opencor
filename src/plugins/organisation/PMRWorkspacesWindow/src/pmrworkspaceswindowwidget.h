@@ -94,7 +94,7 @@ public:
                                      PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                      const QIcon &pIcon);
 
-    virtual int type() const;
+    int type() const override;
 
     PMRSupport::PmrWorkspace * workspace() const;
     PMRSupport::PmrWorkspaceFileNode * fileNode() const;
@@ -140,8 +140,8 @@ public:
                                            QObject *pParent);
 
 protected:
-    virtual bool lessThan(const QModelIndex &pSourceLeft,
-                          const QModelIndex &pSourceRight) const;
+    bool lessThan(const QModelIndex &pSourceLeft,
+                  const QModelIndex &pSourceRight) const override;
 
 private:
     QStandardItemModel *mModel;
@@ -168,12 +168,12 @@ public:
     explicit PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                        PMRSupport::PmrWebService *pPmrWebService,
                                        PmrWorkspacesWindowWindow *pParent);
-    ~PmrWorkspacesWindowWidget();
+    ~PmrWorkspacesWindowWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     void update(const QString &pPmrUrl);
 
@@ -183,7 +183,7 @@ public:
     using QTreeView::reset;
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
     QString mSettingsGroup;

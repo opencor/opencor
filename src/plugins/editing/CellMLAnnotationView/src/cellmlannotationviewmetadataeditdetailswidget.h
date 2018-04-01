@@ -104,7 +104,7 @@ public:
                                                            CellMLSupport::CellmlFile *pCellmlFile,
                                                            QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void filePermissionsChanged();
 

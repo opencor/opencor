@@ -63,9 +63,9 @@ class ZincWindowWindow : public Core::WindowWidget
 
 public:
     explicit ZincWindowWindow(QWidget *pParent);
-    ~ZincWindowWindow();
+    ~ZincWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
 private:
     Ui::ZincWindowWindow *mGui;
