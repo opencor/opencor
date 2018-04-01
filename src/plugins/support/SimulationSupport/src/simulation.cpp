@@ -1081,8 +1081,8 @@ bool Simulation::run()
         connect(mWorker, SIGNAL(paused()),
                 this, SIGNAL(paused()));
 
-        connect(mWorker, SIGNAL(finished(const qint64 &)),
-                this, SIGNAL(stopped(const qint64 &)));
+        connect(mWorker, SIGNAL(finished(qint64)),
+                this, SIGNAL(stopped(qint64)));
 
         connect(mWorker, SIGNAL(error(const QString &)),
                 this, SIGNAL(error(const QString &)));

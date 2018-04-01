@@ -285,7 +285,7 @@ private:
 signals:
     void running(bool pIsResuming);
     void paused();
-    void stopped(const qint64 &pElapsedTime);
+    void stopped(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
 };

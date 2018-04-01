@@ -134,8 +134,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, SLOT(simulationRunning(bool)));
     connect(mSimulation, SIGNAL(paused()),
             this, SLOT(simulationPaused()));
-    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
-            this, SLOT(simulationStopped(const qint64 &)));
+    connect(mSimulation, SIGNAL(stopped(qint64)),
+            this, SLOT(simulationStopped(qint64)));
 
     connect(mSimulation, SIGNAL(error(const QString &)),
             this, SLOT(simulationError(const QString &)));
@@ -3105,7 +3105,7 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationStopped(const qint64 &pElapsedTime)
+void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsedTime)
 {
     // Output the given elapsed time, if valid
 

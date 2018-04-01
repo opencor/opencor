@@ -63,7 +63,7 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation,
     connect(mThread, SIGNAL(started()),
             this, SLOT(started()));
 
-    connect(this, SIGNAL(finished(const qint64 &)),
+    connect(this, SIGNAL(finished(qint64)),
             mThread, SLOT(quit()));
 
     connect(mThread, SIGNAL(finished()),
