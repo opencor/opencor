@@ -84,8 +84,7 @@ public:
     void setDelay(const int &pDelay);
 
     double startingPoint() const;
-    void setStartingPoint(const double &pStartingPoint,
-                          const bool &pRecompute = true);
+    void setStartingPoint(const double &pStartingPoint, bool pRecompute = true);
 
     double endingPoint() const;
     void setEndingPoint(const double &pEndingPoint);
@@ -104,17 +103,16 @@ public:
     SolverInterface * nlaSolverInterface() const;
 
     QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName,
-                          const bool &pReset = true);
+    void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
     Solver::Solver::Properties nlaSolverProperties() const;
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              const bool &pReset = true);
+                              bool pReset = true);
 
-    void reset(const bool &pInitialize = true);
+    void reset(bool pInitialize = true);
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                const bool &pInitialize);
+                                                bool pInitialize);
     void recomputeVariables(const double &pCurrentPoint);
 
     bool isModified() const;
@@ -154,7 +152,7 @@ private:
 
 signals:
     void updated(const double &pCurrentPoint);
-    void modified(const bool &pIsModified);
+    void modified(bool pIsModified);
 
     void error(const QString &pMessage);
 };
@@ -282,10 +280,10 @@ private:
 
     void retrieveFileDetails();
 
-    bool simulationSettingsOk(const bool &pEmitSignal = true);
+    bool simulationSettingsOk(bool pEmitSignal = true);
 
 signals:
-    void running(const bool &pIsResuming);
+    void running(bool pIsResuming);
     void paused();
     void stopped(const qint64 &pElapsedTime);
 

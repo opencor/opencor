@@ -60,7 +60,7 @@ namespace CellMLTextView {
 
 CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
                                                    const QString &pSha1,
-                                                   const bool &pValid,
+                                                   bool pValid,
                                                    const CellMLSupport::CellmlFile::Version &pCellmlVersion,
                                                    QDomDocument pRdfNodes) :
     mEditingWidget(pEditingWidget),
@@ -251,8 +251,7 @@ bool CellmlTextViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void CellmlTextViewWidget::initialize(const QString &pFileName,
-                                      const bool &pUpdate)
+void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
@@ -715,7 +714,7 @@ static const int EndMultilineCommentLength    = EndMultilineCommentString.length
 
 bool CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
                                                   const int &pLineNumber,
-                                                  const bool &pCommentLine)
+                                                  bool pCommentLine)
 {
     // (Un)comment the current line
 
@@ -750,8 +749,7 @@ bool CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaW
 
 //==============================================================================
 
-bool CellmlTextViewWidget::parse(const QString &pFileName,
-                                 const bool &pOnlyErrors)
+bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
 {
     // Parse the given file, should it exist
 

@@ -375,8 +375,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
-                                                              const bool &pResetItemsGui,
-                                                              const bool &pFilePermissionsChanged)
+                                                              bool pResetItemsGui,
+                                                              bool pFilePermissionsChanged)
 {
     // Keep track of the CellML element
 
@@ -456,9 +456,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const bool &pLookUpTerm,
+void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pLookUpTerm,
                                                                          const QString &pErrorMessage,
-                                                                         const bool &pInternetConnectionAvailable,
+                                                                         bool pInternetConnectionAvailable,
                                                                          bool *pShowBusyWidget)
 {
     // Update our output message
@@ -525,9 +525,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
-                                                                   const bool &pLookUpTerm,
+                                                                   bool pLookUpTerm,
                                                                    const QString &pErrorMessage,
-                                                                   const bool &pInternetConnectionAvailable)
+                                                                   bool pInternetConnectionAvailable)
 {
     // Keep track of some information
 

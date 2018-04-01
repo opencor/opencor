@@ -124,7 +124,7 @@ public:
 
     void retranslateUi() override;
 
-    void initialize(const bool &pReloadingView = false);
+    void initialize(bool pReloadingView = false);
     void finalize();
 
     void setSizes(const QIntList &pSizes);
@@ -143,7 +143,7 @@ public:
 
     SimulationSupport::Simulation * simulation() const;
 
-    void updateGui(const bool &pCheckVisibility = false);
+    void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  const quint64 &pSimulationResultsSize,
                                  const Task &pTask = None);
@@ -246,15 +246,14 @@ private:
 
     int tabBarPixmapSize() const;
 
-    void updateRunPauseAction(const bool &pRunActionEnabled);
+    void updateRunPauseAction(bool pRunActionEnabled);
 
     void updateDataStoreActions();
 
     void updateInvalidModelMessageWidget();
 
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                    const bool &pCanSetAxes = true,
-                    const bool &pForceReplot = false);
+                    bool pCanSetAxes = true, bool pForceReplot = false);
 
     double * data(SimulationSupport::Simulation *pSimulation, const int &pRun,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
@@ -266,9 +265,9 @@ private:
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty,
-                                 const bool &pResetNlaSolver);
+                                 bool pResetNlaSolver);
     void updateSolversProperties(Core::Property *pProperty);
-    void updateSolversProperties(const bool &pResetNlaSolver);
+    void updateSolversProperties(bool pResetNlaSolver);
     void updateSolversProperties();
 
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
@@ -276,7 +275,7 @@ private:
                                                                  QString &pCellmlVariable);
 
     bool furtherInitialize();
-    void initializeGui(const bool &pValidSimulationEnvironment);
+    void initializeGui(bool pValidSimulationEnvironment);
     void initializeSimulation();
 
     void initialiseTrackers();
@@ -325,7 +324,7 @@ private slots:
 
     void updateDelayValue(const double &pDelayValue);
 
-    void simulationRunning(const bool &pIsResuming);
+    void simulationRunning(bool pIsResuming);
     void simulationPaused();
     void simulationStopped(const qint64 &pElapsedTime);
 
@@ -335,13 +334,13 @@ private slots:
     void simulationError(const QString &pMessage,
                          const ErrorType &pErrorType = General);
 
-    void simulationDataModified(const bool &pIsModified);
+    void simulationDataModified(bool pIsModified);
 
     void simulationPropertyChanged(OpenCOR::Core::Property *pProperty);
     void solversPropertyChanged(OpenCOR::Core::Property *pProperty);
 
     void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                         const bool &pActive);
+                         bool pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,

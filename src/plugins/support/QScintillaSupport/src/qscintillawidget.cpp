@@ -247,8 +247,7 @@ QString QScintillaWidget::contents() const
 
 //==============================================================================
 
-void QScintillaWidget::setContents(const QString &pContents,
-                                   const bool &pKeepHistory)
+void QScintillaWidget::setContents(const QString &pContents, bool pKeepHistory)
 {
     // Set our contents and keep our history, if required
 
@@ -307,9 +306,9 @@ QString QScintillaWidget::textInRange(const int &pStartRange,
 int QScintillaWidget::findTextInRange(const int &pStartRange,
                                       const int &pEndRange,
                                       const QString &pText,
-                                      const bool &pRegularExpression,
-                                      const bool &pCaseSensitive,
-                                      const bool &pWholeWordsOnly) const
+                                      bool pRegularExpression,
+                                      bool pCaseSensitive,
+                                      bool pWholeWordsOnly) const
 {
     // Keep track of the start and end of the current target
 

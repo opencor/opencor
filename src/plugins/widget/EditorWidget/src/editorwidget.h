@@ -70,7 +70,7 @@ class EDITORWIDGET_EXPORT EditorWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit EditorWidget(const QString &pContents, const bool &pReadOnly,
+    explicit EditorWidget(const QString &pContents, bool pReadOnly,
                           QsciLexer *pLexer, QWidget *pParent);
 
     void loadSettings(QSettings *pSettings) override;
@@ -91,21 +91,20 @@ public:
     int currentPosition() const;
 
     QString contents() const;
-    void setContents(const QString &pContents,
-                     const bool &pKeepHistory = false);
+    void setContents(const QString &pContents, bool pKeepHistory = false);
 
     int contentsSize() const;
 
     bool isReadOnly() const;
-    void setReadOnly(const bool &pReadOnly);
+    void setReadOnly(bool pReadOnly);
 
     bool hasSelectedText() const;
     QString selectedText() const;
 
     QString textInRange(const int &pStartRange, const int &pEndRange) const;
     int findTextInRange(const int &pStartRange, const int &pEndRange,
-                        const QString &pText, const bool &pRegularExpression,
-                        const bool &pCaseSensitive, const bool &pWholeWordsOnly) const;
+                        const QString &pText, bool pRegularExpression,
+                        bool pCaseSensitive, bool pWholeWordsOnly) const;
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
@@ -135,7 +134,7 @@ public:
     void setZoomLevel(const int &pZoomLevel);
 
     bool findReplaceIsVisible() const;
-    void setFindReplaceVisible(const bool &pVisible);
+    void setFindReplaceVisible(bool pVisible);
 
     int styleAt(const int &pPosition) const;
 
@@ -153,7 +152,7 @@ private:
 
     EditorWidgetFindReplaceWidget * findReplace();
 
-    bool findText(const QString &pText, const bool &pForward);
+    bool findText(const QString &pText, bool pForward);
 
 signals:
     void zoomLevelChanged(const int &pZoomLevel);
@@ -162,11 +161,11 @@ signals:
 
     void textChanged();
 
-    void copyAvailable(const bool &pCopyAvailable);
+    void copyAvailable(bool pCopyAvailable);
 
-    void canFindReplace(const bool &pCanFindReplace);
+    void canFindReplace(bool pCanFindReplace);
 
-    void canSelectAll(const bool &pCanSelectAll);
+    void canSelectAll(bool pCanSelectAll);
 
 public slots:
     bool findPrevious();

@@ -46,8 +46,8 @@ QString CORE_EXPORT noInternetConnectionAvailableMessage();
 QString CORE_EXPORT copyright();
 
 QString CORE_EXPORT formatMessage(const QString &pMessage,
-                                  const bool &pLowerCase = true,
-                                  const bool &pDotDotDot = false);
+                                  bool pLowerCase = true,
+                                  bool pDotDotDot = false);
 
 QByteArray CORE_EXPORT resource(const QString &pResource);
 

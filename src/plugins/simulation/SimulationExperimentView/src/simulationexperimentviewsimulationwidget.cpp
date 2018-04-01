@@ -130,8 +130,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mSimulation = simulationManager->simulation(pFileName);
 
-    connect(mSimulation, SIGNAL(running(const bool &)),
-            this, SLOT(simulationRunning(const bool &)));
+    connect(mSimulation, SIGNAL(running(bool)),
+            this, SLOT(simulationRunning(bool)));
     connect(mSimulation, SIGNAL(paused()),
             this, SLOT(simulationPaused()));
     connect(mSimulation, SIGNAL(stopped(const qint64 &)),
@@ -140,8 +140,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mSimulation, SIGNAL(error(const QString &)),
             this, SLOT(simulationError(const QString &)));
 
-    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
-            this, SLOT(simulationDataModified(const bool &)));
+    connect(mSimulation->data(), SIGNAL(modified(bool)),
+            this, SLOT(simulationDataModified(bool)));
 
     // Create a tool bar
 
@@ -391,13 +391,13 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
-            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)),
+            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
             graphPanelAndGraphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
-            this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
+    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)),
+            this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)));
     connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
             this, SLOT(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
 
@@ -660,7 +660,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateRunPauseAction(const bool &pRunActionEnabled)
+void SimulationExperimentViewSimulationWidget::updateRunPauseAction(bool pRunActionEnabled)
 {
     // Update our various actions
 
@@ -708,7 +708,7 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
+void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 {
     // In the case of a SED-ML file and of a COMBINE archive, we will need
     // to further initialise ourselves, to customise graph panels, etc. (see
@@ -2267,7 +2267,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationProperties(Core::
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty,
-                                                                       const bool &pResetNlaSolver)
+                                                                       bool pResetNlaSolver)
 {
     // Update all of our solver(s) properties (and solvers widget) or a
     // particular solver property (and the corresponding GUI for that solver)
@@ -2351,7 +2351,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateSolversProperties(const bool &pResetNlaSolver)
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(bool pResetNlaSolver)
 {
     // Update all of our solver(s) properties (and solvers widget)
 
@@ -2980,7 +2980,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initializeGui(const bool &pValidSimulationEnvironment)
+void SimulationExperimentViewSimulationWidget::initializeGui(bool pValidSimulationEnvironment)
 {
     // Show/hide some widgets based on whether we have a valid simulation
     // environment
@@ -3077,7 +3077,7 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(const double &pD
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationRunning(const bool &pIsResuming)
+void SimulationExperimentViewSimulationWidget::simulationRunning(bool pIsResuming)
 {
     Q_UNUSED(pIsResuming);
 
@@ -3214,7 +3214,7 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
+void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsModified)
 {
     // Update our modified state
 
@@ -3257,7 +3257,7 @@ void SimulationExperimentViewSimulationWidget::solversPropertyChanged(OpenCOR::C
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               const bool &pActive)
+                                                               bool pActive)
 {
     Q_UNUSED(pActive);
 
@@ -3455,8 +3455,8 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelW
 //==============================================================================
 
 bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                                                          const bool &pCanSetAxes,
-                                                          const bool &pForceReplot)
+                                                          bool pCanSetAxes,
+                                                          bool pForceReplot)
 {
     // Retrieve the current axes' linear and log values or use some default
     // ones, if none are available
@@ -3655,7 +3655,7 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisibility)
+void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 {
     // Make sure that we are visible, if requested
 
@@ -4066,12 +4066,12 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
     bool graphsPropertiesModified = mGraphsProperties.keys() != mGraphsPropertiesModified.keys();
 
     if (!graphPanelPropertiesModified) {
-        foreach (const bool &someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
+        foreach (bool someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
             graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
     }
 
     if (!graphsPropertiesModified) {
-        foreach (const bool &someGraphsPropertiesModified, mGraphsPropertiesModified.values())
+        foreach (bool someGraphsPropertiesModified, mGraphsPropertiesModified.values())
             graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
     }
 

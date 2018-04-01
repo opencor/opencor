@@ -148,13 +148,10 @@ QString CORE_EXPORT formatXml(const QString &pXml);
 QString CORE_EXPORT cleanContentMathml(const QString &pContentMathml);
 QString CORE_EXPORT cleanPresentationMathml(const QString &pPresentationMathml);
 
-QString CORE_EXPORT newFileName(const QString &pFileName,
-                                const QString &pExtra,
-                                const bool &pBefore,
-                                const QString &pFileExtension);
-QString CORE_EXPORT newFileName(const QString &pFileName,
-                                const QString &pExtra,
-                                const bool &pBefore);
+QString CORE_EXPORT newFileName(const QString &pFileName, const QString &pExtra,
+                                bool pBefore, const QString &pFileExtension);
+QString CORE_EXPORT newFileName(const QString &pFileName, const QString &pExtra,
+                                bool pBefore);
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pFileExtension);
 

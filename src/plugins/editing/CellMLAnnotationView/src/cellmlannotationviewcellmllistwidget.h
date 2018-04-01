@@ -90,7 +90,7 @@ public:
         VariableMapping       = QStandardItem::UserType+15
     };
 
-    explicit CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText);
+    explicit CellmlAnnotationViewCellmlElementItem(bool pError, const QString &pText);
     explicit CellmlAnnotationViewCellmlElementItem(const Type &pType, const QString &pText);
     explicit CellmlAnnotationViewCellmlElementItem(const Type &pType,
                                                    iface::cellml_api::CellMLElement *pElement,
@@ -112,7 +112,7 @@ private:
 
     void setIcon(const Type &pType);
 
-    explicit CellmlAnnotationViewCellmlElementItem(const bool &pCategory,
+    explicit CellmlAnnotationViewCellmlElementItem(bool pCategory,
                                                    const Type &pType,
                                                    const QString &pText,
                                                    iface::cellml_api::CellMLElement *pElement,
@@ -150,7 +150,7 @@ private:
 
     void retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem);
 
-    void initializeTreeViewWidget(const bool &pSelectFirstItem = true);
+    void initializeTreeViewWidget(bool pSelectFirstItem = true);
 
     void populateModel();
     void populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,

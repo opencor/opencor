@@ -60,9 +60,8 @@ class SEDMLEDITINGVIEW_EXPORT SedmlEditingViewWidget : public Core::SplitterWidg
     Q_OBJECT
 
 public:
-    explicit SedmlEditingViewWidget(const QString &pContents,
-                                    const bool &pReadOnly, QsciLexer *pLexer,
-                                    QWidget *pParent);
+    explicit SedmlEditingViewWidget(const QString &pContents, bool pReadOnly,
+                                    QsciLexer *pLexer, QWidget *pParent);
 
     void loadSettings(QSettings *pSettings) override;
     void saveSettings(QSettings *pSettings) const override;

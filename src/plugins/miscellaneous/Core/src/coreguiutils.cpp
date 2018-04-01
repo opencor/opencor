@@ -302,7 +302,7 @@ QString getSaveFileName(const QString &pCaption, const QStringList &pFilters,
 //==============================================================================
 
 QString getDirectory(const QString &pCaption, const QString &pDirName,
-                     const bool &pEmptyDir)
+                     bool pEmptyDir)
 {
     // Retrieve and return the name of an existing directory
     // Note: normally, we would rely on QFileDialog::getExistingDirectory() to
@@ -404,7 +404,7 @@ QMenu * newMenu(const QIcon &pIcon, QWidget *pParent)
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
+QAction * newAction(bool pCheckable, const QIcon &pIcon,
                     const QKeySequence &pKeySequence, QWidget *pParent)
 {
     // Create and return an action
@@ -420,8 +420,7 @@ QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
-                    QWidget *pParent)
+QAction * newAction(bool pCheckable, const QIcon &pIcon, QWidget *pParent)
 {
     // Create and return an action
 
@@ -435,7 +434,7 @@ QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, const QKeySequence &pKeySequence,
+QAction * newAction(bool pCheckable, const QKeySequence &pKeySequence,
                     QWidget *pParent)
 {
     // Create and return an action
@@ -450,7 +449,7 @@ QAction * newAction(const bool &pCheckable, const QKeySequence &pKeySequence,
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, QWidget *pParent)
+QAction * newAction(bool pCheckable, QWidget *pParent)
 {
     // Create and return an action
 
@@ -555,8 +554,7 @@ QAction * newSeparator(QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(const bool &pHorizontal, const QColor &pColor,
-                       QWidget *pParent)
+QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
 {
     // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
     // using a QFrame widget
@@ -582,7 +580,7 @@ QFrame * newLineWidget(const bool &pHorizontal, const QColor &pColor,
 
 //==============================================================================
 
-QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
+QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 {
     // Create and return a 'real' horizontal line widget
 
@@ -749,8 +747,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 
 //==============================================================================
 
-void showEnableWidget(QWidget *pWidget, const bool &pVisible,
-                      const bool &pEnabled)
+void showEnableWidget(QWidget *pWidget, bool pVisible, bool pEnabled)
 {
     // Show/enable or hide/disable the given widget
 
@@ -785,7 +782,7 @@ QColor lockedColor(const QColor &pColor)
 //==============================================================================
 
 QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    const bool &pCheckMimeTypes, const QString &pMimeType)
+                    bool pCheckMimeTypes, const QString &pMimeType)
 {
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces, using the given MIME types, if any

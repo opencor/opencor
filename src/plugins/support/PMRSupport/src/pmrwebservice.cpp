@@ -52,10 +52,10 @@ PmrWebService::PmrWebService(const QString &pPmrUrl, QObject *pParent) :
 
     // Forward any signal we receive from our PMR web service manager
 
-    connect(mPmrWebServiceManager, SIGNAL(busy(const bool &)),
-            this, SIGNAL(busy(const bool &)));
-    connect(mPmrWebServiceManager, SIGNAL(authenticated(const bool &)),
-            this, SIGNAL(authenticated(const bool &)));
+    connect(mPmrWebServiceManager, SIGNAL(busy(bool)),
+            this, SIGNAL(busy(bool)));
+    connect(mPmrWebServiceManager, SIGNAL(authenticated(bool)),
+            this, SIGNAL(authenticated(bool)));
     connect(mPmrWebServiceManager, SIGNAL(error(const QString &)),
             this, SIGNAL(error(const QString &)));
     connect(mPmrWebServiceManager, SIGNAL(authenticationCancelled()),
@@ -80,7 +80,7 @@ bool PmrWebService::isAuthenticated() const
 
 //==============================================================================
 
-void PmrWebService::authenticate(const bool &pAuthenticate)
+void PmrWebService::authenticate(bool pAuthenticate)
 {
     // Un/authenticate ourselves
 
@@ -459,7 +459,7 @@ void PmrWebService::workspaceCloneFinished(OpenCOR::PMRSupport::PmrWorkspace *pW
 //==============================================================================
 
 void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
-                                                const bool &pPush)
+                                                bool pPush)
 {
     // Let people know that we are (going to be) busy
 

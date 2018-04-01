@@ -59,7 +59,7 @@ void CollapsibleHeaderTitleWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-CollapsibleHeaderWidget::CollapsibleHeaderWidget(const bool &pCollapsible,
+CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
                                                  QWidget *pParent) :
     QWidget(pParent),
     mCollapsed(false),
@@ -151,7 +151,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const bool &pCollapsible,
 
 //==============================================================================
 
-void CollapsibleHeaderWidget::setFirstHeader(const bool &pFirstHeader)
+void CollapsibleHeaderWidget::setFirstHeader(bool pFirstHeader)
 {
     // Show/hide our top separator depending on whether we are the first header
 
@@ -160,7 +160,7 @@ void CollapsibleHeaderWidget::setFirstHeader(const bool &pFirstHeader)
 
 //==============================================================================
 
-void CollapsibleHeaderWidget::setLastHeader(const bool &pLastHeader)
+void CollapsibleHeaderWidget::setLastHeader(bool pLastHeader)
 {
     // Keep track of our last header status and update our bottom separator
     // visible status, if needed
@@ -192,7 +192,7 @@ bool CollapsibleHeaderWidget::isCollapsed() const
 
 //==============================================================================
 
-void CollapsibleHeaderWidget::setCollapsed(const bool &pCollapsed)
+void CollapsibleHeaderWidget::setCollapsed(bool pCollapsed)
 {
     // Collapse or uncollapse ourselves, if needed
 
@@ -330,7 +330,7 @@ bool CollapsibleWidget::isCollapsed(const int &pIndex) const
 
 //==============================================================================
 
-void CollapsibleWidget::setCollapsed(const int &pIndex, const bool &pCollapsed)
+void CollapsibleWidget::setCollapsed(const int &pIndex, bool pCollapsed)
 {
     // Collapse or uncollapse our requested header
 
@@ -360,7 +360,7 @@ void CollapsibleWidget::setHeaderTitle(const int &pIndex, const QString &pTitle)
 //==============================================================================
 
 CollapsibleHeaderWidget * CollapsibleWidget::addWidget(QWidget *pWidget,
-                                                       const bool &pCollapsible)
+                                                       bool pCollapsible)
 {
     // Make sure that there is a widget to add
 
@@ -399,10 +399,10 @@ CollapsibleHeaderWidget * CollapsibleWidget::addWidget(QWidget *pWidget,
     // new collapsible state
 
     if (pCollapsible) {
-        connect(header, SIGNAL(widgetVisible(const bool &)),
+        connect(header, SIGNAL(widgetVisible(bool)),
                 pWidget, SLOT(setVisible(bool)));
 
-        connect(header, SIGNAL(widgetVisible(const bool &)),
+        connect(header, SIGNAL(widgetVisible(bool)),
                 this, SLOT(emitCollapsed()));
     }
 

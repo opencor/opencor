@@ -117,7 +117,7 @@ private:
 
     QStringList mDontExpandExposures;
 
-    void updateGui(const bool &pForceUserMessageVisibility = false);
+    void updateGui(bool pForceUserMessageVisibility = false);
 
     PmrWindowItem * currentItem() const;
 

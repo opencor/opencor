@@ -273,7 +273,7 @@ void ZincWidget::createSceneViewer()
 
 void ZincWidget::updateSceneViewerViewerportSize(const int &pWidth,
                                                  const int &pHeight,
-                                                 const bool &pCheckDevicePixelRatio)
+                                                 bool pCheckDevicePixelRatio)
 {
     // Update the viewport size of our scene viewer, keeping in mind our device
     // pixel ratio

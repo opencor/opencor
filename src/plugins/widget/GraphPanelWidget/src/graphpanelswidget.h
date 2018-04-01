@@ -51,7 +51,7 @@ public:
     GraphPanelWidgets graphPanels() const;
     GraphPanelWidget * activeGraphPanel() const;
 
-    GraphPanelWidget * addGraphPanel(const bool &pActive = true);
+    GraphPanelWidget * addGraphPanel(bool pActive = true);
 
     bool removeCurrentGraphPanel();
     void removeAllGraphPanels();
@@ -76,7 +76,7 @@ private:
 
 signals:
     void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                         const bool &pActive);
+                         bool pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);

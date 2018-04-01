@@ -409,8 +409,7 @@ void CellmlFileRuntime::resetFunctions()
 
 //==============================================================================
 
-void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
-                              const bool &pResetIssues)
+void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
 {
     // Reset all of the runtime's properties
 

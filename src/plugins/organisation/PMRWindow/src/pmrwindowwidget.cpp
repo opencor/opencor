@@ -220,7 +220,7 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void PmrWindowWidget::updateGui(const bool &pForceUserMessageVisibility)
+void PmrWindowWidget::updateGui(bool pForceUserMessageVisibility)
 {
     // Update the message to be displayed, if any
 

@@ -60,7 +60,7 @@ public:
     void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation,
-                    const bool &pReloadingView = false);
+                    bool pReloadingView = false);
     void finalize();
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;

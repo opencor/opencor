@@ -72,7 +72,7 @@ public:
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
                                            const int &pSymbolSize = 8,
                                            const QColor &pSymbolColor = Qt::darkBlue,
-                                           const bool &pSymbolFilled = true,
+                                           bool pSymbolFilled = true,
                                            const QColor &pSymbolFillColor = Qt::white);
 
     QString title() const;
@@ -147,7 +147,7 @@ public:
     GraphPanelPlotGraphRun * lastRun() const;
 
     bool isSelected() const;
-    void setSelected(const bool &pSelected);
+    void setSelected(bool pSelected);
 
     QString fileName() const;
     void setFileName(const QString &pFileName);
@@ -168,7 +168,7 @@ public:
     void setTitle(const QString &pTitle);
 
     bool isVisible() const;
-    void setVisible(const bool &pVisible);
+    void setVisible(bool pVisible);
 
     bool hasData() const;
     quint64 dataSize() const;
@@ -238,7 +238,7 @@ private:
                          const QColor &pBackgroundColor,
                          const QColor &pForegroundColor, const int &pLineWidth,
                          const Position &pPosition,
-                         const bool &pCanMovePosition = true);
+                         bool pCanMovePosition = true);
 };
 
 //==============================================================================
@@ -270,11 +270,11 @@ public:
     explicit GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent);
 
     bool isActive() const;
-    void setActive(const bool &pActive);
+    void setActive(bool pActive);
 
     bool isEmpty() const override;
 
-    void setChecked(const int &pIndex, const bool &pChecked);
+    void setChecked(const int &pIndex, bool pChecked);
 
     void setFontSize(const int &pFontSize);
     void setBackgroundColor(const QColor &pBackgroundColor);
@@ -336,7 +336,7 @@ public:
 
     void retranslateUi() override;
 
-    void setActive(const bool &pActive);
+    void setActive(bool pActive);
 
     GraphPanelPlotGraphs graphs() const;
 
@@ -361,7 +361,7 @@ public:
     void setBackgroundColor(const QColor &pBackgroundColor);
 
     int fontSize() const;
-    void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
+    void setFontSize(const int &pFontSize, bool pForceSetting = false);
 
     QColor foregroundColor() const;
     void setForegroundColor(const QColor &pForegroundColor);
@@ -376,7 +376,7 @@ public:
     void setGridLinesColor(const QColor &pGridLinesColor);
 
     bool isLegendActive() const;
-    void setLegendActive(const bool &pLegendActive);
+    void setLegendActive(bool pLegendActive);
 
     void setLegendWidth(const int &pLegendWidth);
 
@@ -401,13 +401,13 @@ public:
     void setTitle(const QString &pTitle);
 
     bool logAxisX() const;
-    void setLogAxisX(const bool &pLogAxisX);
+    void setLogAxisX(bool pLogAxisX);
 
     QString titleAxisX() const;
     void setTitleAxisX(const QString &pTitleAxisX);
 
     bool logAxisY() const;
-    void setLogAxisY(const bool &pLogAxisY);
+    void setLogAxisY(bool pLogAxisY);
 
     QString titleAxisY() const;
     void setTitleAxisY(const QString &pTitleAxisY);
@@ -425,7 +425,7 @@ public:
     void setZoomRegionFontColor(const QColor &pZoomRegionFontColor);
 
     bool zoomRegionFilled() const;
-    void setZoomRegionFilled(const bool &pZoomRegionFilled);
+    void setZoomRegionFilled(bool pZoomRegionFilled);
 
     QColor zoomRegionFillColor() const;
     void setZoomRegionFillColor(const QColor &pZoomRegionFillColor);
@@ -440,10 +440,9 @@ public:
                               const double &pDefaultMaxLogY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 const bool &pSynchronizeAxes = true,
-                 const bool &pCanReplot = true, const bool &pEmitSignal = true,
-                 const bool &pForceXAxisSetting = false,
-                 const bool &pForceYAxisSetting = false);
+                 bool pSynchronizeAxes = true, bool pCanReplot = true,
+                 bool pEmitSignal = true, bool pForceXAxisSetting = false,
+                 bool pForceYAxisSetting = false);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph, const quint64 &pFrom);
 
@@ -452,8 +451,7 @@ public:
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
-    void alignWithNeighbors(const bool &pCanReplot,
-                            const bool &pForceAlignment = false);
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
     void forceAlignWithNeighbors();
 
     Action action() const;
@@ -563,7 +561,7 @@ private:
 
     GraphPanelPlotWidgets mNeighbors;
 
-    void checkAxisValues(const bool &pLogAxis, double &pMin, double &pMax);
+    void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 
     void updateActions();
 
@@ -575,9 +573,9 @@ private:
 
     bool resetAxes();
 
-    bool scaleAxis(const Scaling &pScaling, const bool &pCanZoomIn,
-                   const bool &pCanZoomOut, const QwtScaleMap &pCanvasMap,
-                   const double &pPoint, double &pMin, double &pMax);
+    bool scaleAxis(const Scaling &pScaling, bool pCanZoomIn, bool pCanZoomOut,
+                   const QwtScaleMap &pCanvasMap, const double &pPoint,
+                   double &pMin, double &pMax);
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
 

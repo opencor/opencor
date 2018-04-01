@@ -129,7 +129,7 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
 
 QString CORE_EXPORT getDirectory(const QString &pCaption,
                                  const QString &pDirName = QString(),
-                                 const bool &pEmptyDir = false);
+                                 bool pEmptyDir = false);
 QString CORE_EXPORT getEmptyDirectory(const QString &pCaption,
                                       const QString &pDirName = QString());
 
@@ -138,15 +138,15 @@ void CORE_EXPORT setFocusTo(QWidget *pWidget);
 QMenu CORE_EXPORT * newMenu(const QString &pName, QWidget *pParent);
 QMenu CORE_EXPORT * newMenu(const QIcon &pIcon, QWidget *pParent);
 
-QAction CORE_EXPORT * newAction(const bool &pCheckable, const QIcon &pIcon,
+QAction CORE_EXPORT * newAction(bool pCheckable, const QIcon &pIcon,
                                 const QKeySequence &pKeySequence,
                                 QWidget *pParent);
-QAction CORE_EXPORT * newAction(const bool &pCheckable, const QIcon &pIcon,
+QAction CORE_EXPORT * newAction(bool pCheckable, const QIcon &pIcon,
                                 QWidget *pParent);
-QAction CORE_EXPORT * newAction(const bool &pCheckable,
+QAction CORE_EXPORT * newAction(bool pCheckable,
                                 const QKeySequence &pKeySequence,
                                 QWidget *pParent);
-QAction CORE_EXPORT * newAction(const bool &pCheckable, QWidget *pParent);
+QAction CORE_EXPORT * newAction(bool pCheckable, QWidget *pParent);
 QAction CORE_EXPORT * newAction(const QIcon &pIcon,
                                 const QList<QKeySequence> &pKeySequences,
                                 QWidget *pParent);
@@ -162,9 +162,9 @@ QAction CORE_EXPORT * newAction(QWidget *pParent);
 
 QAction CORE_EXPORT * newSeparator(QWidget *pParent);
 
-QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
-                                   const QColor &pColor, QWidget *pParent);
-QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal, QWidget *pParent);
+QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, const QColor &pColor,
+                                   QWidget *pParent);
+QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
@@ -205,8 +205,8 @@ QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 const int &pOverlayWidth,
                                 const int &pOverlayHeight);
 
-void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
-                                  const bool &pEnabled = true);
+void CORE_EXPORT showEnableWidget(QWidget *pWidget, bool pVisible,
+                                  bool pEnabled = true);
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
 

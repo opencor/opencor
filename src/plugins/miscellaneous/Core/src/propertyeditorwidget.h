@@ -267,38 +267,35 @@ public:
     void setId(const QString &pId);
 
     bool isCheckable() const;
-    void setCheckable(const bool &pCheckable);
+    void setCheckable(bool pCheckable);
 
     bool isChecked() const;
-    void setChecked(const bool &pChecked);
+    void setChecked(bool pChecked);
 
     bool isEditable() const;
-    void setEditable(const bool &pEditable);
+    void setEditable(bool pEditable);
 
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
 
     QString name() const;
-    void setName(const QString &pName, const bool &pUpdateToolTip = true);
+    void setName(const QString &pName, bool pUpdateToolTip = true);
 
     QString value() const;
-    void setValue(const QString &pValue, const bool &pForce = false,
-                  const bool &pEmitSignal = true);
+    void setValue(const QString &pValue, bool pForce = false,
+                  bool pEmitSignal = true);
 
     QVariant valueAsVariant() const;
     QString valueAsString() const;
 
     int integerValue() const;
-    void setIntegerValue(const int &pIntegerValue,
-                         const bool &pEmitSignal = true);
+    void setIntegerValue(const int &pIntegerValue, bool pEmitSignal = true);
 
     double doubleValue() const;
-    void setDoubleValue(const double &pDoubleValue,
-                        const bool &pEmitSignal = true);
+    void setDoubleValue(const double &pDoubleValue, bool pEmitSignal = true);
 
     QStringList listValues() const;
-    void setListValues(const QStringList &pListValues,
-                       const bool &pEmitSignal = true);
+    void setListValues(const QStringList &pListValues, bool pEmitSignal = true);
 
     QString listValue() const;
     void setListValue(const QString &pListValue);
@@ -310,20 +307,20 @@ public:
     void setEmptyListValue(const QString &pEmptyListValue);
 
     bool booleanValue() const;
-    void setBooleanValue(const bool &pBooleanValue);
+    void setBooleanValue(bool pBooleanValue);
 
     QColor colorValue() const;
     void setColorValue(const QColor &pColorValue);
     void setColorValue(const QPoint &pPoint = QPoint());
 
     QString unit() const;
-    void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
+    void setUnit(const QString &pUnit, bool pUpdateToolTip = true);
 
     QString extraInfo() const;
     void setExtraInfo(const QString &pExtraInfo);
 
     bool isVisible() const;
-    void setVisible(const bool &pVisible);
+    void setVisible(bool pVisible);
 
     void select() const;
 
@@ -353,7 +350,7 @@ private:
     QList<QStandardItem *> items() const;
 
 signals:
-    void visibilityChanged(const bool &pVisible);
+    void visibilityChanged(bool pVisible);
     void valueChanged(const QString &pOldValue, const QString &pNewValue);
 };
 
@@ -364,11 +361,9 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
     Q_OBJECT
 
 public:
-    explicit PropertyEditorWidget(const bool &pShowUnits,
-                                  const bool &pAutoUpdateHeight,
+    explicit PropertyEditorWidget(bool pShowUnits, bool pAutoUpdateHeight,
                                   QWidget *pParent);
-    explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
-                                  QWidget *pParent);
+    explicit PropertyEditorWidget(bool pAutoUpdateHeight, QWidget *pParent);
     explicit PropertyEditorWidget(QWidget *pParent);
     ~PropertyEditorWidget() override;
 
@@ -409,7 +404,7 @@ public:
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 
-    Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
+    Property * addBooleanProperty(bool pValue, Property *pParent = 0);
     Property * addBooleanProperty(Property *pParent = 0);
 
     Property * addColorProperty(const QColor &pValue, Property *pParent = 0);
@@ -425,7 +420,7 @@ public:
 
     bool showUnits() const;
 
-    void finishEditing(const bool &pCommitData = true);
+    void finishEditing(bool pCommitData = true);
 
     void removeAllProperties();
 
@@ -460,7 +455,7 @@ private:
     Property * addProperty(const Property::Type &pType, Property *pParent);
 
     void selectProperty(Property *pProperty);
-    void editProperty(Property *pProperty, const bool &pCommitData = true);
+    void editProperty(Property *pProperty, bool pCommitData = true);
 
     void goToNeighbouringProperty(const int &pShift);
 

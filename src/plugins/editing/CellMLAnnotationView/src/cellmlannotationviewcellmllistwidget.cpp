@@ -86,7 +86,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pCategory,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(bool pCategory,
                                                                              const Type &pType,
                                                                              const QString &pText,
                                                                              iface::cellml_api::CellMLElement *pElement,
@@ -101,7 +101,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(bool pError,
                                                                              const QString &pText) :
     CellmlAnnotationViewCellmlElementItem(false, pError?Error:Warning, pText, 0, -1)
 {
@@ -507,7 +507,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(const bool &pSelectFirstItem)
+void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(bool pSelectFirstItem)
 {
     // Populate our tree view widget
 

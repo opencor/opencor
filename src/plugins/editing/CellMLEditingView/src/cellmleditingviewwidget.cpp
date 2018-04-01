@@ -43,7 +43,7 @@ namespace CellMLEditingView {
 //==============================================================================
 
 CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
-                                                 const bool &pReadOnly,
+                                                 bool pReadOnly,
                                                  QsciLexer *pLexer,
                                                  QWidget *pParent) :
     Core::SplitterWidget(pParent),

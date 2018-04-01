@@ -58,7 +58,7 @@ namespace SEDMLSupport {
 //==============================================================================
 
 SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
-                     const bool &pNew) :
+                     bool pNew) :
     StandardSupport::StandardFile(pFileName),
     mOwnerFileName(pOwnerFileName),
     mSedmlDocument(0),
@@ -73,7 +73,7 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
 
 //==============================================================================
 
-SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
+SedmlFile::SedmlFile(const QString &pFileName, bool pNew) :
     SedmlFile(pFileName, QString(), pNew)
 {
 }

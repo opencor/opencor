@@ -52,12 +52,12 @@ class FileOrganiserWindowItem : public QStandardItem
 public:
     explicit FileOrganiserWindowItem(const QIcon &pIcon,
                                      const QString &pTextOrPath,
-                                     const bool &pFolder = false);
+                                     bool pFolder = false);
 
     bool isFolder() const;
 
     bool isExpanded() const;
-    void setExpanded(const bool &pExpanded);
+    void setExpanded(bool pExpanded);
 
     QString path() const;
 
@@ -167,8 +167,8 @@ private:
 signals:
     void openFilesRequested(const QStringList &pFileNames);
 
-    void newFolderEnabled(const bool &pEnabled);
-    void deleteItemsEnabled(const bool &pEnabled);
+    void newFolderEnabled(bool pEnabled);
+    void deleteItemsEnabled(bool pEnabled);
 
 private slots:
     void resizeToContents();

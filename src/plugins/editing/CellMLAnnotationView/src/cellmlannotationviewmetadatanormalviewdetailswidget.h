@@ -90,7 +90,7 @@ public:
                    const Information &pLookUpRdfTripleInformation = First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
-                      const bool &pNeedAdditionalGuiUpdates = true);
+                      bool pNeedAdditionalGuiUpdates = true);
 
     void filePermissionsChanged();
 

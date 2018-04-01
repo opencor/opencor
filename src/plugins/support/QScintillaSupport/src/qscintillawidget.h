@@ -72,15 +72,14 @@ public:
     void setCurrentPosition(const int &pCurrentPosition);
 
     QString contents() const;
-    void setContents(const QString &pContents,
-                     const bool &pKeepHistory = false);
+    void setContents(const QString &pContents, bool pKeepHistory = false);
 
     int contentsSize() const;
 
     QString textInRange(const int &pStartRange, const int &pEndRange) const;
     int findTextInRange(const int &pStartRange, const int &pEndRange,
-                        const QString &pText, const bool &pRegularExpression,
-                        const bool &pCaseSensitive, const bool &pWholeWordsOnly) const;
+                        const QString &pText, bool pRegularExpression,
+                        bool pCaseSensitive, bool pWholeWordsOnly) const;
 
     QString wordAt(const int &pLine, const int &pColumn) const;
 
@@ -132,7 +131,7 @@ private:
     void updateColors();
 
 signals:
-    void canSelectAll(const bool &pCanSelectAll);
+    void canSelectAll(bool pCanSelectAll);
 
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 

@@ -54,7 +54,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
+PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
                            const QString &pUrl, const QString &pDescription,
                            const QString &pOwner, PmrWebService *pParent) :
     QObject(pParent)
@@ -111,7 +111,7 @@ PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
+PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
                            const QString &pUrl, PmrWebService *pParent) :
     PmrWorkspace(pOwned, pName, pUrl, QString(), QString(), pParent)
 {
@@ -468,7 +468,7 @@ bool PmrWorkspace::isOpen() const
 
 //==============================================================================
 
-bool PmrWorkspace::open(const QString &pPath, const bool &pRefreshStatus)
+bool PmrWorkspace::open(const QString &pPath, bool pRefreshStatus)
 {
     // Open ourselves by first making sure that we are closed
 
@@ -701,7 +701,7 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
 
 //==============================================================================
 
-void PmrWorkspace::synchronize(const bool &pPush)
+void PmrWorkspace::synchronize(bool pPush)
 {
     // Synchronise our local workspace with PMR and let people know that we have
     // done so
@@ -868,7 +868,7 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
 //==============================================================================
 
-void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
+void PmrWorkspace::stageFile(const QString &pPath, bool pStage)
 {
     // Un/stage the file, which path is given, and let people know of the
     // outcome

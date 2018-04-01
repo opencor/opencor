@@ -43,7 +43,7 @@ namespace FileOrganiserWindow {
 
 FileOrganiserWindowItem::FileOrganiserWindowItem(const QIcon &pIcon,
                                                  const QString &pTextOrPath,
-                                                 const bool &pFolder) :
+                                                 bool pFolder) :
     QStandardItem(pIcon,
                   pFolder?
                       pTextOrPath:
@@ -79,7 +79,7 @@ bool FileOrganiserWindowItem::isExpanded() const
 
 //==============================================================================
 
-void FileOrganiserWindowItem::setExpanded(const bool &pExpanded)
+void FileOrganiserWindowItem::setExpanded(bool pExpanded)
 {
     // Set our expanded state
 

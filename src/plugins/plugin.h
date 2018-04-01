@@ -83,7 +83,7 @@ public:
     };
 
     explicit Plugin(const QString &pFileName, PluginInfo *pInfo,
-                    const QString &pErrorMessage, const bool &pLoad,
+                    const QString &pErrorMessage, bool pLoad,
                     PluginManager *pPluginManager);
     ~Plugin() override;
 
@@ -107,7 +107,7 @@ public:
                              QString *pErrorMessage = 0);
 
     static bool load(const QString &pName);
-    static void setLoad(const QString &pName, const bool &pToBeLoaded);
+    static void setLoad(const QString &pName, bool pToBeLoaded);
 
     static QStringList fullDependencies(const QString &pPluginsDir,
                                         const QString &pName,

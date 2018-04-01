@@ -584,8 +584,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
 
 //==============================================================================
 
-void FileBrowserWindowWidget::goToPath(const QString &pPath,
-                                       const bool &pExpand)
+void FileBrowserWindowWidget::goToPath(const QString &pPath, bool pExpand)
 {
     // Set the current index to that of the provided path
 

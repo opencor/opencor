@@ -192,8 +192,8 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 
         SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
 
-        connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(const int &, const bool &)),
-                this, SLOT(collapsibleWidgetCollapsed(const int &, const bool &)));
+        connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(const int &, bool)),
+                this, SLOT(collapsibleWidgetCollapsed(const int &, bool)));
 
         connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
                 this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
@@ -209,8 +209,8 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         connect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
 
-        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(const int &, const bool &)),
-                this, SLOT(graphPanelSectionExpanded(const int &, const bool &)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(const int &, bool)),
+                this, SLOT(graphPanelSectionExpanded(const int &, bool)));
 
         // Check when some graph plot settings or graphs settings have been
         // requested
@@ -597,7 +597,7 @@ void SimulationExperimentViewWidget::contentsWidgetSplitterMoved(const QIntList 
 //==============================================================================
 
 void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
-                                                                const bool &pCollapsed)
+                                                                bool pCollapsed)
 {
     // One of the widgets in our collapsible widget has been collapsed or
     // expanded, so keep track of that fact
@@ -702,7 +702,7 @@ void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &p
 //==============================================================================
 
 void SimulationExperimentViewWidget::graphPanelSectionExpanded(const int &pSection,
-                                                               const bool &pExpanded)
+                                                               bool pExpanded)
 {
     // Keep track of the section's expanded state
 

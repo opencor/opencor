@@ -263,7 +263,7 @@ static const auto Indent = QStringLiteral("    ");
 
 //==============================================================================
 
-void CellMLTextViewConverter::indent(const bool &pForceTracking)
+void CellMLTextViewConverter::indent(bool pForceTracking)
 {
     // Indent our output and keep track of it, if required
 
@@ -361,7 +361,7 @@ QString CellMLTextViewConverter::cmetaId(const QDomNode &pDomNode) const
 QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
                                                     const QString &pNamespace,
                                                     const QString &pName,
-                                                    const bool &pMustBePresent) const
+                                                    bool pMustBePresent) const
 {
     // Return the trimmed value of the requested attribute using the given
     // namespace
@@ -388,7 +388,7 @@ QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
 
 QString CellMLTextViewConverter::cellmlAttributeNodeValue(const QDomNode &pDomNode,
                                                           const QString &pName,
-                                                          const bool &pMustBePresent) const
+                                                          bool pMustBePresent) const
 {
     // Return the requested CellML attribute using the CellML 1.0 namespace or,
     // if needed, the CellML 1.1 namespace
@@ -588,7 +588,7 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 //==============================================================================
 
 bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
-                                               const bool &pInImportNode)
+                                               bool pInImportNode)
 {
     // Start processing the given units node
 
@@ -720,7 +720,7 @@ bool CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
 //==============================================================================
 
 bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
-                                                   const bool &pInImportNode)
+                                                   bool pInImportNode)
 {
     // Start processing the given component node
 
@@ -2380,7 +2380,7 @@ bool CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
 //==============================================================================
 
 bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode,
-                                                 const bool &pError)
+                                                 bool pError)
 {
     // The given node is unknown, so warn the user about it
 
@@ -2465,7 +2465,7 @@ bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode,
 //==============================================================================
 
 void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
-                                                     const bool &pError,
+                                                     bool pError,
                                                      const QString &pExtra)
 {
     // The given node is known, but we don't support it, so consider it as an

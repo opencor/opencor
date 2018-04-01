@@ -71,7 +71,7 @@ public:
     ~CentralWidgetMode();
 
     bool isEnabled() const;
-    void setEnabled(const bool &pEnabled);
+    void setEnabled(bool pEnabled);
 
     TabBarWidget * viewTabs() const;
 
@@ -106,7 +106,7 @@ public:
     void addView(Plugin *pPlugin);
 
     TabBarWidget * newTabBarWidget(const QTabBar::Shape &pShape,
-                                   const bool &pFileTabs = false);
+                                   bool pFileTabs = false);
 
     QString currentFileName() const;
 
@@ -115,7 +115,7 @@ public:
                   const QString &pUrl = QString());
     void openFiles(const QStringList &pFileNames);
 
-    void openRemoteFile(const QString &pUrl, const bool &pShowWarning = true);
+    void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
 
@@ -177,33 +177,32 @@ private:
 
     void updateNoViewMsg();
 
-    bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
+    bool saveFile(const int &pIndex, bool pNeedNewFileName = false);
 
     bool canCloseFile(const int &pIndex);
 
-    void updateFileTab(const int &pIndex, const bool &pIconOnly = false);
+    void updateFileTab(const int &pIndex, bool pIconOnly = false);
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
 
     QString viewKey(const int &pMode, const int &pView,
                     const QString &pFileName);
 
-    void fileReloadedOrSaved(const QString &pFileName,
-                             const bool &pFileReloaded);
+    void fileReloadedOrSaved(const QString &pFileName, bool pFileReloaded);
 
     void setTabBarCurrentIndex(TabBarWidget *pTabBar, const int &pIndex);
 
 signals:
     void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
-    void atLeastOneView(const bool &pAtLeastOneView);
+    void atLeastOneView(bool pAtLeastOneView);
 
-    void canSave(const bool &pEnabled);
-    void canSaveAs(const bool &pEnabled);
-    void canSaveAll(const bool &pEnabled);
+    void canSave(bool pEnabled);
+    void canSaveAs(bool pEnabled);
+    void canSaveAll(bool pEnabled);
 
-    void atLeastOneFile(const bool &pAtLeastOneFile);
-    void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
+    void atLeastOneFile(bool pAtLeastOneFile);
+    void atLeastTwoFiles(bool pAtLeastTwoFiles);
 
 private slots:
     void updateGui();
@@ -215,14 +214,14 @@ private slots:
     void cancelOpenRemoteFile();
     void openRemoteFile();
 
-    void reloadFile(const int &pIndex = -1, const bool &pForce = false);
+    void reloadFile(const int &pIndex = -1, bool pForce = false);
 
     void duplicateFile();
 
     void toggleLockedFile();
 
-    void fileChanged(const QString &pFileName, const bool &pFileChanged,
-                     const bool &pDependenciesChanged);
+    void fileChanged(const QString &pFileName, bool pFileChanged,
+                     bool pDependenciesChanged);
     void fileDeleted(const QString &pFileName);
 
     void updateModifiedSettings();
@@ -245,8 +244,8 @@ private slots:
     void previousFile();
     void nextFile();
 
-    bool closeFile(const int &pIndex = -1, const bool &pForceClosing = false);
-    void closeAllFiles(const bool &pForceClosing = false);
+    bool closeFile(const int &pIndex = -1, bool pForceClosing = false);
+    void closeAllFiles(bool pForceClosing = false);
 
     void moveFile(const int &pFromIndex, const int &pToIndex);
 

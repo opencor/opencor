@@ -71,7 +71,7 @@ private:
     QStringList mPreviousItems;
     QStringList mNextItems;
 
-    void goToPath(const QString &pPath, const bool &pExpand = false);
+    void goToPath(const QString &pPath, bool pExpand = false);
 
     QString currentPathParent() const;
 
@@ -89,11 +89,11 @@ private:
 signals:
     void filesOpenRequested(const QStringList &pFileNames);
 
-    void notHomeFolder(const bool &pNotHomeFolder);
-    void goToParentFolderEnabled(const bool &pEnabled);
+    void notHomeFolder(bool pNotHomeFolder);
+    void goToParentFolderEnabled(bool pEnabled);
 
-    void goToPreviousFileOrFolderEnabled(const bool &pEnabled);
-    void goToNextFileOrFolderEnabled(const bool &pEnabled);
+    void goToPreviousFileOrFolderEnabled(bool pEnabled);
+    void goToNextFileOrFolderEnabled(bool pEnabled);
 
 private slots:
     void itemChanged(const QModelIndex &pNewIndex,

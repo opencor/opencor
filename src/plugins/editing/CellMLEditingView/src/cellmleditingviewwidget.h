@@ -66,9 +66,8 @@ class CELLMLEDITINGVIEW_EXPORT CellmlEditingViewWidget : public Core::SplitterWi
     Q_OBJECT
 
 public:
-    explicit CellmlEditingViewWidget(const QString &pContents,
-                                     const bool &pReadOnly, QsciLexer *pLexer,
-                                     QWidget *pParent);
+    explicit CellmlEditingViewWidget(const QString &pContents, bool pReadOnly,
+                                     QsciLexer *pLexer, QWidget *pParent);
 
     void loadSettings(QSettings *pSettings) override;
     void saveSettings(QSettings *pSettings) const override;

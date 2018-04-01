@@ -59,14 +59,14 @@ protected:
 
     virtual StandardFile * create(const QString &pFileName) const = 0;
 
-    bool doIsFile(const QString &pFileName, const bool &pForceChecking = false);
+    bool doIsFile(const QString &pFileName, bool pForceChecking = false);
 
 private slots:
     void manage(const QString &pFileName);
     void unmanage(const QString &pFileName);
 
     void save(const QString &pFileName);
-    void reload(const QString &pFileName, const bool &pForceChecking = true);
+    void reload(const QString &pFileName, bool pForceChecking = true);
     void rename(const QString &pOldFileName, const QString &pNewFileName);
 };
 

@@ -65,19 +65,19 @@ public:
     void setContents(const QString &pContents);
 
     bool error() const;
-    void setError(const bool &pError);
+    void setError(bool pError);
 
     bool optimiseFontSize() const;
-    void setOptimiseFontSize(const bool &pOptimiseFontSize);
+    void setOptimiseFontSize(bool pOptimiseFontSize);
 
     bool subscripts() const;
-    void setSubscripts(const bool &pSubscripts);
+    void setSubscripts(bool pSubscripts);
 
     bool greekSymbols() const;
-    void setGreekSymbols(const bool &pGreekSymbols);
+    void setGreekSymbols(bool pGreekSymbols);
 
     bool digitGrouping() const;
-    void setDigitGrouping(const bool &pDigitGrouping);
+    void setDigitGrouping(bool pDigitGrouping);
 
 protected:
     void contextMenuEvent(QContextMenuEvent *pEvent) override;

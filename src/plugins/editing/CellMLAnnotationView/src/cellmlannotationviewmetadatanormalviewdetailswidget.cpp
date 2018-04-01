@@ -261,7 +261,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
-                                                                       const bool &pNeedAdditionalGuiUpdates)
+                                                                       bool pNeedAdditionalGuiUpdates)
 {
     if (!pRdfTriple)
         return;

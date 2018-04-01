@@ -366,8 +366,7 @@ QString copyright()
 
 //==============================================================================
 
-QString formatMessage(const QString &pMessage, const bool &pLowerCase,
-                      const bool &pDotDotDot)
+QString formatMessage(const QString &pMessage, bool pLowerCase, bool pDotDotDot)
 {
     // Trim the message and make sure that we don't end up with an empty string
 

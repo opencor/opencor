@@ -210,7 +210,7 @@ static const int StringLength = StringString.length();
 void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
                                       const int &pBytesEnd,
                                       const QString &pText,
-                                      const bool &pParameterBlock)
+                                      bool pParameterBlock)
 {
     // Make sure that we are given some text to style
 
@@ -260,7 +260,7 @@ void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
 void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
                                              const int &pBytesEnd,
                                              const QString &pText,
-                                             const bool &pParameterBlock)
+                                             bool pParameterBlock)
 {
     // Make sure that we are given some text to style
 
@@ -496,7 +496,7 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
                                                               const int &pBytesStart,
                                                               const int &pBytesEnd,
                                                               const QString &pText,
-                                                              const bool &pParameterBlock)
+                                                              bool pParameterBlock)
 {
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
@@ -552,7 +552,7 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
                                                             const int &pBytesStart,
                                                             const int &pBytesEnd,
                                                             const QString &pText,
-                                                            const bool &pParameterBlock)
+                                                            bool pParameterBlock)
 {
     // A parameter block started before or at the beginning of the given text,
     // so now look for where it ends
@@ -618,7 +618,7 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
                                             const int &pBytesStart,
                                             const int &pBytesEnd,
                                             const QString &pText,
-                                            const bool &pParameterBlock)
+                                            bool pParameterBlock)
 {
     // There is a string to style, so first style everything that is before it
 
@@ -779,7 +779,7 @@ bool CellmlTextViewLexer::validString(const int &pFrom, const int &pTo,
 //==============================================================================
 
 int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
-                                    const int &pStyle, const bool &pForward)
+                                    const int &pStyle, bool pForward)
 {
     // Find forward/backward the given string starting from the given position
 

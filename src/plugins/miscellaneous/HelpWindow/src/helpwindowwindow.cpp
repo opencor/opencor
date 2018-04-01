@@ -123,20 +123,20 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mHelpWindowWidget, SIGNAL(homePage(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(homePage(bool)),
             mGui->actionHome, SLOT(setDisabled(bool)));
 
-    connect(mHelpWindowWidget, SIGNAL(backEnabled(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(backEnabled(bool)),
             mGui->actionBack, SLOT(setEnabled(bool)));
-    connect(mHelpWindowWidget, SIGNAL(forwardEnabled(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(forwardEnabled(bool)),
             mGui->actionForward, SLOT(setEnabled(bool)));
 
-    connect(mHelpWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(defaultZoomLevel(bool)),
             mGui->actionNormalSize, SLOT(setDisabled(bool)));
-    connect(mHelpWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(zoomingOutEnabled(bool)),
             mGui->actionZoomOut, SLOT(setEnabled(bool)));
 
-    connect(mHelpWindowWidget, SIGNAL(copyTextEnabled(const bool &)),
+    connect(mHelpWindowWidget, SIGNAL(copyTextEnabled(bool)),
             mGui->actionCopy, SLOT(setEnabled(bool)));
 
     // En/disable the printing action, depending on whether printers are

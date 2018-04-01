@@ -313,7 +313,7 @@ bool MathmlViewerWidget::error() const
 
 //==============================================================================
 
-void MathmlViewerWidget::setError(const bool &pError)
+void MathmlViewerWidget::setError(bool pError)
 {
     // Keep track of whether there is an error
 
@@ -339,7 +339,7 @@ bool MathmlViewerWidget::optimiseFontSize() const
 
 //==============================================================================
 
-void MathmlViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
+void MathmlViewerWidget::setOptimiseFontSize(bool pOptimiseFontSize)
 {
     // Keep track of whether we should optimise our font size
 
@@ -360,7 +360,7 @@ bool MathmlViewerWidget::subscripts() const
 
 //==============================================================================
 
-void MathmlViewerWidget::setSubscripts(const bool &pSubscripts)
+void MathmlViewerWidget::setSubscripts(bool pSubscripts)
 {
     // Keep track of whether we use subscripts
 
@@ -381,7 +381,7 @@ bool MathmlViewerWidget::greekSymbols() const
 
 //==============================================================================
 
-void MathmlViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
+void MathmlViewerWidget::setGreekSymbols(bool pGreekSymbols)
 {
     // Keep track of whether we use Greek symbols
 
@@ -402,7 +402,7 @@ bool MathmlViewerWidget::digitGrouping() const
 
 //==============================================================================
 
-void MathmlViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
+void MathmlViewerWidget::setDigitGrouping(bool pDigitGrouping)
 {
     // Keep track of whether we do digit grouping
 

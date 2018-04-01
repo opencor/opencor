@@ -118,7 +118,7 @@ GraphPanelWidget * GraphPanelsWidget::activeGraphPanel() const
 
 //==============================================================================
 
-GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
+GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
 {
     // Create a new graph panel, add it to ourselves and keep track of it
 

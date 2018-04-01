@@ -186,7 +186,7 @@ private:
 
     void resetFunctions();
 
-    void reset(const bool &pRecreateCompilerEngine, const bool &pResetIssues);
+    void reset(bool pRecreateCompilerEngine, bool pResetIssues);
 
     void couldNotGenerateModelCodeIssue(const QString &pExtraInfo);
     void unknownProblemDuringModelCodeGenerationIssue();

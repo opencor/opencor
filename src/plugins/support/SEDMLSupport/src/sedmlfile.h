@@ -110,8 +110,8 @@ class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
 
 public:
     explicit SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
-                       const bool &pNew = false);
-    explicit SedmlFile(const QString &pFileName, const bool &pNew = false);
+                       bool pNew = false);
+    explicit SedmlFile(const QString &pFileName, bool pNew = false);
     ~SedmlFile() override;
 
     libsedml::SedDocument * sedmlDocument();

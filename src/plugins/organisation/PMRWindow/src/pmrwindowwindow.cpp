@@ -127,7 +127,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // exposures, if necessary
 
     connect(this, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(retrieveExposures(const bool &)));
+            this, SLOT(retrieveExposures(bool)));
 
     // Create an instance of our PMR web service
 
@@ -141,8 +141,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Some connections to process responses from our PMR web service
 
-    connect(mPmrWebService, SIGNAL(busy(const bool &)),
-            this, SLOT(busy(const bool &)));
+    connect(mPmrWebService, SIGNAL(busy(bool)),
+            this, SLOT(busy(bool)));
 
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
@@ -247,7 +247,7 @@ void PmrWindowWindow::filterValueChanged(const QString &pText)
 
 //==============================================================================
 
-void PmrWindowWindow::busy(const bool &pBusy)
+void PmrWindowWindow::busy(bool pBusy)
 {
     // Show ourselves as busy or not busy anymore
 
@@ -356,8 +356,7 @@ void PmrWindowWindow::itemDoubleClicked()
 
 //==============================================================================
 
-void PmrWindowWindow::retrieveExposures(const bool &pVisible,
-                                        const bool &pForceRetrieval)
+void PmrWindowWindow::retrieveExposures(bool pVisible, bool pForceRetrieval)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
     // of exposures has never been requested before (through a single shot, this

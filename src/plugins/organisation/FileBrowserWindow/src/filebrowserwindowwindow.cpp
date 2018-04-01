@@ -93,15 +93,15 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mFileBrowserWindowWidget, SIGNAL(notHomeFolder(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(notHomeFolder(bool)),
             mGui->actionHome, SLOT(setEnabled(bool)));
 
-    connect(mFileBrowserWindowWidget, SIGNAL(goToParentFolderEnabled(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(goToParentFolderEnabled(bool)),
             mGui->actionParent, SLOT(setEnabled(bool)));
 
-    connect(mFileBrowserWindowWidget, SIGNAL(goToPreviousFileOrFolderEnabled(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(goToPreviousFileOrFolderEnabled(bool)),
             mGui->actionPrevious, SLOT(setEnabled(bool)));
-    connect(mFileBrowserWindowWidget, SIGNAL(goToNextFileOrFolderEnabled(const bool &)),
+    connect(mFileBrowserWindowWidget, SIGNAL(goToNextFileOrFolderEnabled(bool)),
             mGui->actionNext, SLOT(setEnabled(bool)));
 }
 

@@ -100,7 +100,7 @@ private slots:
     void updateInformation(const QModelIndex &pNewIndex,
                            const QModelIndex &pOldIndex);
     void updatePluginsSelectedState(QStandardItem *pItem,
-                                    const bool &pInitializing = false);
+                                    bool pInitializing = false);
 
     void openLink(const QString &pLink) const;
 

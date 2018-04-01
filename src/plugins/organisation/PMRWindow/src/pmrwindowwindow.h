@@ -97,14 +97,13 @@ private slots:
 
     void filterValueChanged(const QString &pText);
 
-    void busy(const bool &pBusy);
+    void busy(bool pBusy);
 
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
     void showError(const QString &pMessage);
 
-    void retrieveExposures(const bool &pVisible,
-                           const bool &pForceRetrieval = false);
+    void retrieveExposures(bool pVisible, bool pForceRetrieval = false);
 
     void initializeWidget(const OpenCOR::PMRSupport::PmrExposures &pExposures);
 

@@ -64,7 +64,7 @@ public:
     bool searchWholeWordsOnly() const;
     bool useRegularExpression() const;
 
-    void setReadOnly(const bool &pReadOnly);
+    void setReadOnly(bool pReadOnly);
 
     void updateFrom(EditorWidgetFindReplaceWidget *pFindReplace);
 
@@ -81,7 +81,7 @@ public:
     bool replaceEditHasFocus() const;
 
     bool isActive() const;
-    void setActive(const bool &pActive);
+    void setActive(bool pActive);
 
 protected:
     void changeEvent(QEvent *pEvent) override;
@@ -110,7 +110,7 @@ signals:
 
     void findTextChanged(const QString &pText);
 
-    void canFindReplace(const bool &pCanFindReplace);
+    void canFindReplace(bool pCanFindReplace);
 
     void findPreviousRequested();
     void findNextRequested();

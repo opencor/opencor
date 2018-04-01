@@ -64,7 +64,7 @@ StandardFileManager::~StandardFileManager()
 //==============================================================================
 
 bool StandardFileManager::doIsFile(const QString &pFileName,
-                                   const bool &pForceChecking)
+                                   bool pForceChecking)
 {
     // If the given file is already managed, then we consider that it's of the
     // right type (e.g. CellML file), even though it may not be of the right
@@ -150,8 +150,7 @@ void StandardFileManager::save(const QString &pFileName)
 
 //==============================================================================
 
-void StandardFileManager::reload(const QString &pFileName,
-                                 const bool &pForceChecking)
+void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
 {
     // The file is to be reloaded (either because it has been changed or because
     // one or several of its dependencies has changed), so reload it

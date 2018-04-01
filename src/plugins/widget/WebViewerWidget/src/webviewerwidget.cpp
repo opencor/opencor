@@ -417,7 +417,7 @@ void WebViewerWidget::zoomOut()
 
 //==============================================================================
 
-void WebViewerWidget::setZoomingEnabled(const bool &pZoomingEnabled)
+void WebViewerWidget::setZoomingEnabled(bool pZoomingEnabled)
 {
     // Set whether zooming in/out is enabled
 
@@ -426,7 +426,7 @@ void WebViewerWidget::setZoomingEnabled(const bool &pZoomingEnabled)
 
 //==============================================================================
 
-void WebViewerWidget::setOverrideCursor(const bool &pOverrideCursor)
+void WebViewerWidget::setOverrideCursor(bool pOverrideCursor)
 {
     // Set whether we should override our cursor
 

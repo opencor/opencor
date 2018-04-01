@@ -504,28 +504,28 @@ void CorePlugin::initializePlugin()
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastOneView(bool)),
             mFileOpenAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastOneView(bool)),
             mFileOpenRemoteAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
-            this, SLOT(updateFileReopenMenu(const bool &)));
+    connect(mCentralWidget, SIGNAL(atLeastOneView(bool)),
+            this, SLOT(updateFileReopenMenu(bool)));
 
-    connect(mCentralWidget, SIGNAL(canSave(const bool &)),
+    connect(mCentralWidget, SIGNAL(canSave(bool)),
             mFileSaveAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(canSaveAs(const bool &)),
+    connect(mCentralWidget, SIGNAL(canSaveAs(bool)),
             mFileSaveAsAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(canSaveAll(const bool &)),
+    connect(mCentralWidget, SIGNAL(canSaveAll(bool)),
             mFileSaveAllAction, SLOT(setEnabled(bool)));
 
-    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(bool)),
             mFilePreviousAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(bool)),
             mFileNextAction, SLOT(setEnabled(bool)));
 
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(bool)),
             mFileCloseAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
+    connect(mCentralWidget, SIGNAL(atLeastOneFile(bool)),
             mFileCloseAllAction, SLOT(setEnabled(bool)));
 
     // A connection related to our Reopen sub-menu
@@ -701,7 +701,7 @@ void CorePlugin::newFile()
 
 //==============================================================================
 
-void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
+void CorePlugin::updateFileReopenMenu(bool pEnabled)
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 

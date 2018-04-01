@@ -643,7 +643,7 @@ QString cleanPresentationMathml(const QString &pPresentationMathml)
 //==============================================================================
 
 QString newFileName(const QString &pFileName, const QString &pExtra,
-                    const bool &pBefore, const QString &pFileExtension)
+                    bool pBefore, const QString &pFileExtension)
 {
     // Return the name of a 'new' file
     // Note: see Tests::newFileNameTests() for what we want to be able to get...
@@ -702,7 +702,7 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
 //==============================================================================
 
 QString newFileName(const QString &pFileName, const QString &pExtra,
-                    const bool &pBefore)
+                    bool pBefore)
 {
     // Return the name of a 'new' file
 

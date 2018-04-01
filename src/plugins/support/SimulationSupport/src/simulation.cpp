@@ -151,7 +151,7 @@ double SimulationData::startingPoint() const
 //==============================================================================
 
 void SimulationData::setStartingPoint(const double &pStartingPoint,
-                                      const bool &pRecompute)
+                                      bool pRecompute)
 {
     // Set our starting point
 
@@ -287,7 +287,7 @@ QString SimulationData::nlaSolverName() const
 //==============================================================================
 
 void SimulationData::setNlaSolverName(const QString &pNlaSolverName,
-                                      const bool &pReset)
+                                      bool pReset)
 {
     // Set our NLA solver name and reset its properties
 
@@ -320,8 +320,7 @@ Solver::Solver::Properties SimulationData::nlaSolverProperties() const
 //==============================================================================
 
 void SimulationData::addNlaSolverProperty(const QString &pName,
-                                          const QVariant &pValue,
-                                          const bool &pReset)
+                                          const QVariant &pValue, bool pReset)
 {
     // Add an NLA solver property
 
@@ -340,7 +339,7 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
 
 //==============================================================================
 
-void SimulationData::reset(const bool &pInitialize)
+void SimulationData::reset(bool pInitialize)
 {
     // Reset our parameter values which means both initialising our 'constants'
     // and computing our 'computed constants' and 'variables'
@@ -414,7 +413,7 @@ void SimulationData::reset(const bool &pInitialize)
 //==============================================================================
 
 void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                            const bool &pInitialize)
+                                                            bool pInitialize)
 {
     // Recompute our 'computed constants', some 'constant' algebraic variables
     // and our 'variables'
@@ -1015,7 +1014,7 @@ void Simulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-bool Simulation::simulationSettingsOk(const bool &pEmitSignal)
+bool Simulation::simulationSettingsOk(bool pEmitSignal)
 {
     // Check and return whether our simulation settings are sound
 
@@ -1078,8 +1077,8 @@ bool Simulation::run()
 
         // Create a few connections
 
-        connect(mWorker, SIGNAL(running(const bool &)),
-                this, SIGNAL(running(const bool &)));
+        connect(mWorker, SIGNAL(running(bool)),
+                this, SIGNAL(running(bool)));
         connect(mWorker, SIGNAL(paused()),
                 this, SIGNAL(paused()));
 

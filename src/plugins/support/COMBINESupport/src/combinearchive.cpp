@@ -46,8 +46,7 @@ namespace COMBINESupport {
 
 CombineArchiveFile::CombineArchiveFile(const QString &pFileName,
                                        const QString &pLocation,
-                                       const Format &pFormat,
-                                       const bool &pMaster) :
+                                       const Format &pFormat, bool pMaster) :
     mFileName(pFileName),
     mLocation(pLocation),
     mFormat(pFormat),
@@ -121,7 +120,7 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 
 //==============================================================================
 
-CombineArchive::CombineArchive(const QString &pFileName, const bool &pNew) :
+CombineArchive::CombineArchive(const QString &pFileName, bool pNew) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName()),
     mNew(pNew),
@@ -499,7 +498,7 @@ CombineArchiveFiles CombineArchive::masterFiles()
 
 bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
                              const CombineArchiveFile::Format &pFormat,
-                             const bool &pMaster)
+                             bool pMaster)
 {
     // Make sure that we are properly loaded
 

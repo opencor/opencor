@@ -44,16 +44,15 @@ class CORE_EXPORT BorderedWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit BorderedWidget(QWidget *pWidget,
-                            const bool &pTop, const bool &pLeft,
-                            const bool &pBottom, const bool &pRight);
+    explicit BorderedWidget(QWidget *pWidget, bool pTop, bool pLeft,
+                            bool pBottom, bool pRight);
 
     QWidget * widget();
 
-    void setTopBorderVisible(const bool &pVisible) const;
-    void setLeftBorderVisible(const bool &pVisible) const;
-    void setBottomBorderVisible(const bool &pVisible) const;
-    void setRightBorderVisible(const bool &pVisible) const;
+    void setTopBorderVisible(bool pVisible) const;
+    void setLeftBorderVisible(bool pVisible) const;
+    void setBottomBorderVisible(bool pVisible) const;
+    void setRightBorderVisible(bool pVisible) const;
 
 private:
     QWidget *mWidget;

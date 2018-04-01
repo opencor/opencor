@@ -109,16 +109,16 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SLOT(updateClearFindTextAction(const QString &)));
 
-    connect(this, SIGNAL(canFindReplace(const bool &)),
+    connect(this, SIGNAL(canFindReplace(bool)),
             mGui->findPreviousButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(const bool &)),
+    connect(this, SIGNAL(canFindReplace(bool)),
             mGui->findNextButton, SLOT(setEnabled(bool)));
 
-    connect(this, SIGNAL(canFindReplace(const bool &)),
+    connect(this, SIGNAL(canFindReplace(bool)),
             mGui->replaceButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(const bool &)),
+    connect(this, SIGNAL(canFindReplace(bool)),
             mGui->replaceAndFindButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(const bool &)),
+    connect(this, SIGNAL(canFindReplace(bool)),
             mGui->replaceAllButton, SLOT(setEnabled(bool)));
 
     // A connection for our replace widget
@@ -208,7 +208,7 @@ bool EditorWidgetFindReplaceWidget::useRegularExpression() const
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::setReadOnly(const bool &pReadOnly)
+void EditorWidgetFindReplaceWidget::setReadOnly(bool pReadOnly)
 {
     // Show/hide our replace-related widgets based on whether we are in
     // read-only mode
@@ -312,7 +312,7 @@ bool EditorWidgetFindReplaceWidget::isActive() const
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::setActive(const bool &pActive)
+void EditorWidgetFindReplaceWidget::setActive(bool pActive)
 {
     if (pActive == mActive)
         return;

@@ -63,7 +63,7 @@ public:
 
     explicit CombineArchiveFile(const QString &pFileName,
                                 const QString &pLocation, const Format &pFormat,
-                                const bool &pMaster);
+                                bool pMaster);
 
     QString fileName() const;
 
@@ -92,7 +92,7 @@ class COMBINESUPPORT_EXPORT CombineArchive : public StandardSupport::StandardFil
     Q_OBJECT
 
 public:
-    explicit CombineArchive(const QString &pFileName, const bool &pNew = false);
+    explicit CombineArchive(const QString &pFileName, bool pNew = false);
     ~CombineArchive() override;
 
     bool load() override;
@@ -111,7 +111,7 @@ public:
 
     bool addFile(const QString &pFileName, const QString &pLocation,
                  const CombineArchiveFile::Format &pFormat,
-                 const bool &pMaster = false);
+                 bool pMaster = false);
 
     SEDMLSupport::SedmlFile * sedmlFile();
 

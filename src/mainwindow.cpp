@@ -185,7 +185,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
 
     connect(mGui->actionDockedWindows, SIGNAL(triggered(bool)),
-            this, SLOT(showDockedWindows(const bool &)));
+            this, SLOT(showDockedWindows(bool)));
 
     new QShortcut(QKeySequence(Qt::META|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
@@ -723,7 +723,7 @@ void MainWindow::saveSettings() const
 
 //==============================================================================
 
-void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
+void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
 {
     QString systemLocale = QLocale::system().name().left(2);
 
@@ -1204,7 +1204,7 @@ void MainWindow::on_actionAbout_triggered()
 
 //==============================================================================
 
-void MainWindow::restart(const bool &pSaveSettings) const
+void MainWindow::restart(bool pSaveSettings) const
 {
     // Restart OpenCOR after saving its settings, if required
     // Note: the closeEvent method won't get called when exiting OpenCOR and
@@ -1278,8 +1278,7 @@ void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
 
 //==============================================================================
 
-void MainWindow::showDockedWindows(const bool &pShow,
-                                   const bool &pInitialisation)
+void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
 {
     // Show/hide the docked windows
 

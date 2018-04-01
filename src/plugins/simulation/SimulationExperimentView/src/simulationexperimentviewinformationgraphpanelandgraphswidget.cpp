@@ -272,7 +272,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 //==============================================================================
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                              const bool &pActive)
+                                                                              bool pActive)
 {
     // Retrieve the graph panel and graphs property editors for the given file
     // name or create some, if none exists
@@ -613,7 +613,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeAllGrap
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGraphs(const bool &pSelect)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGraphs(bool pSelect)
 {
     // (Un)select all the graphs
     // Note: normally, we would only update the checked state of our graph
@@ -859,7 +859,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColu
 //==============================================================================
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelSectionExpanded(const int &pSection,
-                                                                                                const bool &pExpanded)
+                                                                                                bool pExpanded)
 {
     // Make sure that we have a graph panel property editor
 
@@ -1126,7 +1126,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                                                                                   GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                                                                                   Core::Property *pParameterProperty,
-                                                                                  const bool &pParameterX) const
+                                                                                  bool pParameterX) const
 {
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime

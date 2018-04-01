@@ -136,7 +136,7 @@ private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
     void contentsWidgetSplitterMoved(const QIntList &pSizes);
 
-    void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
+    void collapsibleWidgetCollapsed(const int &pIndex, bool pCollapsed);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
@@ -154,7 +154,7 @@ private slots:
     void parametersHeaderSectionResized(const int &pIndex, const int &pOldSize,
                                         const int &pNewSize);
 
-    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+    void graphPanelSectionExpanded(const int &pSection, bool pExpanded);
 
     void callCheckSimulationResults();
 };

@@ -69,7 +69,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
+DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
                                  QWidget *pParent) :
     Core::Dialog(pParent),
     mGui(new Ui::DataStoreDialog),

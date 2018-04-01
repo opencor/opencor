@@ -687,7 +687,7 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibility)
+void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
 {
     // Determine the message to be displayed, if any
 
@@ -737,7 +737,7 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
 void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
                                            const MessageType &pMessageType,
                                            const QString &pMessage,
-                                           const bool &pAuthenticated)
+                                           bool pAuthenticated)
 {
     // Initialise / keep track of some properties
 
@@ -1186,7 +1186,7 @@ void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                                                 const bool &pSortAndResize)
+                                                 bool pSortAndResize)
 {
     // Refresh the status of the given workspace
 

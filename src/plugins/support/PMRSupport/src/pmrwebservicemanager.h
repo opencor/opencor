@@ -70,11 +70,10 @@ public:
     ~PmrWebServiceManager() override;
 
     bool isAuthenticated() const;
-    void authenticate(const bool &pAuthenticate);
+    void authenticate(bool pAuthenticate);
 
-    PmrWebServiceResponse * request(const QString &pUrl,
-                                    const bool &pSecureRequest,
-                                    const bool &pUsePost = false,
+    PmrWebServiceResponse * request(const QString &pUrl, bool pSecureRequest,
+                                    bool pUsePost = false,
                                     const QJsonDocument &pJsonDocument = QJsonDocument());
 
     void update(const QString &pPmrUrl);
@@ -91,8 +90,8 @@ private:
     bool mWebViewerUsed;
 
 signals:
-    void busy(const bool &pBusy);
-    void authenticated(const bool &pAuthenticated);
+    void busy(bool pBusy);
+    void authenticated(bool pAuthenticated);
 
     void error(const QString &pErrorMessage);
 

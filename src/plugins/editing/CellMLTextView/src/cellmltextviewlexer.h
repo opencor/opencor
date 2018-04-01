@@ -74,22 +74,22 @@ private:
     QString mEolString;
 
     void doStyleText(const int &pBytesStart, const int &pBytesEnd,
-                     const QString &pText, const bool &pParameterBlock);
+                     const QString &pText, bool pParameterBlock);
     void doStyleTextCurrent(const int &pBytesStart, const int &pBytesEnd,
-                            const QString &pText, const bool &pParameterBlock);
+                            const QString &pText, bool pParameterBlock);
     void doStyleTextPreviousMultilineComment(const int &pPosition,
                                              const int &pBytesStart,
                                              const int &pBytesEnd,
                                              const QString &pText,
-                                             const bool &pParameterBlock);
+                                             bool pParameterBlock);
     void doStyleTextPreviousParameterBlock(const int &pPosition,
                                            const int &pBytesStart,
                                            const int &pBytesEnd,
                                            const QString &pText,
-                                           const bool &pParameterBlock);
+                                           bool pParameterBlock);
     void doStyleTextString(const int &pPosition, const int &pBytesStart,
                            const int &pBytesEnd, const QString &pText,
-                           const bool &pParameterBlock);
+                           bool pParameterBlock);
     void doStyleTextRegEx(const int &pBytesStart, const QString &pText,
                           const QRegularExpression &pRegEx,
                           const int &pRegExStyle);
@@ -98,7 +98,7 @@ private:
 
     bool validString(const int &pFrom, const int &pTo, const int &pStyle) const;
     int findString(const QString &pString, int pFrom, const int &pStyle,
-                   const bool &pForward = true);
+                   bool pForward = true);
 
     int fullTextPosition(const int &pBytesPosition) const;
     int fullTextLength(const int &pBytesStart, const int &pBytesEnd) const;

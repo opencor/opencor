@@ -111,7 +111,7 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 //==============================================================================
 
 void SimulationExperimentViewInformationParametersWidget::initialize(SimulationSupport::Simulation *pSimulation,
-                                                                     const bool &pReloadingView)
+                                                                     bool pReloadingView)
 {
     // Keep track of the simulation
 

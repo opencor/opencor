@@ -48,7 +48,7 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(const bool &pGuiMode = true);
+    explicit PluginManager(bool pGuiMode = true);
     ~PluginManager() override;
 
     bool guiMode() const;

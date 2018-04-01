@@ -54,7 +54,7 @@ public:
     explicit PmrWebService(QObject *pParent);
 
     bool isAuthenticated() const;
-    void authenticate(const bool &pAuthenticate = true);
+    void authenticate(bool pAuthenticate = true);
 
     void requestExposures() const;
 
@@ -66,8 +66,7 @@ public:
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace,
                                const QString &pPath);
-    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
-                                     const bool &pPush);
+    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace, bool pPush);
 
     void update(const QString &pPmrUrl);
 
@@ -98,8 +97,8 @@ private:
     void emitInformation(const QString &pMessage);
 
 signals:
-    void busy(const bool &pBusy);
-    void authenticated(const bool &pAuthenticated);
+    void busy(bool pBusy);
+    void authenticated(bool pAuthenticated);
 
     void information(const QString &pMessage);
     void warning(const QString &pMessage);

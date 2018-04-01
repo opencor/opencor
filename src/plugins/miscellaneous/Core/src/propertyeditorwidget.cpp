@@ -675,7 +675,7 @@ bool Property::isCheckable() const
 
 //==============================================================================
 
-void Property::setCheckable(const bool &pCheckable)
+void Property::setCheckable(bool pCheckable)
 {
     // Make our name item (un)checkable
 
@@ -693,7 +693,7 @@ bool Property::isChecked() const
 
 //==============================================================================
 
-void Property::setChecked(const bool &pChecked)
+void Property::setChecked(bool pChecked)
 {
     // Make our name item (un)checked
 
@@ -711,7 +711,7 @@ bool Property::isEditable() const
 
 //==============================================================================
 
-void Property::setEditable(const bool &pEditable)
+void Property::setEditable(bool pEditable)
 {
     // Make our value item (non-)editable
 
@@ -747,7 +747,7 @@ QString Property::name() const
 
 //==============================================================================
 
-void Property::setName(const QString &pName, const bool &pUpdateToolTip)
+void Property::setName(const QString &pName, bool pUpdateToolTip)
 {
     // Set our name
 
@@ -770,8 +770,7 @@ QString Property::value() const
 
 //==============================================================================
 
-void Property::setValue(const QString &pValue, const bool &pForce,
-                        const bool &pEmitSignal)
+void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
 {
     // Set our value (and value icon, if we are a colour property)
 
@@ -867,8 +866,7 @@ int Property::integerValue() const
 
 //==============================================================================
 
-void Property::setIntegerValue(const int &pIntegerValue,
-                               const bool &pEmitSignal)
+void Property::setIntegerValue(const int &pIntegerValue, bool pEmitSignal)
 {
     // Set our value, should it be of integer type
 
@@ -891,8 +889,7 @@ double Property::doubleValue() const
 
 //==============================================================================
 
-void Property::setDoubleValue(const double &pDoubleValue,
-                              const bool &pEmitSignal)
+void Property::setDoubleValue(const double &pDoubleValue, bool pEmitSignal)
 {
     // Set our value, should it be of double type
     // Note: we want as much precision as possible, hence we use a precision of
@@ -917,8 +914,7 @@ QStringList Property::listValues() const
 
 //==============================================================================
 
-void Property::setListValues(const QStringList &pListValues,
-                             const bool &pEmitSignal)
+void Property::setListValues(const QStringList &pListValues, bool pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
 
@@ -1028,7 +1024,7 @@ bool Property::booleanValue() const
 
 //==============================================================================
 
-void Property::setBooleanValue(const bool &pBooleanValue)
+void Property::setBooleanValue(bool pBooleanValue)
 {
     // Set our value, should it be of boolean type
 
@@ -1128,7 +1124,7 @@ QString Property::unit() const
 
 //==============================================================================
 
-void Property::setUnit(const QString &pUnit, const bool &pUpdateToolTip)
+void Property::setUnit(const QString &pUnit, bool pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
@@ -1176,7 +1172,7 @@ bool Property::isVisible() const
 
 //==============================================================================
 
-void Property::setVisible(const bool &pVisible)
+void Property::setVisible(bool pVisible)
 {
     // Set our visibility
 
@@ -1249,8 +1245,8 @@ void Property::updateToolTip()
 
 //==============================================================================
 
-PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
-                                           const bool &pAutoUpdateHeight,
+PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
+                                           bool pAutoUpdateHeight,
                                            QWidget *pParent) :
     TreeViewWidget(pParent),
     mShowUnits(pShowUnits),
@@ -1316,7 +1312,7 @@ PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
 
 //==============================================================================
 
-PropertyEditorWidget::PropertyEditorWidget(const bool &pAutoUpdateHeight,
+PropertyEditorWidget::PropertyEditorWidget(bool pAutoUpdateHeight,
                                            QWidget *pParent) :
     PropertyEditorWidget(true, pAutoUpdateHeight, pParent)
 {
@@ -1502,7 +1498,7 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
 
     // Keep track of our property's change of visibility
 
-    connect(res, SIGNAL(visibilityChanged(const bool &)),
+    connect(res, SIGNAL(visibilityChanged(bool)),
             this, SLOT(updateHeight()));
 
     // Keep track of our property's change of value
@@ -1747,7 +1743,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addBooleanProperty(const bool &pValue,
+Property * PropertyEditorWidget::addBooleanProperty(bool pValue,
                                                     Property *pParent)
 {
     // Add a boolean property and return its information
@@ -2092,8 +2088,7 @@ void PropertyEditorWidget::selectProperty(Property *pProperty)
 
 //==============================================================================
 
-void PropertyEditorWidget::editProperty(Property *pProperty,
-                                        const bool &pCommitData)
+void PropertyEditorWidget::editProperty(Property *pProperty, bool pCommitData)
 {
     // We want to edit a new property, so first stop the editing of the current
     // one, if any
@@ -2228,7 +2223,7 @@ Properties PropertyEditorWidget::allProperties() const
 
 //==============================================================================
 
-void PropertyEditorWidget::finishEditing(const bool &pCommitData)
+void PropertyEditorWidget::finishEditing(bool pCommitData)
 {
     // The user wants to finish the editing
 

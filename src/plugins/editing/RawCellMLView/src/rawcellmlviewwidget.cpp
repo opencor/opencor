@@ -111,8 +111,7 @@ bool RawCellmlViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::initialize(const QString &pFileName,
-                                     const bool &pUpdate)
+void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
@@ -324,7 +323,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 //==============================================================================
 
 bool RawCellmlViewWidget::validate(const QString &pFileName,
-                                   const bool &pOnlyErrors) const
+                                   bool pOnlyErrors) const
 {
     // Validate the given file
 

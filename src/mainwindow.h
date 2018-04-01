@@ -122,13 +122,13 @@ private:
     void saveSettings() const;
 
     void setLocale(const QString &pRawLocale = QString(),
-                   const bool &pForceSetting = false);
+                   bool pForceSetting = false);
 
     void reorderViewWindowsMenu();
 
     void updateViewWindowsMenu(QAction *pAction);
 
-    void restart(const bool &pSaveSettings) const;
+    void restart(bool pSaveSettings) const;
 
     void showEnableActions(const QList<QAction *> &pActions);
 
@@ -150,8 +150,7 @@ private slots:
 
     void updateGui(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
-    void showDockedWindows(const bool &pShow,
-                           const bool &pInitialisation = false);
+    void showDockedWindows(bool pShow, bool pInitialisation = false);
     void toggleDockedWindows();
 
     void updateDockWidgetsVisibility();

@@ -217,7 +217,7 @@ SimulationExperimentViewInformationParametersWidget * SimulationExperimentViewIn
 
 //==============================================================================
 
-void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPausedSimulation)
+void SimulationExperimentViewInformationWidget::finishEditing(bool pPausedSimulation)
 {
     // Finish the editing of any of the information we support
     // Note: when a simulation is paused, the simulation and solvers widgets are

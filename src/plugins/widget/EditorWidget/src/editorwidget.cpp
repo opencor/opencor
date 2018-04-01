@@ -42,7 +42,7 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
+EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
     Core::Widget(pParent),
     mCurrentLine(0),
@@ -97,10 +97,10 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
             this, SIGNAL(textChanged()));
 
     connect(mEditor, SIGNAL(copyAvailable(bool)),
-            this, SIGNAL(copyAvailable(const bool &)));
+            this, SIGNAL(copyAvailable(bool)));
 
-    connect(mEditor, SIGNAL(canSelectAll(const bool &)),
-            this, SIGNAL(canSelectAll(const bool &)));
+    connect(mEditor, SIGNAL(canSelectAll(bool)),
+            this, SIGNAL(canSelectAll(bool)));
 
     // Keep track of our position within our editor
 
@@ -119,8 +119,8 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
             this, SLOT(findTextChanged(const QString &)));
-    connect(mFindReplace, SIGNAL(canFindReplace(const bool &)),
-            this, SIGNAL(canFindReplace(const bool &)));
+    connect(mFindReplace, SIGNAL(canFindReplace(bool)),
+            this, SIGNAL(canFindReplace(bool)));
 
     // Keep track of the triggering of some actions in our find/replace widget
 
@@ -275,8 +275,7 @@ QString EditorWidget::contents() const
 
 //==============================================================================
 
-void EditorWidget::setContents(const QString &pContents,
-                               const bool &pKeepHistory)
+void EditorWidget::setContents(const QString &pContents, bool pKeepHistory)
 {
     // Set the contents of our editor
 
@@ -303,7 +302,7 @@ bool EditorWidget::isReadOnly() const
 
 //==============================================================================
 
-void EditorWidget::setReadOnly(const bool &pReadOnly)
+void EditorWidget::setReadOnly(bool pReadOnly)
 {
     // Set the read-only mode of our editor and find/replace widget
 
@@ -352,10 +351,8 @@ QString EditorWidget::textInRange(const int &pStartRange,
 //==============================================================================
 
 int EditorWidget::findTextInRange(const int &pStartRange, const int &pEndRange,
-                                  const QString &pText,
-                                  const bool &pRegularExpression,
-                                  const bool &pCaseSensitive,
-                                  const bool &pWholeWordsOnly) const
+                                  const QString &pText, bool pRegularExpression,
+                                  bool pCaseSensitive, bool pWholeWordsOnly) const
 {
     // Find and return the position, if any, of the given text within the given
     // range in our editor
@@ -538,7 +535,7 @@ bool EditorWidget::findReplaceIsVisible() const
 
 //==============================================================================
 
-void EditorWidget::setFindReplaceVisible(const bool &pVisible)
+void EditorWidget::setFindReplaceVisible(bool pVisible)
 {
     // Set our find text, if we are to show our find/replace widget
     // Note: if we are over a word, then we want it to become our find text, but
@@ -813,7 +810,7 @@ void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 //==============================================================================
 
-bool EditorWidget::findText(const QString &pText, const bool &pForward)
+bool EditorWidget::findText(const QString &pText, bool pForward)
 {
     // Find the previous/next occurrence of the given text
 

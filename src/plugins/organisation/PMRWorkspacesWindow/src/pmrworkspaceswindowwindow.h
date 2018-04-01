@@ -111,7 +111,7 @@ private slots:
     void on_actionPreferences_triggered();
     void on_actionPmr_triggered();
 
-    void busy(const bool &pBusy);
+    void busy(bool pBusy);
 
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
@@ -119,7 +119,7 @@ private slots:
 
     void updateGui();
 
-    void retrieveWorkspaces(const bool &pVisible);
+    void retrieveWorkspaces(bool pVisible);
 };
 
 //==============================================================================

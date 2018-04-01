@@ -350,7 +350,7 @@ void FileManager::makeNew(const QString &pFileName)
 
 //==============================================================================
 
-void FileManager::setModified(const QString &pFileName, const bool &pModified)
+void FileManager::setModified(const QString &pFileName, bool pModified)
 {
     // Set the modified state of the given file, should it be managed
 
@@ -364,7 +364,7 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 //==============================================================================
 
 void FileManager::setDependenciesModified(const QString &pFileName,
-                                          const bool &pModified)
+                                          bool pModified)
 {
     // Set the dependencies modified state of the given file, should it be
     // managed
@@ -431,7 +431,7 @@ bool FileManager::isLocked(const QString &pFileName) const
 //==============================================================================
 
 FileManager::Status FileManager::setLocked(const QString &pFileName,
-                                           const bool &pLocked)
+                                           bool pLocked)
 {
     // Set the locked status of the given file, should it be managed
 
@@ -662,7 +662,7 @@ void FileManager::emitFilePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void FileManager::setCheckFilesEnabled(const bool &pCheckFilesEnabled)
+void FileManager::setCheckFilesEnabled(bool pCheckFilesEnabled)
 {
     // Specify whether we can check files
 

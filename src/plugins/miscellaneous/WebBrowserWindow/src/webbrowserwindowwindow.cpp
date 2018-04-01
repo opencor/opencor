@@ -164,20 +164,20 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mWebBrowserWindowWidget, SIGNAL(homePage(const bool &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(homePage(bool)),
             mGui->actionClear, SLOT(setDisabled(bool)));
 
-    connect(mWebBrowserWindowWidget, SIGNAL(backEnabled(const bool &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(backEnabled(bool)),
             mGui->actionBack, SLOT(setEnabled(bool)));
-    connect(mWebBrowserWindowWidget, SIGNAL(forwardEnabled(const bool &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(forwardEnabled(bool)),
             mGui->actionForward, SLOT(setEnabled(bool)));
 
-    connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(bool)),
             mGui->actionNormalSize, SLOT(setDisabled(bool)));
-    connect(mWebBrowserWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(zoomingOutEnabled(bool)),
             mGui->actionZoomOut, SLOT(setEnabled(bool)));
 
-    connect(mWebBrowserWindowWidget, SIGNAL(copyTextEnabled(const bool &)),
+    connect(mWebBrowserWindowWidget, SIGNAL(copyTextEnabled(bool)),
             mGui->actionCopy, SLOT(setEnabled(bool)));
 
     // En/disable the printing action, depending on whether printers are

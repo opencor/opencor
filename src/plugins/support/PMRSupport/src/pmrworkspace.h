@@ -59,10 +59,10 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspace(const bool &pOwned, const QString &pName,
+    explicit PmrWorkspace(bool pOwned, const QString &pName,
                           const QString &pUrl, const QString &pDescription,
                           const QString &pOwner, PmrWebService *pParent);
-    explicit PmrWorkspace(const bool &pOwned, const QString &pName,
+    explicit PmrWorkspace(bool pOwned, const QString &pName,
                           const QString &pUrl, PmrWebService *pParent);
     ~PmrWorkspace() override;
 
@@ -88,8 +88,8 @@ public:
     bool commitMerge();
     bool isMerging() const;
     bool isOpen() const;
-    bool open(const QString &pPath, const bool &pRefreshStatus = true);
-    void synchronize(const bool &pPush);
+    bool open(const QString &pPath, bool pRefreshStatus = true);
+    void synchronize(bool pPush);
 
     QByteArray headFileContents(const QString &pFileName);
 
@@ -106,7 +106,7 @@ public:
     CharPair gitFileStatus(const QString &pPath) const;
     WorkspaceStatus gitWorkspaceStatus() const;
 
-    void stageFile(const QString &pPath, const bool &pStage);
+    void stageFile(const QString &pPath, bool pStage);
     StagedFiles stagedFiles();
 
 private:

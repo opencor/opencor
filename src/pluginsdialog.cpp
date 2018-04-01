@@ -420,7 +420,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 //==============================================================================
 
 void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
-                                               const bool &pInitializing)
+                                               bool pInitializing)
 {
     // Disable the connection that handles a change in a plugin's loading state
     // (otherwise what we are doing here is going to be completely uneffective)

@@ -145,8 +145,7 @@ public:
     explicit Property(const Type &pType, const QString &pId,
                       const Descriptions &pDescriptions,
                       const QStringList &pListValues,
-                      const QVariant &pDefaultValue,
-                      const bool &pHasVoiUnit);
+                      const QVariant &pDefaultValue, bool pHasVoiUnit);
 
     Type type() const;
     QString id() const;

@@ -198,7 +198,7 @@ void CellmlFile::retrieveImports(const QString &pXmlBase,
 
 bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                          CellmlFileIssues &pIssues,
-                                         const bool &pWithBusyWidget)
+                                         bool pWithBusyWidget)
 {
     // Fully instantiate all the imports, but only if we are not directly
     // dealing with our model or if we are dealing with a non CellML 1.0 model,
@@ -710,8 +710,7 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
 bool CellmlFile::doIsValid(const QString &pFileContents,
                            ObjRef<iface::cellml_api::Model> *pModel,
-                           CellmlFileIssues &pIssues,
-                           const bool &pWithBusyWidget)
+                           CellmlFileIssues &pIssues, bool pWithBusyWidget)
 {
     // Try to load our model
 
@@ -734,7 +733,7 @@ bool CellmlFile::doIsValid(const QString &pFileContents,
 //==============================================================================
 
 bool CellmlFile::isValid(const QString &pFileContents,
-                         CellmlFileIssues &pIssues, const bool &pWithBusyWidget)
+                         CellmlFileIssues &pIssues, bool pWithBusyWidget)
 {
     // Check whether the given file contents is CellML valid, so for this create
     // a temporary model
@@ -746,7 +745,7 @@ bool CellmlFile::isValid(const QString &pFileContents,
 
 //==============================================================================
 
-bool CellmlFile::isValid(const bool &pWithBusyWidget)
+bool CellmlFile::isValid(bool pWithBusyWidget)
 {
     // Return whether we are valid
 
@@ -764,7 +763,7 @@ CellmlFileIssues CellmlFile::issues() const
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFile::runtime(const bool &pWithBusyWidget)
+CellmlFileRuntime * CellmlFile::runtime(bool pWithBusyWidget)
 {
     // Check whether the runtime needs to be updated
 
@@ -794,7 +793,7 @@ CellmlFileRuntime * CellmlFile::runtime(const bool &pWithBusyWidget)
 
 //==============================================================================
 
-QStringList CellmlFile::dependencies(const bool &pWithBusyWidget)
+QStringList CellmlFile::dependencies(bool pWithBusyWidget)
 {
     // Check whether the dependencies need to be retrieved
 
@@ -1034,7 +1033,7 @@ QString CellmlFile::xmlBase()
 //==============================================================================
 
 bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
-                          const bool &pWithBusyWidget)
+                          bool pWithBusyWidget)
 {
     // Export the model to the required format, after loading it if necessary
 
@@ -1106,7 +1105,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
 
 bool CellmlFile::exportTo(const QString &pFileName,
                           const QString &pUserDefinedFormatFileName,
-                          const bool &pWithBusyWidget)
+                          bool pWithBusyWidget)
 {
     // Export the model to the required format, after loading it if necessary
 

@@ -106,7 +106,7 @@ public:
     void setGraphPanelColumnWidth(const int &pIndex, const int &pColumnWidth);
     void setGraphsColumnWidth(const int &pIndex, const int &pColumnWidth);
 
-    void setGraphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+    void setGraphPanelSectionExpanded(const int &pSection, bool pExpanded);
 
     void reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
@@ -154,7 +154,7 @@ private:
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                         GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                         Core::Property *pParameterProperty,
-                        const bool &pParameterX) const;
+                        bool pParameterX) const;
 
     QString modelListValue(const QString &pFileName) const;
 
@@ -162,7 +162,7 @@ private:
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
     void updateAllGraphsInfo();
 
-    void selectAllGraphs(const bool &pSelect);
+    void selectAllGraphs(bool pSelect);
 
     bool rootProperty(Core::Property *pProperty) const;
 
@@ -174,14 +174,14 @@ signals:
     void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
                                     const int &pNewSize);
 
-    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+    void graphPanelSectionExpanded(const int &pSection, bool pExpanded);
 
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 public slots:
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    const bool &pActive = true);
+                    bool pActive = true);
     void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,

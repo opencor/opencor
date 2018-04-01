@@ -143,7 +143,7 @@ void CommonWidget::showProgressBusyWidget()
 
 //==============================================================================
 
-void CommonWidget::hideBusyWidget(const bool &pForceHiding)
+void CommonWidget::hideBusyWidget(bool pForceHiding)
 {
     // Make sure that we have a busy widget
 

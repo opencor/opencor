@@ -69,7 +69,7 @@ class CellmlTextViewWidgetData
 {
 public:
     explicit CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
-                                      const QString &pSha1, const bool &pValid,
+                                      const QString &pSha1, bool pValid,
                                       const CellMLSupport::CellmlFile::Version &pCellmlVersion,
                                       QDomDocument pRdfNodes);
     ~CellmlTextViewWidgetData();
@@ -120,7 +120,7 @@ public:
 
     bool contains(const QString &pFileName) const;
 
-    void initialize(const QString &pFileName, const bool &pUpdate = true);
+    void initialize(const QString &pFileName, bool pUpdate = true);
     void finalize(const QString &pFileName);
 
     void fileSaved(const QString &pFileName);
@@ -163,10 +163,9 @@ private:
     QString mContentMathmlEquation;
 
     bool commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
-                                const int &pLineNumber,
-                                const bool &pCommentLine);
+                                const int &pLineNumber, bool pCommentLine);
 
-    bool parse(const QString &pFileName, const bool &pOnlyErrors = false);
+    bool parse(const QString &pFileName, bool pOnlyErrors = false);
 
     QString partialStatement(const int &pPosition, int &pFromPosition,
                              int &pToPosition) const;

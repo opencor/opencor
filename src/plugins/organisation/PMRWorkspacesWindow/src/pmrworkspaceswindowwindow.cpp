@@ -154,12 +154,12 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // workspaces, if necessary
 
     connect(this, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(retrieveWorkspaces(const bool &)));
+            this, SLOT(retrieveWorkspaces(bool)));
 
     // Some connections to process responses from our PMR web service
 
-    connect(mPmrWebService, SIGNAL(busy(const bool &)),
-            this, SLOT(busy(const bool &)));
+    connect(mPmrWebService, SIGNAL(busy(bool)),
+            this, SLOT(busy(bool)));
 
     connect(mPmrWebService, SIGNAL(information(const QString &)),
             this, SLOT(showInformation(const QString &)));
@@ -168,7 +168,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     connect(mPmrWebService, SIGNAL(error(const QString &)),
             this, SLOT(showError(const QString &)));
 
-    connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
+    connect(mPmrWebService, SIGNAL(authenticated(bool)),
             this, SLOT(updateGui()));
     connect(mPmrWebService, SIGNAL(authenticationCancelled()),
             this, SLOT(updateGui()));
@@ -294,7 +294,7 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
+void PmrWorkspacesWindowWindow::busy(bool pBusy)
 {
     // Show ourselves as busy or not busy anymore
 
@@ -369,7 +369,7 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
+void PmrWorkspacesWindowWindow::retrieveWorkspaces(bool pVisible)
 {
     // Update our GUI, if we are becoming visible and the list of workspaces has
     // never been requested before (through a single shot, this to allow other

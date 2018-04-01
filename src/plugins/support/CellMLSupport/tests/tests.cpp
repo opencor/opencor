@@ -37,8 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void Tests::doRuntimeTest(const QString &pFileName,
                           const QString &pCellmlVersion,
-                          const QStringList &pModelParameters,
-                          const bool &pIsValid)
+                          const QStringList &pModelParameters, bool pIsValid)
 {
     // Get a CellML file object for the given CellML file and make sure that it
     // is considered of the expected CellML version

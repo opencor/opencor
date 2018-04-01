@@ -100,7 +100,7 @@ bool PmrWebServiceManager::isAuthenticated() const
 
 //==============================================================================
 
-void PmrWebServiceManager::authenticate(const bool &pAuthenticate)
+void PmrWebServiceManager::authenticate(bool pAuthenticate)
 {
     // Authenticate ourselves to PMR
 
@@ -208,8 +208,8 @@ void PmrWebServiceManager::sslErrors(QNetworkReply *pNetworkReply,
 //==============================================================================
 
 PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
-                                                      const bool &pSecureRequest,
-                                                      const bool &pUsePost,
+                                                      bool pSecureRequest,
+                                                      bool pUsePost,
                                                       const QJsonDocument &pJsonDocument)
 {
     // Check that we are connected to the Internet
@@ -265,8 +265,8 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
 
     PmrWebServiceResponse *pmrWebServiceResponse = new PmrWebServiceResponse(networkReply);
 
-    connect(pmrWebServiceResponse, SIGNAL(busy(const bool &)),
-            mPmrWebService, SIGNAL(busy(const bool &)));
+    connect(pmrWebServiceResponse, SIGNAL(busy(bool)),
+            mPmrWebService, SIGNAL(busy(bool)));
     connect(pmrWebServiceResponse, SIGNAL(error(const QString &)),
             mPmrWebService, SIGNAL(error(const QString &)));
     connect(pmrWebServiceResponse, SIGNAL(forbidden(const QString &)),

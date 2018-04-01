@@ -101,7 +101,7 @@ public:
 
     bool execute(const QString &pCellmlText,
                  const CellMLSupport::CellmlFile::Version &pCellmlVersion);
-    bool execute(const QString &pCellmlText, const bool &pFullParsing = true);
+    bool execute(const QString &pCellmlText, bool pFullParsing = true);
 
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
 
@@ -189,7 +189,7 @@ private:
     bool parseComponentDefinition(QDomNode &pDomNode);
     bool parseVariableDeclaration(QDomNode &pDomNode);
     bool parseMathematicalExpression(QDomNode &pDomNode,
-                                     const bool &pFullParsing = true);
+                                     bool pFullParsing = true);
     bool parseGroupDefinition(QDomNode &pDomNode);
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
@@ -198,10 +198,9 @@ private:
 
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
     QDomElement parseNumber(QDomNode &pDomNode);
-    QDomElement parseMathematicalFunction(QDomNode &pDomNode,
-                                          const bool &pOneArgument,
-                                          const bool &pTwoArguments,
-                                          const bool &pMoreArguments);
+    QDomElement parseMathematicalFunction(QDomNode &pDomNode, bool pOneArgument,
+                                          bool pTwoArguments,
+                                          bool pMoreArguments);
     QDomElement parseParenthesizedMathematicalExpression(QDomNode &pDomNode);
 
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,

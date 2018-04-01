@@ -105,9 +105,9 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mFileOrganiserWindowWidget, SIGNAL(newFolderEnabled(const bool &)),
+    connect(mFileOrganiserWindowWidget, SIGNAL(newFolderEnabled(bool)),
             mGui->actionNew, SLOT(setEnabled(bool)));
-    connect(mFileOrganiserWindowWidget, SIGNAL(deleteItemsEnabled(const bool &)),
+    connect(mFileOrganiserWindowWidget, SIGNAL(deleteItemsEnabled(bool)),
             mGui->actionDelete, SLOT(setEnabled(bool)));
 }
 

@@ -133,7 +133,7 @@ private:
     void createSceneViewer();
 
     void updateSceneViewerViewerportSize(const int &pWidth, const int &pHeight,
-                                         const bool &pCheckDevicePixelRatio = false);
+                                         bool pCheckDevicePixelRatio = false);
 
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;

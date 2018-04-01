@@ -266,11 +266,11 @@ private:
 
     void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
                     const MessageType &pMessageType, const QString &pMessage,
-                    const bool &pAuthenticated);
+                    bool pAuthenticated);
 
     void reset(const QString &pPmrUrl);
 
-    void updateGui(const bool &pForceUserMessageVisibility = false);
+    void updateGui(bool pForceUserMessageVisibility = false);
 
     PmrWorkspacesWindowItem * currentItem() const;
     PmrWorkspacesWindowItem * workspaceItem(PMRSupport::PmrWorkspace *pWorkspace) const;
@@ -293,7 +293,7 @@ private:
                                                PmrWorkspacesWindowItem *pFolderItem,
                                                PMRSupport::PmrWorkspaceFileNode *pFileNode);
     void refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                          const bool &pSortAndResize = true);
+                          bool pSortAndResize = true);
 
     void duplicateCloneMessage(const QString &pUrl, const QString &pPath1,
                                const QString &pPath2);

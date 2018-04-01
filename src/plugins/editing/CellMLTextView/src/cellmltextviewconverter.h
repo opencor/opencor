@@ -137,7 +137,7 @@ private:
 
     void reset();
 
-    void indent(const bool &pForceTracking = true);
+    void indent(bool pForceTracking = true);
     void unindent();
 
     void outputString(const OutputType &pOutputType = EmptyLine,
@@ -154,21 +154,20 @@ private:
     QString attributeNodeValue(const QDomNode &pDomNode,
                                const QString &pNamespace,
                                const QString &pName,
-                               const bool &pMustBePresent = true) const;
+                               bool pMustBePresent = true) const;
     QString cellmlAttributeNodeValue(const QDomNode &pDomNode,
                                      const QString &pName,
-                                     const bool &pMustBePresent = true) const;
+                                     bool pMustBePresent = true) const;
 
     bool processModelNode(const QDomNode &pDomNode);
     QString processCommentString(const QString &pComment);
     void processCommentNode(const QDomNode &pDomNode);
     void processRdfNode(const QDomNode &pDomNode);
     bool processImportNode(const QDomNode &pDomNode);
-    bool processUnitsNode(const QDomNode &pDomNode,
-                          const bool &pInImportNode = false);
+    bool processUnitsNode(const QDomNode &pDomNode, bool pInImportNode = false);
     bool processUnitNode(const QDomNode &pDomNode);
     bool processComponentNode(const QDomNode &pDomNode,
-                              const bool &pInImportNode = false);
+                              bool pInImportNode = false);
     bool processVariableNode(const QDomNode &pDomNode);
     bool processMathNode(const QDomNode &pDomNode);
     int childNodesCount(const QDomNode &pDomNode) const;
@@ -198,8 +197,8 @@ private:
     bool processMapComponentsNode(const QDomNode &pDomNode,
                                   QString &pMapComponents);
     bool processMapVariablesNode(const QDomNode &pDomNode);
-    bool processUnknownNode(const QDomNode &pDomNode, const bool &pError);
-    void processUnsupportedNode(const QDomNode &pDomNode, const bool &pError,
+    bool processUnknownNode(const QDomNode &pDomNode, bool pError);
+    void processUnsupportedNode(const QDomNode &pDomNode, bool pError,
                                 const QString &pExtra = QString());
 };
 

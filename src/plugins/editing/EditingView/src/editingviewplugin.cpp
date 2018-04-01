@@ -172,13 +172,13 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             connect(mEditor, SIGNAL(textChanged()),
                     this, SLOT(updateUndoAndRedoActions()),
                     Qt::UniqueConnection);
-            connect(mEditor, SIGNAL(copyAvailable(const bool &)),
+            connect(mEditor, SIGNAL(copyAvailable(bool)),
                     this, SLOT(updateEditingActions()),
                     Qt::UniqueConnection);
-            connect(mEditor, SIGNAL(canFindReplace(const bool &)),
+            connect(mEditor, SIGNAL(canFindReplace(bool)),
                     this, SLOT(updateFindPreviousNextActions()),
                     Qt::UniqueConnection);
-            connect(mEditor, SIGNAL(canSelectAll(const bool &)),
+            connect(mEditor, SIGNAL(canSelectAll(bool)),
                     this, SLOT(updateSelectAllAction()),
                     Qt::UniqueConnection);
         }
