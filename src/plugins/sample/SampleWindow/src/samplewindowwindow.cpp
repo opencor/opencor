@@ -46,10 +46,10 @@ SampleWindowWindow::SampleWindowWindow(QWidget *pParent) :
     // A couple of connections to update our sum whenever one of the value of
     // one of our numbers is updated
 
-    connect(mGui->nb1DoubleSpinBox, SIGNAL(valueChanged(double)),
-            this, SLOT(updateSum()));
-    connect(mGui->nb2DoubleSpinBox, SIGNAL(valueChanged(double)),
-            this, SLOT(updateSum()));
+    connect(mGui->nb1DoubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this, &SampleWindowWindow::updateSum);
+    connect(mGui->nb2DoubleSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this, &SampleWindowWindow::updateSum);
 
     // Initialise our sum
 
@@ -67,8 +67,10 @@ SampleWindowWindow::~SampleWindowWindow()
 
 //==============================================================================
 
-void SampleWindowWindow::updateSum()
+void SampleWindowWindow::updateSum(int pDummy)
 {
+    Q_UNUSED(pDummy);
+
     // Update our sum
 
     mGui->sumLabel->setText(QString::number(Sample::add(mGui->nb1DoubleSpinBox->value(), mGui->nb2DoubleSpinBox->value())));
