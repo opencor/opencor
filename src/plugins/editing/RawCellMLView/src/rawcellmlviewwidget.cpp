@@ -65,8 +65,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions
 
-    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
+    connect(&mMathmlConverter, &Core::MathmlConverter::done,
+            this, &RawCellmlViewWidget::mathmlConversionDone);
 }
 
 //==============================================================================
@@ -131,10 +131,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         // Update our viewer whenever necessary
 
-        connect(newEditingWidget->editorWidget(), SIGNAL(textChanged()),
-                this, SLOT(updateViewer()));
-        connect(newEditingWidget->editorWidget(), SIGNAL(cursorPositionChanged(int, int)),
-                this, SLOT(updateViewer()));
+        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
+                this, &RawCellmlViewWidget::updateViewer);
+        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
+                this, &RawCellmlViewWidget::updateViewer);
 
         // Keep track of our editing widget
 

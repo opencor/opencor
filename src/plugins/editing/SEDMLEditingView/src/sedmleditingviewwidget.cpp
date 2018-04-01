@@ -54,8 +54,8 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterMoved()));
+    connect(this, &SedmlEditingViewWidget::splitterMoved,
+            this, &SedmlEditingViewWidget::updateSizes);
 
     // Create our editor and editor list widgets
 
@@ -64,8 +64,8 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
     mEditorWidget->setObjectName("EditorWidget");
 
-    connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
-            this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
+    connect(mEditorListWidget, &EditorWidget::EditorListWidget::itemRequested,
+            this, &SedmlEditingViewWidget::itemRequested);
 
     // Add the bordered editor and editor list widgets to ourselves
 
@@ -179,7 +179,7 @@ QIntList SedmlEditingViewWidget::editingWidgetSizes() const
 
 //==============================================================================
 
-void SedmlEditingViewWidget::splitterMoved()
+void SedmlEditingViewWidget::updateSizes()
 {
     // We have moved, so keep track of our new sizes
 

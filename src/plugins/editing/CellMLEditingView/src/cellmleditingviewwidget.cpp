@@ -55,8 +55,8 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterMoved()));
+    connect(this, &CellmlEditingViewWidget::splitterMoved,
+            this, &CellmlEditingViewWidget::updateSizes);
 
     // Create our MathML viewer, editor and editor list widgets
 
@@ -67,8 +67,8 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
     mMathmlViewerWidget->setObjectName("MathmlViewerWidget");
     mEditorWidget->setObjectName("EditorWidget");
 
-    connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
-            this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
+    connect(mEditorListWidget, &EditorWidget::EditorListWidget::itemRequested,
+            this, &CellmlEditingViewWidget::itemRequested);
 
     // Add the bordered MathML viewer, editor and editor list widgets to
     // ourselves
@@ -206,7 +206,7 @@ QIntList CellmlEditingViewWidget::editingWidgetSizes() const
 
 //==============================================================================
 
-void CellmlEditingViewWidget::splitterMoved()
+void CellmlEditingViewWidget::updateSizes()
 {
     // We have moved, so keep track of our new sizes
 

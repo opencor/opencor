@@ -178,7 +178,7 @@ private slots:
 
     void updateViewer();
 
-    void selectFirstItemInEditorList(OpenCOR::EditorWidget::EditorListWidget *pEditorList = 0);
+    void selectFirstItemInEditorList();
 
     void mathmlConversionDone(const QString &pContentMathml,
                               const QString &pPresentationMathml);

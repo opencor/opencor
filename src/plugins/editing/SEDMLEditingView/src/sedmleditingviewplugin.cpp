@@ -266,11 +266,11 @@ void SEDMLEditingViewPlugin::initializePlugin()
 
     // Some connections to handle our different actions
 
-    connect(mEditReformatAction, SIGNAL(triggered(bool)),
-            this, SLOT(reformat()));
+    connect(mEditReformatAction, &QAction::triggered,
+            this, &SEDMLEditingViewPlugin::reformat);
 
-    connect(mToolsSedmlValidationAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlValidation()));
+    connect(mToolsSedmlValidationAction, &QAction::triggered,
+            this, &SEDMLEditingViewPlugin::sedmlValidation);
 }
 
 //==============================================================================

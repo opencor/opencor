@@ -272,11 +272,11 @@ void CellMLEditingViewPlugin::initializePlugin()
 
     // Some connections to handle our different actions
 
-    connect(mEditReformatAction, SIGNAL(triggered(bool)),
-            this, SLOT(reformat()));
+    connect(mEditReformatAction, &QAction::triggered,
+            this, &CellMLEditingViewPlugin::reformat);
 
-    connect(mToolsCellmlValidationAction, SIGNAL(triggered(bool)),
-            this, SLOT(cellmlValidation()));
+    connect(mToolsCellmlValidationAction, &QAction::triggered,
+            this, &CellMLEditingViewPlugin::cellmlValidation);
 }
 
 //==============================================================================
