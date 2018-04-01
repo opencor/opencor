@@ -43,7 +43,7 @@ namespace DataStore {
 class DataStoreVariableRun
 {
 public:
-    explicit DataStoreVariableRun(const quint64 &pCapacity, double *pValue);
+    explicit DataStoreVariableRun(quint64 pCapacity, double *pValue);
     ~DataStoreVariableRun();
 
     quint64 size() const;
@@ -51,7 +51,7 @@ public:
     void addValue();
     void addValue(double pValue);
 
-    double value(const quint64 &pPosition) const;
+    double value(quint64 pPosition) const;
     double * values() const;
 
 private:
@@ -81,7 +81,7 @@ public:
 
     int runsCount() const;
 
-    void addRun(const quint64 &pCapacity);
+    void addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
 
 #ifndef CLI_VERSION
@@ -103,7 +103,7 @@ public:
     void addValue();
     void addValue(double pValue);
 
-    double value(const quint64 &pPosition, int pRun = -1) const;
+    double value(quint64 pPosition, int pRun = -1) const;
     double * values(int pRun = -1) const;
 
 private:
@@ -157,7 +157,7 @@ public:
 
     int runsCount() const;
 
-    bool addRun(const quint64 &pCapacity);
+    bool addRun(quint64 pCapacity);
 
     quint64 size(int pRun = -1) const;
 

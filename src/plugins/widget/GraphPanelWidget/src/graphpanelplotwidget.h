@@ -439,7 +439,7 @@ public:
                  bool pEmitSignal = true, bool pForceXAxisSetting = false,
                  bool pForceYAxisSetting = false);
 
-    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, const quint64 &pFrom);
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
 
     GraphPanelPlotWidgets neighbors() const;
 

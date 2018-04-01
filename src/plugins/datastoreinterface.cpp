@@ -51,8 +51,7 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariableRun::DataStoreVariableRun(const quint64 &pCapacity,
-                                           double *pValue) :
+DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
     mCapacity(pCapacity),
     mSize(0),
     mValue(pValue)
@@ -108,7 +107,7 @@ void DataStoreVariableRun::addValue(double pValue)
 
 //==============================================================================
 
-double DataStoreVariableRun::value(const quint64 &pPosition) const
+double DataStoreVariableRun::value(quint64 pPosition) const
 {
     // Return the value at the given position
 
@@ -187,7 +186,7 @@ int DataStoreVariable::runsCount() const
 
 //==============================================================================
 
-void DataStoreVariable::addRun(const quint64 &pCapacity)
+void DataStoreVariable::addRun(quint64 pCapacity)
 {
     // Add a run of the given capacity
 
@@ -319,7 +318,7 @@ void DataStoreVariable::addValue(double pValue)
 
 //==============================================================================
 
-double DataStoreVariable::value(const quint64 &pPosition, int pRun) const
+double DataStoreVariable::value(quint64 pPosition, int pRun) const
 {
     // Return the value at the given position and this for the given run
 
@@ -429,7 +428,7 @@ int DataStore::runsCount() const
 
 //==============================================================================
 
-bool DataStore::addRun(const quint64 &pCapacity)
+bool DataStore::addRun(quint64 pCapacity)
 {
     // Try to add a run to our VOI and all our variables
 

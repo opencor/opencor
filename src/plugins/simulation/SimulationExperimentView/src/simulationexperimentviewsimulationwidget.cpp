@@ -3630,7 +3630,7 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                                                                int pRun,
-                                                               const quint64 &pSize)
+                                                               quint64 pSize)
 {
     // Update our graph's data from the given run
 
@@ -3646,7 +3646,7 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               const quint64 &pSize)
+                                                               quint64 pSize)
 {
     // Update our graph's data from the last run
 
@@ -3692,7 +3692,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       const quint64 &pSimulationResultsSize,
+                                                                       quint64 pSimulationResultsSize,
                                                                        const Task &pTask)
 {
     // Update the modified state of our simulation's corresponding file, if

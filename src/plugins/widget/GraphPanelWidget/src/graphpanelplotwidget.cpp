@@ -3079,7 +3079,7 @@ int GraphPanelPlotWidget::graphIndex(GraphPanelPlotGraph *pGraph) const
 //==============================================================================
 
 bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
-                                         const quint64 &pFrom)
+                                         quint64 pFrom)
 {
     // Direct paint our graph from the given point unless we can't direct paint
     // (due to the axes having been changed), in which case we replot ourselves

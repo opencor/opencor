@@ -145,7 +145,7 @@ public:
 
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 const quint64 &pSimulationResultsSize,
+                                 quint64 pSimulationResultsSize,
                                  const Task &pTask = None);
 
     void resetSimulationProgress();
@@ -259,9 +259,9 @@ private:
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         int pRun, const quint64 &pSize);
+                         int pRun, quint64 pSize);
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         const quint64 &pSize);
+                         quint64 pSize);
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty,
