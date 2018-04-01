@@ -47,7 +47,7 @@ public:
     explicit ProgressBarWidget(QWidget *pParent);
 
     double value() const;
-    void setValue(const double &pValue);
+    void setValue(double pValue);
 
 protected:
     void paintEvent(QPaintEvent *pEvent) override;

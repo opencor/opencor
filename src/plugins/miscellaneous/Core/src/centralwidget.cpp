@@ -249,9 +249,9 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mFileTabs, SIGNAL(tabMoved(int, int)),
-            this, SLOT(moveFile(const int &, const int &)));
+            this, SLOT(moveFile(int, int)));
     connect(mFileTabs, SIGNAL(tabCloseRequested(int)),
-            this, SLOT(closeFile(const int &)));
+            this, SLOT(closeFile(int)));
 
     // A connection to handle our modes tab bar
 
@@ -667,7 +667,7 @@ QString CentralWidget::currentFileName() const
 
 //==============================================================================
 
-void CentralWidget::updateFileTab(const int &pIndex, bool pIconOnly)
+void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 {
     // Update the text, tool tip and icon to be used for the given file tab
 
@@ -940,7 +940,7 @@ void CentralWidget::openRemoteFile()
 
 //==============================================================================
 
-void CentralWidget::reloadFile(const int &pIndex, bool pForce)
+void CentralWidget::reloadFile(int pIndex, bool pForce)
 {
     // Ask our file manager to reload the file, but only if it isn't new and if
     // the user wants (in case the file has been modified)
@@ -1063,7 +1063,7 @@ void CentralWidget::toggleLockedFile()
 
 //==============================================================================
 
-bool CentralWidget::saveFile(const int &pIndex, bool pNeedNewFileName)
+bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 {
     // Make sure that we have a valid index
 
@@ -1237,7 +1237,7 @@ void CentralWidget::nextFile()
 
 //==============================================================================
 
-bool CentralWidget::canCloseFile(const int &pIndex)
+bool CentralWidget::canCloseFile(int pIndex)
 {
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
@@ -1267,7 +1267,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
 
 //==============================================================================
 
-bool CentralWidget::closeFile(const int &pIndex, bool pForceClosing)
+bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 {
     // Make sure that we are not updating the GUI
 
@@ -1366,7 +1366,7 @@ void CentralWidget::closeAllFiles(bool pForceClosing)
 
 //==============================================================================
 
-void CentralWidget::moveFile(const int &pFromIndex, const int &pToIndex)
+void CentralWidget::moveFile(int pFromIndex, int pToIndex)
 {
     // Update our list of file names to reflect the fact that a tab has been
     // moved
@@ -1537,7 +1537,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-Plugin * CentralWidget::viewPlugin(const int &pIndex) const
+Plugin * CentralWidget::viewPlugin(int pIndex) const
 {
     // Return the view plugin associated with the file, which index is given
 
@@ -1567,8 +1567,7 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
 
 //==============================================================================
 
-QString CentralWidget::viewKey(const int &pMode, const int &pView,
-                               const QString &pFileName)
+QString CentralWidget::viewKey(int pMode, int pView, const QString &pFileName)
 {
     // Return the view key to be used with mViews for the given mode, view and
     // file name
@@ -1608,8 +1607,7 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
 
 //==============================================================================
 
-void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar,
-                                          const int &pIndex)
+void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
 {
     // Update the current index of the given tab bar widget, after having
     // temporarily disabled its handling of the currentChanged() signal, if

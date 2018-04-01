@@ -81,13 +81,13 @@ public:
 
     explicit OdeSolver();
 
-    virtual void initialize(const double &pVoi, const int &pRatesStatesCount,
+    virtual void initialize(double pVoi, int pRatesStatesCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic,
                             ComputeRatesFunction pComputeRates);
-    virtual void reinitialize(const double &pVoi);
+    virtual void reinitialize(double pVoi);
 
-    virtual void solve(double &pVoi, const double &pVoiEnd) const = 0;
+    virtual void solve(double &pVoi, double pVoiEnd) const = 0;
 
 protected:
     int mRatesStatesCount;
@@ -108,8 +108,7 @@ public:
     typedef void (*ComputeSystemFunction)(double *, double *, void *);
 
     virtual void solve(ComputeSystemFunction pComputeSystem,
-                       double *pParameters, const int &pSize,
-                       void *pUserData = 0) = 0;
+                       double *pParameters, int pSize, void *pUserData = 0) = 0;
 };
 
 //==============================================================================

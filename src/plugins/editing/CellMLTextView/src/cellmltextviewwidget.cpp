@@ -300,7 +300,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
             connect(editingWidget->editorWidget(), SIGNAL(textChanged()),
                     this, SLOT(updateViewer()));
-            connect(editingWidget->editorWidget(), SIGNAL(cursorPositionChanged(const int &, const int &)),
+            connect(editingWidget->editorWidget(), SIGNAL(cursorPositionChanged(int, int)),
                     this, SLOT(updateViewer()));
         } else {
             // The conversion wasn't successful, so make the editor read-only
@@ -713,7 +713,7 @@ static const int EndMultilineCommentLength    = EndMultilineCommentString.length
 //==============================================================================
 
 bool CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
-                                                  const int &pLineNumber,
+                                                  int pLineNumber,
                                                   bool pCommentLine)
 {
     // (Un)comment the current line
@@ -936,7 +936,7 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 //==============================================================================
 
-QString CellmlTextViewWidget::partialStatement(const int &pPosition,
+QString CellmlTextViewWidget::partialStatement(int pPosition,
                                                int &pFromPosition,
                                                int &pToPosition) const
 {
@@ -1063,7 +1063,7 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
 
 //==============================================================================
 
-QString CellmlTextViewWidget::statement(const int &pPosition) const
+QString CellmlTextViewWidget::statement(int pPosition) const
 {
     // Retrieve the (partial) statement around the given position
 

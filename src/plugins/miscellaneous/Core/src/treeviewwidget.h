@@ -48,7 +48,7 @@ public:
 
     void resizeColumnsToContents();
 
-    void selectItem(const int &pRow = 0, const int &pColumn = 0);
+    void selectItem(int pRow = 0, int pColumn = 0);
     void selectFirstItem();
 
     bool isEditing() const;

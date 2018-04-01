@@ -91,7 +91,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
             this, SLOT(zoomLevelChanged()));
 
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SIGNAL(cursorPositionChanged(const int &, const int &)));
+            this, SIGNAL(cursorPositionChanged(int, int)));
 
     connect(mEditor, SIGNAL(textChanged()),
             this, SIGNAL(textChanged()));
@@ -105,7 +105,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     // Keep track of our position within our editor
 
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(keepTrackOfCursorPosition(const int &, const int &)));
+            this, SLOT(keepTrackOfCursorPosition(int, int)));
 
     // Keep track of whenever a key is being pressed in our editor or
     // find/replace widget
@@ -248,7 +248,7 @@ void EditorWidget::cursorPosition(int &pLine, int &pColumn)
 
 //==============================================================================
 
-void EditorWidget::setCursorPosition(const int &pLine, const int &pColumn)
+void EditorWidget::setCursorPosition(int pLine, int pColumn)
 {
     // Set our cursor position
 
@@ -315,7 +315,7 @@ void EditorWidget::setReadOnly(bool pReadOnly)
     QColor lockedColor = Core::lockedColor(baseColor);
     QColor newBackgroundColor = pReadOnly?lockedColor:baseColor;
 
-    foreach (const int &readOnlyStyle, mReadOnlyStyles)
+    foreach (int readOnlyStyle, mReadOnlyStyles)
         mEditor->setBackgroundColor(readOnlyStyle, newBackgroundColor);
 }
 
@@ -339,8 +339,7 @@ QString EditorWidget::selectedText() const
 
 //==============================================================================
 
-QString EditorWidget::textInRange(const int &pStartRange,
-                                  const int &pEndRange) const
+QString EditorWidget::textInRange(int pStartRange, int pEndRange) const
 {
     // Retrieve and return the text in the given range in our editor, making
     // sure that the given range makes sense
@@ -350,7 +349,7 @@ QString EditorWidget::textInRange(const int &pStartRange,
 
 //==============================================================================
 
-int EditorWidget::findTextInRange(const int &pStartRange, const int &pEndRange,
+int EditorWidget::findTextInRange(int pStartRange, int pEndRange,
                                   const QString &pText, bool pRegularExpression,
                                   bool pCaseSensitive, bool pWholeWordsOnly) const
 {
@@ -508,7 +507,7 @@ int EditorWidget::zoomLevel() const
 
 //==============================================================================
 
-void EditorWidget::setZoomLevel(const int &pZoomLevel)
+void EditorWidget::setZoomLevel(int pZoomLevel)
 {
     // Set the zoom level of our editor
 
@@ -575,7 +574,7 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
 
 //==============================================================================
 
-int EditorWidget::styleAt(const int &pPosition) const
+int EditorWidget::styleAt(int pPosition) const
 {
     // Return the style used at the given position
 
@@ -742,8 +741,7 @@ void EditorWidget::zoomLevelChanged()
 
 //==============================================================================
 
-void EditorWidget::keepTrackOfCursorPosition(const int &pLine,
-                                             const int &pColumn)
+void EditorWidget::keepTrackOfCursorPosition(int pLine, int pColumn)
 {
     // Keep track of our new position within our editor
 

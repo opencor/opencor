@@ -195,7 +195,7 @@ double ZincWidget::tumbleRate()
 
 //==============================================================================
 
-void ZincWidget::setTumbleRate(const double &pTumbleRate)
+void ZincWidget::setTumbleRate(double pTumbleRate)
 {
     // Set our tumble rate
 
@@ -271,8 +271,7 @@ void ZincWidget::createSceneViewer()
 
 //==============================================================================
 
-void ZincWidget::updateSceneViewerViewerportSize(const int &pWidth,
-                                                 const int &pHeight,
+void ZincWidget::updateSceneViewerViewerportSize(int pWidth, int pHeight,
                                                  bool pCheckDevicePixelRatio)
 {
     // Update the viewport size of our scene viewer, keeping in mind our device

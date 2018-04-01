@@ -51,8 +51,7 @@ FourthOrderRungeKuttaSolver::~FourthOrderRungeKuttaSolver()
 
 //==============================================================================
 
-void FourthOrderRungeKuttaSolver::initialize(const double &pVoi,
-                                             const int &pRatesStatesCount,
+void FourthOrderRungeKuttaSolver::initialize(double pVoi, int pRatesStatesCount,
                                              double *pConstants,
                                              double *pRates, double *pStates,
                                              double *pAlgebraic,
@@ -87,8 +86,7 @@ void FourthOrderRungeKuttaSolver::initialize(const double &pVoi,
 
 //==============================================================================
 
-void FourthOrderRungeKuttaSolver::solve(double &pVoi,
-                                        const double &pVoiEnd) const
+void FourthOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
 {
     // k1 = h * f(t_n, Y_n)
     // k2 = h * f(t_n + h / 2, Y_n + k1 / 2)

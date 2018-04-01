@@ -133,7 +133,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         connect(newEditingWidget->editorWidget(), SIGNAL(textChanged()),
                 this, SLOT(updateViewer()));
-        connect(newEditingWidget->editorWidget(), SIGNAL(cursorPositionChanged(const int &, const int &)),
+        connect(newEditingWidget->editorWidget(), SIGNAL(cursorPositionChanged(int, int)),
                 this, SLOT(updateViewer()));
 
         // Keep track of our editing widget
@@ -390,7 +390,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 //==============================================================================
 
 QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
-                                                           const int &pPosition) const
+                                                           int pPosition) const
 {
     // Retrieve a DOM representation of the given Content MathML block
 

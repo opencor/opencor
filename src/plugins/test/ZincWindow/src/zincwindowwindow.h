@@ -80,7 +80,7 @@ private:
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
+    void devicePixelRatioChanged(int pDevicePixelRatio);
 };
 
 //==============================================================================

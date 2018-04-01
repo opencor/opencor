@@ -148,8 +148,8 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 
     // Keep track of when some of the model's data has changed
 
-    connect(pSimulation->data(), SIGNAL(updated(const double &)),
-            this, SLOT(updateParameters(const double &)));
+    connect(pSimulation->data(), SIGNAL(updated(double)),
+            this, SLOT(updateParameters(double)));
 }
 
 //==============================================================================
@@ -169,7 +169,7 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::updateParameters(const double &pCurrentPoint)
+void SimulationExperimentViewInformationParametersWidget::updateParameters(double pCurrentPoint)
 {
     // Update our data
 

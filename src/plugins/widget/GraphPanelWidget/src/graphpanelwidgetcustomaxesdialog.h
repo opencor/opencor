@@ -49,10 +49,8 @@ class GraphPanelWidgetCustomAxesDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit GraphPanelWidgetCustomAxesDialog(const double &pMinX,
-                                              const double &pMaxX,
-                                              const double &pMinY,
-                                              const double &pMaxY,
+    explicit GraphPanelWidgetCustomAxesDialog(double pMinX, double pMaxX,
+                                              double pMinY, double pMaxY,
                                               QWidget *pParent);
     ~GraphPanelWidgetCustomAxesDialog() override;
 

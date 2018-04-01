@@ -86,7 +86,7 @@ public:
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
     void cursorPosition(int &pLine, int &pColumn);
-    void setCursorPosition(const int &pLine, const int &pColumn);
+    void setCursorPosition(int pLine, int pColumn);
 
     int currentPosition() const;
 
@@ -101,10 +101,10 @@ public:
     bool hasSelectedText() const;
     QString selectedText() const;
 
-    QString textInRange(const int &pStartRange, const int &pEndRange) const;
-    int findTextInRange(const int &pStartRange, const int &pEndRange,
-                        const QString &pText, bool pRegularExpression,
-                        bool pCaseSensitive, bool pWholeWordsOnly) const;
+    QString textInRange(int pStartRange, int pEndRange) const;
+    int findTextInRange(int pStartRange, int pEndRange, const QString &pText,
+                        bool pRegularExpression, bool pCaseSensitive,
+                        bool pWholeWordsOnly) const;
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
@@ -131,12 +131,12 @@ public:
     QString eolString() const;
 
     int zoomLevel() const;
-    void setZoomLevel(const int &pZoomLevel);
+    void setZoomLevel(int pZoomLevel);
 
     bool findReplaceIsVisible() const;
     void setFindReplaceVisible(bool pVisible);
 
-    int styleAt(const int &pPosition) const;
+    int styleAt(int pPosition) const;
 
 private:
     QScintillaSupport::QScintillaWidget *mEditor;
@@ -155,9 +155,9 @@ private:
     bool findText(const QString &pText, bool pForward);
 
 signals:
-    void zoomLevelChanged(const int &pZoomLevel);
+    void zoomLevelChanged(int pZoomLevel);
 
-    void cursorPositionChanged(const int &pRow, const int &pColumn);
+    void cursorPositionChanged(int pRow, int pColumn);
 
     void textChanged();
 
@@ -178,7 +178,7 @@ public slots:
 private slots:
     void zoomLevelChanged();
 
-    void keepTrackOfCursorPosition(const int &pLine, const int &pColumn);
+    void keepTrackOfCursorPosition(int pLine, int pColumn);
 
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
     void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);

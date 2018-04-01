@@ -207,8 +207,7 @@ static const int StringLength = StringString.length();
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
-                                      const int &pBytesEnd,
+void CellmlTextViewLexer::doStyleText(int pBytesStart, int pBytesEnd,
                                       const QString &pText,
                                       bool pParameterBlock)
 {
@@ -257,8 +256,7 @@ void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
-                                             const int &pBytesEnd,
+void CellmlTextViewLexer::doStyleTextCurrent(int pBytesStart, int pBytesEnd,
                                              const QString &pText,
                                              bool pParameterBlock)
 {
@@ -492,9 +490,9 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPosition,
-                                                              const int &pBytesStart,
-                                                              const int &pBytesEnd,
+void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(int pPosition,
+                                                              int pBytesStart,
+                                                              int pBytesEnd,
                                                               const QString &pText,
                                                               bool pParameterBlock)
 {
@@ -548,9 +546,9 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition,
-                                                            const int &pBytesStart,
-                                                            const int &pBytesEnd,
+void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(int pPosition,
+                                                            int pBytesStart,
+                                                            int pBytesEnd,
                                                             const QString &pText,
                                                             bool pParameterBlock)
 {
@@ -614,10 +612,8 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
-                                            const int &pBytesStart,
-                                            const int &pBytesEnd,
-                                            const QString &pText,
+void CellmlTextViewLexer::doStyleTextString(int pPosition, int pBytesStart,
+                                            int pBytesEnd, const QString &pText,
                                             bool pParameterBlock)
 {
     // There is a string to style, so first style everything that is before it
@@ -686,10 +682,10 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextRegEx(const int &pBytesStart,
+void CellmlTextViewLexer::doStyleTextRegEx(int pBytesStart,
                                            const QString &pText,
                                            const QRegularExpression &pRegEx,
-                                           const int &pRegExStyle)
+                                           int pRegExStyle)
 {
     // Style the given text using the given regular expression
 
@@ -711,9 +707,9 @@ void CellmlTextViewLexer::doStyleTextRegEx(const int &pBytesStart,
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextNumberRegEx(const int &pBytesStart,
+void CellmlTextViewLexer::doStyleTextNumberRegEx(int pBytesStart,
                                                  const QString &pText,
-                                                 const int &pRegExStyle)
+                                                 int pRegExStyle)
 {
     // Style the given text using the number regular expression
 
@@ -757,8 +753,7 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(const int &pBytesStart,
 
 //==============================================================================
 
-bool CellmlTextViewLexer::validString(const int &pFrom, const int &pTo,
-                                      const int &pStyle) const
+bool CellmlTextViewLexer::validString(int pFrom, int pTo, int pStyle) const
 {
     // Check whether the string, which range is given, is valid, i.e. is either
     // of the default or given style
@@ -779,7 +774,7 @@ bool CellmlTextViewLexer::validString(const int &pFrom, const int &pTo,
 //==============================================================================
 
 int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
-                                    const int &pStyle, bool pForward)
+                                    int pStyle, bool pForward)
 {
     // Find forward/backward the given string starting from the given position
 
@@ -797,7 +792,7 @@ int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
 
 //==============================================================================
 
-int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition) const
+int CellmlTextViewLexer::fullTextPosition(int pBytesPosition) const
 {
     // Return the corresponding position within mFullText of the given
     // byte-based position within mFullTextUtf8
@@ -807,8 +802,7 @@ int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition) const
 
 //==============================================================================
 
-int CellmlTextViewLexer::fullTextLength(const int &pBytesStart,
-                                        const int &pBytesEnd) const
+int CellmlTextViewLexer::fullTextLength(int pBytesStart, int pBytesEnd) const
 {
     // Return the corresponding length within mFullText of the given byte-based
     // length of a substring within mFullTextUtf8
@@ -818,7 +812,7 @@ int CellmlTextViewLexer::fullTextLength(const int &pBytesStart,
 
 //==============================================================================
 
-int CellmlTextViewLexer::fullTextBytesPosition(const int &pPosition) const
+int CellmlTextViewLexer::fullTextBytesPosition(int pPosition) const
 {
     // Return the byte-based value of the given position within mFullText
 
@@ -828,7 +822,7 @@ int CellmlTextViewLexer::fullTextBytesPosition(const int &pPosition) const
 //==============================================================================
 
 int CellmlTextViewLexer::textBytesPosition(const QString &pText,
-                                           const int &pPosition) const
+                                           int pPosition) const
 {
     // Return the byte-based value of the given position within the given text
 

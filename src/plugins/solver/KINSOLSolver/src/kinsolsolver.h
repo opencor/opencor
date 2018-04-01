@@ -130,7 +130,7 @@ public:
     ~KinsolSolver() override;
 
     void solve(ComputeSystemFunction pComputeSystem, double *pParameters,
-               const int &pSize, void *pUserData) override;
+               int pSize, void *pUserData) override;
 
 private:
     QMap<void *, KinsolSolverData *> mData;

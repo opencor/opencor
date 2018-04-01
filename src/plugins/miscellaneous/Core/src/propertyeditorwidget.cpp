@@ -866,7 +866,7 @@ int Property::integerValue() const
 
 //==============================================================================
 
-void Property::setIntegerValue(const int &pIntegerValue, bool pEmitSignal)
+void Property::setIntegerValue(int pIntegerValue, bool pEmitSignal)
 {
     // Set our value, should it be of integer type
 
@@ -889,7 +889,7 @@ double Property::doubleValue() const
 
 //==============================================================================
 
-void Property::setDoubleValue(const double &pDoubleValue, bool pEmitSignal)
+void Property::setDoubleValue(double pDoubleValue, bool pEmitSignal)
 {
     // Set our value, should it be of double type
     // Note: we want as much precision as possible, hence we use a precision of
@@ -975,7 +975,7 @@ int Property::listValueIndex() const
 
 //==============================================================================
 
-void Property::setListValueIndex(const int &pListValueIndex)
+void Property::setListValueIndex(int pListValueIndex)
 {
     // Set our list value, if appropriate
 
@@ -1565,7 +1565,7 @@ Property * PropertyEditorWidget::addStringProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerProperty(const int &pValue,
+Property * PropertyEditorWidget::addIntegerProperty(int pValue,
                                                     Property *pParent)
 {
     // Add an integer property and return its information
@@ -1588,7 +1588,7 @@ Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerGe0Property(const int &pValue,
+Property * PropertyEditorWidget::addIntegerGe0Property(int pValue,
                                                        Property *pParent)
 {
     // Add a zero or strictly positive integer property and return its
@@ -1613,7 +1613,7 @@ Property * PropertyEditorWidget::addIntegerGe0Property(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerGt0Property(const int &pValue,
+Property * PropertyEditorWidget::addIntegerGt0Property(int pValue,
                                                        Property *pParent)
 {
     // Add a strictly positive integer property and return its information
@@ -1636,7 +1636,7 @@ Property * PropertyEditorWidget::addIntegerGt0Property(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleProperty(const double &pValue,
+Property * PropertyEditorWidget::addDoubleProperty(double pValue,
                                                    Property *pParent)
 {
     // Add a double property and return its information
@@ -1659,7 +1659,7 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleGe0Property(const double &pValue,
+Property * PropertyEditorWidget::addDoubleGe0Property(double pValue,
                                                       Property *pParent)
 {
     // Add a zero or strictly positive double property and return its
@@ -1684,7 +1684,7 @@ Property * PropertyEditorWidget::addDoubleGe0Property(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleGt0Property(const double &pValue,
+Property * PropertyEditorWidget::addDoubleGt0Property(double pValue,
                                                       Property *pParent)
 {
     // Add a strictly positive double property and return its information
@@ -2245,7 +2245,7 @@ void PropertyEditorWidget::removeAllProperties()
 
 //==============================================================================
 
-void PropertyEditorWidget::goToNeighbouringProperty(const int &pShift)
+void PropertyEditorWidget::goToNeighbouringProperty(int pShift)
 {
     // Determine the index of the current index's neighbour
 

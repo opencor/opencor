@@ -243,7 +243,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 #endif
 
     connect(mDelayWidget, SIGNAL(valueChanged(double)),
-            this, SLOT(updateDelayValue(const double &)));
+            this, SLOT(updateDelayValue(double)));
 
     mDelayWidget->setValue(0.0);
 
@@ -1531,7 +1531,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                   libsedml::SedModel *pSedmlModel,
                                                                   libsedml::SedRepeatedTask *pSedmlRepeatedTask,
                                                                   libsedml::SedSimulation *pSedmlSimulation,
-                                                                  const int &pOrder)
+                                                                  int pOrder)
 {
     // Create, customise and add an algorithm (i.e. an ODE solver) to our given
     // SED-ML simulation
@@ -3042,8 +3042,8 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
         connect(dataStoreExporter, SIGNAL(done(const QString &)),
                 this, SLOT(dataStoreExportDone(const QString &)));
-        connect(dataStoreExporter, SIGNAL(progress(const double &)),
-                this, SLOT(dataStoreExportProgress(const double &)));
+        connect(dataStoreExporter, SIGNAL(progress(double)),
+                this, SLOT(dataStoreExportProgress(double)));
 
         dataStoreExporter->start();
     }
@@ -3051,7 +3051,7 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateDelayValue(const double &pDelayValue)
+void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayValue)
 {
     // Update our delay value widget
 
@@ -3271,7 +3271,7 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
     mUpdatablePlotViewports.insert(plot, true);
 
-    connect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
+    connect(plot, SIGNAL(axesChanged(double, double, double, double)),
             this, SLOT(plotAxesChanged()));
 
     // Let people know when some graph panel settings or graphs settings have
@@ -3601,7 +3601,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 //==============================================================================
 
 double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
-                                                        const int &pRun,
+                                                        int pRun,
                                                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given parameter
@@ -3629,7 +3629,7 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               const int &pRun,
+                                                               int pRun,
                                                                const quint64 &pSize)
 {
     // Update our graph's data from the given run
@@ -3931,7 +3931,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const double &pProgress)
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
 {
     // There has been some progress with our export, so update our busy widget
 

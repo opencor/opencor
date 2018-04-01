@@ -91,7 +91,7 @@ signals:
                        OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
 public slots:
-    void updateParameters(const double &pCurrentPoint);
+    void updateParameters(double pCurrentPoint);
 
 private slots:
     void propertyChanged(OpenCOR::Core::Property *pProperty);

@@ -67,10 +67,10 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 public:
     explicit GraphPanelPlotGraphProperties(const QString &pTitle = QString(),
                                            const Qt::PenStyle &pLineStyle = Qt::SolidLine,
-                                           const int &pLineWidth = 1,
+                                           int pLineWidth = 1,
                                            const QColor &pLineColor = Qt::darkBlue,
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
-                                           const int &pSymbolSize = 8,
+                                           int pSymbolSize = 8,
                                            const QColor &pSymbolColor = Qt::darkBlue,
                                            bool pSymbolFilled = true,
                                            const QColor &pSymbolFillColor = Qt::white);
@@ -163,7 +163,7 @@ public:
 
     const QwtSymbol * symbol() const;
     void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
-                   const QPen &pPen, const int &pSize);
+                   const QPen &pPen, int pSize);
 
     void setTitle(const QString &pTitle);
 
@@ -173,9 +173,8 @@ public:
     bool hasData() const;
     quint64 dataSize() const;
 
-    QwtSeriesData<QPointF> *data(const int &pRun = -1) const;
-    void setData(double *pDataX, double *pDataY, const int &pSize,
-                 const int &pRun = -1);
+    QwtSeriesData<QPointF> *data(int pRun = -1) const;
+    void setData(double *pDataX, double *pDataY, int pSize, int pRun = -1);
 
     QRectF boundingRect();
     QRectF boundingLogRect();
@@ -236,7 +235,7 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor, const int &pLineWidth,
+                         const QColor &pForegroundColor, int pLineWidth,
                          const Position &pPosition,
                          bool pCanMovePosition = true);
 };
@@ -274,9 +273,9 @@ public:
 
     bool isEmpty() const override;
 
-    void setChecked(const int &pIndex, bool pChecked);
+    void setChecked(int pIndex, bool pChecked);
 
-    void setFontSize(const int &pFontSize);
+    void setFontSize(int pFontSize);
     void setBackgroundColor(const QColor &pBackgroundColor);
     void setForegroundColor(const QColor &pForegroundColor);
 
@@ -361,7 +360,7 @@ public:
     void setBackgroundColor(const QColor &pBackgroundColor);
 
     int fontSize() const;
-    void setFontSize(const int &pFontSize, bool pForceSetting = false);
+    void setFontSize(int pFontSize, bool pForceSetting = false);
 
     QColor foregroundColor() const;
     void setForegroundColor(const QColor &pForegroundColor);
@@ -370,7 +369,7 @@ public:
     void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
 
     int gridLinesWidth() const;
-    void setGridLinesWidth(const int &pGridLinesWidth);
+    void setGridLinesWidth(int pGridLinesWidth);
 
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
@@ -378,13 +377,13 @@ public:
     bool isLegendActive() const;
     void setLegendActive(bool pLegendActive);
 
-    void setLegendWidth(const int &pLegendWidth);
+    void setLegendWidth(int pLegendWidth);
 
     Qt::PenStyle pointCoordinatesStyle() const;
     void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
 
     int pointCoordinatesWidth() const;
-    void setPointCoordinatesWidth(const int &pPointCoordinatesWidth);
+    void setPointCoordinatesWidth(int pPointCoordinatesWidth);
 
     QColor pointCoordinatesColor() const;
     void setPointCoordinatesColor(const QColor &pPointCoordinatesColor);
@@ -416,7 +415,7 @@ public:
     void setZoomRegionStyle(const Qt::PenStyle &pZoomRegionStyle);
 
     int zoomRegionWidth() const;
-    void setZoomRegionWidth(const int &pZoomRegionWidth);
+    void setZoomRegionWidth(int pZoomRegionWidth);
 
     QColor zoomRegionColor() const;
     void setZoomRegionColor(const QColor &pZoomRegionColor);
@@ -430,14 +429,10 @@ public:
     QColor zoomRegionFillColor() const;
     void setZoomRegionFillColor(const QColor &pZoomRegionFillColor);
 
-    void setDefaultAxesValues(const double &pDefaultMinX,
-                              const double &pDefaultMaxX,
-                              const double &pDefaultMinLogX,
-                              const double &pDefaultMaxLogX,
-                              const double &pDefaultMinY,
-                              const double &pDefaultMaxY,
-                              const double &pDefaultMinLogY,
-                              const double &pDefaultMaxLogY);
+    void setDefaultAxesValues(double pDefaultMinX, double pDefaultMaxX,
+                              double pDefaultMinLogX, double pDefaultMaxLogX,
+                              double pDefaultMinY, double pDefaultMaxY,
+                              double pDefaultMinLogY, double pDefaultMaxLogY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  bool pSynchronizeAxes = true, bool pCanReplot = true,
@@ -569,21 +564,20 @@ private:
 
     QRectF realDataRect() const;
 
-    void setAxis(const int &pAxisId, double pMin, double pMax);
+    void setAxis(int pAxisId, double pMin, double pMax);
 
     bool resetAxes();
 
     bool scaleAxis(const Scaling &pScaling, bool pCanZoomIn, bool pCanZoomOut,
-                   const QwtScaleMap &pCanvasMap, const double &pPoint,
+                   const QwtScaleMap &pCanvasMap, double pPoint,
                    double &pMin, double &pMax);
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
 
-    void setTitleAxis(const int &pAxisId, const QString &pTitleAxis);
+    void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 
 signals:
-    void axesChanged(const double &pMinX, const double &pMaxX,
-                     const double &pMinY, const double &pMaxY);
+    void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();

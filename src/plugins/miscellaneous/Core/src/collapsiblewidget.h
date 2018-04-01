@@ -118,11 +118,11 @@ public:
 
     int count() const;
 
-    bool isCollapsed(const int &pIndex) const;
-    void setCollapsed(const int &pIndex, bool pCollapsed);
+    bool isCollapsed(int pIndex) const;
+    void setCollapsed(int pIndex, bool pCollapsed);
 
-    QString headerTitle(const int &pIndex) const;
-    void setHeaderTitle(const int &pIndex, const QString &pTitle);
+    QString headerTitle(int pIndex) const;
+    void setHeaderTitle(int pIndex, const QString &pTitle);
 
     CollapsibleHeaderWidget * addWidget(QWidget *pWidget,
                                         bool pCollapsible = true);
@@ -133,7 +133,7 @@ private:
     QList<CollapsibleHeaderWidget *> mHeaders;
 
 signals:
-    void collapsed(const int &pIndex, bool pCollapsed);
+    void collapsed(int pIndex, bool pCollapsed);
 
 private slots:
     void emitCollapsed();

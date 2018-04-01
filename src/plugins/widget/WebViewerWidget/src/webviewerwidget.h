@@ -130,7 +130,7 @@ private:
 
     void emitZoomRelatedSignals();
 
-    void setZoomLevel(const int &pZoomLevel);
+    void setZoomLevel(int pZoomLevel);
 
 signals:
     void homePage(bool pHomePage);
@@ -156,7 +156,7 @@ private slots:
 
     void pageChanged();
 
-    void loadProgress(const int &pProgress);
+    void loadProgress(int pProgress);
     void loadFinished();
     void resetProgressBar();
 };

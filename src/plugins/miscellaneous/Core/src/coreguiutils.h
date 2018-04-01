@@ -168,42 +168,36 @@ QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
-QString CORE_EXPORT iconDataUri(const QIcon &pIcon, const int &pWidth,
-                                const int &pHeight,
+QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                                 const QIcon::Mode &pMode = QIcon::Normal);
-QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth,
-                                const int &pHeight,
+QString CORE_EXPORT iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                                 const QIcon::Mode &pMode = QIcon::Normal);
 
-QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, const int &pWidth,
-                             const int &pHeight, const QColor &pColor);
-QIcon CORE_EXPORT tintedIcon(const QString &pIcon, const int &pWidth,
-                             const int &pHeight, const QColor &pColor);
+QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                             const QColor &pColor);
+QIcon CORE_EXPORT tintedIcon(const QString &pIcon, int pWidth, int pHeight,
+                             const QColor &pColor);
 
 QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
                                 const QIcon &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 const QIcon &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
                                 const QString &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 const QString &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 
 void CORE_EXPORT showEnableWidget(QWidget *pWidget, bool pVisible,
                                   bool pEnabled = true);

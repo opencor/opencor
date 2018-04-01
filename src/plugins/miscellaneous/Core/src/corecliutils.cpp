@@ -101,7 +101,7 @@ QVariantList qBoolListToVariantList(const QBoolList &pBoolList)
 
     QVariantList res = QVariantList();
 
-    foreach (const int &nb, pBoolList)
+    foreach (int nb, pBoolList)
         res << nb;
 
     return res;
@@ -129,7 +129,7 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 
     QVariantList res = QVariantList();
 
-    foreach (const int &nb, pIntList)
+    foreach (int nb, pIntList)
         res << nb;
 
     return res;
@@ -242,7 +242,7 @@ QString digitGroupNumber(const QString &pNumber)
 
 //==============================================================================
 
-QString sizeAsString(const double &pSize, const int &pPrecision)
+QString sizeAsString(double pSize, int pPrecision)
 {
     // Note: pSize is a double rather than a quint64, in case we need to convert
     //       an insane size...
@@ -282,7 +282,7 @@ QString sha1(const QString &pString)
 //==============================================================================
 
 void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
-                                const int &pPosition, int &pLine, int &pColumn)
+                                int pPosition, int &pLine, int &pColumn)
 {
     // Determine the line and column values of the given position within the
     // given string using the given end of line
@@ -301,8 +301,7 @@ void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
 //==============================================================================
 
 void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
-                                const int &pLine, const int &pColumn,
-                                int &pPosition)
+                                int pLine, int pColumn, int &pPosition)
 {
     // Determine the position value of the given line and column within the
     // given string using the given end of line
@@ -426,7 +425,7 @@ bool isEmptyDirectory(const QString &pDirName)
     #pragma optimize("", off)
 #endif
 
-void doNothing(const int &pMax)
+void doNothing(int pMax)
 {
     // A silly function, which aim is simply to do nothing
     // Note: this function came about because there is no way, on Windows, to

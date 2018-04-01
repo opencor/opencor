@@ -537,7 +537,7 @@ void Plugin::setLoad(const QString &pName, bool pToBeLoaded)
 //==============================================================================
 
 QStringList Plugin::fullDependencies(const QString &pPluginsDir,
-                                     const QString &pName, const int &pLevel)
+                                     const QString &pName, int pLevel)
 {
     // Return the given plugin's full dependencies
 

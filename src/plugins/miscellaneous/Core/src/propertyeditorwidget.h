@@ -289,10 +289,10 @@ public:
     QString valueAsString() const;
 
     int integerValue() const;
-    void setIntegerValue(const int &pIntegerValue, bool pEmitSignal = true);
+    void setIntegerValue(int pIntegerValue, bool pEmitSignal = true);
 
     double doubleValue() const;
-    void setDoubleValue(const double &pDoubleValue, bool pEmitSignal = true);
+    void setDoubleValue(double pDoubleValue, bool pEmitSignal = true);
 
     QStringList listValues() const;
     void setListValues(const QStringList &pListValues, bool pEmitSignal = true);
@@ -301,7 +301,7 @@ public:
     void setListValue(const QString &pListValue);
 
     int listValueIndex() const;
-    void setListValueIndex(const int &pListValueIndex);
+    void setListValueIndex(int pListValueIndex);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
@@ -379,22 +379,22 @@ public:
     Property * addStringProperty(const QString &pString, Property *pParent = 0);
     Property * addStringProperty(Property *pParent = 0);
 
-    Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
+    Property * addIntegerProperty(int pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
 
-    Property * addIntegerGe0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGe0Property(int pValue, Property *pParent = 0);
     Property * addIntegerGe0Property(Property *pParent = 0);
 
-    Property * addIntegerGt0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGt0Property(int pValue, Property *pParent = 0);
     Property * addIntegerGt0Property(Property *pParent = 0);
 
-    Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
+    Property * addDoubleProperty(double pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
-    Property * addDoubleGe0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGe0Property(double pValue, Property *pParent = 0);
     Property * addDoubleGe0Property(Property *pParent = 0);
 
-    Property * addDoubleGt0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGt0Property(double pValue, Property *pParent = 0);
     Property * addDoubleGt0Property(Property *pParent = 0);
 
     Property * addListProperty(const QStringList &pValues,
@@ -457,7 +457,7 @@ private:
     void selectProperty(Property *pProperty);
     void editProperty(Property *pProperty, bool pCommitData = true);
 
-    void goToNeighbouringProperty(const int &pShift);
+    void goToNeighbouringProperty(int pShift);
 
     int childrenRowHeight(const QStandardItem *pItem) const;
 

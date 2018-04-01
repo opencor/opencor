@@ -42,10 +42,10 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double &pMinX,
-                                                                   const double &pMaxX,
-                                                                   const double &pMinY,
-                                                                   const double &pMaxY,
+GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
+                                                                   double pMaxX,
+                                                                   double pMinY,
+                                                                   double pMaxY,
                                                                    QWidget *pParent) :
     Core::Dialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)

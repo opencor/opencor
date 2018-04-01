@@ -202,7 +202,7 @@ KinsolSolver::~KinsolSolver()
 //==============================================================================
 
 void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
-                         double *pParameters, const int &pSize, void *pUserData)
+                         double *pParameters, int pSize, void *pUserData)
 {
     // Check whether we need to initialise or update ourselves
 

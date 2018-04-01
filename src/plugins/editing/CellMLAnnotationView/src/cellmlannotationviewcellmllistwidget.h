@@ -116,7 +116,7 @@ private:
                                                    const Type &pType,
                                                    const QString &pText,
                                                    iface::cellml_api::CellMLElement *pElement,
-                                                   const int &pNumber);
+                                                   int pNumber);
 };
 
 //==============================================================================

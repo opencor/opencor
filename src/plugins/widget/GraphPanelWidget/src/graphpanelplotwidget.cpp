@@ -65,10 +65,10 @@ namespace GraphPanelWidget {
 
 GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
                                                              const Qt::PenStyle &pLineStyle,
-                                                             const int &pLineWidth,
+                                                             int pLineWidth,
                                                              const QColor &pLineColor,
                                                              const QwtSymbol::Style &pSymbolStyle,
-                                                             const int &pSymbolSize,
+                                                             int pSymbolSize,
                                                              const QColor &pSymbolColor,
                                                              bool pSymbolFilled,
                                                              const QColor &pSymbolFillColor) :
@@ -443,7 +443,7 @@ const QwtSymbol * GraphPanelPlotGraph::symbol() const
 
 void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
                                     const QBrush &pBrush, const QPen &pPen,
-                                    const int &pSize)
+                                    int pSize)
 {
     // Set the symbol of our different runs
 
@@ -520,7 +520,7 @@ quint64 GraphPanelPlotGraph::dataSize() const
 
 //==============================================================================
 
-QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
+QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(int pRun) const
 {
     // Return the data, i.e. raw samples, of the given run, if it exists
 
@@ -536,8 +536,8 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
-                                  const int &pSize, const int &pRun)
+void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, int pSize,
+                                  int pRun)
 {
     // Set our data, i.e. raw samples, to the given run, if it exists
 
@@ -866,7 +866,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
-                                                  const int &pLineWidth,
+                                                  int pLineWidth,
                                                   const Position &pPosition,
                                                   bool pCanMovePosition)
 {
@@ -1055,7 +1055,7 @@ bool GraphPanelPlotLegendWidget::isEmpty() const
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setChecked(const int &pIndex, bool pChecked)
+void GraphPanelPlotLegendWidget::setChecked(int pIndex, bool pChecked)
 {
     // Un/check the graph which index is given
     // Note: the +1 is because the first child of our contents widget is our
@@ -1066,7 +1066,7 @@ void GraphPanelPlotLegendWidget::setChecked(const int &pIndex, bool pChecked)
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setFontSize(const int &pFontSize)
+void GraphPanelPlotLegendWidget::setFontSize(int pFontSize)
 {
     // Set our font size
 
@@ -1747,7 +1747,7 @@ int GraphPanelPlotWidget::fontSize() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSize(const int &pFontSize, bool pForceSetting)
+void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 {
     // Set our font size
 
@@ -1849,7 +1849,7 @@ int GraphPanelPlotWidget::gridLinesWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setGridLinesWidth(const int &pGridLinesWidth)
+void GraphPanelPlotWidget::setGridLinesWidth(int pGridLinesWidth)
 {
     // Set our grid lines width
 
@@ -1913,7 +1913,7 @@ void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendWidth(const int &pLegendWidth)
+void GraphPanelPlotWidget::setLegendWidth(int pLegendWidth)
 {
     // Set our legend's width
 
@@ -1950,7 +1950,7 @@ int GraphPanelPlotWidget::pointCoordinatesWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setPointCoordinatesWidth(const int &pPointCoordinatesWidth)
+void GraphPanelPlotWidget::setPointCoordinatesWidth(int pPointCoordinatesWidth)
 {
     // Set our point coordinates width
 
@@ -2221,7 +2221,7 @@ int GraphPanelPlotWidget::zoomRegionWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setZoomRegionWidth(const int &pZoomRegionWidth)
+void GraphPanelPlotWidget::setZoomRegionWidth(int pZoomRegionWidth)
 {
     // Set our zoom region width
 
@@ -2506,7 +2506,7 @@ QRectF GraphPanelPlotWidget::realDataRect() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
+void GraphPanelPlotWidget::setAxis(int pAxisId, double pMin, double pMax)
 {
     // Set our axis
     // Note: to use setAxisScale() on its own is not sufficient unless we were
@@ -2524,14 +2524,14 @@ void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setDefaultAxesValues(const double &pDefaultMinX,
-                                                const double &pDefaultMaxX,
-                                                const double &pDefaultMinLogX,
-                                                const double &pDefaultMaxLogX,
-                                                const double &pDefaultMinY,
-                                                const double &pDefaultMaxY,
-                                                const double &pDefaultMinLogY,
-                                                const double &pDefaultMaxLogY)
+void GraphPanelPlotWidget::setDefaultAxesValues(double pDefaultMinX,
+                                                double pDefaultMaxX,
+                                                double pDefaultMinLogX,
+                                                double pDefaultMaxLogX,
+                                                double pDefaultMinY,
+                                                double pDefaultMaxY,
+                                                double pDefaultMinLogY,
+                                                double pDefaultMaxLogY)
 {
     // Set the default axes values
 
@@ -2638,8 +2638,7 @@ bool GraphPanelPlotWidget::resetAxes()
 bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
                                      bool pCanZoomOut,
                                      const QwtScaleMap &pCanvasMap,
-                                     const double &pPoint, double &pMin,
-                                     double &pMax)
+                                     double pPoint, double &pMin, double &pMax)
 {
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
@@ -2722,8 +2721,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
-                                        const QString &pTitleAxis)
+void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 {
     // Set the title for our axis
 

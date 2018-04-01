@@ -255,11 +255,11 @@ private:
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     bool pCanSetAxes = true, bool pForceReplot = false);
 
-    double * data(SimulationSupport::Simulation *pSimulation, const int &pRun,
+    double * data(SimulationSupport::Simulation *pSimulation, int pRun,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         const int &pRun, const quint64 &pSize);
+                         int pRun, const quint64 &pSize);
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          const quint64 &pSize);
 
@@ -288,7 +288,7 @@ private:
                             libsedml::SedModel *pSedmlModel,
                             libsedml::SedRepeatedTask *pSedmlRepeatedTask,
                             libsedml::SedSimulation *pSedmlSimulation,
-                            const int &pOrder);
+                            int pOrder);
     void addSedmlVariableTarget(libsedml::SedVariable *pSedmlVariable,
                                 const QString &pComponent,
                                 const QString &pVariable);
@@ -322,7 +322,7 @@ private slots:
 
     void simulationDataExport();
 
-    void updateDelayValue(const double &pDelayValue);
+    void updateDelayValue(double pDelayValue);
 
     void simulationRunning(bool pIsResuming);
     void simulationPaused();
@@ -360,7 +360,7 @@ private slots:
     void plotAxesChanged();
 
     void dataStoreExportDone(const QString &pErrorMessage);
-    void dataStoreExportProgress(const double &pProgress);
+    void dataStoreExportProgress(double pProgress);
 
     void checkSimulationProperties();
     void checkSolversProperties();

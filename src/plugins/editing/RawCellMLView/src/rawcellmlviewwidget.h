@@ -100,7 +100,7 @@ private:
     QString mContentMathmlEquation;
 
     QString retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
-                                          const int &pPosition) const;
+                                          int pPosition) const;
 
 private slots:
     void updateViewer();

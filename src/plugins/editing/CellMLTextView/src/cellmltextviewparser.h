@@ -49,9 +49,8 @@ public:
         Warning
     };
 
-    explicit CellmlTextViewParserMessage(const Type &pType,
-                                         const int &pLine, const int &pColumn,
-                                         const QString &pMessage);
+    explicit CellmlTextViewParserMessage(const Type &pType, int pLine,
+                                         int pColumn, const QString &pMessage);
 
     Type type() const;
 

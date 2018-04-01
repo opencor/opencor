@@ -496,7 +496,7 @@ bool PmrWorkspace::open(const QString &pPath, bool pRefreshStatus)
 
 //==============================================================================
 
-CharPair PmrWorkspace::gitStatusChars(const int &pFlags) const
+CharPair PmrWorkspace::gitStatusChars(int pFlags) const
 {
     // Git status
 

@@ -51,8 +51,8 @@ public:
         Fatal       = QStandardItem::UserType+4
     };
 
-    explicit EditorListItem(const Type &pType, const int &pLine,
-                            const int &pColumn, const QString &pMessage);
+    explicit EditorListItem(const Type &pType, int pLine, int pColumn,
+                            const QString &pMessage);
 
     int type() const override;
     int line() const;
@@ -78,9 +78,9 @@ public:
 
     void retranslateUi() override;
 
-    void addItem(const EditorListItem::Type &pType, const int &pLine,
-                 const int &pColumn, const QString &pMessage);
-    void addItem(const EditorListItem::Type &pType, const int &pLine,
+    void addItem(const EditorListItem::Type &pType, int pLine, int pColumn,
+                 const QString &pMessage);
+    void addItem(const EditorListItem::Type &pType, int pLine,
                  const QString &pMessage);
     void addItem(const EditorListItem::Type &pType, const QString &pMessage);
 

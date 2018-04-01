@@ -65,7 +65,7 @@ public:
     explicit TabBarWidget(QWidget *pParent);
 
     int oldIndex() const;
-    void setOldIndex(const int &pOldIndex);
+    void setOldIndex(int pOldIndex);
 
 protected:
     void wheelEvent(QWheelEvent *pEvent) override;

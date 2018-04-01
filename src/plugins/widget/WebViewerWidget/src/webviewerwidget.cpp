@@ -173,7 +173,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
             this, SLOT(selectionChanged()));
 
     connect(mWebView, SIGNAL(loadProgress(int)),
-            this, SLOT(loadProgress(const int &)));
+            this, SLOT(loadProgress(int)));
     connect(mWebView, SIGNAL(loadFinished(bool)),
             this, SLOT(loadFinished()));
 
@@ -464,7 +464,7 @@ void WebViewerWidget::emitZoomRelatedSignals()
 
 //==============================================================================
 
-void WebViewerWidget::setZoomLevel(const int &pZoomLevel)
+void WebViewerWidget::setZoomLevel(int pZoomLevel)
 {
     if (!mZoomingEnabled || (pZoomLevel == mZoomLevel))
         return;
@@ -525,7 +525,7 @@ void WebViewerWidget::pageChanged()
 
 //==============================================================================
 
-void WebViewerWidget::loadProgress(const int &pProgress)
+void WebViewerWidget::loadProgress(int pProgress)
 {
     // Update the value of our progress bar
 

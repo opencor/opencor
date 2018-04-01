@@ -50,11 +50,11 @@ public:
     explicit SecondOrderRungeKuttaSolver();
     ~SecondOrderRungeKuttaSolver() override;
 
-    void initialize(const double &pVoi, const int &pRatesStatesCount,
-                    double *pConstants, double *pRates, double *pStates,
-                    double *pAlgebraic, ComputeRatesFunction pComputeRates) override;
+    void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
+                    double *pRates, double *pStates, double *pAlgebraic,
+                    ComputeRatesFunction pComputeRates) override;
 
-    void solve(double &pVoi, const double &pVoiEnd) const override;
+    void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
     double mStep;

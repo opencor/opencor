@@ -607,7 +607,7 @@ QFrame * newLineWidget(QWidget *pParent)
 
 //==============================================================================
 
-QString iconDataUri(const QIcon &pIcon, const int &pWidth, const int &pHeight,
+QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                     const QIcon::Mode &pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
@@ -628,7 +628,7 @@ QString iconDataUri(const QIcon &pIcon, const int &pWidth, const int &pHeight,
 
 //==============================================================================
 
-QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
+QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                     const QIcon::Mode &pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
@@ -639,7 +639,7 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
 
 //==============================================================================
 
-QIcon tintedIcon(const QIcon &pIcon, const int &pWidth, const int &pHeight,
+QIcon tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                  const QColor &pColor)
 {
     // Create and return a tinted icon using the given icon and colour
@@ -668,7 +668,7 @@ QIcon tintedIcon(const QIcon &pIcon, const int &pWidth, const int &pHeight,
 
 //==============================================================================
 
-QIcon tintedIcon(const QString &pIcon, const int &pWidth, const int &pHeight,
+QIcon tintedIcon(const QString &pIcon, int pWidth, int pHeight,
                  const QColor &pColor)
 {
     // Create and return a tinted icon using the given icon and colour
@@ -679,9 +679,8 @@ QIcon tintedIcon(const QString &pIcon, const int &pWidth, const int &pHeight,
 //==============================================================================
 
 QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
@@ -706,9 +705,8 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 //==============================================================================
 
 QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
@@ -720,9 +718,8 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
 //==============================================================================
 
 QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
@@ -734,9 +731,8 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
 //==============================================================================
 
 QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons

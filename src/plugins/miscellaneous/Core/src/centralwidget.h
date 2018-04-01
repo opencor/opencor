@@ -172,25 +172,24 @@ private:
 
     QMap<QString, QWidget *> mViews;
 
-    Plugin * viewPlugin(const int &pIndex) const;
+    Plugin * viewPlugin(int pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 
     void updateNoViewMsg();
 
-    bool saveFile(const int &pIndex, bool pNeedNewFileName = false);
+    bool saveFile(int pIndex, bool pNeedNewFileName = false);
 
-    bool canCloseFile(const int &pIndex);
+    bool canCloseFile(int pIndex);
 
-    void updateFileTab(const int &pIndex, bool pIconOnly = false);
+    void updateFileTab(int pIndex, bool pIconOnly = false);
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
 
-    QString viewKey(const int &pMode, const int &pView,
-                    const QString &pFileName);
+    QString viewKey(int pMode, int pView, const QString &pFileName);
 
     void fileReloadedOrSaved(const QString &pFileName, bool pFileReloaded);
 
-    void setTabBarCurrentIndex(TabBarWidget *pTabBar, const int &pIndex);
+    void setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex);
 
 signals:
     void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
@@ -214,7 +213,7 @@ private slots:
     void cancelOpenRemoteFile();
     void openRemoteFile();
 
-    void reloadFile(const int &pIndex = -1, bool pForce = false);
+    void reloadFile(int pIndex = -1, bool pForce = false);
 
     void duplicateFile();
 
@@ -244,10 +243,10 @@ private slots:
     void previousFile();
     void nextFile();
 
-    bool closeFile(const int &pIndex = -1, bool pForceClosing = false);
+    bool closeFile(int pIndex = -1, bool pForceClosing = false);
     void closeAllFiles(bool pForceClosing = false);
 
-    void moveFile(const int &pFromIndex, const int &pToIndex);
+    void moveFile(int pFromIndex, int pToIndex);
 
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);

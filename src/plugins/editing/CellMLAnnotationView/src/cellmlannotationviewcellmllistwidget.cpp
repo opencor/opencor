@@ -90,7 +90,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(boo
                                                                              const Type &pType,
                                                                              const QString &pText,
                                                                              iface::cellml_api::CellMLElement *pElement,
-                                                                             const int &pNumber) :
+                                                                             int pNumber) :
     QStandardItem(pText),
     mCategory(pCategory),
     mType(pType),

@@ -72,12 +72,12 @@ public:
 
     void resizeBusyWidget();
 
-    void setBusyWidgetProgress(const double &pProgress);
+    void setBusyWidgetProgress(double pProgress);
 
     void processEvents();
 
 protected:
-    QSize defaultSize(const double &pRatio) const;
+    QSize defaultSize(double pRatio) const;
 
 private:
     QWidget *mParent;
@@ -86,7 +86,7 @@ private:
 
     int mCounter;
 
-    void doShowBusyWidget(const double &pProgress = -1.0);
+    void doShowBusyWidget(double pProgress = -1.0);
 };
 
 //==============================================================================

@@ -317,9 +317,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         // Keep track of changes to columns' width
 
         connect(mGraphPanelPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SIGNAL(graphPanelHeaderSectionResized(const int &, const int &, const int &)));
+                this, SIGNAL(graphPanelHeaderSectionResized(int, int, int)));
         connect(mGraphsPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SIGNAL(graphsHeaderSectionResized(const int &, const int &, const int &)));
+                this, SIGNAL(graphsHeaderSectionResized(int, int, int)));
 
         // Keep track of changes to the expanded/collapsed state of a property
         // Note: we only need to do this for our graph panel property editor
@@ -828,8 +828,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelColumnWidth(const int &pIndex,
-                                                                                            const int &pColumnWidth)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelColumnWidth(int pIndex,
+                                                                                            int pColumnWidth)
 {
     // Make sure that we have a graph panel property editor
 
@@ -843,8 +843,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanel
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColumnWidth(const int &pIndex,
-                                                                                        const int &pColumnWidth)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColumnWidth(int pIndex,
+                                                                                        int pColumnWidth)
 {
     // Make sure that we have a graphs property editor
 
@@ -858,7 +858,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphsColu
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelSectionExpanded(const int &pSection,
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setGraphPanelSectionExpanded(int pSection,
                                                                                                 bool pExpanded)
 {
     // Make sure that we have a graph panel property editor

@@ -49,7 +49,7 @@ public:
     quint64 size() const;
 
     void addValue();
-    void addValue(const double &pValue);
+    void addValue(double pValue);
 
     double value(const quint64 &pPosition) const;
     double * values() const;
@@ -82,7 +82,7 @@ public:
     int runsCount() const;
 
     void addRun(const quint64 &pCapacity);
-    void keepRuns(const int &pRunsCount);
+    void keepRuns(int pRunsCount);
 
 #ifndef CLI_VERSION
     QIcon icon() const;
@@ -98,13 +98,13 @@ public:
     QString unit() const;
     void setUnit(const QString &pUnit);
 
-    quint64 size(const int &pRun = -1) const;
+    quint64 size(int pRun = -1) const;
 
     void addValue();
-    void addValue(const double &pValue);
+    void addValue(double pValue);
 
-    double value(const quint64 &pPosition, const int &pRun = -1) const;
-    double * values(const int &pRun = -1) const;
+    double value(const quint64 &pPosition, int pRun = -1) const;
+    double * values(int pRun = -1) const;
 
 private:
 #ifndef CLI_VERSION
@@ -159,16 +159,16 @@ public:
 
     bool addRun(const quint64 &pCapacity);
 
-    quint64 size(const int &pRun = -1) const;
+    quint64 size(int pRun = -1) const;
 
     DataStoreVariable * voi() const;
     DataStoreVariables variables();
     DataStoreVariables voiAndVariables();
 
     DataStoreVariable * addVariable(double *pValue = 0);
-    DataStoreVariables addVariables(double *pValues, const int &pCount);
+    DataStoreVariables addVariables(double *pValues, int pCount);
 
-    void addValues(const double &pVoiValue);
+    void addValues(double pVoiValue);
 
 private:
     QString mUri;
@@ -199,7 +199,7 @@ protected:
 
 signals:
     void done(const QString &pErrorMessage);
-    void progress(const double &pProgress) const;
+    void progress(double pProgress) const;
 
 private slots:
     void started();

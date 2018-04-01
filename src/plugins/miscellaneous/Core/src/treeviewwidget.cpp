@@ -66,7 +66,7 @@ void TreeViewWidget::resizeColumnsToContents()
 
 //==============================================================================
 
-void TreeViewWidget::selectItem(const int &pRow, const int &pColumn)
+void TreeViewWidget::selectItem(int pRow, int pColumn)
 {
     // Select the requested item, if any
 

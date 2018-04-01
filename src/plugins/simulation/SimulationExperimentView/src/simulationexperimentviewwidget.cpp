@@ -192,25 +192,25 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 
         SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
 
-        connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(const int &, bool)),
-                this, SLOT(collapsibleWidgetCollapsed(const int &, bool)));
+        connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(int, bool)),
+                this, SLOT(collapsibleWidgetCollapsed(int, bool)));
 
         connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
                 this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
 
         connect(informationWidget->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(simulationHeaderSectionResized(const int &, const int &, const int &)));
+                this, SLOT(simulationHeaderSectionResized(int, int, int)));
         connect(informationWidget->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(solversHeaderSectionResized(const int &, const int &, const int &)));
+                this, SLOT(solversHeaderSectionResized(int, int, int)));
         connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelHeaderSectionResized(int, int, int)),
-                this, SLOT(graphPanelHeaderSectionResized(const int &, const int &, const int &)));
+                this, SLOT(graphPanelHeaderSectionResized(int, int, int)));
         connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphsHeaderSectionResized(int, int, int)),
-                this, SLOT(graphsHeaderSectionResized(const int &, const int &, const int &)));
+                this, SLOT(graphsHeaderSectionResized(int, int, int)));
         connect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(parametersHeaderSectionResized(const int &, const int &, const int &)));
+                this, SLOT(parametersHeaderSectionResized(int, int, int)));
 
-        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(const int &, bool)),
-                this, SLOT(graphPanelSectionExpanded(const int &, bool)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(int, bool)),
+                this, SLOT(graphPanelSectionExpanded(int, bool)));
 
         // Check when some graph plot settings or graphs settings have been
         // requested
@@ -596,7 +596,7 @@ void SimulationExperimentViewWidget::contentsWidgetSplitterMoved(const QIntList 
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(const int &pIndex,
+void SimulationExperimentViewWidget::collapsibleWidgetCollapsed(int pIndex,
                                                                 bool pCollapsed)
 {
     // One of the widgets in our collapsible widget has been collapsed or
@@ -636,9 +636,9 @@ void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const OpenCOR::
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::simulationHeaderSectionResized(const int &pIndex,
-                                                                    const int &pOldSize,
-                                                                    const int &pNewSize)
+void SimulationExperimentViewWidget::simulationHeaderSectionResized(int pIndex,
+                                                                    int pOldSize,
+                                                                    int pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -649,9 +649,9 @@ void SimulationExperimentViewWidget::simulationHeaderSectionResized(const int &p
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::solversHeaderSectionResized(const int &pIndex,
-                                                                 const int &pOldSize,
-                                                                 const int &pNewSize)
+void SimulationExperimentViewWidget::solversHeaderSectionResized(int pIndex,
+                                                                 int pOldSize,
+                                                                 int pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -662,9 +662,9 @@ void SimulationExperimentViewWidget::solversHeaderSectionResized(const int &pInd
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::graphPanelHeaderSectionResized(const int &pIndex,
-                                                                    const int &pOldSize,
-                                                                    const int &pNewSize)
+void SimulationExperimentViewWidget::graphPanelHeaderSectionResized(int pIndex,
+                                                                    int pOldSize,
+                                                                    int pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -675,9 +675,9 @@ void SimulationExperimentViewWidget::graphPanelHeaderSectionResized(const int &p
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::graphsHeaderSectionResized(const int &pIndex,
-                                                                const int &pOldSize,
-                                                                const int &pNewSize)
+void SimulationExperimentViewWidget::graphsHeaderSectionResized(int pIndex,
+                                                                int pOldSize,
+                                                                int pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -688,9 +688,9 @@ void SimulationExperimentViewWidget::graphsHeaderSectionResized(const int &pInde
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &pIndex,
-                                                                    const int &pOldSize,
-                                                                    const int &pNewSize)
+void SimulationExperimentViewWidget::parametersHeaderSectionResized(int pIndex,
+                                                                    int pOldSize,
+                                                                    int pNewSize)
 {
     Q_UNUSED(pOldSize);
 
@@ -701,7 +701,7 @@ void SimulationExperimentViewWidget::parametersHeaderSectionResized(const int &p
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::graphPanelSectionExpanded(const int &pSection,
+void SimulationExperimentViewWidget::graphPanelSectionExpanded(int pSection,
                                                                bool pExpanded)
 {
     // Keep track of the section's expanded state
@@ -745,7 +745,7 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
     for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
         informationWidget->parametersWidget()->setColumnWidth(i, (i == iMax-1)?0:mParametersColumnWidths[i]);
 
-    foreach (const int &section, mGraphPanelSectionsExpanded.keys())
+    foreach (int section, mGraphPanelSectionsExpanded.keys())
         informationWidget->graphPanelAndGraphsWidget()->setGraphPanelSectionExpanded(section, mGraphPanelSectionsExpanded.value(section));
 }
 

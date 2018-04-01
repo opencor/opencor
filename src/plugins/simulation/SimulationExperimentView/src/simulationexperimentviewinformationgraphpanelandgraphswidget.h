@@ -103,10 +103,10 @@ public:
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
     void setMode(const Mode &pMode);
 
-    void setGraphPanelColumnWidth(const int &pIndex, const int &pColumnWidth);
-    void setGraphsColumnWidth(const int &pIndex, const int &pColumnWidth);
+    void setGraphPanelColumnWidth(int pIndex, int pColumnWidth);
+    void setGraphsColumnWidth(int pIndex, int pColumnWidth);
 
-    void setGraphPanelSectionExpanded(const int &pSection, bool pExpanded);
+    void setGraphPanelSectionExpanded(int pSection, bool pExpanded);
 
     void reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
@@ -169,12 +169,10 @@ private:
 signals:
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
-    void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                        const int &pNewSize);
-    void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                    const int &pNewSize);
+    void graphPanelHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
+    void graphsHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
 
-    void graphPanelSectionExpanded(const int &pSection, bool pExpanded);
+    void graphPanelSectionExpanded(int pSection, bool pExpanded);
 
     void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);

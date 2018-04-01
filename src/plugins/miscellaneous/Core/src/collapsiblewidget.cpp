@@ -321,7 +321,7 @@ int CollapsibleWidget::count() const
 
 //==============================================================================
 
-bool CollapsibleWidget::isCollapsed(const int &pIndex) const
+bool CollapsibleWidget::isCollapsed(int pIndex) const
 {
     // Return wheter our requested header is collapsed
 
@@ -330,7 +330,7 @@ bool CollapsibleWidget::isCollapsed(const int &pIndex) const
 
 //==============================================================================
 
-void CollapsibleWidget::setCollapsed(const int &pIndex, bool pCollapsed)
+void CollapsibleWidget::setCollapsed(int pIndex, bool pCollapsed)
 {
     // Collapse or uncollapse our requested header
 
@@ -340,7 +340,7 @@ void CollapsibleWidget::setCollapsed(const int &pIndex, bool pCollapsed)
 
 //==============================================================================
 
-QString CollapsibleWidget::headerTitle(const int &pIndex) const
+QString CollapsibleWidget::headerTitle(int pIndex) const
 {
     // Return the title of our requested header
 
@@ -349,7 +349,7 @@ QString CollapsibleWidget::headerTitle(const int &pIndex) const
 
 //==============================================================================
 
-void CollapsibleWidget::setHeaderTitle(const int &pIndex, const QString &pTitle)
+void CollapsibleWidget::setHeaderTitle(int pIndex, const QString &pTitle)
 {
     // Set the title of our requested header
 

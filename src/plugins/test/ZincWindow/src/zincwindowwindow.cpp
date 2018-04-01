@@ -65,8 +65,8 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
             this, SLOT(createAndSetZincContext()));
     connect(mZincWidget, SIGNAL(graphicsInitialized()),
             this, SLOT(graphicsInitialized()));
-    connect(mZincWidget, SIGNAL(devicePixelRatioChanged(const int &)),
-            this, SLOT(devicePixelRatioChanged(const int &)));
+    connect(mZincWidget, SIGNAL(devicePixelRatioChanged(int)),
+            this, SLOT(devicePixelRatioChanged(int)));
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     mGui->layout->addWidget(new Core::BorderedWidget(mZincWidget,
@@ -237,7 +237,7 @@ void ZincWindowWindow::graphicsInitialized()
 
 //==============================================================================
 
-void ZincWindowWindow::devicePixelRatioChanged(const int &pDevicePixelRatio)
+void ZincWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 {
     // Update our scene using the given devide pixel ratio
 

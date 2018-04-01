@@ -53,7 +53,7 @@ CommonWidget::CommonWidget(QWidget *pParent) :
 
 //==============================================================================
 
-QSize CommonWidget::defaultSize(const double &pRatio) const
+QSize CommonWidget::defaultSize(double pRatio) const
 {
     // The default size of a widget is a ratio of the available geometry
 
@@ -99,7 +99,7 @@ bool CommonWidget::isBusyWidgetVisible() const
 
 //==============================================================================
 
-void CommonWidget::doShowBusyWidget(const double &pProgress)
+void CommonWidget::doShowBusyWidget(double pProgress)
 {
     // Create and show our new busy widget resized, and then disable our parent
 
@@ -186,7 +186,7 @@ void CommonWidget::resizeBusyWidget()
 
 //==============================================================================
 
-void CommonWidget::setBusyWidgetProgress(const double &pProgress)
+void CommonWidget::setBusyWidgetProgress(double pProgress)
 {
     // Make sure that we have a busy widget
 

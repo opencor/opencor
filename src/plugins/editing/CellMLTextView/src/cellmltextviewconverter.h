@@ -40,8 +40,7 @@ namespace CellMLTextView {
 class CellMLTextViewConverterWarning
 {
 public:
-    explicit CellMLTextViewConverterWarning(const int &pLine,
-                                            const QString &pMessage);
+    explicit CellMLTextViewConverterWarning(int pLine, const QString &pMessage);
 
     int line() const;
 
@@ -171,8 +170,7 @@ private:
     bool processVariableNode(const QDomNode &pDomNode);
     bool processMathNode(const QDomNode &pDomNode);
     int childNodesCount(const QDomNode &pDomNode) const;
-    QDomNode childNode(const QDomNode &pDomNode,
-                       const int &pChildNodeIndex) const;
+    QDomNode childNode(const QDomNode &pDomNode, int pChildNodeIndex) const;
     QString processMathmlNode(const QDomNode &pDomNode, bool &pHasError);
     QString processPiecewiseNode(const QDomNode &pDomNode, bool &pHasError);
     QString processPieceNode(const QDomNode &pDomNode, bool &pHasError);

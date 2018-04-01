@@ -80,12 +80,10 @@ public:
         LocallyBound
     };
 
-    explicit CellmlFileRuntimeParameter(const QString &pName,
-                                        const int &pDegree,
+    explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        const ParameterType &pType,
-                                        const int &pIndex);
+                                        const ParameterType &pType, int pIndex);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);

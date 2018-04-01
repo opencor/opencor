@@ -110,8 +110,7 @@ public:
     static void setLoad(const QString &pName, bool pToBeLoaded);
 
     static QStringList fullDependencies(const QString &pPluginsDir,
-                                        const QString &pName,
-                                        const int &pLevel = 0);
+                                        const QString &pName, int pLevel = 0);
 
 private:
     QString mName;

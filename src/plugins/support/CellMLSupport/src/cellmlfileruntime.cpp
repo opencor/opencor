@@ -62,11 +62,11 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
-                                                       const int &pDegree,
+                                                       int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
                                                        const ParameterType &pType,
-                                                       const int &pIndex) :
+                                                       int pIndex) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),

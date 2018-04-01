@@ -37,8 +37,8 @@ namespace CellMLTextView {
 //==============================================================================
 
 CellmlTextViewParserMessage::CellmlTextViewParserMessage(const Type &pType,
-                                                         const int &pLine,
-                                                         const int &pColumn,
+                                                         int pLine,
+                                                         int pColumn,
                                                          const QString &pMessage) :
     mType(pType),
     mLine(pLine),

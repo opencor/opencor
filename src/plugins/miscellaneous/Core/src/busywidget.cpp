@@ -45,7 +45,7 @@ namespace Core {
 
 //==============================================================================
 
-BusyWidget::BusyWidget(QWidget *pParent, const double &pProgress) :
+BusyWidget::BusyWidget(QWidget *pParent, double pProgress) :
     QWidget(pParent),
     mParent(pParent),
     mFps(0),
@@ -90,7 +90,7 @@ int BusyWidget::fps() const
 
 //==============================================================================
 
-void BusyWidget::setFps(const int &pFps)
+void BusyWidget::setFps(int pFps)
 {
     // Set our FPS
 
@@ -156,7 +156,7 @@ double BusyWidget::backgroundRoundness() const
 
 //==============================================================================
 
-void BusyWidget::setBackgroundRoundness(const double &pBackgroundRoundness)
+void BusyWidget::setBackgroundRoundness(double pBackgroundRoundness)
 {
     // Set our background roundness
 
@@ -178,7 +178,7 @@ int BusyWidget::count() const
 
 //==============================================================================
 
-void BusyWidget::setCount(const int &pCount)
+void BusyWidget::setCount(int pCount)
 {
     // Set our number of lines
 
@@ -201,7 +201,7 @@ int BusyWidget::length() const
 
 //==============================================================================
 
-void BusyWidget::setLength(const int &pLength)
+void BusyWidget::setLength(int pLength)
 {
     // Set the length of our lines
 
@@ -223,7 +223,7 @@ int BusyWidget::thickness() const
 
 //==============================================================================
 
-void BusyWidget::setThickness(const int &pThickness)
+void BusyWidget::setThickness(int pThickness)
 {
     // Set the thickness of our lines
 
@@ -245,7 +245,7 @@ double BusyWidget::roundness() const
 
 //==============================================================================
 
-void BusyWidget::setRoundness(const double &pRoundness)
+void BusyWidget::setRoundness(double pRoundness)
 {
     // Set the roundness of our lines
 
@@ -267,7 +267,7 @@ int BusyWidget::trail() const
 
 //==============================================================================
 
-void BusyWidget::setTrail(const int &pTrail)
+void BusyWidget::setTrail(int pTrail)
 {
     // Set the trail of our lines
 
@@ -289,7 +289,7 @@ double BusyWidget::opacity() const
 
 //==============================================================================
 
-void BusyWidget::setOpacity(const double &pOpacity)
+void BusyWidget::setOpacity(double pOpacity)
 {
     // Set the opacity of our lines
 
@@ -311,7 +311,7 @@ int BusyWidget::radius() const
 
 //==============================================================================
 
-void BusyWidget::setRadius(const int &pRadius)
+void BusyWidget::setRadius(int pRadius)
 {
     // Set our radius
 
@@ -333,7 +333,7 @@ double BusyWidget::progress() const
 
 //==============================================================================
 
-void BusyWidget::setProgress(const double &pProgress)
+void BusyWidget::setProgress(double pProgress)
 {
     // Set our progress and enable/disable our timer, depending on the case
 

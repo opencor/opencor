@@ -69,21 +69,21 @@ public:
     void setLexer(QsciLexer *pLexer) override;
 
     int currentPosition() const;
-    void setCurrentPosition(const int &pCurrentPosition);
+    void setCurrentPosition(int pCurrentPosition);
 
     QString contents() const;
     void setContents(const QString &pContents, bool pKeepHistory = false);
 
     int contentsSize() const;
 
-    QString textInRange(const int &pStartRange, const int &pEndRange) const;
-    int findTextInRange(const int &pStartRange, const int &pEndRange,
-                        const QString &pText, bool pRegularExpression,
-                        bool pCaseSensitive, bool pWholeWordsOnly) const;
+    QString textInRange(int pStartRange, int pEndRange) const;
+    int findTextInRange(int pStartRange, int pEndRange, const QString &pText,
+                        bool pRegularExpression, bool pCaseSensitive,
+                        bool pWholeWordsOnly) const;
 
-    QString wordAt(const int &pLine, const int &pColumn) const;
+    QString wordAt(int pLine, int pColumn) const;
 
-    void selectWordAt(const int &pLine, const int &pColumn);
+    void selectWordAt(int pLine, int pColumn);
 
     bool isSelectAllAvailable() const;
 
@@ -96,11 +96,11 @@ public:
 
     QString eolString() const;
 
-    QColor backgroundColor(const int &pStyle);
-    void setBackgroundColor(const int &pStyle, const QColor &pBackgroundColor);
+    QColor backgroundColor(int pStyle);
+    void setBackgroundColor(int pStyle, const QColor &pBackgroundColor);
 
-    QColor foregroundColor(const int &pStyle);
-    void setForegroundColor(const int &pStyle, const QColor &pForegroundColor);
+    QColor foregroundColor(int pStyle);
+    void setForegroundColor(int pStyle, const QColor &pForegroundColor);
 
     int zoomLevel() const;
 
@@ -147,7 +147,7 @@ private slots:
 
     void checkCanSelectAll();
 
-    void cursorPositionChanged(const int &pLine, const int &pColumn);
+    void cursorPositionChanged(int pLine, int pColumn);
 };
 
 //==============================================================================

@@ -163,15 +163,15 @@ private:
     QString mContentMathmlEquation;
 
     bool commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
-                                const int &pLineNumber, bool pCommentLine);
+                                int pLineNumber, bool pCommentLine);
 
     bool parse(const QString &pFileName, bool pOnlyErrors = false);
 
-    QString partialStatement(const int &pPosition, int &pFromPosition,
+    QString partialStatement(int pPosition, int &pFromPosition,
                              int &pToPosition) const;
     QString beginningOfPiecewiseStatement(int &pPosition) const;
     QString endOfPiecewiseStatement(int &pPosition) const;
-    QString statement(const int &pPosition) const;
+    QString statement(int pPosition) const;
 
 private slots:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);

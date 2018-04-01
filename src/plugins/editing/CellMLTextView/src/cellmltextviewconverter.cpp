@@ -37,7 +37,7 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellMLTextViewConverterWarning::CellMLTextViewConverterWarning(const int &pLine,
+CellMLTextViewConverterWarning::CellMLTextViewConverterWarning(int pLine,
                                                                const QString &pMessage) :
     mLine(pLine),
     mMessage(pMessage)
@@ -901,7 +901,7 @@ int CellMLTextViewConverter::childNodesCount(const QDomNode &pDomNode) const
 //==============================================================================
 
 QDomNode CellMLTextViewConverter::childNode(const QDomNode &pDomNode,
-                                            const int &pChildNodeIndex) const
+                                            int pChildNodeIndex) const
 {
     // Return the nth child element of the given node
 

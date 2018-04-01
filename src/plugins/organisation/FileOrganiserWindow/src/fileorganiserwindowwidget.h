@@ -89,7 +89,7 @@ public:
 
 private:
     void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
-                             const int &pLevel = 0) const;
+                             int pLevel = 0) const;
     QByteArray encodeData(const QModelIndexList &pIndexes) const;
 
     QModelIndex decodeHierarchyData(QDataStream &pStream) const;
@@ -125,7 +125,7 @@ private:
 
     void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings *pSettings, QStandardItem *pItem,
-                          const int &pParentItemIndex) const;
+                          int pParentItemIndex) const;
 
     QString newFolderName(QStandardItem *pFolderItem) const;
     void collapseEmptyFolders(QStandardItem *pFolder);

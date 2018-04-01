@@ -115,7 +115,7 @@ OdeSolver::OdeSolver() :
 
 //==============================================================================
 
-void OdeSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
+void OdeSolver::initialize(double pVoi, int pRatesStatesCount,
                            double *pConstants, double *pRates, double *pStates,
                            double *pAlgebraic,
                            ComputeRatesFunction pComputeRates)
@@ -136,7 +136,7 @@ void OdeSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
 //==============================================================================
 
-void OdeSolver::reinitialize(const double &pVoi)
+void OdeSolver::reinitialize(double pVoi)
 {
     Q_UNUSED(pVoi);
 

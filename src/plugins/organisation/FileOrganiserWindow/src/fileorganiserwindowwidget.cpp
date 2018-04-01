@@ -119,7 +119,7 @@ QStringList FileOrganiserWindowModel::mimeTypes() const
 
 void FileOrganiserWindowModel::encodeHierarchyData(const QModelIndex &pIndex,
                                                    QDataStream &pStream,
-                                                   const int &pLevel) const
+                                                   int pLevel) const
 {
     // Encode the item's hierarchy
 
@@ -461,7 +461,7 @@ void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
 
 void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
                                                  QStandardItem *pItem,
-                                                 const int &pParentItemIndex) const
+                                                 int pParentItemIndex) const
 {
     // Recursively keep track of the item settings
 

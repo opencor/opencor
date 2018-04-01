@@ -100,7 +100,7 @@ public:
     void setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter);
 
     double tumbleRate();
-    void setTumbleRate(const double &pTumbleRate);
+    void setTumbleRate(double pTumbleRate);
 
     int project(double *pInCoordinates, double *pOutCoordinates);
     int unproject(double *pInCoordinates, double *pOutCoordinates);
@@ -132,7 +132,7 @@ private:
 
     void createSceneViewer();
 
-    void updateSceneViewerViewerportSize(const int &pWidth, const int &pHeight,
+    void updateSceneViewerViewerportSize(int pWidth, int pHeight,
                                          bool pCheckDevicePixelRatio = false);
 
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
@@ -141,7 +141,7 @@ private:
 signals:
     void contextAboutToBeDestroyed();
     void graphicsInitialized();
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
+    void devicePixelRatioChanged(int pDevicePixelRatio);
 };
 
 //==============================================================================
