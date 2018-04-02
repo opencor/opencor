@@ -573,7 +573,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Also keep track of GUI updates in our central widget
         // Note: we cannot use the new signal/slot mechanism since the signal
-        //       is located in our Core plugin...
+        //       is located in our Core plugin and that we don't normally know
+        //       anything about it...
 
         connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(OpenCOR::Plugin *, const QString &)),
                 this, SLOT(updateGui(OpenCOR::Plugin *, const QString &)));
