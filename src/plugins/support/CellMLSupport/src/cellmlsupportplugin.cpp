@@ -186,8 +186,8 @@ void CellMLSupportPlugin::initializePlugin()
 
     // Some connections to handle our different actions
 
-    connect(mFileNewCellmlFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newCellmlFile()));
+    connect(mFileNewCellmlFileAction, &QAction::triggered,
+            this, &CellMLSupportPlugin::newCellmlFile);
 }
 
 //==============================================================================

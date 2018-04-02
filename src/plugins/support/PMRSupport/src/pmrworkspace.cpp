@@ -86,27 +86,27 @@ PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
     // Note: ideally, we would do this within the clone() method, but we can't
     //       since it's executed in a different thread...
 
-    connect(this, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(refreshStatus()));
+    connect(this, &PmrWorkspace::workspaceCloned,
+            this, &PmrWorkspace::refreshStatus);
 
     // Forward our signals to the 'global' instance of our workspace manager
     // class
 
     PmrWorkspaceManager *workspaceManager = PmrWorkspaceManager::instance();
 
-    connect(this, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(this, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(this, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(this, &PmrWorkspace::workspaceCloned,
+            workspaceManager, &PmrWorkspaceManager::workspaceCloned);
+    connect(this, &PmrWorkspace::workspaceUncloned,
+            workspaceManager, &PmrWorkspaceManager::workspaceUncloned);
+    connect(this, &PmrWorkspace::workspaceSynchronized,
+            workspaceManager, &PmrWorkspaceManager::workspaceSynchronized);
 
     // Forward our signals to our parent PMR web service
 
-    connect(this, SIGNAL(information(const QString &)),
-            pParent, SIGNAL(information(const QString &)));
-    connect(this, SIGNAL(warning(const QString &)),
-            pParent, SIGNAL(warning(const QString &)));
+    connect(this, &PmrWorkspace::information,
+            pParent, &PmrWebService::information);
+    connect(this, &PmrWorkspace::warning,
+            pParent, &PmrWebService::warning);
 }
 
 //==============================================================================

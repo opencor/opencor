@@ -361,8 +361,8 @@ void SimulationData::reset(bool pInitialize)
 
         // Keep track of any error that might be reported by our NLA solver
 
-        connect(nlaSolver, SIGNAL(error(const QString &)),
-                this, SIGNAL(error(const QString &)));
+        connect(nlaSolver, &Solver::NlaSolver::error,
+                this, &SimulationData::error);
 
         // Initialise our NLA solver
 
@@ -768,8 +768,8 @@ Simulation::Simulation(const QString &pFileName) :
 
     // Keep track of any error occurring in our data
 
-    connect(mData, SIGNAL(error(const QString &)),
-            this, SIGNAL(error(const QString &)));
+    connect(mData, &SimulationData::error,
+            this, &Simulation::error);
 }
 
 //==============================================================================
@@ -1076,16 +1076,16 @@ bool Simulation::run()
 
         // Create a few connections
 
-        connect(mWorker, SIGNAL(running(bool)),
-                this, SIGNAL(running(bool)));
-        connect(mWorker, SIGNAL(paused()),
-                this, SIGNAL(paused()));
+        connect(mWorker, &SimulationWorker::running,
+                this, &Simulation::running);
+        connect(mWorker, &SimulationWorker::paused,
+                this, &Simulation::paused);
 
-        connect(mWorker, SIGNAL(finished(qint64)),
-                this, SIGNAL(stopped(qint64)));
+        connect(mWorker, &SimulationWorker::finished,
+                this, &Simulation::stopped);
 
-        connect(mWorker, SIGNAL(error(const QString &)),
-                this, SIGNAL(error(const QString &)));
+        connect(mWorker, &SimulationWorker::error,
+                this, &Simulation::error);
 
         // Start our worker
 

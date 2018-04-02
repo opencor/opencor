@@ -104,8 +104,8 @@ private slots:
     void openBrowser(const QUrl &pUrl);
     void closeBrowser();
 
-    void sslErrors(QNetworkReply *pNetworkReply,
-                   const QList<QSslError> &pSslErrors);
+    void ignoreSslErrors(QNetworkReply *pNetworkReply,
+                         const QList<QSslError> &pSslErrors);
 };
 
 //==============================================================================

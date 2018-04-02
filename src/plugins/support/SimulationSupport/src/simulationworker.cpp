@@ -60,16 +60,16 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation,
 
     // Create a few connections
 
-    connect(mThread, SIGNAL(started()),
-            this, SLOT(started()));
+    connect(mThread, &QThread::started,
+            this, &SimulationWorker::started);
 
-    connect(this, SIGNAL(finished(qint64)),
-            mThread, SLOT(quit()));
+    connect(this, &SimulationWorker::finished,
+            mThread, &QThread::quit);
 
-    connect(mThread, SIGNAL(finished()),
-            mThread, SLOT(deleteLater()));
-    connect(mThread, SIGNAL(finished()),
-            this, SLOT(deleteLater()));
+    connect(mThread, &QThread::finished,
+            mThread, &QThread::deleteLater);
+    connect(mThread, &QThread::finished,
+            this, &SimulationWorker::deleteLater);
 }
 
 //==============================================================================
@@ -222,12 +222,12 @@ void SimulationWorker::started()
     mStopped = false;
     mError = false;
 
-    connect(odeSolver, SIGNAL(error(const QString &)),
-            this, SLOT(emitError(const QString &)));
+    connect(odeSolver, &Solver::OdeSolver::error,
+            this, &SimulationWorker::emitError);
 
     if (nlaSolver) {
-        connect(nlaSolver, SIGNAL(error(const QString &)),
-                this, SLOT(emitError(const QString &)));
+        connect(nlaSolver, &Solver::NlaSolver::error,
+                this, &SimulationWorker::emitError);
     }
 
     // Retrieve our simulation properties

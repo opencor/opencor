@@ -131,22 +131,22 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Keep track of the change to the UI
 
-    connect(this, SIGNAL(SCN_UPDATEUI(int)),
-            this, SLOT(updateUi()));
+    connect(this, &QScintillaWidget::SCN_UPDATEUI,
+            this, &QScintillaWidget::updateUi);
 
     // Keep track of changes to our editor and resize the margin line numbers
     // accordingly
 
-    connect(this, SIGNAL(textChanged()),
-            this, SLOT(updateMarginLineNumbersWidth()));
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::updateMarginLineNumbersWidth);
 
     // Keep track of changes to our editor that may affect our ability to select
     // all of its text
 
-    connect(this, SIGNAL(selectionChanged()),
-            this, SLOT(checkCanSelectAll()));
-    connect(this, SIGNAL(textChanged()),
-            this, SLOT(checkCanSelectAll()));
+    connect(this, &QScintillaWidget::selectionChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
 
     // Keep track of the change in the cursor position
 

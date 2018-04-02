@@ -41,18 +41,18 @@ StandardFileManager::StandardFileManager() :
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileManaged(const QString &)),
-            this, SLOT(manage(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
-            this, SLOT(unmanage(const QString &)));
+    connect(fileManagerInstance, &Core::FileManager::fileManaged,
+            this, &StandardFileManager::manage);
+    connect(fileManagerInstance, &Core::FileManager::fileUnmanaged,
+            this, &StandardFileManager::unmanage);
 
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(reload(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(rename(const QString &, const QString &)));
+    connect(fileManagerInstance, &Core::FileManager::fileReloaded,
+            this, &StandardFileManager::reload);
+    connect(fileManagerInstance, &Core::FileManager::fileRenamed,
+            this, &StandardFileManager::rename);
 
-    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
-            this, SLOT(save(const QString &)));
+    connect(fileManagerInstance, &Core::FileManager::fileSaved,
+            this, &StandardFileManager::save);
 }
 
 //==============================================================================
@@ -145,12 +145,12 @@ void StandardFileManager::save(const QString &pFileName)
     StandardFile *crtFile = file(pFileName);
 
     if (crtFile)
-        reload(pFileName, crtFile->isNew());
+        doReload(pFileName, crtFile->isNew());
 }
 
 //==============================================================================
 
-void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
+void StandardFileManager::doReload(const QString &pFileName, bool pForceChecking)
 {
     // The file is to be reloaded (either because it has been changed or because
     // one or several of its dependencies has changed), so reload it
@@ -180,6 +180,15 @@ void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
         if (crtFile)
             crtFile->load();
     }
+}
+
+//==============================================================================
+
+void StandardFileManager::reload(const QString &pFileName)
+{
+    // Reload the given file
+
+    doReload(pFileName);
 }
 
 //==============================================================================
