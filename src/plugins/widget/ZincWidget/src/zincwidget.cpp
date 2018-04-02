@@ -53,7 +53,7 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
     // Ask our Zinc widget to update itself if repainting is required
 
     if (pSceneViewerEvent.getChangeFlags() & OpenCMISS::Zinc::Sceneviewerevent::CHANGE_FLAG_REPAINT_REQUIRED)
-        QTimer::singleShot(0, mZincWidget, SLOT(update()));
+        QTimer::singleShot(0, mZincWidget, QOverload<>::of(&ZincWidget::update));
 }
 
 //==============================================================================
