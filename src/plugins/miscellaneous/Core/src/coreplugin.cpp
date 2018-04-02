@@ -468,72 +468,72 @@ void CorePlugin::initializePlugin()
 
     // Some connections to handle our different File actions
 
-    connect(mFileNewFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newFile()));
+    connect(mFileNewFileAction, &QAction::triggered,
+            this, &CorePlugin::newFile);
 
-    connect(mFileOpenAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(openFile()));
-    connect(mFileOpenRemoteAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(openRemoteFile()));
+    connect(mFileOpenAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::openFile));
+    connect(mFileOpenRemoteAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::openRemoteFile));
 
-    connect(mFileReloadAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(reloadFile()));
+    connect(mFileReloadAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::reloadFile);
 
-    connect(mFileDuplicateAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(duplicateFile()));
+    connect(mFileDuplicateAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::duplicateFile);
 
-    connect(mFileLockedAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(toggleLockedFile()));
+    connect(mFileLockedAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::toggleLockedFile);
 
-    connect(mFileSaveAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(saveFile()));
-    connect(mFileSaveAsAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(saveFileAs()));
-    connect(mFileSaveAllAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(saveAllFiles()));
+    connect(mFileSaveAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::saveFile));
+    connect(mFileSaveAsAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::saveFileAs);
+    connect(mFileSaveAllAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::saveAllFiles);
 
-    connect(mFilePreviousAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(previousFile()));
-    connect(mFileNextAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(nextFile()));
+    connect(mFilePreviousAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::previousFile);
+    connect(mFileNextAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::nextFile);
 
-    connect(mFileCloseAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(closeFile()));
-    connect(mFileCloseAllAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(closeAllFiles()));
+    connect(mFileCloseAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::closeFile);
+    connect(mFileCloseAllAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::closeAllFiles);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mCentralWidget, SIGNAL(atLeastOneView(bool)),
-            mFileOpenAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneView(bool)),
-            mFileOpenRemoteAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneView(bool)),
-            this, SLOT(updateFileReopenMenu(bool)));
+    connect(mCentralWidget, &CentralWidget::atLeastOneView,
+            mFileOpenAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::atLeastOneView,
+            mFileOpenRemoteAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::atLeastOneView,
+            this, &CorePlugin::updateFileReopenMenu);
 
-    connect(mCentralWidget, SIGNAL(canSave(bool)),
-            mFileSaveAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(canSaveAs(bool)),
-            mFileSaveAsAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(canSaveAll(bool)),
-            mFileSaveAllAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, &CentralWidget::canSave,
+            mFileSaveAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::canSaveAs,
+            mFileSaveAsAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::canSaveAll,
+            mFileSaveAllAction, &QAction::setEnabled);
 
-    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(bool)),
-            mFilePreviousAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(bool)),
-            mFileNextAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, &CentralWidget::atLeastTwoFiles,
+            mFilePreviousAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::atLeastTwoFiles,
+            mFileNextAction, &QAction::setEnabled);
 
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(bool)),
-            mFileCloseAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(bool)),
-            mFileCloseAllAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, &CentralWidget::atLeastOneFile,
+            mFileCloseAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::atLeastOneFile,
+            mFileCloseAllAction, &QAction::setEnabled);
 
     // A connection related to our Reopen sub-menu
 
-    connect(mFileReopenMostRecentFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(reopenMostRecentFile()));
-    connect(mFileClearReopenSubMenuAction, SIGNAL(triggered(bool)),
-            this, SLOT(clearReopenSubMenu()));
+    connect(mFileReopenMostRecentFileAction, &QAction::triggered,
+            this, &CorePlugin::reopenMostRecentFile);
+    connect(mFileClearReopenSubMenuAction, &QAction::triggered,
+            this, &CorePlugin::clearReopenSubMenu);
 }
 
 //==============================================================================
@@ -725,8 +725,8 @@ void CorePlugin::updateFileReopenMenu(bool pEnabled)
         action->setEnabled(pEnabled);
         action->setText(recentFile);
 
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(reopenRecentFile()));
+        connect(action, &QAction::triggered,
+                this, &CorePlugin::reopenRecentFile);
 
         mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator2, action);
     }

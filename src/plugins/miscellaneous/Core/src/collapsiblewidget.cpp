@@ -142,10 +142,10 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
     // Connections to toggle our collapsed state
 
     if (pCollapsible) {
-        connect(mButton, SIGNAL(clicked(bool)),
-                this, SLOT(toggleCollapsedState()));
-        connect(mTitle, SIGNAL(doubleClicked()),
-                this, SLOT(toggleCollapsedState()));
+        connect(mButton, &QToolButton::clicked,
+                this, &CollapsibleHeaderWidget::toggleCollapsedState);
+        connect(mTitle, &CollapsibleHeaderTitleWidget::doubleClicked,
+                this, &CollapsibleHeaderWidget::toggleCollapsedState);
     }
 }
 
@@ -242,11 +242,11 @@ void CollapsibleHeaderWidget::setMenu(QMenu *pMenu)
         mMenuMenu = pMenu;
 
         if (pMenu) {
-            connect(mMenu, SIGNAL(clicked(bool)),
-                    this, SLOT(showMenu()));
+            connect(mMenu, &QToolButton::clicked,
+                    this, &CollapsibleHeaderWidget::showMenu);
         } else {
-            disconnect(mMenu, SIGNAL(clicked(bool)),
-                       this, SLOT(showMenu()));
+            disconnect(mMenu, &QToolButton::clicked,
+                       this, &CollapsibleHeaderWidget::showMenu);
         }
     }
 }
@@ -399,11 +399,11 @@ CollapsibleHeaderWidget * CollapsibleWidget::addWidget(QWidget *pWidget,
     // new collapsible state
 
     if (pCollapsible) {
-        connect(header, SIGNAL(widgetVisible(bool)),
-                pWidget, SLOT(setVisible(bool)));
+        connect(header, &CollapsibleHeaderWidget::widgetVisible,
+                pWidget, &QWidget::setVisible);
 
-        connect(header, SIGNAL(widgetVisible(bool)),
-                this, SLOT(emitCollapsed()));
+        connect(header, &CollapsibleHeaderWidget::widgetVisible,
+                this, &CollapsibleWidget::emitCollapsed);
     }
 
     return header;

@@ -118,26 +118,26 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     mHelpWindowWidget->webView()->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mHelpWindowWidget->webView(), SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
+    connect(mHelpWindowWidget->webView(), &QWebView::customContextMenuRequested,
+            this, &HelpWindowWindow::showCustomContextMenu);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mHelpWindowWidget, SIGNAL(homePage(bool)),
-            mGui->actionHome, SLOT(setDisabled(bool)));
+    connect(mHelpWindowWidget, QOverload<bool>::of(&HelpWindowWidget::homePage),
+            mGui->actionHome, &QAction::setDisabled);
 
-    connect(mHelpWindowWidget, SIGNAL(backEnabled(bool)),
-            mGui->actionBack, SLOT(setEnabled(bool)));
-    connect(mHelpWindowWidget, SIGNAL(forwardEnabled(bool)),
-            mGui->actionForward, SLOT(setEnabled(bool)));
+    connect(mHelpWindowWidget, &HelpWindowWidget::backEnabled,
+            mGui->actionBack, &QAction::setEnabled);
+    connect(mHelpWindowWidget, &HelpWindowWidget::forwardEnabled,
+            mGui->actionForward, &QAction::setEnabled);
 
-    connect(mHelpWindowWidget, SIGNAL(defaultZoomLevel(bool)),
-            mGui->actionNormalSize, SLOT(setDisabled(bool)));
-    connect(mHelpWindowWidget, SIGNAL(zoomingOutEnabled(bool)),
-            mGui->actionZoomOut, SLOT(setEnabled(bool)));
+    connect(mHelpWindowWidget, &HelpWindowWidget::defaultZoomLevel,
+            mGui->actionNormalSize, &QAction::setDisabled);
+    connect(mHelpWindowWidget, &HelpWindowWidget::zoomingOutEnabled,
+            mGui->actionZoomOut, &QAction::setEnabled);
 
-    connect(mHelpWindowWidget, SIGNAL(copyTextEnabled(bool)),
-            mGui->actionCopy, SLOT(setEnabled(bool)));
+    connect(mHelpWindowWidget, &HelpWindowWidget::copyTextEnabled,
+            mGui->actionCopy, &QAction::setEnabled);
 
     // En/disable the printing action, depending on whether printers are
     // available

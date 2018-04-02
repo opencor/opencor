@@ -335,6 +335,8 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Create and return an editor for our item, based on its type
 
     QWidget *editor = 0;
+    TextEditorWidget *textEditor = 0;
+    ListEditorWidget *listEditor = 0;
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
@@ -343,37 +345,35 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         return 0;
     case Property::String:
-        editor = new TextEditorWidget(pParent);
+        editor = textEditor = new TextEditorWidget(pParent);
 
         break;
     case Property::Integer:
-        editor = new IntegerEditorWidget(pParent);
+        editor = textEditor = new IntegerEditorWidget(pParent);
 
         break;
     case Property::IntegerGe0:
-        editor = new IntegerGe0EditorWidget(pParent);
+        editor = textEditor = new IntegerGe0EditorWidget(pParent);
 
         break;
     case Property::IntegerGt0:
-        editor = new IntegerGt0EditorWidget(pParent);
+        editor = textEditor = new IntegerGt0EditorWidget(pParent);
 
         break;
     case Property::Double:
-        editor = new DoubleEditorWidget(pParent);
+        editor = textEditor = new DoubleEditorWidget(pParent);
 
         break;
     case Property::DoubleGe0:
-        editor = new DoubleGe0EditorWidget(pParent);
+        editor = textEditor = new DoubleGe0EditorWidget(pParent);
 
         break;
     case Property::DoubleGt0:
-        editor = new DoubleGt0EditorWidget(pParent);
+        editor = textEditor = new DoubleGt0EditorWidget(pParent);
 
         break;
     case Property::List: {
-        ListEditorWidget *listEditor = new ListEditorWidget(pParent);
-
-        editor = listEditor;
+        editor = listEditor = new ListEditorWidget(pParent);
 
         // Add the value items to our list, keeping in mind separators
 
@@ -384,24 +384,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                 listEditor->addItem(valueItem);
         }
 
-        // Propagate the signal telling us about our list property value having
-        // changed
-
-        connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SLOT(listPropertyChanged(const QString &)));
-
         break;
     }
     case Property::Boolean: {
-        BooleanEditorWidget *booleanEditor = new BooleanEditorWidget(pParent);
-
-        editor = booleanEditor;
-
-        // Propagate the signal telling us about our boolean value having
-        // changed
-
-        connect(booleanEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SLOT(booleanPropertyChanged(const QString &)));
+        editor = listEditor = new BooleanEditorWidget(pParent);
 
         break;
     }
@@ -413,10 +399,37 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
     // Propagate a few signals
 
-    connect(editor, SIGNAL(goToPreviousPropertyRequested()),
-            this, SIGNAL(goToPreviousPropertyRequested()));
-    connect(editor, SIGNAL(goToNextPropertyRequested()),
-            this, SIGNAL(goToNextPropertyRequested()));
+    switch (property->type()) {
+    case Property::String:
+    case Property::Integer:
+    case Property::IntegerGe0:
+    case Property::IntegerGt0:
+    case Property::Double:
+    case Property::DoubleGe0:
+    case Property::DoubleGt0:
+    case Property::Color:
+        connect(textEditor, &TextEditorWidget::goToPreviousPropertyRequested,
+                this, &PropertyItemDelegate::goToPreviousPropertyRequested);
+        connect(textEditor, &TextEditorWidget::goToNextPropertyRequested,
+                this, &PropertyItemDelegate::goToNextPropertyRequested);
+
+        break;
+    case Property::List:
+    case Property::Boolean:
+        connect(listEditor, QOverload<const QString &>::of(&ListEditorWidget::currentIndexChanged),
+                this, &PropertyItemDelegate::listPropertyChanged);
+
+        connect(listEditor, &ListEditorWidget::goToPreviousPropertyRequested,
+                this, &PropertyItemDelegate::goToPreviousPropertyRequested);
+        connect(listEditor, &ListEditorWidget::goToNextPropertyRequested,
+                this, &PropertyItemDelegate::goToNextPropertyRequested);
+
+        break;
+    default:
+        // Not a relevant type, so do nothing...
+
+        ;
+    }
 
     // Let people know that there is a new editor
 
@@ -1270,34 +1283,34 @@ PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
 
     PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate(this);
 
-    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(editorClosed()));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &PropertyEditorWidget::editorClosed);
 
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(checkCheckState(QStandardItem *)));
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, &PropertyEditorWidget::checkCheckState);
 
-    connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
-            this, SLOT(editorOpened(QWidget *)));
-    connect(propertyItemDelegate, SIGNAL(closeEditor(QWidget *, QAbstractItemDelegate::EndEditHint)),
-            this, SLOT(editorClosed()));
+    connect(propertyItemDelegate, &PropertyItemDelegate::openEditor,
+            this, &PropertyEditorWidget::editorOpened);
+    connect(propertyItemDelegate, &PropertyItemDelegate::closeEditor,
+            this, &PropertyEditorWidget::editorClosed);
 
-    connect(propertyItemDelegate, SIGNAL(goToPreviousPropertyRequested()),
-            this, SLOT(goToPreviousProperty()));
-    connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
-            this, SLOT(goToNextProperty()));
+    connect(propertyItemDelegate, &PropertyItemDelegate::goToPreviousPropertyRequested,
+            this, &PropertyEditorWidget::goToPreviousProperty);
+    connect(propertyItemDelegate, &PropertyItemDelegate::goToNextPropertyRequested,
+            this, &PropertyEditorWidget::goToNextProperty);
 
     setItemDelegate(propertyItemDelegate);
 
     // Resize our height in case some data has changed or one of the properties
     // gets expanded/collapsed
 
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updateHeight()));
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, &PropertyEditorWidget::updateHeight);
 
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(updateHeight()));
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(updateHeight()));
+    connect(this, &PropertyEditorWidget::collapsed,
+            this, &PropertyEditorWidget::updateHeight);
+    connect(this, &PropertyEditorWidget::expanded,
+            this, &PropertyEditorWidget::updateHeight);
 
     header()->setSectionsMovable(false);
 
@@ -1498,13 +1511,13 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
 
     // Keep track of our property's change of visibility
 
-    connect(res, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(updateHeight()));
+    connect(res, &Property::visibilityChanged,
+            this, &PropertyEditorWidget::updateHeight);
 
     // Keep track of our property's change of value
 
-    connect(res, SIGNAL(valueChanged(const QString &, const QString &)),
-            this, SLOT(emitPropertyChanged()));
+    connect(res, &Property::valueChanged,
+            this, &PropertyEditorWidget::emitPropertyChanged);
 
     // Keep track of our property's check state
 

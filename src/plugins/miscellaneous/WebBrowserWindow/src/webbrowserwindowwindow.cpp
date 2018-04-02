@@ -76,8 +76,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mUrlValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    connect(mUrlValue, SIGNAL(returnPressed()),
-            this, SLOT(returnPressed()));
+    connect(mUrlValue, &QLineEdit::returnPressed,
+            this, &WebBrowserWindowWindow::returnPressed);
 
     topToolBarWidget->addWidget(spacer);
     topToolBarWidget->addWidget(mUrlValue);
@@ -130,8 +130,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Various connections to handle our web browser window widget
 
-    connect(mWebBrowserWindowWidget->webView(), SIGNAL(urlChanged(const QUrl &)),
-            this, SLOT(urlChanged(const QUrl &)));
+    connect(mWebBrowserWindowWidget->webView(), &QWebView::urlChanged,
+            this, &WebBrowserWindowWindow::urlChanged);
 
     // Create and populate our context menu
 
@@ -159,26 +159,26 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mWebBrowserWindowWidget->webView()->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mWebBrowserWindowWidget->webView(), SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
+    connect(mWebBrowserWindowWidget->webView(), &QWebView::customContextMenuRequested,
+            this, &WebBrowserWindowWindow::showCustomContextMenu);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mWebBrowserWindowWidget, SIGNAL(homePage(bool)),
-            mGui->actionClear, SLOT(setDisabled(bool)));
+    connect(mWebBrowserWindowWidget, QOverload<bool>::of(&WebBrowserWindowWidget::homePage),
+            mGui->actionClear, &QAction::setDisabled);
 
-    connect(mWebBrowserWindowWidget, SIGNAL(backEnabled(bool)),
-            mGui->actionBack, SLOT(setEnabled(bool)));
-    connect(mWebBrowserWindowWidget, SIGNAL(forwardEnabled(bool)),
-            mGui->actionForward, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::backEnabled,
+            mGui->actionBack, &QAction::setEnabled);
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::forwardEnabled,
+            mGui->actionForward, &QAction::setEnabled);
 
-    connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(bool)),
-            mGui->actionNormalSize, SLOT(setDisabled(bool)));
-    connect(mWebBrowserWindowWidget, SIGNAL(zoomingOutEnabled(bool)),
-            mGui->actionZoomOut, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::defaultZoomLevel,
+            mGui->actionNormalSize, &QAction::setDisabled);
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::zoomingOutEnabled,
+            mGui->actionZoomOut, &QAction::setEnabled);
 
-    connect(mWebBrowserWindowWidget, SIGNAL(copyTextEnabled(bool)),
-            mGui->actionCopy, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::copyTextEnabled,
+            mGui->actionCopy, &QAction::setEnabled);
 
     // En/disable the printing action, depending on whether printers are
     // available

@@ -191,6 +191,11 @@ private:
 
     void setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex);
 
+    void doReloadFile(int pIndex = -1, bool pForce = false);
+
+    bool doCloseFile(int pIndex = -1, bool pForceClosing = false);
+    void doCloseAllFiles(bool pForceClosing = false);
+
 signals:
     void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
@@ -203,21 +208,33 @@ signals:
     void atLeastOneFile(bool pAtLeastOneFile);
     void atLeastTwoFiles(bool pAtLeastTwoFiles);
 
-private slots:
-    void updateGui();
-
+public slots:
     void openFile();
 
-    void openRemoteFileChanged();
-    void doOpenRemoteFile();
-    void cancelOpenRemoteFile();
     void openRemoteFile();
 
-    void reloadFile(int pIndex = -1, bool pForce = false);
+    void reloadFile();
 
     void duplicateFile();
 
     void toggleLockedFile();
+
+    void saveFile();
+    void saveFileAs();
+    void saveAllFiles();
+
+    void previousFile();
+    void nextFile();
+
+    bool closeFile();
+    void closeAllFiles();
+
+private slots:
+    void updateGui();
+
+    void openRemoteFileChanged();
+    void doOpenRemoteFile();
+    void cancelOpenRemoteFile();
 
     void fileChanged(const QString &pFileName, bool pFileChanged,
                      bool pDependenciesChanged);
@@ -235,16 +252,6 @@ private slots:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     void fileSaved(const QString &pFileName);
-
-    void saveFile();
-    void saveFileAs();
-    void saveAllFiles();
-
-    void previousFile();
-    void nextFile();
-
-    bool closeFile(int pIndex = -1, bool pForceClosing = false);
-    void closeAllFiles(bool pForceClosing = false);
 
     void moveFile(int pFromIndex, int pToIndex);
 

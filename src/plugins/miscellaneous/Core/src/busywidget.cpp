@@ -68,8 +68,8 @@ BusyWidget::BusyWidget(QWidget *pParent, double pProgress) :
 
     setFps(10);
 
-    connect(mTimer, SIGNAL(timeout()),
-            this, SLOT(rotate()));
+    connect(mTimer, &QTimer::timeout,
+            this, &BusyWidget::rotate);
 
     // Make ourselves visible and start our timer, if needed
 
