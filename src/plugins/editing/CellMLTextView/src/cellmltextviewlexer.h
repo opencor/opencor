@@ -73,24 +73,22 @@ private:
 
     QString mEolString;
 
-    void doStyleText(int pBytesStart, int pBytesEnd, const QString &pText,
-                     bool pParameterBlock);
-    void doStyleTextCurrent(int pBytesStart, int pBytesEnd,
-                            const QString &pText, bool pParameterBlock);
-    void doStyleTextPreviousMultilineComment(int pPosition, int pBytesStart,
-                                             int pBytesEnd,
-                                             const QString &pText,
-                                             bool pParameterBlock);
-    void doStyleTextPreviousParameterBlock(int pPosition, int pBytesStart,
+    void styleText(int pBytesStart, int pBytesEnd, const QString &pText,
+                   bool pParameterBlock);
+    void styleTextCurrent(int pBytesStart, int pBytesEnd, const QString &pText,
+                          bool pParameterBlock);
+    void styleTextPreviousMultilineComment(int pPosition, int pBytesStart,
                                            int pBytesEnd, const QString &pText,
                                            bool pParameterBlock);
-    void doStyleTextString(int pPosition, int pBytesStart, int pBytesEnd,
-                           const QString &pText, bool pParameterBlock);
-    void doStyleTextRegEx(int pBytesStart, const QString &pText,
-                          const QRegularExpression &pRegEx,
-                          int pRegExStyle);
-    void doStyleTextNumberRegEx(int pBytesStart, const QString &pText,
-                                int pRegExStyle);
+    void styleTextPreviousParameterBlock(int pPosition, int pBytesStart,
+                                         int pBytesEnd, const QString &pText,
+                                         bool pParameterBlock);
+    void styleTextString(int pPosition, int pBytesStart, int pBytesEnd,
+                         const QString &pText, bool pParameterBlock);
+    void styleTextRegEx(int pBytesStart, const QString &pText,
+                        const QRegularExpression &pRegEx, int pRegExStyle);
+    void styleTextNumberRegEx(int pBytesStart, const QString &pText,
+                              int pRegExStyle);
 
     bool validString(int pFrom, int pTo, int pStyle) const;
     int findString(const QString &pString, int pFrom, int pStyle,

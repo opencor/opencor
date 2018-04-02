@@ -98,10 +98,10 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Show/hide the relevant properties
 
-    doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
+    solverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
 
     if (mNlaSolverData)
-        doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
+        solverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
 
     // Expand all our properties
 
@@ -110,7 +110,7 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
     // Keep track of changes to list properties
 
     connect(this, &SimulationExperimentViewInformationSolversWidget::propertyChanged,
-            this, &SimulationExperimentViewInformationSolversWidget::solverChanged);
+            this, QOverload<OpenCOR::Core::Property *>::of(&SimulationExperimentViewInformationSolversWidget::solverChanged));
 }
 
 //==============================================================================
@@ -453,8 +453,8 @@ void SimulationExperimentViewInformationSolversWidget::updateGui(SimulationExper
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSolversWidget::doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
-                                                                       const QString &pSolverName)
+void SimulationExperimentViewInformationSolversWidget::solverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
+                                                                     const QString &pSolverName)
 {
     // Make sure that we have some solver data
 
@@ -486,10 +486,10 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(OpenCOR::Co
     //       solver)...
 
     if (!pProperty->row()) {
-        doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
-                            mOdeSolverData:
-                            mNlaSolverData,
-                        pProperty->value());
+        solverChanged((pProperty == mOdeSolverData->solversListProperty())?
+                          mOdeSolverData:
+                          mNlaSolverData,
+                      pProperty->value());
     }
 }
 

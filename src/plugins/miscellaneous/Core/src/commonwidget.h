@@ -86,7 +86,7 @@ private:
 
     int mCounter;
 
-    void doShowBusyWidget(double pProgress = -1.0);
+    void showBusyWidget(double pProgress);
 };
 
 //==============================================================================

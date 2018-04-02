@@ -60,7 +60,7 @@ protected:
     virtual StandardFile * create(const QString &pFileName) const = 0;
 
 private:
-    bool doIsFile(const QString &pFileName, bool pForceChecking = false);
+    bool isFile(const QString &pFileName, bool pForceChecking);
 
     void reload(const QString &pFileName, bool pForceChecking);
 

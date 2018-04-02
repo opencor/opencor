@@ -212,7 +212,7 @@ void DataStoreDialog::addWidget(QWidget *pWidget)
 
 //==============================================================================
 
-DataStoreVariables DataStoreDialog::doSelectedData(QStandardItem *pItem) const
+DataStoreVariables DataStoreDialog::selectedData(QStandardItem *pItem) const
 {
     // Return the selected data for the given item
 
@@ -220,7 +220,7 @@ DataStoreVariables DataStoreDialog::doSelectedData(QStandardItem *pItem) const
 
     if (pItem->hasChildren()) {
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
-            res << doSelectedData(pItem->child(i));
+            res << selectedData(pItem->child(i));
     } else if (pItem->checkState() == Qt::Checked) {
         res << mData.value(pItem);
     }
@@ -237,7 +237,7 @@ DataStoreVariables DataStoreDialog::selectedData() const
     DataStoreVariables res = DataStoreVariables();
 
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
-        res << doSelectedData(mModel->invisibleRootItem()->child(i));
+        res << selectedData(mModel->invisibleRootItem()->child(i));
 
     return res;
 }

@@ -186,19 +186,19 @@ private:
                                  CellmlFileIssues &pIssues,
                                  bool pWithBusyWidget = false);
 
-    bool doLoad(const QString &pFileContents,
-                ObjRef<iface::cellml_api::Model> *pModel,
-                CellmlFileIssues &pIssues);
+    bool load(const QString &pFileContents,
+              ObjRef<iface::cellml_api::Model> *pModel,
+              CellmlFileIssues &pIssues);
 
-    bool doIsValid(const QString &pFileContents,
-                   ObjRef<iface::cellml_api::Model> *pModel,
-                   CellmlFileIssues &pIssues, bool pWithBusyWidget);
+    bool isValid(const QString &pFileContents,
+                 ObjRef<iface::cellml_api::Model> *pModel,
+                 CellmlFileIssues &pIssues, bool pWithBusyWidget);
 
     void retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElement *pElement);
     void clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
                                         const QStringList &pUsedCmetaIds);
 
-    bool doIsValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
+    bool isValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
 
     CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
                                     const QString &pQualifier,

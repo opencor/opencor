@@ -290,8 +290,8 @@ void PmrWorkspace::close()
 
 //==============================================================================
 
-bool PmrWorkspace::doCommit(const char *pMessage, const size_t &pParentCount,
-                            const git_commit **pParents)
+bool PmrWorkspace::commit(const char *pMessage, const size_t &pParentCount,
+                          const git_commit **pParents)
 {
     // Commit everything that is staged
 
@@ -366,8 +366,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
         }
 
         if (parentsCount >= 0) {
-            res = doCommit(message.ptr, parentsCount,
-                           (const git_commit **) (&parent));
+            res = commit(message.ptr, parentsCount, (const git_commit **) (&parent));
 
             if (!res)
                 emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide both a name and an email)."));
@@ -428,12 +427,10 @@ bool PmrWorkspace::commitMerge()
         if (res) {
             std::string message = std::string("Merge branch 'master' of ");
 
-            if (doCommit(message.c_str(), parentsCount,
-                         (const git_commit **) parents)) {
+            if (commit(message.c_str(), parentsCount, (const git_commit **) parents))
                 git_repository_state_cleanup(mGitRepository);
-            } else {
+            else
                 res = false;
-            }
         }
     }
 

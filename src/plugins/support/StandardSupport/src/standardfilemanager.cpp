@@ -63,8 +63,7 @@ StandardFileManager::~StandardFileManager()
 
 //==============================================================================
 
-bool StandardFileManager::doIsFile(const QString &pFileName,
-                                   bool pForceChecking)
+bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking)
 {
     // If the given file is already managed, then we consider that it's of the
     // right type (e.g. CellML file), even though it may not be of the right
@@ -97,7 +96,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
     // Check whether the given file is of the right type, i.e. whether it can be
     // loaded
 
-    return doIsFile(pFileName);
+    return isFile(pFileName, false);
 }
 
 //==============================================================================
@@ -116,7 +115,7 @@ void StandardFileManager::manage(const QString &pFileName)
     // Create the given file and add it to our list of managed files, if we are
     // dealing with a file that is not already managed,
 
-    if (!file(pFileName) && doIsFile(pFileName))
+    if (!file(pFileName) && isFile(pFileName, false))
         mFiles.insert(Core::canonicalFileName(pFileName), create(pFileName));
 }
 
@@ -164,7 +163,7 @@ void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
         // The file is managed, but should it still be (i.e. can it still be
         // considered as being a file)?
 
-        if (doIsFile(pFileName, pForceChecking))
+        if (isFile(pFileName, pForceChecking))
             crtFile->reload();
         else
             unmanage(pFileName);

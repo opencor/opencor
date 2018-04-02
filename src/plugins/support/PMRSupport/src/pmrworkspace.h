@@ -130,8 +130,8 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
-    bool doCommit(const char *pMessage, const size_t &pParentCount,
-                  const git_commit **pParents);
+    bool commit(const char *pMessage, const size_t &pParentCount,
+                const git_commit **pParents);
 
     CharPair gitStatusChars(int pFlags) const;
 

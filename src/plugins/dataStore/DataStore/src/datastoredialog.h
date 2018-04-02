@@ -83,7 +83,7 @@ private:
     QMap<QStandardItem *, DataStoreVariable*> mData;
     int mNbOfData;
 
-    DataStoreVariables doSelectedData(QStandardItem *pItem) const;
+    DataStoreVariables selectedData(QStandardItem *pItem) const;
 
     void checkDataSelectedState(QStandardItem *pItem, int &pNbOfselectedData);
 

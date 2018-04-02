@@ -100,8 +100,8 @@ private:
 
     SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const Solver::Type &pSolverType);
 
-    void doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
-                         const QString &pSolverName);
+    void solverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
+                       const QString &pSolverName);
 
     void setPropertiesUnit(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);

@@ -99,7 +99,7 @@ bool CommonWidget::isBusyWidgetVisible() const
 
 //==============================================================================
 
-void CommonWidget::doShowBusyWidget(double pProgress)
+void CommonWidget::showBusyWidget(double pProgress)
 {
     // Create and show our new busy widget resized, and then disable our parent
 
@@ -129,7 +129,7 @@ void CommonWidget::showBusyWidget()
 {
     // Show a 'normal' busy widget
 
-    doShowBusyWidget();
+    showBusyWidget(-1.0);
 }
 
 //==============================================================================
@@ -138,7 +138,7 @@ void CommonWidget::showProgressBusyWidget()
 {
     // Show a progress busy widget
 
-    doShowBusyWidget(0.0);
+    showBusyWidget(0.0);
 }
 
 //==============================================================================
