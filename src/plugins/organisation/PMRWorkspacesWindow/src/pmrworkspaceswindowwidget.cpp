@@ -828,7 +828,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces)
 {
     // Initialise ourselves using the given workspaces
 
@@ -1399,7 +1399,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been cloned, so update ourselves accordingly
 
@@ -1436,7 +1436,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(OpenCOR::PMRSupport::PmrWorkspac
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been uncloned, so update ourselves accordingly
 
@@ -1448,7 +1448,7 @@ void PmrWorkspacesWindowWidget::workspaceUncloned(OpenCOR::PMRSupport::PmrWorksp
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The workspace has been synchronised, so refresh it
 

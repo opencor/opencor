@@ -215,7 +215,7 @@ void CellmlEditingViewWidget::splitterMoved()
 
 //==============================================================================
 
-void CellmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
+void CellmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 {
     // Set our editor widget's cursor position to the line/column of the given
     // item and give our editor widget the focus so that we can see the exact

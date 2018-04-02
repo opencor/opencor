@@ -89,14 +89,13 @@ private:
     void updateMarkerColor();
 
 signals:
-    void activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
-    void inactivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void activated(GraphPanelWidget *pGraphPanel);
+    void inactivated(GraphPanelWidget *pGraphPanel);
 
-    void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
-    void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphAdded(GraphPanelWidget *pGraphPanel, GraphPanelPlotGraph *pGraph,
+                    const GraphPanelPlotGraphProperties &pGraphProperties);
+    void graphsRemoved(GraphPanelWidget *pGraphPanel,
+                       const GraphPanelPlotGraphs &pGraphs);
 };
 
 //==============================================================================

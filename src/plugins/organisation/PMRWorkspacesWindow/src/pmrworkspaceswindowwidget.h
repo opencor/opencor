@@ -311,7 +311,7 @@ signals:
     void openFilesRequested(const QStringList &pFileNames);
 
 public slots:
-    void initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces);
+    void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces);
 
 private slots:
     void showCustomContextMenu() const;
@@ -323,9 +323,9 @@ private slots:
 
     void refreshWorkspaces();
 
-    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace);
 
     void viewWorkspaceInPmr();
     void viewWorkspaceOncomputer();

@@ -340,24 +340,24 @@ private slots:
 
     void simulationDataModified(bool pIsModified);
 
-    void simulationPropertyChanged(OpenCOR::Core::Property *pProperty);
-    void solversPropertyChanged(OpenCOR::Core::Property *pProperty);
+    void simulationPropertyChanged(Core::Property *pProperty);
+    void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+    void graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          bool pActive);
-    void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                  OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                  CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
-    void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                    const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
+    void graphsRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                       const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
-    void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
-    void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void openCellmlFile();
 

@@ -271,7 +271,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                                                               bool pActive)
 {
     // Retrieve the graph panel and graphs property editors for the given file
@@ -376,7 +376,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // Initialise the given graph panel
 
@@ -385,7 +385,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // Remove track of the link betwen our graph panel and our graph panel and
     // graphs property editors
@@ -414,9 +414,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(Open
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                            OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                                            const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                            GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                                            const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
 {
     // Make sure that we have a graphs property editor
 
@@ -504,8 +504,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                                const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                                const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     // Make sure that we have a graphs property editor
 
@@ -529,7 +529,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs(
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // Toggle our graph property
 
@@ -1339,7 +1339,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSec
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged(Core::Property *pProperty)
 {
     // Update our graph panel settings
 
@@ -1421,7 +1421,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(Core::Property *pProperty)
 {
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed

@@ -143,7 +143,7 @@ signals:
     void idLookUpRequested(const QString &pResource, const QString &pId);
     void noLookUpRequested();
 
-    void rdfTripleRemoved(OpenCOR::CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 public slots:
     void disableLookUpInformation();

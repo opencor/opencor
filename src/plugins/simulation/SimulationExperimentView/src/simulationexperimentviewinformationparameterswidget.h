@@ -87,14 +87,14 @@ private:
     void retranslateContextMenu();
 
 signals:
-    void graphRequired(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                       OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
 public slots:
     void updateParameters(double pCurrentPoint);
 
 private slots:
-    void propertyChanged(OpenCOR::Core::Property *pProperty);
+    void propertyChanged(Core::Property *pProperty);
 
     void emitGraphRequired();
 };

@@ -91,7 +91,7 @@ private:
 
 private slots:
     void splitterMoved();
-    void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
+    void itemRequested(EditorWidget::EditorListItem *pItem);
 };
 
 //==============================================================================

@@ -101,7 +101,7 @@ private:
     QAction *mCopyToClipboardAction;
 
 signals:
-    void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
+    void itemRequested(EditorListItem *pItem);
 
 public slots:
     void clear();

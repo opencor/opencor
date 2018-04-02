@@ -107,7 +107,7 @@ private:
                            const QString &pVoiUnit);
 
 private slots:
-    void solverChanged(OpenCOR::Core::Property *pProperty);
+    void solverChanged(Core::Property *pProperty);
 };
 
 //==============================================================================

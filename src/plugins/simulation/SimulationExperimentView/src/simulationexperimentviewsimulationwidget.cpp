@@ -392,9 +392,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
-            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *, bool>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelRemoved,
-            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize));
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize));
 
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
             this, &SimulationExperimentViewSimulationWidget::graphPanelAdded);
@@ -404,7 +404,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of whether a graph panel has been activated
 
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelActivated,
-            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
 
     // Keep track of whether a graph panel has been resized
 
@@ -3253,7 +3253,7 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsMo
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
     // Update our simulation properties, as well as our plots
 
@@ -3274,7 +3274,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(OpenCOR
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::solversPropertyChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Property *pProperty)
 {
     // Update our solvers properties
 
@@ -3283,7 +3283,7 @@ void SimulationExperimentViewSimulationWidget::solversPropertyChanged(OpenCOR::C
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+void SimulationExperimentViewSimulationWidget::graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                                                bool pActive)
 {
     Q_UNUSED(pActive);
@@ -3335,7 +3335,7 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void SimulationExperimentViewSimulationWidget::graphPanelRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been removed, so stop tracking it
 
@@ -3351,8 +3351,8 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphP
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                                        OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Ask the current graph panel to add a new graph for the given parameters
 
@@ -3361,9 +3361,9 @@ void SimulationExperimentViewSimulationWidget::addGraph(OpenCOR::CellMLSupport::
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                          OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                          const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
+void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                          GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                          const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
 {
     Q_UNUSED(pGraphProperties);
 
@@ -3400,8 +3400,8 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                             const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                             const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
 
@@ -3428,7 +3428,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
@@ -3471,7 +3471,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::Grap
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // The given graph has been updated, so make sure that its corresponding
     // plots are up to date

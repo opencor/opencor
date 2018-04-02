@@ -375,7 +375,7 @@ void GraphPanelsWidget::stopUsingInternalSizes()
 
 //==============================================================================
 
-void GraphPanelsWidget::updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void GraphPanelsWidget::updateGraphPanels(GraphPanelWidget *pGraphPanel)
 {
     // Keep track of the newly activated graph panel
 

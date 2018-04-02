@@ -297,7 +297,7 @@ private:
     QColor mForegroundColor;
 
 signals:
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphToggled(GraphPanelPlotGraph *pGraph);
 
 private slots:
     void legendChecked(const QVariant &pItemInfo);
@@ -582,7 +582,7 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphToggled(GraphPanelPlotGraph *pGraph);
 
     void legendToggled();
 

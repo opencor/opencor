@@ -107,7 +107,7 @@ private slots:
 
     void retrieveExposures(bool pVisible);
 
-    void initializeWidget(const OpenCOR::PMRSupport::PmrExposures &pExposures);
+    void initializeWidget(const PMRSupport::PmrExposures &pExposures);
 
     void itemDoubleClicked();
 };

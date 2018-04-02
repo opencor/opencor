@@ -627,7 +627,7 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
 {
     // Keep track of the new graph panel / graphs mode
 

@@ -292,9 +292,8 @@ void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
 
     // Initialise our ODE solver
 
-    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
-                                           pRates, pStates, pAlgebraic,
-                                           pComputeRates);
+    OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates,
+                          pAlgebraic, pComputeRates);
 
     // Create our states vector
 

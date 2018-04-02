@@ -75,22 +75,21 @@ private:
     bool removeGraphPanel(GraphPanelWidget *pGraphPanel);
 
 signals:
-    void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+    void graphPanelAdded(GraphPanelWidget *pGraphPanel,
                          bool pActive);
-    void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void graphPanelRemoved(GraphPanelWidget *pGraphPanel);
 
-    void graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void graphPanelActivated(GraphPanelWidget *pGraphPanel);
 
-    void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
-    void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphAdded(GraphPanelWidget *pGraphPanel, GraphPanelPlotGraph *pGraph,
+                    const GraphPanelPlotGraphProperties &pGraphProperties);
+    void graphsRemoved(GraphPanelWidget *pGraphPanel,
+                       const GraphPanelPlotGraphs &pGraphs);
 
 private slots:
     void stopUsingInternalSizes();
 
-    void updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void updateGraphPanels(GraphPanelWidget *pGraphPanel);
 
     void synchronizeXAxis();
     void synchronizeYAxis();

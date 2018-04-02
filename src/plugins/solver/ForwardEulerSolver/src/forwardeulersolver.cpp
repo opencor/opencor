@@ -54,9 +54,8 @@ void ForwardEulerSolver::initialize(double pVoi, int pRatesStatesCount,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
-                                           pRates, pStates, pAlgebraic,
-                                           pComputeRates);
+    OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates,
+                          pAlgebraic, pComputeRates);
 }
 
 //==============================================================================

@@ -447,7 +447,7 @@ void PmrWebService::workspaceErrored()
 
 //==============================================================================
 
-void PmrWebService::workspaceCloneFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceCloneFinished(PmrWorkspace *pWorkspace)
 {
     // Let people know that we are not busy anymore and that a workspace has
     // been cloned
@@ -479,7 +479,7 @@ void PmrWebService::requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
 
 //==============================================================================
 
-void PmrWebService::workspaceSynchronizeFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWebService::workspaceSynchronizeFinished(PmrWorkspace *pWorkspace)
 {
     // Let people know that we are not busy anymore and that the given workspace
     // has been synchronised

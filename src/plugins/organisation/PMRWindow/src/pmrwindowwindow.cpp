@@ -337,7 +337,7 @@ void PmrWindowWindow::on_actionReload_triggered()
 
 //==============================================================================
 
-void PmrWindowWindow::initializeWidget(const OpenCOR::PMRSupport::PmrExposures &pExposures)
+void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures)
 {
     // Ask our PMR widget to initialise itself
 

@@ -214,7 +214,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::propertyChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewInformationParametersWidget::propertyChanged(Core::Property *pProperty)
 {
     // Update our simulation data
 

@@ -97,11 +97,11 @@ signals:
 private slots:
     void emitSplitterMoved();
 
-    void updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                              const QString &pQualifier);
-    void updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                             const QString &pResource);
-    void updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+    void updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                       const QString &pResource,
                                       const QString &pId);
 };

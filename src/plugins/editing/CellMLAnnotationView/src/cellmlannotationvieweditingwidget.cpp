@@ -165,7 +165,7 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewEditingWidget::m
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                             const QString &pQualifier)
 {
     // The user requested a qualifier to be looked up, so generate a web page
@@ -255,7 +255,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(Open
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                            const QString &pResource)
 {
     // The user requested a resource to be looked up, so retrieve it using
@@ -266,7 +266,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(OpenC
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                      const QString &pResource,
                                                                      const QString &pId)
 {

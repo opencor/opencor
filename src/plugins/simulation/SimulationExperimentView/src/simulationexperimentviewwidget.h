@@ -141,7 +141,7 @@ private slots:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+    void graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
     void simulationHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
     void solversHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);

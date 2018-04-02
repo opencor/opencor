@@ -110,7 +110,7 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
     // Keep track of changes to list properties
 
     connect(this, &SimulationExperimentViewInformationSolversWidget::propertyChanged,
-            this, QOverload<OpenCOR::Core::Property *>::of(&SimulationExperimentViewInformationSolversWidget::solverChanged));
+            this, QOverload<Core::Property *>::of(&SimulationExperimentViewInformationSolversWidget::solverChanged));
 }
 
 //==============================================================================
@@ -476,7 +476,7 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(SimulationE
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSolversWidget::solverChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Property *pProperty)
 {
     // Try, for the ODE/NLA solvers list property, to handle the change in the
     // list property
