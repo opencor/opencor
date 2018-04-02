@@ -166,6 +166,9 @@ private:
 
     bool rootProperty(Core::Property *pProperty) const;
 
+    void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    bool pActive);
+
 signals:
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
@@ -178,13 +181,14 @@ signals:
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 public slots:
-    void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    bool pActive = true);
+    void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
     void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                   OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                   const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
+    void addGraph();
+
     void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
@@ -198,7 +202,6 @@ public slots:
 private slots:
     void selectGraphPanelColor();
 
-    void addGraph();
     void removeCurrentGraph();
     void removeAllGraphs();
     void selectAllGraphs();

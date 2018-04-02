@@ -130,18 +130,18 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mSimulation = simulationManager->simulation(pFileName);
 
-    connect(mSimulation, SIGNAL(running(bool)),
-            this, SLOT(simulationRunning(bool)));
-    connect(mSimulation, SIGNAL(paused()),
-            this, SLOT(simulationPaused()));
-    connect(mSimulation, SIGNAL(stopped(qint64)),
-            this, SLOT(simulationStopped(qint64)));
+    connect(mSimulation, &SimulationSupport::Simulation::running,
+            this, &SimulationExperimentViewSimulationWidget::simulationRunning);
+    connect(mSimulation, &SimulationSupport::Simulation::paused,
+            this, &SimulationExperimentViewSimulationWidget::simulationPaused);
+    connect(mSimulation, &SimulationSupport::Simulation::stopped,
+            this, &SimulationExperimentViewSimulationWidget::simulationStopped);
 
-    connect(mSimulation, SIGNAL(error(const QString &)),
-            this, SLOT(simulationError(const QString &)));
+    connect(mSimulation, &SimulationSupport::Simulation::error,
+            this, QOverload<const QString &>::of(&SimulationExperimentViewSimulationWidget::simulationError));
 
-    connect(mSimulation->data(), SIGNAL(modified(bool)),
-            this, SLOT(simulationDataModified(bool)));
+    connect(mSimulation->data(), &SimulationSupport::SimulationData::modified,
+            this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
 
     // Create a tool bar
 
@@ -181,39 +181,39 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
     mSedmlExportAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive);
 
-    connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
-            this, SLOT(runPauseResumeSimulation()));
-    connect(mStopSimulationAction, SIGNAL(triggered(bool)),
-            this, SLOT(stopSimulation()));
-    connect(mResetModelParametersAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetModelParameters()));
-    connect(mClearSimulationDataAction, SIGNAL(triggered(bool)),
-            this, SLOT(clearSimulationData()));
-    connect(mDevelopmentModeAction, SIGNAL(triggered(bool)),
-            this, SLOT(developmentMode()));
-    connect(mAddGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(addGraphPanel()));
-    connect(mRemoveGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeGraphPanel()));
-    connect(mRemoveCurrentGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeCurrentGraphPanel()));
-    connect(mRemoveAllGraphPanelsAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeAllGraphPanels()));
-    connect(mCellmlOpenAction, SIGNAL(triggered(bool)),
-            this, SLOT(openCellmlFile()));
-    connect(mSedmlExportAction, SIGNAL(triggered(bool)),
+    connect(mRunPauseResumeSimulationAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::runPauseResumeSimulation);
+    connect(mStopSimulationAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::stopSimulation);
+    connect(mResetModelParametersAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
+    connect(mClearSimulationDataAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::clearSimulationData);
+    connect(mDevelopmentModeAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::developmentMode);
+    connect(mAddGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::addGraphPanel);
+    connect(mRemoveGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::removeGraphPanel);
+    connect(mRemoveCurrentGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel);
+    connect(mRemoveAllGraphPanelsAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::removeAllGraphPanels);
+    connect(mCellmlOpenAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
+    connect(mSedmlExportAction, &QAction::triggered,
             this, mSedmlExportSedmlFileAction?
-                      SLOT(sedmlExportSedmlFile()):
-                      SLOT(sedmlExportCombineArchive()));
+                      QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile):
+                      QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive));
 
     if (mSedmlExportSedmlFileAction) {
-        connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
-                this, SLOT(sedmlExportSedmlFile()));
+        connect(mSedmlExportSedmlFileAction, &QAction::triggered,
+                this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile));
     }
 
     if (mSedmlExportCombineArchiveAction) {
-        connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
-                this, SLOT(sedmlExportCombineArchive()));
+        connect(mSedmlExportCombineArchiveAction, &QAction::triggered,
+                this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive));
     }
 
     // Enable/disable our development mode action depending on whether our file
@@ -242,8 +242,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     delaySpaceWidget->setFixedWidth(4);
 #endif
 
-    connect(mDelayWidget, SIGNAL(valueChanged(double)),
-            this, SLOT(updateDelayValue(double)));
+    connect(mDelayWidget, &QwtWheel::valueChanged,
+            this, &SimulationExperimentViewSimulationWidget::updateDelayValue);
 
     mDelayWidget->setValue(0.0);
 
@@ -273,8 +273,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
         mCellmlBasedViewPlugins.insert(action, cellmlEditingViewPlugin);
 
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(openCellmlFile()));
+        connect(action, &QAction::triggered,
+                this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
     cellmlOpenDropDownMenu->addSeparator();
@@ -286,8 +286,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
         mCellmlBasedViewPlugins.insert(action, cellmlSimulationViewPlugin);
 
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(openCellmlFile()));
+        connect(action, &QAction::triggered,
+                this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
     QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
@@ -317,8 +317,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
         mDataStoreInterfaces.insert(action, dataStoreInterface);
 
-        connect(action, SIGNAL(triggered()),
-                this, SLOT(simulationDataExport()));
+        connect(action, &QAction::triggered,
+                this, &SimulationExperimentViewSimulationWidget::simulationDataExport);
     }
 
     updateDataStoreActions();
@@ -368,8 +368,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
 
-    connect(mSplitterWidget, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(emitSplitterMoved()));
+    connect(mSplitterWidget, &Core::SplitterWidget::splitterMoved,
+            this, &SimulationExperimentViewSimulationWidget::emitSplitterMoved);
 
     // Create our contents widget
 
@@ -381,52 +381,52 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
-    connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(solversPropertyChanged(OpenCOR::Core::Property *)));
+    connect(informationWidget->simulationWidget(), &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
+    connect(informationWidget->solversWidget(), &SimulationExperimentViewInformationSolversWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::solversPropertyChanged);
 
     // Keep track of the addition and removal of a graph panel
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)),
-            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)));
-    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphPanelAndGraphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
+            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelRemoved,
+            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize));
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)),
-            this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool)));
-    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            this, SLOT(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
+            this, &SimulationExperimentViewSimulationWidget::graphPanelAdded);
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelRemoved,
+            this, &SimulationExperimentViewSimulationWidget::graphPanelRemoved);
 
     // Keep track of whether a graph panel has been activated
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelActivated,
+            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
 
     // Keep track of whether a graph panel has been resized
 
-    connect(graphPanelsWidget, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(checkGraphPanelsAndGraphs()));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::splitterMoved,
+            this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs);
 
     // Keep track of a graph being required
 
-    connect(informationWidget->parametersWidget(), SIGNAL(graphRequired(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)),
-            this, SLOT(addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)));
+    connect(informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::graphRequired,
+            this, &SimulationExperimentViewSimulationWidget::addGraph);
 
     // Keep track of the addition and removal of a graph
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
-            graphPanelAndGraphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            graphPanelAndGraphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphAdded,
+            graphPanelAndGraphsWidget, QOverload<>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphsRemoved,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs);
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
-            this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            this, SLOT(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphAdded,
+            this, &SimulationExperimentViewSimulationWidget::graphAdded);
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphsRemoved,
+            this, &SimulationExperimentViewSimulationWidget::graphsRemoved);
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
@@ -445,10 +445,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphPanelAndGraphsWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SLOT(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-    connect(graphPanelAndGraphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphUpdated,
+            this, &SimulationExperimentViewSimulationWidget::graphUpdated);
+    connect(graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsUpdated,
+            this, &SimulationExperimentViewSimulationWidget::graphsUpdated);
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -736,8 +736,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
-    disconnect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-               this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
+    disconnect(simulationWidget, &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+               this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
 
     // Reset our progress
 
@@ -1019,8 +1019,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     // Resume the tracking of certain things
     // Note: see the corresponding code at the beginning of this method...
 
-    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
+    connect(mContentsWidget->informationWidget()->simulationWidget(), &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
 
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
@@ -1462,11 +1462,11 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
     mSimulationPropertiesModified = false;
     mSolversPropertiesModified = false;
 
-    connect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(checkSimulationProperties()),
+    connect(simulationWidget, &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::checkSimulationProperties,
             Qt::UniqueConnection);
-    connect(solversWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(checkSolversProperties()),
+    connect(solversWidget, &SimulationExperimentViewInformationSolversWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::checkSolversProperties,
             Qt::UniqueConnection);
 
     mGraphPanelProperties.clear();
@@ -1486,11 +1486,11 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
         mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
         mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
 
-        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-                this, SLOT(checkGraphPanelsAndGraphs()),
+        connect(graphPanelPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs,
                 Qt::UniqueConnection);
-        connect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-                this, SLOT(checkGraphPanelsAndGraphs()),
+        connect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs,
                 Qt::UniqueConnection);
     }
 
@@ -2072,6 +2072,15 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
+{
+    // Export the simulation to a SED-ML file
+
+    sedmlExportSedmlFile(QString());
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const QString &pFileName)
 {
     // Note: if there is no given file name, then it means that we want to
@@ -2231,6 +2240,15 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         if (!isCellmlOrSedmlFile)
             initialiseTrackers();
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
+{
+    // Export the simulation to a COMBINE archive
+
+    sedmlExportCombineArchive(QString());
 }
 
 //==============================================================================
@@ -3040,10 +3058,10 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
 
-        connect(dataStoreExporter, SIGNAL(done(const QString &)),
-                this, SLOT(dataStoreExportDone(const QString &)));
-        connect(dataStoreExporter, SIGNAL(progress(double)),
-                this, SLOT(dataStoreExportProgress(double)));
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
 
         dataStoreExporter->start();
     }
@@ -3189,19 +3207,19 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
         if (mNeedReloadView)
             resetProgressBar();
         else
-            QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+            QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
     } else {
         if (mNeedReloadView)
             resetFileTabIcon();
         else
-            QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
+            QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
     }
 }
 
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
-                                                               const ErrorType &pErrorType)
+                                                                 const ErrorType &pErrorType)
 {
     // Output the simulation error
 
@@ -3210,6 +3228,15 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
     updateInvalidModelMessageWidget();
 
     output(OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+pMessage+".</span>"+OutputBrLn);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage)
+{
+    // Output the simulation error
+
+    simulationError(pMessage, General);
 }
 
 //==============================================================================
@@ -3271,35 +3298,35 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
     mUpdatablePlotViewports.insert(plot, true);
 
-    connect(plot, SIGNAL(axesChanged(double, double, double, double)),
-            this, SLOT(plotAxesChanged()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::axesChanged,
+            this, &SimulationExperimentViewSimulationWidget::plotAxesChanged);
 
     // Let people know when some graph panel settings or graphs settings have
     // been requested
 
-    connect(plot, SIGNAL(graphPanelSettingsRequested()),
-            this, SIGNAL(graphPanelSettingsRequested()));
-    connect(plot, SIGNAL(graphsSettingsRequested()),
-            this, SIGNAL(graphsSettingsRequested()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::graphPanelSettingsRequested,
+            this, &SimulationExperimentViewSimulationWidget::graphPanelSettingsRequested);
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::graphsSettingsRequested,
+            this, &SimulationExperimentViewSimulationWidget::graphsSettingsRequested);
 
     // Let people know when we a graph has been toggled
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = contentsWidget()->informationWidget()->graphPanelAndGraphsWidget();
 
-    connect(plot, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            graphPanelAndGraphsWidget, SLOT(toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::graphToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph);
 
     // Let people know when we the legend has been toggled
 
-    connect(plot, SIGNAL(legendToggled()),
-            graphPanelAndGraphsWidget, SLOT(toggleLegend()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::legendToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend);
 
     // Let people know when we the X/Y logarithmic axis has been toggled
 
-    connect(plot, SIGNAL(logarithmicXAxisToggled()),
-            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicXAxis()));
-    connect(plot, SIGNAL(logarithmicYAxisToggled()),
-            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicYAxis()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::logarithmicXAxisToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicXAxis);
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::logarithmicYAxisToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicYAxis);
 
     // Check our graph panels and their graphs
 

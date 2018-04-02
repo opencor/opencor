@@ -52,8 +52,8 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
 
     // Keep track of when the user changes a property value
 
-    connect(this, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(propertyChanged(OpenCOR::Core::Property *)));
+    connect(this, &Core::PropertyEditorWidget::propertyChanged,
+            this, &SimulationExperimentViewInformationParametersWidget::propertyChanged);
 }
 
 //==============================================================================
@@ -148,8 +148,8 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 
     // Keep track of when some of the model's data has changed
 
-    connect(pSimulation->data(), SIGNAL(updated(double)),
-            this, SLOT(updateParameters(double)));
+    connect(pSimulation->data(), &SimulationSupport::SimulationData::updated,
+            this, &SimulationExperimentViewInformationParametersWidget::updateParameters);
 }
 
 //==============================================================================
@@ -410,8 +410,8 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
     // keep track of the parameter associated with our first main menu item
 
     if (mVoiAccessible) {
-        connect(voiAction, SIGNAL(triggered(bool)),
-                this, SLOT(emitGraphRequired()));
+        connect(voiAction, &QAction::triggered,
+                this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
         mParameterActions.insert(voiAction, pRuntime->voi());
     }
@@ -484,8 +484,8 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
         // Create a connection to handle the graph requirement against our
         // parameter
 
-        connect(parameterAction, SIGNAL(triggered(bool)),
-                this, SLOT(emitGraphRequired()));
+        connect(parameterAction, &QAction::triggered,
+                this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
         // Keep track of the parameter associated with our model parameter
         // action

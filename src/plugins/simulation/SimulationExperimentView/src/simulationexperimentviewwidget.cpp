@@ -182,43 +182,43 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
         // Keep track of various things related to our simulation widget and its
         // children
 
-        connect(mSimulationWidget, SIGNAL(splitterMoved(const QIntList &)),
-                this, SLOT(simulationWidgetSplitterMoved(const QIntList &)));
+        connect(mSimulationWidget, &SimulationExperimentViewSimulationWidget::splitterMoved,
+                this, &SimulationExperimentViewWidget::simulationWidgetSplitterMoved);
 
         SimulationExperimentViewContentsWidget *contentsWidget = mSimulationWidget->contentsWidget();
 
-        connect(contentsWidget, SIGNAL(splitterMoved(const QIntList &)),
-                this, SLOT(contentsWidgetSplitterMoved(const QIntList &)));
+        connect(contentsWidget, &SimulationExperimentViewContentsWidget::splitterMoved,
+                this, &SimulationExperimentViewWidget::contentsWidgetSplitterMoved);
 
         SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
 
-        connect(informationWidget->collapsibleWidget(), SIGNAL(collapsed(int, bool)),
-                this, SLOT(collapsibleWidgetCollapsed(int, bool)));
+        connect(informationWidget->collapsibleWidget(), &Core::CollapsibleWidget::collapsed,
+                this, &SimulationExperimentViewWidget::collapsibleWidgetCollapsed);
 
-        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
-                this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelGraphsModeChanged,
+                this, &SimulationExperimentViewWidget::graphPanelGraphsModeChanged);
 
-        connect(informationWidget->simulationWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(simulationHeaderSectionResized(int, int, int)));
-        connect(informationWidget->solversWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(solversHeaderSectionResized(int, int, int)));
-        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelHeaderSectionResized(int, int, int)),
-                this, SLOT(graphPanelHeaderSectionResized(int, int, int)));
-        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphsHeaderSectionResized(int, int, int)),
-                this, SLOT(graphsHeaderSectionResized(int, int, int)));
-        connect(informationWidget->parametersWidget()->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(parametersHeaderSectionResized(int, int, int)));
+        connect(informationWidget->simulationWidget()->header(), &QHeaderView::sectionResized,
+                this, &SimulationExperimentViewWidget::simulationHeaderSectionResized);
+        connect(informationWidget->solversWidget()->header(), &QHeaderView::sectionResized,
+                this, &SimulationExperimentViewWidget::solversHeaderSectionResized);
+        connect(informationWidget->graphPanelAndGraphsWidget(), &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelHeaderSectionResized,
+                this, &SimulationExperimentViewWidget::graphPanelHeaderSectionResized);
+        connect(informationWidget->graphPanelAndGraphsWidget(), &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsHeaderSectionResized,
+                this, &SimulationExperimentViewWidget::graphsHeaderSectionResized);
+        connect(informationWidget->parametersWidget()->header(), &QHeaderView::sectionResized,
+                this, &SimulationExperimentViewWidget::parametersHeaderSectionResized);
 
-        connect(informationWidget->graphPanelAndGraphsWidget(), SIGNAL(graphPanelSectionExpanded(int, bool)),
-                this, SLOT(graphPanelSectionExpanded(int, bool)));
+        connect(informationWidget->graphPanelAndGraphsWidget(), QOverload<int, bool>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSectionExpanded),
+                this, &SimulationExperimentViewWidget::graphPanelSectionExpanded);
 
         // Check when some graph plot settings or graphs settings have been
         // requested
 
-        connect(mSimulationWidget, SIGNAL(graphPanelSettingsRequested()),
-                this, SLOT(graphPanelSettingsRequested()));
-        connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
-                this, SLOT(graphsSettingsRequested()));
+        connect(mSimulationWidget, &SimulationExperimentViewSimulationWidget::graphPanelSettingsRequested,
+                this, &SimulationExperimentViewWidget::graphPanelSettingsRequested);
+        connect(mSimulationWidget, &SimulationExperimentViewSimulationWidget::graphsSettingsRequested,
+                this, &SimulationExperimentViewWidget::graphsSettingsRequested);
     } else {
         // We already have a simulation widget, so just make sure that its GUI
         // is up to date
@@ -549,7 +549,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
         mSimulationCheckResults << pFileName;
 
-        QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
+        QTimer::singleShot(0, this, &SimulationExperimentViewWidget::callCheckSimulationResults);
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
         // the simulation progress of the given file

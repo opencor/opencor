@@ -109,8 +109,8 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Keep track of changes to list properties
 
-    connect(this, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(solverChanged(OpenCOR::Core::Property *)));
+    connect(this, &SimulationExperimentViewInformationSolversWidget::propertyChanged,
+            this, &SimulationExperimentViewInformationSolversWidget::solverChanged);
 }
 
 //==============================================================================

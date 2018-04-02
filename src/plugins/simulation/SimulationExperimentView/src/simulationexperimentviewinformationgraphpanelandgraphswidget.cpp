@@ -75,8 +75,8 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
 
     mSelectGraphPanelColorAction = Core::newAction(this);
 
-    connect(mSelectGraphPanelColorAction, SIGNAL(triggered(bool)),
-            this, SLOT(selectGraphPanelColor()));
+    connect(mSelectGraphPanelColorAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectGraphPanelColor);
 
     mGraphPanelContextMenu->addAction(mSelectGraphPanelColorAction);
 
@@ -92,18 +92,18 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mUnselectAllGraphsAction = Core::newAction(this);
     mSelectGraphColorAction = Core::newAction(this);
 
-    connect(mAddGraphAction, SIGNAL(triggered(bool)),
-            this, SLOT(addGraph()));
-    connect(mRemoveCurrentGraphAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeCurrentGraph()));
-    connect(mRemoveAllGraphsAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeAllGraphs()));
-    connect(mSelectAllGraphsAction, SIGNAL(triggered(bool)),
-            this, SLOT(selectAllGraphs()));
-    connect(mUnselectAllGraphsAction, SIGNAL(triggered(bool)),
-            this, SLOT(unselectAllGraphs()));
-    connect(mSelectGraphColorAction, SIGNAL(triggered(bool)),
-            this, SLOT(selectGraphColor()));
+    connect(mAddGraphAction, &QAction::triggered,
+            this, QOverload<>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph));
+    connect(mRemoveCurrentGraphAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeCurrentGraph);
+    connect(mRemoveAllGraphsAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeAllGraphs);
+    connect(mSelectAllGraphsAction, &QAction::triggered,
+            this, QOverload<>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGraphs));
+    connect(mUnselectAllGraphsAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::unselectAllGraphs);
+    connect(mSelectGraphColorAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectGraphColor);
 
     mGraphContextMenu->addAction(mAddGraphAction);
     mGraphContextMenu->addSeparator();
@@ -309,33 +309,33 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
         mGraphPanelPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
         mGraphsPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
 
-        connect(mGraphPanelPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
-                this, SLOT(showGraphPanelContextMenu(const QPoint &)));
-        connect(mGraphsPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
-                this, SLOT(showGraphsContextMenu(const QPoint &)));
+        connect(mGraphPanelPropertyEditor, &Core::PropertyEditorWidget::customContextMenuRequested,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphPanelContextMenu);
+        connect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::customContextMenuRequested,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsContextMenu);
 
         // Keep track of changes to columns' width
 
-        connect(mGraphPanelPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SIGNAL(graphPanelHeaderSectionResized(int, int, int)));
-        connect(mGraphsPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SIGNAL(graphsHeaderSectionResized(int, int, int)));
+        connect(mGraphPanelPropertyEditor->header(), &QHeaderView::sectionResized,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelHeaderSectionResized);
+        connect(mGraphsPropertyEditor->header(), &QHeaderView::sectionResized,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsHeaderSectionResized);
 
         // Keep track of changes to the expanded/collapsed state of a property
         // Note: we only need to do this for our graph panel property editor
         //       since graphs are really unique to a graph panel...
 
-        connect(mGraphPanelPropertyEditor, SIGNAL(expanded(QModelIndex)),
-                this, SLOT(graphPanelSectionExpanded(const QModelIndex &)));
-        connect(mGraphPanelPropertyEditor, SIGNAL(collapsed(QModelIndex)),
-                this, SLOT(graphPanelSectionCollapsed(const QModelIndex &)));
+        connect(mGraphPanelPropertyEditor, &Core::PropertyEditorWidget::expanded,
+                this, QOverload<const QModelIndex &>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSectionExpanded));
+        connect(mGraphPanelPropertyEditor, &Core::PropertyEditorWidget::collapsed,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSectionCollapsed);
 
         // Keep track of when the user changes a property value
 
-        connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-                this, SLOT(graphPanelPropertyChanged(OpenCOR::Core::Property *)));
-        connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-                this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
+        connect(mGraphPanelPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged);
+        connect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
         // Add our new graphs property editor to ourselves
 
@@ -372,6 +372,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
     //       different graph panel...
 
     updateAllGraphsInfo();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+{
+    // Initialise the given graph panel
+
+    initialize(pGraphPanel, true);
 }
 
 //==============================================================================
@@ -439,8 +448,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     //          property, so give it a blank icon so that it is properly aligned
     //          with our other properties...
 
-    disconnect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-               this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
+    disconnect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+               this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
     graphsPropertyEditor->addListProperty(graphProperty);
     graphsPropertyEditor->addStringProperty(pGraphProperties.title(), graphProperty);
@@ -485,8 +494,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     graphsPropertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
-    connect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
+    connect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
     // Update the information about our new graph
 
@@ -626,8 +635,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     //       properties as well as the selected state of our graphs, and then
     //       let people know that all the graphs have been updated...
 
-    disconnect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-               this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
+    disconnect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+               this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
     GraphPanelWidget::GraphPanelPlotGraphs graphs = GraphPanelWidget::GraphPanelPlotGraphs();
 
@@ -644,8 +653,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     if (!graphs.isEmpty())
         emit graphsUpdated(graphs);
 
-    connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
+    connect(mGraphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+            this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 }
 
 //==============================================================================
@@ -1111,8 +1120,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
         // Create a connection to handle the parameter value update
 
-        connect(parameterAction, SIGNAL(triggered(bool)),
-                this, SLOT(updateParameterValue()));
+        connect(parameterAction, &QAction::triggered,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateParameterValue);
 
         // Keep track of the parameter associated with our model parameter
         // action

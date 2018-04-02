@@ -127,15 +127,15 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     graphPanelHeader->setMenu(menu);
 
-    connect(mGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(grapPanelPropertyEditor()));
-    connect(mGraphsAction, SIGNAL(triggered(bool)),
-            this, SLOT(graphsPropertyEditor()));
+    connect(mGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationWidget::grapPanelPropertyEditor);
+    connect(mGraphsAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationWidget::graphsPropertyEditor);
 
     // A connection to know when our graph panel / graphs panel changes modes
 
-    connect(mGraphPanelAndGraphsWidget, SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
-            this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
+    connect(mGraphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelGraphsModeChanged,
+            this, &SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged);
 
     // Add our collapsible widget to our layout
 

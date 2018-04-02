@@ -299,6 +299,11 @@ private:
 
     void updateFileModifiedStatus();
 
+    void simulationError(const QString &pMessage, const ErrorType &pErrorType);
+
+    void sedmlExportSedmlFile(const QString &pFileName);
+    void sedmlExportCombineArchive(const QString &pFileName);
+
 signals:
     void splitterMoved(const QIntList &pSizes);
 
@@ -315,8 +320,8 @@ private slots:
     void removeAllGraphPanels();
     void resetModelParameters();
     void clearSimulationData();
-    void sedmlExportSedmlFile(const QString &pFileName = QString());
-    void sedmlExportCombineArchive(const QString &pFileName = QString());
+    void sedmlExportSedmlFile();
+    void sedmlExportCombineArchive();
 
     void emitSplitterMoved();
 
@@ -331,8 +336,7 @@ private slots:
     void resetProgressBar();
     void resetFileTabIcon();
 
-    void simulationError(const QString &pMessage,
-                         const ErrorType &pErrorType = General);
+    void simulationError(const QString &pMessage);
 
     void simulationDataModified(bool pIsModified);
 
