@@ -153,40 +153,40 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
 
-    connect(this, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(retrieveWorkspaces(bool)));
+    connect(this, &PmrWorkspacesWindowWindow::visibilityChanged,
+            this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
     // Some connections to process responses from our PMR web service
 
-    connect(mPmrWebService, SIGNAL(busy(bool)),
-            this, SLOT(busy(bool)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, &PmrWorkspacesWindowWindow::busy);
 
-    connect(mPmrWebService, SIGNAL(information(const QString &)),
-            this, SLOT(showInformation(const QString &)));
-    connect(mPmrWebService, SIGNAL(warning(const QString &)),
-            this, SLOT(showWarning(const QString &)));
-    connect(mPmrWebService, SIGNAL(error(const QString &)),
-            this, SLOT(showError(const QString &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::information,
+            this, &PmrWorkspacesWindowWindow::showInformation);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::warning,
+            this, &PmrWorkspacesWindowWindow::showWarning);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::error,
+            this, &PmrWorkspacesWindowWindow::showError);
 
-    connect(mPmrWebService, SIGNAL(authenticated(bool)),
-            this, SLOT(updateGui()));
-    connect(mPmrWebService, SIGNAL(authenticationCancelled()),
-            this, SLOT(updateGui()));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::authenticated,
+            this, &PmrWorkspacesWindowWindow::updateGui);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::authenticationCancelled,
+            this, &PmrWorkspacesWindowWindow::updateGui);
 
-    connect(mPmrWebService, SIGNAL(workspaces(const OpenCOR::PMRSupport::PmrWorkspaces &)),
-            mPmrWorkspacesWindowWidget, SLOT(initialize(const OpenCOR::PMRSupport::PmrWorkspaces &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::workspaces,
+            mPmrWorkspacesWindowWidget, QOverload<const PMRSupport::PmrWorkspaces &>::of(&PmrWorkspacesWindowWidget::initialize));
 
     // Connections to process requests from our PMR workspaces widget
 
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(information(const QString &)),
-            this, SLOT(showInformation(const QString &)));
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
-            this, SLOT(showWarning(const QString &)));
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::information,
+            this, &PmrWorkspacesWindowWindow::showInformation);
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::warning,
+            this, &PmrWorkspacesWindowWindow::showWarning);
 
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
-            this, SLOT(openFile(const QString &)));
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::openFileRequested,
+            this, &PmrWorkspacesWindowWindow::openFile);
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::openFilesRequested,
+            this, &PmrWorkspacesWindowWindow::openFiles);
 
     // Retranslate our GUI
 
@@ -383,7 +383,7 @@ void PmrWorkspacesWindowWindow::retrieveWorkspaces(bool pVisible)
     if (pVisible && firstTime) {
         firstTime = false;
 
-        QTimer::singleShot(0, this, SLOT(updateGui()));
+        QTimer::singleShot(0, this, &PmrWorkspacesWindowWindow::updateGui);
     }
 }
 

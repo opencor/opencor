@@ -319,20 +319,20 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     // Some connections
 
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeToContents()));
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeToContents()));
+    connect(this, &FileOrganiserWindowWidget::expanded,
+            this, &FileOrganiserWindowWidget::resizeToContents);
+    connect(this, &FileOrganiserWindowWidget::collapsed,
+            this, &FileOrganiserWindowWidget::resizeToContents);
 
     // A connection to handle the change of selection
 
-    connect(selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(emitItemsRelatedSignals()));
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &FileOrganiserWindowWidget::emitItemsRelatedSignals);
 
     // Some connections to handle our file manager
 
-    connect(mFileManager, SIGNAL(fileDeleted(const QString &)),
-            this, SLOT(fileDeleted(const QString &)));
+    connect(mFileManager, &Core::FileManager::fileDeleted,
+            this, &FileOrganiserWindowWidget::fileDeleted);
 }
 
 //==============================================================================

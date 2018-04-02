@@ -321,7 +321,7 @@ private slots:
 
     void resizeTreeViewToContents();
 
-    void refreshWorkspaces(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces = OpenCOR::PMRSupport::PmrWorkspaces());
+    void refreshWorkspaces();
 
     void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
     void workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);

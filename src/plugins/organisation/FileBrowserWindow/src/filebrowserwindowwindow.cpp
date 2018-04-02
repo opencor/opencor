@@ -84,25 +84,25 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     // Some connections
 
-    connect(mFileBrowserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
-    connect(mFileBrowserWindowWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked()));
-    connect(mFileBrowserWindowWidget, SIGNAL(filesOpenRequested(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::customContextMenuRequested,
+            this, &FileBrowserWindowWindow::showCustomContextMenu);
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::doubleClicked,
+            this, &FileBrowserWindowWindow::itemDoubleClicked);
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::filesOpenRequested,
+            this, &FileBrowserWindowWindow::openFiles);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mFileBrowserWindowWidget, SIGNAL(notHomeFolder(bool)),
-            mGui->actionHome, SLOT(setEnabled(bool)));
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::notHomeFolder,
+            mGui->actionHome, &QAction::setEnabled);
 
-    connect(mFileBrowserWindowWidget, SIGNAL(goToParentFolderEnabled(bool)),
-            mGui->actionParent, SLOT(setEnabled(bool)));
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::goToParentFolderEnabled,
+            mGui->actionParent, &QAction::setEnabled);
 
-    connect(mFileBrowserWindowWidget, SIGNAL(goToPreviousFileOrFolderEnabled(bool)),
-            mGui->actionPrevious, SLOT(setEnabled(bool)));
-    connect(mFileBrowserWindowWidget, SIGNAL(goToNextFileOrFolderEnabled(bool)),
-            mGui->actionNext, SLOT(setEnabled(bool)));
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::goToPreviousFileOrFolderEnabled,
+            mGui->actionPrevious, &QAction::setEnabled);
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::goToNextFileOrFolderEnabled,
+            mGui->actionNext, &QAction::setEnabled);
 }
 
 //==============================================================================

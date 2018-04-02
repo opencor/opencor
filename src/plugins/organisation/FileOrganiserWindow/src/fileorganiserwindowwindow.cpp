@@ -96,19 +96,19 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
 
     // Some connections
 
-    connect(mFileOrganiserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
-    connect(mFileOrganiserWindowWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(mFileOrganiserWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::customContextMenuRequested,
+            this, &FileOrganiserWindowWindow::showCustomContextMenu);
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::doubleClicked,
+            this, &FileOrganiserWindowWindow::itemDoubleClicked);
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::openFilesRequested,
+            this, &FileOrganiserWindowWindow::openFiles);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mFileOrganiserWindowWidget, SIGNAL(newFolderEnabled(bool)),
-            mGui->actionNew, SLOT(setEnabled(bool)));
-    connect(mFileOrganiserWindowWidget, SIGNAL(deleteItemsEnabled(bool)),
-            mGui->actionDelete, SLOT(setEnabled(bool)));
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::newFolderEnabled,
+            mGui->actionNew, &QAction::setEnabled);
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::deleteItemsEnabled,
+            mGui->actionDelete, &QAction::setEnabled);
 }
 
 //==============================================================================
