@@ -83,7 +83,7 @@ void Tests::cleanupTestCase()
 
 //==============================================================================
 
-void Tests::doBasicTests(const QString &pFileName)
+void Tests::basicTests(const QString &pFileName)
 {
     // Save the given COMBINE archive to the given file
 
@@ -119,8 +119,8 @@ void Tests::basicTests()
 
     QString otherFileName = OpenCOR::Core::temporaryFileName();
 
-    doBasicTests();
-    doBasicTests(otherFileName);
+    basicTests(QString());
+    basicTests(otherFileName);
 
     // Check that we can load our other COMBINE archive and save it in yet
     // another file

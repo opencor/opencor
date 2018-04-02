@@ -35,9 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-void Tests::doRuntimeTest(const QString &pFileName,
-                          const QString &pCellmlVersion,
-                          const QStringList &pModelParameters, bool pIsValid)
+void Tests::runtimeTest(const QString &pFileName, const QString &pCellmlVersion,
+                        const QStringList &pModelParameters, bool pIsValid)
 {
     // Get a CellML file object for the given CellML file and make sure that it
     // is considered of the expected CellML version
@@ -79,8 +78,8 @@ void Tests::runtimeTests()
 
     QStringList modelParameters = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/noble_model_1962.out"));
 
-    doRuntimeTest(OpenCOR::fileName("models/noble_model_1962.cellml"), "1.0",
-                  modelParameters);
+    runtimeTest(OpenCOR::fileName("models/noble_model_1962.cellml"),
+                "1.0", modelParameters);
 
     // Do the same as above but using the CellML 1.1 namespace
     // Note: the idea is to check that what we are doing to retrieve the
@@ -94,7 +93,7 @@ void Tests::runtimeTests()
 
     QVERIFY(OpenCOR::Core::writeFileContentsToFile(fileName, fileContents));
 
-    doRuntimeTest(fileName, "1.1", modelParameters);
+    runtimeTest(fileName, "1.1", modelParameters);
 
     // Now, we do the same for some proper CellML 1.1 models:
     //  - Hodgking-Huxley model, which is somewhat 'complex' in terms of
@@ -110,22 +109,22 @@ void Tests::runtimeTests()
     //    child model; and
     //  - A somewhat comprehensive model (Faville 2008).
 
-    doRuntimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
-                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
-    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
-                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
-    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.cellml"),
-                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.out")));
-    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/units_import_only_parent_model.cellml"),
-                  "1.1", modelParameters);
-    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.cellml"),
-                  "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.out")));
+    runtimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
+                "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
+    runtimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
+                "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
+    runtimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.cellml"),
+                "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_new.out")));
+    runtimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/units_import_only_parent_model.cellml"),
+                "1.1", modelParameters);
+    runtimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.cellml"),
+                "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/faville_model_2008.out")));
 
     // Finally, test a CellML file that has, according to the CellML API at
     // least, several VOIs
 
-    doRuntimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/calcium_transient.cellml"),
-                  "1.1", QStringList(), false);
+    runtimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/calcium_transient.cellml"),
+                "1.1", QStringList(), false);
 
     // Clean up after ourselves
 
