@@ -477,7 +477,7 @@ void CorePlugin::initializePlugin()
             mCentralWidget, QOverload<>::of(&CentralWidget::openRemoteFile));
 
     connect(mFileReloadAction, &QAction::triggered,
-            mCentralWidget, &CentralWidget::reloadFile);
+            mCentralWidget, QOverload<>::of(&CentralWidget::reloadFile));
 
     connect(mFileDuplicateAction, &QAction::triggered,
             mCentralWidget, &CentralWidget::duplicateFile);
@@ -498,9 +498,9 @@ void CorePlugin::initializePlugin()
             mCentralWidget, &CentralWidget::nextFile);
 
     connect(mFileCloseAction, &QAction::triggered,
-            mCentralWidget, &CentralWidget::closeFile);
+            mCentralWidget, QOverload<>::of(&CentralWidget::closeFile));
     connect(mFileCloseAllAction, &QAction::triggered,
-            mCentralWidget, &CentralWidget::closeAllFiles);
+            mCentralWidget, QOverload<>::of(&CentralWidget::closeAllFiles));
 
     // Some connections to update the enabled state of our various actions
 

@@ -191,10 +191,10 @@ private:
 
     void setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex);
 
-    void doReloadFile(int pIndex = -1, bool pForce = false);
+    void reloadFile(int pIndex, bool pForce);
 
-    bool doCloseFile(int pIndex = -1, bool pForceClosing = false);
-    void doCloseAllFiles(bool pForceClosing = false);
+    bool closeFile(int pIndex, bool pForceClosing);
+    void closeAllFiles(bool pForceClosing);
 
 signals:
     void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);

@@ -251,7 +251,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     connect(mFileTabs, &TabBarWidget::tabMoved,
             this, &CentralWidget::moveFile);
     connect(mFileTabs, &TabBarWidget::tabCloseRequested,
-            this, &CentralWidget::closeFile);
+            this, QOverload<>::of(&CentralWidget::closeFile));
 
     // A connection to handle our modes tab bar
 
@@ -322,7 +322,7 @@ CentralWidget::~CentralWidget()
     //       been called before to decide what needs to be done with modified
     //       files...
 
-    doCloseAllFiles(true);
+    closeAllFiles(true);
 
     // Delete our various modes
 
@@ -940,7 +940,7 @@ void CentralWidget::openRemoteFile()
 
 //==============================================================================
 
-void CentralWidget::doReloadFile(int pIndex, bool pForce)
+void CentralWidget::reloadFile(int pIndex, bool pForce)
 {
     // Ask our file manager to reload the file, but only if it isn't new and if
     // the user wants (in case the file has been modified)
@@ -952,14 +952,14 @@ void CentralWidget::doReloadFile(int pIndex, bool pForce)
         QString fileName = mFileNames[realIndex];
 
         if (!fileManagerInstance->isNew(fileName)) {
-            bool doReloadFile = true;
+            bool reloadFile = true;
 
             if (!pForce && fileManagerInstance->isModified(fileName)) {
                 // The current file is modified, so ask the user whether s/he
                 // still wants to reload it
 
-                doReloadFile = questionMessageBox(tr("File Modified"),
-                                                  tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(QDir::toNativeSeparators(fileName))) == QMessageBox::Yes;
+                reloadFile = questionMessageBox(tr("File Modified"),
+                                                tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(QDir::toNativeSeparators(fileName))) == QMessageBox::Yes;
             }
 
             // Reload the file, if needed, and consider it as non-modified
@@ -968,7 +968,7 @@ void CentralWidget::doReloadFile(int pIndex, bool pForce)
             //       that all the view plugins do their job properly and update
             //       their GUI...
 
-            if (doReloadFile) {
+            if (reloadFile) {
                 // Actually redownload the file, if it is a remote one
 
                 if (fileManagerInstance->isRemote(fileName)) {
@@ -1013,7 +1013,7 @@ void CentralWidget::reloadFile()
 {
     // Reload the current file
 
-    doReloadFile();
+    reloadFile(-1, false);
 }
 
 //==============================================================================
@@ -1276,7 +1276,7 @@ bool CentralWidget::canCloseFile(int pIndex)
 
 //==============================================================================
 
-bool CentralWidget::doCloseFile(int pIndex, bool pForceClosing)
+bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 {
     // Make sure that we are not updating the GUI
 
@@ -1364,12 +1364,12 @@ bool CentralWidget::closeFile()
 {
     // Close the current file
 
-    return doCloseFile();
+    return closeFile(-1, false);
 }
 
 //==============================================================================
 
-void CentralWidget::doCloseAllFiles(bool pForceClosing)
+void CentralWidget::closeAllFiles(bool pForceClosing)
 {
     // Check whether we can close all the files
 
@@ -1378,7 +1378,7 @@ void CentralWidget::doCloseAllFiles(bool pForceClosing)
 
     // Close all the files
 
-    while (doCloseFile(-2, pForceClosing))
+    while (closeFile(-2, pForceClosing))
         ;
 }
 
@@ -1388,7 +1388,7 @@ void CentralWidget::closeAllFiles()
 {
     // Close all the files
 
-    doCloseAllFiles();
+    closeAllFiles(false);
 }
 
 //==============================================================================
@@ -1971,7 +1971,7 @@ void CentralWidget::fileChanged(const QString &pFileName, bool pFileChanged,
 
             for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
                 if (!mFileNames[i].compare(pFileName)) {
-                    doReloadFile(i, true);
+                    reloadFile(i, true);
 
                     break;
                 }
@@ -2006,7 +2006,7 @@ void CentralWidget::fileDeleted(const QString &pFileName)
             if (!mFileNames[i].compare(pFileName)) {
                 // We have found the file to close
 
-                doCloseFile(i, true);
+                closeFile(i, true);
 
                 break;
             }
