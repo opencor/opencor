@@ -150,8 +150,8 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Keep track of the change in the cursor position
 
-    connect(this, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(updateCursorPosition(int, int)));
+    connect(this, &QScintillaWidget::cursorPositionChanged,
+            this, &QScintillaWidget::updateCursorPosition);
 }
 
 //==============================================================================
