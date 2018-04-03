@@ -131,12 +131,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     graphPanelProperties[0]->setName(tr("Background colour"));
     graphPanelProperties[1]->setName(tr("Font size"));
+    graphPanelProperties[2]->setName(tr("Foreground colour"));
 
     // Grid lines
 
-    Core::Properties gridLinesProperties = graphPanelProperties[2]->properties();
+    Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
-    graphPanelProperties[2]->setName(tr("Grid lines"));
+    graphPanelProperties[3]->setName(tr("Grid lines"));
 
     gridLinesProperties[0]->setName(tr("Style"));
     gridLinesProperties[1]->setName(tr("Width"));
@@ -144,13 +145,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     // Legend
 
-    graphPanelProperties[3]->setName(tr("Legend"));
+    graphPanelProperties[4]->setName(tr("Legend"));
 
     // Point coordinates
 
-    Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+    Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
-    graphPanelProperties[4]->setName(tr("Point coordinates"));
+    graphPanelProperties[5]->setName(tr("Point coordinates"));
 
     pointCoordinatesProperties[0]->setName(tr("Style"));
     pointCoordinatesProperties[1]->setName(tr("Width"));
@@ -159,40 +160,40 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateGr
 
     // Surrounding area
 
-    Core::Properties surroundingAreaProperties = graphPanelProperties[5]->properties();
+    Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
 
-    graphPanelProperties[5]->setName(tr("Surrounding area"));
+    graphPanelProperties[6]->setName(tr("Surrounding area"));
 
     surroundingAreaProperties[0]->setName(tr("Background colour"));
     surroundingAreaProperties[1]->setName(tr("Foreground colour"));
 
     // Title
 
-    graphPanelProperties[6]->setName(tr("Title"));
+    graphPanelProperties[7]->setName(tr("Title"));
 
     // X axis
 
-    Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
+    Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
-    graphPanelProperties[7]->setName(tr("X axis"));
+    graphPanelProperties[8]->setName(tr("X axis"));
 
     xAxisProperties[0]->setName(tr("Logarithmic scale"));
     xAxisProperties[1]->setName(tr("Title"));
 
     // Y axis
 
-    Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
+    Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
-    graphPanelProperties[8]->setName(tr("Y axis"));
+    graphPanelProperties[9]->setName(tr("Y axis"));
 
     yAxisProperties[0]->setName(tr("Logarithmic scale"));
     yAxisProperties[1]->setName(tr("Title"));
 
     // Zoom region
 
-    Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
+    Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
-    graphPanelProperties[9]->setName(tr("Zoom region"));
+    graphPanelProperties[10]->setName(tr("Zoom region"));
 
     zoomRegionProperties[0]->setName(tr("Style"));
     zoomRegionProperties[1]->setName(tr("Width"));
@@ -801,7 +802,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarit
 {
     // Toggle our logarithmic X axis property
 
-    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[7]->properties()[0];
+    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
 
     logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
 }
@@ -812,7 +813,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarit
 {
     // Toggle our logarithmic Y axis property
 
-    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
+    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[9]->properties()[0];
 
     logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
 }
@@ -950,6 +951,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->backgroundColor());
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->fontSize());
+    mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->foregroundColor());
 
     // Grid lines
 
@@ -1337,10 +1339,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     graphPanelPlot->setBackgroundColor(properties[0]->colorValue());
     graphPanelPlot->setFontSize(properties[1]->integerValue());
+    graphPanelPlot->setForegroundColor(properties[2]->colorValue());
 
     // Grid lines
 
-    Core::Properties gridLinesProperties = properties[2]->properties();
+    Core::Properties gridLinesProperties = properties[3]->properties();
 
     graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesProperties[0]->listValues().indexOf(gridLinesProperties[0]->listValue())));
     graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
@@ -1348,11 +1351,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     // Legend
 
-    graphPanelPlot->setLegendActive(properties[3]->booleanValue());
+    graphPanelPlot->setLegendActive(properties[4]->booleanValue());
 
     // Point coordinates
 
-    Core::Properties pointCoordinatesProperties = properties[4]->properties();
+    Core::Properties pointCoordinatesProperties = properties[5]->properties();
 
     graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesProperties[0]->listValues().indexOf(pointCoordinatesProperties[0]->listValue())));
     graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
@@ -1361,32 +1364,32 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
     // Surrounding area
 
-    Core::Properties surroundingAreaProperties = properties[5]->properties();
+    Core::Properties surroundingAreaProperties = properties[6]->properties();
 
     graphPanelPlot->setSurroundingAreaBackgroundColor(surroundingAreaProperties[0]->colorValue());
     graphPanelPlot->setSurroundingAreaForegroundColor(surroundingAreaProperties[1]->colorValue());
 
     // Title
 
-    graphPanelPlot->setTitle(properties[6]->value());
+    graphPanelPlot->setTitle(properties[7]->value());
 
     // X axis
 
-    Core::Properties xAxisProperties = properties[7]->properties();
+    Core::Properties xAxisProperties = properties[8]->properties();
 
     graphPanelPlot->setLogAxisX(xAxisProperties[0]->booleanValue());
     graphPanelPlot->setTitleAxisX(xAxisProperties[1]->value());
 
     // Y axis
 
-    Core::Properties yAxisProperties = properties[8]->properties();
+    Core::Properties yAxisProperties = properties[9]->properties();
 
     graphPanelPlot->setLogAxisY(yAxisProperties[0]->booleanValue());
     graphPanelPlot->setTitleAxisY(yAxisProperties[1]->value());
 
     // Zoom region
 
-    Core::Properties zoomRegionProperties = properties[9]->properties();
+    Core::Properties zoomRegionProperties = properties[10]->properties();
 
     graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionProperties[0]->listValues().indexOf(zoomRegionProperties[0]->listValue())));
     graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());

@@ -155,6 +155,7 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#13000080</backgroundColor>
                     <fontSize>15</fontSize>
+                    <foregroundColor>#000080</foregroundColor>
                     <height>5</height>
                     <legend>true</legend>
                     <title>Membrane potential</title>
@@ -218,6 +219,7 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#12108001</backgroundColor>
                     <fontSize>10</fontSize>
+                    <foregroundColor>#108001</foregroundColor>
                     <height>4</height>
                     <legend>true</legend>
                     <title>Currents</title>
@@ -319,6 +321,7 @@
                 <properties xmlns="http://www.opencor.ws/">
                     <backgroundColor>#13800002</backgroundColor>
                     <fontSize>10</fontSize>
+                    <foregroundColor>#800002</foregroundColor>
                     <height>3</height>
                     <legend>true</legend>
                     <title>Gating variables</title>
