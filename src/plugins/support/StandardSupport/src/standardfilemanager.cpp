@@ -47,7 +47,7 @@ StandardFileManager::StandardFileManager() :
             this, &StandardFileManager::unmanage);
 
     connect(fileManagerInstance, &Core::FileManager::fileReloaded,
-            this, &StandardFileManager::reload);
+            this, QOverload<const QString &>::of(&StandardFileManager::reload));
     connect(fileManagerInstance, &Core::FileManager::fileRenamed,
             this, &StandardFileManager::rename);
 
@@ -145,12 +145,12 @@ void StandardFileManager::save(const QString &pFileName)
     StandardFile *crtFile = file(pFileName);
 
     if (crtFile)
-        doReload(pFileName, crtFile->isNew());
+        reload(pFileName, crtFile->isNew());
 }
 
 //==============================================================================
 
-void StandardFileManager::doReload(const QString &pFileName, bool pForceChecking)
+void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
 {
     // The file is to be reloaded (either because it has been changed or because
     // one or several of its dependencies has changed), so reload it
@@ -188,7 +188,7 @@ void StandardFileManager::reload(const QString &pFileName)
 {
     // Reload the given file
 
-    doReload(pFileName);
+    reload(pFileName, true);
 }
 
 //==============================================================================

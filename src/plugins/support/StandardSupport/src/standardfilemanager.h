@@ -62,7 +62,7 @@ protected:
 private:
     bool doIsFile(const QString &pFileName, bool pForceChecking = false);
 
-    void doReload(const QString &pFileName, bool pForceChecking = true);
+    void reload(const QString &pFileName, bool pForceChecking);
 
 private slots:
     void manage(const QString &pFileName);
