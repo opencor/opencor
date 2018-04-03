@@ -52,7 +52,7 @@ private:
     Ui::SampleWindowWindow *mGui;
 
 private slots:
-    void updateSum(int pDummy = 0);
+    void updateSum();
 };
 
 //==============================================================================

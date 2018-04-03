@@ -67,10 +67,8 @@ SampleWindowWindow::~SampleWindowWindow()
 
 //==============================================================================
 
-void SampleWindowWindow::updateSum(int pDummy)
+void SampleWindowWindow::updateSum()
 {
-    Q_UNUSED(pDummy);
-
     // Update our sum
 
     mGui->sumLabel->setText(QString::number(Sample::add(mGui->nb1DoubleSpinBox->value(), mGui->nb2DoubleSpinBox->value())));
