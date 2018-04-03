@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 23, "month": 10, "year": 2017,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 28, "month": 11, "year": 2017,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -77,6 +77,7 @@ var jsonData = { "versions": [
                                { "type": "Added", "description": "Support for log scales." },
                                { "type": "Added", "description": "Ability to customise a graph." },
                                { "type": "Added", "description": "Ability to customise a graph panel." },
+                               { "type": "Added", "description": "Ability to show the legend of a graph panel." },
                                { "type": "Added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
                                { "type": "Improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "Improved", "description": "Running of long simulations." },

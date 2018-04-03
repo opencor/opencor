@@ -665,15 +665,11 @@ QString plainString(const QString &pString)
 QString urlArguments(const QUrl &pUrl)
 {
     // Return the arguments (path) of the given URL
-    // Note #1: we would normally retrieve the path using pUrl.path(), but this
-    //          doesn't work when there are spaces, so instead we adjust the URL
-    //          by removing its scheme and authority, and return it as a
-    //          string...
-    // Note #2: we use "|" to separate arguments, but they get converted to
-    //          "%7C" and there doesn't seem to be a way to convert them back,
-    //          so we do it ourselves...
+    // Note: we use "|" to separate arguments, but they get converted to "%7C"
+    //       and there doesn't seem to be a way to convert them back, so we do
+    //       it ourselves...
 
-    return pUrl.adjusted(QUrl::RemoveScheme|QUrl::RemoveAuthority).toString().remove(0, 1).replace("%7C", "|");
+    return pUrl.path().remove(0, 1).replace("%7C", "|");
 }
 
 //==============================================================================

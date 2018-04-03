@@ -32,6 +32,10 @@
         <translation>Couleur</translation>
     </message>
     <message>
+        <source>Legend</source>
+        <translation>Légende</translation>
+    </message>
+    <message>
         <source>Point coordinates</source>
         <translation>Coordonnées de point</translation>
     </message>

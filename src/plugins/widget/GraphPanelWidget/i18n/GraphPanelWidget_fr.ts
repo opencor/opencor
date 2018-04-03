@@ -43,14 +43,6 @@
         <translation>Copier le contenu du panneau graphique dans le presse-papier</translation>
     </message>
     <message>
-        <source>Custom Axes...</source>
-        <translation>Axes Personnalisés...</translation>
-    </message>
-    <message>
-        <source>Specify custom axes for the graph panel</source>
-        <translation>Spécifier des axes personnalisés pour le panneau graphique</translation>
-    </message>
-    <message>
         <source>Graph Panel Settings...</source>
         <translation>Paramètres Panneau Graphique...</translation>
     </message>
@@ -65,6 +57,38 @@
     <message>
         <source>Customise the graphs</source>
         <translation>Paramètrer les graphes</translation>
+    </message>
+    <message>
+        <source>Legend</source>
+        <translation>Légende</translation>
+    </message>
+    <message>
+        <source>Show/hide the legend</source>
+        <translation>Montrer/cacher la légende</translation>
+    </message>
+    <message>
+        <source>Logarithmic X Axis</source>
+        <translation>Logarithmique Axe des X</translation>
+    </message>
+    <message>
+        <source>Enable/disable logarithmic scaling on the X axis</source>
+        <translation>Activer/désactiver l&apos;échelle logarithmique sur l&apos;axe des X</translation>
+    </message>
+    <message>
+        <source>Logarithmic Y Axis</source>
+        <translation>Logarithmique Axe des Y</translation>
+    </message>
+    <message>
+        <source>Enable/disable logarithmic scaling on the Y axis</source>
+        <translation>Activer/désactiver l&apos;échelle logarithmique sur l&apos;axe des Y</translation>
+    </message>
+    <message>
+        <source>Custom Axes...</source>
+        <translation>Axes Personnalisés...</translation>
+    </message>
+    <message>
+        <source>Specify custom axes for the graph panel</source>
+        <translation>Spécifier des axes personnalisés pour le panneau graphique</translation>
     </message>
     <message>
         <source>Zoom In</source>

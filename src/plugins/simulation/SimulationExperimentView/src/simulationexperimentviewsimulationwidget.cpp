@@ -687,6 +687,11 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
 {
+    QCoreApplication::processEvents();
+    // Note: this ensures that our GUI is all fine before we start disabling
+    //       updates (e.g. when reloading a SED-ML file that references a remote
+    //       CellML file)...
+
     setUpdatesEnabled(false);
 
     // Stop keeping track of certain things (so that updatePlot() doesn't get
@@ -1266,60 +1271,6 @@ SimulationSupport::Simulation * SimulationExperimentViewSimulationWidget::simula
 
 //==============================================================================
 
-QVariant SimulationExperimentViewSimulationWidget::value(Core::Property *pProperty) const
-{
-    switch (pProperty->type()) {
-    case Core::Property::Section:
-        return QVariant();
-    case Core::Property::String:
-    case Core::Property::Color:
-        return pProperty->value();
-    case Core::Property::Integer:
-    case Core::Property::IntegerGt0:
-        return pProperty->integerValue();
-    case Core::Property::Double:
-    case Core::Property::DoubleGt0:
-        return pProperty->doubleValue();
-    case Core::Property::List:
-        return pProperty->listValue();
-    case Core::Property::Boolean:
-        return pProperty->booleanValue();
-    }
-
-    return QVariant();
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
-}
-
-//==============================================================================
-
-QString SimulationExperimentViewSimulationWidget::stringValue(Core::Property *pProperty) const
-{
-    switch (pProperty->type()) {
-    case Core::Property::Section:
-        return QString();
-    case Core::Property::String:
-    case Core::Property::Color:
-        return pProperty->value();
-    case Core::Property::Integer:
-    case Core::Property::IntegerGt0:
-        return QString::number(pProperty->integerValue());
-    case Core::Property::Double:
-    case Core::Property::DoubleGt0:
-        return QString::number(pProperty->doubleValue(), 'g', 15);
-    case Core::Property::List:
-        return pProperty->listValue();
-    case Core::Property::Boolean:
-        return QVariant(pProperty->booleanValue()).toString();
-    }
-
-    return QString();
-    // Note: we can't reach this point, but without it we may be told that not
-    //       all control paths return a value...
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 {
     // Run/resume our simulation or pause it
@@ -1723,64 +1674,66 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
         Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
-        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
-        Core::Properties xAxisProperties = graphPanelProperties[6]->properties();
-        Core::Properties yAxisProperties = graphPanelProperties[7]->properties();
-        Core::Properties zoomRegionProperties = graphPanelProperties[8]->properties();
+        Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
+        Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
+        Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
+        Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
 
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
                                               "</%1>").arg( SEDMLSupport::Properties,
                                                             SEDMLSupport::OpencorNamespace,
                                                             SedmlProperty.arg(SEDMLSupport::BackgroundColor,
-                                                                              stringValue(graphPanelProperties[0]))
+                                                                              graphPanelProperties[0]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::FontSize,
-                                                                              stringValue(graphPanelProperties[1]))
+                                                                              graphPanelProperties[1]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
-                                                                              stringValue(graphPanelProperties[2]))
+                                                                              graphPanelProperties[2]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::Height,
                                                                               QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]))
+                                                           +SedmlProperty.arg(SEDMLSupport::Legend,
+                                                                              graphPanelProperties[4]->valueAsString())
                                                            +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                              stringValue(graphPanelProperties[5]))
+                                                                              graphPanelProperties[6]->valueAsString())
                                                            +SedmlProperty.arg( SEDMLSupport::GridLines,
                                                                                SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
                                                                               +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 stringValue(gridLinesProperties[1]))
+                                                                                                 gridLinesProperties[1]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 stringValue(gridLinesProperties[2])))
+                                                                                                 gridLinesProperties[2]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::PointCoordinates,
                                                                                SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
                                                                               +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 stringValue(pointCoordinatesProperties[1]))
+                                                                                                 pointCoordinatesProperties[1]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 stringValue(pointCoordinatesProperties[2]))
+                                                                                                 pointCoordinatesProperties[2]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                                                                 stringValue(pointCoordinatesProperties[3])))
+                                                                                                 pointCoordinatesProperties[3]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::XAxis,
                                                                                SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                                                                 stringValue(xAxisProperties[0]))
+                                                                                                 xAxisProperties[0]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                                                 stringValue(xAxisProperties[1])))
+                                                                                                 xAxisProperties[1]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::YAxis,
                                                                                SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                                                                 stringValue(yAxisProperties[0]))
+                                                                                                 yAxisProperties[0]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Title,
-                                                                                                 stringValue(yAxisProperties[1])))
+                                                                                                 yAxisProperties[1]->valueAsString()))
                                                            +SedmlProperty.arg( SEDMLSupport::ZoomRegion,
                                                                                SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                  SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
                                                                               +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                 stringValue(zoomRegionProperties[1]))
+                                                                                                 zoomRegionProperties[1]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                 stringValue(zoomRegionProperties[2]))
+                                                                                                 zoomRegionProperties[2]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                                                                 stringValue(zoomRegionProperties[3]))
+                                                                                                 zoomRegionProperties[3]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::Filled,
-                                                                                                 stringValue(zoomRegionProperties[4]))
+                                                                                                 zoomRegionProperties[4]->valueAsString())
                                                                               +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                                                                 stringValue(zoomRegionProperties[5])))).toStdString());
+                                                                                                 zoomRegionProperties[5]->valueAsString()))).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -1825,8 +1778,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
             libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
             libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-            QStringList propertyX = property->properties()[1]->value().split('.');
-            QStringList propertyY = property->properties()[2]->value().split('.');
+            Core::Properties properties = property->properties();
+            QStringList propertyX = properties[2]->value().split('.');
+            QStringList propertyY = properties[3]->value().split('.');
 
             sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(data.graphPlotCounter),
                                                                 QString::number(graphCounter)).toStdString());
@@ -1856,31 +1810,33 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
             // Customise our curve using an annotation
 
-            Core::Properties lineProperties = property->properties()[3]->properties();
-            Core::Properties symbolProperties = property->properties()[4]->properties();
+            Core::Properties lineProperties = properties[4]->properties();
+            Core::Properties symbolProperties = properties[5]->properties();
 
             sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
                                                  "</%1>").arg( SEDMLSupport::Properties,
                                                                SEDMLSupport::OpencorNamespace,
-                                                               SedmlProperty.arg( SEDMLSupport::Line,
+                                                               SedmlProperty.arg(SEDMLSupport::Title,
+                                                                                 properties[1]->valueAsString())
+                                                              +SedmlProperty.arg( SEDMLSupport::Line,
                                                                                   SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                     SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                    stringValue(lineProperties[1]))
+                                                                                                    lineProperties[1]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                    stringValue(lineProperties[2])))
+                                                                                                    lineProperties[2]->valueAsString()))
                                                               +SedmlProperty.arg( SEDMLSupport::Symbol,
                                                                                   SedmlProperty.arg(SEDMLSupport::Style,
                                                                                                     SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Size,
-                                                                                                    stringValue(symbolProperties[1]))
+                                                                                                    symbolProperties[1]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                    stringValue(symbolProperties[2]))
+                                                                                                    symbolProperties[2]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Filled,
-                                                                                                    stringValue(symbolProperties[3]))
+                                                                                                    symbolProperties[3]->valueAsString())
                                                                                  +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                                                                    stringValue(symbolProperties[4])))).toStdString());
+                                                                                                    symbolProperties[4]->valueAsString()))).toStdString());
         }
     }
 
@@ -2152,7 +2108,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needOdeSolverGuiUpdate) {
             foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
+                    mSimulation->data()->addOdeSolverProperty(property->id(), property->valueAsVariant());
 
                     needOdeSolverGuiUpdate = true;
 
@@ -2184,7 +2140,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needDaeSolverGuiUpdate) {
             foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
+                    mSimulation->data()->addDaeSolverProperty(property->id(), property->valueAsVariant());
 
                     needDaeSolverGuiUpdate = true;
 
@@ -2216,7 +2172,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needNlaSolverGuiUpdate) {
             foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+                    mSimulation->data()->addNlaSolverProperty(property->id(), property->valueAsVariant());
 
                     needNlaSolverGuiUpdate = true;
 
@@ -2268,12 +2224,10 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
             const libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(variableDegreeNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(variableDegreeNode.getName()).compare(SEDMLSupport::VariableDegree)) {
-                continue;
+            if (   !QString::fromStdString(variableDegreeNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                && !QString::fromStdString(variableDegreeNode.getName()).compare(SEDMLSupport::VariableDegree)) {
+                variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt();
             }
-
-            variableDegree = QString::fromStdString(variableDegreeNode.getChild(0).getCharacters()).toInt();
         }
     }
 
@@ -2420,38 +2374,34 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
             const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(solverPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(solverPropertiesNode.getName()).compare(SEDMLSupport::SolverProperties)) {
-                continue;
-            }
+            if (   !QString::fromStdString(solverPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                && !QString::fromStdString(solverPropertiesNode.getName()).compare(SEDMLSupport::SolverProperties)) {
+                for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                    const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
-            for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
+                    if (   !QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                        && !QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                        QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
+                        QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
+                        bool propertySet = false;
 
-                if (   QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                    || QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
-                    continue;
-                }
+                        foreach (Core::Property *solverProperty, solverProperties) {
+                            if (!solverProperty->id().compare(id)) {
+                                solverProperty->setValue(value);
 
-                QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
-                QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
-                bool propertySet = false;
+                                propertySet = true;
 
-                foreach (Core::Property *solverProperty, solverProperties) {
-                    if (!solverProperty->id().compare(id)) {
-                        solverProperty->setValue(value);
+                                break;
+                            }
+                        }
 
-                        propertySet = true;
+                        if (!propertySet) {
+                            simulationError(tr("the requested property (%1) could not be set").arg(id),
+                                            InvalidSimulationEnvironment);
 
-                        break;
+                            return false;
+                        }
                     }
-                }
-
-                if (!propertySet) {
-                    simulationError(tr("the requested property (%1) could not be set").arg(id),
-                                    InvalidSimulationEnvironment);
-
-                    return false;
                 }
             }
         }
@@ -2467,26 +2417,24 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
             const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
-            if (   QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                || QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
-                continue;
-            }
+            if (   !QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                && !QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
+                mustHaveNlaSolver = true;
+                nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
-            mustHaveNlaSolver = true;
-            nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
+                foreach (SolverInterface *solverInterface, solverInterfaces) {
+                    if (!nlaSolverName.compare(solverInterface->solverName())) {
+                        informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
 
-            foreach (SolverInterface *solverInterface, solverInterfaces) {
-                if (!nlaSolverName.compare(solverInterface->solverName())) {
-                    informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
+                        hasNlaSolver = true;
 
-                    hasNlaSolver = true;
-
-                    break;
+                        break;
+                    }
                 }
-            }
 
-            if (hasNlaSolver)
-                break;
+                if (hasNlaSolver)
+                    break;
+            }
         }
 
         if (mustHaveNlaSolver && !hasNlaSolver) {
@@ -2504,14 +2452,12 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     graphPanelsWidget->removeAllGraphPanels();
 
     // Add some graph panels, so that their number corresponds to the number of
-    // 2D outputs mentioned in the SED-ML file, and select the first one
+    // 2D outputs mentioned in the SED-ML file
 
     int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
     while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels)
         graphPanelsWidget->addGraphPanel(false);
-
-    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     // Customise our graph panel and graphs
 
@@ -2520,7 +2466,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
-        static const QString True = "true";
+        static const QString TrueValue = "true";
 
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
@@ -2536,113 +2482,113 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
                 const libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(i);
 
-                if (   QString::fromStdString(sedmlPlot2dPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                    || QString::fromStdString(sedmlPlot2dPropertiesNode.getName()).compare(SEDMLSupport::Properties)) {
-                    continue;
-                }
+                if (   !QString::fromStdString(sedmlPlot2dPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                    && !QString::fromStdString(sedmlPlot2dPropertiesNode.getName()).compare(SEDMLSupport::Properties)) {
+                    for (uint j = 0, jMax = sedmlPlot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                        const libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(j);
+                        QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
+                        QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
 
-                for (uint j = 0, jMax = sedmlPlot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
-                    const libsbml::XMLNode &sedmlPlot2dPropertyNode = sedmlPlot2dPropertiesNode.getChild(j);
-                    QString sedmlPlot2dPropertyNodeName = QString::fromStdString(sedmlPlot2dPropertyNode.getName());
-                    QString sedmlPlot2dPropertyNodeValue = QString::fromStdString(sedmlPlot2dPropertyNode.getChild(0).getCharacters());
+                        if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor)) {
+                            graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize)) {
+                            graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
+                            graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
+                            graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Legend)) {
+                            graphPanelProperties[4]->setBooleanValue(!sedmlPlot2dPropertyNodeValue.compare(TrueValue));
+                        } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
+                            graphPanelProperties[6]->setValue(sedmlPlot2dPropertyNodeValue);
+                        } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                                   && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::GridLines)) {
+                            Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
-                    if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::BackgroundColor)) {
-                        graphPanelProperties[0]->setValue(sedmlPlot2dPropertyNodeValue);
-                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::FontSize)) {
-                        graphPanelProperties[1]->setValue(sedmlPlot2dPropertyNodeValue);
-                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::ForegroundColor)) {
-                        graphPanelProperties[2]->setValue(sedmlPlot2dPropertyNodeValue);
-                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Height)) {
-                        graphPanelsWidgetSizes << sedmlPlot2dPropertyNodeValue.toInt();
-                    } else if (!sedmlPlot2dPropertyNodeName.compare(SEDMLSupport::Title)) {
-                        graphPanelProperties[5]->setValue(sedmlPlot2dPropertyNodeValue);
-                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::GridLines)) {
-                        Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
+                            for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                                QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
+                                QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
 
-                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                            const libsbml::XMLNode &gridLinesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
-                            QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
-                            QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
-
-                            if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Style)) {
-                                gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
-                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Width)) {
-                                gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
-                            } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Color)) {
-                                gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
+                                if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                    gridLinesProperties[0]->setValue(gridLinesPropertyNodeValue);
+                                } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Width)) {
+                                    gridLinesProperties[1]->setValue(gridLinesPropertyNodeValue);
+                                } else if (!gridLinesPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                    gridLinesProperties[2]->setValue(gridLinesPropertyNodeValue);
+                                }
                             }
-                        }
-                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::PointCoordinates)) {
-                        Core::Properties pointCoordinatesProperties = graphPanelProperties[4]->properties();
+                        } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                                   && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::PointCoordinates)) {
+                            Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
-                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                            const libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
-                            QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
-                            QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
+                            for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &pointCoordinatesPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                                QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
+                                QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
 
-                            if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Style)) {
-                                pointCoordinatesProperties[0]->setValue(pointCoordinatesPropertyNodeValue);
-                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Width)) {
-                                pointCoordinatesProperties[1]->setValue(pointCoordinatesPropertyNodeValue);
-                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Color)) {
-                                pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
-                            } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::FontColor)) {
-                                pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
+                                if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                    pointCoordinatesProperties[0]->setValue(pointCoordinatesPropertyNodeValue);
+                                } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Width)) {
+                                    pointCoordinatesProperties[1]->setValue(pointCoordinatesPropertyNodeValue);
+                                } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                    pointCoordinatesProperties[2]->setValue(pointCoordinatesPropertyNodeValue);
+                                } else if (!pointCoordinatesPropertyNodeName.compare(SEDMLSupport::FontColor)) {
+                                    pointCoordinatesProperties[3]->setValue(pointCoordinatesPropertyNodeValue);
+                                }
                             }
-                        }
-                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::XAxis)) {
-                        Core::Properties xAxisProperties = graphPanelProperties[6]->properties();
+                        } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                                   && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::XAxis)) {
+                            Core::Properties xAxisProperties = graphPanelProperties[7]->properties();
 
-                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                            const libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
-                            QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
-                            QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
+                            for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &xAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                                QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
+                                QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
-                            if (!xAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
-                                xAxisProperties[0]->setBooleanValue(!xAxisPropertyNodeValue.compare(True));
-                            } else if (!xAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
-                                xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
+                                if (!xAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
+                                    xAxisProperties[0]->setBooleanValue(!xAxisPropertyNodeValue.compare(TrueValue));
+                                } else if (!xAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
+                                    xAxisProperties[1]->setValue(xAxisPropertyNodeValue);
+                                }
                             }
-                        }
-                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::YAxis)) {
-                        Core::Properties yAxisProperties = graphPanelProperties[7]->properties();
+                        } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                                   && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::YAxis)) {
+                            Core::Properties yAxisProperties = graphPanelProperties[8]->properties();
 
-                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                            const libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
-                            QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
-                            QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
+                            for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &yAxisPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                                QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
+                                QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
-                            if (!yAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
-                                yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(True));
-                            } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
-                                yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
+                                if (!yAxisPropertyNodeName.compare(SEDMLSupport::LogarithmicScale)) {
+                                    yAxisProperties[0]->setBooleanValue(!yAxisPropertyNodeValue.compare(TrueValue));
+                                } else if (!yAxisPropertyNodeName.compare(SEDMLSupport::Title)) {
+                                    yAxisProperties[1]->setValue(yAxisPropertyNodeValue);
+                                }
                             }
-                        }
-                    } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                               && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::ZoomRegion)) {
-                        Core::Properties zoomRegionProperties = graphPanelProperties[8]->properties();
+                        } else if (   !QString::fromStdString(sedmlPlot2dPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                                   && !QString::fromStdString(sedmlPlot2dPropertyNode.getName()).compare(SEDMLSupport::ZoomRegion)) {
+                            Core::Properties zoomRegionProperties = graphPanelProperties[9]->properties();
 
-                        for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                            const libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
-                            QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
-                            QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
+                            for (uint k = 0, kMax = sedmlPlot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &zoomRegionPropertyNode = sedmlPlot2dPropertyNode.getChild(k);
+                                QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
+                                QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
 
-                            if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Style)) {
-                                zoomRegionProperties[0]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Width)) {
-                                zoomRegionProperties[1]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Color)) {
-                                zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FontColor)) {
-                                zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Filled)) {
-                                zoomRegionProperties[4]->setBooleanValue(!zoomRegionPropertyNodeValue.compare(True));
-                            } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FillColor)) {
-                                zoomRegionProperties[5]->setValue(zoomRegionPropertyNodeValue);
+                                if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                    zoomRegionProperties[0]->setValue(zoomRegionPropertyNodeValue);
+                                } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Width)) {
+                                    zoomRegionProperties[1]->setValue(zoomRegionPropertyNodeValue);
+                                } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                    zoomRegionProperties[2]->setValue(zoomRegionPropertyNodeValue);
+                                } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FontColor)) {
+                                    zoomRegionProperties[3]->setValue(zoomRegionPropertyNodeValue);
+                                } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::Filled)) {
+                                    zoomRegionProperties[4]->setBooleanValue(!zoomRegionPropertyNodeValue.compare(TrueValue));
+                                } else if (!zoomRegionPropertyNodeName.compare(SEDMLSupport::FillColor)) {
+                                    zoomRegionProperties[5]->setValue(zoomRegionPropertyNodeValue);
+                                }
                             }
                         }
                     }
@@ -2667,6 +2613,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 return false;
             }
 
+            QString title = QString();
             Qt::PenStyle lineStyle = Qt::SolidLine;
             double lineWidth = 1.0;
             QColor lineColor = Qt::darkBlue;
@@ -2682,53 +2629,48 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
                     const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
 
-                    if (   QString::fromStdString(curvePropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
-                        || QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::Properties)) {
-                        continue;
-                    }
+                    if (   !QString::fromStdString(curvePropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                        && !QString::fromStdString(curvePropertiesNode.getName()).compare(SEDMLSupport::Properties)) {
+                        for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
+                            const libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(j);
+                            QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
+                            QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                    for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
-                        const libsbml::XMLNode &lineOrSymbolPropertiesNode = curvePropertiesNode.getChild(j);
-                        QString lineOrSymbolPropertiesNodeName = QString::fromStdString(lineOrSymbolPropertiesNode.getName());
+                            if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
+                                title = curvePropertyNodeValue;
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Line)) {
+                                for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
+                                    const libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(k);
+                                    QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
+                                    QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
-                        bool isLinePropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::Line);
-                        bool isSymbolPropertiesNode = !lineOrSymbolPropertiesNodeName.compare(SEDMLSupport::Symbol);
-
-                        if (!isLinePropertiesNode && !isSymbolPropertiesNode)
-                            continue;
-
-                        if (isLinePropertiesNode) {
-                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
-                                const libsbml::XMLNode &linePropertyNode = lineOrSymbolPropertiesNode.getChild(k);
-                                QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
-                                QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
-
-                                if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
-                                    lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
-                                } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
-                                    lineWidth = linePropertyNodeValue.toDouble();
-                                } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
-                                    lineColor.setNamedColor(linePropertyNodeValue);
+                                    if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
+                                        lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
+                                    } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
+                                        lineWidth = linePropertyNodeValue.toDouble();
+                                    } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
+                                        lineColor.setNamedColor(linePropertyNodeValue);
+                                    }
                                 }
-                            }
-                        } else {
-                            for (uint k = 0, kMax = lineOrSymbolPropertiesNode.getNumChildren(); k < kMax; ++k) {
-                                const libsbml::XMLNode &symbolPropertyNode = lineOrSymbolPropertiesNode.getChild(k);
-                                QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
-                                QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Symbol)) {
+                                for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
+                                    const libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(k);
+                                    QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
+                                    QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
-                                if (!symbolPropertyNodeName.compare(SEDMLSupport::Style)) {
-                                    int symbolStyleValue = SEDMLSupport::symbolStyleValueIndex(symbolPropertyNodeValue);
+                                    if (!symbolPropertyNodeName.compare(SEDMLSupport::Style)) {
+                                        int symbolStyleValue = SEDMLSupport::symbolStyleValueIndex(symbolPropertyNodeValue);
 
-                                    symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size)) {
-                                    symbolSize = symbolPropertyNodeValue.toInt();
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Color)) {
-                                    symbolColor.setNamedColor(symbolPropertyNodeValue);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Filled)) {
-                                    symbolFilled = !symbolPropertyNodeValue.compare(True);
-                                } else if (!symbolPropertyNodeName.compare(SEDMLSupport::FillColor)) {
-                                    symbolFillColor.setNamedColor(symbolPropertyNodeValue);
+                                        symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
+                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size)) {
+                                        symbolSize = symbolPropertyNodeValue.toInt();
+                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                        symbolColor.setNamedColor(symbolPropertyNodeValue);
+                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Filled)) {
+                                        symbolFilled = !symbolPropertyNodeValue.compare(TrueValue);
+                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::FillColor)) {
+                                        symbolFillColor.setNamedColor(symbolPropertyNodeValue);
+                                    }
                                 }
                             }
                         }
@@ -2737,11 +2679,15 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             }
 
             graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
-                                 GraphPanelWidget::GraphPanelPlotGraphProperties( lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties(title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
     graphPanelsWidget->setSizes(graphPanelsWidgetSizes);
+
+    // Select our first graph panel, now that we are fully initialised
+
+    graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
     return true;
 }
@@ -3063,6 +3009,23 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
             this, SIGNAL(graphPanelSettingsRequested()));
     connect(plot, SIGNAL(graphsSettingsRequested()),
             this, SIGNAL(graphsSettingsRequested()));
+
+    // Let people know when we a graph has been toggled
+
+    connect(plot, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
+            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+
+    // Let people know when we the legend has been toggled
+
+    connect(plot, SIGNAL(legendToggled()),
+            this, SIGNAL(legendToggled()));
+
+    // Let people know when we the X/Y logarithmic axis has been toggled
+
+    connect(plot, SIGNAL(logarithmicXAxisToggled()),
+            this, SIGNAL(logarithmicXAxisToggled()));
+    connect(plot, SIGNAL(logarithmicYAxisToggled()),
+            this, SIGNAL(logarithmicYAxisToggled()));
 }
 
 //==============================================================================

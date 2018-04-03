@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 10, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 28, "month": 11, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -40,7 +40,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>General:</strong> upgraded to Qt 5.9.3 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1464\">#1464</a>)." },
                        { "change": "<strong>GraphPanel widget:</strong> axis labels are now rendered fine when exporting a graph panel to various formats (see issue <a href=\"https://github.com/opencor/opencor/issues/1448\">#1448</a>). Can now interact with a graph panel after it has been exported to a given format (see issue <a href=\"https://github.com/opencor/opencor/issues/1450\">#1450</a>)." },
                        { "change": "<strong>SED-ML support:</strong> now track the relative height of a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/1461\">#1461</a>)." },
-                       { "change": "<strong>SimulationExperiment view:</strong> it is now possible to customise a graph panel and have it serialised to / retrieved from a SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1426\">#1426</a>)." },
+                       { "change": "<strong>SimulationExperiment view:</strong> it is now possible to customise a graph panel and have it serialised to / retrieved from a SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1426\">#1426</a>). Can now show the legend of the different graphs shown in a graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/1171\">#1171</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1453\">#1453</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2m (see issue <a href=\"https://github.com/opencor/opencor/issues/1458\">#1458</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1466\">#1466</a>)." }
                      ]
                    },

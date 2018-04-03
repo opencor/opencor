@@ -72,6 +72,7 @@ public:
 
     void addGraph(GraphPanelPlotGraph *pGraph,
                   const GraphPanelPlotGraphProperties &pGraphProperties = GraphPanelPlotGraphProperties());
+
     void removeGraphs(const GraphPanelPlotGraphs &pGraphs);
     void removeAllGraphs();
 

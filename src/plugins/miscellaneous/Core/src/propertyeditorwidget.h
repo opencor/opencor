@@ -199,6 +199,10 @@ private:
 
 //==============================================================================
 
+typedef QList<Property *> Properties;
+
+//==============================================================================
+
 class CORE_EXPORT Property : public QObject
 {
     Q_OBJECT
@@ -229,7 +233,7 @@ public:
     Property * parentProperty() const;
     void setParentProperty(Property *pProperty);
 
-    QList<Property *> properties() const;
+    Properties properties() const;
 
     void add(Property *pProperty);
     void addTo(QStandardItem *pParent);
@@ -258,6 +262,9 @@ public:
     QString value() const;
     void setValue(const QString &pValue, const bool &pForce = false,
                   const bool &pEmitSignal = true);
+
+    QVariant valueAsVariant() const;
+    QString valueAsString() const;
 
     int integerValue() const;
     void setIntegerValue(const int &pIntegerValue,
@@ -319,7 +326,7 @@ private:
     QString mExtraInfo;
 
     Property * mParentProperty;
-    QList<Property *> mProperties;
+    Properties mProperties;
 
     QList<QStandardItem *> items() const;
 
@@ -327,10 +334,6 @@ signals:
     void visibilityChanged(const bool &pVisible);
     void valueChanged(const QString &pOldValue, const QString &pNewValue);
 };
-
-//==============================================================================
-
-typedef QList<Property *> Properties;
 
 //==============================================================================
 
