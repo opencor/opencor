@@ -1307,9 +1307,9 @@ PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
     connect(mModel, &QStandardItemModel::itemChanged,
             this, &PropertyEditorWidget::updateHeight);
 
-    connect(this, &PropertyEditorWidget::collapsed,
-            this, &PropertyEditorWidget::updateHeight);
     connect(this, &PropertyEditorWidget::expanded,
+            this, &PropertyEditorWidget::updateHeight);
+    connect(this, &PropertyEditorWidget::collapsed,
             this, &PropertyEditorWidget::updateHeight);
 
     header()->setSectionsMovable(false);

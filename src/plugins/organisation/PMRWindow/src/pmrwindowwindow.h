@@ -92,7 +92,7 @@ private:
 
     bool mItemDoubleClicked;
 
-    void doRetrieveExposures(bool pVisible, bool pForceRetrieval = false);
+    void retrieveExposures(bool pVisible, bool pForceRetrieval);
 
 private slots:
     void on_actionReload_triggered();

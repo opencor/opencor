@@ -89,7 +89,7 @@ private:
 signals:
     void filesOpenRequested(const QStringList &pFileNames);
 
-    void notHomeFolder(bool pNotHomeFolder);
+    void homeFolder(bool pNotHomeFolder);
     void goToParentFolderEnabled(bool pEnabled);
 
     void goToPreviousFileOrFolderEnabled(bool pEnabled);

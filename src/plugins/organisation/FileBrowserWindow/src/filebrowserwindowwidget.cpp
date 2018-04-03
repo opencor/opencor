@@ -293,10 +293,10 @@ void FileBrowserWindowWidget::deselectFolders() const
 
 void FileBrowserWindowWidget::emitItemChangedRelatedSignals()
 {
-    // Let the user know whether the path of the new item is not that of our
-    // home folder, as well as whether we could go to the parent item
+    // Let the user know whether the path of the new item is that of our home
+    // folder, as well as whether we could go to the parent item
 
-    emit notHomeFolder(currentPath() != QDir::homePath());
+    emit homeFolder(!currentPath().compare(QDir::homePath()));
     emit goToParentFolderEnabled(!currentPathParent().isEmpty());
 
     // Let the user know whether we can go to the previous/next file/folder

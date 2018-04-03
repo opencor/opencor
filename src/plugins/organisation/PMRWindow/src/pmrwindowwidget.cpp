@@ -104,7 +104,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     connect(this, &PmrWindowWidget::doubleClicked,
             this, QOverload<const QModelIndex &>::of(&PmrWindowWidget::itemDoubleClicked));
     connect(this, &PmrWindowWidget::doubleClicked,
-            this, QOverload<const QModelIndex &>::of(&PmrWindowWidget::itemDoubleClicked));
+            this, QOverload<>::of(&PmrWindowWidget::itemDoubleClicked));
 
     connect(this, &PmrWindowWidget::expanded,
             this, &PmrWindowWidget::resizeTreeViewToContents);

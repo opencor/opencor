@@ -127,7 +127,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // exposures, if necessary
 
     connect(this, &PmrWindowWindow::visibilityChanged,
-            this, &PmrWindowWindow::retrieveExposures);
+            this, QOverload<bool>::of(&PmrWindowWindow::retrieveExposures));
 
     // Create an instance of our PMR web service
 
@@ -231,7 +231,7 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
 
         mPmrInstanceLabel->setText(mPmrWebService->siteName());
 
-        doRetrieveExposures(isVisible(), true);
+        retrieveExposures(isVisible(), true);
     }
 }
 
@@ -356,7 +356,7 @@ void PmrWindowWindow::itemDoubleClicked()
 
 //==============================================================================
 
-void PmrWindowWindow::doRetrieveExposures(bool pVisible, bool pForceRetrieval)
+void PmrWindowWindow::retrieveExposures(bool pVisible, bool pForceRetrieval)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
     // of exposures has never been requested before (through a single shot, this
@@ -378,7 +378,7 @@ void PmrWindowWindow::retrieveExposures(bool pVisible)
 {
     // Retrieve the exposures
 
-    doRetrieveExposures(pVisible);
+    retrieveExposures(pVisible, false);
 }
 
 //==============================================================================

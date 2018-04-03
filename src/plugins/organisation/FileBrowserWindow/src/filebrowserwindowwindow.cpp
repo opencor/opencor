@@ -93,8 +93,8 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::notHomeFolder,
-            mGui->actionHome, &QAction::setEnabled);
+    connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::homeFolder,
+            mGui->actionHome, &QAction::setDisabled);
 
     connect(mFileBrowserWindowWidget, &FileBrowserWindowWidget::goToParentFolderEnabled,
             mGui->actionParent, &QAction::setEnabled);
