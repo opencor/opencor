@@ -843,9 +843,6 @@ bool SedmlFile::isSupported()
                                                       tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
                             return false;
-                        } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
-                                   && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
-                            return false;
                         } else if (   !plot2dPropertyNodeName.compare(Height)
                                    && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Error,
@@ -854,15 +851,9 @@ bool SedmlFile::isSupported()
                                                       tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
                             return false;
-                        } else if (   !plot2dPropertyNodeName.compare(Legend)
-                                   &&  plot2dPropertyNodeValue.compare(TrueValue)
-                                   &&  plot2dPropertyNodeValue.compare(FalseValue)) {
-                            mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                                      plot2dPropertyNode.getLine(),
-                                                      plot2dPropertyNode.getColumn(),
-                                                      tr("the '%1' property must have a value of 'true' or 'false'").arg(Legend));
 
-                            return false;
+                        // Grid lines
+
                         } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                    && !QString::fromStdString(plot2dPropertyNode.getName()).compare(GridLines)) {
                             for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -886,6 +877,21 @@ bool SedmlFile::isSupported()
                                     return false;
                                 }
                             }
+
+                        // Legend
+
+                        } else if (   !plot2dPropertyNodeName.compare(Legend)
+                                   &&  plot2dPropertyNodeValue.compare(TrueValue)
+                                   &&  plot2dPropertyNodeValue.compare(FalseValue)) {
+                            mIssues << SedmlFileIssue(SedmlFileIssue::Error,
+                                                      plot2dPropertyNode.getLine(),
+                                                      plot2dPropertyNode.getColumn(),
+                                                      tr("the '%1' property must have a value of 'true' or 'false'").arg(Legend));
+
+                            return false;
+
+                        // Point coordinates
+
                         } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                    && !QString::fromStdString(plot2dPropertyNode.getName()).compare(PointCoordinates)) {
                             for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -912,6 +918,27 @@ bool SedmlFile::isSupported()
                                     return false;
                                 }
                             }
+
+                        // Surrounding area
+
+                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
+                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(SurroundingArea)) {
+                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                                const libsbml::XMLNode &surroundingAreaPropertyNode = plot2dPropertyNode.getChild(k);
+                                QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
+                                QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
+
+                                if (   !surroundingAreaPropertyNodeName.compare(BackgroundColor)
+                                    && !validColorPropertyValue(surroundingAreaPropertyNode, surroundingAreaPropertyNodeValue, BackgroundColor)) {
+                                    return false;
+                                } else if (   !surroundingAreaPropertyNodeName.compare(ForegroundColor)
+                                           && !validColorPropertyValue(surroundingAreaPropertyNode, surroundingAreaPropertyNodeValue, ForegroundColor)) {
+                                    return false;
+                                }
+                            }
+
+                        // X axis
+
                         } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                    && !QString::fromStdString(plot2dPropertyNode.getName()).compare(XAxis)) {
                             for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -934,6 +961,9 @@ bool SedmlFile::isSupported()
                                     return false;
                                 }
                             }
+
+                        // Y axis
+
                         } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                    && !QString::fromStdString(plot2dPropertyNode.getName()).compare(YAxis)) {
                             for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -956,6 +986,9 @@ bool SedmlFile::isSupported()
                                     return false;
                                 }
                             }
+
+                        // Zoom region
+
                         } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
                                    && !QString::fromStdString(plot2dPropertyNode.getName()).compare(ZoomRegion)) {
                             for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
