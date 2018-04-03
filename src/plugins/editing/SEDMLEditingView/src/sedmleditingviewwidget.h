@@ -82,7 +82,7 @@ private:
     QIntList mEditingWidgetSizes;
 
 private slots:
-    void updateSizes();
+    void splitterMoved();
     void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
 };
 

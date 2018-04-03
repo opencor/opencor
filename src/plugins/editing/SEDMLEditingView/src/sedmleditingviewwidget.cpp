@@ -54,8 +54,8 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, &SedmlEditingViewWidget::splitterMoved,
-            this, &SedmlEditingViewWidget::updateSizes);
+    connect(this, &QSplitter::splitterMoved,
+            this, &SedmlEditingViewWidget::splitterMoved);
 
     // Create our editor and editor list widgets
 
@@ -179,7 +179,7 @@ QIntList SedmlEditingViewWidget::editingWidgetSizes() const
 
 //==============================================================================
 
-void SedmlEditingViewWidget::updateSizes()
+void SedmlEditingViewWidget::splitterMoved()
 {
     // We have moved, so keep track of our new sizes
 
