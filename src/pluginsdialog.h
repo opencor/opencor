@@ -90,8 +90,7 @@ private:
 
     QString statusDescription(Plugin *pPlugin) const;
 
-    void doUpdatePluginsSelectedState(QStandardItem *pItem,
-                                      bool pInitializing = false);
+    void updatePluginsSelectedState(QStandardItem *pItem, bool pInitializing);
 
 private slots:
     void on_treeView_collapsed(const QModelIndex &pIndex);

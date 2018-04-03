@@ -574,7 +574,7 @@ DataStoreExporter::DataStoreExporter(DataStoreData *pDataStoreData) :
             this, &DataStoreExporter::started);
 
     connect(mThread, &QThread::finished,
-            mThread, &DataStoreExporter::deleteLater);
+            mThread, &QThread::deleteLater);
     connect(mThread, &QThread::finished,
             this, &DataStoreExporter::deleteLater);
 }

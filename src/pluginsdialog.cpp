@@ -198,7 +198,7 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
 
-    doUpdatePluginsSelectedState(0, true);
+    updatePluginsSelectedState(0, true);
 
     // Expand the whole tree view widget and make sure that it only takes as
     // much width as necessary
@@ -419,14 +419,14 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
 //==============================================================================
 
-void PluginsDialog::doUpdatePluginsSelectedState(QStandardItem *pItem,
-                                                 bool pInitializing)
+void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
+                                               bool pInitializing)
 {
     // Disable the connection that handles a change in a plugin's loading state
     // (otherwise what we are doing here is going to be completely uneffective)
 
     disconnect(mModel, &QStandardItemModel::itemChanged,
-               this, &PluginsDialog::updatePluginsSelectedState);
+               this, QOverload<QStandardItem *>::of(&PluginsDialog::updatePluginsSelectedState));
 
     // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
@@ -526,7 +526,7 @@ void PluginsDialog::doUpdatePluginsSelectedState(QStandardItem *pItem,
     // state
 
     connect(mModel, &QStandardItemModel::itemChanged,
-            this, &PluginsDialog::updatePluginsSelectedState);
+            this, QOverload<QStandardItem *>::of(&PluginsDialog::updatePluginsSelectedState));
 }
 
 //==============================================================================
@@ -535,7 +535,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem)
 {
     // Update our plugins selected state
 
-    doUpdatePluginsSelectedState(pItem);
+    updatePluginsSelectedState(pItem, false);
 }
 
 //==============================================================================

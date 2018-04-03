@@ -134,7 +134,7 @@ private:
 
     void showPreferencesDialog(const QString &pPluginName = QString());
 
-    void doShowDockedWindows(bool pShow, bool pInitialisation = false);
+    void showDockedWindows(bool pShow, bool pInitialisation);
 
 private slots:
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);

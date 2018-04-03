@@ -87,8 +87,8 @@ private:
 
     void checkDataSelectedState(QStandardItem *pItem, int &pNbOfselectedData);
 
-    void doUpdateDataSelectedState(QStandardItem *pItem,
-                                   const Qt::CheckState &pCheckState);
+    void updateDataSelectedState(QStandardItem *pItem,
+                                 const Qt::CheckState &pCheckState);
 
 private slots:
     void updateDataSelectedState(QStandardItem *pItem);

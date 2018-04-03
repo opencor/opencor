@@ -187,7 +187,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::ControlModifier|Qt::Key_Space));
 
     connect(mGui->actionDockedWindows, &QAction::triggered,
-            this, &MainWindow::showDockedWindows);
+            this, QOverload<bool>::of(&MainWindow::showDockedWindows));
 
     new QShortcut(QKeySequence(Qt::MetaModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
@@ -651,7 +651,7 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the docked windows are to be shown
 
-    doShowDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
+    showDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
 
     // Retrieve the state of the docked windows
 
@@ -1280,7 +1280,7 @@ void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
 
 //==============================================================================
 
-void MainWindow::doShowDockedWindows(bool pShow, bool pInitialisation)
+void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
 {
     // Show/hide the docked windows
 
@@ -1314,7 +1314,7 @@ void MainWindow::showDockedWindows(bool pShow)
 {
     // Show/hide the docked windows
 
-    doShowDockedWindows(pShow);
+    showDockedWindows(pShow, false);
 }
 
 //==============================================================================

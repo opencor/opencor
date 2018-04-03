@@ -280,8 +280,8 @@ void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem,
 
 //==============================================================================
 
-void DataStoreDialog::doUpdateDataSelectedState(QStandardItem *pItem,
-                                                const Qt::CheckState &pCheckState)
+void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem,
+                                              const Qt::CheckState &pCheckState)
 {
     // Update the selected state of the given item's children
 
@@ -291,7 +291,7 @@ void DataStoreDialog::doUpdateDataSelectedState(QStandardItem *pItem,
         childItem->setCheckState(pCheckState);
 
         if (childItem->hasChildren())
-            doUpdateDataSelectedState(childItem, pCheckState);
+            updateDataSelectedState(childItem, pCheckState);
     }
 }
 
@@ -303,14 +303,14 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
     // doing here is going to be completely ineffective)
 
     disconnect(mModel, &QStandardItemModel::itemChanged,
-               this, &DataStoreDialog::updateDataSelectedState);
+               this, QOverload<QStandardItem *>::of(&DataStoreDialog::updateDataSelectedState));
 
     // In case we un/select a hierarchy, then go through its data and un/select
     // it accordingly, or keep track of the number of selected data, if we
     // un/select some data
 
     if (pItem && pItem->isAutoTristate())
-        doUpdateDataSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
+        updateDataSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
 
     // Update the selected state of all our hierarchies
 
@@ -331,7 +331,7 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
     // Re-enable the handling of the itemChanged() signal
 
     connect(mModel, &QStandardItemModel::itemChanged,
-            this, &DataStoreDialog::updateDataSelectedState);
+            this, QOverload<QStandardItem *>::of(&DataStoreDialog::updateDataSelectedState));
 }
 
 //==============================================================================
@@ -349,13 +349,13 @@ void DataStoreDialog::on_allDataCheckBox_clicked()
     //       since we 'manually' set everything ourselves...
 
     disconnect(mModel, &QStandardItemModel::itemChanged,
-               this, &DataStoreDialog::updateDataSelectedState);
+               this, QOverload<QStandardItem *>::of(&DataStoreDialog::updateDataSelectedState));
 
-    doUpdateDataSelectedState(mModel->invisibleRootItem(),
-                              mGui->allDataCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
+    updateDataSelectedState(mModel->invisibleRootItem(),
+                            mGui->allDataCheckBox->isChecked()?Qt::Checked:Qt::Unchecked);
 
     connect(mModel, &QStandardItemModel::itemChanged,
-            this, &DataStoreDialog::updateDataSelectedState);
+            this, QOverload<QStandardItem *>::of(&DataStoreDialog::updateDataSelectedState));
 }
 
 //==============================================================================
