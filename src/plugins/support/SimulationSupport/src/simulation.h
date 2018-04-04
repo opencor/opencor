@@ -211,18 +211,18 @@ private:
 
     DataStore::DataStoreVariables mGradientVariables;
 
-    double *mConstants;
-    double *mRates;
-    double *mStates;
-    double *mDummyStates;
-    double *mAlgebraic;
-    double *mCondVar;
+    double *mConstantsArray;
+    double *mRatesArray;
+    double *mStatesArray;
+    double *mDummyStatesArray;
+    double *mAlgebraicArray;
+    double *mCondVarArray;
 
     QVector<int> mGradientIndices;
-    double *mGradients;
+    double *mGradientsArray;
 
-    double *mInitialConstants;
-    double *mInitialStates;
+    double *mInitialConstantsArray;
+    double *mInitialStatesArray;
 
     SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
