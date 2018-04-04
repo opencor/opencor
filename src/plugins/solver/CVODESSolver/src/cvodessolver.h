@@ -139,8 +139,6 @@ public:
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic,
                             ComputeRatesFunction pComputeRates);
-    virtual void reinitialize(const double &pVoi);
-
     virtual void initialize(const double &pVoiStart,
                             const int &pRatesStatesCount, double *pConstants,
                             double *pRates, double *pStates, double *pAlgebraic,
@@ -148,6 +146,7 @@ public:
                             const int &pGradientsCount,
                             int *pGradientsIndices,
                             double *pGradients);
+    virtual void reinitialize(const double &pVoi);
 
     virtual void solve(double &pVoi, const double &pVoiEnd) const;
 
