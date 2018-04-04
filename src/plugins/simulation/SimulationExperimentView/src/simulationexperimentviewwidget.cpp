@@ -71,7 +71,8 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
     mSimulationResultsSizes(QMap<QString, quint64>()),
-    mSimulationCheckResults(QStringList())
+    mSimulationCheckResults(QStringList()),
+    mNeedReloading(QStringList())
 {
 }
 
@@ -221,7 +222,13 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                 this, &SimulationExperimentViewWidget::graphsSettingsRequested);
     } else {
         // We already have a simulation widget, so just make sure that its GUI
-        // is up to date
+        // is up to date, after having reloaded our file, if needed
+
+        if (mNeedReloading.contains(pFileName)) {
+            mNeedReloading.removeOne(pFileName);
+
+            mSimulationWidget->fileReloaded();
+        }
 
         mSimulationWidget->updateGui();
     }
@@ -353,26 +360,11 @@ void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 
 void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 {
-    // Let the simulation widget, if any, associated with the given file name
-    // know that a file has been reloaded
+    // Keep track of the fact that we will need to reload ourselves the next
+    // time we will be initialised
 
-    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
-
-    if (simulationWidget) {
-        simulationWidget->fileReloaded();
-
-        // Make sure that our simulation's contents' information GUI is up to
-        // date
-        // Note: this is, at least, necessary for our paramaters widget since we
-        //       repopulate it, meaning that its columns' width will be reset...
-
-        updateContentsInformationGui(simulationWidget);
-
-        // Make sure that the GUI of our simulation widgets is up to date
-
-        foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
-            simulationWidget->updateGui(true);
-    }
+    if (!mNeedReloading.contains(pFileName))
+        mNeedReloading << pFileName;
 }
 
 //==============================================================================
