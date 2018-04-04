@@ -1016,7 +1016,7 @@ void CellmlFileRuntime::update()
         // Note: we rename do_nonlinearsolve() to doNonLinearSolve() because
         //       CellML's CIS service already defines do_nonlinearsolve(), yet
         //       we want to use our own non-linear solve routine defined in our
-        //       Compiler plugin. Also, we add a new parameter to all our calls
+        //       Solver interface. Also, we add a new parameter to all our calls
         //       to doNonLinearSolve() so that doNonLinearSolve() can retrieve
         //       the correct instance of our NLA solver...
     }
@@ -1093,9 +1093,10 @@ void CellmlFileRuntime::update()
     } else {
         // Add the symbol of any required external function, if any
 
-        if (mAtLeastOneNlaSystem)
+        if (mAtLeastOneNlaSystem) {
             llvm::sys::DynamicLibrary::AddSymbol("doNonLinearSolve",
                                                  (void *) (intptr_t) doNonLinearSolve);
+        }
 
         // Retrieve the ODE/DAE functions
 

@@ -1,4 +1,30 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 12, "year": 2017, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> addressed a problem with quickly changing files potentially resulting in the wrong view being shown (see issue <a href=\"https://github.com/opencor/opencor/issues/1481\">#1481</a>). Reworked our approach to the saving/reloading of a file (see issue <a href=\"https://github.com/opencor/opencor/issues/1491\">#1491</a>). Now pass `make[test].bat` arguments to `scripts/genericmake.bat` (see issue <a href=\"https://github.com/opencor/opencor/issues/1498\">#1498</a>)." },
+                       { "change": "<strong>CellML API:</strong> fixed a small problem that made OpenCOR crash if a metadata id contained \":\" (see issue <a href=\"https://github.com/opencor/opencor/issues/1487\">#1487</a>)." },
+                       { "change": "<strong>Graph panel widget:</strong> have the legend buttons use the same background as the plot area (see issue <a href=\"https://github.com/opencor/opencor/issues/1477\">#1477</a>). Got the legend context menu to work again (see issue <a href=\"https://github.com/opencor/opencor/issues/1478\">#1478</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> now allow the editing and saving of a SED-ML file / COMBINE archive (see issue <a href=\"https://github.com/opencor/opencor/issues/1366\">#1366</a>). To reload a CellML file when in development mode now actually reloads it (see issue <a href=\"https://github.com/opencor/opencor/issues/1488\">#1488</a>). Made the (re)loading of remote files and SED-ML files / COMBINE archives much smoother (see issue <a href=\"https://github.com/opencor/opencor/issues/1492\">#1492</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2n (see issue <a href=\"https://github.com/opencor/opencor/issues/1483\">#1483</a>). Upgraded <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.16.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1494\">#1494</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 5.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1502\">#1502</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 11, "year": 2017, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
