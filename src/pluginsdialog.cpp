@@ -100,6 +100,15 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     mGui->setupUi(this);
 
+    connect(mGui->treeView, &QTreeView::collapsed,
+            this, &PluginsDialog::onTreeViewCollapsed);
+
+    connect(mGui->selectablePluginsCheckBox, &QCheckBox::toggled,
+            this, &PluginsDialog::onSelectablePluginsCheckBoxToggled);
+
+    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
+            this, &PluginsDialog::onButtonBoxAccepted);
+
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &PluginsDialog::reject);
 
@@ -243,7 +252,7 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     // Show/hide our unselectable plugins
 
-    on_selectablePluginsCheckBox_toggled(mGui->selectablePluginsCheckBox->isChecked());
+    onSelectablePluginsCheckBoxToggled(mGui->selectablePluginsCheckBox->isChecked());
 }
 
 //==============================================================================
@@ -549,7 +558,7 @@ void PluginsDialog::openLink(const QString &pLink) const
 
 //==============================================================================
 
-void PluginsDialog::on_buttonBox_accepted()
+void PluginsDialog::onButtonBoxAccepted()
 {
     // Keep track of the loading state of the various selectable plugins
 
@@ -571,7 +580,7 @@ void PluginsDialog::apply()
                            tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you want to proceed?").arg(qAppName())) == QMessageBox::Yes ) {
         // Do what is done when clicking on the OK button
 
-        on_buttonBox_accepted();
+        onButtonBoxAccepted();
 
         // Let people know that we are done and that we want the settings to be
         // applied
@@ -627,7 +636,7 @@ QStandardItem * PluginsDialog::pluginCategoryItem(const PluginInfo::Category &pC
 
 //==============================================================================
 
-void PluginsDialog::on_treeView_collapsed(const QModelIndex &pIndex)
+void PluginsDialog::onTreeViewCollapsed(const QModelIndex &pIndex)
 {
     // We don't want plugin categories to be collapse, so cancel all collapsings
 
@@ -636,7 +645,7 @@ void PluginsDialog::on_treeView_collapsed(const QModelIndex &pIndex)
 
 //==============================================================================
 
-void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
+void PluginsDialog::onSelectablePluginsCheckBoxToggled(bool pChecked)
 {
     // Keep track of whether to show selectable plugins
 

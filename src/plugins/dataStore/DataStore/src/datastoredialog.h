@@ -93,7 +93,7 @@ private:
 private slots:
     void updateDataSelectedState(QStandardItem *pItem);
 
-    void on_allDataCheckBox_clicked();
+    void onAllDataCheckBoxClicked();
 };
 
 //==============================================================================
