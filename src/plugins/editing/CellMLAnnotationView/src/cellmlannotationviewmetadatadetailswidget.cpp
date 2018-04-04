@@ -107,62 +107,62 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // metadata edit details view, as well as the disabling of information look
     // up for the metadata view details widget
 
-    connect(mMetadataEditDetails, SIGNAL(qualifierLookUpRequested(const QString &)),
-            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
-    connect(mMetadataEditDetails, SIGNAL(qualifierLookUpRequested(const QString &)),
-            this, SLOT(lookUpQualifier(const QString &)));
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::qualifierLookUpRequested,
+            mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformation);
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::qualifierLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier);
 
-    connect(mMetadataEditDetails, SIGNAL(resourceLookUpRequested(const QString &)),
-            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
-    connect(mMetadataEditDetails, SIGNAL(resourceLookUpRequested(const QString &)),
-            this, SLOT(lookUpResource(const QString &)));
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::resourceLookUpRequested,
+            mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformation);
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::resourceLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpResource);
 
-    connect(mMetadataEditDetails, SIGNAL(idLookUpRequested(const QString &, const QString &)),
-            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
-    connect(mMetadataEditDetails, SIGNAL(idLookUpRequested(const QString &, const QString &)),
-            this, SLOT(lookUpId(const QString &, const QString &)));
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::idLookUpRequested,
+            mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformation);
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::idLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpId);
 
-    connect(mMetadataEditDetails, SIGNAL(noLookUpRequested()),
-            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
-    connect(mMetadataEditDetails, SIGNAL(noLookUpRequested()),
-            this, SLOT(lookUpNothing()));
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::noLookUpRequested,
+            mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformation);
+    connect(mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::noLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpNothing);
 
     // Some connections to handle the looking up of a qualifier, resource and
     // resource id from our normal view, as well as the disabling of information
     // look up for the metadata edit details widget
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookUpRequested(const QString &)),
-            mMetadataEditDetails, SLOT(disableLookUpInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookUpRequested(const QString &)),
-            this, SLOT(lookUpQualifier(const QString &)));
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::qualifierLookUpRequested,
+            mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::disableLookUpInformation);
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::qualifierLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier);
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookUpRequested(const QString &)),
-            mMetadataEditDetails, SLOT(disableLookUpInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookUpRequested(const QString &)),
-            this, SLOT(lookUpResource(const QString &)));
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::resourceLookUpRequested,
+            mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::disableLookUpInformation);
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::resourceLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpResource);
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookUpRequested(const QString &, const QString &)),
-            mMetadataEditDetails, SLOT(disableLookUpInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookUpRequested(const QString &, const QString &)),
-            this, SLOT(lookUpId(const QString &, const QString &)));
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::idLookUpRequested,
+            mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::disableLookUpInformation);
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::idLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpId);
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookUpRequested()),
-            mMetadataEditDetails, SLOT(disableLookUpInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookUpRequested()),
-            this, SLOT(lookUpNothing()));
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::noLookUpRequested,
+            mMetadataEditDetails, &CellmlAnnotationViewMetadataEditDetailsWidget::disableLookUpInformation);
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::noLookUpRequested,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::lookUpNothing);
 
     // A connection to handle the removal of an RDF triple from our normal view
     // and to have our metadata edit details widget update itself with regards
     // to possible terms (i.e. enable/disable add buttons)
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(rdfTripleRemoved(OpenCOR::CellMLSupport::CellmlFileRdfTriple *)),
-            this, SLOT(updateMetadataEditDetails()));
+    connect(mMetadataViewDetails->normalView(), &CellmlAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleRemoved,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails);
 
     // A connection to handle the clicking of the link in the unsupported
     // message
 
-    connect(mUnsupportedMetadataMessage, SIGNAL(linkActivated(const QString &)),
-            this, SLOT(removeAllMetadata()));
+    connect(mUnsupportedMetadataMessage, &Core::UserMessageWidget::linkActivated,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::removeAllMetadata);
 
     // Populate our splitter widget
 
@@ -172,8 +172,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Keep track of our splitter being moved
 
-    connect(mSplitter, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(emitSplitterMoved()));
+    connect(mSplitter, &Core::SplitterWidget::splitterMoved,
+            this, &CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved);
 
     // Add our unsupported metadata message widget and splitter widget to our
     // layout

@@ -57,7 +57,7 @@ int lineStyleValueIndex(const QString &pLineStyleValue)
 
 //==============================================================================
 
-QString lineStyleValue(const int &pLineStyleValueIndex)
+QString lineStyleValue(int pLineStyleValueIndex)
 {
     // Return the line style value for the given index
 
@@ -99,7 +99,7 @@ int symbolStyleValueIndex(const QString &pSymbolStyleValue)
 
 //==============================================================================
 
-QString symbolStyleValue(const int &pSymbolStyleValueIndex)
+QString symbolStyleValue(int pSymbolStyleValueIndex)
 {
     // Return the symbol style value for the given index
 

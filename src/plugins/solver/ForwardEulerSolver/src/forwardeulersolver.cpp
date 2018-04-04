@@ -37,8 +37,7 @@ ForwardEulerSolver::ForwardEulerSolver() :
 
 //==============================================================================
 
-void ForwardEulerSolver::initialize(const double &pVoi,
-                                    const int &pRatesStatesCount,
+void ForwardEulerSolver::initialize(double pVoi, int pRatesStatesCount,
                                     double *pConstants, double *pRates,
                                     double *pStates, double *pAlgebraic,
                                     ComputeRatesFunction pComputeRates)
@@ -55,14 +54,13 @@ void ForwardEulerSolver::initialize(const double &pVoi,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
-                                           pRates, pStates, pAlgebraic,
-                                           pComputeRates);
+    OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates,
+                          pAlgebraic, pComputeRates);
 }
 
 //==============================================================================
 
-void ForwardEulerSolver::solve(double &pVoi, const double &pVoiEnd) const
+void ForwardEulerSolver::solve(double &pVoi, double pVoiEnd) const
 {
     // Y_n+1 = Y_n + h * f(t_n, Y_n)
 

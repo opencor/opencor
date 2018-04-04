@@ -45,7 +45,7 @@ class PreferencesWidget : public QWidget
 
 public:
     explicit PreferencesWidget(const QString &pPluginName, QWidget *pParent);
-    ~PreferencesWidget();
+    ~PreferencesWidget() override;
 
     virtual bool preferencesChanged() const = 0;
 

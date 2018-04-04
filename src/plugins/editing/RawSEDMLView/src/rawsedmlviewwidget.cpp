@@ -102,8 +102,7 @@ bool RawSedmlViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawSedmlViewWidget::initialize(const QString &pFileName,
-                                    const bool &pUpdate)
+void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
@@ -303,8 +302,7 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
 
 //==============================================================================
 
-bool RawSedmlViewWidget::validate(const QString &pFileName,
-                                  const bool &pOnlyErrors) const
+bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) const
 {
     // Validate the given file
 

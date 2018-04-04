@@ -78,8 +78,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                   this);
 
-    connect(mCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(copy()));
+    connect(mCopyAction, &QAction::triggered,
+            this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::copy);
 
     mContextMenu->addAction(mCopyAction);
 
@@ -102,15 +102,15 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mOutputOntologicalTerms->setOverrideCursor(true);
     mOutputOntologicalTerms->setZoomingEnabled(false);
 
-    connect(mOutputOntologicalTerms->webView(), SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
+    connect(mOutputOntologicalTerms->webView(), &QWebView::customContextMenuRequested,
+            this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu);
 
     mOutputOntologicalTerms->webView()->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(linkClicked()));
-    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
-            this, SLOT(linkHovered()));
+    connect(mOutputOntologicalTerms->webView()->page(), &QWebPage::linkClicked,
+            this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked);
+    connect(mOutputOntologicalTerms->webView()->page(), &QWebPage::linkHovered,
+            this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered);
 
     // Add our output message and output for ontological terms to our output
     // widget
@@ -261,7 +261,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
-                                                                       const bool &pNeedAdditionalGuiUpdates)
+                                                                       bool pNeedAdditionalGuiUpdates)
 {
     if (!pRdfTriple)
         return;
@@ -412,7 +412,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         //              outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
         //          but this doesnt' get us exactly to the bottom of the page...
 
-        QTimer::singleShot(1, this, SLOT(showLastRdfTriple()));
+        QTimer::singleShot(1, this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple);
     } else if (mLookUpRdfTripleInformation == No) {
         return;
     }

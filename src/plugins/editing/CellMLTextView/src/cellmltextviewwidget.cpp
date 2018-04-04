@@ -60,7 +60,7 @@ namespace CellMLTextView {
 
 CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
                                                    const QString &pSha1,
-                                                   const bool &pValid,
+                                                   bool pValid,
                                                    const CellMLSupport::CellmlFile::Version &pCellmlVersion,
                                                    QDomDocument pRdfNodes) :
     mEditingWidget(pEditingWidget),
@@ -205,8 +205,8 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions
 
-    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
+    connect(&mMathmlConverter, &Core::MathmlConverter::done,
+            this, &CellmlTextViewWidget::mathmlConversionDone);
 }
 
 //==============================================================================
@@ -251,8 +251,7 @@ bool CellmlTextViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void CellmlTextViewWidget::initialize(const QString &pFileName,
-                                      const bool &pUpdate)
+void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
@@ -299,10 +298,10 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
             // Update our viewer whenever necessary
 
-            connect(editingWidget->editorWidget(), SIGNAL(textChanged()),
-                    this, SLOT(updateViewer()));
-            connect(editingWidget->editorWidget(), SIGNAL(cursorPositionChanged(const int &, const int &)),
-                    this, SLOT(updateViewer()));
+            connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
+                    this, &CellmlTextViewWidget::updateViewer);
+            connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
+                    this, &CellmlTextViewWidget::updateViewer);
         } else {
             // The conversion wasn't successful, so make the editor read-only
             // (since its contents is that of the file itself) and add a couple
@@ -342,8 +341,8 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
         // Add support for some key mappings to our editor
 
-        connect(editingWidget->editorWidget()->editor(), SIGNAL(keyPressed(QKeyEvent *, bool &)),
-                this, SLOT(editorKeyPressed(QKeyEvent *, bool &)));
+        connect(editingWidget->editorWidget()->editor(), &QScintillaSupport::QScintillaWidget::keyPressed,
+                this, &CellmlTextViewWidget::editorKeyPressed);
     }
 
     // Update our editing widget, if required
@@ -381,7 +380,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 
             mEditorLists << newEditingWidget->editorListWidget();
 
-            QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
+            QTimer::singleShot(0, this, &CellmlTextViewWidget::selectFirstItemInEditorList);
         }
 
         // Set our focus proxy to our 'new' editing widget and make sure that
@@ -714,8 +713,8 @@ static const int EndMultilineCommentLength    = EndMultilineCommentString.length
 //==============================================================================
 
 bool CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
-                                                  const int &pLineNumber,
-                                                  const bool &pCommentLine)
+                                                  int pLineNumber,
+                                                  bool pCommentLine)
 {
     // (Un)comment the current line
 
@@ -750,8 +749,7 @@ bool CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaW
 
 //==============================================================================
 
-bool CellmlTextViewWidget::parse(const QString &pFileName,
-                                 const bool &pOnlyErrors)
+bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
 {
     // Parse the given file, should it exist
 
@@ -779,7 +777,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName,
             }
         }
 
-        selectFirstItemInEditorList(editingWidget->editorListWidget());
+        editingWidget->editorListWidget()->selectFirstItem();
 
         return res;
     } else {
@@ -938,7 +936,7 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 //==============================================================================
 
-QString CellmlTextViewWidget::partialStatement(const int &pPosition,
+QString CellmlTextViewWidget::partialStatement(int pPosition,
                                                int &pFromPosition,
                                                int &pToPosition) const
 {
@@ -1065,7 +1063,7 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
 
 //==============================================================================
 
-QString CellmlTextViewWidget::statement(const int &pPosition) const
+QString CellmlTextViewWidget::statement(int pPosition) const
 {
     // Retrieve the (partial) statement around the given position
 
@@ -1191,28 +1189,21 @@ void CellmlTextViewWidget::updateViewer()
 
 //==============================================================================
 
-void CellmlTextViewWidget::selectFirstItemInEditorList(OpenCOR::EditorWidget::EditorListWidget *pEditorList)
+void CellmlTextViewWidget::selectFirstItemInEditorList()
 {
-    // Select the first item in the given editor list
+    // Rely on the contents of mEditorLists to select the first item of the
+    // first editor list, assuming it's still current (i.e. it's still
+    // referenced in mData)
 
-    if (pEditorList) {
-        pEditorList->selectFirstItem();
-    } else {
-        // We came here through a single shot (see initialize()), so rely on the
-        // contents of mEditorLists by selecting the first item of the first
-        // first editor list, assuming it's still current (i.e. it's still
-        // referenced in mData)
+    EditorWidget::EditorListWidget *editorList = mEditorLists.first();
 
-        EditorWidget::EditorListWidget *editorList = mEditorLists.first();
+    mEditorLists.removeFirst();
 
-        mEditorLists.removeFirst();
+    foreach (CellmlTextViewWidgetData *data, mData) {
+        if (data->editingWidget()->editorListWidget() == editorList) {
+            editorList->selectFirstItem();
 
-        foreach (CellmlTextViewWidgetData *data, mData) {
-            if (data->editingWidget()->editorListWidget() == editorList) {
-                editorList->selectFirstItem();
-
-                break;
-            }
+            break;
         }
     }
 }

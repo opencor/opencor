@@ -58,6 +58,9 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionReload, &QAction::triggered,
+            this, &PmrWindowWindow::actionReloadTriggered);
+
     // Create a tool bar widget with a URL value and refresh button
     // Note: the spacers is a little trick to improve the rendering of our tool
     //       bar widget...
@@ -81,8 +84,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     mFilterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    connect(mFilterValue, SIGNAL(textChanged(const QString &)),
-            this, SLOT(filterValueChanged(const QString &)));
+    connect(mFilterValue, &QLineEdit::textChanged,
+            this, &PmrWindowWindow::filterValueChanged);
 
     toolBarWidget->addWidget(spacer);
     toolBarWidget->addWidget(mFilterLabel);
@@ -126,8 +129,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // Keep track of the window's visibility, so that we can request the list of
     // exposures, if necessary
 
-    connect(this, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(retrieveExposures(const bool &)));
+    connect(this, &PmrWindowWindow::visibilityChanged,
+            this, QOverload<bool>::of(&PmrWindowWindow::retrieveExposures));
 
     // Create an instance of our PMR web service
 
@@ -141,34 +144,34 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 
     // Some connections to process responses from our PMR web service
 
-    connect(mPmrWebService, SIGNAL(busy(const bool &)),
-            this, SLOT(busy(const bool &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, &PmrWindowWindow::busy);
 
-    connect(mPmrWebService, SIGNAL(information(const QString &)),
-            this, SLOT(showInformation(const QString &)));
-    connect(mPmrWebService, SIGNAL(warning(const QString &)),
-            this, SLOT(showWarning(const QString &)));
-    connect(mPmrWebService, SIGNAL(error(const QString &)),
-            this, SLOT(showError(const QString &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::information,
+            this, &PmrWindowWindow::showInformation);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::warning,
+            this, &PmrWindowWindow::showWarning);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::error,
+            this, &PmrWindowWindow::showError);
 
-    connect(mPmrWebService, SIGNAL(exposures(const OpenCOR::PMRSupport::PmrExposures &)),
-            this, SLOT(initializeWidget(const OpenCOR::PMRSupport::PmrExposures &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::exposures,
+            this, &PmrWindowWindow::initializeWidget);
 
-    connect(mPmrWebService, SIGNAL(exposureFiles(const QString &, const QStringList &)),
-            mPmrWindowWidget, SLOT(addAndShowExposureFiles(const QString &, const QStringList &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::exposureFiles,
+            mPmrWindowWidget, &PmrWindowWidget::addAndShowExposureFiles);
 
     // Some connections to know what our PMR widget wants from us
 
-    connect(mPmrWindowWidget, SIGNAL(cloneWorkspaceRequested(const QString &)),
-            mPmrWebService, SLOT(requestExposureWorkspaceClone(const QString &)));
-    connect(mPmrWindowWidget, SIGNAL(exposureFilesRequested(const QString &)),
-            mPmrWebService, SLOT(requestExposureFiles(const QString &)));
-    connect(mPmrWindowWidget, SIGNAL(openExposureFileRequested(const QString &)),
-            this, SLOT(openFile(const QString &)));
-    connect(mPmrWindowWidget, SIGNAL(openExposureFilesRequested(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
-    connect(mPmrWindowWidget, SIGNAL(itemDoubleClicked()),
-            this, SLOT(itemDoubleClicked()));
+    connect(mPmrWindowWidget, &PmrWindowWidget::cloneWorkspaceRequested,
+            mPmrWebService, &PMRSupport::PmrWebService::requestExposureWorkspaceClone);
+    connect(mPmrWindowWidget, &PmrWindowWidget::exposureFilesRequested,
+            mPmrWebService, &PMRSupport::PmrWebService::requestExposureFiles);
+    connect(mPmrWindowWidget, &PmrWindowWidget::openExposureFileRequested,
+            this, &PmrWindowWindow::openFile);
+    connect(mPmrWindowWidget, &PmrWindowWidget::openExposureFilesRequested,
+            this, &PmrWindowWindow::openFiles);
+    connect(mPmrWindowWidget, QOverload<>::of(&PmrWindowWidget::itemDoubleClicked),
+            this, &PmrWindowWindow::itemDoubleClicked);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -247,7 +250,7 @@ void PmrWindowWindow::filterValueChanged(const QString &pText)
 
 //==============================================================================
 
-void PmrWindowWindow::busy(const bool &pBusy)
+void PmrWindowWindow::busy(bool pBusy)
 {
     // Show ourselves as busy or not busy anymore
 
@@ -328,7 +331,7 @@ void PmrWindowWindow::showError(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWindowWindow::on_actionReload_triggered()
+void PmrWindowWindow::actionReloadTriggered()
 {
     // Get the list of exposures from our PMR web service
 
@@ -337,7 +340,7 @@ void PmrWindowWindow::on_actionReload_triggered()
 
 //==============================================================================
 
-void PmrWindowWindow::initializeWidget(const OpenCOR::PMRSupport::PmrExposures &pExposures)
+void PmrWindowWindow::initializeWidget(const PMRSupport::PmrExposures &pExposures)
 {
     // Ask our PMR widget to initialise itself
 
@@ -356,8 +359,7 @@ void PmrWindowWindow::itemDoubleClicked()
 
 //==============================================================================
 
-void PmrWindowWindow::retrieveExposures(const bool &pVisible,
-                                        const bool &pForceRetrieval)
+void PmrWindowWindow::retrieveExposures(bool pVisible, bool pForceRetrieval)
 {
     // Retrieve the list of exposures, if we are becoming visible and the list
     // of exposures has never been requested before (through a single shot, this
@@ -369,8 +371,17 @@ void PmrWindowWindow::retrieveExposures(const bool &pVisible,
     if (pVisible && (firstTime || pForceRetrieval)) {
         firstTime = false;
 
-        QTimer::singleShot(0, this, SLOT(on_actionReload_triggered()));
+        QTimer::singleShot(0, this, &PmrWindowWindow::actionReloadTriggered);
     }
+}
+
+//==============================================================================
+
+void PmrWindowWindow::retrieveExposures(bool pVisible)
+{
+    // Retrieve the exposures
+
+    retrieveExposures(pVisible, false);
 }
 
 //==============================================================================

@@ -30,8 +30,8 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-SedmlFileIssue::SedmlFileIssue(const Type &pType, const int &pLine,
-                               const int &pColumn, const QString &pMessage) :
+SedmlFileIssue::SedmlFileIssue(const Type &pType, int pLine, int pColumn,
+                               const QString &pMessage) :
     mType(pType),
     mLine(pLine),
     mColumn(pColumn),

@@ -87,7 +87,7 @@ UserMessageWidget::UserMessageWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void UserMessageWidget::setScale(const double &pScale)
+void UserMessageWidget::setScale(double pScale)
 {
     // Scale ourselves, if needed
 

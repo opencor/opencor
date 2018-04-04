@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class GraphPanelWidgetCustomAxesDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -49,12 +49,10 @@ class GraphPanelWidgetCustomAxesDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit GraphPanelWidgetCustomAxesDialog(const double &pMinX,
-                                              const double &pMaxX,
-                                              const double &pMinY,
-                                              const double &pMaxY,
+    explicit GraphPanelWidgetCustomAxesDialog(double pMinX, double pMaxX,
+                                              double pMinY, double pMaxY,
                                               QWidget *pParent);
-    ~GraphPanelWidgetCustomAxesDialog();
+    ~GraphPanelWidgetCustomAxesDialog() override;
 
     double minX() const;
     double maxX() const;
@@ -67,12 +65,12 @@ private:
     void checkValue(QLineEdit *pValue);
 
 private slots:
-    void on_xMinValue_textEdited(const QString &pValue);
-    void on_xMaxValue_textEdited(const QString &pValue);
-    void on_yMinValue_textEdited(const QString &pValue);
-    void on_yMaxValue_textEdited(const QString &pValue);
+    void xMinValueTextEdited(const QString &pValue);
+    void xMaxValueTextEdited(const QString &pValue);
+    void yMinValueTextEdited(const QString &pValue);
+    void yMaxValueTextEdited(const QString &pValue);
 
-    void on_buttonBox_accepted();
+    void buttonBoxAccepted();
 };
 
 //==============================================================================

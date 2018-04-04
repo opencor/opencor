@@ -79,7 +79,7 @@ public:
 private:
     CellmlTextViewWidget *mViewWidget;
 
-    int importExport(const QStringList &pArguments, const bool &pImport);
+    int importExport(const QStringList &pArguments, bool pImport);
 
     void runHelpCommand();
     int runImportCommand(const QStringList &pArguments);

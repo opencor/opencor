@@ -124,7 +124,7 @@ void CliApplication::loadPlugins()
 //==============================================================================
 
 void CliApplication::includePlugins(const QStringList &pPluginNames,
-                                    const bool &pInclude) const
+                                    bool pInclude) const
 {
     // Retrieve all the plugins that are available
 

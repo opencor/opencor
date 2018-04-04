@@ -65,8 +65,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     // Create our MathML converter and create a connection to retrieve the
     // result of its MathML conversions
 
-    connect(&mMathmlConverter, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(mathmlConversionDone(const QString &, const QString &)));
+    connect(&mMathmlConverter, &Core::MathmlConverter::done,
+            this, &RawCellmlViewWidget::mathmlConversionDone);
 }
 
 //==============================================================================
@@ -111,8 +111,7 @@ bool RawCellmlViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::initialize(const QString &pFileName,
-                                     const bool &pUpdate)
+void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
@@ -132,10 +131,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName,
 
         // Update our viewer whenever necessary
 
-        connect(newEditingWidget->editorWidget(), SIGNAL(textChanged()),
-                this, SLOT(updateViewer()));
-        connect(newEditingWidget->editorWidget(), SIGNAL(cursorPositionChanged(const int &, const int &)),
-                this, SLOT(updateViewer()));
+        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
+                this, &RawCellmlViewWidget::updateViewer);
+        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
+                this, &RawCellmlViewWidget::updateViewer);
 
         // Keep track of our editing widget
 
@@ -324,7 +323,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 //==============================================================================
 
 bool RawCellmlViewWidget::validate(const QString &pFileName,
-                                   const bool &pOnlyErrors) const
+                                   bool pOnlyErrors) const
 {
     // Validate the given file
 
@@ -391,7 +390,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 //==============================================================================
 
 QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
-                                                           const int &pPosition) const
+                                                           int pPosition) const
 {
     // Retrieve a DOM representation of the given Content MathML block
 

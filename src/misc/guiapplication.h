@@ -46,7 +46,7 @@ public:
     void updateCanEmitFileOpenRequestSignal();
 
 protected:
-    virtual bool event(QEvent *pEvent);
+    bool event(QEvent *pEvent) override;
 
 private:
     bool mCanEmitFileOpenRequestSignal;

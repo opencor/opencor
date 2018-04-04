@@ -36,7 +36,7 @@ class QMenu;
 
 namespace Ui {
     class WebBrowserWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -55,12 +55,12 @@ class WebBrowserWindowWindow : public Core::WindowWidget
 
 public:
     explicit WebBrowserWindowWindow(QWidget *pParent);
-    ~WebBrowserWindowWindow();
+    ~WebBrowserWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
 private:
     Ui::WebBrowserWindowWindow *mGui;
@@ -72,16 +72,16 @@ private:
     QLineEdit *mUrlValue;
 
 private slots:
-    void on_actionClear_triggered();
-    void on_actionBack_triggered();
-    void on_actionForward_triggered();
-    void on_actionCopy_triggered();
-    void on_actionNormalSize_triggered();
-    void on_actionZoomIn_triggered();
-    void on_actionZoomOut_triggered();
-    void on_actionPrint_triggered();
-    void on_actionInspect_triggered();
-    void on_actionReload_triggered();
+    void actionClearTriggered();
+    void actionBackTriggered();
+    void actionForwardTriggered();
+    void actionCopyTriggered();
+    void actionNormalSizeTriggered();
+    void actionZoomInTriggered();
+    void actionZoomOutTriggered();
+    void actionPrintTriggered();
+    void actionInspectTriggered();
+    void actionReloadTriggered();
 
     void returnPressed();
 

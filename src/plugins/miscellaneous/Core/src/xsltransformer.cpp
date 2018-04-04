@@ -79,13 +79,13 @@ XslTransformer::XslTransformer() :
 
     // Create a few connections
 
-    connect(mThread, SIGNAL(started()),
-            this, SLOT(started()));
+    connect(mThread, &QThread::started,
+            this, &XslTransformer::started);
 
-    connect(mThread, SIGNAL(finished()),
-            mThread, SLOT(deleteLater()));
-    connect(mThread, SIGNAL(finished()),
-            this, SLOT(deleteLater()));
+    connect(mThread, &QThread::finished,
+            mThread, &QThread::deleteLater);
+    connect(mThread, &QThread::finished,
+            this, &XslTransformer::deleteLater);
 }
 
 //==============================================================================

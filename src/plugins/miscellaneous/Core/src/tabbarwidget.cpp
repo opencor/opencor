@@ -274,7 +274,7 @@ int TabBarWidget::oldIndex() const
 
 //==============================================================================
 
-void TabBarWidget::setOldIndex(const int &pOldIndex)
+void TabBarWidget::setOldIndex(int pOldIndex)
 {
     // Set our old index
 

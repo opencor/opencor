@@ -83,26 +83,26 @@ public:
     };
 
     explicit CellmlFile(const QString &pFileName);
-    ~CellmlFile();
+    ~CellmlFile() override;
 
     iface::cellml_api::Model * model();
 
     iface::rdf_api::DataSource * rdfDataSource();
 
-    virtual bool load();
-    virtual bool save(const QString &pFileName = QString());
+    bool load() override;
+    bool save(const QString &pFileName = QString()) override;
 
     bool update(const QString &pFileName = QString());
 
     bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues,
-                 const bool &pWithBusyWidget = false);
-    bool isValid(const bool &pWithBusyWidget = false);
+                 bool pWithBusyWidget = false);
+    bool isValid(bool pWithBusyWidget = false);
 
     CellmlFileIssues issues() const;
 
-    CellmlFileRuntime * runtime(const bool &pWithBusyWidget = false);
+    CellmlFileRuntime * runtime(bool pWithBusyWidget = false);
 
-    QStringList dependencies(const bool &pWithBusyWidget = false);
+    QStringList dependencies(bool pWithBusyWidget = false);
 
     CellmlFileRdfTriples & rdfTriples();
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
@@ -140,10 +140,10 @@ public:
     QString xmlBase();
 
     bool exportTo(const QString &pFileName, const Version &pVersion,
-                  const bool &pWithBusyWidget = false);
+                  bool pWithBusyWidget = false);
     bool exportTo(const QString &pFileName,
                   const QString &pUserDefinedFormatFileName,
-                  const bool &pWithBusyWidget = false);
+                  bool pWithBusyWidget = false);
 
     Version version();
 
@@ -175,7 +175,7 @@ private:
 
     bool mUpdated;
 
-    virtual void reset();
+    void reset() override;
 
     void retrieveImports(const QString &pXmlBase,
                          iface::cellml_api::Model *pModel,
@@ -184,21 +184,21 @@ private:
 
     bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                  CellmlFileIssues &pIssues,
-                                 const bool &pWithBusyWidget = false);
+                                 bool pWithBusyWidget = false);
 
-    bool doLoad(const QString &pFileContents,
-                ObjRef<iface::cellml_api::Model> *pModel,
-                CellmlFileIssues &pIssues);
+    bool load(const QString &pFileContents,
+              ObjRef<iface::cellml_api::Model> *pModel,
+              CellmlFileIssues &pIssues);
 
-    bool doIsValid(const QString &pFileContents,
-                   ObjRef<iface::cellml_api::Model> *pModel,
-                   CellmlFileIssues &pIssues, const bool &pWithBusyWidget);
+    bool isValid(const QString &pFileContents,
+                 ObjRef<iface::cellml_api::Model> *pModel,
+                 CellmlFileIssues &pIssues, bool pWithBusyWidget);
 
     void retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElement *pElement);
     void clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
                                         const QStringList &pUsedCmetaIds);
 
-    bool doIsValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
+    bool isValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
 
     CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
                                     const QString &pQualifier,

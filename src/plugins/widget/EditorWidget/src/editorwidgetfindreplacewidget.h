@@ -41,7 +41,7 @@ class QTextEdit;
 
 namespace Ui {
     class EditorWidgetFindReplaceWidget;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -56,15 +56,15 @@ class EditorWidgetFindReplaceWidget : public Core::Widget
 
 public:
     explicit EditorWidgetFindReplaceWidget(QWidget *pParent);
-    ~EditorWidgetFindReplaceWidget();
+    ~EditorWidgetFindReplaceWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool isCaseSensitive() const;
     bool searchWholeWordsOnly() const;
     bool useRegularExpression() const;
 
-    void setReadOnly(const bool &pReadOnly);
+    void setReadOnly(bool pReadOnly);
 
     void updateFrom(EditorWidgetFindReplaceWidget *pFindReplace);
 
@@ -81,12 +81,12 @@ public:
     bool replaceEditHasFocus() const;
 
     bool isActive() const;
-    void setActive(const bool &pActive);
+    void setActive(bool pActive);
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
     Ui::EditorWidgetFindReplaceWidget *mGui;
@@ -107,7 +107,7 @@ signals:
 
     void findTextChanged(const QString &pText);
 
-    void canFindReplace(const bool &pCanFindReplace);
+    void canFindReplace(bool pCanFindReplace);
 
     void findPreviousRequested();
     void findNextRequested();
@@ -117,12 +117,12 @@ signals:
     void replaceAllRequested();
 
 private slots:
-    void on_findPreviousButton_clicked();
-    void on_findNextButton_clicked();
+    void findPreviousButtonClicked();
+    void findNextButtonClicked();
 
-    void on_replaceButton_clicked();
-    void on_replaceAndFindButton_clicked();
-    void on_replaceAllButton_clicked();
+    void replaceButtonClicked();
+    void replaceAndFindButtonClicked();
+    void replaceAllButtonClicked();
 
     void searchOptionChanged();
 };

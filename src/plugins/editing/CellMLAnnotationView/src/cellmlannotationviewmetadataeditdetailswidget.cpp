@@ -163,10 +163,10 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Make sure that we get told when the download of our Internet file is
     // complete
 
-    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(termLookedUp(QNetworkReply *)));
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
+    connect(mNetworkAccessManager, &QNetworkAccessManager::finished,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp);
+    connect(mNetworkAccessManager, &QNetworkAccessManager::sslErrors,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::sslErrors);
 
     // Create and populate our context menu
 
@@ -175,8 +175,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mCopyAction = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
                                   this);
 
-    connect(mCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(copy()));
+    connect(mCopyAction, &QAction::triggered,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::copy);
 
     mContextMenu->addAction(mCopyAction);
 
@@ -203,8 +203,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
 
-    connect(mQualifierValue, SIGNAL(currentIndexChanged(const QString &)),
-            this, SLOT(qualifierChanged(const QString &)));
+    connect(mQualifierValue, QOverload<const QString &>::of(&QComboBox::currentIndexChanged),
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged);
 
     // Create our qualifier look up button widget
 
@@ -219,8 +219,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mLookUpQualifierButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
     mLookUpQualifierButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    connect(mLookUpQualifierButton, SIGNAL(toggled(bool)),
-            this, SLOT(lookUpQualifier()));
+    connect(mLookUpQualifierButton, &QPushButton::toggled,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier);
 
     // Add our qualifier value and qualifier look up button widgets to our
     // qualifier widget layout
@@ -246,8 +246,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTermValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    connect(mTermValue, SIGNAL(textChanged(const QString &)),
-            this, SLOT(termChanged(const QString &)));
+    connect(mTermValue, &QLineEdit::textChanged,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::termChanged);
 
     // Create our add term button widget
 
@@ -257,8 +257,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
     mAddTermButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    connect(mAddTermButton, SIGNAL(clicked(bool)),
-            this, SLOT(addTerm()));
+    connect(mAddTermButton, &QPushButton::clicked,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::addTerm);
 
     // Add our term value and add term button widgets to our term widget layout
 
@@ -311,15 +311,15 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mOutputOntologicalTerms->setOverrideCursor(true);
     mOutputOntologicalTerms->setZoomingEnabled(false);
 
-    connect(mOutputOntologicalTerms->webView(), SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
+    connect(mOutputOntologicalTerms->webView(), &QWebView::customContextMenuRequested,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu);
 
     mOutputOntologicalTerms->webView()->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(linkClicked()));
-    connect(mOutputOntologicalTerms->webView()->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
-            this, SLOT(linkHovered()));
+    connect(mOutputOntologicalTerms->webView()->page(), &QWebPage::linkClicked,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked);
+    connect(mOutputOntologicalTerms->webView()->page(), &QWebPage::linkHovered,
+            this, &CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered);
 
     // Add our output message and output for ontological terms to our output
     // widget
@@ -375,8 +375,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
-                                                              const bool &pResetItemsGui,
-                                                              const bool &pFilePermissionsChanged)
+                                                              bool pResetItemsGui,
+                                                              bool pFilePermissionsChanged)
 {
     // Keep track of the CellML element
 
@@ -456,9 +456,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const bool &pLookUpTerm,
+void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pLookUpTerm,
                                                                          const QString &pErrorMessage,
-                                                                         const bool &pInternetConnectionAvailable,
+                                                                         bool pInternetConnectionAvailable,
                                                                          bool *pShowBusyWidget)
 {
     // Update our output message
@@ -525,9 +525,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
-                                                                   const bool &pLookUpTerm,
+                                                                   bool pLookUpTerm,
                                                                    const QString &pErrorMessage,
-                                                                   const bool &pInternetConnectionAvailable)
+                                                                   bool pInternetConnectionAvailable)
 {
     // Keep track of some information
 
@@ -650,13 +650,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     //       (e.g. if we came here after clicking on a resource/id link)...
 
     if ((pInformationType != Qualifier) && mLookUpQualifierButton->isChecked()) {
-        disconnect(mLookUpQualifierButton, SIGNAL(toggled(bool)),
-                   this, SLOT(lookUpQualifier()));
+        disconnect(mLookUpQualifierButton, &QPushButton::toggled,
+                   this, &CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier);
 
         mLookUpQualifierButton->toggle();
 
-        connect(mLookUpQualifierButton, SIGNAL(toggled(bool)),
-                this, SLOT(lookUpQualifier()));
+        connect(mLookUpQualifierButton, &QPushButton::toggled,
+                this, &CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier);
     }
 
     // Reset some internal properties, if needed
@@ -905,7 +905,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
         //       we can't cancel a request sent to PMR2, so we should try to
         //       send as few of them as possible...
 
-        QTimer::singleShot(500, this, SLOT(lookUpTerm()));
+        QTimer::singleShot(500, this, &CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm);
     }
 }
 

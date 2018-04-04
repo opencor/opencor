@@ -49,7 +49,7 @@ class CORE_EXPORT MathmlConverter : public QObject
 
 public:
     explicit MathmlConverter();
-    ~MathmlConverter();
+    ~MathmlConverter() override;
 
     void convert(const QString &pContentMathml);
 

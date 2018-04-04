@@ -59,16 +59,16 @@ GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     mSynchronizeXAxisAction = Core::newAction(true, this);
     mSynchronizeYAxisAction = Core::newAction(true, this);
 
-    connect(mSynchronizeXAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(synchronizeXAxis()));
-    connect(mSynchronizeYAxisAction, SIGNAL(triggered(bool)),
-            this, SLOT(synchronizeYAxis()));
+    connect(mSynchronizeXAxisAction, &QAction::triggered,
+            this, &GraphPanelsWidget::synchronizeXAxis);
+    connect(mSynchronizeYAxisAction, &QAction::triggered,
+            this, &GraphPanelsWidget::synchronizeYAxis);
 
     // Check whether one of our splitters has move and, therefore, whether our
     // sizes have changed
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(stopUsingInternalSizes()));
+    connect(this, &GraphPanelsWidget::splitterMoved,
+            this, &GraphPanelsWidget::stopUsingInternalSizes);
 }
 
 //==============================================================================
@@ -118,7 +118,7 @@ GraphPanelWidget * GraphPanelsWidget::activeGraphPanel() const
 
 //==============================================================================
 
-GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
+GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
 {
     // Create a new graph panel, add it to ourselves and keep track of it
 
@@ -164,18 +164,18 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const bool &pActive)
 
     // Keep track of whenever a graph panel gets activated
 
-    connect(res, SIGNAL(activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            this, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(res, &GraphPanelWidget::activated,
+            this, &GraphPanelsWidget::graphPanelActivated);
 
-    connect(res, SIGNAL(activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            this, SLOT(updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(res, &GraphPanelWidget::activated,
+            this, &GraphPanelsWidget::updateGraphPanels);
 
     // Keep track of the addition and removal of a graph
 
-    connect(res, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
-            this, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
-    connect(res, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            this, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(res, &GraphPanelWidget::graphAdded,
+            this, &GraphPanelsWidget::graphAdded);
+    connect(res, &GraphPanelWidget::graphsRemoved,
+            this, &GraphPanelsWidget::graphsRemoved);
 
     // In/activate the graph panel
 
@@ -350,7 +350,7 @@ void GraphPanelsWidget::setSizes(const QIntList &pSizes)
     // Set our sizes as internal and/or default sizes, depending on whether the
     // given sizes consist of ones
 
-    foreach (const int &size, pSizes) {
+    foreach (int size, pSizes) {
         if (size != 1) {
             mUseInternalSizes = false;
 
@@ -375,7 +375,7 @@ void GraphPanelsWidget::stopUsingInternalSizes()
 
 //==============================================================================
 
-void GraphPanelsWidget::updateGraphPanels(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void GraphPanelsWidget::updateGraphPanels(GraphPanelWidget *pGraphPanel)
 {
     // Keep track of the newly activated graph panel
 

@@ -64,6 +64,18 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
     mGui->replaceEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
+    connect(mGui->findPreviousButton, &QToolButton::clicked,
+            this, &EditorWidgetFindReplaceWidget::findPreviousButtonClicked);
+    connect(mGui->findNextButton, &QToolButton::clicked,
+            this, &EditorWidgetFindReplaceWidget::findNextButtonClicked);
+
+    connect(mGui->replaceButton, &QToolButton::clicked,
+            this, &EditorWidgetFindReplaceWidget::replaceButtonClicked);
+    connect(mGui->replaceAndFindButton, &QToolButton::clicked,
+            this, &EditorWidgetFindReplaceWidget::replaceAndFindButtonClicked);
+    connect(mGui->replaceAllButton, &QToolButton::clicked,
+            this, &EditorWidgetFindReplaceWidget::replaceAllButtonClicked);
+
     // Create and handle our drop-down menu action
 
     mDropDownAction = Core::newAction(this);
@@ -82,12 +94,12 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
 
     mGui->findEdit->addAction(mDropDownAction, QLineEdit::LeadingPosition);
 
-    connect(mCaseSensitiveAction, SIGNAL(toggled(bool)),
-            this, SLOT(searchOptionChanged()));
-    connect(mWholeWordsOnlyAction, SIGNAL(toggled(bool)),
-            this, SLOT(searchOptionChanged()));
-    connect(mRegularExpressionAction, SIGNAL(toggled(bool)),
-            this, SLOT(searchOptionChanged()));
+    connect(mCaseSensitiveAction, &QAction::toggled,
+            this, &EditorWidgetFindReplaceWidget::searchOptionChanged);
+    connect(mWholeWordsOnlyAction, &QAction::toggled,
+            this, &EditorWidgetFindReplaceWidget::searchOptionChanged);
+    connect(mRegularExpressionAction, &QAction::toggled,
+            this, &EditorWidgetFindReplaceWidget::searchOptionChanged);
 
     // Make our find edit widget our focus proxy
 
@@ -95,17 +107,17 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
 
     // Some connections for our find-related widgets
 
-    connect(this, SIGNAL(canFindReplace(const bool &)),
-            mGui->findPreviousButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(const bool &)),
-            mGui->findNextButton, SLOT(setEnabled(bool)));
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->findPreviousButton, &QToolButton::setEnabled);
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->findNextButton, &QToolButton::setEnabled);
 
-    connect(this, SIGNAL(canFindReplace(const bool &)),
-            mGui->replaceButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(const bool &)),
-            mGui->replaceAndFindButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindReplace(const bool &)),
-            mGui->replaceAllButton, SLOT(setEnabled(bool)));
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->replaceButton, &QToolButton::setEnabled);
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->replaceAndFindButton, &QToolButton::setEnabled);
+    connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
+            mGui->replaceAllButton, &QToolButton::setEnabled);
 
     // A few more things , so that we are properly initialised
 
@@ -184,7 +196,7 @@ bool EditorWidgetFindReplaceWidget::useRegularExpression() const
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::setReadOnly(const bool &pReadOnly)
+void EditorWidgetFindReplaceWidget::setReadOnly(bool pReadOnly)
 {
     // Show/hide our replace-related widgets based on whether we are in
     // read-only mode
@@ -288,7 +300,7 @@ bool EditorWidgetFindReplaceWidget::isActive() const
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::setActive(const bool &pActive)
+void EditorWidgetFindReplaceWidget::setActive(bool pActive)
 {
     if (pActive == mActive)
         return;
@@ -298,11 +310,11 @@ void EditorWidgetFindReplaceWidget::setActive(const bool &pActive)
     mActive = pActive;
 
     if (pActive) {
-        connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-                this, SIGNAL(findTextChanged(const QString &)));
+        connect(mGui->findEdit, &QLineEdit::textChanged,
+                this, &EditorWidgetFindReplaceWidget::findTextChanged);
     } else {
-        disconnect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-                   this, SIGNAL(findTextChanged(const QString &)));
+        disconnect(mGui->findEdit, &QLineEdit::textChanged,
+                   this, &EditorWidgetFindReplaceWidget::findTextChanged);
     }
 }
 
@@ -408,7 +420,7 @@ void EditorWidgetFindReplaceWidget::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::on_findPreviousButton_clicked()
+void EditorWidgetFindReplaceWidget::findPreviousButtonClicked()
 {
     // Let people know that we want to find the previous occurrence of the text
 
@@ -417,7 +429,7 @@ void EditorWidgetFindReplaceWidget::on_findPreviousButton_clicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::on_findNextButton_clicked()
+void EditorWidgetFindReplaceWidget::findNextButtonClicked()
 {
     // Let people know that we want to find the next occurrence of the text
 
@@ -426,7 +438,7 @@ void EditorWidgetFindReplaceWidget::on_findNextButton_clicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::on_replaceButton_clicked()
+void EditorWidgetFindReplaceWidget::replaceButtonClicked()
 {
     // Let people know that we want to replace the current text
 
@@ -435,7 +447,7 @@ void EditorWidgetFindReplaceWidget::on_replaceButton_clicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::on_replaceAndFindButton_clicked()
+void EditorWidgetFindReplaceWidget::replaceAndFindButtonClicked()
 {
     // Let people know that we want to replace the current text and the find the
     // next occurence of the text
@@ -445,7 +457,7 @@ void EditorWidgetFindReplaceWidget::on_replaceAndFindButton_clicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::on_replaceAllButton_clicked()
+void EditorWidgetFindReplaceWidget::replaceAllButtonClicked()
 {
     // Let people know that we want to replace all the occurences of the text
 

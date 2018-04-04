@@ -59,12 +59,12 @@ public:
                               QWidget *pParent);
     explicit GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                               QWidget *pParent);
-    ~GraphPanelWidget();
+    ~GraphPanelWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool isActive() const;
-    void setActive(const bool &pActive, const bool &pForce = false);
+    void setActive(bool pActive, bool pForce = false);
 
     GraphPanelPlotWidget * plot() const;
 
@@ -77,8 +77,8 @@ public:
     void removeAllGraphs();
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
     QFrame *mMarker;
@@ -89,14 +89,13 @@ private:
     void updateMarkerColor();
 
 signals:
-    void activated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
-    void inactivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void activated(GraphPanelWidget *pGraphPanel);
+    void inactivated(GraphPanelWidget *pGraphPanel);
 
-    void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                    const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
-    void graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphAdded(GraphPanelWidget *pGraphPanel, GraphPanelPlotGraph *pGraph,
+                    const GraphPanelPlotGraphProperties &pGraphProperties);
+    void graphsRemoved(GraphPanelWidget *pGraphPanel,
+                       const GraphPanelPlotGraphs &pGraphs);
 };
 
 //==============================================================================

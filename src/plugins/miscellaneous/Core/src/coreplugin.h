@@ -116,7 +116,7 @@ private:
 private slots:
     void newFile();
 
-    void updateFileReopenMenu(const bool &pEnabled = true);
+    void updateFileReopenMenu(bool pEnabled = true);
 
     void reopenRecentFile();
     void reopenMostRecentFile();

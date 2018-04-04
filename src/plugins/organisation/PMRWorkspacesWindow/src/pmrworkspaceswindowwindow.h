@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrWorkspacesWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -68,19 +68,19 @@ class PmrWorkspacesWindowWindow : public Core::OrganisationWidget
 
 public:
     explicit PmrWorkspacesWindowWindow(QWidget *pParent);
-    ~PmrWorkspacesWindowWindow();
+    ~PmrWorkspacesWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     Ui::PmrWorkspacesWindowWindow * gui() const;
 
     void update(const QString &pPmrUrl);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
     Ui::PmrWorkspacesWindowWindow *mGui;
@@ -106,12 +106,12 @@ private:
     void retranslateActionPmr();
 
 private slots:
-    void on_actionNew_triggered();
-    void on_actionReload_triggered();
-    void on_actionPreferences_triggered();
-    void on_actionPmr_triggered();
+    void actionNewTriggered();
+    void actionReloadTriggered();
+    void actionPreferencesTriggered();
+    void actionPmrTriggered();
 
-    void busy(const bool &pBusy);
+    void busy(bool pBusy);
 
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
@@ -119,7 +119,7 @@ private slots:
 
     void updateGui();
 
-    void retrieveWorkspaces(const bool &pVisible);
+    void retrieveWorkspaces(bool pVisible);
 };
 
 //==============================================================================

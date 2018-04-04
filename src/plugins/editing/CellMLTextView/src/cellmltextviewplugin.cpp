@@ -427,7 +427,7 @@ QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================
 
 int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
-                                       const bool &pImport)
+                                       bool pImport)
 {
     // Make sure that we have the correct number of arguments
 

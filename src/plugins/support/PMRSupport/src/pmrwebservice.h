@@ -54,7 +54,7 @@ public:
     explicit PmrWebService(QObject *pParent);
 
     bool isAuthenticated() const;
-    void authenticate(const bool &pAuthenticate = true);
+    void authenticate(bool pAuthenticate = true);
 
     void requestExposures() const;
 
@@ -66,8 +66,7 @@ public:
 
     void requestWorkspaceClone(PmrWorkspace *pWorkspace,
                                const QString &pPath);
-    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace,
-                                     const bool &pPush);
+    void requestWorkspaceSynchronize(PmrWorkspace *pWorkspace, bool pPush);
 
     void update(const QString &pPmrUrl);
 
@@ -98,8 +97,8 @@ private:
     void emitInformation(const QString &pMessage);
 
 signals:
-    void busy(const bool &pBusy);
-    void authenticated(const bool &pAuthenticated);
+    void busy(bool pBusy);
+    void authenticated(bool pAuthenticated);
 
     void information(const QString &pMessage);
     void warning(const QString &pMessage);
@@ -107,13 +106,13 @@ signals:
 
     void authenticationCancelled();
 
-    void workspaces(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces);
+    void workspaces(const PmrWorkspaces &pWorkspaces);
 
     void workspaceCreated(const QString &pUrl);
-    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PmrWorkspace *pWorkspace);
 
-    void exposures(const OpenCOR::PMRSupport::PmrExposures &pExposures);
+    void exposures(const PmrExposures &pExposures);
     void exposureFiles(const QString &pUrl, const QStringList &pExposureFiles);
 
 public slots:
@@ -133,8 +132,8 @@ private slots:
     void workspaceInformationResponse(const QJsonDocument &pJsonDocument);
 
     void workspaceErrored();
-    void workspaceCloneFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronizeFinished(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloneFinished(PmrWorkspace *pWorkspace);
+    void workspaceSynchronizeFinished(PmrWorkspace *pWorkspace);
 
     void workspaceCredentialsResponse(const QJsonDocument &pJsonDocument);
 

@@ -62,11 +62,11 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
-                                                       const int &pDegree,
+                                                       int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
                                                        const ParameterType &pType,
-                                                       const int &pIndex) :
+                                                       int pIndex) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),
@@ -409,8 +409,7 @@ void CellmlFileRuntime::resetFunctions()
 
 //==============================================================================
 
-void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
-                              const bool &pResetIssues)
+void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
 {
     // Reset all of the runtime's properties
 

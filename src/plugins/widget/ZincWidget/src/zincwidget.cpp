@@ -53,7 +53,7 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
     // Ask our Zinc widget to update itself if repainting is required
 
     if (pSceneViewerEvent.getChangeFlags() & OpenCMISS::Zinc::Sceneviewerevent::CHANGE_FLAG_REPAINT_REQUIRED)
-        QTimer::singleShot(0, mZincWidget, SLOT(update()));
+        QTimer::singleShot(0, mZincWidget, QOverload<>::of(&ZincWidget::update));
 }
 
 //==============================================================================
@@ -195,7 +195,7 @@ double ZincWidget::tumbleRate()
 
 //==============================================================================
 
-void ZincWidget::setTumbleRate(const double &pTumbleRate)
+void ZincWidget::setTumbleRate(double pTumbleRate)
 {
     // Set our tumble rate
 
@@ -271,9 +271,8 @@ void ZincWidget::createSceneViewer()
 
 //==============================================================================
 
-void ZincWidget::updateSceneViewerViewerportSize(const int &pWidth,
-                                                 const int &pHeight,
-                                                 const bool &pCheckDevicePixelRatio)
+void ZincWidget::updateSceneViewerViewerportSize(int pWidth, int pHeight,
+                                                 bool pCheckDevicePixelRatio)
 {
     // Update the viewport size of our scene viewer, keeping in mind our device
     // pixel ratio
@@ -298,8 +297,8 @@ void ZincWidget::initializeGL()
 {
     // Forward the fact that our context is going to be destroyed
 
-    connect(QOpenGLWidget::context(), SIGNAL(aboutToBeDestroyed()),
-            this, SIGNAL(contextAboutToBeDestroyed()));
+    connect(QOpenGLWidget::context(), &QOpenGLContext::aboutToBeDestroyed,
+            this, &ZincWidget::contextAboutToBeDestroyed);
 
     // Create our scene viewer if we have a context
 

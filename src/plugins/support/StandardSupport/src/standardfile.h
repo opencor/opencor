@@ -57,7 +57,7 @@ public:
     bool isNew() const;
 
     bool isModified() const;
-    void setModified(const bool &pModified) const;
+    void setModified(bool pModified) const;
 
 protected:
     QString mFileName;
