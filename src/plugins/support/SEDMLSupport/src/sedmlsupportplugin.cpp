@@ -262,7 +262,7 @@ void SEDMLSupportPlugin::newSedmlFile()
     // Make sure that the file has indeed been created
 
     if (createStatus != Core::FileManager::Created)
-        qFatal("FATAL ERROR | %s:%d: the file was not created.", __FILE__, __LINE__);
+        qFatal("FATAL ERROR | %s:%d: the new SED-ML file did not get created.", __FILE__, __LINE__);
 #endif
 }
 

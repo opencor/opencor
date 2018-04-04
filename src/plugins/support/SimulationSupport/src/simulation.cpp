@@ -458,12 +458,12 @@ bool SimulationData::isModified() const
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
     for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
-        if (!qIsFinite(mStatesArray[i]) || (mStatesArray[i] != mInitialStatesArray[i]))
+        if (mStatesArray[i] != mInitialStatesArray[i])
             return true;
     }
 
     for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
-        if (!qIsFinite(mConstantsArray[i]) || (mConstantsArray[i] != mInitialConstantsArray[i]))
+        if (mConstantsArray[i] != mInitialConstantsArray[i])
             return true;
     }
 
@@ -1249,21 +1249,9 @@ bool Simulation::simulationSettingsOk(const bool &pEmitSignal)
             emit error(tr("the starting and ending points cannot have the same value"));
 
         return false;
-    } else if (mData->pointInterval() == 0.0) {
+    } else if (mData->startingPoint() > mData->endingPoint()) {
         if (pEmitSignal)
-            emit error(tr("the point interval cannot be equal to zero"));
-
-        return false;
-    } else if (   (mData->startingPoint() < mData->endingPoint())
-             && (mData->pointInterval() < 0.0)) {
-        if (pEmitSignal)
-            emit error(tr("the ending point is greater than the starting point, so the point interval should be greater than zero"));
-
-        return false;
-    } else if (   (mData->startingPoint() > mData->endingPoint())
-             && (mData->pointInterval() > 0.0)) {
-        if (pEmitSignal)
-            emit error(tr("the ending point is smaller than the starting point, so the point interval should be smaller than zero"));
+            emit error(tr("the starting point cannot be greater than the ending point"));
 
         return false;
     } else {

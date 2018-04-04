@@ -77,6 +77,16 @@ public:
 
 //==============================================================================
 
+class IntegerGe0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit IntegerGe0EditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class IntegerGt0EditorWidget : public TextEditorWidget
 {
     Q_OBJECT
@@ -93,6 +103,16 @@ class DoubleEditorWidget : public TextEditorWidget
 
 public:
     explicit DoubleEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
+class DoubleGe0EditorWidget : public TextEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DoubleGe0EditorWidget(QWidget *pParent);
 };
 
 //==============================================================================
@@ -212,8 +232,10 @@ public:
         Section,
         String,
         Integer,
+        IntegerGe0,
         IntegerGt0,
         Double,
+        DoubleGe0,
         DoubleGt0,
         List,
         Boolean,
@@ -365,11 +387,17 @@ public:
     Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
 
+    Property * addIntegerGe0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGe0Property(Property *pParent = 0);
+
     Property * addIntegerGt0Property(const int &pValue, Property *pParent = 0);
     Property * addIntegerGt0Property(Property *pParent = 0);
 
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
+
+    Property * addDoubleGe0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGe0Property(Property *pParent = 0);
 
     Property * addDoubleGt0Property(const double &pValue, Property *pParent = 0);
     Property * addDoubleGt0Property(Property *pParent = 0);

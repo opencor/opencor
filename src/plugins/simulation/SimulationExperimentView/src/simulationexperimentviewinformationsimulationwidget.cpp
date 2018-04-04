@@ -38,9 +38,9 @@ SimulationExperimentViewInformationSimulationWidget::SimulationExperimentViewInf
 {
     // Populate our property editor
 
-    mStartingPointProperty = addDoubleProperty(0.0);
-    mEndingPointProperty = addDoubleProperty(1000.0);
-    mPointIntervalProperty = addDoubleProperty(1.0);
+    mStartingPointProperty = addDoubleGe0Property(0.0);
+    mEndingPointProperty = addDoubleGt0Property(1000.0);
+    mPointIntervalProperty = addDoubleGt0Property(1.0);
 }
 
 //==============================================================================
