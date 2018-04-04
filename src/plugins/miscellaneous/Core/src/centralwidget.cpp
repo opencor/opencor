@@ -1149,35 +1149,15 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileIsModified = fileManagerInstance->isModified(oldFileName);
 
     if (fileIsModified || hasNewFileName) {
-        if (fileIsNew || fileIsModified) {
-            // The file is or has been modified, so ask the current view to save
-            // it
+        bool needFeedback = true;
 
-            bool needFeedback = true;
-
-            if (!fileHandlingInterface->saveFile(oldFileName, newFileName, needFeedback)) {
-                if (needFeedback) {
-                    warningMessageBox(tr("Save File"),
-                                      tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
-                }
-
-                return false;
-            }
-        } else {
-            // The file hasn't been modified, so we just make a physical copy of
-            // it
-            // Note: there may already be a file, which name is that of the one
-            //       we want to use, so remove it (if no such file exists, then
-            //       nothing will happen, so we are fine)...
-
-            QFile::remove(newFileName);
-
-            if (!QFile::copy(oldFileName, newFileName)) {
+        if (!fileHandlingInterface->saveFile(oldFileName, newFileName, needFeedback)) {
+            if (needFeedback) {
                 warningMessageBox(tr("Save File"),
-                                  tr("<strong>%1</strong> could not be saved.").arg(newFileName));
-
-                return false;
+                                  tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
             }
+
+            return false;
         }
 
         // Delete the 'old' file, if it was a new one that got saved

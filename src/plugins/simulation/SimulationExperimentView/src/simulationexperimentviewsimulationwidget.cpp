@@ -105,6 +105,16 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mErrorType(General),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
+    mSimulationProperties(QStringList()),
+    mSolversProperties(QStringList()),
+    mGraphPanelProperties(QMap<Core::PropertyEditorWidget *, QStringList>()),
+    mGraphsProperties(QMap<Core::PropertyEditorWidget *, QStringList>()),
+    mSimulationPropertiesModified(false),
+    mSolversPropertiesModified(false),
+    mGraphPanelPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
+    mGraphsPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
+    mGraphPanelsWidgetSizes(QIntList()),
+    mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedReloadView(false),
     mNeedUpdatePlots(false),
@@ -165,12 +175,17 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                         mToolBarWidget);
     mSedmlExportAction = Core::newAction(QIcon(":/SEDMLSupport/logo.png"),
                                          mToolBarWidget);
-    mSedmlExportSedmlFileAction = Core::newAction(mToolBarWidget);
-    mSedmlExportCombineArchiveAction = Core::newAction(mToolBarWidget);
+    mSedmlExportSedmlFileAction = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
+                                      Core::newAction(mToolBarWidget):
+                                      0;
+    mSedmlExportCombineArchiveAction = (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)?
+                                           Core::newAction(mToolBarWidget):
+                                           0;
     mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
 
     mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
+    mSedmlExportAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive);
 
     connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(runPauseResumeSimulation()));
@@ -193,11 +208,19 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mCellmlOpenAction, SIGNAL(triggered(bool)),
             this, SLOT(openCellmlFile()));
     connect(mSedmlExportAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlExportSedmlFile()));
-    connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlExportSedmlFile()));
-    connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlExportCombineArchive()));
+            this, mSedmlExportSedmlFileAction?
+                      SLOT(sedmlExportSedmlFile()):
+                      SLOT(sedmlExportCombineArchive()));
+
+    if (mSedmlExportSedmlFileAction) {
+        connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
+                this, SLOT(sedmlExportSedmlFile()));
+    }
+
+    if (mSedmlExportCombineArchiveAction) {
+        connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
+                this, SLOT(sedmlExportCombineArchive()));
+    }
 
     // Enable/disable our development mode action depending on whether our file
     // is readable/writable and of CellML type
@@ -280,8 +303,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     sedmlExportToolButton->setMenu(sedmlExportDropDownMenu);
     sedmlExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
-    sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
-    sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
+    if (mSedmlExportSedmlFileAction)
+        sedmlExportDropDownMenu->addAction(mSedmlExportSedmlFileAction);
+
+    if (mSedmlExportCombineArchiveAction)
+        sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
 
     QToolButton *simulationDataExportToolButton = new QToolButton(mToolBarWidget);
 
@@ -385,6 +411,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     connect(graphPanelsWidget, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
             graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+
+    // Keep track of whether a graph panel has been resized
+
+    connect(graphPanelsWidget, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(checkGraphPanelsAndGraphs()));
 
     // Keep track of a graph being required
 
@@ -516,10 +547,17 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                      tr("Open the referenced CellML file"));
     I18nInterface::retranslateAction(mSedmlExportAction, tr("SED-ML Export"),
                                      tr("Export the simulation to SED-ML"));
-    I18nInterface::retranslateAction(mSedmlExportSedmlFileAction, tr("SED-ML File..."),
-                                     tr("Export the simulation to SED-ML using a SED-ML file"));
-    I18nInterface::retranslateAction(mSedmlExportCombineArchiveAction, tr("COMBINE Archive..."),
-                                     tr("Export the simulation to SED-ML using a COMBINE archive"));
+
+    if (mSedmlExportSedmlFileAction) {
+        I18nInterface::retranslateAction(mSedmlExportSedmlFileAction, tr("SED-ML File..."),
+                                         tr("Export the simulation to SED-ML using a SED-ML file"));
+    }
+
+    if (mSedmlExportCombineArchiveAction) {
+        I18nInterface::retranslateAction(mSedmlExportCombineArchiveAction, tr("COMBINE Archive..."),
+                                         tr("Export the simulation to SED-ML using a COMBINE archive"));
+    }
+
     I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
                                      tr("Export the simulation data"));
 
@@ -618,9 +656,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
     mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
-    mSedmlExportAction->setEnabled(    (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
-                                   &&  mSimulation->results()->size()
-                                   && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
@@ -1041,6 +1076,11 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
 void SimulationExperimentViewSimulationWidget::finalize()
 {
+    // Reinitialise our trackers, so that it doesn't look for a split second
+    // that we are modified when reloading ourselves
+
+    initialiseTrackers();
+
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
 
@@ -1114,15 +1154,17 @@ QIcon SimulationExperimentViewSimulationWidget::fileTabIcon() const
 
 bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
 {
-    // In case of a CellML file that is in development mode, retrieve all the
-    // state and constant parameters which value has changed and update our
-    // CellML object with their 'new' values, unless they are imported, in which
-    // case we let the user know that their 'new' values cannot be saved
+    // Save to the given CellML file, SED-ML file our COMBINE archive, depending
+    // on the file type of our simulation
 
-    QString importedParameters = QString();
+    switch (mSimulation->fileType()) {
+    case SimulationSupport::Simulation::CellmlFile: {
+        // We are dealing with a CellML file, so retrieve all the state and
+        // constant parameters which value has changed and update our CellML
+        // object with their 'new' values, unless they are imported, in which
+        // case we let the user know that their 'new' values cannot be saved
 
-    if (   (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
-        && mDevelopmentModeAction->isChecked()) {
+        QString importedParameters = QString();
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mSimulation->cellmlFile()->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
 
@@ -1142,23 +1184,34 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
                     importedParameters += "\n - "+QString::fromStdWString(component->name())+" | "+QString::fromStdWString(variable->name());
             }
         }
+
+        // Now, we can effectively save (update) the CellML file to the given
+        // file and let the user know if some parameter values couldn't be saved
+
+        if (mSimulation->cellmlFile()->update(pFileName)) {
+            if (!importedParameters.isEmpty()) {
+                Core::informationMessageBox(tr("Save File"),
+                                            tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+    case SimulationSupport::Simulation::SedmlFile:
+        sedmlExportSedmlFile(pFileName);
+
+        return true;
+    case SimulationSupport::Simulation::CombineArchive:
+        sedmlExportCombineArchive(pFileName);
+
+        return true;
     }
 
-    // Now, we can effectively save our given file and let the user know if some
-    // parameter values couldn't be saved
-
-    bool res = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
-                   mSimulation->cellmlFile()->update(pFileName):
-                   (mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile)?
-                       mSimulation->sedmlFile()->save(pFileName):
-                       mSimulation->combineArchive()->save(pFileName);
-
-    if (res && !importedParameters.isEmpty()) {
-        Core::informationMessageBox(tr("Save File"),
-                                    tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
-    }
-
-    return res;
+    return false;
+    // Note: we can't reach this point, but without it we may, at compilation
+    //       time, be told that not all control paths return a value...
 }
 
 //==============================================================================
@@ -1405,6 +1458,90 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::initialiseTrackers()
+{
+    // Keep track of our simulation, solver, graph panel and graph properties,
+    // and check for changes whenever a property gets changed
+    // Note: we pass Qt::UniqueConnection in our calls to connect() so that we
+    //       don't end up with several identical connections (something that
+    //       might happen if we reload our SED-ML file / COMBINE archive for
+    //       example)...
+
+    SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+    SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+
+    mSimulationProperties = allPropertyValues(simulationWidget);
+    mSolversProperties = allPropertyValues(solversWidget);
+
+    mSimulationPropertiesModified = false;
+    mSolversPropertiesModified = false;
+
+    connect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(checkSimulationProperties()),
+            Qt::UniqueConnection);
+    connect(solversWidget, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(checkSolversProperties()),
+            Qt::UniqueConnection);
+
+    mGraphPanelProperties.clear();
+    mGraphsProperties.clear();
+
+    mGraphPanelPropertiesModified.clear();
+    mGraphsPropertiesModified.clear();
+
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
+
+    for (int i = 0, iMax = graphPanelsWidget->graphPanels().count(); i < iMax; ++i) {
+        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        Core::PropertyEditorWidget *graphPanelPropertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
+        Core::PropertyEditorWidget *graphsPropertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
+
+        mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
+        mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
+
+        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(checkGraphPanelsAndGraphs()),
+                Qt::UniqueConnection);
+        connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(checkGraphPanelsAndGraphs()),
+                Qt::UniqueConnection);
+    }
+
+    mGraphPanelsWidgetSizes = QIntList();
+    mGraphPanelsWidgetSizesModified = false;
+}
+
+//==============================================================================
+
+QString SimulationExperimentViewSimulationWidget::fileName(const QString &pFileName,
+                                                           const QString &pBaseFileName,
+                                                           const QString &pFileExtension,
+                                                           const QString &pCaption,
+                                                           const QStringList &pFileFilters)
+{
+    // Return the given file name, if it is not empty, or ask the user to
+    // provide one using the additional information that is given
+
+    if (!pFileName.isEmpty())
+        return pFileName;
+
+    QString fileName = pBaseFileName;
+    QString baseFileCompleteSuffix = QFileInfo(pBaseFileName).completeSuffix();
+
+    if (baseFileCompleteSuffix.isEmpty())
+        fileName += "."+pFileExtension;
+    else
+        fileName.replace(QRegularExpression(QRegularExpression::escape(baseFileCompleteSuffix)+"$"), pFileExtension);
+
+    QString firstFileFilter = pFileFilters.first();
+
+    return Core::getSaveFileName(pCaption, fileName, pFileFilters, &firstFileFilter);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedDocument *pSedmlDocument,
                                                                   libsedml::SedModel *pSedmlModel,
                                                                   libsedml::SedRepeatedTask *pSedmlRepeatedTask,
@@ -1536,16 +1673,26 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
 
 //==============================================================================
 
-bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pFileName,
+bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
+                                                               const QString &pFileName,
                                                                const QString &pModelSource)
 {
-    // Create a SED-ML document and add the CellML namespace to it
+    // Make sure that the given SED-ML file will act as if it was 'new'
+    // Note: this is important if we are updating a SED-ML file...
 
-    SEDMLSupport::SedmlFile sedmlFile(pFileName, true);
-    libsedml::SedDocument *sedmlDocument = sedmlFile.sedmlDocument();
+    pSedmlFile->forceNew();
+
+    // Create a SED-ML document and add the CellML namespace to it
+    // Note: we retrieve the version of the CellML file using its model rather
+    //       than its file name since we may be creating a SED-ML file from
+    //       another SED-ML file (as opposed to from a CellML file), hence its
+    //       corresponding CellML file won't be managed by our CellML file
+    //       manager, which means that its version would be considered to be
+    //       unknown, which clearly shouldn't be the case...
+
+    libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
-    QString simulationFileName = mSimulation->fileName();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(simulationFileName);
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->cellmlFile()->model());
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                         CellMLSupport::Cellml_1_1_Namespace.toStdString():
@@ -1753,7 +1900,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, simulationFileName);
+        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, mSimulation->fileName());
 
         if (!graphsProperties.isEmpty()) {
             GraphsData data;
@@ -1858,41 +2005,45 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
         }
     }
 
-    // Our SED-ML document is ready, so save it
+    // Our SED-ML document is ready, so save (update) it
+    // Note: we update it because we don't want the SED-ML file to be
+    //       potentially reloaded...
 
-    return sedmlFile.save(pFileName);
+    return pSedmlFile->update(pFileName);
 }
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
+void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QString &pFileName)
 {
-    // Export ourselves to SED-ML using a SED-ML file, but first get a file name
+    // Note: if there is no given file name, then it means that we want to
+    //       export the simulation to a SED-ML file and that mSimulation refers
+    //       to a local or remote CellML file. On the other hand, if a file name
+    //       is given, then it means that we are dealing with a SED-ML file and
+    //       that we want to update it or save it under a new file name, meaning
+    //       that mSimulation refers to a local SED-ML file (never a remote
+    //       SED-ML file since we don't save those)...
 
+    // Export ourselves to SED-ML using a SED-ML file, but first try to get a
+    // file name, if needed
+
+    bool isCellmlFile = mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile;
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString simulationFileName = mSimulation->fileName();
-    bool remoteCellmlFile = fileManagerInstance->isRemote(simulationFileName);
-    QString cellmlFileName = remoteCellmlFile?fileManagerInstance->url(simulationFileName):simulationFileName;
-    QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
-    QString sedmlFileName = cellmlFileName;
+    QString localCellmlFileName = mSimulation->cellmlFile()->fileName();
+    bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
+    QString cellmlFileName = remoteCellmlFile?
+                                 fileManagerInstance->url(localCellmlFileName):
+                                 localCellmlFileName;
     FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
-    QStringList sedmlFilters = sedmlFileTypeInterface?
-                                   Core::filters(FileTypeInterfaces() << sedmlFileTypeInterface):
-                                   QStringList();
-    QString firstSedmlFilter = sedmlFilters.first();
+    QString sedmlFileName = fileName(pFileName, cellmlFileName,
+                                     SEDMLSupport::SedmlFileExtension,
+                                     tr("Export To SED-ML File"),
+                                     sedmlFileTypeInterface?
+                                         Core::filters(FileTypeInterfaces() << sedmlFileTypeInterface):
+                                         QStringList());
 
-    if (!cellmlFileCompleteSuffix.isEmpty()) {
-        sedmlFileName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
-                              SEDMLSupport::SedmlFileExtension);
-    } else {
-        sedmlFileName += "."+SEDMLSupport::SedmlFileExtension;
-    }
-
-    sedmlFileName = Core::getSaveFileName(tr("Export To SED-ML File"),
-                                          sedmlFileName,
-                                          sedmlFilters, &firstSedmlFilter);
-
-    // Create a SED-ML file using the SED-ML file name that has been provided
+    // Create a SED-ML file using the SED-ML file name that has been provided,
+    // if any
 
     if (!sedmlFileName.isEmpty()) {
         QString modelSource = cellmlFileName;
@@ -1913,45 +2064,58 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
             modelSource = sedmlFileDir.relativeFilePath(modelSource);
         }
 
-        if (!createSedmlFile(sedmlFileName, modelSource)) {
+        // Retrieve our SED-ML file or create a temporary one, if needed
+
+        SEDMLSupport::SedmlFile *sedmlFile = isCellmlFile?
+                                                 new SEDMLSupport::SedmlFile(sedmlFileName, true):
+                                                 mSimulation->sedmlFile();
+
+        if (!createSedmlFile(sedmlFile, sedmlFileName, modelSource)) {
             Core::warningMessageBox(tr("Export To SED-ML File"),
                                     tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
         }
+
+        if (isCellmlFile)
+            delete sedmlFile;
     }
+
+    // Reinitialise our trackers, if we are not dealing with a CellML file
+
+    if (!isCellmlFile)
+        initialiseTrackers();
 }
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
+void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const QString &pFileName)
 {
-    // Export ourselves to SED-ML using a COMBINE archive, but first get a file
-    // name
+    // Note: if there is no given file name, then it means that we want to
+    //       export the simulation to a COMBINE archive and that mSimulation
+    //       refers to a local or remote CellML or SED-ML file. On the other
+    //       hand, if a file name is given, then it means that we are dealing
+    //       with a COMBINE archive and that we want to update it or save it
+    //       under a new file name, meaning that mSimulation refers to a local
+    //       COMBINE archive (never a remote COMBINE archive since we don't save
+    //       those)...
+
+    // Export ourselves to SED-ML using a COMBINE archive, but first try to get
+    // a file name, if needed
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString simulationFileName = mSimulation->fileName();
-    bool remoteFile = fileManagerInstance->isRemote(simulationFileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(simulationFileName):simulationFileName;
-    QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
-    QString combineArchiveName = cellmlFileName;
+    QString localSimulationFileName = mSimulation->fileName();
     FileTypeInterface *combineFileTypeInterface = COMBINESupport::fileTypeInterface();
-    QStringList combineFilters = combineFileTypeInterface?
-                                     Core::filters(FileTypeInterfaces() << combineFileTypeInterface):
-                                     QStringList();
-    QString firstCombineFilter = combineFilters.first();
+    QString combineArchiveName = fileName(pFileName,
+                                          fileManagerInstance->isRemote(localSimulationFileName)?
+                                              fileManagerInstance->url(localSimulationFileName):
+                                              localSimulationFileName,
+                                          COMBINESupport::CombineFileExtension,
+                                          tr("Export To COMBINE Archive"),
+                                          combineFileTypeInterface?
+                                              Core::filters(FileTypeInterfaces() << combineFileTypeInterface):
+                                              QStringList());
 
-    if (!cellmlFileCompleteSuffix.isEmpty()) {
-        combineArchiveName.replace(QRegularExpression(QRegularExpression::escape(cellmlFileCompleteSuffix)+"$"),
-                                   COMBINESupport::CombineFileExtension);
-    } else {
-        combineArchiveName += "."+COMBINESupport::CombineFileExtension;
-    }
-
-    combineArchiveName = Core::getSaveFileName(tr("Export To COMBINE Archive"),
-                                               combineArchiveName,
-                                               combineFilters, &firstCombineFilter);
-
-    // Effectively export ourselves to a COMBINE archive, if a COMBINE archive
-    // name has been provided
+    // Create a COMBINE archive using the COMBINE archive name that has been
+    // provided, if any
 
     if (!combineArchiveName.isEmpty()) {
         // Determine the path that is common to our main and, if any, imported
@@ -1961,15 +2125,18 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
         static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
         CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
-        QString commonPath = remoteFile?
-                                 QString(cellmlFileName).remove(FileNameRegEx)+"/":
-                                 QFileInfo(simulationFileName).canonicalPath()+QDir::separator();
+        QString localCellmlFileName = cellmlFile->fileName();
+        bool remoteCellmlFile = fileManagerInstance->isRemote(localCellmlFileName);
+        QString cellmlFileName = remoteCellmlFile?
+                                     fileManagerInstance->url(localCellmlFileName):
+                                     localCellmlFileName;
+        QString commonPath = QString(cellmlFileName).remove(FileNameRegEx)+"/";
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
             // Check for the common path
 
-            QString importedFilePath = remoteFile?
+            QString importedFilePath = remoteCellmlFile?
                                            QString(importedFileName).remove(FileNameRegEx)+"/":
                                            QFileInfo(importedFileName).canonicalPath()+QDir::separator();
 
@@ -1986,7 +2153,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
             // Get a copy of the imported CellML file, if it is a remote one,
             // and keep track of it
 
-            if (remoteFile) {
+            if (remoteCellmlFile) {
                 QString localImportedFileName = Core::temporaryFileName();
 
                 Core::writeFileContentsToFile(localImportedFileName,
@@ -1998,9 +2165,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         // Determine the location of our main CellML file
 
-        QString modelSource = remoteFile?
-                                  QString(cellmlFileName).remove(commonPath):
-                                  QString(simulationFileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
+        QString modelSource = QString(cellmlFileName).remove(commonPath);
 
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
@@ -2008,8 +2173,9 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
         QString errorMessage = QString();
         QString temporaryCombineArchiveName = Core::temporaryFileName();
         QString sedmlFileName = Core::temporaryFileName();
+        SEDMLSupport::SedmlFile sedmlFile(sedmlFileName, true);
 
-        createSedmlFile(sedmlFileName, modelSource);
+        createSedmlFile(&sedmlFile, sedmlFileName, modelSource);
 
         // Create our COMBINE archive after having added all our files to it
 
@@ -2022,19 +2188,20 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
-            if (combineArchive.addFile(simulationFileName, modelSource,
+            if (combineArchive.addFile(localCellmlFileName, modelSource,
                                        (cellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
                 foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
-                    QString realImportedFileName = remoteFile?
+                    QString realImportedFileName = remoteCellmlFile?
                                                        remoteImportedFileNames.value(importedFileName):
                                                        importedFileName;
+                    QString relativeImportedFileName = QString(importedFileName).remove(commonPath);
 
                     if (!combineArchive.addFile(realImportedFileName,
-                                                QString(importedFileName).remove(commonPath),
+                                                relativeImportedFileName,
                                                 COMBINESupport::CombineArchiveFile::Cellml)) {
-                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(realImportedFileName)+").");
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
 
                         break;
                     }
@@ -2051,7 +2218,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
                     }
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(simulationFileName)+").");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+").");
             }
         } else {
             errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
@@ -2757,6 +2924,11 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
+    // Initialise our trackers, so we know if a SED-ML file or COMBINE archive
+    // has been modified
+
+    initialiseTrackers();
+
     return true;
 }
 
@@ -3086,6 +3258,10 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
             this, SIGNAL(logarithmicXAxisToggled()));
     connect(plot, SIGNAL(logarithmicYAxisToggled()),
             this, SIGNAL(logarithmicYAxisToggled()));
+
+    // Check our graph panels and their graphs
+
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3098,6 +3274,10 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphP
 
     mPlots.removeOne(plot);
     mUpdatablePlotViewports.remove(plot);
+
+    // Check our graph panels and their graphs
+
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3137,6 +3317,10 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
     if (!mPlots.contains(plot))
         mPlots << plot;
+
+    // Check our graph panels and their graphs
+
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3161,6 +3345,10 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
     if (plot->graphs().isEmpty())
         mPlots.removeOne(plot);
+
+    // Check our graph panels and their graphs
+
+    checkGraphPanelsAndGraphs();
 }
 
 //==============================================================================
@@ -3681,6 +3869,151 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const dou
     // There has been some progress with our export, so update our busy widget
 
     Core::centralWidget()->setBusyWidgetProgress(pProgress);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::paintEvent(QPaintEvent *pEvent)
+{
+    // Default handling of the event
+
+    QWidget::paintEvent(pEvent);
+
+    // We have been rendered, so we can initialise mGraphPanelsWidgetSizes, if
+    // needed, as well as mGraphPanelPropertiesModified and
+    // mGraphsPropertiesModified by calling checkGraphPanelsAndGraphs()
+    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
+    //       graph panels widget's sizes in furtherInitialize(), we don't end up
+    //       with the final sizes since nothing is visible yet...
+
+    if (mGraphPanelsWidgetSizes.isEmpty()) {
+        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+
+        checkGraphPanelsAndGraphs();
+    }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
+{
+    // Check whether any of our simulation properties has changed
+
+    mSimulationPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->simulationWidget()) != mSimulationProperties;
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkSolversProperties()
+{
+    // Check whether any of our simulation properties has changed
+
+    mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
+{
+    // Make sure that we are dealing with a non-CellML file and that
+    // mGraphPanelsWidgetSizes has been initialised
+
+    if (   (   (mSimulation->fileType() != SimulationSupport::Simulation::SedmlFile)
+            && (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive))
+        || mGraphPanelsWidgetSizes.isEmpty()) {
+        return;
+    }
+
+    // Check whether any of our graph panels' height has changed
+
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
+
+    mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
+
+    // Check whether any of our simulation properties has changed
+
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
+
+    mGraphPanelPropertiesModified.clear();
+    mGraphsPropertiesModified.clear();
+
+    foreach (GraphPanelWidget::GraphPanelWidget *graphPanel, graphPanelsWidget->graphPanels()) {
+        Core::PropertyEditorWidget *propertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
+
+        mGraphPanelPropertiesModified.insert(propertyEditor,
+                                             mGraphPanelProperties.contains(propertyEditor)?
+                                                 allPropertyValues(propertyEditor) != mGraphPanelProperties.value(propertyEditor):
+                                                 true);
+
+        propertyEditor = graphPanelAndGraphsWidget->graphsPropertyEditor(graphPanel);
+
+        mGraphsPropertiesModified.insert(propertyEditor,
+                                         mGraphsProperties.contains(propertyEditor)?
+                                             allPropertyValues(propertyEditor) != mGraphsProperties.value(propertyEditor):
+                                             true);
+    }
+
+    // Update our file's modified status
+
+    updateFileModifiedStatus();
+}
+
+//==============================================================================
+
+QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const
+{
+    // Return all the property values of the given property editor
+
+    QStringList res = QStringList();
+
+    foreach (Core::Property *property, pPropertyEditor->allProperties())
+        res << property->value();
+
+    return res;
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
+{
+    // Make sure that we are not dealing with a remote file
+
+    QString simulationFileName = mSimulation->fileName();
+
+    if (Core::FileManager::instance()->isRemote(simulationFileName))
+        return;
+
+    // Update the modified status of the current file, based on whether its
+    // simulation, solvers, graph panel or graphs properties have changed, and
+    // keeping in mind that we may have added/removed graph panels
+
+    bool graphPanelPropertiesModified = mGraphPanelProperties.keys() != mGraphPanelPropertiesModified.keys();
+    bool graphsPropertiesModified = mGraphsProperties.keys() != mGraphsPropertiesModified.keys();
+
+    if (!graphPanelPropertiesModified) {
+        foreach (const bool &someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
+            graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
+    }
+
+    if (!graphsPropertiesModified) {
+        foreach (const bool &someGraphsPropertiesModified, mGraphsPropertiesModified.values())
+            graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
+    }
+
+    Core::FileManager::instance()->setModified(simulationFileName,
+                                                  mSimulationPropertiesModified
+                                               || mSolversPropertiesModified
+                                               || graphPanelPropertiesModified
+                                               || graphsPropertiesModified
+                                               || mGraphPanelsWidgetSizesModified);
 }
 
 //==============================================================================
