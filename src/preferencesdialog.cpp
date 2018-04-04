@@ -149,10 +149,10 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     mGui->setupUi(this);
 
     connect(mGui->treeView, &QTreeView::collapsed,
-            this, &PreferencesDialog::onTreeViewCollapsed);
+            this, &PreferencesDialog::treeViewCollapsed);
 
     connect(mGui->buttonBox, &QDialogButtonBox::accepted,
-            this, &PreferencesDialog::onButtonBoxAccepted);
+            this, &PreferencesDialog::buttonBoxAccepted);
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &PreferencesDialog::reject);
 
@@ -315,7 +315,7 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
 
 //==============================================================================
 
-void PreferencesDialog::onTreeViewCollapsed(const QModelIndex &pIndex)
+void PreferencesDialog::treeViewCollapsed(const QModelIndex &pIndex)
 {
     // We don't want plugin categories to be collapsed, so cancel all
     // collapsings
@@ -325,7 +325,7 @@ void PreferencesDialog::onTreeViewCollapsed(const QModelIndex &pIndex)
 
 //==============================================================================
 
-void PreferencesDialog::onButtonBoxAccepted()
+void PreferencesDialog::buttonBoxAccepted()
 {
     // Save all of our plugins' preferences, if they have changed, and keep
     // track of their name

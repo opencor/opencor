@@ -53,9 +53,9 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     connect(mGui->actionNew, &QAction::triggered,
-            this, &FileOrganiserWindowWindow::onActionNewTriggered);
+            this, &FileOrganiserWindowWindow::actionNewTriggered);
     connect(mGui->actionDelete, &QAction::triggered,
-            this, &FileOrganiserWindowWindow::onActionDeleteTriggered);
+            this, &FileOrganiserWindowWindow::actionDeleteTriggered);
 
     // Create a tool bar widget with different buttons
     // Note: normally, we would retrieve the folder icon through a call to
@@ -162,7 +162,7 @@ void FileOrganiserWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::onActionNewTriggered()
+void FileOrganiserWindowWindow::actionNewTriggered()
 {
     // Create a new folder
 
@@ -171,7 +171,7 @@ void FileOrganiserWindowWindow::onActionNewTriggered()
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::onActionDeleteTriggered()
+void FileOrganiserWindowWindow::actionDeleteTriggered()
 {
     // Remove the current item(s)
 

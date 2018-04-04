@@ -122,9 +122,9 @@ private:
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 
 private slots:
-    void onTreeViewCollapsed(const QModelIndex &pIndex);
+    void treeViewCollapsed(const QModelIndex &pIndex);
 
-    void onButtonBoxAccepted();
+    void buttonBoxAccepted();
 
     void updatePreferencesWidget(const QModelIndex &pNewIndex,
                                  const QModelIndex &pOldIndex);

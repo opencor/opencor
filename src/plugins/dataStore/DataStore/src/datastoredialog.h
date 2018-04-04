@@ -91,9 +91,9 @@ private:
                                  const Qt::CheckState &pCheckState);
 
 private slots:
-    void updateDataSelectedState(QStandardItem *pItem);
+    void allDataCheckBoxClicked();
 
-    void onAllDataCheckBoxClicked();
+    void updateDataSelectedState(QStandardItem *pItem);
 };
 
 //==============================================================================

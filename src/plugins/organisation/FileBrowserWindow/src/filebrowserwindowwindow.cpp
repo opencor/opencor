@@ -52,13 +52,13 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     connect(mGui->actionHome, &QAction::triggered,
-            this, &FileBrowserWindowWindow::onActionHomeTriggered);
+            this, &FileBrowserWindowWindow::actionHomeTriggered);
     connect(mGui->actionParent, &QAction::triggered,
-            this, &FileBrowserWindowWindow::onActionParentTriggered);
+            this, &FileBrowserWindowWindow::actionParentTriggered);
     connect(mGui->actionPrevious, &QAction::triggered,
-            this, &FileBrowserWindowWindow::onActionPreviousTriggered);
+            this, &FileBrowserWindowWindow::actionPreviousTriggered);
     connect(mGui->actionNext, &QAction::triggered,
-            this, &FileBrowserWindowWindow::onActionNextTriggered);
+            this, &FileBrowserWindowWindow::actionNextTriggered);
 
     // Create a tool bar widget with different buttons
 
@@ -160,7 +160,7 @@ void FileBrowserWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileBrowserWindowWindow::onActionHomeTriggered()
+void FileBrowserWindowWindow::actionHomeTriggered()
 {
     // Go to the home folder
 
@@ -169,7 +169,7 @@ void FileBrowserWindowWindow::onActionHomeTriggered()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::onActionParentTriggered()
+void FileBrowserWindowWindow::actionParentTriggered()
 {
     // Go to the parent item
 
@@ -178,7 +178,7 @@ void FileBrowserWindowWindow::onActionParentTriggered()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::onActionPreviousTriggered()
+void FileBrowserWindowWindow::actionPreviousTriggered()
 {
     // Go to the previous file/folder
 
@@ -187,7 +187,7 @@ void FileBrowserWindowWindow::onActionPreviousTriggered()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::onActionNextTriggered()
+void FileBrowserWindowWindow::actionNextTriggered()
 {
     // Go to the next file/folder
 

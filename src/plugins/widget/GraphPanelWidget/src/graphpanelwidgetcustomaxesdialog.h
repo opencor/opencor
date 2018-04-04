@@ -65,12 +65,12 @@ private:
     void checkValue(QLineEdit *pValue);
 
 private slots:
-    void onXMinValueTextEdited(const QString &pValue);
-    void onXMaxValueTextEdited(const QString &pValue);
-    void onYMinValueTextEdited(const QString &pValue);
-    void onYMaxValueTextEdited(const QString &pValue);
+    void xMinValueTextEdited(const QString &pValue);
+    void xMaxValueTextEdited(const QString &pValue);
+    void yMinValueTextEdited(const QString &pValue);
+    void yMaxValueTextEdited(const QString &pValue);
 
-    void onButtonBoxAccepted();
+    void buttonBoxAccepted();
 };
 
 //==============================================================================

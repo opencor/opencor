@@ -140,15 +140,15 @@ private slots:
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
     void handleMessage(const QString &pMessage);
 
-    void onActionFullScreenTriggered();
-    void onActionSystemTriggered();
-    void onActionEnglishTriggered();
-    void onActionFrenchTriggered();
-    void onActionPluginsTriggered();
-    void onActionPreferencesTriggered();
-    void onActionHomePageTriggered();
-    void onActionCheckForUpdatesTriggered();
-    void onActionAboutTriggered();
+    void actionFullScreenTriggered();
+    void actionSystemTriggered();
+    void actionEnglishTriggered();
+    void actionFrenchTriggered();
+    void actionPluginsTriggered();
+    void actionPreferencesTriggered();
+    void actionHomePageTriggered();
+    void actionCheckForUpdatesTriggered();
+    void actionAboutTriggered();
 
     void updateGui(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 

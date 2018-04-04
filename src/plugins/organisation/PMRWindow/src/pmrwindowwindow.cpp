@@ -59,7 +59,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     connect(mGui->actionReload, &QAction::triggered,
-            this, &PmrWindowWindow::onActionReloadTriggered);
+            this, &PmrWindowWindow::actionReloadTriggered);
 
     // Create a tool bar widget with a URL value and refresh button
     // Note: the spacers is a little trick to improve the rendering of our tool
@@ -331,7 +331,7 @@ void PmrWindowWindow::showError(const QString &pMessage)
 
 //==============================================================================
 
-void PmrWindowWindow::onActionReloadTriggered()
+void PmrWindowWindow::actionReloadTriggered()
 {
     // Get the list of exposures from our PMR web service
 
@@ -371,7 +371,7 @@ void PmrWindowWindow::retrieveExposures(bool pVisible, bool pForceRetrieval)
     if (pVisible && (firstTime || pForceRetrieval)) {
         firstTime = false;
 
-        QTimer::singleShot(0, this, &PmrWindowWindow::onActionReloadTriggered);
+        QTimer::singleShot(0, this, &PmrWindowWindow::actionReloadTriggered);
     }
 }
 

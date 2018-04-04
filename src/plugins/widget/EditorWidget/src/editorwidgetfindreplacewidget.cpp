@@ -65,16 +65,16 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
 #endif
 
     connect(mGui->findPreviousButton, &QToolButton::clicked,
-            this, &EditorWidgetFindReplaceWidget::onFindPreviousButtonClicked);
+            this, &EditorWidgetFindReplaceWidget::findPreviousButtonClicked);
     connect(mGui->findNextButton, &QToolButton::clicked,
-            this, &EditorWidgetFindReplaceWidget::onFindNextButtonClicked);
+            this, &EditorWidgetFindReplaceWidget::findNextButtonClicked);
 
     connect(mGui->replaceButton, &QToolButton::clicked,
-            this, &EditorWidgetFindReplaceWidget::onReplaceButtonClicked);
+            this, &EditorWidgetFindReplaceWidget::replaceButtonClicked);
     connect(mGui->replaceAndFindButton, &QToolButton::clicked,
-            this, &EditorWidgetFindReplaceWidget::onReplaceAndFindButtonClicked);
+            this, &EditorWidgetFindReplaceWidget::replaceAndFindButtonClicked);
     connect(mGui->replaceAllButton, &QToolButton::clicked,
-            this, &EditorWidgetFindReplaceWidget::onReplaceAllButtonClicked);
+            this, &EditorWidgetFindReplaceWidget::replaceAllButtonClicked);
 
     // Create and handle our drop-down menu action
 
@@ -444,7 +444,7 @@ void EditorWidgetFindReplaceWidget::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::onFindPreviousButtonClicked()
+void EditorWidgetFindReplaceWidget::findPreviousButtonClicked()
 {
     // Let people know that we want to find the previous occurrence of the text
 
@@ -453,7 +453,7 @@ void EditorWidgetFindReplaceWidget::onFindPreviousButtonClicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::onFindNextButtonClicked()
+void EditorWidgetFindReplaceWidget::findNextButtonClicked()
 {
     // Let people know that we want to find the next occurrence of the text
 
@@ -462,7 +462,7 @@ void EditorWidgetFindReplaceWidget::onFindNextButtonClicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::onReplaceButtonClicked()
+void EditorWidgetFindReplaceWidget::replaceButtonClicked()
 {
     // Let people know that we want to replace the current text
 
@@ -471,7 +471,7 @@ void EditorWidgetFindReplaceWidget::onReplaceButtonClicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::onReplaceAndFindButtonClicked()
+void EditorWidgetFindReplaceWidget::replaceAndFindButtonClicked()
 {
     // Let people know that we want to replace the current text and the find the
     // next occurence of the text
@@ -481,7 +481,7 @@ void EditorWidgetFindReplaceWidget::onReplaceAndFindButtonClicked()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::onReplaceAllButtonClicked()
+void EditorWidgetFindReplaceWidget::replaceAllButtonClicked()
 {
     // Let people know that we want to replace all the occurences of the text
 

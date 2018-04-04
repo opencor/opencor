@@ -120,12 +120,12 @@ signals:
     void replaceAllRequested();
 
 private slots:
-    void onFindPreviousButtonClicked();
-    void onFindNextButtonClicked();
+    void findPreviousButtonClicked();
+    void findNextButtonClicked();
 
-    void onReplaceButtonClicked();
-    void onReplaceAndFindButtonClicked();
-    void onReplaceAllButtonClicked();
+    void replaceButtonClicked();
+    void replaceAndFindButtonClicked();
+    void replaceAllButtonClicked();
 
     void searchOptionChanged();
 

@@ -72,16 +72,16 @@ private:
     QLineEdit *mUrlValue;
 
 private slots:
-    void onActionClearTriggered();
-    void onActionBackTriggered();
-    void onActionForwardTriggered();
-    void onActionCopyTriggered();
-    void onActionNormalSizeTriggered();
-    void onActionZoomInTriggered();
-    void onActionZoomOutTriggered();
-    void onActionPrintTriggered();
-    void onActionInspectTriggered();
-    void onActionReloadTriggered();
+    void actionClearTriggered();
+    void actionBackTriggered();
+    void actionForwardTriggered();
+    void actionCopyTriggered();
+    void actionNormalSizeTriggered();
+    void actionZoomInTriggered();
+    void actionZoomOutTriggered();
+    void actionPrintTriggered();
+    void actionInspectTriggered();
+    void actionReloadTriggered();
 
     void returnPressed();
 

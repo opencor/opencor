@@ -69,13 +69,13 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     connect(mGui->actionNew, &QAction::triggered,
-            this, &PmrWorkspacesWindowWindow::onActionNewTriggered);
+            this, &PmrWorkspacesWindowWindow::actionNewTriggered);
     connect(mGui->actionReload, &QAction::triggered,
-            this, &PmrWorkspacesWindowWindow::onActionReloadTriggered);
+            this, &PmrWorkspacesWindowWindow::actionReloadTriggered);
     connect(mGui->actionPreferences, &QAction::triggered,
-            this, &PmrWorkspacesWindowWindow::onActionPreferencesTriggered);
+            this, &PmrWorkspacesWindowWindow::actionPreferencesTriggered);
     connect(mGui->actionPmr, &QAction::triggered,
-            this, &PmrWorkspacesWindowWindow::onActionPmrTriggered);
+            this, &PmrWorkspacesWindowWindow::actionPmrTriggered);
 
     // Create a tool bar widget with different actions
     // Note #1: normally, we would retrieve the folder icon through a call to
@@ -418,7 +418,7 @@ void PmrWorkspacesWindowWindow::updateGui()
     // ourselves
 
     if (mAuthenticated)
-        onActionReloadTriggered();
+        actionReloadTriggered();
     else if (mInitialized)
         mPmrWorkspacesWindowWidget->initialize();
 }
@@ -440,7 +440,7 @@ void PmrWorkspacesWindowWindow::retranslateActionPmr()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::onActionNewTriggered()
+void PmrWorkspacesWindowWindow::actionNewTriggered()
 {
     // Create a new (owned) workspace
 
@@ -464,7 +464,7 @@ void PmrWorkspacesWindowWindow::onActionNewTriggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::onActionReloadTriggered()
+void PmrWorkspacesWindowWindow::actionReloadTriggered()
 {
     // Get the list of workspaces from our PMR web service, after making sure
     // that we have cleared existing workspaces from our workspace manager
@@ -476,7 +476,7 @@ void PmrWorkspacesWindowWindow::onActionReloadTriggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::onActionPreferencesTriggered()
+void PmrWorkspacesWindowWindow::actionPreferencesTriggered()
 {
     // Show the preferences for PMR support
 
@@ -485,7 +485,7 @@ void PmrWorkspacesWindowWindow::onActionPreferencesTriggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::onActionPmrTriggered()
+void PmrWorkspacesWindowWindow::actionPmrTriggered()
 {
     // Log on/off to/ PMR
 

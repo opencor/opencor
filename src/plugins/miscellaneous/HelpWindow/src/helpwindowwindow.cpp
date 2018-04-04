@@ -59,21 +59,21 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     mGui->setupUi(this);
 
     connect(mGui->actionHome, &QAction::triggered,
-            this, &HelpWindowWindow::onActionHomeTriggered);
+            this, &HelpWindowWindow::actionHomeTriggered);
     connect(mGui->actionBack, &QAction::triggered,
-            this, &HelpWindowWindow::onActionBackTriggered);
+            this, &HelpWindowWindow::actionBackTriggered);
     connect(mGui->actionForward, &QAction::triggered,
-            this, &HelpWindowWindow::onActionForwardTriggered);
+            this, &HelpWindowWindow::actionForwardTriggered);
     connect(mGui->actionCopy, &QAction::triggered,
-            this, &HelpWindowWindow::onActionCopyTriggered);
+            this, &HelpWindowWindow::actionCopyTriggered);
     connect(mGui->actionNormalSize, &QAction::triggered,
-            this, &HelpWindowWindow::onActionNormalSizeTriggered);
+            this, &HelpWindowWindow::actionNormalSizeTriggered);
     connect(mGui->actionZoomIn, &QAction::triggered,
-            this, &HelpWindowWindow::onActionZoomInTriggered);
+            this, &HelpWindowWindow::actionZoomInTriggered);
     connect(mGui->actionZoomOut, &QAction::triggered,
-            this, &HelpWindowWindow::onActionZoomOutTriggered);
+            this, &HelpWindowWindow::actionZoomOutTriggered);
     connect(mGui->actionPrint, &QAction::triggered,
-            this, &HelpWindowWindow::onActionPrintTriggered);
+            this, &HelpWindowWindow::actionPrintTriggered);
 
     // Create a tool bar widget with different buttons
 
@@ -208,7 +208,7 @@ void HelpWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpWindowWindow::onActionHomeTriggered()
+void HelpWindowWindow::actionHomeTriggered()
 {
     // Go to the home page
 
@@ -217,7 +217,7 @@ void HelpWindowWindow::onActionHomeTriggered()
 
 //==============================================================================
 
-void HelpWindowWindow::onActionBackTriggered()
+void HelpWindowWindow::actionBackTriggered()
 {
     // Go to the previous help page
 
@@ -226,7 +226,7 @@ void HelpWindowWindow::onActionBackTriggered()
 
 //==============================================================================
 
-void HelpWindowWindow::onActionForwardTriggered()
+void HelpWindowWindow::actionForwardTriggered()
 {
     // Go to the next help page
 
@@ -235,7 +235,7 @@ void HelpWindowWindow::onActionForwardTriggered()
 
 //==============================================================================
 
-void HelpWindowWindow::onActionCopyTriggered()
+void HelpWindowWindow::actionCopyTriggered()
 {
     // Copy the current slection to the clipboard
 
@@ -244,7 +244,7 @@ void HelpWindowWindow::onActionCopyTriggered()
 
 //==============================================================================
 
-void HelpWindowWindow::onActionNormalSizeTriggered()
+void HelpWindowWindow::actionNormalSizeTriggered()
 {
     // Reset the zoom level of the help page contents
 
@@ -253,7 +253,7 @@ void HelpWindowWindow::onActionNormalSizeTriggered()
 
 //==============================================================================
 
-void HelpWindowWindow::onActionZoomInTriggered()
+void HelpWindowWindow::actionZoomInTriggered()
 {
     // Zoom in the help page contents
 
@@ -262,7 +262,7 @@ void HelpWindowWindow::onActionZoomInTriggered()
 
 //==============================================================================
 
-void HelpWindowWindow::onActionZoomOutTriggered()
+void HelpWindowWindow::actionZoomOutTriggered()
 {
     // Zoom out the help page contents
 
@@ -271,7 +271,7 @@ void HelpWindowWindow::onActionZoomOutTriggered()
 
 //==============================================================================
 
-void HelpWindowWindow::onActionPrintTriggered()
+void HelpWindowWindow::actionPrintTriggered()
 {
     // Retrieve the printer with which the user wants to print the help page
     // and print it, should s/he still want to go ahead with the printing

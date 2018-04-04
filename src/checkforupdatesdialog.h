@@ -106,11 +106,11 @@ private:
     void updateGui();
 
 private slots:
-    void onStatusLabelLinkActivated(const QString &pLink);
-    void onRecheckButtonClicked();
-    void onCheckForUpdatesAtStartupCheckBoxToggled(bool pChecked);
-    void onIncludeSnapshotsCheckBoxToggled(bool pChecked);
-    void onButtonBoxAccepted();
+    void statusLabelLinkActivated(const QString &pLink);
+    void recheckButtonClicked();
+    void checkForUpdatesAtStartupCheckBoxToggled(bool pChecked);
+    void includeSnapshotsCheckBoxToggled(bool pChecked);
+    void buttonBoxAccepted();
 };
 
 //==============================================================================

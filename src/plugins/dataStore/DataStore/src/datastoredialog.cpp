@@ -87,7 +87,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
     mGui->dataLabel->hide();
 
     connect(mGui->allDataCheckBox, &QCheckBox::clicked,
-            this, &DataStoreDialog::onAllDataCheckBoxClicked);
+            this, &DataStoreDialog::allDataCheckBoxClicked);
     connect(mGui->allDataCheckBox, &QCheckBox::toggled,
             mGui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::setEnabled);
 
@@ -338,7 +338,7 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
 
 //==============================================================================
 
-void DataStoreDialog::onAllDataCheckBoxClicked()
+void DataStoreDialog::allDataCheckBoxClicked()
 {
     // If our checked state is partially checked, then we want to make it fully
     // so

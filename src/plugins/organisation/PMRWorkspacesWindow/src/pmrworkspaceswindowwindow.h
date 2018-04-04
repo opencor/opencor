@@ -106,10 +106,10 @@ private:
     void retranslateActionPmr();
 
 private slots:
-    void onActionNewTriggered();
-    void onActionReloadTriggered();
-    void onActionPreferencesTriggered();
-    void onActionPmrTriggered();
+    void actionNewTriggered();
+    void actionReloadTriggered();
+    void actionPreferencesTriggered();
+    void actionPmrTriggered();
 
     void busy(bool pBusy);
 

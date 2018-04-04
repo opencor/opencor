@@ -95,7 +95,7 @@ private:
     void retrieveExposures(bool pVisible, bool pForceRetrieval);
 
 private slots:
-    void onActionReloadTriggered();
+    void actionReloadTriggered();
 
     void filterValueChanged(const QString &pText);
 

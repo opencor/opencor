@@ -179,15 +179,15 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
     mGui->setupUi(this);
 
     connect(mGui->statusLabel, &QLabel::linkActivated,
-            this, &CheckForUpdatesDialog::onStatusLabelLinkActivated);
+            this, &CheckForUpdatesDialog::statusLabelLinkActivated);
     connect(mGui->recheckButton, &QPushButton::clicked,
-            this, &CheckForUpdatesDialog::onRecheckButtonClicked);
+            this, &CheckForUpdatesDialog::recheckButtonClicked);
     connect(mGui->checkForUpdatesAtStartupCheckBox, &QCheckBox::toggled,
-            this, &CheckForUpdatesDialog::onCheckForUpdatesAtStartupCheckBoxToggled);
+            this, &CheckForUpdatesDialog::checkForUpdatesAtStartupCheckBoxToggled);
     connect(mGui->includeSnapshotsCheckBox, &QCheckBox::toggled,
-            this, &CheckForUpdatesDialog::onIncludeSnapshotsCheckBoxToggled);
+            this, &CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled);
     connect(mGui->buttonBox, &QDialogButtonBox::accepted,
-            this, &CheckForUpdatesDialog::onButtonBoxAccepted);
+            this, &CheckForUpdatesDialog::buttonBoxAccepted);
 
     // Create/set our engine and check for updates in the former case
 
@@ -304,7 +304,7 @@ void CheckForUpdatesDialog::updateGui()
 
 //==============================================================================
 
-void CheckForUpdatesDialog::onButtonBoxAccepted()
+void CheckForUpdatesDialog::buttonBoxAccepted()
 {
     // Simply close ourselves
 
@@ -313,7 +313,7 @@ void CheckForUpdatesDialog::onButtonBoxAccepted()
 
 //==============================================================================
 
-void CheckForUpdatesDialog::onStatusLabelLinkActivated(const QString &pLink)
+void CheckForUpdatesDialog::statusLabelLinkActivated(const QString &pLink)
 {
     // Open the link in the user's browser
 
@@ -322,7 +322,7 @@ void CheckForUpdatesDialog::onStatusLabelLinkActivated(const QString &pLink)
 
 //==============================================================================
 
-void CheckForUpdatesDialog::onRecheckButtonClicked()
+void CheckForUpdatesDialog::recheckButtonClicked()
 {
     // Recheck for updates and then update our GUI accordingly
 
@@ -333,7 +333,7 @@ void CheckForUpdatesDialog::onRecheckButtonClicked()
 
 //==============================================================================
 
-void CheckForUpdatesDialog::onCheckForUpdatesAtStartupCheckBoxToggled(bool pChecked)
+void CheckForUpdatesDialog::checkForUpdatesAtStartupCheckBoxToggled(bool pChecked)
 {
     Q_UNUSED(pChecked);
 
@@ -345,7 +345,7 @@ void CheckForUpdatesDialog::onCheckForUpdatesAtStartupCheckBoxToggled(bool pChec
 
 //==============================================================================
 
-void CheckForUpdatesDialog::onIncludeSnapshotsCheckBoxToggled(bool pChecked)
+void CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled(bool pChecked)
 {
     Q_UNUSED(pChecked);
 

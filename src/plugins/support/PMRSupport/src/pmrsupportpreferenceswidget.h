@@ -75,7 +75,7 @@ private:
     QString mEmail;
 
 private slots:
-    void onPmrUrlValueCurrentTextChanged(const QString &pCurrentText);
+    void pmrUrlValueCurrentTextChanged(const QString &pCurrentText);
 };
 
 //==============================================================================

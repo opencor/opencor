@@ -55,16 +55,16 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
     mGui->setupUi(this);
 
     connect(mGui->xMinValue, &QLineEdit::textEdited,
-            this, &GraphPanelWidgetCustomAxesDialog::onXMinValueTextEdited);
+            this, &GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited);
     connect(mGui->xMaxValue, &QLineEdit::textEdited,
-            this, &GraphPanelWidgetCustomAxesDialog::onXMaxValueTextEdited);
+            this, &GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited);
     connect(mGui->yMinValue, &QLineEdit::textEdited,
-            this, &GraphPanelWidgetCustomAxesDialog::onYMinValueTextEdited);
+            this, &GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited);
     connect(mGui->yMaxValue, &QLineEdit::textEdited,
-            this, &GraphPanelWidgetCustomAxesDialog::onYMaxValueTextEdited);
+            this, &GraphPanelWidgetCustomAxesDialog::yMaxValueTextEdited);
 
     connect(mGui->buttonBox, &QDialogButtonBox::accepted,
-            this, &GraphPanelWidgetCustomAxesDialog::onButtonBoxAccepted);
+            this, &GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted);
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &GraphPanelWidgetCustomAxesDialog::reject);
 
@@ -160,7 +160,7 @@ void GraphPanelWidgetCustomAxesDialog::checkValue(QLineEdit *pValue)
 //==============================================================================
 
 
-void GraphPanelWidgetCustomAxesDialog::onXMinValueTextEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -171,7 +171,7 @@ void GraphPanelWidgetCustomAxesDialog::onXMinValueTextEdited(const QString &pVal
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::onXMaxValueTextEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -182,7 +182,7 @@ void GraphPanelWidgetCustomAxesDialog::onXMaxValueTextEdited(const QString &pVal
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::onYMinValueTextEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -193,7 +193,7 @@ void GraphPanelWidgetCustomAxesDialog::onYMinValueTextEdited(const QString &pVal
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::onYMaxValueTextEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::yMaxValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -204,7 +204,7 @@ void GraphPanelWidgetCustomAxesDialog::onYMaxValueTextEdited(const QString &pVal
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::onButtonBoxAccepted()
+void GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted()
 {
     // Check that the values make sense
 

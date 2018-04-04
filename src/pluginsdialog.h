@@ -93,11 +93,11 @@ private:
     void updatePluginsSelectedState(QStandardItem *pItem, bool pInitializing);
 
 private slots:
-    void onTreeViewCollapsed(const QModelIndex &pIndex);
+    void treeViewCollapsed(const QModelIndex &pIndex);
 
-    void onSelectablePluginsCheckBoxToggled(bool pChecked);
+    void selectablePluginsCheckBoxToggled(bool pChecked);
 
-    void onButtonBoxAccepted();
+    void buttonBoxAccepted();
 
     void updateInformation(const QModelIndex &pNewIndex,
                            const QModelIndex &pOldIndex);

@@ -70,10 +70,10 @@ private:
     QMenu *mContextMenu;
 
 private slots:
-    void onActionHomeTriggered();
-    void onActionParentTriggered();
-    void onActionPreviousTriggered();
-    void onActionNextTriggered();
+    void actionHomeTriggered();
+    void actionParentTriggered();
+    void actionPreviousTriggered();
+    void actionNextTriggered();
 
     void showCustomContextMenu() const;
     void itemDoubleClicked();
