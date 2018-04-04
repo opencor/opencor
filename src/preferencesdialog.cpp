@@ -153,7 +153,6 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
 
     connect(mGui->buttonBox, &QDialogButtonBox::accepted,
             this, &PreferencesDialog::onButtonBoxAccepted);
-
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &PreferencesDialog::reject);
 

@@ -108,7 +108,6 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     connect(mGui->buttonBox, &QDialogButtonBox::accepted,
             this, &PluginsDialog::onButtonBoxAccepted);
-
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &PluginsDialog::reject);
 

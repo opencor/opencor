@@ -178,20 +178,16 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
-            this, &CheckForUpdatesDialog::onButtonBoxAccepted);
-
     connect(mGui->statusLabel, &QLabel::linkActivated,
             this, &CheckForUpdatesDialog::onStatusLabelLinkActivated);
-
     connect(mGui->recheckButton, &QPushButton::clicked,
             this, &CheckForUpdatesDialog::onRecheckButtonClicked);
-
     connect(mGui->checkForUpdatesAtStartupCheckBox, &QCheckBox::toggled,
             this, &CheckForUpdatesDialog::onCheckForUpdatesAtStartupCheckBoxToggled);
-
     connect(mGui->includeSnapshotsCheckBox, &QCheckBox::toggled,
             this, &CheckForUpdatesDialog::onIncludeSnapshotsCheckBoxToggled);
+    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
+            this, &CheckForUpdatesDialog::onButtonBoxAccepted);
 
     // Create/set our engine and check for updates in the former case
 

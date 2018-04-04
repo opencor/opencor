@@ -162,6 +162,25 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionFullScreen, &QAction::triggered,
+            this, &MainWindow::onActionFullScreenTriggered);
+    connect(mGui->actionSystem, &QAction::triggered,
+            this, &MainWindow::onActionSystemTriggered);
+    connect(mGui->actionEnglish, &QAction::triggered,
+            this, &MainWindow::onActionEnglishTriggered);
+    connect(mGui->actionFrench, &QAction::triggered,
+            this, &MainWindow::onActionFrenchTriggered);
+    connect(mGui->actionPlugins, &QAction::triggered,
+            this, &MainWindow::onActionPluginsTriggered);
+    connect(mGui->actionPreferences, &QAction::triggered,
+            this, &MainWindow::onActionPreferencesTriggered);
+    connect(mGui->actionHomePage, &QAction::triggered,
+            this, &MainWindow::onActionHomePageTriggered);
+    connect(mGui->actionCheckForUpdates, &QAction::triggered,
+            this, &MainWindow::onActionCheckForUpdatesTriggered);
+    connect(mGui->actionAbout, &QAction::triggered,
+            this, &MainWindow::onActionAboutTriggered);
+
     // Set the role of some of our menu items, so that macOS can move them into
     // the application menu
 
@@ -999,7 +1018,7 @@ void MainWindow::handleUrl(const QUrl &pUrl)
     if (!actionName.compare("openPluginsDialog", Qt::CaseInsensitive)) {
         // We want to open the Plugins dialog
 
-        on_actionPlugins_triggered();
+        onActionPluginsTriggered();
     } else if (!actionName.compare("openPreferencesDialog", Qt::CaseInsensitive)) {
         // We want to open the Preferences dialog
 
@@ -1007,7 +1026,7 @@ void MainWindow::handleUrl(const QUrl &pUrl)
     } else if (!actionName.compare("openAboutDialog", Qt::CaseInsensitive)) {
         // We want to open the About dialog
 
-        on_actionAbout_triggered();
+        onActionAboutTriggered();
     } else if (!actionName.compare("openFile", Qt::CaseInsensitive)) {
         // We want to open a file, so handle it as an argument that is passed to
         // OpenCOR
@@ -1062,7 +1081,7 @@ void MainWindow::handleMessage(const QString &pMessage)
 
 //==============================================================================
 
-void MainWindow::on_actionFullScreen_triggered()
+void MainWindow::onActionFullScreenTriggered()
 {
     // Switch to / back from full screen mode
 
@@ -1074,7 +1093,7 @@ void MainWindow::on_actionFullScreen_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionSystem_triggered()
+void MainWindow::onActionSystemTriggered()
 {
     // Select the system's language as the language used by OpenCOR
 
@@ -1083,7 +1102,7 @@ void MainWindow::on_actionSystem_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionEnglish_triggered()
+void MainWindow::onActionEnglishTriggered()
 {
     // Select English as the language used by OpenCOR
 
@@ -1092,7 +1111,7 @@ void MainWindow::on_actionEnglish_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionFrench_triggered()
+void MainWindow::onActionFrenchTriggered()
 {
     // Select French as the language used by OpenCOR
 
@@ -1101,7 +1120,7 @@ void MainWindow::on_actionFrench_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionPlugins_triggered()
+void MainWindow::onActionPluginsTriggered()
 {
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins dialog
@@ -1163,7 +1182,7 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 
 //==============================================================================
 
-void MainWindow::on_actionPreferences_triggered()
+void MainWindow::onActionPreferencesTriggered()
 {
     // Show the preferences dialog
 
@@ -1172,7 +1191,7 @@ void MainWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionHomePage_triggered()
+void MainWindow::onActionHomePageTriggered()
 {
     // Look up OpenCOR's home page
 
@@ -1181,7 +1200,7 @@ void MainWindow::on_actionHomePage_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionCheckForUpdates_triggered()
+void MainWindow::onActionCheckForUpdatesTriggered()
 {
     // Show the check for updates dialog
 
@@ -1194,7 +1213,7 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionAbout_triggered()
+void MainWindow::onActionAboutTriggered()
 {
     // Display some information about OpenCOR
 
