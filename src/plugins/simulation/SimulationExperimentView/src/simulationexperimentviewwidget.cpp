@@ -361,7 +361,7 @@ void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 {
     // Keep track of the fact that we will need to reload ourselves the next
-    // time we will be initialising ourselves
+    // time we will be initialised
 
     if (!mNeedReloading.contains(pFileName))
         mNeedReloading << pFileName;
