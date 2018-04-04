@@ -425,10 +425,6 @@ void SimulationData::reset(const bool &pInitialize)
     //          that our data has changed...
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-
-    if (!runtime)
-        return;
-
     Solver::NlaSolver *nlaSolver = 0;
 
     if (runtime->needNlaSolver()) {
@@ -490,31 +486,26 @@ void SimulationData::reset(const bool &pInitialize)
 void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
                                                             const bool &pInitialize)
 {
-    // Make sure that our runtime is valid
+    // Recompute our 'computed constants'
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    if (runtime && runtime->isValid()) {
-        // Recompute our 'computed constants'
+    runtime->computeComputedConstants()(pCurrentPoint, mConstantsArray, mRatesArray,
+                                        pInitialize?mStates:mDummyStatesArray, mAlgebraicArray);
 
-        runtime->computeComputedConstants()(mConstantsArray, mRatesArray,
-                                            pInitialize?mStatesArray:mDummyStatesArray);
+    // Recompute some 'constant' algebraic variables
 
-        // Recompute some 'constant' algebraic variables
+    if (runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
+        runtime->computeOdeRates()(pCurrentPoint, mConstantsArray, mRatesArray,
+                                   mStatesArray, mAlgebraicArray);
 
-        if (Runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
-            Runtime->computeOdeRates()(pCurrentPoint, mConstantsArray, mRatesArray,
-                                       mStatesArray, mAlgebraicArray);
-        }
+    // Recompute our 'variables'
 
-        // Recompute our 'variables'
+    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
 
-        recomputeVariables(pCurrentPoint);
+    // Let people know that our data has been updated
 
-        // Let people know that our data has been updated
-
-        emit updatedParameters(pCurrentPoint);
-    }
+    emit updated(pCurrentPoint);
 }
 
 //==============================================================================
@@ -523,31 +514,19 @@ void SimulationData::recomputeVariables(const double &pCurrentPoint)
 {
     // Recompute our 'variables'
 
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-
-    if (!runtime)
-        return;
-
-    if (runtime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-        runtime->computeOdeVariables()(pCurrentPoint, mConstantsArray, mRatesArray,
-                                       mStatesArray, mAlgebraicArray);
-    else
-        runtime->computeDaeVariables()(pCurrentPoint, mConstantsArray, mRatesArray,
-                                       mStatesArray, mAlgebraicArray, mCondVarArray);
+    mSimulation->runtime()->computeVariables()(pCurrentPoint, mConstantsArray, mRatesArray,
+                                               mStatesArray, mAlgebraicArray, mCondVarArray);
 }
 
 //==============================================================================
 
 bool SimulationData::isModified() const
 {
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-
-    if (!runtime)
-        return false;
-
     // Check whether any of our constants or states has been modified
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
+
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
     for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
         if (!qIsFinite(mStatesArray[i]) || (mStatesArray[i] != mInitialStatesArray[i]))
@@ -657,17 +636,12 @@ QString SimulationData::uri(const QStringList &pComponentHierarchy,
 
 void SimulationData::createResultsDataStore()
 {
-    // Make sure that we have a runtime
-
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-
-    if (!runtime)
-        return true;
 
     // Create our data store and populate it with a variable of integration, as
     // well as with constant, rate, state and algebraic variables
 
-    mResultsDataStore = new DataStore::DataStore(mRuntime->cellmlFile()->xmlBase());
+    mResultsDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase());
 
     mPointVariable = mResultsDataStore->addVoi();
     mConstantVariables = mResultsDataStore->addVariables(runtime->constantsCount(), mConstantsArray);

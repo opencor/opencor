@@ -113,7 +113,7 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mExportToCellml11Action->setEnabled(   cellmlFile && cellmlFile->model()
                                         && (cellmlVersion != CellMLSupport::CellmlFile::Unknown)
                                         && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1));
-//---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
+//---OPENCOR--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
 Core::showEnableAction(mExportToCellml11Action, false);
 
     mExportToUserDefinedFormatAction->setEnabled(cellmlFile && cellmlFile->model());

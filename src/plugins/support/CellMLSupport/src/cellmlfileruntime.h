@@ -130,18 +130,16 @@ public:
         Dae
     };
 
-    typedef int (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
+    typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
+    typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
 
-    typedef int (*ComputeComputedConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
+    typedef void (*ComputeOdeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    typedef void (*ComputeDaeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
 
-    typedef int (*ComputeOdeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef int (*ComputeOdeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-
-    typedef int (*ComputeDaeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef int (*ComputeDaeResidualsFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
-    typedef int (*ComputeDaeRootInformationFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef int (*ComputeDaeStateInformationFunction)(double *SI);
-    typedef int (*ComputeDaeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
+    typedef void (*ComputeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
+    typedef void (*ComputeRootInformationFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
+    typedef void (*ComputeStateInformationFunction)(double *SI);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime();
@@ -165,17 +163,15 @@ public:
     int condVarCount() const;
 
     InitializeConstantsFunction initializeConstants() const;
-
     ComputeComputedConstantsFunction computeComputedConstants() const;
+    ComputeVariablesFunction computeVariables() const;
 
     ComputeOdeRatesFunction computeOdeRates() const;
-    ComputeOdeVariablesFunction computeOdeVariables() const;
+    ComputeDaeRatesFunction computeDaeRates() const;
 
-    ComputeDaeEssentialVariablesFunction computeDaeEssentialVariables() const;
-    ComputeDaeResidualsFunction computeDaeResiduals() const;
-    ComputeDaeRootInformationFunction computeDaeRootInformation() const;
-    ComputeDaeStateInformationFunction computeDaeStateInformation() const;
-    ComputeDaeVariablesFunction computeDaeVariables() const;
+    ComputeEssentialVariablesFunction computeEssentialVariables() const;
+    ComputeRootInformationFunction computeRootInformation() const;
+    ComputeStateInformationFunction computeStateInformation() const;
 
     CellmlFileIssues issues() const;
 
@@ -207,17 +203,15 @@ private:
     CellmlFileRuntimeParameters mParameters;
 
     InitializeConstantsFunction mInitializeConstants;
-
     ComputeComputedConstantsFunction mComputeComputedConstants;
+    ComputeVariablesFunction mComputeVariables;
 
     ComputeOdeRatesFunction mComputeOdeRates;
-    ComputeOdeVariablesFunction mComputeOdeVariables;
+    ComputeDaeRatesFunction mComputeDaeRates;
 
-    ComputeDaeEssentialVariablesFunction mComputeDaeEssentialVariables;
-    ComputeDaeResidualsFunction mComputeDaeResiduals;
-    ComputeDaeRootInformationFunction mComputeDaeRootInformation;
-    ComputeDaeStateInformationFunction mComputeDaeStateInformation;
-    ComputeDaeVariablesFunction mComputeDaeVariables;
+    ComputeEssentialVariablesFunction mComputeEssentialVariables;
+    ComputeRootInformationFunction mComputeRootInformation;
+    ComputeStateInformationFunction mComputeStateInformation;
 
     void resetOdeCodeInformation();
     void resetDaeCodeInformation();
@@ -235,10 +229,9 @@ private:
     void retrieveDaeCodeInformation(iface::cellml_api::Model *pModel);
 
     QString cleanCode(const std::wstring &pCode);
-
-    QString functionCode(const QString &pFunctionSignature,
-                         const QString &pFunctionBody,
-                         const bool &pHasDefines = false);
+    QString methodCode(const QString &pCodeSignature, const QString &pCodeBody);
+    QString methodCode(const QString &pCodeSignature,
+                       const std::wstring &pCodeBody);
 
     QStringList componentHierarchy(iface::cellml_api::CellMLElement *pElement);
 };

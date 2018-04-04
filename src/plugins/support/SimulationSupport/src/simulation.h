@@ -169,7 +169,7 @@ public slots:
     void reset(const bool &pInitialize = true);
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                const bool &pInitialize = true);
+                                                const bool &pInitialize);
     void recomputeVariables(const double &pCurrentPoint);
 
     bool isModified() const;
