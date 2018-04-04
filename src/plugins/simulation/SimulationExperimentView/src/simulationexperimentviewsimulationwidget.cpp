@@ -419,7 +419,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of the addition and removal of a graph
 
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphAdded,
-            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph));
+            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph));
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphsRemoved,
             graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs);
 
