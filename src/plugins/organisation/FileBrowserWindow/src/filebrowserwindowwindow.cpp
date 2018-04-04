@@ -51,6 +51,15 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionHome, &QAction::triggered,
+            this, &FileBrowserWindowWindow::onActionHomeTriggered);
+    connect(mGui->actionParent, &QAction::triggered,
+            this, &FileBrowserWindowWindow::onActionParentTriggered);
+    connect(mGui->actionPrevious, &QAction::triggered,
+            this, &FileBrowserWindowWindow::onActionPreviousTriggered);
+    connect(mGui->actionNext, &QAction::triggered,
+            this, &FileBrowserWindowWindow::onActionNextTriggered);
+
     // Create a tool bar widget with different buttons
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
@@ -151,7 +160,7 @@ void FileBrowserWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileBrowserWindowWindow::on_actionHome_triggered()
+void FileBrowserWindowWindow::onActionHomeTriggered()
 {
     // Go to the home folder
 
@@ -160,7 +169,7 @@ void FileBrowserWindowWindow::on_actionHome_triggered()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::on_actionParent_triggered()
+void FileBrowserWindowWindow::onActionParentTriggered()
 {
     // Go to the parent item
 
@@ -169,7 +178,7 @@ void FileBrowserWindowWindow::on_actionParent_triggered()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::on_actionPrevious_triggered()
+void FileBrowserWindowWindow::onActionPreviousTriggered()
 {
     // Go to the previous file/folder
 
@@ -178,7 +187,7 @@ void FileBrowserWindowWindow::on_actionPrevious_triggered()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::on_actionNext_triggered()
+void FileBrowserWindowWindow::onActionNextTriggered()
 {
     // Go to the next file/folder
 

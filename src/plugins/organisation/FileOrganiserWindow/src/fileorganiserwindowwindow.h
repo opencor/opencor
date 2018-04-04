@@ -73,8 +73,8 @@ private:
     QMenu *mContextMenu;
 
 private slots:
-    void on_actionNew_triggered();
-    void on_actionDelete_triggered();
+    void onActionNewTriggered();
+    void onActionDeleteTriggered();
 
     void showCustomContextMenu() const;
     void itemDoubleClicked(const QModelIndex &pItemIndex);

@@ -68,6 +68,15 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionNew, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::onActionNewTriggered);
+    connect(mGui->actionReload, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::onActionReloadTriggered);
+    connect(mGui->actionPreferences, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::onActionPreferencesTriggered);
+    connect(mGui->actionPmr, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::onActionPmrTriggered);
+
     // Create a tool bar widget with different actions
     // Note #1: normally, we would retrieve the folder icon through a call to
     //          QFileIconProvider().icon(QFileIconProvider::Folder), but on
@@ -409,7 +418,7 @@ void PmrWorkspacesWindowWindow::updateGui()
     // ourselves
 
     if (mAuthenticated)
-        on_actionReload_triggered();
+        onActionReloadTriggered();
     else if (mInitialized)
         mPmrWorkspacesWindowWidget->initialize();
 }
@@ -431,7 +440,7 @@ void PmrWorkspacesWindowWindow::retranslateActionPmr()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionNew_triggered()
+void PmrWorkspacesWindowWindow::onActionNewTriggered()
 {
     // Create a new (owned) workspace
 
@@ -455,7 +464,7 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionReload_triggered()
+void PmrWorkspacesWindowWindow::onActionReloadTriggered()
 {
     // Get the list of workspaces from our PMR web service, after making sure
     // that we have cleared existing workspaces from our workspace manager
@@ -467,7 +476,7 @@ void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionPreferences_triggered()
+void PmrWorkspacesWindowWindow::onActionPreferencesTriggered()
 {
     // Show the preferences for PMR support
 
@@ -476,7 +485,7 @@ void PmrWorkspacesWindowWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
+void PmrWorkspacesWindowWindow::onActionPmrTriggered()
 {
     // Log on/off to/ PMR
 
