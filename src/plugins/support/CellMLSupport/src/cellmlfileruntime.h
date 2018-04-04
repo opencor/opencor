@@ -125,21 +125,10 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
     Q_OBJECT
 
 public:
-    enum ModelType {
-        Ode,
-        Dae
-    };
-
     typedef void (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
     typedef void (*ComputeComputedConstantsFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
-
-    typedef void (*ComputeOdeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
-    typedef void (*ComputeDaeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR, double *resid);
-
-    typedef void (*ComputeEssentialVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef void (*ComputeRootInformationFunction)(double VOI, double *CONSTANTS, double *RATES, double *OLDRATES, double *STATES, double *OLDSTATES, double *ALGEBRAIC, double *CONDVAR);
-    typedef void (*ComputeStateInformationFunction)(double *SI);
+    typedef void (*ComputeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
+    typedef void (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime();
@@ -150,28 +139,17 @@ public:
 
     bool isValid() const;
 
-    ModelType modelType() const;
-
-    bool needOdeSolver() const;
-    bool needDaeSolver() const;
     bool needNlaSolver() const;
 
     int constantsCount() const;
     int statesCount() const;
     int ratesCount() const;
     int algebraicCount() const;
-    int condVarCount() const;
 
     InitializeConstantsFunction initializeConstants() const;
     ComputeComputedConstantsFunction computeComputedConstants() const;
     ComputeVariablesFunction computeVariables() const;
-
-    ComputeOdeRatesFunction computeOdeRates() const;
-    ComputeDaeRatesFunction computeDaeRates() const;
-
-    ComputeEssentialVariablesFunction computeEssentialVariables() const;
-    ComputeRootInformationFunction computeRootInformation() const;
-    ComputeStateInformationFunction computeStateInformation() const;
+    ComputeRatesFunction computeRates() const;
 
     CellmlFileIssues issues() const;
 
@@ -184,16 +162,13 @@ public:
 private:
     CellmlFile *mCellmlFile;
 
-    ModelType mModelType;
     bool mAtLeastOneNlaSystem;
 
-    ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
-    ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
+    ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
 
     int mConstantsCount;
     int mStatesRatesCount;
     int mAlgebraicCount;
-    int mCondVarCount;
 
     Compiler::CompilerEngine *mCompilerEngine;
 
@@ -205,16 +180,9 @@ private:
     InitializeConstantsFunction mInitializeConstants;
     ComputeComputedConstantsFunction mComputeComputedConstants;
     ComputeVariablesFunction mComputeVariables;
+    ComputeRatesFunction mComputeRates;
 
-    ComputeOdeRatesFunction mComputeOdeRates;
-    ComputeDaeRatesFunction mComputeDaeRates;
-
-    ComputeEssentialVariablesFunction mComputeEssentialVariables;
-    ComputeRootInformationFunction mComputeRootInformation;
-    ComputeStateInformationFunction mComputeStateInformation;
-
-    void resetOdeCodeInformation();
-    void resetDaeCodeInformation();
+    void resetCodeInformation();
 
     void resetFunctions();
 
@@ -225,8 +193,7 @@ private:
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
-    void retrieveOdeCodeInformation(iface::cellml_api::Model *pModel);
-    void retrieveDaeCodeInformation(iface::cellml_api::Model *pModel);
+    void retrieveCodeInformation(iface::cellml_api::Model *pModel);
 
     QString cleanCode(const std::wstring &pCode);
     QString methodCode(const QString &pCodeSignature, const QString &pCodeBody);

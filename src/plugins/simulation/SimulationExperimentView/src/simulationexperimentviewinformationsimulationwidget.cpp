@@ -81,14 +81,16 @@ void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationS
 
     // Keep track of when the simulation data has changed
 
-    connect(pSimulation->data(), SIGNAL(updatedSimulation()),
-            this, SLOT(updateSimulation()));
+    connect(pSimulation->data(), SIGNAL(updated(const double &)),
+            this, SLOT(updateSimulation(const double &)));
 }
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSimulationWidget::updateSimulation()
+void SimulationExperimentViewInformationSimulationWidget::updateSimulation(const double &pCurrentPoint)
 {
+    Q_UNUSED(pCurrentPoint);
+
     // Update our data
 
     mStartingPointProperty->setDoubleValue(mSimulation->data()->startingPoint(), false);

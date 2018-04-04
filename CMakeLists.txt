@@ -882,7 +882,6 @@ SET(PLUGINS
     solver/ForwardEulerSolver
     solver/FourthOrderRungeKuttaSolver
     solver/HeunSolver
-    solver/IDASSolver
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 

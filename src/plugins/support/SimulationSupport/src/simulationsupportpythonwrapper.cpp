@@ -144,7 +144,7 @@ void SimulationSupportPythonWrapper::setStartingPoint(SimulationData *pSimulatio
 {
     pSimulationData->setStartingPoint(pStartingPoint, pRecompute);
 
-    emit pSimulationData->updatedSimulation();
+    emit pSimulationData->updated(pStartingPoint);
 }
 
 //==============================================================================
@@ -153,7 +153,7 @@ void SimulationSupportPythonWrapper::setEndingPoint(SimulationData *pSimulationD
 {
     pSimulationData->setEndingPoint(pEndingPoint);
 
-    emit pSimulationData->updatedSimulation();
+    emit pSimulationData->updated(pEndingPoint);
 }
 
 //==============================================================================
@@ -162,7 +162,7 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
 {
     pSimulationData->setPointInterval(pPointInterval);
 
-    emit pSimulationData->updatedSimulation();
+    emit pSimulationData->updated(0.0);
 }
 
 //==============================================================================

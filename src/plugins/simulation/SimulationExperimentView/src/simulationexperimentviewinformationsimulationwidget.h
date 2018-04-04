@@ -66,7 +66,7 @@ private:
     SimulationSupport::Simulation *mSimulation;
 
 public slots:
-    void updateSimulation();
+    void updateSimulation(const double &pCurrentPoint);
 
 private:
     Core::Property *mStartingPointProperty;

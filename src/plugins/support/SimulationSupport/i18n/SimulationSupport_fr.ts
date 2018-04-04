@@ -31,10 +31,6 @@
         <source>datastore doesn&apos;t have enough capacity</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>no valid solvers</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>

@@ -4,64 +4,64 @@
 <context>
     <name>OpenCOR::CVODESSolver::CvodesSolver</name>
     <message>
-        <source>the &apos;maximum step&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;pas maximum&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Maximum step&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Pas maximum&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;maximum number of steps&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;nombre maximum de pas&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Maximum number of steps&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Nombre maximum de pas&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;integration method&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;méthode d&apos;intégration&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Integration method&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Méthode d&apos;intégration&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;preconditioner&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;préconditionneur&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Preconditioner&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Préconditionneur&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;upper half-bandwidth&apos; property must have a value between 0 and %1</source>
-        <translation>la propriété &apos;demi largeur de bande supérieure&apos; doit avoir une valeur comprise entre 0 et %1</translation>
+        <source>the &quot;Upper half-bandwidth&quot; property must have a value between 0 and %1</source>
+        <translation>la propriété &quot;Demi largeur de bande supérieure&quot; doit avoir une valeur comprise entre 0 et %1</translation>
     </message>
     <message>
-        <source>the &apos;upper half-bandwidth&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;demi largeur de bande supérieure&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Upper half-bandwidth&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Demi largeur de bande supérieure&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;lower half-bandwidth&apos; property must have a value between 0 and %1</source>
-        <translation>la propriété &apos;demi largeur de bande inférieure&apos; doit avoir une valeur comprise entre 0 et %1</translation>
+        <source>the &quot;Lower half-bandwidth&quot; property must have a value between 0 and %1</source>
+        <translation>la propriété &quot;Demi largeur de bande inférieure&quot; doit avoir une valeur comprise entre 0 et %1</translation>
     </message>
     <message>
-        <source>the &apos;lower half-bandwidth&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;demi largeur de bande inférieure&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Lower half-bandwidth&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Demi largeur de bande inférieure&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;linear solver&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;solveur linéaire&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Linear solver&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Solveur linéaire&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;iteration type&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;type d&apos;itération&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Iteration type&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Type d&apos;itération&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;relative tolerance&apos; property must have a value greater than or equal to 0</source>
-        <translation>la propriété &apos;tolérance relative&apos; doit avoir une valeur plus grande que ou égale à 0</translation>
+        <source>the &quot;Relative tolerance&quot; property must have a value greater than or equal to 0</source>
+        <translation>la propriété &quot;Tolérance relative&quot; doit avoir une valeur plus grande que ou égale à 0</translation>
     </message>
     <message>
-        <source>the &apos;relative tolerance&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;tolérance relative&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Relative tolerance&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Tolérance relative&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;absolute tolerance&apos; property must have a value greater than or equal to 0</source>
-        <translation>la propriété &apos;tolérance absolue&apos; doit avoir une valeur plus grande que ou égale à 0</translation>
+        <source>the &quot;Absolute tolerance&quot; property must have a value greater than or equal to 0</source>
+        <translation>la propriété &quot;Tolérance absolue&quot; doit avoir une valeur plus grande que ou égale à 0</translation>
     </message>
     <message>
-        <source>the &apos;absolute tolerance&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;tolérance absolue&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Absolute tolerance&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Tolérance absolue&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;interpolate solution&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;interpoler solution&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &quot;Interpolate solution&quot; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &quot;Interpoler solution&quot; n&apos;a pas pu être retrouvée</translation>
     </message>
 </context>
 </TS>

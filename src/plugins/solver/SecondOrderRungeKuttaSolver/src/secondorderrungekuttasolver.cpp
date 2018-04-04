@@ -47,7 +47,7 @@ SecondOrderRungeKuttaSolver::~SecondOrderRungeKuttaSolver()
 
 //==============================================================================
 
-void SecondOrderRungeKuttaSolver::initialize(const double &pVoiStart,
+void SecondOrderRungeKuttaSolver::initialize(const double &pVoi,
                                              const int &pRatesStatesCount,
                                              double *pConstants,
                                              double *pRates, double *pStates,
@@ -60,21 +60,21 @@ void SecondOrderRungeKuttaSolver::initialize(const double &pVoiStart,
         mStep = mProperties.value(StepId).toDouble();
 
         if (!mStep) {
-            emit error(tr("the 'step' property value cannot be equal to zero"));
+            emit error(tr("the \"Step\" property value cannot be equal to zero"));
 
             return;
         }
     } else {
-        emit error(tr("the 'step' property value could not be retrieved"));
+        emit error(tr("the \"Step\" property value could not be retrieved"));
 
         return;
     }
 
     // Initialise the ODE solver itself
 
-    OpenCOR::Solver::OdeSolver::initialize(pVoiStart, pRatesStatesCount,
-                                           pConstants, pRates, pStates,
-                                           pAlgebraic, pComputeRates);
+    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
+                                           pRates, pStates, pAlgebraic,
+                                           pComputeRates);
 
     // (Re)create our mYk1 array
 

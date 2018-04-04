@@ -100,7 +100,6 @@ public:
     double * rates() const;
     double * states() const;
     double * algebraic() const;
-    double * condVar() const;
 
     void setStartingPoint(const double &pStartingPoint,
                           const bool &pRecompute = true);
@@ -111,11 +110,6 @@ public:
 
     Solver::Solver::Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
-
-    SolverInterface * daeSolverInterface() const;
-
-    Solver::Solver::Properties daeSolverProperties() const;
-    void addDaeSolverProperty(const QString &pName, const QVariant &pValue);
 
     SolverInterface * nlaSolverInterface() const;
 
@@ -158,9 +152,6 @@ public slots:
 
     QString odeSolverName() const;
     void setOdeSolverName(const QString &pOdeSolverName);
-
-    QString daeSolverName() const;
-    void setDaeSolverName(const QString &pDaeSolverName);
 
     QString nlaSolverName() const;
     void setNlaSolverName(const QString &pNlaSolverName,
@@ -214,7 +205,6 @@ private:
     double *mStatesArray;
     double *mDummyStatesArray;
     double *mAlgebraicArray;
-    double *mCondVarArray;
 
     QVector<int> mGradientIndices;
     double *mGradientsArray;
@@ -227,16 +217,14 @@ private:
     void createArrays();
     void deleteArrays();
 
-    bool createResultsDataStore();
+    void createResultsDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
 signals:
-    void updatedSimulation();
-
-    void updatedParameters(const double &pCurrentPoint);
+    void updated(const double &pCurrentPoint);
     void modified(const bool &pIsModified);
 
     void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
