@@ -302,13 +302,22 @@ ViewInterface::Mode RawSEDMLViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList RawSEDMLViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList RawSEDMLViewPlugin::viewMimeTypes() const
 {
-    Q_UNUSED(pMimeTypeMode);
-
     // Return the MIME types we support
 
     return QStringList() << SEDMLSupport::SedmlMimeType;
+}
+
+//==============================================================================
+
+QString RawSEDMLViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName)
+
+    // Return the MIME type for the given SED-ML file
+
+    return SEDMLSupport::SedmlMimeType;
 }
 
 //==============================================================================

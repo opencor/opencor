@@ -59,6 +59,7 @@ public:
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
     QIntList sizes() const;
+    void setSizes(const QIntList &pSizes);
 
 private:
     GraphPanelWidgets mGraphPanels;
@@ -77,8 +78,6 @@ signals:
     void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
-
-    void removeGraphPanelsEnabled(const bool &pEnabled);
 
     void graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 

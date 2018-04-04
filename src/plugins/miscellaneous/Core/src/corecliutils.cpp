@@ -714,7 +714,7 @@ QString newFileName(const QString &pFileName, const QString &pFileExtension)
 
 //==============================================================================
 
-bool validXml(const QString &pXml, const QString &pSchema)
+bool validXml(const QByteArray &pXml, const QByteArray &pSchema)
 {
     // Validate the given XML against the given schema
 
@@ -723,11 +723,11 @@ bool validXml(const QString &pXml, const QString &pSchema)
 
     schema.setMessageHandler(&dummyMessageHandler);
 
-    schema.load(pSchema.toUtf8());
+    schema.load(pSchema);
 
     QXmlSchemaValidator validator(schema);
 
-    return validator.validate(pXml.toUtf8());
+    return validator.validate(pXml);
 }
 
 //==============================================================================
@@ -736,8 +736,8 @@ bool validXmlFile(const QString &pXmlFileName, const QString &pSchemaFileName)
 {
     // Validate the given XML file against the given schema file
 
-    QString xmlContents;
-    QString schemaContents;
+    QByteArray xmlContents;
+    QByteArray schemaContents;
 
     readFileContentsFromFile(pXmlFileName, xmlContents);
     readFileContentsFromFile(pSchemaFileName, schemaContents);

@@ -97,7 +97,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     Widget(pParent),
     mPlugin(pPlugin),
     mViewWidget(pViewWidget),
-    mFileName(pFileName),
     mDataStoreInterfaces(QMap<QAction *, DataStoreInterface *>()),
     mCellmlBasedViewPlugins(QMap<QAction *, Plugin *>()),
     mProgress(-1),
@@ -111,11 +110,40 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong>())
 {
+    // Ask our simulation manager to manage our file and then retrieve the
+    // corresponding simulation from it
+
+    SimulationSupport::SimulationManager *simulationManager = SimulationSupport::SimulationManager::instance();
+
+    simulationManager->manage(pFileName);
+
+    mSimulation = simulationManager->simulation(pFileName);
+
+    connect(mSimulation, SIGNAL(running(const bool &)),
+            this, SLOT(simulationRunning(const bool &)));
+    connect(mSimulation, SIGNAL(paused()),
+            this, SLOT(simulationPaused()));
+    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
+            this, SLOT(simulationStopped(const qint64 &)));
+
+    connect(mSimulation, SIGNAL(error(const QString &)),
+            this, SLOT(simulationError(const QString &)));
+
+    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
+            this, SLOT(simulationDataModified(const bool &)));
+
+    // Enable SimulationData to toggle parameter widget's gradients' flag and widget to store index.
+
+    connect(mSimulation->data(), SIGNAL(gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)),
+            informationWidget->parametersWidget(), SLOT(gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)));
+    connect(informationWidget->parametersWidget(), SIGNAL(calculateGradients(const int &, const bool &)),
+            mSimulation->data(), SLOT(calculateGradients(const int &, const bool &)));
+
     // Create a tool bar
 
     mToolBarWidget = new Core::ToolBarWidget(this);
 
-    // Create and handle various actions
+    // Create, customise and handle various actions
 
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
@@ -141,6 +169,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSedmlExportCombineArchiveAction = Core::newAction(mToolBarWidget);
     mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
+
+    mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
 
     connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
             this, SLOT(runPauseResumeSimulation()));
@@ -168,6 +198,12 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, SLOT(sedmlExportSedmlFile()));
     connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
             this, SLOT(sedmlExportCombineArchive()));
+
+    // Enable/disable our development mode action depending on whether our file
+    // is readable/writable and of CellML type
+
+    mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
+                                       && (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile));
 
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
@@ -330,15 +366,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(solversPropertyChanged(Core::Property *)));
 
-    // Keep track of whether we can remove graph panels
-
-    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
-
-    connect(graphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
-            mRemoveGraphPanelAction, SLOT(setEnabled(bool)));
-
     // Keep track of the addition and removal of a graph panel
 
+    GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
@@ -443,41 +473,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     setFocusProxy(mContentsWidget);
 
-    // Ask our simulation manager to manage our file and then retrieve the
-    // corresponding simulation from it
-
-    SimulationSupport::SimulationManager *simulationManager = SimulationSupport::SimulationManager::instance();
-
-    simulationManager->manage(pFileName);
-
-    mSimulation = simulationManager->simulation(pFileName);
-
-    connect(mSimulation, SIGNAL(running(const bool &)),
-            this, SLOT(simulationRunning(const bool &)));
-    connect(mSimulation, SIGNAL(paused()),
-            this, SLOT(simulationPaused()));
-    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
-            this, SLOT(simulationStopped(const qint64 &)));
-
-    connect(mSimulation, SIGNAL(error(const QString &)),
-            this, SLOT(simulationError(const QString &)));
-
-    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
-            this, SLOT(simulationDataModified(const bool &)));
-
-    // Enable SimulationData to toggle parameter widget's gradients' flag and widget to store index.
-
-    connect(mSimulation->data(), SIGNAL(gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)),
-            informationWidget->parametersWidget(), SLOT(gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)));
-    connect(informationWidget->parametersWidget(), SIGNAL(calculateGradients(const int &, const bool &)),
-            mSimulation->data(), SLOT(calculateGradients(const int &, const bool &)));
-
-    // Enable/disable our development mode action depending on whether our file
-    // is readable/writable and of CellML type
-
-    mDevelopmentModeAction->setEnabled(   Core::FileManager::instance()->isReadableAndWritable(pFileName)
-                                       && (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile));
-
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
@@ -490,7 +485,7 @@ SimulationExperimentViewSimulationWidget::~SimulationExperimentViewSimulationWid
 {
     // Ask our simulation manager to unmanage our file
 
-    SimulationSupport::SimulationManager::instance()->unmanage(mFileName);
+    SimulationSupport::SimulationManager::instance()->unmanage(mSimulation->fileName());
 }
 
 //==============================================================================
@@ -623,7 +618,6 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
     mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
-    mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
     mSedmlExportAction->setEnabled(    (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
                                    &&  mSimulation->results()->size()
                                    && !simulationModeEnabled);
@@ -716,11 +710,12 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Output some information about our CellML file
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString fileName = fileManagerInstance->isNew(mFileName)?
-                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileName)):
-                           fileManagerInstance->isRemote(mFileName)?
-                               fileManagerInstance->url(mFileName):
-                               mFileName;
+    QString simulationFileName = mSimulation->fileName();
+    QString fileName = fileManagerInstance->isNew(simulationFileName)?
+                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(simulationFileName)):
+                           fileManagerInstance->isRemote(simulationFileName)?
+                               fileManagerInstance->url(simulationFileName):
+                               simulationFileName;
     QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
     SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSimulation->sedmlFile()?
                                                         mSimulation->sedmlFile()->issues():
@@ -1158,17 +1153,9 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
                        mSimulation->sedmlFile()->save(pFileName):
                        mSimulation->combineArchive()->save(pFileName);
 
-    if (res) {
-        mFileName = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
-                        mSimulation->cellmlFile()->fileName():
-                        (mSimulation->fileType() == SimulationSupport::Simulation::SedmlFile)?
-                            mSimulation->sedmlFile()->fileName():
-                            mSimulation->combineArchive()->fileName();
-
-        if (!importedParameters.isEmpty()) {
-            Core::informationMessageBox(tr("Save File"),
-                                        tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
-        }
+    if (res && !importedParameters.isEmpty()) {
+        Core::informationMessageBox(tr("Save File"),
+                                    tr("The following parameters are imported and cannot therefore be saved:")+importedParameters);
     }
 
     return res;
@@ -1181,7 +1168,7 @@ void SimulationExperimentViewSimulationWidget::filePermissionsChanged()
     // We have been un/locked, so enable/disable the development mode and keep
     // track of its checked status or recheck it, as necessary
 
-     if (Core::FileManager::instance()->isReadableAndWritable(mFileName)) {
+     if (Core::FileManager::instance()->isReadableAndWritable(mSimulation->fileName())) {
          mDevelopmentModeAction->setEnabled(mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile);
          mDevelopmentModeAction->setChecked(mLockedDevelopmentMode);
      } else {
@@ -1196,9 +1183,10 @@ void SimulationExperimentViewSimulationWidget::filePermissionsChanged()
 
 void SimulationExperimentViewSimulationWidget::fileModified()
 {
-    // Update our reset action
+    // Update our reset action, but only if we are dealing with a CellML file
 
-    mResetModelParametersAction->setEnabled(Core::FileManager::instance()->isModified(mFileName));
+    if (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
+        mResetModelParametersAction->setEnabled(Core::FileManager::instance()->isModified(mSimulation->fileName()));
 }
 
 //==============================================================================
@@ -1237,24 +1225,6 @@ void SimulationExperimentViewSimulationWidget::fileReloaded()
 
     if (needReloadView)
         reloadView();
-}
-
-//==============================================================================
-
-QString SimulationExperimentViewSimulationWidget::fileName() const
-{
-    // Return our file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::setFileName(const QString &pFileName)
-{
-    // Set our file name
-
-    mFileName = pFileName;
 }
 
 //==============================================================================
@@ -1328,7 +1298,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // were able to allocate all the memory we need
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mFileName, true);
+                mViewWidget->checkSimulationResults(mSimulation->fileName(), true);
 
                 mSimulation->run();
             } else {
@@ -1373,7 +1343,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mFileName, true);
+    mViewWidget->checkSimulationResults(mSimulation->fileName(), true);
 }
 
 //==============================================================================
@@ -1384,12 +1354,12 @@ void SimulationExperimentViewSimulationWidget::developmentMode()
     // modified state of our current file accordingly, if needed
 
     if (!mDevelopmentModeAction->isChecked())
-        Core::FileManager::instance()->setModified(mFileName, false);
+        Core::FileManager::instance()->setModified(mSimulation->fileName(), false);
 
     // Make sure that our reset button is properly enabled/disabled
     // Note: this is needed if the development mode has just been disabled...
 
-    checkSimulationDataModified(mSimulation->data()->isModified());
+    simulationDataModified(mSimulation->data()->isModified());
 }
 
 //==============================================================================
@@ -1574,7 +1544,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     SEDMLSupport::SedmlFile sedmlFile(pFileName, true);
     libsedml::SedDocument *sedmlDocument = sedmlFile.sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mFileName);
+    QString simulationFileName = mSimulation->fileName();
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(simulationFileName);
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
                         CellMLSupport::Cellml_1_1_Namespace.toStdString():
@@ -1666,6 +1637,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     QIntList graphPanelsWidgetSizes = graphPanelsWidget->sizes();
+    QList<Core::Properties> graphsPropertiesList = QList<Core::Properties>();
     QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
     int graphPlotCounter = 0;
 
@@ -1673,7 +1645,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
              graphPanelsWidget->graphPanels()) {
         // Create and customise the look and feel of our 2D plot
 
-        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+        Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
         libsedml::SedPlot2D *sedmlPlot2d = sedmlDocument->createPlot2D();
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
@@ -1781,9 +1753,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
 
         // Keep track of the graph panel's graphs, if any
 
-        Core::Properties graphProperties = graphPanelAndGraphsWidget->graphProperties(graphPanel, mFileName);
+        Core::Properties graphsProperties = graphPanelAndGraphsWidget->graphsProperties(graphPanel, simulationFileName);
 
-        if (!graphProperties.isEmpty()) {
+        if (!graphsProperties.isEmpty()) {
             GraphsData data;
 
             data.sedmlPlot2d = sedmlPlot2d;
@@ -1791,14 +1763,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(const QString &pF
             data.logAxisX = graphPanel->plot()->logAxisX();
             data.logAxisY = graphPanel->plot()->logAxisY();
 
-            graphsData.insert(graphProperties, data);
+            graphsPropertiesList << graphsProperties;
+
+            graphsData.insert(graphsProperties, data);
         }
     }
 
     // Create and customise 2D plot outputs and data generators for all the
     // graphs that are to be plotted, if any
 
-    foreach (const Core::Properties &graphsProperties, graphsData.keys()) {
+    foreach (const Core::Properties &graphsProperties, graphsPropertiesList) {
         // Create some graphs
 
         GraphsData data = graphsData.value(graphsProperties);
@@ -1896,8 +1870,9 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
     // Export ourselves to SED-ML using a SED-ML file, but first get a file name
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    bool remoteFile = fileManagerInstance->isRemote(mFileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
+    QString simulationFileName = mSimulation->fileName();
+    bool remoteCellmlFile = fileManagerInstance->isRemote(simulationFileName);
+    QString cellmlFileName = remoteCellmlFile?fileManagerInstance->url(simulationFileName):simulationFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString sedmlFileName = cellmlFileName;
     FileTypeInterface *sedmlFileTypeInterface = SEDMLSupport::fileTypeInterface();
@@ -1922,7 +1897,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
     if (!sedmlFileName.isEmpty()) {
         QString modelSource = cellmlFileName;
 
-        if (   !remoteFile
+        if (   !remoteCellmlFile
 #ifdef Q_OS_WIN
             && !modelSource.left(3).compare(sedmlFileName.left(3))
 #endif
@@ -1953,8 +1928,9 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     // name
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    bool remoteFile = fileManagerInstance->isRemote(mFileName);
-    QString cellmlFileName = remoteFile?fileManagerInstance->url(mFileName):mFileName;
+    QString simulationFileName = mSimulation->fileName();
+    bool remoteFile = fileManagerInstance->isRemote(simulationFileName);
+    QString cellmlFileName = remoteFile?fileManagerInstance->url(simulationFileName):simulationFileName;
     QString cellmlFileCompleteSuffix = QFileInfo(cellmlFileName).completeSuffix();
     QString combineArchiveName = cellmlFileName;
     FileTypeInterface *combineFileTypeInterface = COMBINESupport::fileTypeInterface();
@@ -1987,7 +1963,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
         CellMLSupport::CellmlFile *cellmlFile = mSimulation->cellmlFile();
         QString commonPath = remoteFile?
                                  QString(cellmlFileName).remove(FileNameRegEx)+"/":
-                                 QFileInfo(mFileName).canonicalPath()+QDir::separator();
+                                 QFileInfo(simulationFileName).canonicalPath()+QDir::separator();
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
         foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
@@ -2024,7 +2000,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         QString modelSource = remoteFile?
                                   QString(cellmlFileName).remove(commonPath):
-                                  QString(mFileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
+                                  QString(simulationFileName).remove(Core::nativeCanonicalDirName(commonPath)+QDir::separator());
 
         // Create a copy of the SED-ML file that will be the master file in our
         // COMBINE archive
@@ -2046,7 +2022,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
 
         if (combineArchive.addFile(sedmlFileName, sedmlFileLocation,
                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
-            if (combineArchive.addFile(mFileName, modelSource,
+            if (combineArchive.addFile(simulationFileName, modelSource,
                                        (cellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
@@ -2075,7 +2051,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
                     }
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(mFileName)+").");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(simulationFileName)+").");
             }
         } else {
             errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
@@ -2297,6 +2273,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+    SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+    SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     libsedml::SedDocument *sedmlDocument = mSimulation->sedmlFile()->sedmlDocument();
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
@@ -2321,8 +2299,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     //  - Specifying the NLA solver, if any
 
     SimulationExperimentViewInformationSolversWidgetData *solverData = (mSimulation->cellmlFile()->runtime()->modelType() == CellMLSupport::CellmlFileRuntime::Ode)?
-                                                                           informationWidget->solversWidget()->odeSolverData():
-                                                                           informationWidget->solversWidget()->daeSolverData();
+                                                                           solversWidget->odeSolverData():
+                                                                           solversWidget->daeSolverData();
     const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
     SolverInterface *usedSolverInterface = 0;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
@@ -2468,7 +2446,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                 foreach (SolverInterface *solverInterface, solverInterfaces) {
                     if (!nlaSolverName.compare(solverInterface->solverName())) {
-                        informationWidget->solversWidget()->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
+                        solversWidget->nlaSolverData()->solversListProperty()->setValue(nlaSolverName);
 
                         hasNlaSolver = true;
 
@@ -2489,7 +2467,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
-    // Start afresh by removing all the graph panels, but the last one
+    // Start afresh by removing all the graph panels
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
@@ -2514,14 +2492,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
-        SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
         graphPanelAndGraphsWidget->reinitialize(graphPanel);
 
         annotation = sedmlPlot2d->getAnnotation();
 
         if (annotation) {
-            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelProperties(graphPanel);
+            Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
 
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
                 const libsbml::XMLNode &sedmlPlot2dPropertiesNode = annotation->getChild(i);
@@ -2828,14 +2805,15 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStore *dataStore = mSimulation->results()->dataStore();
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mFileName, dataStore);
+    QString simulationFileName = mSimulation->fileName();
+    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(simulationFileName, dataStore);
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
         Core::centralWidget()->showProgressBusyWidget();
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(mFileName, dataStore, dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(simulationFileName, dataStore, dataStoreData);
 
         connect(dataStoreExporter, SIGNAL(done(const QString &)),
                 this, SLOT(dataStoreExportDone(const QString &)));
@@ -2883,7 +2861,7 @@ void SimulationExperimentViewSimulationWidget::simulationRunning(const bool &pIs
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mFileName);
+    mViewWidget->checkSimulationResults(mSimulation->fileName());
 }
 
 //==============================================================================
@@ -2897,7 +2875,7 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
     mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
 
-    mViewWidget->checkSimulationResults(mFileName);
+    mViewWidget->checkSimulationResults(mSimulation->fileName());
 }
 
 //==============================================================================
@@ -2962,7 +2940,7 @@ void SimulationExperimentViewSimulationWidget::resetFileTabIcon()
 
     static const QIcon NoIcon = QIcon();
 
-    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, NoIcon);
+    emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mSimulation->fileName(), NoIcon);
 }
 
 //==============================================================================
@@ -3016,23 +2994,14 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::checkSimulationDataModified(const bool &pIsModified)
-{
-    // We are dealing with the current simulation
-
-    if (mDevelopmentModeAction->isChecked())
-        Core::FileManager::instance()->setModified(mFileName, pIsModified);
-    else
-        mResetModelParametersAction->setEnabled(pIsModified);
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
 {
     // Update our modified state
 
-    checkSimulationDataModified(pIsModified);
+    if (mDevelopmentModeAction->isChecked())
+        Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
+    else
+        mResetModelParametersAction->setEnabled(pIsModified);
 }
 
 //==============================================================================
@@ -3461,7 +3430,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 
     // Make sure that our progress bar is up to date
 
-    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mFileName)/mSimulation->size());
+    mProgressBarWidget->setValue(mViewWidget->simulationResultsSize(mSimulation->fileName())/mSimulation->size());
 }
 
 //==============================================================================
@@ -3483,7 +3452,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     SimulationSupport::Simulation *simulation = pSimulationWidget->simulation();
 
     if (simulation == mSimulation)
-        checkSimulationDataModified(simulation->data()->isModified());
+        simulationDataModified(simulation->data()->isModified());
 
     // Update all the graphs of all our plots, but only if we are visible
     // Note: needProcessingEvents is used to ensure that our plots are all
@@ -3511,7 +3480,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         double plotMaxY = plot->maxY();
 
         foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, plot->graphs()) {
-            if (!graph->fileName().compare(pSimulationWidget->fileName())) {
+            if (!graph->fileName().compare(pSimulationWidget->simulation()->fileName())) {
                 if (pClearGraphs)
                     mOldDataSizes.remove(graph);
 
@@ -3618,7 +3587,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     // Update our progress bar or our tab icon, if needed
 
     if (simulation == mSimulation) {
-        double simulationProgress = mViewWidget->simulationResultsSize(mFileName)/simulation->size();
+        QString simulationFileName = mSimulation->fileName();
+        double simulationProgress = mViewWidget->simulationResultsSize(simulationFileName)/simulation->size();
 
         if (pClearGraphs || visible) {
             mProgressBarWidget->setValue(simulationProgress);
@@ -3639,7 +3609,9 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // Let people know about the file tab icon to be used for the
                 // model
 
-                emit mViewWidget->updateFileTabIcon(mPlugin->viewName(), mFileName, fileTabIcon());
+                emit mViewWidget->updateFileTabIcon(mPlugin->viewName(),
+                                                    simulationFileName,
+                                                    fileTabIcon());
             }
         }
     }

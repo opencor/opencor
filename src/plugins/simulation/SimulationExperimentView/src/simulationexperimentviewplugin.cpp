@@ -196,7 +196,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
         if (   viewInterface
             && (   (viewInterface->viewMode() == EditingMode)
                 || (viewInterface->viewMode() == SimulationMode))) {
-            QStringList viewMimeTypes = viewInterface->viewMimeTypes(OpenMimeTypeMode);
+            QStringList viewMimeTypes = viewInterface->viewMimeTypes();
 
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
@@ -271,17 +271,30 @@ ViewInterface::Mode SimulationExperimentViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList SimulationExperimentViewPlugin::viewMimeTypes(const MimeTypeMode &pMimeTypeMode) const
+QStringList SimulationExperimentViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
-    if (pMimeTypeMode == OpenMimeTypeMode) {
-        return QStringList() << CellMLSupport::CellmlMimeType
-                             << SEDMLSupport::SedmlMimeType
-                             << COMBINESupport::CombineMimeType;
-    } else {
-        return QStringList() << CellMLSupport::CellmlMimeType;
-    }
+    return QStringList() << CellMLSupport::CellmlMimeType
+                         << SEDMLSupport::SedmlMimeType
+                         << COMBINESupport::CombineMimeType;
+}
+
+//==============================================================================
+
+QString SimulationExperimentViewPlugin::viewMimeType(const QString &pFileName) const
+{
+    // Return the MIME type for the given CellML file
+    // Note: we should never return an empty string...
+
+    if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return CellMLSupport::CellmlMimeType;
+    else if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
+        return SEDMLSupport::SedmlMimeType;
+    else if (COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))
+        return COMBINESupport::CombineMimeType;
+    else
+        return QString();
 }
 
 //==============================================================================
