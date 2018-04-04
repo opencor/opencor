@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class SplashScreenWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -46,13 +46,13 @@ class SplashScreenWindow : public QWidget
 
 public:
     explicit SplashScreenWindow();
-    ~SplashScreenWindow();
+    ~SplashScreenWindow() override;
 
     void closeAndDeleteAfter(QWidget *pWindow);
 
 protected:
-    virtual void closeEvent(QCloseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
+    void closeEvent(QCloseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
     Ui::SplashScreenWindow *mGui;

@@ -30,7 +30,7 @@ namespace Sample {
 
 //==============================================================================
 
-double add(const double &pNb1, const double &pNb2)
+double add(double pNb1, double pNb2)
 {
     // Return the sum of the two given numbers
 

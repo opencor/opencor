@@ -70,13 +70,13 @@ class EDITORWIDGET_EXPORT EditorWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit EditorWidget(const QString &pContents, const bool &pReadOnly,
+    explicit EditorWidget(const QString &pContents, bool pReadOnly,
                           QsciLexer *pLexer, QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateSettings(EditorWidget *pEditorWidget);
 
@@ -86,26 +86,25 @@ public:
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
     void cursorPosition(int &pLine, int &pColumn);
-    void setCursorPosition(const int &pLine, const int &pColumn);
+    void setCursorPosition(int pLine, int pColumn);
 
     int currentPosition() const;
 
     QString contents() const;
-    void setContents(const QString &pContents,
-                     const bool &pKeepHistory = false);
+    void setContents(const QString &pContents, bool pKeepHistory = false);
 
     int contentsSize() const;
 
     bool isReadOnly() const;
-    void setReadOnly(const bool &pReadOnly);
+    void setReadOnly(bool pReadOnly);
 
     bool hasSelectedText() const;
     QString selectedText() const;
 
-    QString textInRange(const int &pStartRange, const int &pEndRange) const;
-    int findTextInRange(const int &pStartRange, const int &pEndRange,
-                        const QString &pText, const bool &pRegularExpression,
-                        const bool &pCaseSensitive, const bool &pWholeWordsOnly) const;
+    QString textInRange(int pStartRange, int pEndRange) const;
+    int findTextInRange(int pStartRange, int pEndRange, const QString &pText,
+                        bool pRegularExpression, bool pCaseSensitive,
+                        bool pWholeWordsOnly) const;
 
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
@@ -132,12 +131,12 @@ public:
     QString eolString() const;
 
     int zoomLevel() const;
-    void setZoomLevel(const int &pZoomLevel);
+    void setZoomLevel(int pZoomLevel);
 
     bool findReplaceIsVisible() const;
-    void setFindReplaceVisible(const bool &pVisible);
+    void setFindReplaceVisible(bool pVisible);
 
-    int styleAt(const int &pPosition) const;
+    int styleAt(int pPosition) const;
 
 private:
     QScintillaSupport::QScintillaWidget *mEditor;
@@ -153,20 +152,20 @@ private:
 
     EditorWidgetFindReplaceWidget * findReplace();
 
-    bool findText(const QString &pText, const bool &pForward);
+    bool findText(const QString &pText, bool pForward);
 
 signals:
-    void zoomLevelChanged(const int &pZoomLevel);
+    void zoomLevelChanged(int pZoomLevel);
 
-    void cursorPositionChanged(const int &pRow, const int &pColumn);
+    void cursorPositionChanged(int pRow, int pColumn);
 
     void textChanged();
 
-    void copyAvailable(const bool &pCopyAvailable);
+    void copyAvailable(bool pCopyAvailable);
 
-    void canFindReplace(const bool &pCanFindReplace);
+    void canFindReplace(bool pCanFindReplace);
 
-    void canSelectAll(const bool &pCanSelectAll);
+    void canSelectAll(bool pCanSelectAll);
 
 public slots:
     bool findPrevious();
@@ -177,9 +176,9 @@ public slots:
     void replaceAll();
 
 private slots:
-    void zoomLevelChanged();
+    void emitZoomLevelChanged();
 
-    void keepTrackOfCursorPosition(const int &pLine, const int &pColumn);
+    void keepTrackOfCursorPosition(int pLine, int pColumn);
 
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
     void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);

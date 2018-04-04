@@ -215,13 +215,13 @@ void CellMLToolsPlugin::initializePlugin()
 
     // Some connections to handle our different Tools | Export To actions
 
-    connect(mExportToCellml10Action, SIGNAL(triggered(bool)),
-            this, SLOT(exportToCellml10()));
-    connect(mExportToCellml11Action, SIGNAL(triggered(bool)),
-            this, SLOT(exportToCellml11()));
+    connect(mExportToCellml10Action, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToCellml10);
+    connect(mExportToCellml11Action, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToCellml11);
 
-    connect(mExportToUserDefinedFormatAction, SIGNAL(triggered(bool)),
-            this, SLOT(exportToUserDefinedFormat()));
+    connect(mExportToUserDefinedFormatAction, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToUserDefinedFormat);
 }
 
 //==============================================================================

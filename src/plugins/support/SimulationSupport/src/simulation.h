@@ -69,7 +69,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 
 public:
     explicit SimulationData(Simulation *pSimulation);
-    ~SimulationData();
+    ~SimulationData() override;
 
     void reload();
 
@@ -81,17 +81,16 @@ public:
     double * algebraic() const;
 
     int delay() const;
-    void setDelay(const int &pDelay);
+    void setDelay(int pDelay);
 
     double startingPoint() const;
-    void setStartingPoint(const double &pStartingPoint,
-                          const bool &pRecompute = true);
+    void setStartingPoint(double pStartingPoint, bool pRecompute = true);
 
     double endingPoint() const;
-    void setEndingPoint(const double &pEndingPoint);
+    void setEndingPoint(double pEndingPoint);
 
     double pointInterval() const;
-    void setPointInterval(const double &pPointInterval);
+    void setPointInterval(double pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
 
@@ -104,18 +103,17 @@ public:
     SolverInterface * nlaSolverInterface() const;
 
     QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName,
-                          const bool &pReset = true);
+    void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
     Solver::Solver::Properties nlaSolverProperties() const;
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              const bool &pReset = true);
+                              bool pReset = true);
 
-    void reset(const bool &pInitialize = true);
+    void reset(bool pInitialize = true);
 
-    void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                const bool &pInitialize);
-    void recomputeVariables(const double &pCurrentPoint);
+    void recomputeComputedConstantsAndVariables(double pCurrentPoint,
+                                                bool pInitialize);
+    void recomputeVariables(double pCurrentPoint);
 
     bool isModified() const;
     void checkForModifications();
@@ -153,8 +151,8 @@ private:
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
 signals:
-    void updated(const double &pCurrentPoint);
-    void modified(const bool &pIsModified);
+    void updated(double pCurrentPoint);
+    void modified(bool pIsModified);
 
     void error(const QString &pMessage);
 };
@@ -167,7 +165,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
 
 public:
     explicit SimulationResults(Simulation *pSimulation);
-    ~SimulationResults();
+    ~SimulationResults() override;
 
     void reload();
 
@@ -177,18 +175,18 @@ public:
 
     bool addRun();
 
-    void addPoint(const double &pPoint);
+    void addPoint(double pPoint);
 
-    quint64 size(const int &pRun = -1) const;
+    quint64 size(int pRun = -1) const;
 
     DataStore::DataStore * dataStore() const;
 
-    double * points(const int &pRun = -1) const;
+    double * points(int pRun = -1) const;
 
-    double * constants(const int &pIndex, const int &pRun = -1) const;
-    double * rates(const int &pIndex, const int &pRun = -1) const;
-    double * states(const int &pIndex, const int &pRun = -1) const;
-    double * algebraic(const int &pIndex, const int &pRun = -1) const;
+    double * constants(int pIndex, int pRun = -1) const;
+    double * rates(int pIndex, int pRun = -1) const;
+    double * states(int pIndex, int pRun = -1) const;
+    double * algebraic(int pIndex, int pRun = -1) const;
 
 private:
     Simulation *mSimulation;
@@ -222,7 +220,7 @@ public:
     };
 
     explicit Simulation(const QString &pFileName);
-    ~Simulation();
+    ~Simulation() override;
 
     QString fileName() const;
 
@@ -253,7 +251,7 @@ public:
     double currentPoint() const;
 
     int delay() const;
-    void setDelay(const int &pDelay);
+    void setDelay(int pDelay);
 
     double size();
 
@@ -282,12 +280,12 @@ private:
 
     void retrieveFileDetails();
 
-    bool simulationSettingsOk(const bool &pEmitSignal = true);
+    bool simulationSettingsOk(bool pEmitSignal = true);
 
 signals:
-    void running(const bool &pIsResuming);
+    void running(bool pIsResuming);
     void paused();
-    void stopped(const qint64 &pElapsedTime);
+    void stopped(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
 };

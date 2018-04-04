@@ -41,7 +41,7 @@ class BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
 public:
     explicit BiosignalmlDataStoreExporter(DataStore::DataStoreData *pDataStoreData);
 
-    virtual void execute(QString &pErrorMessage) const;
+    void execute(QString &pErrorMessage) const override;
 };
 
 //==============================================================================

@@ -335,6 +335,8 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Create and return an editor for our item, based on its type
 
     QWidget *editor = 0;
+    TextEditorWidget *textEditor = 0;
+    ListEditorWidget *listEditor = 0;
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
@@ -343,37 +345,35 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         return 0;
     case Property::String:
-        editor = new TextEditorWidget(pParent);
+        editor = textEditor = new TextEditorWidget(pParent);
 
         break;
     case Property::Integer:
-        editor = new IntegerEditorWidget(pParent);
+        editor = textEditor = new IntegerEditorWidget(pParent);
 
         break;
     case Property::IntegerGe0:
-        editor = new IntegerGe0EditorWidget(pParent);
+        editor = textEditor = new IntegerGe0EditorWidget(pParent);
 
         break;
     case Property::IntegerGt0:
-        editor = new IntegerGt0EditorWidget(pParent);
+        editor = textEditor = new IntegerGt0EditorWidget(pParent);
 
         break;
     case Property::Double:
-        editor = new DoubleEditorWidget(pParent);
+        editor = textEditor = new DoubleEditorWidget(pParent);
 
         break;
     case Property::DoubleGe0:
-        editor = new DoubleGe0EditorWidget(pParent);
+        editor = textEditor = new DoubleGe0EditorWidget(pParent);
 
         break;
     case Property::DoubleGt0:
-        editor = new DoubleGt0EditorWidget(pParent);
+        editor = textEditor = new DoubleGt0EditorWidget(pParent);
 
         break;
     case Property::List: {
-        ListEditorWidget *listEditor = new ListEditorWidget(pParent);
-
-        editor = listEditor;
+        editor = listEditor = new ListEditorWidget(pParent);
 
         // Add the value items to our list, keeping in mind separators
 
@@ -384,24 +384,10 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                 listEditor->addItem(valueItem);
         }
 
-        // Propagate the signal telling us about our list property value having
-        // changed
-
-        connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SLOT(listPropertyChanged(const QString &)));
-
         break;
     }
     case Property::Boolean: {
-        BooleanEditorWidget *booleanEditor = new BooleanEditorWidget(pParent);
-
-        editor = booleanEditor;
-
-        // Propagate the signal telling us about our boolean value having
-        // changed
-
-        connect(booleanEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SLOT(booleanPropertyChanged(const QString &)));
+        editor = listEditor = new BooleanEditorWidget(pParent);
 
         break;
     }
@@ -413,10 +399,37 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
     // Propagate a few signals
 
-    connect(editor, SIGNAL(goToPreviousPropertyRequested()),
-            this, SIGNAL(goToPreviousPropertyRequested()));
-    connect(editor, SIGNAL(goToNextPropertyRequested()),
-            this, SIGNAL(goToNextPropertyRequested()));
+    switch (property->type()) {
+    case Property::String:
+    case Property::Integer:
+    case Property::IntegerGe0:
+    case Property::IntegerGt0:
+    case Property::Double:
+    case Property::DoubleGe0:
+    case Property::DoubleGt0:
+    case Property::Color:
+        connect(textEditor, &TextEditorWidget::goToPreviousPropertyRequested,
+                this, &PropertyItemDelegate::goToPreviousPropertyRequested);
+        connect(textEditor, &TextEditorWidget::goToNextPropertyRequested,
+                this, &PropertyItemDelegate::goToNextPropertyRequested);
+
+        break;
+    case Property::List:
+    case Property::Boolean:
+        connect(listEditor, QOverload<const QString &>::of(&ListEditorWidget::currentIndexChanged),
+                this, &PropertyItemDelegate::listPropertyChanged);
+
+        connect(listEditor, &ListEditorWidget::goToPreviousPropertyRequested,
+                this, &PropertyItemDelegate::goToPreviousPropertyRequested);
+        connect(listEditor, &ListEditorWidget::goToNextPropertyRequested,
+                this, &PropertyItemDelegate::goToNextPropertyRequested);
+
+        break;
+    default:
+        // Not a relevant type, so do nothing...
+
+        ;
+    }
 
     // Let people know that there is a new editor
 
@@ -675,7 +688,7 @@ bool Property::isCheckable() const
 
 //==============================================================================
 
-void Property::setCheckable(const bool &pCheckable)
+void Property::setCheckable(bool pCheckable)
 {
     // Make our name item (un)checkable
 
@@ -693,7 +706,7 @@ bool Property::isChecked() const
 
 //==============================================================================
 
-void Property::setChecked(const bool &pChecked)
+void Property::setChecked(bool pChecked)
 {
     // Make our name item (un)checked
 
@@ -711,7 +724,7 @@ bool Property::isEditable() const
 
 //==============================================================================
 
-void Property::setEditable(const bool &pEditable)
+void Property::setEditable(bool pEditable)
 {
     // Make our value item (non-)editable
 
@@ -747,7 +760,7 @@ QString Property::name() const
 
 //==============================================================================
 
-void Property::setName(const QString &pName, const bool &pUpdateToolTip)
+void Property::setName(const QString &pName, bool pUpdateToolTip)
 {
     // Set our name
 
@@ -770,8 +783,7 @@ QString Property::value() const
 
 //==============================================================================
 
-void Property::setValue(const QString &pValue, const bool &pForce,
-                        const bool &pEmitSignal)
+void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
 {
     // Set our value (and value icon, if we are a colour property)
 
@@ -867,8 +879,7 @@ int Property::integerValue() const
 
 //==============================================================================
 
-void Property::setIntegerValue(const int &pIntegerValue,
-                               const bool &pEmitSignal)
+void Property::setIntegerValue(int pIntegerValue, bool pEmitSignal)
 {
     // Set our value, should it be of integer type
 
@@ -891,8 +902,7 @@ double Property::doubleValue() const
 
 //==============================================================================
 
-void Property::setDoubleValue(const double &pDoubleValue,
-                              const bool &pEmitSignal)
+void Property::setDoubleValue(double pDoubleValue, bool pEmitSignal)
 {
     // Set our value, should it be of double type
     // Note: we want as much precision as possible, hence we use a precision of
@@ -917,8 +927,7 @@ QStringList Property::listValues() const
 
 //==============================================================================
 
-void Property::setListValues(const QStringList &pListValues,
-                             const bool &pEmitSignal)
+void Property::setListValues(const QStringList &pListValues, bool pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
 
@@ -979,7 +988,7 @@ int Property::listValueIndex() const
 
 //==============================================================================
 
-void Property::setListValueIndex(const int &pListValueIndex)
+void Property::setListValueIndex(int pListValueIndex)
 {
     // Set our list value, if appropriate
 
@@ -1028,7 +1037,7 @@ bool Property::booleanValue() const
 
 //==============================================================================
 
-void Property::setBooleanValue(const bool &pBooleanValue)
+void Property::setBooleanValue(bool pBooleanValue)
 {
     // Set our value, should it be of boolean type
 
@@ -1128,7 +1137,7 @@ QString Property::unit() const
 
 //==============================================================================
 
-void Property::setUnit(const QString &pUnit, const bool &pUpdateToolTip)
+void Property::setUnit(const QString &pUnit, bool pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
@@ -1176,7 +1185,7 @@ bool Property::isVisible() const
 
 //==============================================================================
 
-void Property::setVisible(const bool &pVisible)
+void Property::setVisible(bool pVisible)
 {
     // Set our visibility
 
@@ -1249,8 +1258,8 @@ void Property::updateToolTip()
 
 //==============================================================================
 
-PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
-                                           const bool &pAutoUpdateHeight,
+PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
+                                           bool pAutoUpdateHeight,
                                            QWidget *pParent) :
     TreeViewWidget(pParent),
     mShowUnits(pShowUnits),
@@ -1274,34 +1283,34 @@ PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
 
     PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate(this);
 
-    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(editorClosed()));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &PropertyEditorWidget::editorClosed);
 
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(checkCheckState(QStandardItem *)));
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, &PropertyEditorWidget::checkCheckState);
 
-    connect(propertyItemDelegate, SIGNAL(openEditor(QWidget *)),
-            this, SLOT(editorOpened(QWidget *)));
-    connect(propertyItemDelegate, SIGNAL(closeEditor(QWidget *, QAbstractItemDelegate::EndEditHint)),
-            this, SLOT(editorClosed()));
+    connect(propertyItemDelegate, &PropertyItemDelegate::openEditor,
+            this, &PropertyEditorWidget::editorOpened);
+    connect(propertyItemDelegate, &PropertyItemDelegate::closeEditor,
+            this, &PropertyEditorWidget::editorClosed);
 
-    connect(propertyItemDelegate, SIGNAL(goToPreviousPropertyRequested()),
-            this, SLOT(goToPreviousProperty()));
-    connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
-            this, SLOT(goToNextProperty()));
+    connect(propertyItemDelegate, &PropertyItemDelegate::goToPreviousPropertyRequested,
+            this, &PropertyEditorWidget::goToPreviousProperty);
+    connect(propertyItemDelegate, &PropertyItemDelegate::goToNextPropertyRequested,
+            this, &PropertyEditorWidget::goToNextProperty);
 
     setItemDelegate(propertyItemDelegate);
 
     // Resize our height in case some data has changed or one of the properties
     // gets expanded/collapsed
 
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updateHeight()));
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, &PropertyEditorWidget::updateHeight);
 
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(updateHeight()));
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(updateHeight()));
+    connect(this, &PropertyEditorWidget::expanded,
+            this, &PropertyEditorWidget::updateHeight);
+    connect(this, &PropertyEditorWidget::collapsed,
+            this, &PropertyEditorWidget::updateHeight);
 
     header()->setSectionsMovable(false);
 
@@ -1316,7 +1325,7 @@ PropertyEditorWidget::PropertyEditorWidget(const bool &pShowUnits,
 
 //==============================================================================
 
-PropertyEditorWidget::PropertyEditorWidget(const bool &pAutoUpdateHeight,
+PropertyEditorWidget::PropertyEditorWidget(bool pAutoUpdateHeight,
                                            QWidget *pParent) :
     PropertyEditorWidget(true, pAutoUpdateHeight, pParent)
 {
@@ -1502,13 +1511,13 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
 
     // Keep track of our property's change of visibility
 
-    connect(res, SIGNAL(visibilityChanged(const bool &)),
-            this, SLOT(updateHeight()));
+    connect(res, &Property::visibilityChanged,
+            this, &PropertyEditorWidget::updateHeight);
 
     // Keep track of our property's change of value
 
-    connect(res, SIGNAL(valueChanged(const QString &, const QString &)),
-            this, SLOT(emitPropertyChanged()));
+    connect(res, &Property::valueChanged,
+            this, &PropertyEditorWidget::emitPropertyChanged);
 
     // Keep track of our property's check state
 
@@ -1569,7 +1578,7 @@ Property * PropertyEditorWidget::addStringProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerProperty(const int &pValue,
+Property * PropertyEditorWidget::addIntegerProperty(int pValue,
                                                     Property *pParent)
 {
     // Add an integer property and return its information
@@ -1592,7 +1601,7 @@ Property * PropertyEditorWidget::addIntegerProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerGe0Property(const int &pValue,
+Property * PropertyEditorWidget::addIntegerGe0Property(int pValue,
                                                        Property *pParent)
 {
     // Add a zero or strictly positive integer property and return its
@@ -1617,7 +1626,7 @@ Property * PropertyEditorWidget::addIntegerGe0Property(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addIntegerGt0Property(const int &pValue,
+Property * PropertyEditorWidget::addIntegerGt0Property(int pValue,
                                                        Property *pParent)
 {
     // Add a strictly positive integer property and return its information
@@ -1640,7 +1649,7 @@ Property * PropertyEditorWidget::addIntegerGt0Property(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleProperty(const double &pValue,
+Property * PropertyEditorWidget::addDoubleProperty(double pValue,
                                                    Property *pParent)
 {
     // Add a double property and return its information
@@ -1663,7 +1672,7 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleGe0Property(const double &pValue,
+Property * PropertyEditorWidget::addDoubleGe0Property(double pValue,
                                                       Property *pParent)
 {
     // Add a zero or strictly positive double property and return its
@@ -1688,7 +1697,7 @@ Property * PropertyEditorWidget::addDoubleGe0Property(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addDoubleGt0Property(const double &pValue,
+Property * PropertyEditorWidget::addDoubleGt0Property(double pValue,
                                                       Property *pParent)
 {
     // Add a strictly positive double property and return its information
@@ -1747,7 +1756,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addBooleanProperty(const bool &pValue,
+Property * PropertyEditorWidget::addBooleanProperty(bool pValue,
                                                     Property *pParent)
 {
     // Add a boolean property and return its information
@@ -2092,8 +2101,7 @@ void PropertyEditorWidget::selectProperty(Property *pProperty)
 
 //==============================================================================
 
-void PropertyEditorWidget::editProperty(Property *pProperty,
-                                        const bool &pCommitData)
+void PropertyEditorWidget::editProperty(Property *pProperty, bool pCommitData)
 {
     // We want to edit a new property, so first stop the editing of the current
     // one, if any
@@ -2228,7 +2236,7 @@ Properties PropertyEditorWidget::allProperties() const
 
 //==============================================================================
 
-void PropertyEditorWidget::finishEditing(const bool &pCommitData)
+void PropertyEditorWidget::finishEditing(bool pCommitData)
 {
     // The user wants to finish the editing
 
@@ -2250,7 +2258,7 @@ void PropertyEditorWidget::removeAllProperties()
 
 //==============================================================================
 
-void PropertyEditorWidget::goToNeighbouringProperty(const int &pShift)
+void PropertyEditorWidget::goToNeighbouringProperty(int pShift)
 {
     // Determine the index of the current index's neighbour
 

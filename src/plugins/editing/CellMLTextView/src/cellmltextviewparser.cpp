@@ -37,8 +37,8 @@ namespace CellMLTextView {
 //==============================================================================
 
 CellmlTextViewParserMessage::CellmlTextViewParserMessage(const Type &pType,
-                                                         const int &pLine,
-                                                         const int &pColumn,
+                                                         int pLine,
+                                                         int pColumn,
                                                          const QString &pMessage) :
     mType(pType),
     mLine(pLine),
@@ -206,7 +206,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 //==============================================================================
 
 bool CellmlTextViewParser::execute(const QString &pCellmlText,
-                                   const bool &pFullParsing)
+                                   bool pFullParsing)
 {
     // Get ready for the parsing of a mathematical expression
 
@@ -1869,7 +1869,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 //==============================================================================
 
 bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
-                                                       const bool &pFullParsing)
+                                                       bool pFullParsing)
 {
     // Check whether we have got an identifier or "ode"
 
@@ -2562,9 +2562,9 @@ QDomElement CellmlTextViewParser::parseNumber(QDomNode &pDomNode)
 //==============================================================================
 
 QDomElement CellmlTextViewParser::parseMathematicalFunction(QDomNode &pDomNode,
-                                                            const bool &pOneArgument,
-                                                            const bool &pTwoArguments,
-                                                            const bool &pMoreArguments)
+                                                            bool pOneArgument,
+                                                            bool pTwoArguments,
+                                                            bool pMoreArguments)
 {
     // Keep track of the mathematical function
 

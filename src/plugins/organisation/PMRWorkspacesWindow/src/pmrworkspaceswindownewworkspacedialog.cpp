@@ -63,18 +63,18 @@ PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QSe
 
     // Connect some signals
 
-    connect(mGui->titleValue, SIGNAL(textChanged(const QString &)),
-            this, SLOT(updateOkButton()));
-    connect(mGui->folderValue, SIGNAL(textChanged(const QString &)),
-            this, SLOT(updateOkButton()));
+    connect(mGui->titleValue, &QLineEdit::textChanged,
+            this, &PmrWorkspacesWindowNewWorkspaceDialog::updateOkButton);
+    connect(mGui->folderValue, &QLineEdit::textChanged,
+            this, &PmrWorkspacesWindowNewWorkspaceDialog::updateOkButton);
 
-    connect(mGui->folderToolButton, SIGNAL(clicked()),
-            this, SLOT(choosePath()));
+    connect(mGui->folderToolButton, &QToolButton::clicked,
+            this, &PmrWorkspacesWindowNewWorkspaceDialog::choosePath);
 
-    connect(mGui->buttonBox, SIGNAL(accepted()),
-            this, SLOT(accept()));
-    connect(mGui->buttonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
+            this, &PmrWorkspacesWindowNewWorkspaceDialog::accept);
+    connect(mGui->buttonBox, &QDialogButtonBox::rejected,
+            this, &PmrWorkspacesWindowNewWorkspaceDialog::reject);
 
     // Set our minimum size
 

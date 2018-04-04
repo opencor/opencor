@@ -47,8 +47,8 @@ public:
         Warning
     };
 
-    explicit CellmlFileIssue(const Type &pType, const int &pLine,
-                             const int &pColumn, const QString &pMessage,
+    explicit CellmlFileIssue(const Type &pType, int pLine, int pColumn,
+                             const QString &pMessage,
                              const QString &pImportedFile);
     explicit CellmlFileIssue(const Type &pType, const QString &pMessage);
 

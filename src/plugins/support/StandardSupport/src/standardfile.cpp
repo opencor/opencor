@@ -111,7 +111,7 @@ bool StandardFile::isModified() const
 
 //==============================================================================
 
-void StandardFile::setModified(const bool &pModified) const
+void StandardFile::setModified(bool pModified) const
 {
     // Set our modified status
 

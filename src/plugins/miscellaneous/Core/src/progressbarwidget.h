@@ -47,10 +47,10 @@ public:
     explicit ProgressBarWidget(QWidget *pParent);
 
     double value() const;
-    void setValue(const double &pValue);
+    void setValue(double pValue);
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     double mValue;

@@ -52,9 +52,9 @@ public:
     CellmlFile * cellmlFile(const QString &pFileName);
 
 protected:
-    virtual bool canLoad(const QString &pFileName) const;
+    bool canLoad(const QString &pFileName) const override;
 
-    virtual StandardSupport::StandardFile * create(const QString &pFileName) const;
+    StandardSupport::StandardFile * create(const QString &pFileName) const override;
 };
 
 //==============================================================================

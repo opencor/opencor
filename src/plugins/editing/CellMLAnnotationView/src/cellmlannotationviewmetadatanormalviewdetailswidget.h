@@ -82,7 +82,7 @@ public:
     explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                  QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
@@ -90,7 +90,7 @@ public:
                    const Information &pLookUpRdfTripleInformation = First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
-                      const bool &pNeedAdditionalGuiUpdates = true);
+                      bool pNeedAdditionalGuiUpdates = true);
 
     void filePermissionsChanged();
 
@@ -143,12 +143,13 @@ signals:
     void idLookUpRequested(const QString &pResource, const QString &pId);
     void noLookUpRequested();
 
-    void rdfTripleRemoved(OpenCOR::CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
+public slots:
+    void disableLookUpInformation();
 
 private slots:
     void copy();
-
-    void disableLookUpInformation();
 
     void showLastRdfTriple();
 

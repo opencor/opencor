@@ -83,9 +83,9 @@ class CORE_EXPORT DummyMessageHandler : public QAbstractMessageHandler
     Q_OBJECT
 
 protected:
-    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
-                               const QUrl &pIdentifier,
-                               const QSourceLocation &pSourceLocation);
+    void handleMessage(QtMsgType pType, const QString &pDescription,
+                       const QUrl &pIdentifier,
+                       const QSourceLocation &pSourceLocation) override;
 };
 
 //==============================================================================
@@ -113,20 +113,17 @@ quint64 CORE_EXPORT freeMemory();
 
 QString CORE_EXPORT digitGroupNumber(const QString &pNumber);
 
-QString CORE_EXPORT sizeAsString(const double &pSize,
-                                 const int &pPrecision = 1);
+QString CORE_EXPORT sizeAsString(double pSize, int pPrecision = 1);
 
 QString CORE_EXPORT sha1(const QByteArray &pByteArray);
 QString CORE_EXPORT sha1(const QString &pString);
 
 void CORE_EXPORT stringPositionAsLineColumn(const QString &pString,
-                                            const QString &pEol,
-                                            const int &pPosition, int &pLine,
-                                            int &pColumn);
+                                            const QString &pEol, int pPosition,
+                                            int &pLine, int &pColumn);
 void CORE_EXPORT stringLineColumnAsPosition(const QString &pString,
-                                            const QString &pEol,
-                                            const int &pLine,
-                                            const int &pColumn, int &pPosition);
+                                            const QString &pEol, int pLine,
+                                            int pColumn, int &pPosition);
 
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
                                   void *pDefaultGlobalInstance = 0);
@@ -137,7 +134,7 @@ void CORE_EXPORT setActiveDirectory(const QString &pDirName);
 bool CORE_EXPORT isDirectory(const QString &pDirName);
 bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
 
-void CORE_EXPORT doNothing(const int &pMax);
+void CORE_EXPORT doNothing(int pMax);
 
 void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
                                     bool &pOutIsLocalFile,
@@ -148,13 +145,10 @@ QString CORE_EXPORT formatXml(const QString &pXml);
 QString CORE_EXPORT cleanContentMathml(const QString &pContentMathml);
 QString CORE_EXPORT cleanPresentationMathml(const QString &pPresentationMathml);
 
-QString CORE_EXPORT newFileName(const QString &pFileName,
-                                const QString &pExtra,
-                                const bool &pBefore,
-                                const QString &pFileExtension);
-QString CORE_EXPORT newFileName(const QString &pFileName,
-                                const QString &pExtra,
-                                const bool &pBefore);
+QString CORE_EXPORT newFileName(const QString &pFileName, const QString &pExtra,
+                                bool pBefore, const QString &pFileExtension);
+QString CORE_EXPORT newFileName(const QString &pFileName, const QString &pExtra,
+                                bool pBefore);
 QString CORE_EXPORT newFileName(const QString &pFileName,
                                 const QString &pFileExtension);
 

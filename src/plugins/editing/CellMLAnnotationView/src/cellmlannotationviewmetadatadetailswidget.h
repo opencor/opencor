@@ -72,7 +72,7 @@ public:
                                                        CellMLSupport::CellmlFile *pCellmlFile,
                                                        QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     Core::SplitterWidget * splitter() const;
 
@@ -110,11 +110,11 @@ signals:
     void splitterMoved(const QIntList &pSizes);
 
 
-    void qualifierDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+    void qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                                    const QString &pQualifier);
-    void resourceDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+    void resourceDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                                   const QString &pResource);
-    void idDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+    void idDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                             const QString &pResource, const QString &pId);
 
 public slots:

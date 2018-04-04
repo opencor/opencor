@@ -50,7 +50,7 @@ private:
     QNetworkReply *mNetworkReply;
 
 signals:
-    void busy(const bool &pBusy);
+    void busy(bool pBusy);
 
     void response(const QJsonDocument &pJsonDocument);
     void finished();

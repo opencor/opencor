@@ -65,26 +65,25 @@ public:
 
     void cursorPosition(int &pLine, int &pColumn);
 
-    virtual void setCursorPosition(int pLine, int pColumn);
-    virtual void setLexer(QsciLexer *pLexer);
+    void setCursorPosition(int pLine, int pColumn) override;
+    void setLexer(QsciLexer *pLexer) override;
 
     int currentPosition() const;
-    void setCurrentPosition(const int &pCurrentPosition);
+    void setCurrentPosition(int pCurrentPosition);
 
     QString contents() const;
-    void setContents(const QString &pContents,
-                     const bool &pKeepHistory = false);
+    void setContents(const QString &pContents, bool pKeepHistory = false);
 
     int contentsSize() const;
 
-    QString textInRange(const int &pStartRange, const int &pEndRange) const;
-    int findTextInRange(const int &pStartRange, const int &pEndRange,
-                        const QString &pText, const bool &pRegularExpression,
-                        const bool &pCaseSensitive, const bool &pWholeWordsOnly) const;
+    QString textInRange(int pStartRange, int pEndRange) const;
+    int findTextInRange(int pStartRange, int pEndRange, const QString &pText,
+                        bool pRegularExpression, bool pCaseSensitive,
+                        bool pWholeWordsOnly) const;
 
-    QString wordAt(const int &pLine, const int &pColumn) const;
+    QString wordAt(int pLine, int pColumn) const;
 
-    void selectWordAt(const int &pLine, const int &pColumn);
+    void selectWordAt(int pLine, int pColumn);
 
     bool isSelectAllAvailable() const;
 
@@ -97,25 +96,25 @@ public:
 
     QString eolString() const;
 
-    QColor backgroundColor(const int &pStyle);
-    void setBackgroundColor(const int &pStyle, const QColor &pBackgroundColor);
+    QColor backgroundColor(int pStyle);
+    void setBackgroundColor(int pStyle, const QColor &pBackgroundColor);
 
-    QColor foregroundColor(const int &pStyle);
-    void setForegroundColor(const int &pStyle, const QColor &pForegroundColor);
+    QColor foregroundColor(int pStyle);
+    void setForegroundColor(int pStyle, const QColor &pForegroundColor);
 
     int zoomLevel() const;
 
     static QString specials(const QString &pString);
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
-    virtual bool event(QEvent *pEvent);
-    virtual void focusInEvent(QFocusEvent *pEvent);
-    virtual void focusOutEvent(QFocusEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    bool event(QEvent *pEvent) override;
+    void focusInEvent(QFocusEvent *pEvent) override;
+    void focusOutEvent(QFocusEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
     QFont mFont;
@@ -132,14 +131,14 @@ private:
     void updateColors();
 
 signals:
-    void canSelectAll(const bool &pCanSelectAll);
+    void canSelectAll(bool pCanSelectAll);
 
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
 public slots:
-    virtual void zoomIn();
-    virtual void zoomOut();
-    virtual void zoomTo(int pSize);
+    void zoomIn() override;
+    void zoomOut() override;
+    void zoomTo(int pSize) override;
 
 private slots:
     void updateUi();
@@ -148,7 +147,7 @@ private slots:
 
     void checkCanSelectAll();
 
-    void cursorPositionChanged(const int &pLine, const int &pColumn);
+    void updateCursorPosition(int pLine, int pColumn);
 };
 
 //==============================================================================

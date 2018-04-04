@@ -76,7 +76,7 @@ void initPluginsPath(const QString &pAppFileName);
 
 void initApplication(QString *pAppDate = 0);
 
-QString applicationDescription(const bool &pGuiMode = true);
+QString applicationDescription(bool pGuiMode = true);
 
 //==============================================================================
 

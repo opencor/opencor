@@ -42,10 +42,10 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double &pMinX,
-                                                                   const double &pMaxX,
-                                                                   const double &pMinY,
-                                                                   const double &pMaxY,
+GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
+                                                                   double pMaxX,
+                                                                   double pMinY,
+                                                                   double pMaxY,
                                                                    QWidget *pParent) :
     Core::Dialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
@@ -54,8 +54,19 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(const double 
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mGui->xMinValue, &QLineEdit::textEdited,
+            this, &GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited);
+    connect(mGui->xMaxValue, &QLineEdit::textEdited,
+            this, &GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited);
+    connect(mGui->yMinValue, &QLineEdit::textEdited,
+            this, &GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited);
+    connect(mGui->yMaxValue, &QLineEdit::textEdited,
+            this, &GraphPanelWidgetCustomAxesDialog::yMaxValueTextEdited);
+
+    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
+            this, &GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted);
+    connect(mGui->buttonBox, &QDialogButtonBox::rejected,
+            this, &GraphPanelWidgetCustomAxesDialog::reject);
 
     // Create our 'special' settings
     // Note: special in the sense that we don't retrieve them from the plugin
@@ -149,7 +160,7 @@ void GraphPanelWidgetCustomAxesDialog::checkValue(QLineEdit *pValue)
 //==============================================================================
 
 
-void GraphPanelWidgetCustomAxesDialog::on_xMinValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -160,7 +171,7 @@ void GraphPanelWidgetCustomAxesDialog::on_xMinValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::on_xMaxValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -171,7 +182,7 @@ void GraphPanelWidgetCustomAxesDialog::on_xMaxValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::on_yMinValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -182,7 +193,7 @@ void GraphPanelWidgetCustomAxesDialog::on_yMinValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::on_yMaxValue_textEdited(const QString &pValue)
+void GraphPanelWidgetCustomAxesDialog::yMaxValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue);
 
@@ -193,7 +204,7 @@ void GraphPanelWidgetCustomAxesDialog::on_yMaxValue_textEdited(const QString &pV
 
 //==============================================================================
 
-void GraphPanelWidgetCustomAxesDialog::on_buttonBox_accepted()
+void GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted()
 {
     // Check that the values make sense
 

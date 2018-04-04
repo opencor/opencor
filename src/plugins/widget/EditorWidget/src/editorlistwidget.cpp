@@ -40,8 +40,8 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorListItem::EditorListItem(const Type &pType, const int &pLine,
-                               const int &pColumn, const QString &pMessage) :
+EditorListItem::EditorListItem(const Type &pType, int pLine, int pColumn,
+                               const QString &pMessage) :
     QStandardItem(),
     mType(pType),
     mLine(pLine),
@@ -149,10 +149,10 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     mClearAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
 
-    connect(mClearAction, SIGNAL(triggered(bool)),
-            this, SLOT(clear()));
-    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyToClipboard()));
+    connect(mClearAction, &QAction::triggered,
+            this, &EditorListWidget::clear);
+    connect(mCopyToClipboardAction, &QAction::triggered,
+            this, &EditorListWidget::copyToClipboard);
 
     mContextMenu->addAction(mClearAction);
     mContextMenu->addSeparator();
@@ -164,8 +164,8 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
 
     // A connection to handle a double click on a given item
 
-    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(requestItem(const QModelIndex &)));
+    connect(this, &EditorListWidget::doubleClicked,
+            this, &EditorListWidget::requestItem);
 
     // Retranslate ourselves, so that our actions are properly initialised
 
@@ -199,8 +199,7 @@ void EditorListWidget::clear()
 //==============================================================================
 
 void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               const int &pLine, const int &pColumn,
-                               const QString &pMessage)
+                               int pLine, int pColumn, const QString &pMessage)
 {
     // Add the given item to our list
 
@@ -213,7 +212,7 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 //==============================================================================
 
 void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               const int &pLine, const QString &pMessage)
+                               int pLine, const QString &pMessage)
 {
     // Add the given item to our list
 

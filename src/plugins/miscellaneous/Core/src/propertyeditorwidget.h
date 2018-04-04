@@ -58,7 +58,7 @@ public:
     explicit TextEditorWidget(QWidget *pParent);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 signals:
     void goToPreviousPropertyRequested();
@@ -135,9 +135,9 @@ public:
     explicit ListEditorWidget(QWidget *pParent);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
 signals:
     void goToPreviousPropertyRequested();
@@ -177,14 +177,14 @@ class PropertyItemDelegate : public StyledItemDelegate
 public:
     explicit PropertyItemDelegate(PropertyEditorWidget *pParent);
 
-    virtual QWidget *createEditor(QWidget *pParent,
-                                  const QStyleOptionViewItem &pOption,
-                                  const QModelIndex &pIndex) const;
+    QWidget *createEditor(QWidget *pParent,
+                          const QStyleOptionViewItem &pOption,
+                          const QModelIndex &pIndex) const override;
 
 protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    bool eventFilter(QObject *pObject, QEvent *pEvent) override;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 
 private:
     PropertyEditorWidget *mPropertyEditorWidget;
@@ -267,63 +267,60 @@ public:
     void setId(const QString &pId);
 
     bool isCheckable() const;
-    void setCheckable(const bool &pCheckable);
+    void setCheckable(bool pCheckable);
 
     bool isChecked() const;
-    void setChecked(const bool &pChecked);
+    void setChecked(bool pChecked);
 
     bool isEditable() const;
-    void setEditable(const bool &pEditable);
+    void setEditable(bool pEditable);
 
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
 
     QString name() const;
-    void setName(const QString &pName, const bool &pUpdateToolTip = true);
+    void setName(const QString &pName, bool pUpdateToolTip = true);
 
     QString value() const;
-    void setValue(const QString &pValue, const bool &pForce = false,
-                  const bool &pEmitSignal = true);
+    void setValue(const QString &pValue, bool pForce = false,
+                  bool pEmitSignal = true);
 
     QVariant valueAsVariant() const;
     QString valueAsString() const;
 
     int integerValue() const;
-    void setIntegerValue(const int &pIntegerValue,
-                         const bool &pEmitSignal = true);
+    void setIntegerValue(int pIntegerValue, bool pEmitSignal = true);
 
     double doubleValue() const;
-    void setDoubleValue(const double &pDoubleValue,
-                        const bool &pEmitSignal = true);
+    void setDoubleValue(double pDoubleValue, bool pEmitSignal = true);
 
     QStringList listValues() const;
-    void setListValues(const QStringList &pListValues,
-                       const bool &pEmitSignal = true);
+    void setListValues(const QStringList &pListValues, bool pEmitSignal = true);
 
     QString listValue() const;
     void setListValue(const QString &pListValue);
 
     int listValueIndex() const;
-    void setListValueIndex(const int &pListValueIndex);
+    void setListValueIndex(int pListValueIndex);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
 
     bool booleanValue() const;
-    void setBooleanValue(const bool &pBooleanValue);
+    void setBooleanValue(bool pBooleanValue);
 
     QColor colorValue() const;
     void setColorValue(const QColor &pColorValue);
     void setColorValue(const QPoint &pPoint = QPoint());
 
     QString unit() const;
-    void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
+    void setUnit(const QString &pUnit, bool pUpdateToolTip = true);
 
     QString extraInfo() const;
     void setExtraInfo(const QString &pExtraInfo);
 
     bool isVisible() const;
-    void setVisible(const bool &pVisible);
+    void setVisible(bool pVisible);
 
     void select() const;
 
@@ -353,7 +350,7 @@ private:
     QList<QStandardItem *> items() const;
 
 signals:
-    void visibilityChanged(const bool &pVisible);
+    void visibilityChanged(bool pVisible);
     void valueChanged(const QString &pOldValue, const QString &pNewValue);
 };
 
@@ -364,15 +361,13 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
     Q_OBJECT
 
 public:
-    explicit PropertyEditorWidget(const bool &pShowUnits,
-                                  const bool &pAutoUpdateHeight,
+    explicit PropertyEditorWidget(bool pShowUnits, bool pAutoUpdateHeight,
                                   QWidget *pParent);
-    explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
-                                  QWidget *pParent);
+    explicit PropertyEditorWidget(bool pAutoUpdateHeight, QWidget *pParent);
     explicit PropertyEditorWidget(QWidget *pParent);
-    ~PropertyEditorWidget();
+    ~PropertyEditorWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void clear();
 
@@ -384,22 +379,22 @@ public:
     Property * addStringProperty(const QString &pString, Property *pParent = 0);
     Property * addStringProperty(Property *pParent = 0);
 
-    Property * addIntegerProperty(const int &pValue, Property *pParent = 0);
+    Property * addIntegerProperty(int pValue, Property *pParent = 0);
     Property * addIntegerProperty(Property *pParent = 0);
 
-    Property * addIntegerGe0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGe0Property(int pValue, Property *pParent = 0);
     Property * addIntegerGe0Property(Property *pParent = 0);
 
-    Property * addIntegerGt0Property(const int &pValue, Property *pParent = 0);
+    Property * addIntegerGt0Property(int pValue, Property *pParent = 0);
     Property * addIntegerGt0Property(Property *pParent = 0);
 
-    Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
+    Property * addDoubleProperty(double pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
-    Property * addDoubleGe0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGe0Property(double pValue, Property *pParent = 0);
     Property * addDoubleGe0Property(Property *pParent = 0);
 
-    Property * addDoubleGt0Property(const double &pValue, Property *pParent = 0);
+    Property * addDoubleGt0Property(double pValue, Property *pParent = 0);
     Property * addDoubleGt0Property(Property *pParent = 0);
 
     Property * addListProperty(const QStringList &pValues,
@@ -409,7 +404,7 @@ public:
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 
-    Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
+    Property * addBooleanProperty(bool pValue, Property *pParent = 0);
     Property * addBooleanProperty(Property *pParent = 0);
 
     Property * addColorProperty(const QColor &pValue, Property *pParent = 0);
@@ -425,19 +420,19 @@ public:
 
     bool showUnits() const;
 
-    void finishEditing(const bool &pCommitData = true);
+    void finishEditing(bool pCommitData = true);
 
     void removeAllProperties();
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+    void mouseMoveEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
+    void mouseReleaseEvent(QMouseEvent *pEvent) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
 
-    virtual QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 private:
     bool mShowUnits;
@@ -460,16 +455,16 @@ private:
     Property * addProperty(const Property::Type &pType, Property *pParent);
 
     void selectProperty(Property *pProperty);
-    void editProperty(Property *pProperty, const bool &pCommitData = true);
+    void editProperty(Property *pProperty, bool pCommitData = true);
 
-    void goToNeighbouringProperty(const int &pShift);
+    void goToNeighbouringProperty(int pShift);
 
     int childrenRowHeight(const QStandardItem *pItem) const;
 
     void deleteProperty(Property *pProperty);
 
 signals:
-    void propertyChanged(OpenCOR::Core::Property *pProperty);
+    void propertyChanged(Property *pProperty);
 
 private slots:
     void updateHeight();

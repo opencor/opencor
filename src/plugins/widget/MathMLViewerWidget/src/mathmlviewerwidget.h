@@ -54,10 +54,10 @@ class MATHMLVIEWERWIDGET_EXPORT MathmlViewerWidget : public Core::Widget
 public:
     explicit MathmlViewerWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateSettings(MathmlViewerWidget *pMathmlViewerWidget);
 
@@ -65,23 +65,23 @@ public:
     void setContents(const QString &pContents);
 
     bool error() const;
-    void setError(const bool &pError);
+    void setError(bool pError);
 
     bool optimiseFontSize() const;
-    void setOptimiseFontSize(const bool &pOptimiseFontSize);
+    void setOptimiseFontSize(bool pOptimiseFontSize);
 
     bool subscripts() const;
-    void setSubscripts(const bool &pSubscripts);
+    void setSubscripts(bool pSubscripts);
 
     bool greekSymbols() const;
-    void setGreekSymbols(const bool &pGreekSymbols);
+    void setGreekSymbols(bool pGreekSymbols);
 
     bool digitGrouping() const;
-    void setDigitGrouping(const bool &pDigitGrouping);
+    void setDigitGrouping(bool pDigitGrouping);
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     QwtMathMLDocument mMathmlDocument;

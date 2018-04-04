@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class ZincWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -63,9 +63,9 @@ class ZincWindowWindow : public Core::WindowWidget
 
 public:
     explicit ZincWindowWindow(QWidget *pParent);
-    ~ZincWindowWindow();
+    ~ZincWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
 private:
     Ui::ZincWindowWindow *mGui;
@@ -80,7 +80,7 @@ private:
 private slots:
     void createAndSetZincContext();
     void graphicsInitialized();
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
+    void devicePixelRatioChanged(int pDevicePixelRatio);
 };
 
 //==============================================================================

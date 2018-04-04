@@ -88,7 +88,7 @@ public:
     };
 
     explicit FileManager();
-    ~FileManager();
+    ~FileManager() override;
 
     static FileManager * instance();
 
@@ -118,16 +118,15 @@ public:
 
     void makeNew(const QString &pFileName);
 
-    void setModified(const QString &pFileName, const bool &pModified);
-    void setDependenciesModified(const QString &pFileName,
-                                 const bool &pModified);
+    void setModified(const QString &pFileName, bool pModified);
+    void setDependenciesModified(const QString &pFileName, bool pModified);
 
     bool isReadable(const QString &pFileName) const;
     bool isWritable(const QString &pFileName) const;
     bool isReadableAndWritable(const QString &pFileName) const;
 
     bool isLocked(const QString &pFileName) const;
-    Status setLocked(const QString &pFileName, const bool &pLocked);
+    Status setLocked(const QString &pFileName, bool pLocked);
 
     QStringList dependencies(const QString &pFileName) const;
     void setDependencies(const QString &pFileName, const QStringList &pDependencies);
@@ -144,7 +143,7 @@ public:
 
     int count() const;
 
-    void setCheckFilesEnabled(const bool &pCheckFilesEnabled);
+    void setCheckFilesEnabled(bool pCheckFilesEnabled);
 
 private:
     QTimer *mTimer;
@@ -167,8 +166,8 @@ signals:
     void fileManaged(const QString &pFileName);
     void fileUnmanaged(const QString &pFileName);
 
-    void fileChanged(const QString &pFileName, const bool &pFileChanged,
-                     const bool &pDependenciesChanged);
+    void fileChanged(const QString &pFileName, bool pFileChanged,
+                     bool pDependenciesChanged);
     void fileDeleted(const QString &pFileName);
 
     void filePermissionsChanged(const QString &pFileName);
