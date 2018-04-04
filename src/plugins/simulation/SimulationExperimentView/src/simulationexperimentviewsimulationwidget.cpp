@@ -392,7 +392,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
-            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
+            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *, bool>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelRemoved,
             graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize));
 
@@ -419,7 +419,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Keep track of the addition and removal of a graph
 
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphAdded,
-            graphPanelAndGraphsWidget, QOverload<>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph));
+            graphPanelAndGraphsWidget, QOverload<OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph));
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphsRemoved,
             graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs);
 
@@ -3219,7 +3219,7 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
-                                                                 const ErrorType &pErrorType)
+                                                               const ErrorType &pErrorType)
 {
     // Output the simulation error
 

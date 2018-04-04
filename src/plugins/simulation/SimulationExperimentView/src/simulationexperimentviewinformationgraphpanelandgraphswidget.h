@@ -166,9 +166,6 @@ private:
 
     bool rootProperty(Core::Property *pProperty) const;
 
-    void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    bool pActive);
-
 signals:
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
@@ -181,6 +178,8 @@ signals:
     void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 public slots:
+    void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    bool pActive);
     void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
     void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
