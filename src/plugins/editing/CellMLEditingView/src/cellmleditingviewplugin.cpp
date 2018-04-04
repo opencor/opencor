@@ -112,13 +112,18 @@ void CellMLEditingViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLEditingViewPlugin::fileReloaded(const QString &pFileName,
-                                           const bool &pFileChanged,
-                                           const bool &pFileJustSaved)
+void CellMLEditingViewPlugin::fileSaved(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pFileChanged);
-    Q_UNUSED(pFileJustSaved);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLEditingViewPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
 
     // We don't handle this interface...
 }

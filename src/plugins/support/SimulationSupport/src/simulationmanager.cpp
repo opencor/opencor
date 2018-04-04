@@ -86,6 +86,19 @@ void SimulationManager::unmanage(const QString &pFileName)
 
 //==============================================================================
 
+void SimulationManager::save(const QString &pFileName)
+{
+    // Check whether we are already managing the corresponding simulation and,
+    // if so, save it
+
+    Simulation *crtSimulation = simulation(pFileName);
+
+    if (crtSimulation)
+        crtSimulation->save();
+}
+
+//==============================================================================
+
 void SimulationManager::reload(const QString &pFileName)
 {
     // Check whether we are already managing the corresponding simulation and,

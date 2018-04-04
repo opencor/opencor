@@ -193,6 +193,9 @@ private:
     QString viewKey(const int &pMode, const int &pView,
                     const QString &pFileName);
 
+    void fileReloadedOrSaved(const QString &pFileName,
+                             const bool &pFileReloaded);
+
 signals:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 
@@ -230,8 +233,7 @@ private slots:
     void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName);
 
-    void fileReloaded(const QString &pFileName, const bool &pFileChanged,
-                      const bool &pFileJustSaved = false);
+    void fileReloaded(const QString &pFileName);
 
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileDuplicated(const QString &pFileName);

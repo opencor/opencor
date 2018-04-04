@@ -243,15 +243,20 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void SampleViewPlugin::fileReloaded(const QString &pFileName,
-                                    const bool &pFileChanged,
-                                    const bool &pFileJustSaved)
+void SampleViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileJustSaved);
+    Q_UNUSED(pFileName);
 
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::fileReloaded(const QString &pFileName)
+{
     // The given file has been reloaded, so update our view widget, if needed
 
-    if (pFileChanged && !pFileName.compare(mFileName))
+    if (!pFileName.compare(mFileName))
         mViewWidget->update(pFileName);
 }
 
@@ -284,14 +289,14 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view and, as such, should at least handle some of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a> interface's methods. Here, we want our plugin to provide some information about the current file, so we do not need to implement <code>saveFile()</code> (lines 63-74), <code>fileOpened()</code> (lines 78-83) and <code>fileModified()</code> (lines 98-103). On the other hand, should the current file have its permissions changed or be renamed, then we want to update the information presented in our view. We do this by implementing the <code>filePermissionsChanged()</code> (lines 87-94) and <code>fileReloaded()</code> (lines 107-117) methods. The same holds true if the current file gets renamed, in which case we also want to update <code>mFileName</code> (see <code>fileRenamed()</code>; lines 121-133). Finally, we want to reset <code>mFileName</code> if the current file gets closed (see <code>fileClosed()</code>; lines 137-143).
+            Our plugin provides a view and, as such, should at least handle some of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a> interface's methods. Here, we want our plugin to provide some information about the current file, so we do not need to implement <code>saveFile()</code> (lines 63-74), <code>fileOpened()</code> (lines 78-83) and <code>fileModified()</code> (lines 98-103). On the other hand, should the current file have its permissions changed or be renamed, then we want to update the information presented in our view. We do this by implementing the <code>filePermissionsChanged()</code> (lines 87-94), <code>fileSaved()</code> (lines 107-112) and <code>fileReloaded()</code> (lines 116-122) methods. The same holds true if the current file gets renamed, in which case we also want to update <code>mFileName</code> (see <code>fileRenamed()</code>; lines 126-138). Finally, we want to reset <code>mFileName</code> if the current file gets closed (see <code>fileClosed()</code>; lines 142-148).
         </p>
 
         <p>
             Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:145">//==============================================================================
+        <pre class="prettyprint linenums:150">//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -313,7 +318,7 @@ void SampleViewPlugin::retranslateUi()
             After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:157">//==============================================================================
+        <pre class="prettyprint linenums:162">//==============================================================================
 // Plugin interface
 //==============================================================================
 
@@ -397,14 +402,14 @@ void SampleViewPlugin::handleUrl(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 183-193), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 188-198), which is where we initialise <code>mViewWidget</code>, our view. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleUrl()</code>) are left empty.
         </p>
 
         <p>
             Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">View</a> interface:
         </p>
 
-        <pre class="prettyprint linenums:238">//==============================================================================
+        <pre class="prettyprint linenums:243">//==============================================================================
 // View interface
 //==============================================================================
 
@@ -491,7 +496,7 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 304-309), its type (see <code>viewMode()</code>; lines 242-247), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 251-256), the MIME type supported by a given file (see <code>viewMimeType()</code>; lines 260-267), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 271-276) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 313-320). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 280-289). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 293-300), which happens whenever a file gets closed.
+            Our plugin provides a view, so OpenCOR needs to know about its name (see <code>viewName()</code>; lines 309-314), its type (see <code>viewMode()</code>; lines 247-252), the MIME types it supports (see <code>viewMimeTypes()</code>; lines 256-261), the MIME type supported by a given file (see <code>viewMimeType()</code>; lines 265-272), the default file extension it supports (see <code>viewDefaultFileExtension()</code>; lines 276-281) and whether it needs a special tab icon (see <code>fileTabIcon()</code>; lines 318-325). OpenCOR also needs to know the widget that is used for the view and this for a given file (see <code>viewWidget()</code>; lines 285-294). Note that our plugin uses only one view widget (and updates its contents based on the file that is currently active), but it might perfectly use one per file. Finally, our plugin needs to handle the case where a view widget is to be removed (see <code>removeViewWidget()</code>; lines 298-305), which happens whenever a file gets closed.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>

@@ -79,12 +79,11 @@ public:
     virtual bool load();
     virtual bool save(const QString &pFileName = QString());
 
+    bool update(const QString &pFileName = QString());
+
     bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues,
                  const bool &pWithBusyWidget = false);
     bool isValid(const bool &pWithBusyWidget = false);
-
-    bool isModified() const;
-    void setModified(const bool &pModified) const;
 
     CellmlFileIssues issues() const;
 
@@ -160,6 +159,8 @@ private:
     QMap<QString, QString> mImportContents;
 
     QStringList mUsedCmetaIds;
+
+    bool mUpdated;
 
     virtual void reset();
 

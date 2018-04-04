@@ -181,8 +181,6 @@ public slots:
 private:
     Simulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     int mDelay;
 
     double mStartingPoint;
@@ -229,7 +227,7 @@ private:
     void createArrays();
     void deleteArrays();
 
-    void createResultsDataStore();
+    bool createResultsDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 
@@ -281,8 +279,6 @@ public slots:
 private:
     Simulation *mSimulation;
 
-    CellMLSupport::CellmlFileRuntime *mRuntime;
-
     DataStore::DataStore *mDataStore;
     DataStore::DataStore *mGradientsDataStore;
 
@@ -329,11 +325,12 @@ public:
     bool stop();
 
 public slots:
-    QString fileName() const;
-
     OpenCOR::SimulationSupport::SimulationData * data() const;
     OpenCOR::SimulationSupport::SimulationResults * results() const;
 
+    QString fileName() const;
+
+    void save();
     void reload();
     void rename(const QString &pFileName);
 

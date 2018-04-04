@@ -436,13 +436,26 @@ void CellmlTextViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
+void CellmlTextViewWidget::fileSaved(const QString &pFileName)
+{
+    // The given file has been saved, so consider it reloaded, but only if it
+    // has a corresponding widget that is invisible
+
+    QWidget *crtWidget = widget(pFileName);
+
+    if (crtWidget && !crtWidget->isVisible())
+        fileReloaded(pFileName);
+}
+
+//==============================================================================
+
 void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
     // Note: if the view for the given file is not the active view, then to call
-    //       finalize() and then initialize() would activate the contents of the
-    //       view (but the file tab would still point to the previously active
-    //       file). However, we want to the 'old' file to remain the active one,
+    //       finalize() and then initialize() will activate the contents of the
+    //       view (but the file tab will still point to the previously active
+    //       file). However, we want the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);

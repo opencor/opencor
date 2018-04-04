@@ -484,8 +484,7 @@ void FileManager::setDependencies(const QString &pFileName,
 
 //==============================================================================
 
-void FileManager::reload(const QString &pFileName,
-                         const bool &pForceFileChanged)
+void FileManager::reload(const QString &pFileName)
 {
     // Make sure that the given file is managed
 
@@ -493,17 +492,12 @@ void FileManager::reload(const QString &pFileName,
     File *nativeFile = file(nativeFileName);
 
     if (nativeFile) {
-        // The file is managed, so determine whether the file itself has been
-        // modified, reset its settings and let people know that it should be
-        // reloaded
-
-        File::Status nativeFileStatus = nativeFile->check();
+        // The file is managed, so reset its settings and let people know that
+        // it should be reloaded
 
         nativeFile->reset();
 
-        emit fileReloaded(nativeFileName,
-                              pForceFileChanged
-                          || (nativeFileStatus == File::Changed) || (nativeFileStatus == File::AllChanged));
+        emit fileReloaded(nativeFileName);
     }
 }
 

@@ -64,6 +64,7 @@ public:
     void initialize(const QString &pFileName, const bool &pUpdate = true);
     void finalize(const QString &pFileName);
 
+    void fileSaved(const QString &pFileName);
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
