@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class CheckForUpdatesDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -89,7 +89,7 @@ public:
                                    QWidget *pParent);
     explicit CheckForUpdatesDialog(QSettings *pSettings,
                                    CheckForUpdatesEngine *pEngine);
-    ~CheckForUpdatesDialog();
+    ~CheckForUpdatesDialog() override;
 
 private:
     Ui::CheckForUpdatesDialog *mGui;
@@ -106,11 +106,11 @@ private:
     void updateGui();
 
 private slots:
-    void on_buttonBox_accepted();
-    void on_statusLabel_linkActivated(const QString &pLink);
-    void on_recheckButton_clicked();
-    void on_checkForUpdatesAtStartupCheckBox_toggled(bool pChecked);
-    void on_includeSnapshotsCheckBox_toggled(bool pChecked);
+    void statusLabelLinkActivated(const QString &pLink);
+    void recheckButtonClicked();
+    void checkForUpdatesAtStartupCheckBoxToggled(bool pChecked);
+    void includeSnapshotsCheckBoxToggled(bool pChecked);
+    void buttonBoxAccepted();
 };
 
 //==============================================================================

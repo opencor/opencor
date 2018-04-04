@@ -43,7 +43,7 @@ namespace FileOrganiserWindow {
 
 FileOrganiserWindowItem::FileOrganiserWindowItem(const QIcon &pIcon,
                                                  const QString &pTextOrPath,
-                                                 const bool &pFolder) :
+                                                 bool pFolder) :
     QStandardItem(pIcon,
                   pFolder?
                       pTextOrPath:
@@ -79,7 +79,7 @@ bool FileOrganiserWindowItem::isExpanded() const
 
 //==============================================================================
 
-void FileOrganiserWindowItem::setExpanded(const bool &pExpanded)
+void FileOrganiserWindowItem::setExpanded(bool pExpanded)
 {
     // Set our expanded state
 
@@ -119,7 +119,7 @@ QStringList FileOrganiserWindowModel::mimeTypes() const
 
 void FileOrganiserWindowModel::encodeHierarchyData(const QModelIndex &pIndex,
                                                    QDataStream &pStream,
-                                                   const int &pLevel) const
+                                                   int pLevel) const
 {
     // Encode the item's hierarchy
 
@@ -319,20 +319,20 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     // Some connections
 
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeToContents()));
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeToContents()));
+    connect(this, &FileOrganiserWindowWidget::expanded,
+            this, &FileOrganiserWindowWidget::resizeToContents);
+    connect(this, &FileOrganiserWindowWidget::collapsed,
+            this, &FileOrganiserWindowWidget::resizeToContents);
 
     // A connection to handle the change of selection
 
-    connect(selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(emitItemsRelatedSignals()));
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &FileOrganiserWindowWidget::emitItemsRelatedSignals);
 
     // Some connections to handle our file manager
 
-    connect(mFileManager, SIGNAL(fileDeleted(const QString &)),
-            this, SLOT(fileDeleted(const QString &)));
+    connect(mFileManager, &Core::FileManager::fileDeleted,
+            this, &FileOrganiserWindowWidget::fileDeleted);
 }
 
 //==============================================================================
@@ -461,7 +461,7 @@ void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
 
 void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
                                                  QStandardItem *pItem,
-                                                 const int &pParentItemIndex) const
+                                                 int pParentItemIndex) const
 {
     // Recursively keep track of the item settings
 

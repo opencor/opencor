@@ -64,9 +64,9 @@ public:
     explicit WebViewerPage(WebViewerWidget *pParent);
 
 protected:
-    virtual bool acceptNavigationRequest(QWebFrame *pFrame,
-                                         const QNetworkRequest &pRequest,
-                                         QWebPage::NavigationType pType);
+    bool acceptNavigationRequest(QWebFrame *pFrame,
+                                 const QNetworkRequest &pRequest,
+                                 QWebPage::NavigationType pType) override;
 
 private:
     WebViewerWidget *mOwner;
@@ -82,8 +82,8 @@ class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWidget,
 public:
     explicit WebViewerWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     QWebView * webView() const;
     Core::ProgressBarWidget * progressBarWidget() const;
@@ -99,9 +99,9 @@ public:
 
     void goToHomePage();
 
-    void setZoomingEnabled(const bool &pZoomingEnabled);
+    void setZoomingEnabled(bool pZoomingEnabled);
 
-    void setOverrideCursor(const bool &pOverrideCursor);
+    void setOverrideCursor(bool pOverrideCursor);
 
     void showProgressBar();
     void hideProgressBar();
@@ -109,8 +109,8 @@ public:
     void showWebInspector();
 
 protected:
-    virtual bool event(QEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    bool event(QEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
     QString mToolTip;
@@ -130,18 +130,18 @@ private:
 
     void emitZoomRelatedSignals();
 
-    void setZoomLevel(const int &pZoomLevel);
+    void setZoomLevel(int pZoomLevel);
 
 signals:
-    void homePage(const bool &pHomePage);
+    void homePage(bool pHomePage);
 
-    void backEnabled(const bool &pEnabled);
-    void forwardEnabled(const bool &pEnabled);
+    void backEnabled(bool pEnabled);
+    void forwardEnabled(bool pEnabled);
 
-    void copyTextEnabled(const bool &pEnabled);
+    void copyTextEnabled(bool pEnabled);
 
-    void defaultZoomLevel(const bool &pDefault);
-    void zoomingOutEnabled(const bool &pEnabled);
+    void defaultZoomLevel(bool pDefault);
+    void zoomingOutEnabled(bool pEnabled);
 
 public slots:
     void resetZoom();
@@ -156,7 +156,7 @@ private slots:
 
     void pageChanged();
 
-    void loadProgress(const int &pProgress);
+    void loadProgress(int pProgress);
     void loadFinished();
     void resetProgressBar();
 };

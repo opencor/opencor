@@ -66,14 +66,13 @@ class CELLMLEDITINGVIEW_EXPORT CellmlEditingViewWidget : public Core::SplitterWi
     Q_OBJECT
 
 public:
-    explicit CellmlEditingViewWidget(const QString &pContents,
-                                     const bool &pReadOnly, QsciLexer *pLexer,
-                                     QWidget *pParent);
+    explicit CellmlEditingViewWidget(const QString &pContents, bool pReadOnly,
+                                     QsciLexer *pLexer, QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateSettings(CellmlEditingViewWidget *pEditingWidget);
 
@@ -92,7 +91,7 @@ private:
 
 private slots:
     void splitterMoved();
-    void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
+    void itemRequested(EditorWidget::EditorListItem *pItem);
 };
 
 //==============================================================================

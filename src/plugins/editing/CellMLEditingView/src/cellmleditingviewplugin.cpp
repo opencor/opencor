@@ -262,21 +262,21 @@ void CellMLEditingViewPlugin::initializePlugin()
 
     // Create our different actions
 
-    mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
+    mEditReformatAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_R),
                                           Core::mainWindow());
     mEditReformatSeparator = Core::newSeparator(Core::mainWindow());
 
-    mToolsCellmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
+    mToolsCellmlValidationAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_T),
                                                    Core::mainWindow());
     mToolsCellmlValidationSeparator = Core::newSeparator(Core::mainWindow());
 
     // Some connections to handle our different actions
 
-    connect(mEditReformatAction, SIGNAL(triggered(bool)),
-            this, SLOT(reformat()));
+    connect(mEditReformatAction, &QAction::triggered,
+            this, &CellMLEditingViewPlugin::reformat);
 
-    connect(mToolsCellmlValidationAction, SIGNAL(triggered(bool)),
-            this, SLOT(cellmlValidation()));
+    connect(mToolsCellmlValidationAction, &QAction::triggered,
+            this, &CellMLEditingViewPlugin::cellmlValidation);
 }
 
 //==============================================================================

@@ -41,18 +41,18 @@ StandardFileManager::StandardFileManager() :
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileManaged(const QString &)),
-            this, SLOT(manage(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
-            this, SLOT(unmanage(const QString &)));
+    connect(fileManagerInstance, &Core::FileManager::fileManaged,
+            this, &StandardFileManager::manage);
+    connect(fileManagerInstance, &Core::FileManager::fileUnmanaged,
+            this, &StandardFileManager::unmanage);
 
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(reload(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(rename(const QString &, const QString &)));
+    connect(fileManagerInstance, &Core::FileManager::fileReloaded,
+            this, QOverload<const QString &>::of(&StandardFileManager::reload));
+    connect(fileManagerInstance, &Core::FileManager::fileRenamed,
+            this, &StandardFileManager::rename);
 
-    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
-            this, SLOT(save(const QString &)));
+    connect(fileManagerInstance, &Core::FileManager::fileSaved,
+            this, &StandardFileManager::save);
 }
 
 //==============================================================================
@@ -63,8 +63,7 @@ StandardFileManager::~StandardFileManager()
 
 //==============================================================================
 
-bool StandardFileManager::doIsFile(const QString &pFileName,
-                                   const bool &pForceChecking)
+bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking)
 {
     // If the given file is already managed, then we consider that it's of the
     // right type (e.g. CellML file), even though it may not be of the right
@@ -97,7 +96,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
     // Check whether the given file is of the right type, i.e. whether it can be
     // loaded
 
-    return doIsFile(pFileName);
+    return isFile(pFileName, false);
 }
 
 //==============================================================================
@@ -116,7 +115,7 @@ void StandardFileManager::manage(const QString &pFileName)
     // Create the given file and add it to our list of managed files, if we are
     // dealing with a file that is not already managed,
 
-    if (!file(pFileName) && doIsFile(pFileName))
+    if (!file(pFileName) && isFile(pFileName, false))
         mFiles.insert(Core::canonicalFileName(pFileName), create(pFileName));
 }
 
@@ -150,8 +149,7 @@ void StandardFileManager::save(const QString &pFileName)
 
 //==============================================================================
 
-void StandardFileManager::reload(const QString &pFileName,
-                                 const bool &pForceChecking)
+void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
 {
     // The file is to be reloaded (either because it has been changed or because
     // one or several of its dependencies has changed), so reload it
@@ -165,7 +163,7 @@ void StandardFileManager::reload(const QString &pFileName,
         // The file is managed, but should it still be (i.e. can it still be
         // considered as being a file)?
 
-        if (doIsFile(pFileName, pForceChecking))
+        if (isFile(pFileName, pForceChecking))
             crtFile->reload();
         else
             unmanage(pFileName);
@@ -181,6 +179,15 @@ void StandardFileManager::reload(const QString &pFileName,
         if (crtFile)
             crtFile->load();
     }
+}
+
+//==============================================================================
+
+void StandardFileManager::reload(const QString &pFileName)
+{
+    // Reload the given file
+
+    reload(pFileName, true);
 }
 
 //==============================================================================

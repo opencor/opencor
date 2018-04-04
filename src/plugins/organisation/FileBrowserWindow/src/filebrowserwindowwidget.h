@@ -42,8 +42,8 @@ class FileBrowserWindowWidget : public Core::TreeViewWidget
 public:
     explicit FileBrowserWindowWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     QString currentPath() const;
 
@@ -54,10 +54,10 @@ public:
     void goToNextFileOrFolder();
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
-    virtual bool viewportEvent(QEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseMoveEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
+    bool viewportEvent(QEvent *pEvent) override;
 
 private:
     FileBrowserWindowModel *mModel;
@@ -71,7 +71,7 @@ private:
     QStringList mPreviousItems;
     QStringList mNextItems;
 
-    void goToPath(const QString &pPath, const bool &pExpand = false);
+    void goToPath(const QString &pPath, bool pExpand = false);
 
     QString currentPathParent() const;
 
@@ -89,11 +89,11 @@ private:
 signals:
     void filesOpenRequested(const QStringList &pFileNames);
 
-    void notHomeFolder(const bool &pNotHomeFolder);
-    void goToParentFolderEnabled(const bool &pEnabled);
+    void homeFolder(bool pHomeFolder);
+    void goToParentFolderEnabled(bool pEnabled);
 
-    void goToPreviousFileOrFolderEnabled(const bool &pEnabled);
-    void goToNextFileOrFolderEnabled(const bool &pEnabled);
+    void goToPreviousFileOrFolderEnabled(bool pEnabled);
+    void goToNextFileOrFolderEnabled(bool pEnabled);
 
 private slots:
     void itemChanged(const QModelIndex &pNewIndex,

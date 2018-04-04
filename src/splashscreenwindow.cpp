@@ -52,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef Q_OS_WIN
     #include <qt_windows.h>
 #else
-    #include <time.h>
+    #include <ctime>
 #endif
 
 //==============================================================================
@@ -168,7 +168,7 @@ void SplashScreenWindow::closeAndDeleteAfter(QWidget *pWindow)
 
     // Close ourselves with a bit of a delay
 
-    QTimer::singleShot(500, this, SLOT(close()));
+    QTimer::singleShot(500, this, &SplashScreenWindow::close);
 }
 
 //==============================================================================

@@ -302,7 +302,7 @@ QString getSaveFileName(const QString &pCaption, const QStringList &pFilters,
 //==============================================================================
 
 QString getDirectory(const QString &pCaption, const QString &pDirName,
-                     const bool &pEmptyDir)
+                     bool pEmptyDir)
 {
     // Retrieve and return the name of an existing directory
     // Note: normally, we would rely on QFileDialog::getExistingDirectory() to
@@ -404,7 +404,7 @@ QMenu * newMenu(const QIcon &pIcon, QWidget *pParent)
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
+QAction * newAction(bool pCheckable, const QIcon &pIcon,
                     const QKeySequence &pKeySequence, QWidget *pParent)
 {
     // Create and return an action
@@ -420,8 +420,7 @@ QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
-                    QWidget *pParent)
+QAction * newAction(bool pCheckable, const QIcon &pIcon, QWidget *pParent)
 {
     // Create and return an action
 
@@ -435,7 +434,7 @@ QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, const QKeySequence &pKeySequence,
+QAction * newAction(bool pCheckable, const QKeySequence &pKeySequence,
                     QWidget *pParent)
 {
     // Create and return an action
@@ -450,7 +449,7 @@ QAction * newAction(const bool &pCheckable, const QKeySequence &pKeySequence,
 
 //==============================================================================
 
-QAction * newAction(const bool &pCheckable, QWidget *pParent)
+QAction * newAction(bool pCheckable, QWidget *pParent)
 {
     // Create and return an action
 
@@ -555,8 +554,7 @@ QAction * newSeparator(QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(const bool &pHorizontal, const QColor &pColor,
-                       QWidget *pParent)
+QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
 {
     // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
     // using a QFrame widget
@@ -582,7 +580,7 @@ QFrame * newLineWidget(const bool &pHorizontal, const QColor &pColor,
 
 //==============================================================================
 
-QFrame * newLineWidget(const bool &pHorizontal, QWidget *pParent)
+QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 {
     // Create and return a 'real' horizontal line widget
 
@@ -609,7 +607,7 @@ QFrame * newLineWidget(QWidget *pParent)
 
 //==============================================================================
 
-QString iconDataUri(const QIcon &pIcon, const int &pWidth, const int &pHeight,
+QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                     const QIcon::Mode &pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
@@ -630,7 +628,7 @@ QString iconDataUri(const QIcon &pIcon, const int &pWidth, const int &pHeight,
 
 //==============================================================================
 
-QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
+QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                     const QIcon::Mode &pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
@@ -641,7 +639,7 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
 
 //==============================================================================
 
-QIcon tintedIcon(const QIcon &pIcon, const int &pWidth, const int &pHeight,
+QIcon tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                  const QColor &pColor)
 {
     // Create and return a tinted icon using the given icon and colour
@@ -670,7 +668,7 @@ QIcon tintedIcon(const QIcon &pIcon, const int &pWidth, const int &pHeight,
 
 //==============================================================================
 
-QIcon tintedIcon(const QString &pIcon, const int &pWidth, const int &pHeight,
+QIcon tintedIcon(const QString &pIcon, int pWidth, int pHeight,
                  const QColor &pColor)
 {
     // Create and return a tinted icon using the given icon and colour
@@ -681,9 +679,8 @@ QIcon tintedIcon(const QString &pIcon, const int &pWidth, const int &pHeight,
 //==============================================================================
 
 QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
@@ -708,9 +705,8 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 //==============================================================================
 
 QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
@@ -722,9 +718,8 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
 //==============================================================================
 
 QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
@@ -736,9 +731,8 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
 //==============================================================================
 
 QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
-                    const int &pBaseWidth, const int &pBaseHeight,
-                    const int &pOverlayLeft, const int &pOverlayTop,
-                    const int &pOverlayWidth, const int &pOverlayHeight)
+                    int pBaseWidth, int pBaseHeight, int pOverlayLeft,
+                    int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
@@ -749,8 +743,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 
 //==============================================================================
 
-void showEnableWidget(QWidget *pWidget, const bool &pVisible,
-                      const bool &pEnabled)
+void showEnableWidget(QWidget *pWidget, bool pVisible, bool pEnabled)
 {
     // Show/enable or hide/disable the given widget
 
@@ -785,7 +778,7 @@ QColor lockedColor(const QColor &pColor)
 //==============================================================================
 
 QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    const bool &pCheckMimeTypes, const QString &pMimeType)
+                    bool pCheckMimeTypes, const QString &pMimeType)
 {
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces, using the given MIME types, if any

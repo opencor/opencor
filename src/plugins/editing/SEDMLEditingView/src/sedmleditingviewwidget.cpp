@@ -42,7 +42,7 @@ namespace SEDMLEditingView {
 //==============================================================================
 
 SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
-                                               const bool &pReadOnly,
+                                               bool pReadOnly,
                                                QsciLexer *pLexer,
                                                QWidget *pParent) :
     Core::SplitterWidget(pParent),
@@ -54,8 +54,8 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterMoved()));
+    connect(this, &QSplitter::splitterMoved,
+            this, &SedmlEditingViewWidget::splitterMoved);
 
     // Create our editor and editor list widgets
 
@@ -64,8 +64,8 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
     mEditorWidget->setObjectName("EditorWidget");
 
-    connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
-            this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
+    connect(mEditorListWidget, &EditorWidget::EditorListWidget::itemRequested,
+            this, &SedmlEditingViewWidget::itemRequested);
 
     // Add the bordered editor and editor list widgets to ourselves
 
@@ -188,7 +188,7 @@ void SedmlEditingViewWidget::splitterMoved()
 
 //==============================================================================
 
-void SedmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
+void SedmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 {
     // Set our editor widget's cursor position to the line/column of the given
     // item and give our editor widget the focus so that we can see the exact

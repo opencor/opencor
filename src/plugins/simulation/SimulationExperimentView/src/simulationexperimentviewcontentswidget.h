@@ -59,7 +59,7 @@ public:
                                                     SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                     QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     SimulationExperimentViewInformationWidget * informationWidget() const;
     GraphPanelWidget::GraphPanelsWidget * graphPanelsWidget() const;

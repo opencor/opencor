@@ -51,7 +51,7 @@ class COMPILER_EXPORT CompilerEngine : public QObject
 
 public:
     explicit CompilerEngine();
-    ~CompilerEngine();
+    ~CompilerEngine() override;
 
     bool hasError() const;
     QString error() const;

@@ -49,7 +49,7 @@ HeunSolver::~HeunSolver()
 
 //==============================================================================
 
-void HeunSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
+void HeunSolver::initialize(double pVoi, int pRatesStatesCount,
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic,
                             ComputeRatesFunction pComputeRates)
@@ -66,9 +66,8 @@ void HeunSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
-                                           pRates, pStates, pAlgebraic,
-                                           pComputeRates);
+    OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates,
+                          pAlgebraic, pComputeRates);
 
     // (Re)create our various arrays
 
@@ -81,7 +80,7 @@ void HeunSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
 //==============================================================================
 
-void HeunSolver::solve(double &pVoi, const double &pVoiEnd) const
+void HeunSolver::solve(double &pVoi, double pVoiEnd) const
 {
     // k = h * f(t_n, Y_n)
     // Y_n+1 = Y_n + h / 2 * ( f(t_n, Y_n) + f(t_n + h, Y_n + k) )

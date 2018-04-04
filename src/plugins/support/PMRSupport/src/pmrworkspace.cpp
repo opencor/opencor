@@ -54,7 +54,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
+PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
                            const QString &pUrl, const QString &pDescription,
                            const QString &pOwner, PmrWebService *pParent) :
     QObject(pParent)
@@ -86,32 +86,32 @@ PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
     // Note: ideally, we would do this within the clone() method, but we can't
     //       since it's executed in a different thread...
 
-    connect(this, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(refreshStatus()));
+    connect(this, &PmrWorkspace::workspaceCloned,
+            this, &PmrWorkspace::refreshStatus);
 
     // Forward our signals to the 'global' instance of our workspace manager
     // class
 
     PmrWorkspaceManager *workspaceManager = PmrWorkspaceManager::instance();
 
-    connect(this, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(this, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(this, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)),
-            workspaceManager, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(this, &PmrWorkspace::workspaceCloned,
+            workspaceManager, &PmrWorkspaceManager::workspaceCloned);
+    connect(this, &PmrWorkspace::workspaceUncloned,
+            workspaceManager, &PmrWorkspaceManager::workspaceUncloned);
+    connect(this, &PmrWorkspace::workspaceSynchronized,
+            workspaceManager, &PmrWorkspaceManager::workspaceSynchronized);
 
     // Forward our signals to our parent PMR web service
 
-    connect(this, SIGNAL(information(const QString &)),
-            pParent, SIGNAL(information(const QString &)));
-    connect(this, SIGNAL(warning(const QString &)),
-            pParent, SIGNAL(warning(const QString &)));
+    connect(this, &PmrWorkspace::information,
+            pParent, &PmrWebService::information);
+    connect(this, &PmrWorkspace::warning,
+            pParent, &PmrWebService::warning);
 }
 
 //==============================================================================
 
-PmrWorkspace::PmrWorkspace(const bool &pOwned, const QString &pName,
+PmrWorkspace::PmrWorkspace(bool pOwned, const QString &pName,
                            const QString &pUrl, PmrWebService *pParent) :
     PmrWorkspace(pOwned, pName, pUrl, QString(), QString(), pParent)
 {
@@ -290,8 +290,8 @@ void PmrWorkspace::close()
 
 //==============================================================================
 
-bool PmrWorkspace::doCommit(const char *pMessage, const size_t &pParentCount,
-                            const git_commit **pParents)
+bool PmrWorkspace::commit(const char *pMessage, const size_t &pParentCount,
+                          const git_commit **pParents)
 {
     // Commit everything that is staged
 
@@ -366,8 +366,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
         }
 
         if (parentsCount >= 0) {
-            res = doCommit(message.ptr, parentsCount,
-                           (const git_commit **) (&parent));
+            res = commit(message.ptr, parentsCount, (const git_commit **) (&parent));
 
             if (!res)
                 emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide both a name and an email)."));
@@ -428,12 +427,10 @@ bool PmrWorkspace::commitMerge()
         if (res) {
             std::string message = std::string("Merge branch 'master' of ");
 
-            if (doCommit(message.c_str(), parentsCount,
-                         (const git_commit **) parents)) {
+            if (commit(message.c_str(), parentsCount, (const git_commit **) parents))
                 git_repository_state_cleanup(mGitRepository);
-            } else {
+            else
                 res = false;
-            }
         }
     }
 
@@ -468,7 +465,7 @@ bool PmrWorkspace::isOpen() const
 
 //==============================================================================
 
-bool PmrWorkspace::open(const QString &pPath, const bool &pRefreshStatus)
+bool PmrWorkspace::open(const QString &pPath, bool pRefreshStatus)
 {
     // Open ourselves by first making sure that we are closed
 
@@ -496,7 +493,7 @@ bool PmrWorkspace::open(const QString &pPath, const bool &pRefreshStatus)
 
 //==============================================================================
 
-CharPair PmrWorkspace::gitStatusChars(const int &pFlags) const
+CharPair PmrWorkspace::gitStatusChars(int pFlags) const
 {
     // Git status
 
@@ -701,7 +698,7 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
 
 //==============================================================================
 
-void PmrWorkspace::synchronize(const bool &pPush)
+void PmrWorkspace::synchronize(bool pPush)
 {
     // Synchronise our local workspace with PMR and let people know that we have
     // done so
@@ -868,7 +865,7 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
 
 //==============================================================================
 
-void PmrWorkspace::stageFile(const QString &pPath, const bool &pStage)
+void PmrWorkspace::stageFile(const QString &pPath, bool pStage)
 {
     // Un/stage the file, which path is given, and let people know of the
     // outcome

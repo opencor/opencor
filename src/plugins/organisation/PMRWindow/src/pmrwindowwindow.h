@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -67,14 +67,14 @@ class PmrWindowWindow : public Core::OrganisationWidget
 
 public:
     explicit PmrWindowWindow(QWidget *pParent);
-    ~PmrWindowWindow();
+    ~PmrWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void update(const QString &pPmrUrl);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
     Ui::PmrWindowWindow *mGui;
@@ -92,21 +92,22 @@ private:
 
     bool mItemDoubleClicked;
 
+    void retrieveExposures(bool pVisible, bool pForceRetrieval);
+
 private slots:
-    void on_actionReload_triggered();
+    void actionReloadTriggered();
 
     void filterValueChanged(const QString &pText);
 
-    void busy(const bool &pBusy);
+    void busy(bool pBusy);
 
     void showInformation(const QString &pMessage);
     void showWarning(const QString &pMessage);
     void showError(const QString &pMessage);
 
-    void retrieveExposures(const bool &pVisible,
-                           const bool &pForceRetrieval = false);
+    void retrieveExposures(bool pVisible);
 
-    void initializeWidget(const OpenCOR::PMRSupport::PmrExposures &pExposures);
+    void initializeWidget(const PMRSupport::PmrExposures &pExposures);
 
     void itemDoubleClicked();
 };

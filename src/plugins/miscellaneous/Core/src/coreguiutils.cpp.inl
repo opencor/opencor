@@ -265,8 +265,7 @@ void adjustWidgetSize(QWidget *pWidget)
 
 //==============================================================================
 
-void showEnableAction(QAction *pAction, const bool &pVisible,
-                      const bool &pEnabled)
+void showEnableAction(QAction *pAction, bool pVisible, bool pEnabled)
 {
     // Show/enable or hide/disable the given action
 

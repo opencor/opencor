@@ -60,6 +60,27 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionClear, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionClearTriggered);
+    connect(mGui->actionBack, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionBackTriggered);
+    connect(mGui->actionForward, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionForwardTriggered);
+    connect(mGui->actionCopy, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionCopyTriggered);
+    connect(mGui->actionNormalSize, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionNormalSizeTriggered);
+    connect(mGui->actionZoomIn, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionZoomInTriggered);
+    connect(mGui->actionZoomOut, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionZoomOutTriggered);
+    connect(mGui->actionPrint, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionPrintTriggered);
+    connect(mGui->actionInspect, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionInspectTriggered);
+    connect(mGui->actionReload, &QAction::triggered,
+            this, &WebBrowserWindowWindow::actionReloadTriggered);
+
     // Create a tool bar widget with a URL value and refresh button
     // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
@@ -76,8 +97,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     mUrlValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    connect(mUrlValue, SIGNAL(returnPressed()),
-            this, SLOT(returnPressed()));
+    connect(mUrlValue, &QLineEdit::returnPressed,
+            this, &WebBrowserWindowWindow::returnPressed);
 
     topToolBarWidget->addWidget(spacer);
     topToolBarWidget->addWidget(mUrlValue);
@@ -130,8 +151,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Various connections to handle our web browser window widget
 
-    connect(mWebBrowserWindowWidget->webView(), SIGNAL(urlChanged(const QUrl &)),
-            this, SLOT(urlChanged(const QUrl &)));
+    connect(mWebBrowserWindowWidget->webView(), &QWebView::urlChanged,
+            this, &WebBrowserWindowWindow::urlChanged);
 
     // Create and populate our context menu
 
@@ -159,26 +180,26 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mWebBrowserWindowWidget->webView()->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mWebBrowserWindowWidget->webView(), SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
+    connect(mWebBrowserWindowWidget->webView(), &QWebView::customContextMenuRequested,
+            this, &WebBrowserWindowWindow::showCustomContextMenu);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mWebBrowserWindowWidget, SIGNAL(homePage(const bool &)),
-            mGui->actionClear, SLOT(setDisabled(bool)));
+    connect(mWebBrowserWindowWidget, QOverload<bool>::of(&WebBrowserWindowWidget::homePage),
+            mGui->actionClear, &QAction::setDisabled);
 
-    connect(mWebBrowserWindowWidget, SIGNAL(backEnabled(const bool &)),
-            mGui->actionBack, SLOT(setEnabled(bool)));
-    connect(mWebBrowserWindowWidget, SIGNAL(forwardEnabled(const bool &)),
-            mGui->actionForward, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::backEnabled,
+            mGui->actionBack, &QAction::setEnabled);
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::forwardEnabled,
+            mGui->actionForward, &QAction::setEnabled);
 
-    connect(mWebBrowserWindowWidget, SIGNAL(defaultZoomLevel(const bool &)),
-            mGui->actionNormalSize, SLOT(setDisabled(bool)));
-    connect(mWebBrowserWindowWidget, SIGNAL(zoomingOutEnabled(const bool &)),
-            mGui->actionZoomOut, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::defaultZoomLevel,
+            mGui->actionNormalSize, &QAction::setDisabled);
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::zoomingOutEnabled,
+            mGui->actionZoomOut, &QAction::setEnabled);
 
-    connect(mWebBrowserWindowWidget, SIGNAL(copyTextEnabled(const bool &)),
-            mGui->actionCopy, SLOT(setEnabled(bool)));
+    connect(mWebBrowserWindowWidget, &WebBrowserWindowWidget::copyTextEnabled,
+            mGui->actionCopy, &QAction::setEnabled);
 
     // En/disable the printing action, depending on whether printers are
     // available
@@ -253,7 +274,7 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionClear_triggered()
+void WebBrowserWindowWindow::actionClearTriggered()
 {
     // Clear the contents of our Web browser window widget
     // Note: we disable the progress bar since we don't want to see its
@@ -266,7 +287,7 @@ void WebBrowserWindowWindow::on_actionClear_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionBack_triggered()
+void WebBrowserWindowWindow::actionBackTriggered()
 {
     // Go to the previous page
     // Note: we enable/disable the progress bar based on whether the back URL is
@@ -280,7 +301,7 @@ void WebBrowserWindowWindow::on_actionBack_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionForward_triggered()
+void WebBrowserWindowWindow::actionForwardTriggered()
 {
     // Go to the next page
     // Note: we enable/disable the progress bar based on whether the forward URL
@@ -294,7 +315,7 @@ void WebBrowserWindowWindow::on_actionForward_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionCopy_triggered()
+void WebBrowserWindowWindow::actionCopyTriggered()
 {
     // Copy the current slection to the clipboard
 
@@ -303,7 +324,7 @@ void WebBrowserWindowWindow::on_actionCopy_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionNormalSize_triggered()
+void WebBrowserWindowWindow::actionNormalSizeTriggered()
 {
     // Reset the zoom level of the page contents
 
@@ -312,7 +333,7 @@ void WebBrowserWindowWindow::on_actionNormalSize_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionZoomIn_triggered()
+void WebBrowserWindowWindow::actionZoomInTriggered()
 {
     // Zoom in the page contents
 
@@ -321,7 +342,7 @@ void WebBrowserWindowWindow::on_actionZoomIn_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionZoomOut_triggered()
+void WebBrowserWindowWindow::actionZoomOutTriggered()
 {
     // Zoom out the page contents
 
@@ -330,7 +351,7 @@ void WebBrowserWindowWindow::on_actionZoomOut_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionPrint_triggered()
+void WebBrowserWindowWindow::actionPrintTriggered()
 {
     // Retrieve the printer with which the user wants to print the page and
     // print it, should s/he still want to go ahead with the printing
@@ -344,7 +365,7 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionInspect_triggered()
+void WebBrowserWindowWindow::actionInspectTriggered()
 {
     // Inspect the current page using our Web inspector
 
@@ -353,7 +374,7 @@ void WebBrowserWindowWindow::on_actionInspect_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionReload_triggered()
+void WebBrowserWindowWindow::actionReloadTriggered()
 {
     // Reload the URL
 

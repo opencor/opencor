@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class FileBrowserWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -55,12 +55,12 @@ class FileBrowserWindowWindow : public Core::OrganisationWidget
 
 public:
     explicit FileBrowserWindowWindow(QWidget *pParent);
-    ~FileBrowserWindowWindow();
+    ~FileBrowserWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
 private:
     Ui::FileBrowserWindowWindow *mGui;
@@ -70,10 +70,10 @@ private:
     QMenu *mContextMenu;
 
 private slots:
-    void on_actionHome_triggered();
-    void on_actionParent_triggered();
-    void on_actionPrevious_triggered();
-    void on_actionNext_triggered();
+    void actionHomeTriggered();
+    void actionParentTriggered();
+    void actionPreviousTriggered();
+    void actionNextTriggered();
 
     void showCustomContextMenu() const;
     void itemDoubleClicked();

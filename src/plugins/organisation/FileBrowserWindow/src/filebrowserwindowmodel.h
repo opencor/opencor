@@ -41,7 +41,7 @@ class FileBrowserWindowModel : public QFileSystemModel
 public:
     explicit FileBrowserWindowModel(QObject *pParent);
 
-    virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
+    Qt::ItemFlags flags(const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================

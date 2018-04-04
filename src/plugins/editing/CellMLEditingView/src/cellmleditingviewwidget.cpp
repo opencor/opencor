@@ -43,7 +43,7 @@ namespace CellMLEditingView {
 //==============================================================================
 
 CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
-                                                 const bool &pReadOnly,
+                                                 bool pReadOnly,
                                                  QsciLexer *pLexer,
                                                  QWidget *pParent) :
     Core::SplitterWidget(pParent),
@@ -55,8 +55,8 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterMoved()));
+    connect(this, &QSplitter::splitterMoved,
+            this, &CellmlEditingViewWidget::splitterMoved);
 
     // Create our MathML viewer, editor and editor list widgets
 
@@ -67,8 +67,8 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
     mMathmlViewerWidget->setObjectName("MathmlViewerWidget");
     mEditorWidget->setObjectName("EditorWidget");
 
-    connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
-            this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
+    connect(mEditorListWidget, &EditorWidget::EditorListWidget::itemRequested,
+            this, &CellmlEditingViewWidget::itemRequested);
 
     // Add the bordered MathML viewer, editor and editor list widgets to
     // ourselves
@@ -215,7 +215,7 @@ void CellmlEditingViewWidget::splitterMoved()
 
 //==============================================================================
 
-void CellmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
+void CellmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 {
     // Set our editor widget's cursor position to the line/column of the given
     // item and give our editor widget the focus so that we can see the exact

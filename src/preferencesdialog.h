@@ -39,7 +39,7 @@ class QStandardItemModel;
 
 namespace Ui {
     class PreferencesDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -82,8 +82,8 @@ class PreferencesItemDelegate : public StyledItemDelegate
 public:
     explicit PreferencesItemDelegate(QObject *pParent);
 
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================
@@ -96,7 +96,7 @@ public:
     explicit PreferencesDialog(QSettings *pSettings,
                                PluginManager *pPluginManager,
                                const QString &pPluginName, QWidget *pParent);
-    ~PreferencesDialog();
+    ~PreferencesDialog() override;
 
     QStringList pluginNames() const;
 
@@ -122,9 +122,9 @@ private:
     QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
 
 private slots:
-    void on_treeView_collapsed(const QModelIndex &pIndex);
+    void treeViewCollapsed(const QModelIndex &pIndex);
 
-    void on_buttonBox_accepted();
+    void buttonBoxAccepted();
 
     void updatePreferencesWidget(const QModelIndex &pNewIndex,
                                  const QModelIndex &pOldIndex);

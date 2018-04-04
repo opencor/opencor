@@ -256,21 +256,21 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     setModel(mProxyModel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
+    connect(this, &PmrWorkspacesWindowWidget::customContextMenuRequested,
+            this, &PmrWorkspacesWindowWidget::showCustomContextMenu);
 
-    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked()));
+    connect(this, &PmrWorkspacesWindowWidget::doubleClicked,
+            this, &PmrWorkspacesWindowWidget::itemDoubleClicked);
 
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(itemExpanded(const QModelIndex &)));
+    connect(this, &PmrWorkspacesWindowWidget::expanded,
+            this, &PmrWorkspacesWindowWidget::resizeTreeViewToContents);
+    connect(this, &PmrWorkspacesWindowWidget::expanded,
+            this, &PmrWorkspacesWindowWidget::itemExpanded);
 
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(itemCollapsed(const QModelIndex &)));
+    connect(this, &PmrWorkspacesWindowWidget::collapsed,
+            this, &PmrWorkspacesWindowWidget::resizeTreeViewToContents);
+    connect(this, &PmrWorkspacesWindowWidget::collapsed,
+            this, &PmrWorkspacesWindowWidget::itemCollapsed);
 
     // Create and set ourselves a layout
 
@@ -414,19 +414,19 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     PMRSupport::PmrWorkspaceManager *workspaceManager = PMRSupport::PmrWorkspaceManager::instance();
 
-    connect(workspaceManager, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(workspaceManager, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(workspaceManager, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(workspaceManager, &PMRSupport::PmrWorkspaceManager::workspaceCloned,
+            this, &PmrWorkspacesWindowWidget::workspaceCloned);
+    connect(workspaceManager, &PMRSupport::PmrWorkspaceManager::workspaceUncloned,
+            this, &PmrWorkspacesWindowWidget::workspaceUncloned);
+    connect(workspaceManager, &PMRSupport::PmrWorkspaceManager::workspaceSynchronized,
+            this, &PmrWorkspacesWindowWidget::workspaceSynchronized);
 
     // Create and start a timer for refreshing our workspaces
 
     mTimer = new QTimer(this);
 
-    connect(mTimer, SIGNAL(timeout()),
-            this, SLOT(refreshWorkspaces()));
+    connect(mTimer, &QTimer::timeout,
+            this, &PmrWorkspacesWindowWidget::refreshWorkspaces);
 
     mTimer->start(1000);
 
@@ -460,24 +460,24 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mAboutWorkspaceAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
                                             this);
 
-    connect(mNewWorkspaceAction, SIGNAL(triggered(bool)),
-            mParentNewAction, SIGNAL(triggered(bool)));
-    connect(mViewWorkspaceInPmrAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewWorkspaceInPmr()));
-    connect(mViewWorkspaceOncomputerAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewWorkspaceOncomputer()));
-    connect(mCopyWorkspaceUrlAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyWorkspaceUrl()));
-    connect(mCopyWorkspacePathAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyWorkspacePath()));
-    connect(mMakeLocalWorkspaceCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(makeLocalWorkspaceCopy()));
-    connect(mSynchronizeWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(synchronizeWorkspace()));
-    connect(mReloadWorkspacesAction, SIGNAL(triggered(bool)),
-            mParentReloadAction, SIGNAL(triggered(bool)));
-    connect(mAboutWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(aboutWorkspace()));
+    connect(mNewWorkspaceAction, &QAction::triggered,
+            mParentNewAction, &QAction::triggered);
+    connect(mViewWorkspaceInPmrAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::viewWorkspaceInPmr);
+    connect(mViewWorkspaceOncomputerAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::viewWorkspaceOncomputer);
+    connect(mCopyWorkspaceUrlAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::copyWorkspaceUrl);
+    connect(mCopyWorkspacePathAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::copyWorkspacePath);
+    connect(mMakeLocalWorkspaceCopyAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::makeLocalWorkspaceCopy);
+    connect(mSynchronizeWorkspaceAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::synchronizeWorkspace);
+    connect(mReloadWorkspacesAction, &QAction::triggered,
+            mParentReloadAction, &QAction::triggered);
+    connect(mAboutWorkspaceAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::aboutWorkspace);
 
     mContextMenu->addAction(mNewWorkspaceAction);
     mContextMenu->addSeparator();
@@ -687,7 +687,7 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibility)
+void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
 {
     // Determine the message to be displayed, if any
 
@@ -737,7 +737,7 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
 void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
                                            const MessageType &pMessageType,
                                            const QString &pMessage,
-                                           const bool &pAuthenticated)
+                                           bool pAuthenticated)
 {
     // Initialise / keep track of some properties
 
@@ -828,7 +828,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces)
 {
     // Initialise ourselves using the given workspaces
 
@@ -1186,7 +1186,7 @@ void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                                                 const bool &pSortAndResize)
+                                                 bool pSortAndResize)
 {
     // Refresh the status of the given workspace
 
@@ -1402,7 +1402,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been cloned, so update ourselves accordingly
 
@@ -1439,7 +1439,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(OpenCOR::PMRSupport::PmrWorkspac
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been uncloned, so update ourselves accordingly
 
@@ -1451,7 +1451,7 @@ void PmrWorkspacesWindowWidget::workspaceUncloned(OpenCOR::PMRSupport::PmrWorksp
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The workspace has been synchronised, so refresh it
 

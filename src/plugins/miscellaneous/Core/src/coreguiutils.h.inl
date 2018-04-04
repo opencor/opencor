@@ -28,8 +28,8 @@ bool CORE_EXPORT aboutToQuit();
 QSize CORE_EXPORT minimumWidgetSize(QWidget *pWidget);
 void CORE_EXPORT adjustWidgetSize(QWidget *pWidget);
 
-void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
-                                  const bool &pEnabled = true);
+void CORE_EXPORT showEnableAction(QAction *pAction, bool pVisible,
+                                  bool pEnabled = true);
 
 QColor CORE_EXPORT baseColor();
 QColor CORE_EXPORT borderColor();

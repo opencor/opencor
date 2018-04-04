@@ -166,7 +166,7 @@ QString File::sha1() const
 
 //==============================================================================
 
-void File::reset(const bool &pResetDependencies)
+void File::reset(bool pResetDependencies)
 {
     // Reset our modified state, new index and SHA-1 value
 
@@ -281,7 +281,7 @@ bool File::isModified() const
 
 //==============================================================================
 
-bool File::setModified(const bool &pModified)
+bool File::setModified(bool pModified)
 {
     // Set our modified status
 
@@ -344,7 +344,7 @@ bool File::isLocked() const
 
 //==============================================================================
 
-File::Status File::setLocked(const bool &pLocked)
+File::Status File::setLocked(bool pLocked)
 {
     // Set our locked status, but only if we are readable
 
@@ -413,7 +413,7 @@ bool File::setDependencies(const QStringList &pDependencies)
 
 //==============================================================================
 
-bool File::setDependenciesModified(const bool &pDependenciesModified)
+bool File::setDependenciesModified(bool pDependenciesModified)
 {
     // Set our dependencies modified status
 

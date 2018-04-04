@@ -52,12 +52,12 @@ class FileOrganiserWindowItem : public QStandardItem
 public:
     explicit FileOrganiserWindowItem(const QIcon &pIcon,
                                      const QString &pTextOrPath,
-                                     const bool &pFolder = false);
+                                     bool pFolder = false);
 
     bool isFolder() const;
 
     bool isExpanded() const;
-    void setExpanded(const bool &pExpanded);
+    void setExpanded(bool pExpanded);
 
     QString path() const;
 
@@ -77,8 +77,8 @@ class FileOrganiserWindowModel : public QStandardItemModel
 public:
     explicit FileOrganiserWindowModel(QObject *pParent);
 
-    virtual QStringList mimeTypes() const;
-    virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
+    QStringList mimeTypes() const override;
+    QMimeData * mimeData(const QModelIndexList &pIndexes) const override;
 
     QByteArray encodeHierarchyData(const QModelIndex &pIndex) const;
 
@@ -89,7 +89,7 @@ public:
 
 private:
     void encodeHierarchyData(const QModelIndex &pIndex, QDataStream &pStream,
-                             const int &pLevel = 0) const;
+                             int pLevel = 0) const;
     QByteArray encodeData(const QModelIndexList &pIndexes) const;
 
     QModelIndex decodeHierarchyData(QDataStream &pStream) const;
@@ -103,10 +103,10 @@ class FileOrganiserWindowWidget : public Core::TreeViewWidget
 
 public:
     explicit FileOrganiserWindowWidget(QWidget *pParent);
-    ~FileOrganiserWindowWidget();
+    ~FileOrganiserWindowWidget() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     void newFolder();
     void deleteItems();
@@ -114,10 +114,10 @@ public:
     QString filePath(const QModelIndex &pFileIndex) const;
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
-    virtual void dragMoveEvent(QDragMoveEvent *pEvent);
-    virtual void dropEvent(QDropEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
     Core::FileManager *mFileManager;
@@ -125,7 +125,7 @@ private:
 
     void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
     void saveItemSettings(QSettings *pSettings, QStandardItem *pItem,
-                          const int &pParentItemIndex) const;
+                          int pParentItemIndex) const;
 
     QString newFolderName(QStandardItem *pFolderItem) const;
     void collapseEmptyFolders(QStandardItem *pFolder);
@@ -167,8 +167,8 @@ private:
 signals:
     void openFilesRequested(const QStringList &pFileNames);
 
-    void newFolderEnabled(const bool &pEnabled);
-    void deleteItemsEnabled(const bool &pEnabled);
+    void newFolderEnabled(bool pEnabled);
+    void deleteItemsEnabled(bool pEnabled);
 
 private slots:
     void resizeToContents();

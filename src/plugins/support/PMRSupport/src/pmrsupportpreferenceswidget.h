@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrSupportPreferencesWidget;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -60,12 +60,12 @@ class PmrSupportPreferencesWidget : public Preferences::PreferencesWidget
 
 public:
     explicit PmrSupportPreferencesWidget(QWidget *pParent);
-    ~PmrSupportPreferencesWidget();
+    ~PmrSupportPreferencesWidget() override;
 
-    virtual bool preferencesChanged() const;
+    bool preferencesChanged() const override;
 
-    virtual void resetPreferences();
-    virtual void savePreferences();
+    void resetPreferences() override;
+    void savePreferences() override;
 
 private:
     Ui::PmrSupportPreferencesWidget *mGui;
@@ -75,7 +75,7 @@ private:
     QString mEmail;
 
 private slots:
-    void on_pmrUrlValue_currentTextChanged(const QString &pCurrentText);
+    void pmrUrlValueCurrentTextChanged(const QString &pCurrentText);
 };
 
 //==============================================================================

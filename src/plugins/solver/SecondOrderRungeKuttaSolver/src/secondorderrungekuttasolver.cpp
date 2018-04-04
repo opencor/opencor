@@ -47,8 +47,7 @@ SecondOrderRungeKuttaSolver::~SecondOrderRungeKuttaSolver()
 
 //==============================================================================
 
-void SecondOrderRungeKuttaSolver::initialize(const double &pVoi,
-                                             const int &pRatesStatesCount,
+void SecondOrderRungeKuttaSolver::initialize(double pVoi, int pRatesStatesCount,
                                              double *pConstants,
                                              double *pRates, double *pStates,
                                              double *pAlgebraic,
@@ -66,9 +65,8 @@ void SecondOrderRungeKuttaSolver::initialize(const double &pVoi,
 
     // Initialise the ODE solver itself
 
-    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
-                                           pRates, pStates, pAlgebraic,
-                                           pComputeRates);
+    OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates,
+                          pAlgebraic, pComputeRates);
 
     // (Re)create our mYk1 array
 
@@ -79,8 +77,7 @@ void SecondOrderRungeKuttaSolver::initialize(const double &pVoi,
 
 //==============================================================================
 
-void SecondOrderRungeKuttaSolver::solve(double &pVoi,
-                                        const double &pVoiEnd) const
+void SecondOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
 {
     // k1 = h * f(t_n, Y_n)
     // k2 = h * f(t_n + h / 2, Y_n + k1 / 2)

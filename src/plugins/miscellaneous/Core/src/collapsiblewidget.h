@@ -54,7 +54,7 @@ public:
     explicit CollapsibleHeaderTitleWidget(QWidget *pParent);
 
 protected:
-    virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
 
 signals:
     void doubleClicked();
@@ -67,16 +67,15 @@ class CORE_EXPORT CollapsibleHeaderWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit CollapsibleHeaderWidget(const bool &pCollapsible,
-                                     QWidget *pParent);
+    explicit CollapsibleHeaderWidget(bool pCollapsible, QWidget *pParent);
 
-    void setFirstHeader(const bool &pFirstHeader);
-    void setLastHeader(const bool &pFirstHeader);
+    void setFirstHeader(bool pFirstHeader);
+    void setLastHeader(bool pFirstHeader);
 
     bool isCollapsable() const;
 
     bool isCollapsed() const;
-    void setCollapsed(const bool &pCollapsed);
+    void setCollapsed(bool pCollapsed);
 
     QString title() const;
     void setTitle(const QString &pTitle);
@@ -101,7 +100,7 @@ private:
     void updateBottomSeparatorVisibleStatus();
 
 signals:
-    void widgetVisible(const bool &pVisible);
+    void widgetVisible(bool pVisible);
 
 private slots:
     void toggleCollapsedState();
@@ -119,14 +118,14 @@ public:
 
     int count() const;
 
-    bool isCollapsed(const int &pIndex) const;
-    void setCollapsed(const int &pIndex, const bool &pCollapsed);
+    bool isCollapsed(int pIndex) const;
+    void setCollapsed(int pIndex, bool pCollapsed);
 
-    QString headerTitle(const int &pIndex) const;
-    void setHeaderTitle(const int &pIndex, const QString &pTitle);
+    QString headerTitle(int pIndex) const;
+    void setHeaderTitle(int pIndex, const QString &pTitle);
 
     CollapsibleHeaderWidget * addWidget(QWidget *pWidget,
-                                        const bool &pCollapsible = true);
+                                        bool pCollapsible = true);
 
 private:
     QVBoxLayout *mLayout;
@@ -134,7 +133,7 @@ private:
     QList<CollapsibleHeaderWidget *> mHeaders;
 
 signals:
-    void collapsed(const int &pIndex, const bool &pCollapsed);
+    void collapsed(int pIndex, bool pCollapsed);
 
 private slots:
     void emitCollapsed();

@@ -109,10 +109,12 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // operating system), as well as a message sent by another instance of
     // itself
 
-    QObject::connect(qApp, SIGNAL(fileOpenRequest(const QString &)),
-                     this, SLOT(openFileOrHandleUrl(const QString &)));
-    QObject::connect(qApp, SIGNAL(messageReceived(const QString &)),
-                     this, SLOT(handleMessage(const QString &)));
+    GuiApplication *guiApplication = qobject_cast<GuiApplication *>(qApp);
+
+    connect(guiApplication, &GuiApplication::fileOpenRequest,
+            this, &MainWindow::openFileOrHandleUrl);
+    connect(guiApplication, &GuiApplication::messageReceived,
+            this, &MainWindow::handleMessage);
 
     // Handle OpenCOR URLs
     // Note: we should, through our GuiApplication class (see main.cpp), be able
@@ -160,6 +162,25 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionFullScreen, &QAction::triggered,
+            this, &MainWindow::actionFullScreenTriggered);
+    connect(mGui->actionSystem, &QAction::triggered,
+            this, &MainWindow::actionSystemTriggered);
+    connect(mGui->actionEnglish, &QAction::triggered,
+            this, &MainWindow::actionEnglishTriggered);
+    connect(mGui->actionFrench, &QAction::triggered,
+            this, &MainWindow::actionFrenchTriggered);
+    connect(mGui->actionPlugins, &QAction::triggered,
+            this, &MainWindow::actionPluginsTriggered);
+    connect(mGui->actionPreferences, &QAction::triggered,
+            this, &MainWindow::actionPreferencesTriggered);
+    connect(mGui->actionHomePage, &QAction::triggered,
+            this, &MainWindow::actionHomePageTriggered);
+    connect(mGui->actionCheckForUpdates, &QAction::triggered,
+            this, &MainWindow::actionCheckForUpdatesTriggered);
+    connect(mGui->actionAbout, &QAction::triggered,
+            this, &MainWindow::actionAboutTriggered);
+
     // Set the role of some of our menu items, so that macOS can move them into
     // the application menu
 
@@ -182,35 +203,35 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //          and then manually creating several QShortcut objects, but it
     //          doesn't work (bug?)...
 
-    mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
+    mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::ControlModifier|Qt::Key_Space));
 
-    connect(mGui->actionDockedWindows, SIGNAL(triggered(bool)),
-            this, SLOT(showDockedWindows(const bool &)));
+    connect(mGui->actionDockedWindows, &QAction::triggered,
+            this, QOverload<bool>::of(&MainWindow::showDockedWindows));
 
-    new QShortcut(QKeySequence(Qt::META|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::MetaModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::MetaModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::META|Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::MetaModifier|Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::ALT|Qt::Key_Space),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::MetaModifier|Qt::AltModifier|Qt::Key_Space),
                   this, SLOT(toggleDockedWindows()));
 
     // A connection to handle the status bar
 
-    connect(mGui->actionStatusBar, SIGNAL(toggled(bool)),
-            mGui->statusBar, SLOT(setVisible(bool)));
+    connect(mGui->actionStatusBar, &QAction::toggled,
+            mGui->statusBar, &QStatusBar::setVisible);
 
     // Some connections to handle our various menu items
 
-    connect(mGui->actionQuit, SIGNAL(triggered(bool)),
-            this, SLOT(close()));
-    connect(mGui->actionResetAll, SIGNAL(triggered(bool)),
-            this, SLOT(resetAll()));
+    connect(mGui->actionQuit, &QAction::triggered,
+            this, &MainWindow::close);
+    connect(mGui->actionResetAll, &QAction::triggered,
+            this, &MainWindow::resetAll);
 
     // Set the shortcuts of some actions
     // Note: we do it here, so that we can use standard shortcuts (whenever
@@ -222,8 +243,8 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       default key sequence doesn't, so we set them ourselves...
 
     mGui->actionQuit->setShortcuts(QList<QKeySequence>()
-                                       << QKeySequence(Qt::ALT|Qt::Key_F4)
-                                       << QKeySequence(Qt::CTRL|Qt::Key_Q));
+                                       << QKeySequence(Qt::AltModifier|Qt::Key_F4)
+                                       << QKeySequence(Qt::ControlModifier|Qt::Key_Q));
 #elif defined(Q_OS_MAC)
     mGui->actionQuit->setShortcut(QKeySequence::Quit);
 #else
@@ -235,7 +256,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Note: indeed, when pressing Cmd+M on macOS, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
 
-    new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_M),
+    new QShortcut(QKeySequence(Qt::ControlModifier|Qt::Key_M),
                   this, SLOT(showMinimized()));
 #endif
 
@@ -267,8 +288,8 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Keep track of the showing/hiding of the different window widgets
 
     foreach (Plugin *plugin, mLoadedWindowPlugins) {
-        connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), SIGNAL(visibilityChanged(bool)),
-                this, SLOT(updateDockWidgetsVisibility()));
+        connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), &QDockWidget::visibilityChanged,
+                this, &MainWindow::updateDockWidgetsVisibility);
     }
 
     // Show/hide and enable/disable the windows action depending on whether
@@ -291,8 +312,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       can still receive files / OpenCOR URLs to open/handle while we
     //       start opening/handling those that we have in stock, and this in the
     //       correct order...
-
-    GuiApplication *guiApplication = qobject_cast<GuiApplication *>(qApp);
 
     while (guiApplication->hasFileNamesOrOpencorUrls())
         openFileOrHandleUrl(guiApplication->firstFileNameOrOpencorUrl());
@@ -572,6 +591,9 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         //       Core interface, so no need to check anything...
 
         // Also keep track of GUI updates in our central widget
+        // Note: we cannot use the new signal/slot mechanism since the signal
+        //       is located in our Core plugin and that we don't normally know
+        //       anything about it...
 
         connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(OpenCOR::Plugin *, const QString &)),
                 this, SLOT(updateGui(OpenCOR::Plugin *, const QString &)));
@@ -603,10 +625,10 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Connect the action to the window
 
-        connect(windowInterface->windowAction(), SIGNAL(triggered(bool)),
-                windowInterface->windowWidget(), SLOT(setVisible(bool)));
-        connect(windowInterface->windowWidget()->toggleViewAction(), SIGNAL(toggled(bool)),
-                windowInterface->windowAction(), SLOT(setChecked(bool)));
+        connect(windowInterface->windowAction(), &QAction::triggered,
+                windowInterface->windowWidget(), &QDockWidget::setVisible);
+        connect(windowInterface->windowWidget()->toggleViewAction(), &QAction::toggled,
+                windowInterface->windowAction(), &QAction::setChecked);
     }
 }
 
@@ -723,7 +745,7 @@ void MainWindow::saveSettings() const
 
 //==============================================================================
 
-void MainWindow::setLocale(const QString &pRawLocale, const bool &pForceSetting)
+void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
 {
     QString systemLocale = QLocale::system().name().left(2);
 
@@ -996,7 +1018,7 @@ void MainWindow::handleUrl(const QUrl &pUrl)
     if (!actionName.compare("openPluginsDialog", Qt::CaseInsensitive)) {
         // We want to open the Plugins dialog
 
-        on_actionPlugins_triggered();
+        actionPluginsTriggered();
     } else if (!actionName.compare("openPreferencesDialog", Qt::CaseInsensitive)) {
         // We want to open the Preferences dialog
 
@@ -1004,7 +1026,7 @@ void MainWindow::handleUrl(const QUrl &pUrl)
     } else if (!actionName.compare("openAboutDialog", Qt::CaseInsensitive)) {
         // We want to open the About dialog
 
-        on_actionAbout_triggered();
+        actionAboutTriggered();
     } else if (!actionName.compare("openFile", Qt::CaseInsensitive)) {
         // We want to open a file, so handle it as an argument that is passed to
         // OpenCOR
@@ -1059,7 +1081,7 @@ void MainWindow::handleMessage(const QString &pMessage)
 
 //==============================================================================
 
-void MainWindow::on_actionFullScreen_triggered()
+void MainWindow::actionFullScreenTriggered()
 {
     // Switch to / back from full screen mode
 
@@ -1071,7 +1093,7 @@ void MainWindow::on_actionFullScreen_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionSystem_triggered()
+void MainWindow::actionSystemTriggered()
 {
     // Select the system's language as the language used by OpenCOR
 
@@ -1080,7 +1102,7 @@ void MainWindow::on_actionSystem_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionEnglish_triggered()
+void MainWindow::actionEnglishTriggered()
 {
     // Select English as the language used by OpenCOR
 
@@ -1089,7 +1111,7 @@ void MainWindow::on_actionEnglish_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionFrench_triggered()
+void MainWindow::actionFrenchTriggered()
 {
     // Select French as the language used by OpenCOR
 
@@ -1098,7 +1120,7 @@ void MainWindow::on_actionFrench_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionPlugins_triggered()
+void MainWindow::actionPluginsTriggered()
 {
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins dialog
@@ -1160,7 +1182,7 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 
 //==============================================================================
 
-void MainWindow::on_actionPreferences_triggered()
+void MainWindow::actionPreferencesTriggered()
 {
     // Show the preferences dialog
 
@@ -1169,7 +1191,7 @@ void MainWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionHomePage_triggered()
+void MainWindow::actionHomePageTriggered()
 {
     // Look up OpenCOR's home page
 
@@ -1178,7 +1200,7 @@ void MainWindow::on_actionHomePage_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionCheckForUpdates_triggered()
+void MainWindow::actionCheckForUpdatesTriggered()
 {
     // Show the check for updates dialog
 
@@ -1191,7 +1213,7 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionAbout_triggered()
+void MainWindow::actionAboutTriggered()
 {
     // Display some information about OpenCOR
 
@@ -1204,7 +1226,7 @@ void MainWindow::on_actionAbout_triggered()
 
 //==============================================================================
 
-void MainWindow::restart(const bool &pSaveSettings) const
+void MainWindow::restart(bool pSaveSettings) const
 {
     // Restart OpenCOR after saving its settings, if required
     // Note: the closeEvent method won't get called when exiting OpenCOR and
@@ -1278,8 +1300,7 @@ void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
 
 //==============================================================================
 
-void MainWindow::showDockedWindows(const bool &pShow,
-                                   const bool &pInitialisation)
+void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
 {
     // Show/hide the docked windows
 
@@ -1305,6 +1326,15 @@ void MainWindow::showDockedWindows(const bool &pShow,
     // Update the checked state of our docked windows action
 
     mGui->actionDockedWindows->setChecked(pShow);
+}
+
+//==============================================================================
+
+void MainWindow::showDockedWindows(bool pShow)
+{
+    // Show/hide the docked windows
+
+    showDockedWindows(pShow, false);
 }
 
 //==============================================================================

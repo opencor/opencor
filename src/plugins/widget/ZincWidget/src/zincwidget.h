@@ -64,7 +64,7 @@ public:
 private:
     ZincWidget *mZincWidget;
 
-    virtual void operator()(const OpenCMISS::Zinc::Sceneviewerevent &pSceneViewerEvent);
+    void operator()(const OpenCMISS::Zinc::Sceneviewerevent &pSceneViewerEvent) override;
 };
 
 //==============================================================================
@@ -100,7 +100,7 @@ public:
     void setSceneFilter(const OpenCMISS::Zinc::Scenefilter &pSceneFilter);
 
     double tumbleRate();
-    void setTumbleRate(const double &pTumbleRate);
+    void setTumbleRate(double pTumbleRate);
 
     int project(double *pInCoordinates, double *pOutCoordinates);
     int unproject(double *pInCoordinates, double *pOutCoordinates);
@@ -108,16 +108,16 @@ public:
     void viewAll();
 
 protected:
-    virtual void initializeGL();
-    virtual void paintGL();
-    virtual void resizeGL(int pWidth, int pHeight);
+    void initializeGL() override;
+    void paintGL() override;
+    void resizeGL(int pWidth, int pHeight) override;
 
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    void mouseMoveEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
+    void mouseReleaseEvent(QMouseEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
-    virtual QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 private:
     bool mGraphicsInitialized;
@@ -132,8 +132,8 @@ private:
 
     void createSceneViewer();
 
-    void updateSceneViewerViewerportSize(const int &pWidth, const int &pHeight,
-                                         const bool &pCheckDevicePixelRatio = false);
+    void updateSceneViewerViewerportSize(int pWidth, int pHeight,
+                                         bool pCheckDevicePixelRatio = false);
 
     OpenCMISS::Zinc::Sceneviewerinput::ButtonType buttonMap(const Qt::MouseButton &pButton) const;
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags modifierMap(const Qt::KeyboardModifiers &pModifiers) const;
@@ -141,7 +141,7 @@ private:
 signals:
     void contextAboutToBeDestroyed();
     void graphicsInitialized();
-    void devicePixelRatioChanged(const int &pDevicePixelRatio);
+    void devicePixelRatioChanged(int pDevicePixelRatio);
 };
 
 //==============================================================================

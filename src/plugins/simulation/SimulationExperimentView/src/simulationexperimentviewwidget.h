@@ -64,10 +64,10 @@ public:
                                             const Plugins &pCellmlSimulationViewPlugins,
                                             QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
@@ -94,7 +94,7 @@ public:
     SimulationSupport::Simulation * simulation(const QString &pFileName) const;
     CellMLSupport::CellmlFileRuntime * runtime(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName);
+    QWidget * widget(const QString &pFileName) override;
 
     quint64 simulationResultsSize(const QString &pFileName) const;
 
@@ -138,25 +138,20 @@ private slots:
     void simulationWidgetSplitterMoved(const QIntList &pSizes);
     void contentsWidgetSplitterMoved(const QIntList &pSizes);
 
-    void collapsibleWidgetCollapsed(const int &pIndex, const bool &pCollapsed);
+    void collapsibleWidgetCollapsed(int pIndex, bool pCollapsed);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+    void graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 
-    void simulationHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                        const int &pNewSize);
-    void solversHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                     const int &pNewSize);
-    void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                        const int &pNewSize);
-    void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                    const int &pNewSize);
-    void parametersHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                        const int &pNewSize);
+    void simulationHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
+    void solversHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
+    void graphPanelHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
+    void graphsHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
+    void parametersHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
 
-    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+    void graphPanelSectionExpanded(int pSection, bool pExpanded);
 
     void callCheckSimulationResults();
 };
