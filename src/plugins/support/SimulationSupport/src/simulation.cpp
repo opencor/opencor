@@ -1209,8 +1209,6 @@ QString Simulation::fileName() const
 
 void Simulation::save()
 {
-//---ISSUE1491--- WE SHOULD BE ABLE TO SAVE A FILE WHILE RUNNING A SIMULATION,
-//                HENCE NO NEED TO STOP THE SIMULATION...
     // Retrieve our file details
 
     retrieveFileDetails();

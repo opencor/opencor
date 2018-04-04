@@ -9,8 +9,6 @@ else
     enableTests=ON
 fi
 
-shift
-
 if [ "`hash ninja 2>&1`" = "" ]; then
     ninjaFound=true
     generator="Ninja"
@@ -41,10 +39,12 @@ if [ $exitCode -ne 0 ]; then
     exit $exitCode
 fi
 
+shift
+
 if [ $ninjaFound = true ]; then
-    ninja $*
+    ninja $@
 else
-    make $*
+    make $@
 fi
 
 exitCode=$?
