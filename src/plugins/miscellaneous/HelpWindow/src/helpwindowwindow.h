@@ -70,14 +70,14 @@ private:
     QMenu *mContextMenu;
 
 private slots:
-    void on_actionHome_triggered();
-    void on_actionBack_triggered();
-    void on_actionForward_triggered();
-    void on_actionCopy_triggered();
-    void on_actionNormalSize_triggered();
-    void on_actionZoomIn_triggered();
-    void on_actionZoomOut_triggered();
-    void on_actionPrint_triggered();
+    void onActionHomeTriggered();
+    void onActionBackTriggered();
+    void onActionForwardTriggered();
+    void onActionCopyTriggered();
+    void onActionNormalSizeTriggered();
+    void onActionZoomInTriggered();
+    void onActionZoomOutTriggered();
+    void onActionPrintTriggered();
 
     void showCustomContextMenu() const;
 };

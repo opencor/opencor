@@ -58,6 +58,23 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionHome, &QAction::triggered,
+            this, &HelpWindowWindow::onActionHomeTriggered);
+    connect(mGui->actionBack, &QAction::triggered,
+            this, &HelpWindowWindow::onActionBackTriggered);
+    connect(mGui->actionForward, &QAction::triggered,
+            this, &HelpWindowWindow::onActionForwardTriggered);
+    connect(mGui->actionCopy, &QAction::triggered,
+            this, &HelpWindowWindow::onActionCopyTriggered);
+    connect(mGui->actionNormalSize, &QAction::triggered,
+            this, &HelpWindowWindow::onActionNormalSizeTriggered);
+    connect(mGui->actionZoomIn, &QAction::triggered,
+            this, &HelpWindowWindow::onActionZoomInTriggered);
+    connect(mGui->actionZoomOut, &QAction::triggered,
+            this, &HelpWindowWindow::onActionZoomOutTriggered);
+    connect(mGui->actionPrint, &QAction::triggered,
+            this, &HelpWindowWindow::onActionPrintTriggered);
+
     // Create a tool bar widget with different buttons
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
@@ -191,7 +208,7 @@ void HelpWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionHome_triggered()
+void HelpWindowWindow::onActionHomeTriggered()
 {
     // Go to the home page
 
@@ -200,7 +217,7 @@ void HelpWindowWindow::on_actionHome_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionBack_triggered()
+void HelpWindowWindow::onActionBackTriggered()
 {
     // Go to the previous help page
 
@@ -209,7 +226,7 @@ void HelpWindowWindow::on_actionBack_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionForward_triggered()
+void HelpWindowWindow::onActionForwardTriggered()
 {
     // Go to the next help page
 
@@ -218,7 +235,7 @@ void HelpWindowWindow::on_actionForward_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionCopy_triggered()
+void HelpWindowWindow::onActionCopyTriggered()
 {
     // Copy the current slection to the clipboard
 
@@ -227,7 +244,7 @@ void HelpWindowWindow::on_actionCopy_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionNormalSize_triggered()
+void HelpWindowWindow::onActionNormalSizeTriggered()
 {
     // Reset the zoom level of the help page contents
 
@@ -236,7 +253,7 @@ void HelpWindowWindow::on_actionNormalSize_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionZoomIn_triggered()
+void HelpWindowWindow::onActionZoomInTriggered()
 {
     // Zoom in the help page contents
 
@@ -245,7 +262,7 @@ void HelpWindowWindow::on_actionZoomIn_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionZoomOut_triggered()
+void HelpWindowWindow::onActionZoomOutTriggered()
 {
     // Zoom out the help page contents
 
@@ -254,7 +271,7 @@ void HelpWindowWindow::on_actionZoomOut_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::on_actionPrint_triggered()
+void HelpWindowWindow::onActionPrintTriggered()
 {
     // Retrieve the printer with which the user wants to print the help page
     // and print it, should s/he still want to go ahead with the printing

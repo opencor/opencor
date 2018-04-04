@@ -60,6 +60,27 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionClear, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionClearTriggered);
+    connect(mGui->actionBack, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionBackTriggered);
+    connect(mGui->actionForward, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionForwardTriggered);
+    connect(mGui->actionCopy, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionCopyTriggered);
+    connect(mGui->actionNormalSize, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionNormalSizeTriggered);
+    connect(mGui->actionZoomIn, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionZoomInTriggered);
+    connect(mGui->actionZoomOut, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionZoomOutTriggered);
+    connect(mGui->actionPrint, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionPrintTriggered);
+    connect(mGui->actionInspect, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionInspectTriggered);
+    connect(mGui->actionReload, &QAction::triggered,
+            this, &WebBrowserWindowWindow::onActionReloadTriggered);
+
     // Create a tool bar widget with a URL value and refresh button
     // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
@@ -253,7 +274,7 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionClear_triggered()
+void WebBrowserWindowWindow::onActionClearTriggered()
 {
     // Clear the contents of our Web browser window widget
     // Note: we disable the progress bar since we don't want to see its
@@ -266,7 +287,7 @@ void WebBrowserWindowWindow::on_actionClear_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionBack_triggered()
+void WebBrowserWindowWindow::onActionBackTriggered()
 {
     // Go to the previous page
     // Note: we enable/disable the progress bar based on whether the back URL is
@@ -280,7 +301,7 @@ void WebBrowserWindowWindow::on_actionBack_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionForward_triggered()
+void WebBrowserWindowWindow::onActionForwardTriggered()
 {
     // Go to the next page
     // Note: we enable/disable the progress bar based on whether the forward URL
@@ -294,7 +315,7 @@ void WebBrowserWindowWindow::on_actionForward_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionCopy_triggered()
+void WebBrowserWindowWindow::onActionCopyTriggered()
 {
     // Copy the current slection to the clipboard
 
@@ -303,7 +324,7 @@ void WebBrowserWindowWindow::on_actionCopy_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionNormalSize_triggered()
+void WebBrowserWindowWindow::onActionNormalSizeTriggered()
 {
     // Reset the zoom level of the page contents
 
@@ -312,7 +333,7 @@ void WebBrowserWindowWindow::on_actionNormalSize_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionZoomIn_triggered()
+void WebBrowserWindowWindow::onActionZoomInTriggered()
 {
     // Zoom in the page contents
 
@@ -321,7 +342,7 @@ void WebBrowserWindowWindow::on_actionZoomIn_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionZoomOut_triggered()
+void WebBrowserWindowWindow::onActionZoomOutTriggered()
 {
     // Zoom out the page contents
 
@@ -330,7 +351,7 @@ void WebBrowserWindowWindow::on_actionZoomOut_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionPrint_triggered()
+void WebBrowserWindowWindow::onActionPrintTriggered()
 {
     // Retrieve the printer with which the user wants to print the page and
     // print it, should s/he still want to go ahead with the printing
@@ -344,7 +365,7 @@ void WebBrowserWindowWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionInspect_triggered()
+void WebBrowserWindowWindow::onActionInspectTriggered()
 {
     // Inspect the current page using our Web inspector
 
@@ -353,7 +374,7 @@ void WebBrowserWindowWindow::on_actionInspect_triggered()
 
 //==============================================================================
 
-void WebBrowserWindowWindow::on_actionReload_triggered()
+void WebBrowserWindowWindow::onActionReloadTriggered()
 {
     // Reload the URL
 
