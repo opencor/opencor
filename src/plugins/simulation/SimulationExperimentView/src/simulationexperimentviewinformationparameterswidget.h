@@ -89,8 +89,8 @@ private:
     void retranslateContextMenu();
 
 signals:
-    void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void graphRequired(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                       OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void calculateGradients(const int &pIndex, const bool &pCalculate);
 
@@ -100,7 +100,7 @@ public slots:
     void gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate);
 
 private slots:
-    void propertyChanged(Core::Property *pProperty);
+    void propertyChanged(OpenCOR::Core::Property *pProperty);
 
     void emitGraphRequired();
 

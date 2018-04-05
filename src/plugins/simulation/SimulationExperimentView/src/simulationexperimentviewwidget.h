@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "sedmlfile.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
+#include "simulationexperimentviewsimulationwidget.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -94,10 +95,10 @@ public:
 
     virtual QWidget * widget(const QString &pFileName);
 
-    qulonglong simulationResultsSize(const QString &pFileName) const;
+    quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                const bool &pClearGraphs = false);
+                                const SimulationExperimentViewSimulationWidget::Task &pTask = SimulationExperimentViewSimulationWidget::None);
 
 private:
     SimulationExperimentViewPlugin *mPlugin;
@@ -125,7 +126,7 @@ private:
 
     QStringList mFileNames;
 
-    QMap<QString, qulonglong> mSimulationResultsSizes;
+    QMap<QString, quint64> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
@@ -138,13 +139,6 @@ private slots:
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
-
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
-    void legendToggled();
-
-    void logarithmicXAxisToggled();
-    void logarithmicYAxisToggled();
 
     void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
 

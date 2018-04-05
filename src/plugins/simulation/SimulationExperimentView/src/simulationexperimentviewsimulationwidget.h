@@ -110,6 +110,13 @@ class SimulationExperimentViewSimulationWidget : public Core::Widget
     Q_OBJECT
 
 public:
+    enum Task {
+        None,
+        ResetRuns,
+        AddRun,
+        FakeAddRun
+    };
+
     explicit SimulationExperimentViewSimulationWidget(SimulationExperimentViewPlugin *pPlugin,
                                                       SimulationExperimentViewWidget *pViewWidget,
                                                       const QString &pFileName,
@@ -139,8 +146,8 @@ public:
 
     void updateGui(const bool &pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 const qulonglong &pSimulationResultsSize,
-                                 const bool &pClearGraphs);
+                                 const quint64 &pSimulationResultsSize,
+                                 const Task &pTask = None);
 
     void resetSimulationProgress();
 
@@ -230,7 +237,7 @@ private:
 
     bool mNeedUpdatePlots;
 
-    QMap<GraphPanelWidget::GraphPanelPlotGraph *, qulonglong> mOldDataSizes;
+    QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
     void reloadView();
 
@@ -254,7 +261,7 @@ private:
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         const qulonglong &pSize);
+                         const quint64 &pSize);
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty,
@@ -296,13 +303,6 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
-    void legendToggled();
-
-    void logarithmicXAxisToggled();
-    void logarithmicYAxisToggled();
-
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();
@@ -334,15 +334,15 @@ private slots:
 
     void simulationDataModified(const bool &pIsModified);
 
-    void simulationPropertyChanged(Core::Property *pProperty);
-    void solversPropertyChanged(Core::Property *pProperty);
+    void simulationPropertyChanged(OpenCOR::Core::Property *pProperty);
+    void solversPropertyChanged(OpenCOR::Core::Property *pProperty);
 
     void graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                          const bool &pActive);
     void graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                  CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                  OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                     OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,

@@ -332,10 +332,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Op
 
         // Keep track of when the user changes a property value
 
-        connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(graphPanelPropertyChanged(Core::Property *)));
-        connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(graphsPropertyChanged(Core::Property *)));
+        connect(mGraphPanelPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+                this, SLOT(graphPanelPropertyChanged(OpenCOR::Core::Property *)));
+        connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+                this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
         // Add our new graphs property editor to ourselves
 
@@ -439,8 +439,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     //          property, so give it a blank icon so that it is properly aligned
     //          with our other properties...
 
-    disconnect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(graphsPropertyChanged(Core::Property *)));
+    disconnect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+               this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
     graphsPropertyEditor->addListProperty(graphProperty);
     graphsPropertyEditor->addStringProperty(pGraphProperties.title(), graphProperty);
@@ -485,8 +485,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Open
     graphsPropertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
-    connect(graphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(graphsPropertyChanged(Core::Property *)));
+    connect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
     // Update the information about our new graph
 
@@ -516,6 +516,50 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs(
         mGraphs.remove(property);
         mGraphProperties.remove(graph);
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+{
+    // Toggle our graph property
+
+    Core::Property *graphProperty = mGraphProperties.value(pGraph);
+
+    graphProperty->setChecked(!graphProperty->isChecked());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend()
+{
+    // Toggle our legend property
+
+    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[4];
+
+    legendProperty->setBooleanValue(!legendProperty->booleanValue());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicXAxis()
+{
+    // Toggle our logarithmic X axis property
+
+    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
+
+    logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicYAxis()
+{
+    // Toggle our logarithmic Y axis property
+
+    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[9]->properties()[0];
+
+    logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
 }
 
 //==============================================================================
@@ -582,8 +626,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     //       properties as well as the selected state of our graphs, and then
     //       let people know that all the graphs have been updated...
 
-    disconnect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(graphsPropertyChanged(Core::Property *)));
+    disconnect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+               this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 
     GraphPanelWidget::GraphPanelPlotGraphs graphs = GraphPanelWidget::GraphPanelPlotGraphs();
 
@@ -600,8 +644,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::selectAllGrap
     if (!graphs.isEmpty())
         emit graphsUpdated(graphs);
 
-    connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(graphsPropertyChanged(Core::Property *)));
+    connect(mGraphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
+            this, SLOT(graphsPropertyChanged(OpenCOR::Core::Property *)));
 }
 
 //==============================================================================
@@ -780,50 +824,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const
 
         emit graphPanelGraphsModeChanged(pMode);
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
-{
-    // Toggle our graph property
-
-    Core::Property *graphProperty = mGraphProperties.value(pGraph);
-
-    graphProperty->setChecked(!graphProperty->isChecked());
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend()
-{
-    // Toggle our legend property
-
-    Core::Property *legendProperty = mGraphPanelPropertyEditor->properties()[4];
-
-    legendProperty->setBooleanValue(!legendProperty->booleanValue());
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicXAxis()
-{
-    // Toggle our logarithmic X axis property
-
-    Core::Property *logarithmicXAxisProperty = mGraphPanelPropertyEditor->properties()[8]->properties()[0];
-
-    logarithmicXAxisProperty->setBooleanValue(!logarithmicXAxisProperty->booleanValue());
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicYAxis()
-{
-    // Toggle our logarithmic Y axis property
-
-    Core::Property *logarithmicYAxisProperty = mGraphPanelPropertyEditor->properties()[9]->properties()[0];
-
-    logarithmicYAxisProperty->setBooleanValue(!logarithmicYAxisProperty->booleanValue());
 }
 
 //==============================================================================
@@ -1294,8 +1294,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
                              || (oldGraphSymbol->brush() != symbolFillColor);
     }
 
-    graph->setSymbol(new QwtSymbol(symbolStyle, symbolFillColor, symbolColor,
-                                   QSize(symbolSize, symbolSize)));
+    graph->setSymbol(symbolStyle, symbolFillColor, symbolColor, symbolSize);
 
     // Let people know if the X and/or Y parameters of our graph have changed or
     // replot it if its settings have changed
@@ -1331,7 +1330,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelSec
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Update our graph panel settings
 
@@ -1413,7 +1412,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(Core::Property *pProperty)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged(OpenCOR::Core::Property *pProperty)
 {
     // Our graph has changed, which means that either it has been un/selected or
     // that the value of one of its properties has changed

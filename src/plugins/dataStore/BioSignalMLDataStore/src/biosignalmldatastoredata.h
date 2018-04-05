@@ -42,7 +42,8 @@ public:
                                       const QString &pAuthor,
                                       const QString &pDescription,
                                       const QString &pComment,
-                                      const DataStore::DataStoreVariables &pSelectedVariables);
+                                      DataStore::DataStore *pDataStore,
+                                      const DataStore::DataStoreVariables &pVariables);
 
     QString name() const;
     QString author() const;

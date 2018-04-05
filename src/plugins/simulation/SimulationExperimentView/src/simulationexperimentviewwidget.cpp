@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulationexperimentviewinformationsolverswidget.h"
 #include "simulationexperimentviewinformationwidget.h"
 #include "simulationexperimentviewplugin.h"
-#include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
 //==============================================================================
@@ -71,7 +70,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
-    mSimulationResultsSizes(QMap<QString, qulonglong>()),
+    mSimulationResultsSizes(QMap<QString, quint64>()),
     mSimulationCheckResults(QStringList())
 {
 }
@@ -220,23 +219,6 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                 this, SLOT(graphPanelSettingsRequested()));
         connect(mSimulationWidget, SIGNAL(graphsSettingsRequested()),
                 this, SLOT(graphsSettingsRequested()));
-
-        // Check when a graph has been toggled
-
-        connect(mSimulationWidget, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-                this, SLOT(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-
-        // Check when the legend has been toggled
-
-        connect(mSimulationWidget, SIGNAL(legendToggled()),
-                this, SLOT(legendToggled()));
-
-        // Check when the X/Y logarithmic axis has been toggled
-
-        connect(mSimulationWidget, SIGNAL(logarithmicXAxisToggled()),
-                this, SLOT(logarithmicXAxisToggled()));
-        connect(mSimulationWidget, SIGNAL(logarithmicYAxisToggled()),
-                this, SLOT(logarithmicYAxisToggled()));
     } else {
         // We already have a simulation widget, so just make sure that its GUI
         // is up to date
@@ -508,7 +490,7 @@ QWidget * SimulationExperimentViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-qulonglong SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
+quint64 SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
 {
     // Return the results size for the given file name
 
@@ -518,7 +500,7 @@ qulonglong SimulationExperimentViewWidget::simulationResultsSize(const QString &
 //==============================================================================
 
 void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFileName,
-                                                            const bool &pClearGraphs)
+                                                            const SimulationExperimentViewSimulationWidget::Task &pTask)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -534,14 +516,14 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       given simulation widget...
 
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
-    qulonglong simulationResultsSize = simulation->results()->size();
+    quint64 simulationResultsSize = simulation->results()->size();
 
-    if (   pClearGraphs
+    if (   (pTask != SimulationExperimentViewSimulationWidget::None)
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
         foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
-            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pClearGraphs);
+            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pTask);
     }
 
     // Ask to recheck our simulation widget's results, but only if its
@@ -632,42 +614,6 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 
     mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
-{
-    // Toggle the given graph
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleGraph(pGraph);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::legendToggled()
-{
-    // Toggle the legend property
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLegend();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::logarithmicXAxisToggled()
-{
-    // Toggle the logarithmic X axis property
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLogarithmicXAxis();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::logarithmicYAxisToggled()
-{
-    // Toggle the logarithmic Y axis property
-
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->toggleLogarithmicYAxis();
 }
 
 //==============================================================================

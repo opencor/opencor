@@ -74,7 +74,7 @@ static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *k
     DataStoreVariable *variable = getVariable(valuesDict, key);
 
     if (variable) {
-        return PyFloat_FromDouble(variable->nextValue());
+        return PyFloat_FromDouble(variable->getValue());
     } else {
         Py_RETURN_NONE;
     }
@@ -96,8 +96,8 @@ static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key
         if (variable) {
             double newValue = PyFloat_AS_DOUBLE(PyNumber_Float(value));
 
-            if (variable->nextValue() != newValue) {
-                variable->setNextValue(newValue);
+            if (variable->getValue() != newValue) {
+                variable->setValue(newValue);
 
                 // Let our SimulationData object know that data values have changed
 
@@ -189,7 +189,7 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
             PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)value;
             DataStoreVariable *variable = (DataStoreVariable *)wrap->_objPointerCopy;
             Py_CLEAR(value);
-            value = PyFloat_FromDouble(variable->nextValue());
+            value = PyFloat_FromDouble(variable->getValue());
         }
 
         s = PyObject_Repr(value);
@@ -302,10 +302,10 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable)
+PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable, const int &pRun)
 {
-    if (pDataStoreVariable && pDataStoreVariable->array()) {
-        auto numpyArray = new NumPyPythonWrapper(pDataStoreVariable->array(), pDataStoreVariable->size());
+    if (pDataStoreVariable && pDataStoreVariable->array(pRun)) {
+        auto numpyArray = new NumPyPythonWrapper(pDataStoreVariable->array(pRun), pDataStoreVariable->size());
         return numpyArray->numpyArray();
     } else {
         Py_RETURN_NONE;
@@ -315,10 +315,11 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
 
 //==============================================================================
 
-double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable, const qulonglong &pPosition) const
+double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
+                                     const quint64 &pPosition, const int &pRun) const
 {
     if (pDataStoreVariable && pDataStoreVariable->array()) {
-        return pDataStoreVariable->value(pPosition);
+        return pDataStoreVariable->value(pPosition, pRun);
     } else {
         throw std::runtime_error("'NoneType' object is not subscriptable");
         return 0.0;
@@ -327,9 +328,9 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable, cons
 
 //==============================================================================
 
-PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable) const
+PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable, const int &pRun) const
 {
-    return DataStorePythonWrapper::newNumPyArray(pDataStoreVariable);
+    return DataStorePythonWrapper::newNumPyArray(pDataStoreVariable, pRun);
 }
 
 //==============================================================================
@@ -377,14 +378,14 @@ PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
 
 //==============================================================================
 
-NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, qulonglong pSize) :
+NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize) :
     mArray(pDataStoreArray)
 {
     npy_intp dims[1];
     dims[0] = (pSize > 0) ? pSize : pDataStoreArray->capacity();
 
-    mArray->incReference();
-    mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void *)mArray->values());
+    mArray->incRef();
+    mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void *)mArray->data());
 
     mPythonObject = PythonSupport::wrapQObject(this);
     PyArray_SetBaseObject((PyArrayObject *)mNumPyArray, mPythonObject);
@@ -394,7 +395,10 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, qulonglo
 
 NumPyPythonWrapper::~NumPyPythonWrapper()
 {
-    mArray->decReference();
+    mArray->decRef();
+
+    if (mArray->refCount() == 0)
+        delete mArray;
 }
 
 //==============================================================================

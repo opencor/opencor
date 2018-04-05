@@ -103,13 +103,6 @@ public:
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
     void setMode(const Mode &pMode);
 
-    void toggleGraph(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-
-    void toggleLegend();
-
-    void toggleLogarithmicXAxis();
-    void toggleLogarithmicYAxis();
-
     void setGraphPanelColumnWidth(const int &pIndex, const int &pColumnWidth);
     void setGraphsColumnWidth(const int &pIndex, const int &pColumnWidth);
 
@@ -197,6 +190,13 @@ public slots:
     void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                       const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
+    void toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+
+    void toggleLegend();
+
+    void toggleLogarithmicXAxis();
+    void toggleLogarithmicYAxis();
+
 private slots:
     void selectGraphPanelColor();
 
@@ -213,8 +213,8 @@ private slots:
     void graphPanelSectionExpanded(const QModelIndex &pIndex);
     void graphPanelSectionCollapsed(const QModelIndex &pIndex);
 
-    void graphPanelPropertyChanged(Core::Property *pProperty);
-    void graphsPropertyChanged(Core::Property *pProperty);
+    void graphPanelPropertyChanged(OpenCOR::Core::Property *pProperty);
+    void graphsPropertyChanged(OpenCOR::Core::Property *pProperty);
 
     void updateParameterValue();
 };

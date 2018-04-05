@@ -39,9 +39,7 @@ class BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
     Q_OBJECT
 
 public:
-    explicit BiosignalmlDataStoreExporter(const QString &pFileName,
-                                          DataStore::DataStore *pDataStore,
-                                          DataStore::DataStoreData *pDataStoreData);
+    explicit BiosignalmlDataStoreExporter(DataStore::DataStoreData *pDataStoreData);
 
     virtual void execute(QString &pErrorMessage) const;
 };

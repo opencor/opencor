@@ -74,7 +74,7 @@ bool CombineFileManager::canLoad(const QString &pFileName) const
 
 //==============================================================================
 
-QObject * CombineFileManager::create(const QString &pFileName) const
+StandardSupport::StandardFile * CombineFileManager::create(const QString &pFileName) const
 {
     // Create and return a new COMBINE archive
 

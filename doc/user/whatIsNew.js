@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 12, "month": 1, "year": 2018,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 31, "month": 1, "year": 2018,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -76,6 +76,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
                              "entries": [
                                { "type": "added", "description": "Support for log scales." },
+                               { "type": "added", "description": "Support for multiple runs." },
                                { "type": "added", "description": "Ability to customise a graph." },
                                { "type": "added", "description": "Ability to customise a graph panel." },
                                { "type": "added", "description": "Ability to show the legend of a graph panel." },

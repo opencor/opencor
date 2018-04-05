@@ -34,7 +34,8 @@ namespace StandardSupport {
 
 StandardFile::StandardFile(const QString &pFileName) :
     QObject(),
-    mFileName(Core::nativeCanonicalFileName(pFileName))
+    mFileName(Core::nativeCanonicalFileName(pFileName)),
+    mNew(Core::FileManager::instance()->isNew(pFileName))
 {
 }
 
@@ -55,16 +56,19 @@ bool StandardFile::reload()
 
 bool StandardFile::save(const QString &pFileName)
 {
-    // Our file being saved, it cannot be modified (should it have been before)
+    // Our file being saved, so it cannot be new and cannot be modified (should
+    // it have been modified before)
     // Note: we must do this before updating mFileName (should it be given a new
     //       value) since we use it to update our modified status...
+
+    mNew = false;
 
     setModified(false);
 
     // Make sure that mFileName is up to date
 
     if (!pFileName.isEmpty())
-        mFileName = pFileName;
+        setFileName(pFileName);
 
     return true;
 }
@@ -84,7 +88,16 @@ void StandardFile::setFileName(const QString &pFileName)
 {
     // Set the standard file's file name
 
-    mFileName = pFileName;
+    mFileName = Core::nativeCanonicalFileName(pFileName);
+}
+
+//==============================================================================
+
+bool StandardFile::isNew() const
+{
+    // Return whether we are new
+
+    return mNew;
 }
 
 //==============================================================================

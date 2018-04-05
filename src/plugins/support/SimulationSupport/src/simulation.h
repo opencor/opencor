@@ -69,6 +69,7 @@ class SimulationSupportPythonWrapper;
 
 class Simulation;
 class SimulationData;
+class SimulationResults;
 class SimulationWorker;
 
 //==============================================================================
@@ -96,6 +97,8 @@ public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData();
 
+    void setSimulationResults(SimulationResults *pSimulationResults);
+
     double * constants() const;
     double * rates() const;
     double * states() const;
@@ -103,7 +106,9 @@ public:
 
     void setStartingPoint(const double &pStartingPoint,
                           const bool &pRecompute = true);
+
     void setEndingPoint(const double &pEndingPoint);
+
     void setPointInterval(const double &pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
@@ -117,37 +122,29 @@ public:
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               const bool &pReset = true);
 
-    DataStore::DataStore * resultsDataStore() const;
-
-    DataStore::DataStoreVariable * pointVariable() const;
-
-    DataStore::DataStoreVariables constantVariables() const;
-    DataStore::DataStoreVariables rateVariables() const;
-    DataStore::DataStoreVariables stateVariables() const;
-    DataStore::DataStoreVariables algebraicVariables() const;
-
-    bool createGradientsDataStore();
-
-    double * gradients() const;
-    int gradientsCount() const;
     int * gradientIndices();
 
-    DataStore::DataStore * gradientsDataStore() const;
+    bool createGradientsArray();
 
-    DataStore::DataStoreVariables gradientVariables() const;
+    double * gradients() const;
+
+    int gradientsCount() const;
+    int gradientsSize() const;
 
     static void updateParameters(SimulationData *pSimulationData);
 
 public slots:
     void reload();
 
-    OpenCOR::SimulationSupport::Simulation * simulation() const;
+    Simulation * simulation() const;
 
     int delay() const;
     void setDelay(const int &pDelay);
 
     double startingPoint() const;
+
     double endingPoint() const;
+
     double pointInterval() const;
 
     QString odeSolverName() const;
@@ -166,11 +163,12 @@ public slots:
     bool isModified() const;
     void checkForModifications();
 
-    void calculateGradients(const int &pIndex, bool pCalculate);
-    void calculateGradients(const QString &pConstantUri, bool pCalculate = true);
+    void setGradientCalculation(const int &pIndex, bool pCalculate);
+    void setGradientCalculation(const QString &pConstantUri, bool pCalculate = true);
 
 private:
     Simulation *mSimulation;
+    SimulationResults *mSimulationResults;
 
     int mDelay;
 
@@ -187,39 +185,23 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
-    DataStore::DataStore *mResultsDataStore;
+    DataStore::DataStoreArray *mConstants;
+    DataStore::DataStoreArray *mRates;
+    DataStore::DataStoreArray *mStates;
+    DataStore::DataStoreArray *mAlgebraic;
 
-    DataStore::DataStore *mGradientsDataStore;
-
-    DataStore::DataStoreVariable *mPointVariable;
-
-    DataStore::DataStoreVariables mConstantVariables;
-    DataStore::DataStoreVariables mRateVariables;
-    DataStore::DataStoreVariables mStateVariables;
-    DataStore::DataStoreVariables mAlgebraicVariables;
-
-    DataStore::DataStoreVariables mGradientVariables;
-
-    double *mConstantsArray;
-    double *mRatesArray;
-    double *mStatesArray;
-    double *mDummyStatesArray;
-    double *mAlgebraicArray;
+    double *mDummyStates;
+    double *mInitialConstants;
+    double *mInitialStates;
 
     QVector<int> mGradientIndices;
-    double *mGradientsArray;
-
-    double *mInitialConstantsArray;
-    double *mInitialStatesArray;
+    DataStore::DataStoreArray *mGradients;
+    int mGradientsSize;
 
     SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
     void createArrays();
     void deleteArrays();
-
-    void createResultsDataStore();
-
-    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
@@ -244,41 +226,51 @@ public:
     explicit SimulationResults(Simulation *pSimulation);
     ~SimulationResults();
 
-    void reload();
+    bool addRun();
 
     void addPoint(const double &pPoint);
 
     double * points() const;
 
-    double * algebraic(const int &pIndex) const;
     double * constants(const int &pIndex) const;
     double * rates(const int &pIndex) const;
     double * states(const int &pIndex) const;
+    double * algebraic(const int &pIndex) const;
 
-    bool createGradientsDataStore();
+    DataStore::DataStoreVariables constantVariables() const;
+    DataStore::DataStoreVariables rateVariables() const;
+    DataStore::DataStoreVariables stateVariables() const;
+    DataStore::DataStoreVariables algebraicVariables() const;
 
 public slots:
-    bool reset(const bool &pAllocateArrays = true);
+    void reload();
 
-    qulonglong size() const;
+    void reset();
 
-    OpenCOR::DataStore::DataStore * dataStore() const;
+    int runsCount() const;
+
+    quint64 size() const;
+
+    DataStore::DataStore * dataStore() const;
 
 private:
     Simulation *mSimulation;
 
     DataStore::DataStore *mDataStore;
-    DataStore::DataStore *mGradientsDataStore;
 
-    const DataStore::DataStoreVariable *mPointVariable;
+    DataStore::DataStoreVariable *mPoints;
 
-    const DataStore::DataStoreVariables mConstantVariables;
-    const DataStore::DataStoreVariables mRateVariables;
-    const DataStore::DataStoreVariables mStateVariables;
-    const DataStore::DataStoreVariables mAlgebraicVariables;
+    DataStore::DataStoreVariables mConstants;
+    DataStore::DataStoreVariables mRates;
+    DataStore::DataStoreVariables mStates;
+    DataStore::DataStoreVariables mAlgebraic;
 
-    bool createDataStoreArrays();
-    void deleteDataStoreArrays();
+    void createDataStore();
+    void deleteDataStore();
+
+    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
+
+    DataStore::DataStoreVariables mGradients;
 };
 
 //==============================================================================
@@ -305,22 +297,26 @@ public:
     SEDMLSupport::SedmlFile * sedmlFile() const;
     COMBINESupport::CombineArchive * combineArchive() const;
 
-    bool reset();
-    bool run();
+    bool addRun();
 
+    bool run();
     bool pause();
     bool resume();
     bool stop();
 
-public slots:
-    OpenCOR::SimulationSupport::SimulationData * data() const;
-    OpenCOR::SimulationSupport::SimulationResults * results() const;
+    bool reset();
 
+public slots:
     QString fileName() const;
 
     void save();
     void reload();
     void rename(const QString &pFileName);
+
+    SimulationData * data() const;
+    SimulationResults * results() const;
+
+    int runsCount() const;
 
     bool isRunning() const;
     bool isPaused() const;

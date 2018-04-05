@@ -115,8 +115,10 @@ void CellmlFile::reset()
     mRdfApiRepresentation = 0;
     mRdfDataSource = 0;
 
-    Core::resetList(mRdfTriples);
+    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+        delete rdfTriple;
 
+    mRdfTriples.clear();
     mIssues.clear();
 
     Core::FileManager::instance()->setDependencies(mFileName, QStringList());

@@ -463,7 +463,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     if (errorMessage.isEmpty()) {
         if (pImport) {
-            CellMLTextView::CellMLTextViewConverter converter;
+            CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
                 errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(QString::number(converter.errorLine()),
@@ -473,7 +473,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 std::cout << converter.output().toUtf8().constData();
             }
         } else {
-            CellMLTextView::CellmlTextViewParser parser;
+            CellmlTextViewParser parser;
 
             if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";

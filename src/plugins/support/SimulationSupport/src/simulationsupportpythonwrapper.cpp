@@ -81,7 +81,7 @@ bool SimulationSupportPythonWrapper::reset(Simulation *pSimulation)
 {
     // Clear our simulation data
 
-    pSimulation->results()->reset(false);
+    pSimulation->results()->reset();
 
     // Reset our model parameters
 
@@ -100,18 +100,13 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
     mErrorMessage = QString();
 
-    // Try to allocate all the memory we need for the simulation by
-    // resetting its settings
+    // Try to allocate all the memory we need by adding a run to our
+    // simulation
 
-    bool runSimulation = pSimulation->results()->reset();
+    bool runSimulation = pSimulation->addRun();
 
-    // Allocate additional memory for sensitivity analysis
-
-    if (runSimulation)
-        runSimulation = pSimulation->results()->createGradientsDataStore();
-
-    // Run our simulation in case we were able to allocate all the
-    // memory we need to run the simulation
+    // Run our simulation, in case we were able to allocate all the
+    // memory we need
 
     if (runSimulation) {
         // Signal our event loop when the simulation has finished
@@ -169,7 +164,8 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->algebraicVariables(),
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
+        pSimulationData->mSimulationResults->mAlgebraic,
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
@@ -177,7 +173,8 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->constantVariables(),
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
+        pSimulationData->mSimulationResults->mConstants,
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
@@ -185,7 +182,8 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulation
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->rateVariables(),
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
+        pSimulationData->mSimulationResults->mRates,
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
@@ -193,7 +191,8 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(pSimulationData->stateVariables(),
+    return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
+        pSimulationData->mSimulationResults->mStates,
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
@@ -201,35 +200,35 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 const OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
 {
-    return pSimulationResults->mPointVariable;
+    return pSimulationResults->mPoints;
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mAlgebraicVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mAlgebraic);
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mConstantVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mConstants);
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mRateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mRates);
 }
 
 //==============================================================================
 
 PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
 {
-    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mStateVariables);
+    return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mStates);
 }
 
 //==============================================================================
@@ -238,9 +237,9 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
 {
     SimulationData *simulationData = pSimulationResults->mSimulation->data();
 
-    const DataStore::DataStoreVariables constantVariables = simulationData->constantVariables();
-    const DataStore::DataStoreVariables stateVariables = simulationData->stateVariables();
-    const DataStore::DataStoreVariables gradientVariables = simulationData->gradientVariables();
+    const DataStore::DataStoreVariables constantVariables = pSimulationResults->mConstants;
+    const DataStore::DataStoreVariables stateVariables = pSimulationResults->mStates;
+    const DataStore::DataStoreVariables gradientVariables = pSimulationResults->mGradients;
 
     int *indices = simulationData->gradientIndices();
 

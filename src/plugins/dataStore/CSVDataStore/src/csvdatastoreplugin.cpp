@@ -99,7 +99,7 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                                  &csvFilter);
 
         if (!fileName.isEmpty())
-            return new DataStore::DataStoreData(fileName, dataStoreDialog.selectedData());
+            return new DataStore::DataStoreData(fileName, pDataStore, dataStoreDialog.selectedData());
     }
 
     return 0;
@@ -107,13 +107,11 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
 
 //==============================================================================
 
-DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(const QString &pFileName,
-                                                                             DataStore::DataStore *pDataStore,
-                                                                             DataStore::DataStoreData *pDataStoreData) const
+DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const
 {
     // Return an instance of our CSV data store exporter
 
-    return new CsvDataStoreExporter(pFileName, pDataStore, pDataStoreData);
+    return new CsvDataStoreExporter(pDataStoreData);
 }
 
 //==============================================================================

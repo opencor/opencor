@@ -156,11 +156,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>FATAL ERROR | %s:%d: the remote file was not created.</source>
+        <source>&apos;%1&apos; could not be opened (%2).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&apos;%1&apos; could not be opened (%2).</source>
+        <source>FATAL ERROR | %s:%d: &apos;%s&apos; did not get created.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

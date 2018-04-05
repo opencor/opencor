@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "corecliutils.h"
 #endif
 #include "datastoreinterface.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -42,7 +43,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 1;
+    return 3;
 }
 
 //==============================================================================
@@ -51,42 +52,23 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreArray::DataStoreArray(const qulonglong &pCapacity) :
-    mCapacity(pCapacity),
-    mReferences(0)
+DataStoreArray::DataStoreArray(const quint64 &pCapacity) :
+    mCapacity(pCapacity)
 {
-    mValues = new double[pCapacity];
-    mReferences = 1;
+    mData = new double[pCapacity];
+    mRefCount = 1;
 }
 
 //==============================================================================
 
 DataStoreArray::~DataStoreArray()
 {
-    decReference();
+    decRef();
 }
 
 //==============================================================================
 
-void DataStoreArray::decReference()
-{
-    --mReferences;
-    if (mReferences == 0) {
-        delete[] mValues;
-        mValues = 0;
-    }
-}
-
-//==============================================================================
-
-void DataStoreArray::incReference()
-{
-    ++mReferences;
-}
-
-//==============================================================================
-
-qulonglong DataStoreArray::capacity() const
+quint64 DataStoreArray::capacity() const
 {
     // Return our capacity
 
@@ -95,7 +77,161 @@ qulonglong DataStoreArray::capacity() const
 
 //==============================================================================
 
-double * DataStoreArray::values() const
+double * DataStoreArray::data() const
+{
+    // Return a pointer to our data
+
+    return mData;
+}
+
+//==============================================================================
+
+double DataStoreArray::data(const quint64 &pPosition) const
+{
+    // Return the value at the given position
+
+    Q_ASSERT((pPosition < mCapacity) && mData);
+
+    return mData[pPosition];
+}
+
+//==============================================================================
+
+void DataStoreArray::clear()
+{
+    // Clear our data
+
+    memset(mData, 0, mCapacity*Solver::SizeOfDouble);
+}
+
+//==============================================================================
+
+void DataStoreArray::decRef()
+{
+    --mRefCount;
+    if (mRefCount == 0) {
+        delete[] mData;
+        mData = 0;
+    }
+}
+
+//==============================================================================
+
+void DataStoreArray::incRef()
+{
+    ++mRefCount;
+}
+
+//==============================================================================
+
+int DataStoreArray::refCount() const
+{
+    return mRefCount;
+}
+
+//==============================================================================
+
+DataStoreVariableRun::DataStoreVariableRun(const quint64 &pCapacity,
+                                           double *pValue) :
+    mCapacity(pCapacity),
+    mSize(0),
+    mValue(pValue)
+{
+    // Create our array of values
+
+    mArray = new DataStoreArray(mCapacity);
+    mValues = mArray->data();
+}
+
+//==============================================================================
+
+DataStoreVariableRun::~DataStoreVariableRun()
+{
+    // Delete some internal objects
+
+    mArray->decRef();
+}
+
+//==============================================================================
+
+quint64 DataStoreVariableRun::size() const
+{
+    // Return our size
+
+    return mSize;
+}
+
+//==============================================================================
+
+void DataStoreVariableRun::addValue()
+{
+    // Set the value of the variable at the given position
+
+    Q_ASSERT((mSize < mCapacity) && mValue);
+
+    mValues[mSize] = *mValue;
+
+    ++mSize;
+}
+
+//==============================================================================
+
+double DataStoreVariableRun::getValue() const
+{
+    // Return the value to be added next
+
+    Q_ASSERT(mValue);
+
+    return *mValue;
+}
+
+//==============================================================================
+
+void DataStoreVariableRun::setValue(const double &pValue)
+{
+    // Set the value to be added next
+
+    Q_ASSERT(mValue);
+
+    *mValue = pValue;
+}
+
+//==============================================================================
+
+void DataStoreVariableRun::addValue(const double &pValue)
+{
+    // Set the value of the variable at the given position using the given value
+
+    Q_ASSERT(mSize < mCapacity);
+
+    mValues[mSize] = pValue;
+
+    ++mSize;
+}
+
+//==============================================================================
+
+DataStoreArray * DataStoreVariableRun::array() const
+{
+    // Return our data array
+
+    return mArray;
+}
+
+//==============================================================================
+
+double DataStoreVariableRun::value(const quint64 &pPosition) const
+{
+    // Return the value at the given position
+
+    Q_ASSERT(pPosition < mSize);
+
+    return mValues[pPosition];
+}
+
+//==============================================================================
+
+double * DataStoreVariableRun::values() const
 {
     // Return our values
 
@@ -104,52 +240,26 @@ double * DataStoreArray::values() const
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pCapacity, double *pNextValuePtr) :
+DataStoreVariable::DataStoreVariable(double *pValue) :
 #ifndef CLI_VERSION
     mIcon(QIcon()),
 #endif
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
-    mCapacity(0),
-    mSize(0),
-    mArray(0),
-    mNextValuePtr(pNextValuePtr),
-    mValues(0)
+    mValue(pValue),
+    mRuns(DataStoreVariableRuns())
 {
-    if (pCapacity) createArray(pCapacity);
 }
 
 //==============================================================================
 
 DataStoreVariable::~DataStoreVariable()
 {
-    if (mCapacity) deleteArray();
-}
-
-//==============================================================================
-
-void DataStoreVariable::createArray(const qulonglong &pCapacity)
-{
-    mCapacity = pCapacity;
-    mSize = 0;
-
-    // Create our array of values
-
-    mArray = new DataStoreArray(mCapacity);
-    mValues = mArray->values();
-}
-
-//==============================================================================
-
-void DataStoreVariable::deleteArray()
-{
     // Delete some internal objects
 
-    if (mArray) mArray->decReference();
-
-    mCapacity = 0;
-    mSize = 0;
+    foreach (DataStoreVariableRun *run, mRuns)
+        delete run;
 }
 
 //==============================================================================
@@ -176,6 +286,37 @@ bool DataStoreVariable::isVisible() const
     //       this...
 
     return !mUri.isEmpty();
+}
+
+//==============================================================================
+
+int DataStoreVariable::runsCount() const
+{
+    // Return our number of runs
+
+    return mRuns.count();
+}
+
+//==============================================================================
+
+void DataStoreVariable::addRun(const quint64 &pCapacity)
+{
+    // Add a run of the given capacity
+
+    mRuns << new DataStoreVariableRun(pCapacity, mValue);
+}
+
+//==============================================================================
+
+void DataStoreVariable::keepRuns(const int &pRunsCount)
+{
+    // Keep the given number of runs
+
+    while (mRuns.count() > pRunsCount) {
+        delete mRuns.last();
+
+        mRuns.removeLast();
+    }
 }
 
 //==============================================================================
@@ -256,127 +397,116 @@ void DataStoreVariable::setUnit(const QString &pUnit)
 
 //==============================================================================
 
-qulonglong DataStoreVariable::size() const
+quint64 DataStoreVariable::size(const int &pRun) const
 {
-    // Return our size
+    // Return our size for the given run
 
-    return mSize;
+    if (pRun == -1)
+        return mRuns.count()?mRuns.last()->size():0;
+    else
+        return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->size():0;
 }
 
 //==============================================================================
 
 void DataStoreVariable::addValue()
 {
-    // Set the value of the variable at the given position
+    // Add a value to our current (i.e. last) run
 
-    Q_ASSERT(mSize < mCapacity);
-    Q_ASSERT(mNextValuePtr);
-    Q_ASSERT(mValues);
+    Q_ASSERT(!mRuns.isEmpty());
 
-    mValues[mSize] = *mNextValuePtr;
-
-    ++mSize;
+    mRuns.last()->addValue();
 }
 
 //==============================================================================
 
 void DataStoreVariable::addValue(const double &pValue)
 {
-    // Set the value of the variable at the given position using the given value
+    // Add the given value to our current (i.e. last) run
 
-    Q_ASSERT(mSize < mCapacity);
-    Q_ASSERT(mValues);
+    Q_ASSERT(!mRuns.isEmpty());
 
-    mValues[mSize] = pValue;
-
-    ++mSize;
+    mRuns.last()->addValue(pValue);
 }
 
 //==============================================================================
 
-DataStoreArray * DataStoreVariable::array() const
+double DataStoreVariable::getValue() const
 {
-    // Return our data array
+    // Get the value to be added next to our current (i.e. last) run
 
-    return mArray;
+    Q_ASSERT(!mRuns.isEmpty());
+
+    return mRuns.last()->getValue();
 }
 
 //==============================================================================
 
-void DataStoreVariable::clearNextValuePtr()
+void DataStoreVariable::setValue(const double &pValue)
 {
-    mNextValuePtr = 0;
+    // Set the value to be added next to our current (i.e. last) run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    mRuns.last()->setValue(pValue);
 }
 
 //==============================================================================
 
-void DataStoreVariable::setNextValuePtr(double *pNextValuePtr)
+DataStoreArray * DataStoreVariable::array(const int &pRun) const
 {
-    mNextValuePtr = pNextValuePtr;
-}
+    // Return the data array for the given run, if any
 
-//==============================================================================
-
-double DataStoreVariable::nextValue() const
-{
-    Q_ASSERT(mNextValuePtr);
-    return *mNextValuePtr;
-}
-
-//==============================================================================
-
-void DataStoreVariable::setNextValue(const double &pValue)
-{
-    Q_ASSERT(mNextValuePtr);
-
-    *mNextValuePtr = pValue;
-}
-
-//==============================================================================
-
-double DataStoreVariable::value(const qulonglong &pPosition) const
-{
-    // Return our value at the given position
-
-    Q_ASSERT(pPosition < mSize);
-    Q_ASSERT(mValues);
-
-    return mValues[pPosition];
-}
-
-//==============================================================================
-
-double * DataStoreVariable::values() const
-{
-    // Return our values
-
-    return mValues;
-}
-
-//==============================================================================
-
-void DataStoreVariables::clearNextValuePtrs()
-{
-    foreach (DataStoreVariable *variable, *this)
-        variable->clearNextValuePtr();
-}
-
-//==============================================================================
-
-void DataStoreVariables::setNextValuePtrs(double *pNextValuePtrs)
-{
-    foreach (DataStoreVariable *variable, *this) {
-        variable->setNextValuePtr(pNextValuePtrs);
-        ++pNextValuePtrs;
+    if (mRuns.isEmpty()) {
+        return 0;
+    } else {
+        if (pRun == -1)
+            return mRuns.last()->array();
+        else
+            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->array():0;
     }
 }
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName,
-                             const DataStoreVariables &pSelectedVariables) :
+double DataStoreVariable::value(const quint64 &pPosition, const int &pRun) const
+{
+    // Return the value at the given position and this for the given run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    if (pRun == -1) {
+        return mRuns.last()->value(pPosition);
+    } else {
+        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
+
+        return mRuns[pRun]->value(pPosition);
+    }
+}
+
+//==============================================================================
+
+double * DataStoreVariable::values(const int &pRun) const
+{
+    // Return the values for the given run, if any
+
+    if (mRuns.isEmpty()) {
+        return 0;
+    } else {
+        if (pRun == -1)
+            return mRuns.last()->values();
+        else
+            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():0;
+    }
+}
+
+//==============================================================================
+
+DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
+                             const DataStoreVariables &pVariables) :
     mFileName(pFileName),
-    mSelectedVariables(pSelectedVariables)
+    mDataStore(pDataStore),
+    mVariables(pVariables)
 {
 }
 
@@ -391,20 +521,27 @@ QString DataStoreData::fileName() const
 
 //==============================================================================
 
-DataStoreVariables DataStoreData::selectedVariables() const
+DataStore * DataStoreData::dataStore() const
 {
-    // Return our selected variables
+    // Return our data store
 
-    return mSelectedVariables;
+    return mDataStore;
+}
+
+//==============================================================================
+
+DataStoreVariables DataStoreData::variables() const
+{
+    // Return our variables
+
+    return mVariables;
 }
 
 //==============================================================================
 
 DataStore::DataStore(const QString &pUri) :
-    mlUri(pUri),
-    mCapacity(0),
-    mSize(0),
-    mVoi(0),
+    mUri(pUri),
+    mVoi(new DataStoreVariable()),
     mVariables(DataStoreVariables())
 {
 }
@@ -417,37 +554,8 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-#ifdef OpenCOR_MAIN
-    resetList(mVariables);
-#else
-    Core::resetList(mVariables);
-#endif
-}
-
-//==============================================================================
-
-void DataStore::createArrays(const qulonglong &pCapacity)
-{
-    mCapacity = pCapacity;
-    mSize = 0;
-
-    if (mVoi) mVoi->createArray(pCapacity);
-
     foreach (DataStoreVariable *variable, mVariables)
-        variable->createArray(pCapacity);
-}
-
-//==============================================================================
-
-void DataStore::deleteArrays()
-{
-    if (mVoi) mVoi->deleteArray();
-
-    foreach (DataStoreVariable *variable, mVariables)
-        variable->deleteArray();
-
-    mCapacity = 0;
-    mSize = 0;
+        delete variable;
 }
 
 //==============================================================================
@@ -456,61 +564,61 @@ QString DataStore::uri() const
 {
     // Return our URI
 
-    return mlUri;
+    return mUri;
 }
 
 //==============================================================================
 
-qulonglong DataStore::capacity() const
+int DataStore::runsCount() const
 {
-    // Return our capacity
+    // Return our number of runs, i.e. the number of runs for our VOI, for
+    // example
 
-    return mCapacity;
+    return mVoi->runsCount();
 }
 
 //==============================================================================
 
-qulonglong DataStore::size() const
+bool DataStore::addRun(const quint64 &pCapacity)
 {
-    // Return our size
+    // Try to add a run to our VOI and all our variables
 
-    return mSize;
+    int oldRunsCount = mVoi->runsCount();
+
+    try {
+        mVoi->addRun(pCapacity);
+
+        foreach (DataStoreVariable *variable, mVariables)
+            variable->addRun(pCapacity);
+    } catch (...) {
+        // We couldn't add a run to our VOI and all our variables, so only keep
+        // the number of runs we used to have
+
+        mVoi->keepRuns(oldRunsCount);
+
+        foreach (DataStoreVariable *variable, mVariables)
+            variable->keepRuns(oldRunsCount);
+
+        return false;
+    }
+
+    return true;
 }
 
 //==============================================================================
 
-DataStoreVariables DataStore::voiAndVariables()
+quint64 DataStore::size(const int &pRun) const
 {
-    // Return our variable of integration, if any, and all our variables, after
-    // making sure that they are sorted
+    // Return our size, i.e. the size of our VOI, for example
 
-    DataStoreVariables res = DataStoreVariables();
-
-    res << mVoi << mVariables;
-
-    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
-
-    return res;
+    return mVoi->size(pRun);
 }
 
 //==============================================================================
 
 DataStoreVariable * DataStore::voi() const
 {
-    // Return our variable of integration
-
-    return mVoi;
-}
-
-//==============================================================================
-
-DataStoreVariable * DataStore::addVoi()
-{
-    // Add a (new) variable of integration to our data store
-
-    delete mVoi;
-
-    mVoi = new DataStoreVariable(mCapacity);
+    // Return our VOI
 
     return mVoi;
 }
@@ -528,11 +636,31 @@ DataStoreVariables DataStore::variables()
 
 //==============================================================================
 
-DataStoreVariable * DataStore::addVariable(double *pNextValuePtr)
+DataStoreVariables DataStore::voiAndVariables()
 {
-    // Add a variable to our data store
+    // Return our VOI, if any, and all our variables, after making sure that
+    // they are sorted
 
-    DataStoreVariable *variable = new DataStoreVariable(mCapacity, pNextValuePtr);
+    DataStoreVariables res = DataStoreVariables();
+
+    res << mVoi << mVariables;
+
+    std::sort(res.begin(), res.end(), DataStoreVariable::compare);
+
+    return res;
+}
+
+//==============================================================================
+
+DataStoreVariable * DataStore::addVariable(double *pValue)
+{
+    // Add a variable to our data store, but only if we haven't already added
+    // some runs
+
+    if (mVoi->runsCount())
+        return 0;
+
+    DataStoreVariable *variable = new DataStoreVariable(pValue);
 
     mVariables << variable;
 
@@ -541,15 +669,18 @@ DataStoreVariable * DataStore::addVariable(double *pNextValuePtr)
 
 //==============================================================================
 
-DataStoreVariables DataStore::addVariables(const int &pCount,
-                                           double *pNextValuePtrs)
+DataStoreVariables DataStore::addVariables(double *pValues, const int &pCount)
 {
-    // Add some variables to our data store
+    // Add some variables to our data store, but only if we haven't already
+    // added some runs
+
+    if (mVoi->runsCount())
+        return DataStoreVariables();
 
     DataStoreVariables variables = DataStoreVariables();
 
-    for (int i = 0; i < pCount; ++i, ++pNextValuePtrs)
-        variables << new DataStoreVariable(mCapacity, pNextValuePtrs);
+    for (int i = 0; i < pCount; ++i, ++pValues)
+        variables << new DataStoreVariable(pValues);
 
     mVariables << variables;
 
@@ -561,9 +692,7 @@ DataStoreVariables DataStore::addVariables(const int &pCount,
 void DataStore::addValues(const double &pVoiValue)
 {
     // Set the value at the mSize position of all our variables including our
-    // variable of integration, which value is directly given to us
-
-    Q_ASSERT(mSize < mCapacity);
+    // VOI, which value is directly given to us
 
     if (mVoi)
         mVoi->addValue(pVoiValue);
@@ -572,17 +701,11 @@ void DataStore::addValues(const double &pVoiValue)
          variable != variableEnd; ++variable) {
         (*variable)->addValue();
     }
-
-    ++mSize;
 }
 
 //==============================================================================
 
-DataStoreExporter::DataStoreExporter(const QString &pFileName,
-                                     DataStore *pDataStore,
-                                     DataStoreData *pDataStoreData) :
-    mFileName(pFileName),
-    mDataStore(pDataStore),
+DataStoreExporter::DataStoreExporter(DataStoreData *pDataStoreData) :
     mDataStoreData(pDataStoreData)
 {
     // Create our thread

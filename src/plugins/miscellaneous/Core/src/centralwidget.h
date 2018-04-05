@@ -199,7 +199,7 @@ private:
     void setTabBarCurrentIndex(TabBarWidget *pTabBar, const int &pIndex);
 
 signals:
-    void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
+    void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
     void atLeastOneView(const bool &pAtLeastOneView);
 
