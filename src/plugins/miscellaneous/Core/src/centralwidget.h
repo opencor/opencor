@@ -226,6 +226,7 @@ public slots:
     void previousFile();
     void nextFile();
 
+    bool closeFile(int pIndex);
     bool closeFile();
     void closeAllFiles();
 
