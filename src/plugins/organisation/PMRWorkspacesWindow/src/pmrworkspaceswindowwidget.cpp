@@ -1387,7 +1387,10 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
-    // Refresh our workspaces
+    // Refresh our workspaces, but only if we are visible
+
+    if (!isVisible())
+        return;
 
     PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaceManager::instance()->workspaces();
     int workspacesCount = workspaces.count();

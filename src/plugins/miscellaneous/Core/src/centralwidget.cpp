@@ -251,7 +251,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     connect(mFileTabs, &TabBarWidget::tabMoved,
             this, &CentralWidget::moveFile);
     connect(mFileTabs, &TabBarWidget::tabCloseRequested,
-            this, QOverload<>::of(&CentralWidget::closeFile));
+            this, QOverload<int>::of(&CentralWidget::closeFile));
 
     // A connection to handle our modes tab bar
 
@@ -1356,6 +1356,15 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool CentralWidget::closeFile(int pIndex)
+{
+    // Close the file which index is given
+
+    return closeFile(pIndex, false);
 }
 
 //==============================================================================

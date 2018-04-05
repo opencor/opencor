@@ -222,7 +222,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     mViewWidget->setObjectName("SimulationExperimentViewWidget");
 
     // Hide our Simulation Experiment view widget since it may not initially be
-    // shown in  our central widget
+    // shown in our central widget
 
     mViewWidget->hide();
 }

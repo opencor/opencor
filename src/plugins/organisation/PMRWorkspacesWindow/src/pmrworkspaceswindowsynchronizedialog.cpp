@@ -516,6 +516,11 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 
 void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 {
+    // Refresh our changes, but only if we are visible
+
+    if (!isVisible())
+        return;
+
     // Keep track of our existing items
 
     PmrWorkspacesWindowSynchronizeDialogItems oldItems = PmrWorkspacesWindowSynchronizeDialogItems();
