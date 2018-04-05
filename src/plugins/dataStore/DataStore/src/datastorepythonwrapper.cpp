@@ -382,7 +382,7 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 
     mArray(pDataStoreArray)
 {
     npy_intp dims[1];
-    dims[0] = (pSize > 0) ? pSize : pDataStoreArray->capacity();
+    dims[0] = (pSize > 0) ? pSize : pDataStoreArray->size();
 
     mArray->incRef();
     mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void *)mArray->data());

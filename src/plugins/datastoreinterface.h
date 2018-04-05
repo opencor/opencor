@@ -44,10 +44,10 @@ namespace DataStore {
 class DataStoreArray
 {
 public:
-    explicit DataStoreArray(const quint64 &pCapacity);
+    explicit DataStoreArray(const quint64 &pSize);
     ~DataStoreArray();
 
-    quint64 capacity() const;
+    quint64 size() const;
 
     double * data() const;
     double data(const quint64 &pPosition) const;
@@ -59,7 +59,7 @@ public:
     int refCount() const;
 
 private:
-    const quint64 mCapacity;
+    const quint64 mSize;
     int mRefCount;
     double *mData;
 };
@@ -76,9 +76,6 @@ public:
 
     void addValue();
     void addValue(const double &pValue);
-
-    double getValue() const;
-    void setValue(const double &pValue);
 
     DataStoreArray * array() const;
     double value(const quint64 &pPosition) const;
@@ -130,6 +127,8 @@ public:
     double getValue() const;
     void setValue(const double &pValue);
 
+    DataStoreArray * array(const int &pRun = -1) const;
+
 public slots:
     bool isVisible() const;
 
@@ -142,8 +141,6 @@ public slots:
     QString unit() const;
 
     quint64 size(const int &pRun = -1) const;
-
-    DataStoreArray * array(const int &pRun = -1) const;
 
     double value(const quint64 &pPosition, const int &pRun = -1) const;
     double * values(const int &pRun = -1) const;
@@ -201,6 +198,9 @@ public:
 
     bool addRun(const quint64 &pCapacity);
 
+    DataStoreVariables variables();
+    DataStoreVariables voiAndVariables();
+
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(double *pValues, const int &pCount);
 
@@ -213,9 +213,7 @@ public slots:
 
     quint64 size(const int &pRun = -1) const;
 
-    DataStoreVariable * voi() const;
-    DataStoreVariables variables();
-    DataStoreVariables voiAndVariables();
+    OpenCOR::DataStore::DataStoreVariable * voi() const;
 
 private:
     QString mUri;

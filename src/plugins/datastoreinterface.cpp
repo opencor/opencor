@@ -52,10 +52,10 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreArray::DataStoreArray(const quint64 &pCapacity) :
-    mCapacity(pCapacity)
+DataStoreArray::DataStoreArray(const quint64 &pSize) :
+    mSize(pSize)
 {
-    mData = new double[pCapacity];
+    mData = new double[pSize];
     mRefCount = 1;
 }
 
@@ -68,11 +68,11 @@ DataStoreArray::~DataStoreArray()
 
 //==============================================================================
 
-quint64 DataStoreArray::capacity() const
+quint64 DataStoreArray::size() const
 {
-    // Return our capacity
+    // Return our size
 
-    return mCapacity;
+    return mSize;
 }
 
 //==============================================================================
@@ -90,7 +90,7 @@ double DataStoreArray::data(const quint64 &pPosition) const
 {
     // Return the value at the given position
 
-    Q_ASSERT((pPosition < mCapacity) && mData);
+    Q_ASSERT((pPosition < mSize) && mData);
 
     return mData[pPosition];
 }
@@ -101,7 +101,7 @@ void DataStoreArray::clear()
 {
     // Clear our data
 
-    memset(mData, 0, mCapacity*Solver::SizeOfDouble);
+    memset(mData, 0, mSize*Solver::SizeOfDouble);
 }
 
 //==============================================================================
@@ -172,28 +172,6 @@ void DataStoreVariableRun::addValue()
     mValues[mSize] = *mValue;
 
     ++mSize;
-}
-
-//==============================================================================
-
-double DataStoreVariableRun::getValue() const
-{
-    // Return the value to be added next
-
-    Q_ASSERT(mValue);
-
-    return *mValue;
-}
-
-//==============================================================================
-
-void DataStoreVariableRun::setValue(const double &pValue)
-{
-    // Set the value to be added next
-
-    Q_ASSERT(mValue);
-
-    *mValue = pValue;
 }
 
 //==============================================================================
@@ -433,22 +411,22 @@ void DataStoreVariable::addValue(const double &pValue)
 
 double DataStoreVariable::getValue() const
 {
-    // Get the value to be added next to our current (i.e. last) run
+    // Return the value to be added next
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mValue);
 
-    return mRuns.last()->getValue();
+    return *mValue;
 }
 
 //==============================================================================
 
 void DataStoreVariable::setValue(const double &pValue)
 {
-    // Set the value to be added next to our current (i.e. last) run
+    // Set the value to be added next
 
-    Q_ASSERT(!mRuns.isEmpty());
+    Q_ASSERT(mValue);
 
-    mRuns.last()->setValue(pValue);
+    *mValue = pValue;
 }
 
 //==============================================================================

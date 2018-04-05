@@ -238,13 +238,14 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
     SimulationData *simulationData = pSimulationResults->mSimulation->data();
 
     const DataStore::DataStoreVariables constantVariables = pSimulationResults->mConstants;
+
     const DataStore::DataStoreVariables stateVariables = pSimulationResults->mStates;
+    int statesCount = stateVariables.size();
+
     const DataStore::DataStoreVariables gradientVariables = pSimulationResults->mGradients;
+    int gradientsCount = gradientVariables.size()/statesCount;
 
     int *indices = simulationData->gradientIndices();
-
-    int gradientsCount = simulationData->gradientsCount();
-    int statesCount = pSimulationResults->mSimulation->runtime()->statesCount();
 
     PyObject *gradientsDict = PyDict_New();
     QMap<QString, PyObject *> stateGradientsDictionaries;

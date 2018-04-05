@@ -136,7 +136,7 @@ public:
 public slots:
     void reload();
 
-    Simulation * simulation() const;
+    OpenCOR::SimulationSupport::Simulation * simulation() const;
 
     int delay() const;
     void setDelay(const int &pDelay);
@@ -196,7 +196,6 @@ private:
 
     QVector<int> mGradientIndices;
     DataStore::DataStoreArray *mGradients;
-    int mGradientsSize;
 
     SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
@@ -242,6 +241,8 @@ public:
     DataStore::DataStoreVariables stateVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
+    void initialiseGradientsStore();
+
 public slots:
     void reload();
 
@@ -251,7 +252,7 @@ public slots:
 
     quint64 size() const;
 
-    DataStore::DataStore * dataStore() const;
+    OpenCOR::DataStore::DataStore * dataStore() const;
 
 private:
     Simulation *mSimulation;
@@ -265,12 +266,13 @@ private:
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
 
+    DataStore::DataStore *mGradientsStore;
+    DataStore::DataStoreVariables mGradients;
+
     void createDataStore();
     void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
-
-    DataStore::DataStoreVariables mGradients;
 };
 
 //==============================================================================
@@ -313,8 +315,8 @@ public slots:
     void reload();
     void rename(const QString &pFileName);
 
-    SimulationData * data() const;
-    SimulationResults * results() const;
+    OpenCOR::SimulationSupport::SimulationData * data() const;
+    OpenCOR::SimulationSupport::SimulationResults * results() const;
 
     int runsCount() const;
 
