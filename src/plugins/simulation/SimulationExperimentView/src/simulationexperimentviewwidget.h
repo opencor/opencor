@@ -101,6 +101,9 @@ public:
     void checkSimulationResults(const QString &pFileName,
                                 const SimulationExperimentViewSimulationWidget::Task &pTask = SimulationExperimentViewSimulationWidget::None);
 
+public slots:
+    void startingRun(const QString &pFileName);
+
 private:
     SimulationExperimentViewPlugin *mPlugin;
 

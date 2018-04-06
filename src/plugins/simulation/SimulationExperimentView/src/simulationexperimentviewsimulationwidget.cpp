@@ -1336,7 +1336,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // case we were able to allocate all the memory we need
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(), AddRun);
+                mViewWidget->startingRun(mSimulation->fileName());
 
                 mSimulation->run();
             } else {

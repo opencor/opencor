@@ -351,6 +351,8 @@ private:
     bool simulationSettingsOk(bool pEmitSignal = true);
 
 signals:
+    void runStarting(const QString &pFileName);
+
     void running(bool pIsResuming);
     void paused();
     void stopped(qint64 pElapsedTime);

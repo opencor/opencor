@@ -38,18 +38,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace SimulationSupport {
+    class Simulation;
+}   // namespace Simulationsupport
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
 static PyObject *initializeSimulation(const QString &pFileName)
 {
-    SimulationExperimentView::SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
+    SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
 
     if (simulationExperimentViewWidget) {
         simulationExperimentViewWidget->initialize(pFileName);
+
         auto simulation = simulationExperimentViewWidget->simulation(pFileName);
-        if (simulation) return PythonQt::priv()->wrapQObject(simulation);
+        if (simulation) {
+            // Allow the simulation to let its widget know when it starts running
+
+            // Note: connect is also in the PythonQt namespace
+
+            QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
+                             simulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
+
+            // Return the simulation as a Python object
+
+            return PythonQt::priv()->wrapQObject(simulation);
+        }
     }
     Py_RETURN_NONE;
 }
@@ -120,6 +141,14 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
     if (simulationExperimentViewWidget) {
         foreach (const QString &fileName, simulationExperimentViewWidget->fileNames()) {
             auto simulation = simulationExperimentViewWidget->simulation(fileName);
+
+            // Allow the simulation to let its widget know when it starts running
+
+            QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
+                             simulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
+
+            // Add the simulation to the dictionary
+
             PythonSupport::addObject(simulationDict, fileName, simulation);
         }
     }
@@ -137,6 +166,14 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
     if (simulationExperimentViewWidget) {
         auto simulation = simulationExperimentViewWidget->simulation(Core::centralWidget()->currentFileName());
+
+        // Allow the simulation to let its widget know when it starts running
+
+        QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
+                         simulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
+
+        // Return the simulation as a Python object
+
         return PythonSupport::wrapQObject(simulation);
     } else {
         Py_RETURN_NONE;

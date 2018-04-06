@@ -105,10 +105,15 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
     bool runSimulation = pSimulation->addRun();
 
-    // Run our simulation, in case we were able to allocate all the
-    // memory we need
+    // Run our simulation (after having added a run to our graphs), in
+    // case we were able to allocate all the memory we need
 
     if (runSimulation) {
+
+        // Let our widget know we are starting
+
+        emit pSimulation->runStarting(pSimulation->fileName());
+
         // Signal our event loop when the simulation has finished
 
         connect(pSimulation, &Simulation::stopped,

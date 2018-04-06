@@ -568,6 +568,13 @@ void SimulationExperimentViewWidget::callCheckSimulationResults()
 
 //==============================================================================
 
+void SimulationExperimentViewWidget::startingRun(const QString &pFileName)
+{
+    checkSimulationResults(pFileName, SimulationExperimentViewSimulationWidget::AddRun);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewWidget::simulationWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our simulation widget has moved, so keep track of its new
