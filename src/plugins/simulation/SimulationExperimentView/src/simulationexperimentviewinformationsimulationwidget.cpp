@@ -81,8 +81,8 @@ void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationS
 
     // Keep track of when the simulation data has changed
 
-    connect(pSimulation->data(), SIGNAL(updated(const double &)),
-            this, SLOT(updateSimulation(const double &)));
+    connect(pSimulation->data(), &SimulationSupport::SimulationData::updated,
+            this, &SimulationExperimentViewInformationSimulationWidget::updateSimulation);
 }
 
 //==============================================================================

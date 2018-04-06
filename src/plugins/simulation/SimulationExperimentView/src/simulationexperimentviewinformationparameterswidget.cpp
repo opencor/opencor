@@ -422,7 +422,8 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
     QAction *gradientAction = mContextMenu->addAction(QString());
 
-    connect(gradientAction, SIGNAL(triggered(bool)), this, SLOT(toggleGradientFlag()));
+    connect(gradientAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationParametersWidget::toggleGradientFlag);
 
     gradientAction->setVisible(false);
 
@@ -580,7 +581,7 @@ void SimulationExperimentViewInformationParametersWidget::emitGraphRequired()
 //==============================================================================
 
 void SimulationExperimentViewInformationParametersWidget::gradientToggled(
-    CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate)
+    CellMLSupport::CellmlFileRuntimeParameter *pParameter, bool pCalculate)
 {
     static const QIcon ConstantWithGradientIcon = QIcon(":/SimulationExperimentView/constantWithGradient.png");
 

@@ -541,7 +541,7 @@ void SimulationData::deleteArrays()
 
 //==============================================================================
 
-void SimulationData::setGradientCalculation(const int &pIndex, bool pCalculate)
+void SimulationData::setGradientCalculationByIndex(const int &pIndex, bool pCalculate)
 {
     // Keep track of the indices of constant parameters that will
     // have gradients calculated
@@ -569,7 +569,7 @@ void SimulationData::setGradientCalculation(const QString &pConstantUri, bool pC
 
         if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant
               && pConstantUri == mSimulationResults->constantVariables()[parameter->index()]->uri()) {
-            setGradientCalculation(parameter->index(), pCalculate);
+            setGradientCalculationByIndex(parameter->index(), pCalculate);
 
             // Update icon in parameter information widget
 

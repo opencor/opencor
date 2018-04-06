@@ -161,8 +161,8 @@ public slots:
     bool isModified() const;
     void checkForModifications();
 
-    void setGradientCalculation(const int &pIndex, bool pCalculate);
     void setGradientCalculation(const QString &pConstantUri, bool pCalculate = true);
+    void setGradientCalculationByIndex(const int &pIndex, bool pCalculate);
 
 private:
     Simulation *mSimulation;

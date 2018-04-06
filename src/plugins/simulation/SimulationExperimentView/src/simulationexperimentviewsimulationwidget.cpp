@@ -388,10 +388,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Enable SimulationData to toggle parameter widget's gradients' flag and widget to store index.
 
-    connect(mSimulation->data(), SIGNAL(gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)),
-            informationWidget->parametersWidget(), SLOT(gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *, const bool &)));
-    connect(informationWidget->parametersWidget(), SIGNAL(calculateGradients(const int &, const bool &)),
-            mSimulation->data(), SLOT(calculateGradients(const int &, const bool &)));
+    connect(mSimulation->data(), &SimulationSupport::SimulationData::gradientCalculation,
+            informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::gradientToggled);
+    connect(informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::calculateGradients,
+            mSimulation->data(), &SimulationSupport::SimulationData::setGradientCalculationByIndex);
 
     // Keep track of the addition and removal of a graph panel
 

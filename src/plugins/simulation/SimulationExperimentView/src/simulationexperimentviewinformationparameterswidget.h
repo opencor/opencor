@@ -92,12 +92,12 @@ signals:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
-    void calculateGradients(const int &pIndex, const bool &pCalculate);
+    void calculateGradients(int pIndex, bool pCalculate);
 
 public slots:
     void updateParameters(double pCurrentPoint);
 
-    void gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate);
+    void gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *pParameter, bool pCalculate);
 
 private slots:
     void propertyChanged(Core::Property *pProperty);

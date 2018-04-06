@@ -111,11 +111,13 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
     if (runSimulation) {
         // Signal our event loop when the simulation has finished
 
-        connect(pSimulation, SIGNAL(stopped(const qint64 &)), this, SLOT(simulationFinished(const qint64 &)));
+        connect(pSimulation, &Simulation::stopped,
+                this, &SimulationSupportPythonWrapper::simulationFinished);
 
         // Get error messages from the simulation
 
-        connect(pSimulation, SIGNAL(error(const QString &)), this, SLOT(error(const QString &)));
+        connect(pSimulation, &Simulation::error,
+                this, &SimulationSupportPythonWrapper::error);
 
         // Start the simulation and wait for it to complete
 
