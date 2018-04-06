@@ -143,7 +143,7 @@ public:
     int runsCount() const;
 
     void addRun();
-    void resetRuns();
+    void removeRuns();
     GraphPanelPlotGraphRun * lastRun() const;
 
     bool isSelected() const;
@@ -173,7 +173,9 @@ public:
     bool hasData() const;
     quint64 dataSize() const;
 
-    QwtSeriesData<QPointF> *data() const;
+    QwtSeriesData<QPointF> *data(const int &pRun = -1) const;
+    void setData(double *pDataX, double *pDataY, const int &pRun,
+                 const int &pSize);
     void setData(double *pDataX, double *pDataY, const int &pSize);
 
     QRectF boundingRect();
@@ -195,6 +197,7 @@ private:
 
     GraphPanelPlotWidget *mPlot;
 
+    GraphPanelPlotGraphRun *mDummyRun;
     GraphPanelPlotGraphRuns mRuns;
 };
 

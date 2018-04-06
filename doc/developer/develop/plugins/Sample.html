@@ -67,11 +67,11 @@ double addResult = Sample::add(3.0, 5.0);
             To build our plugin, we need a <code>CMakeLists.txt</code> file (click <a href="index.html#CMake project">here</a> for some information on CMake and plugins in OpenCOR), which contents is:
         </p>
 
-        <pre class="prettyprint linenums">PROJECT(SamplePlugin)
+        <pre class="prettyprint linenums">project(SamplePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(Sample
+add_plugin(Sample
     SOURCES
         <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
 
@@ -84,7 +84,7 @@ ADD_PLUGIN(Sample
 )</pre>
 
         <p>
-            The first line specifies the name of the CMake project for our <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a> plugin, i.e. <code>SamplePlugin</code>. Then, we have a call to the <code>ADD_PLUGIN()</code> macro (line 5), which is defined in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>common.cmake</code></a>. Different types of parameters are passed to it (<code>SOURCES</code>, <code>HEADERS_MOC</code> and <code>QT_MODULES</code> at lines 6, 11 and 13, respectively), followed by the parameters themselves.
+            The first line specifies the name of the CMake project for our <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/Sample/">Sample</a> plugin, i.e. <code>SamplePlugin</code>. Then, we have a call to the <code>add_plugin()</code> macro (line 5), which is defined in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>common.cmake</code></a>. Different types of parameters are passed to it (<code>SOURCES</code>, <code>HEADERS_MOC</code> and <code>QT_MODULES</code> at lines 6, 11 and 13, respectively), followed by the parameters themselves.
         </p>
 
         <p>

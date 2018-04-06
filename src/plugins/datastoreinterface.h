@@ -110,6 +110,11 @@ public:
     void addRun(const quint64 &pCapacity);
     void keepRuns(const int &pRunsCount);
 
+    int runsCount() const;
+
+    void addRun(const quint64 &pCapacity);
+    void keepRuns(const int &pRunsCount);
+
 #ifndef CLI_VERSION
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
@@ -163,6 +168,10 @@ private:
 class DataStoreVariables : public QList<DataStoreVariable *>
 {
 };
+
+//==============================================================================
+
+class DataStore;
 
 //==============================================================================
 

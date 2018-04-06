@@ -1,8 +1,8 @@
-PROJECT(CellMLTextViewPlugin)
+project(CellMLTextViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLTextView
+add_plugin(CellMLTextView
     SOURCES
         ../../cliinterface.cpp
         ../../filehandlinginterface.cpp

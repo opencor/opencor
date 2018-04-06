@@ -34,7 +34,7 @@ namespace StandardSupport {
 
 StandardFile::StandardFile(const QString &pFileName) :
     QObject(),
-    mFileName(Core::nativeCanonicalFileName(pFileName)),
+    mFileName(Core::canonicalFileName(pFileName)),
     mNew(Core::FileManager::instance()->isNew(pFileName))
 {
 }
@@ -88,7 +88,7 @@ void StandardFile::setFileName(const QString &pFileName)
 {
     // Set the standard file's file name
 
-    mFileName = Core::nativeCanonicalFileName(pFileName);
+    mFileName = Core::canonicalFileName(pFileName);
 }
 
 //==============================================================================

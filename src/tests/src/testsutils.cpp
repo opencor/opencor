@@ -42,7 +42,7 @@ QString dirOrFileName(const QString &pDirOrFileName)
 
     static const QString SourceDir = OpenCOR::fileContents(":/source_directory").first();
 
-    return QDir::toNativeSeparators(SourceDir+QDir::separator()+QString(pDirOrFileName));
+    return QDir::toNativeSeparators(SourceDir+"/"+QString(pDirOrFileName));
 }
 
 //==============================================================================

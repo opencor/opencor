@@ -1,8 +1,8 @@
-PROJECT(RawTextViewPlugin)
+project(RawTextViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(RawTextView
+add_plugin(RawTextView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp

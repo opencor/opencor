@@ -78,7 +78,7 @@ StandardSupport::StandardFile * CombineFileManager::create(const QString &pFileN
 {
     // Create and return a new COMBINE archive
 
-    return new CombineArchive(Core::nativeCanonicalFileName(pFileName));
+    return new CombineArchive(Core::canonicalFileName(pFileName));
 }
 
 //==============================================================================

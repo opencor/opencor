@@ -148,7 +148,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
 {
     // Extract the help files
 
-    QString applicationBaseFileName =  QDir::tempPath()+QDir::separator()
+    QString applicationBaseFileName =  QDir::tempPath()+"/"
                                       +QFileInfo(qApp->applicationFilePath()).baseName();
 
     mQchFileName = applicationBaseFileName+".qch";

@@ -28,12 +28,12 @@
             <li>Be located under the <code>tests</code> folder of a plugin folder (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Compiler/tests"><code>[OpenCOR]/src/plugins/miscellaneous/Compiler/tests</code></a>);</li>
             <li>Consist of at least one set of <code>.cpp</code> and <code>.h</code> files (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Compiler/tests/tests.cpp"><code>[OpenCOR]/src/plugins/miscellaneous/Compiler/tests/tests.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Compiler/tests/tests.h"><code>[OpenCOR]/src/plugins/miscellaneous/Compiler/tests/tests.h</code></a>);</li>
             <li>
-                Be listed under the <code>TESTS</code> header in the call to our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>ADD_PLUGIN</code></a> macro of the plugin's <code>CMakeLists.txt</code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/miscellaneous/Compiler/CMakeLists.txt</code></a>):
-                <pre class="prettyprint">PROJECT(MyPlugin)
+                Be listed under the <code>TESTS</code> header in the call to our CMake <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>add_plugin()</code></a> macro of the plugin's <code>CMakeLists.txt</code> file (e.g. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Compiler/CMakeLists.txt"><code>[OpenCOR]/src/plugins/miscellaneous/Compiler/CMakeLists.txt</code></a>):
+                <pre class="prettyprint">project(MyPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(MyPlugin
+add_plugin(MyPlugin
     ...
     TESTS
         tests1

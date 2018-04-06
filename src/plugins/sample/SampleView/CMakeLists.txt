@@ -1,8 +1,8 @@
-PROJECT(SampleViewPlugin)
+project(SampleViewPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(SampleView
+add_plugin(SampleView
     SOURCES
         ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp

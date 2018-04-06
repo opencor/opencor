@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 31, "month": 1, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 3, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,10 +37,10 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.4 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1526\">#1526</a>). A new file (with no specific type) is not wrongly considered to be a COMBINE archive anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1530\">#1530</a>)." },
-                       { "change": "<strong>PMR window:</strong> properly refresh the list of public exposures when changing the PMR instance (see issue <a href=\"https://github.com/opencor/opencor/issues/1521\">#1521</a>)." },
-                       { "change": "<strong>Simulation support:</strong> addressed a problem with fixing and then saving a previously invalid simulation (see issue <a href=\"https://github.com/opencor/opencor/issues/1533\">#1533</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> added support for multiple runs (see issue <a href=\"https://github.com/opencor/opencor/issues/1523\">#1523</a>)." }
+                       { "change": "<strong>PMR support:</strong> now provide better error messages (see issue <a href=\"https://github.com/opencor/opencor/issues/1556\">#1556</a>). Now provide a more meaningful error message when something goes wrong (see issue <a href=\"https://github.com/opencor/opencor/issues/1558\">#1558</a>). Fixed a problem with folders being potentially incorrectly tracked (see issue <a href=\"https://github.com/opencor/opencor/issues/1559\">#1559</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> improved the synchronisation with PMR in case the Internet connection drops (see issue <a href=\"https://github.com/opencor/opencor/issues/1566\">#1566</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> fixed a small regression problem with nothing being shown when running a simulation and then asking for a graph to be plotted (see issue <a href=\"https://github.com/opencor/opencor/issues/1560\">#1560</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1557\">#1557</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

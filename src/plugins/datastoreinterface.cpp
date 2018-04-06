@@ -409,6 +409,39 @@ void DataStoreVariable::addValue(const double &pValue)
 
 //==============================================================================
 
+double DataStoreVariable::value(const quint64 &pPosition, const int &pRun) const
+{
+    // Return the value at the given position and this for the given run
+
+    Q_ASSERT(!mRuns.isEmpty());
+
+    if (pRun == -1) {
+        return mRuns.last()->value(pPosition);
+    } else {
+        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
+
+        return mRuns[pRun]->value(pPosition);
+    }
+}
+
+//==============================================================================
+
+double * DataStoreVariable::values(const int &pRun) const
+{
+    // Return the values for the given run, if any
+
+    if (mRuns.isEmpty()) {
+        return 0;
+    } else {
+        if (pRun == -1)
+            return mRuns.last()->values();
+        else
+            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():0;
+    }
+}
+
+//==============================================================================
+
 double DataStoreVariable::getValue() const
 {
     // Return the value to be added next
@@ -442,39 +475,6 @@ DataStoreArray * DataStoreVariable::array(const int &pRun) const
             return mRuns.last()->array();
         else
             return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->array():0;
-    }
-}
-
-//==============================================================================
-
-double DataStoreVariable::value(const quint64 &pPosition, const int &pRun) const
-{
-    // Return the value at the given position and this for the given run
-
-    Q_ASSERT(!mRuns.isEmpty());
-
-    if (pRun == -1) {
-        return mRuns.last()->value(pPosition);
-    } else {
-        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
-
-        return mRuns[pRun]->value(pPosition);
-    }
-}
-
-//==============================================================================
-
-double * DataStoreVariable::values(const int &pRun) const
-{
-    // Return the values for the given run, if any
-
-    if (mRuns.isEmpty()) {
-        return 0;
-    } else {
-        if (pRun == -1)
-            return mRuns.last()->values();
-        else
-            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():0;
     }
 }
 

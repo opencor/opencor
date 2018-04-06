@@ -229,12 +229,12 @@ public:
 
     void addPoint(const double &pPoint);
 
-    double * points() const;
+    double * points(const int &pRun) const;
 
-    double * constants(const int &pIndex) const;
-    double * rates(const int &pIndex) const;
-    double * states(const int &pIndex) const;
-    double * algebraic(const int &pIndex) const;
+    double * constants(const int &pRun, const int &pIndex) const;
+    double * rates(const int &pRun, const int &pIndex) const;
+    double * states(const int &pRun, const int &pIndex) const;
+    double * algebraic(const int &pRun, const int &pIndex) const;
 
     DataStore::DataStoreVariables constantVariables() const;
     DataStore::DataStoreVariables rateVariables() const;
@@ -293,6 +293,8 @@ public:
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
+    SimulationWorker * worker() const;
+
     Simulation::FileType fileType() const;
 
     CellMLSupport::CellmlFile * cellmlFile() const;
@@ -319,6 +321,10 @@ public slots:
     OpenCOR::SimulationSupport::SimulationResults * results() const;
 
     int runsCount() const;
+
+    int runsCount() const;
+
+    bool addRun();
 
     bool isRunning() const;
     bool isPaused() const;

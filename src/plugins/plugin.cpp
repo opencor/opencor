@@ -386,7 +386,7 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 {
     // Return the plugin's file name based on its name
 
-    return pPluginsDir+QDir::separator()+PluginPrefix+pName+PluginExtension;
+    return pPluginsDir+"/"+PluginPrefix+pName+PluginExtension;
     // Note: we must add the plugin prefix part to the plugin file name...
 }
 
@@ -401,7 +401,7 @@ int Plugin::pluginInfoVersion(const QString &pFileName)
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+    QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
     QLibrary plugin(pFileName);
@@ -427,7 +427,7 @@ int Plugin::interfaceVersion(const QString &pFileName,
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+    QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
     QLibrary plugin(pFileName);
@@ -458,7 +458,7 @@ PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
 #ifdef Q_OS_WIN
     QString origPath = QDir::currentPath();
 
-    QDir::setCurrent(QFileInfo(pFileName).absolutePath());
+    QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
     QLibrary plugin(pFileName);

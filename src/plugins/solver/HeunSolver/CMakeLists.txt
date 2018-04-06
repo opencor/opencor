@@ -1,8 +1,8 @@
-PROJECT(HeunSolverPlugin)
+project(HeunSolverPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(HeunSolver
+add_plugin(HeunSolver
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp

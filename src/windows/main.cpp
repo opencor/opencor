@@ -84,7 +84,7 @@ int main(int pArgC, char *pArgV[])
 
             res = -1;
         } else {
-            QString guiAppFilePath = qApp->applicationDirPath()+QDir::separator()+qAppName()+DotExe;
+            QString guiAppFilePath = qApp->applicationDirPath()+"/"+qAppName()+DotExe;
 
             if (!QFile::exists(guiAppFilePath)) {
                 // We can't find the GUI version of OpenCOR, so...

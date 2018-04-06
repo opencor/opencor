@@ -764,7 +764,7 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                            fileManagerInstance->isRemote(simulationFileName)?
                                fileManagerInstance->url(simulationFileName):
                                simulationFileName;
-    QString information =  "<strong>"+fileName+"</strong>"+OutputBrLn;
+    QString information = "<strong>"+QDir::toNativeSeparators(fileName)+"</strong>"+OutputBrLn;
     SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSimulation->sedmlFile()?
                                                         mSimulation->sedmlFile()->issues():
                                                         SEDMLSupport::SedmlFileIssues();
@@ -1323,16 +1323,9 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
 
             // Run our simulation (after having added a run to our graphs), in
             // case we were able to allocate all the memory we need
-            // Note: a graph will, by default, have a run (otherwise it can't
-            //       be created since setting it up requires access to an
-            //       QwtPlotCurve object), so only add a run from the second run
-            //       onwards...
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(),
-                                                    (mSimulation->runsCount() > 1)?
-                                                        AddRun:
-                                                        FakeAddRun);
+                mViewWidget->checkSimulationResults(mSimulation->fileName(), AddRun);
 
                 mSimulation->run();
             } else {
@@ -1370,6 +1363,11 @@ void SimulationExperimentViewSimulationWidget::resetModelParameters()
 void SimulationExperimentViewSimulationWidget::clearSimulationData()
 {
     // Clear our simulation data
+    // Note: we temporarily disable updates to prevent the GUI from taking too
+    //       long to update itself (something that might happen when we have
+    //       several graph panels since they will try to realign themselves)...
+
+    setUpdatesEnabled(false);
 
     mSimulation->results()->reset();
 
@@ -1378,6 +1376,8 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
     updateSimulationMode();
 
     mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+
+    setUpdatesEnabled(true);
 }
 
 //==============================================================================
@@ -2047,7 +2047,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
 
         if (!createSedmlFile(sedmlFile, sedmlFileName, modelSource)) {
             Core::warningMessageBox(tr("Export To SED-ML File"),
-                                    tr("The simulation could not be exported to <strong>%1</strong>.").arg(sedmlFileName));
+                                    tr("The simulation could not be exported to <strong>%1</strong>.").arg(QDir::toNativeSeparators(sedmlFileName)));
         }
 
         if (isCellmlFile)
@@ -2113,7 +2113,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
             QString importedFilePath = remoteCellmlFile?
                                            QString(importedFileName).remove(FileNameRegEx)+"/":
-                                           QFileInfo(importedFileName).canonicalPath()+QDir::separator();
+                                           QFileInfo(importedFileName).canonicalPath()+"/";
 
             for (int i = 0, iMax = qMin(commonPath.length(), importedFilePath.length()); i < iMax; ++i) {
                 if (commonPath[i] != importedFilePath[i]) {
@@ -2359,7 +2359,9 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties()
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable)
+CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWidget::runtimeParameter(libsedml::SedVariable *pSedmlVariable,
+                                                                                                       QString &pCellmlComponent,
+                                                                                                       QString &pCellmlVariable)
 {
     // Retrieve the CellML runtime parameter corresponding to the given SED-ML
     // variable
@@ -2399,6 +2401,9 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
     // Go through the runtime parameters to see one of them correspond to our
     // given SED-ML variable
+
+    pCellmlComponent = componentName;
+    pCellmlVariable = variableName+QString(variableDegree, '\'');
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mSimulation->runtime()->parameters()) {
         if (   !componentName.compare(parameter->componentHierarchy().last())
@@ -2529,7 +2534,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
 
         if (!propertySet) {
-            simulationError(tr("the requested property (%1) could not be set").arg(kisaoId),
+            simulationError(tr("the requested solver property (%1) could not be set").arg(kisaoId),
                             InvalidSimulationEnvironment);
 
             return false;
@@ -2564,7 +2569,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                         }
 
                         if (!propertySet) {
-                            simulationError(tr("the requested property (%1) could not be set").arg(id),
+                            simulationError(tr("the requested solver property (%1) could not be set").arg(id),
                                             InvalidSimulationEnvironment);
 
                             return false;
@@ -2626,7 +2631,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             }
 
                             if (!propertySet) {
-                                simulationError(tr("the requested property (%1) could not be set").arg(id),
+                                simulationError(tr("the requested solver property (%1) could not be set").arg(id),
                                                 InvalidSimulationEnvironment);
 
                                 return false;
@@ -2843,11 +2848,29 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         for (uint j = 0, jMax = sedmlPlot2d->getNumCurves(); j < jMax; ++j) {
             libsedml::SedCurve *sedmlCurve = sedmlPlot2d->getCurve(j);
 
-            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0));
-            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0));
+            libsedml::SedVariable *xVariable = sedmlDocument->getDataGenerator(sedmlCurve->getXDataReference())->getVariable(0);
+            libsedml::SedVariable *yVariable = sedmlDocument->getDataGenerator(sedmlCurve->getYDataReference())->getVariable(0);
+            QString xCellmlComponent;
+            QString yCellmlComponent;
+            QString xCellmlVariable;
+            QString yCellmlVariable;
+            CellMLSupport::CellmlFileRuntimeParameter *xParameter = runtimeParameter(xVariable, xCellmlComponent, xCellmlVariable);
+            CellMLSupport::CellmlFileRuntimeParameter *yParameter = runtimeParameter(yVariable, yCellmlComponent, yCellmlVariable);
 
-            if (!xParameter || !yParameter) {
-                simulationError(tr("the requested curve (%1) could not be set").arg(QString::fromStdString(sedmlCurve->getId())),
+            if (!xParameter) {
+                if (!yParameter) {
+                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), xCellmlVariable, xCellmlComponent, yCellmlVariable, yCellmlComponent),
+                                    InvalidSimulationEnvironment);
+
+                    return false;
+                } else {
+                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), xCellmlVariable, xCellmlComponent),
+                                    InvalidSimulationEnvironment);
+
+                    return false;
+                }
+            } else if (!yParameter) {
+                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), yCellmlVariable, yCellmlComponent),
                                 InvalidSimulationEnvironment);
 
                 return false;
@@ -3307,7 +3330,12 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 {
     Q_UNUSED(pGraphProperties);
 
-    // A new graph has been added, so keep track of it and update its plot
+    // A new graph has been added, so add runs to it, if our simulation has some
+
+    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
+        pGraph->addRun();
+
+    // Now, keep track of the graph and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as a
     //       result, replot the graphs including our new one. On the other hand,
     //       if the plot's axes don't get updated, we need to draw our new
@@ -3315,7 +3343,8 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    updateGraphData(pGraph, mSimulation->results()->size());
+    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
+        updateGraphData(pGraph, i, mSimulation->results()->size(i));
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
@@ -3562,22 +3591,23 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 //==============================================================================
 
 double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
+                                                        const int &pRun,
                                                         CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given parameter
 
     switch (pParameter->type()) {
     case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return pSimulation->results()->points();
+        return pSimulation->results()->points(pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return pSimulation->results()->constants(pParameter->index());
+        return pSimulation->results()->constants(pRun, pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return pSimulation->results()->rates(pParameter->index());
+        return pSimulation->results()->rates(pRun, pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return pSimulation->results()->states(pParameter->index());
+        return pSimulation->results()->states(pRun, pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return pSimulation->results()->algebraic(pParameter->index());
+        return pSimulation->results()->algebraic(pRun, pParameter->index());
     default:
         // Not a relevant type, so return null
         // Note: we should never reach this point...
@@ -3589,17 +3619,28 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                               const int &pRun,
                                                                const quint64 &pSize)
 {
-    // Update our graph's data
+    // Update our graph's data from the given run
 
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setData(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                        data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
-                        pSize);
+        pGraph->setData(data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
+                        data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+                        pRun, pSize);
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                                                               const quint64 &pSize)
+{
+    // Update our graph's data from the last run
+
+    updateGraphData(pGraph, -1, pSize);
 }
 
 //==============================================================================
@@ -3692,7 +3733,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // Reset our runs or a add new one, if needed
 
                 if (pTask == ResetRuns)
-                    graph->resetRuns();
+                    graph->removeRuns();
                 else if (pTask == AddRun)
                     graph->addRun();
 

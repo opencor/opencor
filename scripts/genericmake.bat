@@ -27,13 +27,6 @@ IF "!CMakeBuildType!" == "Release" (
 
 TITLE Making OpenCOR!TitleTests! (using !Generator!)...
 
-FOR /F "TOKENS=1,4" %%X IN ('qmake --version') DO (
-    IF "%%X" == "Using" (
-        SET FullQtVersion=%%Y
-        SET QtVersion=!FullQtVersion:~0,3!
-    )
-)
-
 CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
 
 CD build

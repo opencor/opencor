@@ -1,146 +1,146 @@
-PROJECT(SBMLAPIPlugin)
+project(SBMLAPIPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME libSBML)
-SET(PACKAGE_VERSION 5.16.0)
+set(PACKAGE_NAME libSBML)
+set(PACKAGE_VERSION 5.16.0)
 
 # Version of our package's libraries
 
-SET(MAJOR_LIBRARY_VERSION 5)
-SET(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.16.0)
+set(MAJOR_LIBRARY_VERSION 5)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.16.0)
 
 # Git tag for our library
 
-SET(GIT_TAG v5.16.0)
+set(GIT_TAG v5.16.0)
 
 # Package repository
 
-SET(PACKAGE_REPOSITORY libsbml)
+set(PACKAGE_REPOSITORY libsbml)
 
 # Specify where our local package will be installed
 
-SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
 # Name of our package's shared library (and of its import library, if any)
 
-IF(WIN32)
-    SET(SHARED_LIBRARY libsbml${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(IMPORT_LIBRARY libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-ELSE()
-    SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
-ENDIF()
+if(WIN32)
+    set(SHARED_LIBRARY libsbml${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(IMPORT_LIBRARY libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+else()
+    set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(IMPORT_LIBRARY ${SHARED_LIBRARY})
+endif()
 
 # Retrieve our package's binaries
 
-SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
-SET(EXTERNAL_BINARIES
+set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
 # Specify the files that need to have their SHA-1 value checked
 
-SET(SHA1_FILES
+set(SHA1_FILES
     lib/${SHARED_LIBRARY}
 )
 
-IF(WIN32)
-    LIST(APPEND SHA1_FILES
+if(WIN32)
+    list(APPEND SHA1_FILES
         lib/${IMPORT_LIBRARY}
     )
-ENDIF()
+endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_SBMLAPI_PACKAGE)
+if(USE_PREBUILT_SBMLAPI_PACKAGE)
     # Retrieve the plugin's package
 
-    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
+    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
-    IF(WIN32)
-        IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    if(WIN32)
+        if(RELEASE_MODE)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} e45f13c13f47f6b672e5d95b0bde6a7fe8eefbbb
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 04079417caa3c4542acc4d04131be02d91bc42ce
                                               efab157439ecb681c7bdec310d991af75f2437bf)
-        ELSE()
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} c61704db02f2316fc2a64d436197cce91e798dd7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 319c46e94103012416adc2af82cdd24d46dbeab9
                                               562d624ac501f8f439c7be458b27534dce2f713d)
-        ENDIF()
-    ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+        endif()
+    elseif(APPLE)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} adc952722dbd8c5a6535d700b8e5179bf3d57b99
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 1b6a911d1b8320fb57db48c78f06432bc5b4f975)
-    ELSE()
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    else()
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} ba10ad4f50b7a4f111a9e8bec7db7559645cc1fd
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 7b6ae4e1a6c715b01607c9a3308fc65e0d345507)
-    ENDIF()
-ELSE()
+    endif()
+else()
     # Download some dependencies for Windows, if needed
 
-    IF(WIN32)
-        IF(RELEASE_MODE)
-            SET(MODE release)
-        ELSE()
-            SET(MODE debug)
-        ENDIF()
+    if(WIN32)
+        if(RELEASE_MODE)
+            set(MODE release)
+        else()
+            set(MODE debug)
+        endif()
 
-        SET(DEPENDENCIES_FILENAME libSBML_dependencies_vs14_${MODE}_x64.zip)
-        SET(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/api/SBMLAPI/ext/dependencies)
-        SET(DEPENDENCIES_MODE_DIR ${DEPENDENCIES_DIR}/${MODE})
+        set(DEPENDENCIES_FILENAME libSBML_dependencies_vs14_${MODE}_x64.zip)
+        set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/api/SBMLAPI/ext/dependencies)
+        set(DEPENDENCIES_MODE_DIR ${DEPENDENCIES_DIR}/${MODE})
 
-        IF(NOT EXISTS ${DEPENDENCIES_MODE_DIR})
-            MESSAGE("Retrieving the 'libSBML' dependencies...")
+        if(NOT EXISTS ${DEPENDENCIES_MODE_DIR})
+            message("Retrieving the 'libSBML' dependencies...")
 
-            SET(REAL_DEPENDENCIES_FILENAME ${DEPENDENCIES_DIR}/${DEPENDENCIES_FILENAME})
+            set(REAL_DEPENDENCIES_FILENAME ${DEPENDENCIES_DIR}/${DEPENDENCIES_FILENAME})
 
-            FILE(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${GIT_TAG}/${DEPENDENCIES_FILENAME}" ${REAL_DEPENDENCIES_FILENAME}
+            file(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${GIT_TAG}/${DEPENDENCIES_FILENAME}" ${REAL_DEPENDENCIES_FILENAME}
                  SHOW_PROGRESS STATUS STATUS)
 
-            LIST(GET STATUS 0 STATUS_CODE)
+            list(GET STATUS 0 STATUS_CODE)
 
-            IF(${STATUS_CODE} EQUAL 0)
-                EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_DEPENDENCIES_FILENAME}
+            if(${STATUS_CODE} EQUAL 0)
+                execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_DEPENDENCIES_FILENAME}
                                 WORKING_DIRECTORY ${DEPENDENCIES_DIR}
                                 OUTPUT_QUIET)
-                EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E rename "libSBML Dependencies-1.0.0-b1-win64" ${MODE}
+                execute_process(COMMAND ${CMAKE_COMMAND} -E rename "libSBML Dependencies-1.0.0-b1-win64" ${MODE}
                                 WORKING_DIRECTORY ${DEPENDENCIES_DIR}
                                 OUTPUT_QUIET)
 
-                FILE(REMOVE ${REAL_DEPENDENCIES_FILENAME})
-            ELSE()
-                FILE(REMOVE ${REAL_DEPENDENCIES_FILENAME})
+                file(REMOVE ${REAL_DEPENDENCIES_FILENAME})
+            else()
+                file(REMOVE ${REAL_DEPENDENCIES_FILENAME})
                 # Note: this is in case we had an HTTP error of sorts, in which case we
                 #       would end up with an empty file...
 
-                MESSAGE(FATAL_ERROR "The libSBML depencies could not be retrieved...")
-            ENDIF()
-        ENDIF()
-    ENDIF()
+                message(FATAL_ERROR "The libSBML depencies could not be retrieved...")
+            endif()
+        endif()
+    endif()
 
     # Ignore some warnings
 
-    IF(APPLE)
-        SET(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-switch")
-    ENDIF()
+    if(APPLE)
+        set(PACKAGE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-switch")
+    endif()
 
     # Build libSBML as an external project
 
-    SET(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+    set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -168,14 +168,14 @@ ELSE()
 
     # Do some post-processing that is specific to each platform
 
-    IF(WIN32)
+    if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
-    ELSE()
+    else()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
@@ -185,32 +185,32 @@ ELSE()
                                                                   ${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
-    ENDIF()
+    endif()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(DEPENDS_ON ${PACKAGE_BUILD})
-ENDIF()
+    set(DEPENDS_ON ${PACKAGE_BUILD})
+endif()
 
 # Allow other external projects to find our libSBML package
 
-SET(SBMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-SET(SBMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-SET(SBMLAPI_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+set(SBMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(SBMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+set(SBMLAPI_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
 # Note: we would normally use '${PACKAGE_NAME}' rather than 'SBMLAPI', but it
 #       can't be done here since the name of our package is different from that
 #       of our plugin...
 
-ADD_PLUGIN(SBMLAPI
+add_plugin(SBMLAPI
     SOURCES
         ../../plugininfo.cpp
 

@@ -147,6 +147,14 @@
         <source>An error occurred while trying to push the workspace.</source>
         <translation>Une erreur s&apos;est produite lors du poussage de l&apos;espace de travail.</translation>
     </message>
+    <message>
+        <source>%1
+
+Git message: %2.</source>
+        <translation>%1
+
+Message Git : %2.</translation>
+    </message>
 </context>
 <context>
     <name>PmrSupportPreferencesWidget</name>
