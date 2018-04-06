@@ -89,8 +89,8 @@
         <translation>Le modèle est trop constraint (i.e. des variables sont soit à la fois initialisées et calculées soit calculées plus d&apos;une fois)</translation>
     </message>
     <message>
-        <source>a problem occurred during the generation of the model code</source>
-        <translation>un problème s&apos;est produit durant la génération du code pour le modèle</translation>
+        <source>a problem occurred during the generation of the model code (%1)</source>
+        <translation>un problème s&apos;est produit durant la génération du code pour le modèle (%1)</translation>
     </message>
     <message>
         <source>a model can have only one variable of integration</source>
