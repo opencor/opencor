@@ -505,7 +505,7 @@ void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel
 
         checkCodeInformation(mCodeInformation);
     } catch (iface::cellml_api::CellMLException &exception) {
-        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation)));
+        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation), false));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }
