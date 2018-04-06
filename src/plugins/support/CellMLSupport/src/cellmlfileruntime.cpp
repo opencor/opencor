@@ -464,9 +464,9 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
     // Retrieve the code information's latest error message
 
-    QString codeGenerationErrorMessage = QString::fromStdWString(pCodeInformation->errorMessage());
+    QString errorMessage = QString::fromStdWString(pCodeInformation->errorMessage());
 
-    if (codeGenerationErrorMessage.isEmpty()) {
+    if (errorMessage.isEmpty()) {
         // The code generation went fine, so check the model's constraint level
 
         iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
@@ -483,7 +483,7 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         }
     } else {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("a problem occurred during the generation of the model code"));
+                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage, false)));
     }
 }
 
@@ -505,7 +505,7 @@ void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel
 
         checkCodeInformation(mCodeInformation);
     } catch (iface::cellml_api::CellMLException &exception) {
-        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation)));
+        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation), false));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }

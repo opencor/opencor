@@ -797,7 +797,8 @@ endif()
 
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
-#          other plugins...
+#          other plugins, and zlib before OpenSSL since the latter needs the
+#          former...
 # Note #2: soft dependencies are determined automatically, so plugins can be
 #          listed in any order...
 
@@ -821,8 +822,8 @@ else()
 endif()
 
 set(PLUGINS
-    thirdParty/OpenSSL
     thirdParty/zlib
+    thirdParty/OpenSSL
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
