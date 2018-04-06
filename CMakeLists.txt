@@ -802,24 +802,13 @@ if(ENABLE_TESTS)
 endif()
 
 # Build our plugins
-# Note: apart from Python related third-party plugins, plugins can be listed in
-#       any order (dependencies are determined automatically). However, for this
-#       to work, all plugins must have [PLUGIN_DIR]/src as an include directory.
-#       In addition, all plugins linked to a packge (built using the ExternalProject
-#       module) must also have [PLUGIN_DIR]/[LOCAL_EXTERNAL_PACKAGE_DIR]/include
-#       as an include directory...
 
-# Third-party Python plugins depend on CMake variables defined by the OpenSSL and
-# zlib plugins as well as by the preceding Python plugins
-
-set(PYTHON_PLUGINS
-    thirdParty/OpenSSL
-    thirdParty/zlib
-
-    thirdParty/Python
-    thirdParty/PythonPackages
-    thirdParty/PythonQtAPI
-)
+# Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
+#          other plugins...
+# Note #2: Python thirdparty plugins must be built in order, after zlib and
+#          OpenSSL, and before any other plugins...
+# Note #3: soft dependencies are determined automatically, so plugins can be
+#          listed in any order...
 
 if(ENABLE_SAMPLE_PLUGINS)
     set(SAMPLE_PLUGINS
@@ -841,7 +830,13 @@ else()
 endif()
 
 set(PLUGINS
-    ${PYTHON_PLUGINS}
+    thirdParty/zlib
+    thirdParty/OpenSSL
+
+    thirdParty/Python
+    thirdParty/PythonPackages
+    thirdParty/PythonQtAPI
+
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 

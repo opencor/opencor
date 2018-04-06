@@ -59,12 +59,12 @@ class PMRSUPPORT_EXPORT PmrWorkspace : public QObject
     Q_OBJECT
 
 public:
-    explicit PmrWorkspace(const bool &pOwned, const QString &pName,
+    explicit PmrWorkspace(bool pOwned, const QString &pName,
                           const QString &pUrl, const QString &pDescription,
                           const QString &pOwner, PmrWebService *pParent);
-    explicit PmrWorkspace(const bool &pOwned, const QString &pName,
+    explicit PmrWorkspace(bool pOwned, const QString &pName,
                           const QString &pUrl, PmrWebService *pParent);
-    ~PmrWorkspace();
+    ~PmrWorkspace() override;
 
     static bool compare(PmrWorkspace *pWorkspace1, PmrWorkspace *pWorkspace2);
 
@@ -88,8 +88,8 @@ public:
     bool commitMerge();
     bool isMerging() const;
     bool isOpen() const;
-    bool open(const QString &pPath, const bool &pRefreshStatus = true);
-    void synchronize(const bool &pPush);
+    bool open(const QString &pPath, bool pRefreshStatus = true);
+    void synchronize(bool pPush);
 
     QByteArray headFileContents(const QString &pFileName);
 
@@ -99,14 +99,14 @@ public:
         StatusBehind   = 2,
         StatusCurrent  = 4,
         StatusConflict = 32,
-        StatusCommit   = 64,
+        StatusStaged   = 64,
         StatusUnstaged = 128
     };
 
     CharPair gitFileStatus(const QString &pPath) const;
     WorkspaceStatus gitWorkspaceStatus() const;
 
-    void stageFile(const QString &pPath, const bool &pStage);
+    void stageFile(const QString &pPath, bool pStage);
     StagedFiles stagedFiles();
 
 private:
@@ -130,10 +130,10 @@ private:
     int mStagedCount;
     int mUnstagedCount;
 
-    bool doCommit(const char *pMessage, const size_t &pParentCount,
-                  const git_commit **pParents);
+    bool commit(const char *pMessage, const size_t &pParentCount,
+                const git_commit **pParents);
 
-    CharPair gitStatusChars(const int &pFlags) const;
+    CharPair gitStatusChars(int pFlags) const;
 
     void setGitAuthorization(git_strarray *pAuthorizationStrArray);
 
@@ -167,9 +167,9 @@ signals:
     void information(const QString &pMessage) const;
     void warning(const QString &pMessage) const;
 
-    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(PmrWorkspace *pWorkspace);
+    void workspaceUncloned(PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PmrWorkspace *pWorkspace);
 
 public slots:
     void refreshStatus();

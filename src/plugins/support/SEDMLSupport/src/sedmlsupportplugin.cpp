@@ -186,8 +186,8 @@ void SEDMLSupportPlugin::initializePlugin()
 
     // Some connections to handle our different actions
 
-    connect(mFileNewSedmlFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newSedmlFile()));
+    connect(mFileNewSedmlFileAction, &QAction::triggered,
+            this, &SEDMLSupportPlugin::newSedmlFile);
 }
 
 //==============================================================================

@@ -59,7 +59,7 @@ HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
 
     // Let ourselves know immediately that data is available for reading
 
-    QTimer::singleShot(0, this, SIGNAL(readyRead()));
+    QTimer::singleShot(0, this, &HelpWindowNetworkReply::readyRead);
 }
 
 //==============================================================================
@@ -98,7 +98,7 @@ qint64 HelpWindowNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
     // that we are done
 
     if (!mData.length())
-        QTimer::singleShot(0, this, SIGNAL(finished()));
+        QTimer::singleShot(0, this, &HelpWindowNetworkReply::finished);
 
     // Return the size of the data which was read
 

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "centralwidget.h"
 #include "coreguiutils.h"
+#include "file.h"
 #include "pythonsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
@@ -69,7 +70,8 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     QString fileName = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    QString ioError = Core::centralWidget()->openFile(fileName, false);
+    QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Local,
+                                                      QString(), false);
 
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());

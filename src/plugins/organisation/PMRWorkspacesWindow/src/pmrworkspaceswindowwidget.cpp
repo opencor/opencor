@@ -256,21 +256,21 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     setModel(mProxyModel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
+    connect(this, &PmrWorkspacesWindowWidget::customContextMenuRequested,
+            this, &PmrWorkspacesWindowWidget::showCustomContextMenu);
 
-    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked()));
+    connect(this, &PmrWorkspacesWindowWidget::doubleClicked,
+            this, &PmrWorkspacesWindowWidget::itemDoubleClicked);
 
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(itemExpanded(const QModelIndex &)));
+    connect(this, &PmrWorkspacesWindowWidget::expanded,
+            this, &PmrWorkspacesWindowWidget::resizeTreeViewToContents);
+    connect(this, &PmrWorkspacesWindowWidget::expanded,
+            this, &PmrWorkspacesWindowWidget::itemExpanded);
 
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(itemCollapsed(const QModelIndex &)));
+    connect(this, &PmrWorkspacesWindowWidget::collapsed,
+            this, &PmrWorkspacesWindowWidget::resizeTreeViewToContents);
+    connect(this, &PmrWorkspacesWindowWidget::collapsed,
+            this, &PmrWorkspacesWindowWidget::itemCollapsed);
 
     // Create and set ourselves a layout
 
@@ -284,12 +284,14 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     mUserMessageWidget = new Core::UserMessageWidget(this);
 
+    mUserMessageWidget->setOpenExternalLinks(true);
     mUserMessageWidget->setScale(0.85);
 
     layout->addWidget(mUserMessageWidget);
 
     // Create our various non-owned workspace icons
 
+    static const QIcon StagedIcon = QIcon(":/PMRWorkspacesWindow/iQ.png");
     static const QIcon UnstagedIcon = QIcon(":/PMRWorkspacesWindow/wQ.png");
     static const QIcon ConflictIcon = QIcon(":/PMRWorkspacesWindow/wE.png");
 
@@ -298,6 +300,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
     int overlayIconSize = 0.57*folderIconSize;
+
+    mStagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, StagedIcon,
+                                                        folderIconSize, folderIconSize,
+                                                        0, 0, overlayIconSize, overlayIconSize);
+    mStagedExpandedWorkspaceIcon = Core::overlayedIcon(mExpandedWorkspaceIcon, StagedIcon,
+                                                       folderIconSize, folderIconSize,
+                                                       0, 0, overlayIconSize, overlayIconSize);
 
     mUnstagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, UnstagedIcon,
                                                           folderIconSize, folderIconSize,
@@ -328,6 +337,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                                       overlayIconPos, overlayIconPos,
                                                       overlayIconSize, overlayIconSize);
 
+    mStagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, StagedIcon,
+                                                             folderIconSize, folderIconSize,
+                                                             0, 0, overlayIconSize, overlayIconSize);
+    mStagedExpandedOwnedWorkspaceIcon = Core::overlayedIcon(mExpandedOwnedWorkspaceIcon, StagedIcon,
+                                                            folderIconSize, folderIconSize,
+                                                            0, 0, overlayIconSize, overlayIconSize);
+
     mUnstagedCollapsedOwnedWorkspaceIcon = Core::overlayedIcon(mCollapsedOwnedWorkspaceIcon, UnstagedIcon,
                                                                folderIconSize, folderIconSize,
                                                                0, 0, overlayIconSize, overlayIconSize);
@@ -349,6 +365,25 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     int fileIconSize = mFileIcon.availableSizes().first().width();
 
     overlayIconSize = 0.57*fileIconSize;
+
+    mIaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mIdFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iD.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mImFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iM.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mIqFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iQ.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mIrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iR.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mItFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iT.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
 
     mWaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wA.png"),
                                       fileIconSize, fileIconSize,
@@ -379,19 +414,19 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     PMRSupport::PmrWorkspaceManager *workspaceManager = PMRSupport::PmrWorkspaceManager::instance();
 
-    connect(workspaceManager, SIGNAL(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(workspaceManager, SIGNAL(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *)));
-    connect(workspaceManager, SIGNAL(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)),
-            this, SLOT(workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *)));
+    connect(workspaceManager, &PMRSupport::PmrWorkspaceManager::workspaceCloned,
+            this, &PmrWorkspacesWindowWidget::workspaceCloned);
+    connect(workspaceManager, &PMRSupport::PmrWorkspaceManager::workspaceUncloned,
+            this, &PmrWorkspacesWindowWidget::workspaceUncloned);
+    connect(workspaceManager, &PMRSupport::PmrWorkspaceManager::workspaceSynchronized,
+            this, &PmrWorkspacesWindowWidget::workspaceSynchronized);
 
     // Create and start a timer for refreshing our workspaces
 
     mTimer = new QTimer(this);
 
-    connect(mTimer, SIGNAL(timeout()),
-            this, SLOT(refreshWorkspaces()));
+    connect(mTimer, &QTimer::timeout,
+            this, &PmrWorkspacesWindowWidget::refreshWorkspaces);
 
     mTimer->start(1000);
 
@@ -425,24 +460,24 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mAboutWorkspaceAction = Core::newAction(QIcon(":/oxygen/actions/help-about.png"),
                                             this);
 
-    connect(mNewWorkspaceAction, SIGNAL(triggered(bool)),
-            mParentNewAction, SIGNAL(triggered(bool)));
-    connect(mViewWorkspaceInPmrAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewWorkspaceInPmr()));
-    connect(mViewWorkspaceOncomputerAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewWorkspaceOncomputer()));
-    connect(mCopyWorkspaceUrlAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyWorkspaceUrl()));
-    connect(mCopyWorkspacePathAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyWorkspacePath()));
-    connect(mMakeLocalWorkspaceCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(makeLocalWorkspaceCopy()));
-    connect(mSynchronizeWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(synchronizeWorkspace()));
-    connect(mReloadWorkspacesAction, SIGNAL(triggered(bool)),
-            mParentReloadAction, SIGNAL(triggered(bool)));
-    connect(mAboutWorkspaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(aboutWorkspace()));
+    connect(mNewWorkspaceAction, &QAction::triggered,
+            mParentNewAction, &QAction::triggered);
+    connect(mViewWorkspaceInPmrAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::viewWorkspaceInPmr);
+    connect(mViewWorkspaceOncomputerAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::viewWorkspaceOncomputer);
+    connect(mCopyWorkspaceUrlAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::copyWorkspaceUrl);
+    connect(mCopyWorkspacePathAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::copyWorkspacePath);
+    connect(mMakeLocalWorkspaceCopyAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::makeLocalWorkspaceCopy);
+    connect(mSynchronizeWorkspaceAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::synchronizeWorkspace);
+    connect(mReloadWorkspacesAction, &QAction::triggered,
+            mParentReloadAction, &QAction::triggered);
+    connect(mAboutWorkspaceAction, &QAction::triggered,
+            this, &PmrWorkspacesWindowWidget::aboutWorkspace);
 
     mContextMenu->addAction(mNewWorkspaceAction);
     mContextMenu->addSeparator();
@@ -645,13 +680,14 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
     mInitialized = false;
 
-    mErrorMessage = QString();
+    mMessageType = None;
+    mMessage = QString();
     mAuthenticated = false;
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibility)
+void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
 {
     // Determine the message to be displayed, if any
 
@@ -659,7 +695,7 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
         mUserMessageWidget->setIconMessage(":/oxygen/actions/help-hint.png",
                                            tr("Authenticate yourself..."),
                                            tr("Click on the top-right button."));
-    } else if (mErrorMessage.isEmpty()) {
+    } else if (mMessage.isEmpty()) {
         if (!PMRSupport::PmrWorkspaceManager::instance()->count()) {
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("No workspaces were found..."));
@@ -667,8 +703,27 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
             mUserMessageWidget->resetMessage();
         }
     } else {
-        mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
-                                           Core::formatMessage(mErrorMessage, false, true));
+        switch (mMessageType) {
+        case Information:
+            mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
+                                               Core::formatMessage(mMessage, false, true));
+
+            break;
+        case Error:
+            mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
+                                               Core::formatMessage(mMessage, false, true));
+
+            break;
+        case Warning:
+            mUserMessageWidget->setIconMessage(":/oxygen/status/task-attention.png",
+                                               Core::formatMessage(mMessage, false, true));
+
+            break;
+        default:
+            // Not a relevant type, so do nothing
+
+            ;
+        }
     }
 
     // Show/hide our user message widget
@@ -679,9 +734,10 @@ void PmrWorkspacesWindowWidget::updateGui(const bool &pForceUserMessageVisibilit
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces,
-                                           const QString &pErrorMessage,
-                                           const bool &pAuthenticated)
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
+                                           const MessageType &pMessageType,
+                                           const QString &pMessage,
+                                           bool pAuthenticated)
 {
     // Initialise / keep track of some properties
 
@@ -689,10 +745,11 @@ void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspa
 
     workspaceManager->clearWorkspaces();
 
-    mErrorMessage = pErrorMessage;
+    mMessageType = pMessageType;
+    mMessage = pMessage;
     mAuthenticated = pAuthenticated;
 
-    if (pErrorMessage.isEmpty() && pAuthenticated) {
+    if (pMessage.isEmpty() && pAuthenticated) {
         // Reconcile the URLs of my-workspaces (on PMR) with those from our
         // workspace folders (in doing so, folders/URLs that don't correspond to
         // an actual PMR workspace are pruned from the relevant maps)
@@ -764,9 +821,37 @@ void PmrWorkspacesWindowWidget::initialize(const OpenCOR::PMRSupport::PmrWorkspa
         addWorkspace(workspace);
 
     updateGui(   (pWorkspaces == PMRSupport::PmrWorkspaces())
-              && pErrorMessage.isEmpty() && !pAuthenticated);
+              && pMessage.isEmpty() && !pAuthenticated);
 
     mInitialized = true;
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces)
+{
+    // Initialise ourselves using the given workspaces
+
+    initialize(pWorkspaces, None, QString(), true);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize()
+{
+    // Initialise ourselves
+
+    initialize(PMRSupport::PmrWorkspaces(), None, QString(), false);
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWidget::initialize(const MessageType &pMessageType,
+                                           const QString &pMessage)
+{
+    // Initialise ourselves using the given message
+
+    initialize(PMRSupport::PmrWorkspaces(), pMessageType, pMessage, true);
 }
 
 //==============================================================================
@@ -818,6 +903,9 @@ void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace 
                                                        QIcon &pExpandedIcon)
 {
     // Retrieve the icons to use for the given workspace
+    // Note: we want to check for the unstaged status before the staged status
+    //       since a workspace may have both staged and unstaged files, so the
+    //       unstaged status should have precedence...
 
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = pWorkspace->gitWorkspaceStatus();
 
@@ -827,6 +915,9 @@ void PmrWorkspacesWindowWidget::retrieveWorkspaceIcons(PMRSupport::PmrWorkspace 
     } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged) {
         pCollapsedIcon = pWorkspace->isOwned()?mUnstagedCollapsedOwnedWorkspaceIcon:mUnstagedCollapsedWorkspaceIcon;
         pExpandedIcon = pWorkspace->isOwned()?mUnstagedExpandedOwnedWorkspaceIcon:mUnstagedExpandedWorkspaceIcon;
+    } else if (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged) {
+        pCollapsedIcon = pWorkspace->isOwned()?mStagedCollapsedOwnedWorkspaceIcon:mStagedCollapsedWorkspaceIcon;
+        pExpandedIcon = pWorkspace->isOwned()?mStagedExpandedOwnedWorkspaceIcon:mStagedExpandedWorkspaceIcon;
     } else {
         pCollapsedIcon = pWorkspace->isOwned()?mCollapsedOwnedWorkspaceIcon:mCollapsedWorkspaceIcon;
         pExpandedIcon = pWorkspace->isOwned()?mExpandedOwnedWorkspaceIcon:mExpandedWorkspaceIcon;
@@ -922,6 +1013,7 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
 PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
                                                                       PmrWorkspacesWindowItem *pFolderItem,
                                                                       PMRSupport::PmrWorkspaceFileNode *pFileNode,
+                                                                      bool &pIsStaged,
                                                                       bool &pIsUnstaged,
                                                                       bool &pHasConflicts)
 {
@@ -930,6 +1022,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
     PmrWorkspacesWindowItems res = PmrWorkspacesWindowItems();
 
+    pIsStaged = false;
     pIsUnstaged = false;
     pHasConflicts = false;
 
@@ -950,6 +1043,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
         // Add a new item for the file node or use the one that already exists
         // for it
+        // Note: an unstaged status must have precedence over a staged status...
 
         if (fileNode->hasChildren()) {
             PmrWorkspacesWindowItem *folderItem = newItem?
@@ -965,23 +1059,28 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             if (!newItem)
                 pFolderItem->appendRow(folderItem);
 
+            bool isStaged;
             bool isUnstaged;
             bool hasConflicts;
 
             res << folderItem
                 << populateWorkspace(pWorkspace, folderItem, fileNode,
-                                     isUnstaged, hasConflicts);
+                                     isStaged, isUnstaged, hasConflicts);
 
             folderItem->setCollapsedIcon(hasConflicts?
                                              mConflictCollapsedWorkspaceIcon:
                                              isUnstaged?
                                                  mUnstagedCollapsedWorkspaceIcon:
-                                                 mCollapsedWorkspaceIcon);
+                                                 isStaged?
+                                                     mStagedCollapsedWorkspaceIcon:
+                                                     mCollapsedWorkspaceIcon);
             folderItem->setExpandedIcon(hasConflicts?
                                             mConflictExpandedWorkspaceIcon:
                                             isUnstaged?
                                                 mUnstagedExpandedWorkspaceIcon:
-                                                mExpandedWorkspaceIcon);
+                                                isStaged?
+                                                    mStagedExpandedWorkspaceIcon:
+                                                    mExpandedWorkspaceIcon);
         } else {
             // We are dealing with a file, so retrieve its status and use the
             // corresponding icon for it, if needed
@@ -990,32 +1089,49 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             //       I and W values not to be '\0' (which would be the case for
             //       a folder that doesn't contain any files anymore)...
 
-            PMRSupport::CharPair status = fileNode->status();
+            QChar iStatus = fileNode->status().first;
+            QChar wStatus = fileNode->status().second;
 
-            if ((status.first == '\0') && (status.second == '\0'))
+            if ((iStatus == '\0') && (wStatus == '\0'))
                 continue;
 
             QIcon icon = mFileIcon;
 
-            if (status.second == 'A')
+            if (iStatus == 'A')
+                icon = mIaFileIcon;
+            else if (iStatus == 'D')
+                icon = mIdFileIcon;
+            else if (iStatus == 'M')
+                icon = mImFileIcon;
+            else if (iStatus == 'Q')
+                icon = mIqFileIcon;
+            else if (iStatus == 'R')
+                icon = mIrFileIcon;
+            else if (iStatus == 'T')
+                icon = mItFileIcon;
+            else if (wStatus == 'A')
                 icon = mWaFileIcon;
-            else if (status.second == 'C')
+            else if (wStatus == 'C')
                 icon = mWcFileIcon;
-            else if (status.second == 'D')
+            else if (wStatus == 'D')
                 icon = mWdFileIcon;
-            else if (status.second == 'E')
+            else if (wStatus == 'E')
                 icon = mWeFileIcon;
-            else if (status.second == 'M')
+            else if (wStatus == 'M')
                 icon = mWmFileIcon;
-            else if (status.second == 'Q')
+            else if (wStatus == 'Q')
                 icon = mWqFileIcon;
-            else if (status.second == 'R')
+            else if (wStatus == 'R')
                 icon = mWrFileIcon;
-            else if (status.second == 'T')
+            else if (wStatus == 'T')
                 icon = mWtFileIcon;
 
-            pIsUnstaged = pIsUnstaged || ((status.second != ' ') && (status.second != 'C'));
-            pHasConflicts = pHasConflicts || (status.second == 'C');
+            pIsStaged =    pIsStaged
+                        || (    (iStatus != '\0') && (iStatus != ' ')
+                            && ((wStatus == '\0') || (wStatus == ' ')));
+            pIsUnstaged =    pIsUnstaged
+                          || ((wStatus != '\0') && (wStatus != ' ') && (wStatus != 'C'));
+            pHasConflicts = pHasConflicts || (wStatus == 'C');
 
             if (newItem) {
                 // We already have an item, so just update its icon
@@ -1047,10 +1163,12 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     // Populate the given folder item with its children, which are referenced in
     // the given file node
 
+    bool isStaged;
     bool isUnstaged;
     bool hasConflicts;
 
-    return populateWorkspace(pWorkspace, pFolderItem, pFileNode, isUnstaged, hasConflicts);
+    return populateWorkspace(pWorkspace, pFolderItem, pFileNode,
+                             isStaged, isUnstaged, hasConflicts);
 }
 
 //==============================================================================
@@ -1068,7 +1186,7 @@ void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWorkspace,
-                                                 const bool &pSortAndResize)
+                                                 bool pSortAndResize)
 {
     // Refresh the status of the given workspace
 
@@ -1205,8 +1323,9 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
     mCopyWorkspacePathAction->setEnabled(oneWorkspacePath);
     mMakeLocalWorkspaceCopyAction->setEnabled(oneItem && !nbOfWorkspacePaths);
     mSynchronizeWorkspaceAction->setEnabled(   oneWorkspacePath
-                                            && (   (    workspace->isOwned()
-                                                    && (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead))
+                                            && (   (   workspace->isOwned()
+                                                    && (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)
+                                                        || (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged)))
                                                 || (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)));
     mAboutWorkspaceAction->setEnabled(oneWorkspaceUrl);
 
@@ -1266,13 +1385,14 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::refreshWorkspaces(const OpenCOR::PMRSupport::PmrWorkspaces &pWorkspaces)
+void PmrWorkspacesWindowWidget::refreshWorkspaces()
 {
-    // Refresh our workspaces
+    // Refresh our workspaces, but only if we are visible
 
-    PMRSupport::PmrWorkspaces workspaces = pWorkspaces.isEmpty()?
-                                               PMRSupport::PmrWorkspaceManager::instance()->workspaces():
-                                               pWorkspaces;
+    if (!isVisible())
+        return;
+
+    PMRSupport::PmrWorkspaces workspaces = PMRSupport::PmrWorkspaceManager::instance()->workspaces();
     int workspacesCount = workspaces.count();
     int workspaceNb = 0;
 
@@ -1282,7 +1402,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces(const OpenCOR::PMRSupport::Pmr
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been cloned, so update ourselves accordingly
 
@@ -1319,7 +1439,7 @@ void PmrWorkspacesWindowWidget::workspaceCloned(OpenCOR::PMRSupport::PmrWorkspac
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceUncloned(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The given workspace has been uncloned, so update ourselves accordingly
 
@@ -1331,7 +1451,7 @@ void PmrWorkspacesWindowWidget::workspaceUncloned(OpenCOR::PMRSupport::PmrWorksp
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace)
+void PmrWorkspacesWindowWidget::workspaceSynchronized(PMRSupport::PmrWorkspace *pWorkspace)
 {
     // The workspace has been synchronised, so refresh it
 
@@ -1435,8 +1555,10 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
         //       current state...
 
         PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+        bool needRequestWorkspaceSynchronize = false;
 
-        if (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged) {
+        if (   (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusStaged)
+            || (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged)) {
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
@@ -1452,12 +1574,15 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
                             workspace->stageFile(fileNames[i], true);
 
                         workspace->commit(synchronizeDialog.message());
+
+                        needRequestWorkspaceSynchronize = true;
                     }
                 settings.endGroup();
             settings.endGroup();
         }
 
-        mPmrWebService->requestWorkspaceSynchronize(workspace, workspace->isOwned());
+        if (needRequestWorkspaceSynchronize)
+            mPmrWebService->requestWorkspaceSynchronize(workspace, workspace->isOwned());
     }
 }
 

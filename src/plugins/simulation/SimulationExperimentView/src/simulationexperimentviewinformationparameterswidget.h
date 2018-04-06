@@ -57,16 +57,16 @@ class SimulationExperimentViewInformationParametersWidget : public Core::Propert
 public:
     explicit SimulationExperimentViewInformationParametersWidget(QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation,
-                    const bool &pReloadingView = false);
+                    bool pReloadingView = false);
     void finalize();
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
 
 private:
     QMenu *mContextMenu;
@@ -89,18 +89,18 @@ private:
     void retranslateContextMenu();
 
 signals:
-    void graphRequired(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                       OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
+    void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                       CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void calculateGradients(const int &pIndex, const bool &pCalculate);
 
 public slots:
-    void updateParameters(const double &pCurrentPoint);
+    void updateParameters(double pCurrentPoint);
 
     void gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate);
 
 private slots:
-    void propertyChanged(OpenCOR::Core::Property *pProperty);
+    void propertyChanged(Core::Property *pProperty);
 
     void emitGraphRequired();
 

@@ -98,18 +98,18 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
     setModel(mTreeViewModel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+    connect(this, &PmrWindowWidget::customContextMenuRequested,
+            this, &PmrWindowWidget::showCustomContextMenu);
 
-    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SIGNAL(itemDoubleClicked()));
+    connect(this, &PmrWindowWidget::doubleClicked,
+            this, QOverload<const QModelIndex &>::of(&PmrWindowWidget::itemDoubleClicked));
+    connect(this, &PmrWindowWidget::doubleClicked,
+            this, QOverload<>::of(&PmrWindowWidget::itemDoubleClicked));
 
-    connect(this, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(this, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
+    connect(this, &PmrWindowWidget::expanded,
+            this, &PmrWindowWidget::resizeTreeViewToContents);
+    connect(this, &PmrWindowWidget::collapsed,
+            this, &PmrWindowWidget::resizeTreeViewToContents);
 
     // Create and set ourselves a layout
 
@@ -147,12 +147,12 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
                                                                overlayIconSize, overlayIconSize),
                                            this);
 
-    connect(mViewInPmrAction, SIGNAL(triggered(bool)),
-            this, SLOT(viewInPmr()));
-    connect(mCopyUrlAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyUrl()));
-    connect(mMakeLocalCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(makeLocalCopy()));
+    connect(mViewInPmrAction, &QAction::triggered,
+            this, &PmrWindowWidget::viewInPmr);
+    connect(mCopyUrlAction, &QAction::triggered,
+            this, &PmrWindowWidget::copyUrl);
+    connect(mMakeLocalCopyAction, &QAction::triggered,
+            this, &PmrWindowWidget::makeLocalCopy);
 
     mContextMenu->addAction(mViewInPmrAction);
     mContextMenu->addSeparator();
@@ -220,7 +220,7 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void PmrWindowWidget::updateGui(const bool &pForceUserMessageVisibility)
+void PmrWindowWidget::updateGui(bool pForceUserMessageVisibility)
 {
     // Update the message to be displayed, if any
 

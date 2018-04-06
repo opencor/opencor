@@ -72,6 +72,22 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+CellmlFileException::CellmlFileException(const QString &pMessage) :
+    mMessage(pMessage)
+{
+}
+
+//==============================================================================
+
+QString CellmlFileException::message() const
+{
+    // Return our message
+
+    return mMessage;
+}
+
+//==============================================================================
+
 CellmlFile::CellmlFile(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
     mRdfTriples(CellmlFileRdfTriples(this)),
@@ -182,7 +198,7 @@ void CellmlFile::retrieveImports(const QString &pXmlBase,
 
 bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                          CellmlFileIssues &pIssues,
-                                         const bool &pWithBusyWidget)
+                                         bool pWithBusyWidget)
 {
     // Fully instantiate all the imports, but only if we are not directly
     // dealing with our model or if we are dealing with a non CellML 1.0 model,
@@ -232,16 +248,20 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     //       instantiate it from text instead...
 
                     ObjRef<iface::cellml_api::URI> xlinkHref = import->xlinkHref();
-                    QString url = QUrl(importXmlBase).resolved(QString::fromStdWString(xlinkHref->asText())).toString();
+                    QString xlinkHrefString = QString::fromStdWString(xlinkHref->asText());
+                    QString url = QUrl(importXmlBase).resolved(xlinkHrefString).toString();
                     bool isLocalFile;
                     QString fileNameOrUrl;
+                    bool dummy;
+                    QString xmlBaseFileNameOrUrl;
 
                     Core::checkFileNameOrUrl(url, isLocalFile, fileNameOrUrl);
+                    Core::checkFileNameOrUrl(importXmlBase, dummy, xmlBaseFileNameOrUrl);
 
                     if (!fileNameOrUrl.compare(mFileName)) {
                         // We want to import ourselves, something we can't do
 
-                        throw(std::exception());
+                        throw(CellmlFileException(tr("%1 cannot import itself").arg(fileNameOrUrl)));
                     } else if (mImportContents.contains(fileNameOrUrl)) {
                         // We have already loaded the import contents, so
                         // directly instantiate the import with it
@@ -272,7 +292,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                             if (isLocalFile && (pModel == mModel))
                                 dependencies << fileNameOrUrl;
                         } else {
-                            throw(std::exception());
+                            throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved").arg(xmlBaseFileNameOrUrl, xlinkHrefString)));
                         }
                     }
 
@@ -282,7 +302,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
 
                     if (!importModel)
-                        throw(std::exception());
+                        throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(xmlBaseFileNameOrUrl, xlinkHrefString)));
 
                     retrieveImports(isLocalFile?
                                         QUrl::fromLocalFile(fileNameOrUrl).toString():
@@ -290,11 +310,11 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                     importModel, importList, importXmlBaseList);
                 }
             }
-        } catch (...) {
+        } catch (CellmlFileException &exception) {
             // Something went wrong with the full instantiation of the imports
 
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the imports could not be fully instantiated"));
+                                       tr("the imports could not be fully instantiated (%1)").arg(exception.message()));
 
             return false;
         }
@@ -316,9 +336,9 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::doLoad(const QString &pFileContents,
-                        ObjRef<iface::cellml_api::Model> *pModel,
-                        CellmlFileIssues &pIssues)
+bool CellmlFile::load(const QString &pFileContents,
+                      ObjRef<iface::cellml_api::Model> *pModel,
+                      CellmlFileIssues &pIssues)
 {
     // Make sure that pIssues is empty
 
@@ -439,7 +459,7 @@ bool CellmlFile::load()
 
     // Try to load the model
 
-    if (!doLoad(QString(), &mModel, mIssues))
+    if (!load(QString(), &mModel, mIssues))
         return false;
 
     // Retrieve all the RDF triples associated with the model and initialise our
@@ -501,8 +521,8 @@ bool CellmlFile::save(const QString &pFileName)
     // annotations
     // Note #1: as part of good practices, a CellML file should never contain an
     //          XML base value. Yet, upon loading a CellML file, we set one (see
-    //          doLoad()), so that we can properly import CellML files, if
-    //          needed. So, now, we need to undo what we did...
+    //          load()), so that we can properly import CellML files, if needed.
+    //          So, now, we need to undo what we did...
     // Note #2: normally, we would be asking QDomDocument::setContent() to
     //          process namespaces, but this would then result in a very messy
     //          serialisation with namespaces being referenced all over the
@@ -559,8 +579,8 @@ bool CellmlFile::update(const QString &pFileName)
 
 //==============================================================================
 
-bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
-                           CellmlFileIssues &pIssues)
+bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
+                         CellmlFileIssues &pIssues)
 {
     // Check whether the given model is CellML valid
     // Note: validateModel() is somewhat slow, but there is (unfortunately)
@@ -688,21 +708,20 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-bool CellmlFile::doIsValid(const QString &pFileContents,
-                           ObjRef<iface::cellml_api::Model> *pModel,
-                           CellmlFileIssues &pIssues,
-                           const bool &pWithBusyWidget)
+bool CellmlFile::isValid(const QString &pFileContents,
+                         ObjRef<iface::cellml_api::Model> *pModel,
+                         CellmlFileIssues &pIssues, bool pWithBusyWidget)
 {
     // Try to load our model
 
-    if (doLoad(pFileContents, pModel, pIssues)) {
+    if (load(pFileContents, pModel, pIssues)) {
         // The file contents was properly loaded, so make sure that its imports,
         // if any, are fully instantiated
 
         if (fullyInstantiateImports(*pModel, pIssues, pWithBusyWidget)) {
             // Now, we can check whether the file contents is CellML valid
 
-            return doIsValid(*pModel, pIssues);
+            return isValid(*pModel, pIssues);
         } else {
             return false;
         }
@@ -714,23 +733,23 @@ bool CellmlFile::doIsValid(const QString &pFileContents,
 //==============================================================================
 
 bool CellmlFile::isValid(const QString &pFileContents,
-                         CellmlFileIssues &pIssues, const bool &pWithBusyWidget)
+                         CellmlFileIssues &pIssues, bool pWithBusyWidget)
 {
     // Check whether the given file contents is CellML valid, so for this create
     // a temporary model
 
     ObjRef<iface::cellml_api::Model> model;
 
-    return doIsValid(pFileContents, &model, pIssues, pWithBusyWidget);
+    return isValid(pFileContents, &model, pIssues, pWithBusyWidget);
 }
 
 //==============================================================================
 
-bool CellmlFile::isValid(const bool &pWithBusyWidget)
+bool CellmlFile::isValid(bool pWithBusyWidget)
 {
     // Return whether we are valid
 
-    return doIsValid(QString(), &mModel, mIssues, pWithBusyWidget);
+    return isValid(QString(), &mModel, mIssues, pWithBusyWidget);
 }
 
 //==============================================================================
@@ -744,7 +763,7 @@ CellmlFileIssues CellmlFile::issues() const
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFile::runtime(const bool &pWithBusyWidget)
+CellmlFileRuntime * CellmlFile::runtime(bool pWithBusyWidget)
 {
     // Check whether the runtime needs to be updated
 
@@ -774,7 +793,7 @@ CellmlFileRuntime * CellmlFile::runtime(const bool &pWithBusyWidget)
 
 //==============================================================================
 
-QStringList CellmlFile::dependencies(const bool &pWithBusyWidget)
+QStringList CellmlFile::dependencies(bool pWithBusyWidget)
 {
     // Check whether the dependencies need to be retrieved
 
@@ -1014,7 +1033,7 @@ QString CellmlFile::xmlBase()
 //==============================================================================
 
 bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
-                          const bool &pWithBusyWidget)
+                          bool pWithBusyWidget)
 {
     // Export the model to the required format, after loading it if necessary
 
@@ -1086,7 +1105,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
 
 bool CellmlFile::exportTo(const QString &pFileName,
                           const QString &pUserDefinedFormatFileName,
-                          const bool &pWithBusyWidget)
+                          bool pWithBusyWidget)
 {
     // Export the model to the required format, after loading it if necessary
 

@@ -65,12 +65,12 @@ namespace GraphPanelWidget {
 
 GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
                                                              const Qt::PenStyle &pLineStyle,
-                                                             const int &pLineWidth,
+                                                             int pLineWidth,
                                                              const QColor &pLineColor,
                                                              const QwtSymbol::Style &pSymbolStyle,
-                                                             const int &pSymbolSize,
+                                                             int pSymbolSize,
                                                              const QColor &pSymbolColor,
-                                                             const bool &pSymbolFilled,
+                                                             bool pSymbolFilled,
                                                              const QColor &pSymbolFillColor) :
     mTitle(pTitle),
     mLineStyle(pLineStyle),
@@ -338,7 +338,7 @@ bool GraphPanelPlotGraph::isSelected() const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setSelected(const bool &pSelected)
+void GraphPanelPlotGraph::setSelected(bool pSelected)
 {
     // Set our selected state
 
@@ -443,7 +443,7 @@ const QwtSymbol * GraphPanelPlotGraph::symbol() const
 
 void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
                                     const QBrush &pBrush, const QPen &pPen,
-                                    const int &pSize)
+                                    int pSize)
 {
     // Set the symbol of our different runs
 
@@ -482,7 +482,7 @@ bool GraphPanelPlotGraph::isVisible() const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setVisible(const bool &pVisible)
+void GraphPanelPlotGraph::setVisible(bool pVisible)
 {
     // Set the visibility of our different runs
 
@@ -520,7 +520,7 @@ quint64 GraphPanelPlotGraph::dataSize() const
 
 //==============================================================================
 
-QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
+QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(int pRun) const
 {
     // Return the data, i.e. raw samples, of the given run, if it exists
 
@@ -536,8 +536,8 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
-                                  const int &pRun, const int &pSize)
+void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, int pSize,
+                                  int pRun)
 {
     // Set our data, i.e. raw samples, to the given run, if it exists
 
@@ -562,16 +562,6 @@ void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
 
     mBoundingRects.remove(run);
     mBoundingLogRects.remove(run);
-}
-
-//==============================================================================
-
-void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
-                                  const int &pSize)
-{
-    // Set our data, i.e. raw samples, to our current (i.e. last) run
-
-    setData(pDataX, pDataY, -1, pSize);
 }
 
 //==============================================================================
@@ -876,9 +866,9 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
-                                                  const int &pLineWidth,
+                                                  int pLineWidth,
                                                   const Position &pPosition,
-                                                  const bool &pCanMovePosition)
+                                                  bool pCanMovePosition)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
@@ -1028,8 +1018,8 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
 
     // Check when someone clicks on a legend item
 
-    connect(this, SIGNAL(checked(const QVariant &, bool, int)),
-            this, SLOT(checked(const QVariant &)));
+    connect(this, &GraphPanelPlotLegendWidget::checked,
+            this, &GraphPanelPlotLegendWidget::legendChecked);
 }
 
 //==============================================================================
@@ -1043,7 +1033,7 @@ bool GraphPanelPlotLegendWidget::isActive() const
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setActive(const bool &pActive)
+void GraphPanelPlotLegendWidget::setActive(bool pActive)
 {
     // Set our active state
 
@@ -1065,8 +1055,7 @@ bool GraphPanelPlotLegendWidget::isEmpty() const
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setChecked(const int &pIndex,
-                                            const bool &pChecked)
+void GraphPanelPlotLegendWidget::setChecked(int pIndex, bool pChecked)
 {
     // Un/check the graph which index is given
     // Note: the +1 is because the first child of our contents widget is our
@@ -1077,7 +1066,7 @@ void GraphPanelPlotLegendWidget::setChecked(const int &pIndex,
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setFontSize(const int &pFontSize)
+void GraphPanelPlotLegendWidget::setFontSize(int pFontSize)
 {
     // Set our font size
 
@@ -1271,7 +1260,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::checked(const QVariant &pItemInfo)
+void GraphPanelPlotLegendWidget::legendChecked(const QVariant &pItemInfo)
 {
     // Make sure that the corresponding graph panel is selected
     // Note: this makes it much easier to handle the graphToggled() signal
@@ -1363,8 +1352,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     //       involve updating our actions (see updateActions()), something that
     //       we cannot do when our grand parent gets destroyed...
 
-    connect(pParent->parent(), SIGNAL(destroyed(QObject *)),
-            this, SLOT(cannotUpdateActions()));
+    connect(pParent->parent(), &QObject::destroyed,
+            this, &GraphPanelPlotWidget::cannotUpdateActions);
 
     // Get ourselves a direct painter
 
@@ -1437,8 +1426,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     insertLegend(mLegend);
 
-    connect(mLegend, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(mLegend, &GraphPanelPlotLegendWidget::graphToggled,
+            this, &GraphPanelPlotWidget::graphToggled);
 
     // Create our context menu
 
@@ -1456,28 +1445,28 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
-    connect(mExportToAction, SIGNAL(triggered(bool)),
-            this, SLOT(exportTo()));
-    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyToClipboard()));
-    connect(mGraphPanelSettingsAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(graphPanelSettingsRequested()));
-    connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(graphsSettingsRequested()));
-    connect(mLegendAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(legendToggled()));
-    connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(logarithmicXAxisToggled()));
-    connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(logarithmicYAxisToggled()));
-    connect(mCustomAxesAction, SIGNAL(triggered(bool)),
-            this, SLOT(customAxes()));
-    connect(mZoomInAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomIn()));
-    connect(mZoomOutAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomOut()));
-    connect(mResetZoomAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetZoom()));
+    connect(mExportToAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::exportTo);
+    connect(mCopyToClipboardAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::copyToClipboard);
+    connect(mGraphPanelSettingsAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::graphPanelSettingsRequested);
+    connect(mGraphsSettingsAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::graphsSettingsRequested);
+    connect(mLegendAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::legendToggled);
+    connect(mLogarithmicXAxisAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::logarithmicXAxisToggled);
+    connect(mLogarithmicYAxisAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::logarithmicYAxisToggled);
+    connect(mCustomAxesAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::customAxes);
+    connect(mZoomInAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::zoomIn);
+    connect(mZoomOutAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::zoomOut);
+    connect(mResetZoomAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::resetZoom);
 
     mContextMenu->addAction(mExportToAction);
     mContextMenu->addSeparator();
@@ -1638,7 +1627,7 @@ void GraphPanelPlotWidget::updateActions()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::checkAxisValues(const bool &pLogAxis, double &pMin,
+void GraphPanelPlotWidget::checkAxisValues(bool pLogAxis, double &pMin,
                                            double &pMax)
 {
     // Make sure that our axis' values have finite values
@@ -1758,8 +1747,7 @@ int GraphPanelPlotWidget::fontSize() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
-                                       const bool &pForceSetting)
+void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 {
     // Set our font size
 
@@ -1861,7 +1849,7 @@ int GraphPanelPlotWidget::gridLinesWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setGridLinesWidth(const int &pGridLinesWidth)
+void GraphPanelPlotWidget::setGridLinesWidth(int pGridLinesWidth)
 {
     // Set our grid lines width
 
@@ -1913,7 +1901,7 @@ bool GraphPanelPlotWidget::isLegendActive() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendActive(const bool &pLegendActive)
+void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
 {
     // Show/hide our legend
 
@@ -1925,7 +1913,7 @@ void GraphPanelPlotWidget::setLegendActive(const bool &pLegendActive)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendWidth(const int &pLegendWidth)
+void GraphPanelPlotWidget::setLegendWidth(int pLegendWidth)
 {
     // Set our legend's width
 
@@ -1962,7 +1950,7 @@ int GraphPanelPlotWidget::pointCoordinatesWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setPointCoordinatesWidth(const int &pPointCoordinatesWidth)
+void GraphPanelPlotWidget::setPointCoordinatesWidth(int pPointCoordinatesWidth)
 {
     // Set our point coordinates width
 
@@ -2118,7 +2106,7 @@ bool GraphPanelPlotWidget::logAxisX() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
+void GraphPanelPlotWidget::setLogAxisX(bool pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
@@ -2166,7 +2154,7 @@ bool GraphPanelPlotWidget::logAxisY() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
+void GraphPanelPlotWidget::setLogAxisY(bool pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
@@ -2233,7 +2221,7 @@ int GraphPanelPlotWidget::zoomRegionWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setZoomRegionWidth(const int &pZoomRegionWidth)
+void GraphPanelPlotWidget::setZoomRegionWidth(int pZoomRegionWidth)
 {
     // Set our zoom region width
 
@@ -2290,7 +2278,7 @@ bool GraphPanelPlotWidget::zoomRegionFilled() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setZoomRegionFilled(const bool &pZoomRegionFilled)
+void GraphPanelPlotWidget::setZoomRegionFilled(bool pZoomRegionFilled)
 {
     // Set our zoom region filled status
 
@@ -2392,7 +2380,7 @@ bool GraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setActive(const bool &pActive)
+void GraphPanelPlotWidget::setActive(bool pActive)
 {
     // In/activate ourselves by asking our owner to in/activate itself
 
@@ -2518,7 +2506,7 @@ QRectF GraphPanelPlotWidget::realDataRect() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
+void GraphPanelPlotWidget::setAxis(int pAxisId, double pMin, double pMax)
 {
     // Set our axis
     // Note: to use setAxisScale() on its own is not sufficient unless we were
@@ -2536,14 +2524,14 @@ void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setDefaultAxesValues(const double &pDefaultMinX,
-                                                const double &pDefaultMaxX,
-                                                const double &pDefaultMinLogX,
-                                                const double &pDefaultMaxLogX,
-                                                const double &pDefaultMinY,
-                                                const double &pDefaultMaxY,
-                                                const double &pDefaultMinLogY,
-                                                const double &pDefaultMaxLogY)
+void GraphPanelPlotWidget::setDefaultAxesValues(double pDefaultMinX,
+                                                double pDefaultMaxX,
+                                                double pDefaultMinLogX,
+                                                double pDefaultMaxLogX,
+                                                double pDefaultMinY,
+                                                double pDefaultMaxY,
+                                                double pDefaultMinLogY,
+                                                double pDefaultMaxLogY)
 {
     // Set the default axes values
 
@@ -2561,11 +2549,10 @@ void GraphPanelPlotWidget::setDefaultAxesValues(const double &pDefaultMinX,
 //==============================================================================
 
 bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
-                                   double pMaxY, const bool &pSynchronizeAxes,
-                                   const bool &pCanReplot,
-                                   const bool &pEmitSignal,
-                                   const bool &pForceXAxisSetting,
-                                   const bool &pForceYAxisSetting)
+                                   double pMaxY, bool pSynchronizeAxes,
+                                   bool pCanReplot, bool pEmitSignal,
+                                   bool pForceXAxisSetting,
+                                   bool pForceYAxisSetting)
 {
     // Keep track of our axes' old values
 
@@ -2648,12 +2635,10 @@ bool GraphPanelPlotWidget::resetAxes()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling,
-                                     const bool &pCanZoomIn,
-                                     const bool &pCanZoomOut,
+bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
+                                     bool pCanZoomOut,
                                      const QwtScaleMap &pCanvasMap,
-                                     const double &pPoint, double &pMin,
-                                     double &pMax)
+                                     double pPoint, double &pMin, double &pMax)
 {
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
@@ -2736,8 +2721,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
-                                        const QString &pTitleAxis)
+void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 {
     // Set the title for our axis
 
@@ -3095,7 +3079,7 @@ int GraphPanelPlotWidget::graphIndex(GraphPanelPlotGraph *pGraph) const
 //==============================================================================
 
 bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
-                                         const quint64 &pFrom)
+                                         quint64 pFrom)
 {
     // Direct paint our graph from the given point unless we can't direct paint
     // (due to the axes having been changed), in which case we replot ourselves
@@ -3151,8 +3135,8 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
-                                              const bool &pForceAlignment)
+void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
+                                              bool pForceAlignment)
 {
     // Align ourselves with our neighbours by taking into account the size it
     // takes to draw the Y axis and, if any, its corresponding title (including

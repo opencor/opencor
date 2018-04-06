@@ -52,6 +52,11 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionNew, &QAction::triggered,
+            this, &FileOrganiserWindowWindow::actionNewTriggered);
+    connect(mGui->actionDelete, &QAction::triggered,
+            this, &FileOrganiserWindowWindow::actionDeleteTriggered);
+
     // Create a tool bar widget with different buttons
     // Note: normally, we would retrieve the folder icon through a call to
     //       QFileIconProvider().icon(QFileIconProvider::Folder), but on Windows
@@ -96,19 +101,19 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
 
     // Some connections
 
-    connect(mFileOrganiserWindowWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu()));
-    connect(mFileOrganiserWindowWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked(const QModelIndex &)));
-    connect(mFileOrganiserWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::customContextMenuRequested,
+            this, &FileOrganiserWindowWindow::showCustomContextMenu);
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::doubleClicked,
+            this, &FileOrganiserWindowWindow::itemDoubleClicked);
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::openFilesRequested,
+            this, &FileOrganiserWindowWindow::openFiles);
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mFileOrganiserWindowWidget, SIGNAL(newFolderEnabled(const bool &)),
-            mGui->actionNew, SLOT(setEnabled(bool)));
-    connect(mFileOrganiserWindowWidget, SIGNAL(deleteItemsEnabled(const bool &)),
-            mGui->actionDelete, SLOT(setEnabled(bool)));
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::newFolderEnabled,
+            mGui->actionNew, &QAction::setEnabled);
+    connect(mFileOrganiserWindowWidget, &FileOrganiserWindowWidget::deleteItemsEnabled,
+            mGui->actionDelete, &QAction::setEnabled);
 }
 
 //==============================================================================
@@ -157,7 +162,7 @@ void FileOrganiserWindowWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::on_actionNew_triggered()
+void FileOrganiserWindowWindow::actionNewTriggered()
 {
     // Create a new folder
 
@@ -166,7 +171,7 @@ void FileOrganiserWindowWindow::on_actionNew_triggered()
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::on_actionDelete_triggered()
+void FileOrganiserWindowWindow::actionDeleteTriggered()
 {
     // Remove the current item(s)
 

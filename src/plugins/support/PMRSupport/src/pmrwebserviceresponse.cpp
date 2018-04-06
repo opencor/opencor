@@ -44,8 +44,8 @@ PmrWebServiceResponse::PmrWebServiceResponse(QNetworkReply *pNetworkReply) :
 {
     // Process the response once we have got it
 
-    connect(mNetworkReply, SIGNAL(finished()),
-            this, SLOT(processResponse()));
+    connect(mNetworkReply, &QNetworkReply::finished,
+            this, &PmrWebServiceResponse::processResponse);
 }
 
 //==============================================================================

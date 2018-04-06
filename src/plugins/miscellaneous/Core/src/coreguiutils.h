@@ -80,10 +80,10 @@ public:
 protected:
     QSettings *mSettings;
 
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 public slots:
-    virtual int exec();
+    int exec() override;
 };
 
 //==============================================================================
@@ -98,8 +98,8 @@ class CORE_EXPORT StyledItemDelegate : public QStyledItemDelegate
 public:
     explicit StyledItemDelegate(QObject *pParent);
 
-    virtual QSize sizeHint(const QStyleOptionViewItem &pOption,
-                           const QModelIndex &pIndex) const;
+    QSize sizeHint(const QStyleOptionViewItem &pOption,
+                   const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================
@@ -129,7 +129,7 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
 
 QString CORE_EXPORT getDirectory(const QString &pCaption,
                                  const QString &pDirName = QString(),
-                                 const bool &pEmptyDir = false);
+                                 bool pEmptyDir = false);
 QString CORE_EXPORT getEmptyDirectory(const QString &pCaption,
                                       const QString &pDirName = QString());
 
@@ -138,15 +138,15 @@ void CORE_EXPORT setFocusTo(QWidget *pWidget);
 QMenu CORE_EXPORT * newMenu(const QString &pName, QWidget *pParent);
 QMenu CORE_EXPORT * newMenu(const QIcon &pIcon, QWidget *pParent);
 
-QAction CORE_EXPORT * newAction(const bool &pCheckable, const QIcon &pIcon,
+QAction CORE_EXPORT * newAction(bool pCheckable, const QIcon &pIcon,
                                 const QKeySequence &pKeySequence,
                                 QWidget *pParent);
-QAction CORE_EXPORT * newAction(const bool &pCheckable, const QIcon &pIcon,
+QAction CORE_EXPORT * newAction(bool pCheckable, const QIcon &pIcon,
                                 QWidget *pParent);
-QAction CORE_EXPORT * newAction(const bool &pCheckable,
+QAction CORE_EXPORT * newAction(bool pCheckable,
                                 const QKeySequence &pKeySequence,
                                 QWidget *pParent);
-QAction CORE_EXPORT * newAction(const bool &pCheckable, QWidget *pParent);
+QAction CORE_EXPORT * newAction(bool pCheckable, QWidget *pParent);
 QAction CORE_EXPORT * newAction(const QIcon &pIcon,
                                 const QList<QKeySequence> &pKeySequences,
                                 QWidget *pParent);
@@ -162,51 +162,45 @@ QAction CORE_EXPORT * newAction(QWidget *pParent);
 
 QAction CORE_EXPORT * newSeparator(QWidget *pParent);
 
-QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
-                                   const QColor &pColor, QWidget *pParent);
-QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal, QWidget *pParent);
+QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, const QColor &pColor,
+                                   QWidget *pParent);
+QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
-QString CORE_EXPORT iconDataUri(const QIcon &pIcon, const int &pWidth,
-                                const int &pHeight,
+QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                                 const QIcon::Mode &pMode = QIcon::Normal);
-QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth,
-                                const int &pHeight,
+QString CORE_EXPORT iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                                 const QIcon::Mode &pMode = QIcon::Normal);
 
-QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, const int &pWidth,
-                             const int &pHeight, const QColor &pColor);
-QIcon CORE_EXPORT tintedIcon(const QString &pIcon, const int &pWidth,
-                             const int &pHeight, const QColor &pColor);
+QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                             const QColor &pColor);
+QIcon CORE_EXPORT tintedIcon(const QString &pIcon, int pWidth, int pHeight,
+                             const QColor &pColor);
 
 QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
                                 const QIcon &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 const QIcon &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
                                 const QString &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 const QString &pOverlayIcon,
-                                const int &pBaseWidth, const int &pBaseHeight,
-                                const int &pOverlayLeft, const int &pOverlayTop,
-                                const int &pOverlayWidth,
-                                const int &pOverlayHeight);
+                                int pBaseWidth, int pBaseHeight,
+                                int pOverlayLeft, int pOverlayTop,
+                                int pOverlayWidth, int pOverlayHeight);
 
-void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
-                                  const bool &pEnabled = true);
+void CORE_EXPORT showEnableWidget(QWidget *pWidget, bool pVisible,
+                                  bool pEnabled = true);
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
 

@@ -158,8 +158,8 @@ void SampleToolsPlugin::initializePlugin()
 
     // A connection to handle our Add Two Numbers action
 
-    connect(mAddTwoNumbersAction, SIGNAL(triggered()),
-            this, SLOT(addTwoNumbers()));
+    connect(mAddTwoNumbersAction, &QAction::triggered,
+            this, &SampleToolsPlugin::addTwoNumbers);
 }
 
 //==============================================================================

@@ -42,7 +42,7 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
+EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
     Core::Widget(pParent),
     mCurrentLine(0),
@@ -87,54 +87,54 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     // Forward some signals that are emitted by our editor
 
-    connect(mEditor, SIGNAL(SCN_ZOOM()),
-            this, SLOT(zoomLevelChanged()));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::SCN_ZOOM,
+            this, &EditorWidget::emitZoomLevelChanged);
 
-    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SIGNAL(cursorPositionChanged(const int &, const int &)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::cursorPositionChanged,
+            this, &EditorWidget::cursorPositionChanged);
 
-    connect(mEditor, SIGNAL(textChanged()),
-            this, SIGNAL(textChanged()));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::textChanged,
+            this, &EditorWidget::textChanged);
 
-    connect(mEditor, SIGNAL(copyAvailable(bool)),
-            this, SIGNAL(copyAvailable(const bool &)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::copyAvailable,
+            this, &EditorWidget::copyAvailable);
 
-    connect(mEditor, SIGNAL(canSelectAll(const bool &)),
-            this, SIGNAL(canSelectAll(const bool &)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::canSelectAll,
+            this, &EditorWidget::canSelectAll);
 
     // Keep track of our position within our editor
 
-    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(keepTrackOfCursorPosition(const int &, const int &)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::cursorPositionChanged,
+            this, &EditorWidget::keepTrackOfCursorPosition);
 
     // Keep track of whenever a key is being pressed in our editor or
     // find/replace widget
 
-    connect(mEditor, SIGNAL(keyPressed(QKeyEvent *, bool &)),
-            this, SLOT(editorKeyPressed(QKeyEvent *, bool &)));
-    connect(mFindReplace, SIGNAL(keyPressed(QKeyEvent *, bool &)),
-            this, SLOT(findReplaceKeyPressed(QKeyEvent *, bool &)));
+    connect(mEditor, &QScintillaSupport::QScintillaWidget::keyPressed,
+            this, &EditorWidget::editorKeyPressed);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::keyPressed,
+            this, &EditorWidget::findReplaceKeyPressed);
 
     // Keep track of whenever the find text changes
 
-    connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
-            this, SLOT(findTextChanged(const QString &)));
-    connect(mFindReplace, SIGNAL(canFindReplace(const bool &)),
-            this, SIGNAL(canFindReplace(const bool &)));
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findTextChanged,
+            this, &EditorWidget::findTextChanged);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::canFindReplace,
+            this, &EditorWidget::canFindReplace);
 
     // Keep track of the triggering of some actions in our find/replace widget
 
-    connect(mFindReplace, SIGNAL(findPreviousRequested()),
-            this, SLOT(findPrevious()));
-    connect(mFindReplace, SIGNAL(findNextRequested()),
-            this, SLOT(findNext()));
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findPreviousRequested,
+            this, &EditorWidget::findPrevious);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findNextRequested,
+            this, &EditorWidget::findNext);
 
-    connect(mFindReplace, SIGNAL(replaceRequested()),
-            this, SLOT(replace()));
-    connect(mFindReplace, SIGNAL(replaceAndFindRequested()),
-            this, SLOT(replaceAndFind()));
-    connect(mFindReplace, SIGNAL(replaceAllRequested()),
-            this, SLOT(replaceAll()));
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceRequested,
+            this, &EditorWidget::replace);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceAndFindRequested,
+            this, &EditorWidget::replaceAndFind);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceAllRequested,
+            this, &EditorWidget::replaceAll);
 
     // Add our editor and find/replace widgets to our layout
 
@@ -248,7 +248,7 @@ void EditorWidget::cursorPosition(int &pLine, int &pColumn)
 
 //==============================================================================
 
-void EditorWidget::setCursorPosition(const int &pLine, const int &pColumn)
+void EditorWidget::setCursorPosition(int pLine, int pColumn)
 {
     // Set our cursor position
 
@@ -275,8 +275,7 @@ QString EditorWidget::contents() const
 
 //==============================================================================
 
-void EditorWidget::setContents(const QString &pContents,
-                               const bool &pKeepHistory)
+void EditorWidget::setContents(const QString &pContents, bool pKeepHistory)
 {
     // Set the contents of our editor
 
@@ -303,7 +302,7 @@ bool EditorWidget::isReadOnly() const
 
 //==============================================================================
 
-void EditorWidget::setReadOnly(const bool &pReadOnly)
+void EditorWidget::setReadOnly(bool pReadOnly)
 {
     // Set the read-only mode of our editor and find/replace widget
 
@@ -316,7 +315,7 @@ void EditorWidget::setReadOnly(const bool &pReadOnly)
     QColor lockedColor = Core::lockedColor(baseColor);
     QColor newBackgroundColor = pReadOnly?lockedColor:baseColor;
 
-    foreach (const int &readOnlyStyle, mReadOnlyStyles)
+    foreach (int readOnlyStyle, mReadOnlyStyles)
         mEditor->setBackgroundColor(readOnlyStyle, newBackgroundColor);
 }
 
@@ -340,8 +339,7 @@ QString EditorWidget::selectedText() const
 
 //==============================================================================
 
-QString EditorWidget::textInRange(const int &pStartRange,
-                                  const int &pEndRange) const
+QString EditorWidget::textInRange(int pStartRange, int pEndRange) const
 {
     // Retrieve and return the text in the given range in our editor, making
     // sure that the given range makes sense
@@ -351,11 +349,9 @@ QString EditorWidget::textInRange(const int &pStartRange,
 
 //==============================================================================
 
-int EditorWidget::findTextInRange(const int &pStartRange, const int &pEndRange,
-                                  const QString &pText,
-                                  const bool &pRegularExpression,
-                                  const bool &pCaseSensitive,
-                                  const bool &pWholeWordsOnly) const
+int EditorWidget::findTextInRange(int pStartRange, int pEndRange,
+                                  const QString &pText, bool pRegularExpression,
+                                  bool pCaseSensitive, bool pWholeWordsOnly) const
 {
     // Find and return the position, if any, of the given text within the given
     // range in our editor
@@ -511,7 +507,7 @@ int EditorWidget::zoomLevel() const
 
 //==============================================================================
 
-void EditorWidget::setZoomLevel(const int &pZoomLevel)
+void EditorWidget::setZoomLevel(int pZoomLevel)
 {
     // Set the zoom level of our editor
 
@@ -538,7 +534,7 @@ bool EditorWidget::findReplaceIsVisible() const
 
 //==============================================================================
 
-void EditorWidget::setFindReplaceVisible(const bool &pVisible)
+void EditorWidget::setFindReplaceVisible(bool pVisible)
 {
     // Set our find text, if we are to show our find/replace widget
     // Note: if we are over a word, then we want it to become our find text, but
@@ -578,7 +574,7 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
 
 //==============================================================================
 
-int EditorWidget::styleAt(const int &pPosition) const
+int EditorWidget::styleAt(int pPosition) const
 {
     // Return the style used at the given position
 
@@ -736,7 +732,7 @@ void EditorWidget::replaceAll()
 
 //==============================================================================
 
-void EditorWidget::zoomLevelChanged()
+void EditorWidget::emitZoomLevelChanged()
 {
     // Let people know that the zoom level has changed
 
@@ -745,8 +741,7 @@ void EditorWidget::zoomLevelChanged()
 
 //==============================================================================
 
-void EditorWidget::keepTrackOfCursorPosition(const int &pLine,
-                                             const int &pColumn)
+void EditorWidget::keepTrackOfCursorPosition(int pLine, int pColumn)
 {
     // Keep track of our new position within our editor
 
@@ -813,7 +808,7 @@ void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 //==============================================================================
 
-bool EditorWidget::findText(const QString &pText, const bool &pForward)
+bool EditorWidget::findText(const QString &pText, bool pForward)
 {
     // Find the previous/next occurrence of the given text
 

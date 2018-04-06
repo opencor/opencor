@@ -95,7 +95,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 
 public:
     explicit SimulationData(Simulation *pSimulation);
-    ~SimulationData();
+    ~SimulationData() override;
 
     void setSimulationResults(SimulationResults *pSimulationResults);
 
@@ -104,12 +104,11 @@ public:
     double * states() const;
     double * algebraic() const;
 
-    void setStartingPoint(const double &pStartingPoint,
-                          const bool &pRecompute = true);
+    void setStartingPoint(double pStartingPoint, bool pRecompute = true);
 
-    void setEndingPoint(const double &pEndingPoint);
+    void setEndingPoint(double pEndingPoint);
 
-    void setPointInterval(const double &pPointInterval);
+    void setPointInterval(double pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
 
@@ -120,7 +119,7 @@ public:
 
     Solver::Solver::Properties nlaSolverProperties() const;
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              const bool &pReset = true);
+                              bool pReset = true);
 
     int * gradientIndices();
 
@@ -139,7 +138,7 @@ public slots:
     OpenCOR::SimulationSupport::Simulation * simulation() const;
 
     int delay() const;
-    void setDelay(const int &pDelay);
+    void setDelay(int pDelay);
 
     double startingPoint() const;
 
@@ -151,14 +150,13 @@ public slots:
     void setOdeSolverName(const QString &pOdeSolverName);
 
     QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName,
-                          const bool &pReset = true);
+    void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
-    void reset(const bool &pInitialize = true);
+    void reset(bool pInitialize = true);
 
-    void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                const bool &pInitialize);
-    void recomputeVariables(const double &pCurrentPoint);
+    void recomputeComputedConstantsAndVariables(double pCurrentPoint,
+                                                bool pInitialize);
+    void recomputeVariables(double pCurrentPoint);
 
     bool isModified() const;
     void checkForModifications();
@@ -205,8 +203,8 @@ private:
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
 signals:
-    void updated(const double &pCurrentPoint);
-    void modified(const bool &pIsModified);
+    void updated(double pCurrentPoint);
+    void modified(bool pIsModified);
 
     void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
 
@@ -223,18 +221,18 @@ class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
 
 public:
     explicit SimulationResults(Simulation *pSimulation);
-    ~SimulationResults();
+    ~SimulationResults() override;
 
     bool addRun();
 
-    void addPoint(const double &pPoint);
+    void addPoint(double pPoint);
 
-    double * points(const int &pRun) const;
+    double * points(int pRun = -1) const;
 
-    double * constants(const int &pRun, const int &pIndex) const;
-    double * rates(const int &pRun, const int &pIndex) const;
-    double * states(const int &pRun, const int &pIndex) const;
-    double * algebraic(const int &pRun, const int &pIndex) const;
+    double * constants(int pIndex, int pRun = -1) const;
+    double * rates(int pIndex, int pRun = -1) const;
+    double * states(int pIndex, int pRun = -1) const;
+    double * algebraic(int pIndex, int pRun = -1) const;
 
     DataStore::DataStoreVariables constantVariables() const;
     DataStore::DataStoreVariables rateVariables() const;
@@ -250,7 +248,7 @@ public slots:
 
     int runsCount() const;
 
-    quint64 size() const;
+    quint64 size(int pRun = -1) const;
 
     OpenCOR::DataStore::DataStore * dataStore() const;
 
@@ -289,7 +287,7 @@ public:
     };
 
     explicit Simulation(const QString &pFileName);
-    ~Simulation();
+    ~Simulation() override;
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
@@ -322,17 +320,13 @@ public slots:
 
     int runsCount() const;
 
-    int runsCount() const;
-
-    bool addRun();
-
     bool isRunning() const;
     bool isPaused() const;
 
     double currentPoint() const;
 
     int delay() const;
-    void setDelay(const int &pDelay);
+    void setDelay(int pDelay);
 
     double size();
 
@@ -354,12 +348,12 @@ private:
 
     void retrieveFileDetails();
 
-    bool simulationSettingsOk(const bool &pEmitSignal = true);
+    bool simulationSettingsOk(bool pEmitSignal = true);
 
 signals:
-    void running(const bool &pIsResuming);
+    void running(bool pIsResuming);
     void paused();
-    void stopped(const qint64 &pElapsedTime);
+    void stopped(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
 };

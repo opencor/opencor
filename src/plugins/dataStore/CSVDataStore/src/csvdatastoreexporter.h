@@ -41,7 +41,7 @@ class CsvDataStoreExporter : public DataStore::DataStoreExporter
 public:
     explicit CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreData);
 
-    virtual void execute(QString &pErrorMessage) const;
+    void execute(QString &pErrorMessage) const override;
 };
 
 //==============================================================================

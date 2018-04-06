@@ -36,9 +36,8 @@ namespace Core {
 
 //==============================================================================
 
-BorderedWidget::BorderedWidget(QWidget *pWidget,
-                               const bool &pTop, const bool &pLeft,
-                               const bool &pBottom, const bool &pRight) :
+BorderedWidget::BorderedWidget(QWidget *pWidget, bool pTop, bool pLeft,
+                               bool pBottom, bool pRight) :
     Widget(pWidget->parentWidget()),
     mWidget(pWidget)
 {
@@ -92,7 +91,7 @@ QWidget * BorderedWidget::widget()
 
 //==============================================================================
 
-void BorderedWidget::setTopBorderVisible(const bool &pVisible) const
+void BorderedWidget::setTopBorderVisible(bool pVisible) const
 {
     // Show/hide the top border
 
@@ -101,7 +100,7 @@ void BorderedWidget::setTopBorderVisible(const bool &pVisible) const
 
 //==============================================================================
 
-void BorderedWidget::setLeftBorderVisible(const bool &pVisible) const
+void BorderedWidget::setLeftBorderVisible(bool pVisible) const
 {
     // Show/hide the left border
 
@@ -110,7 +109,7 @@ void BorderedWidget::setLeftBorderVisible(const bool &pVisible) const
 
 //==============================================================================
 
-void BorderedWidget::setBottomBorderVisible(const bool &pVisible) const
+void BorderedWidget::setBottomBorderVisible(bool pVisible) const
 {
     // Show/hide the bottom border
 
@@ -119,7 +118,7 @@ void BorderedWidget::setBottomBorderVisible(const bool &pVisible) const
 
 //==============================================================================
 
-void BorderedWidget::setRightBorderVisible(const bool &pVisible) const
+void BorderedWidget::setRightBorderVisible(bool pVisible) const
 {
     // Show/hide the right border
 

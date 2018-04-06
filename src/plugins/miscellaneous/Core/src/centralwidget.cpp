@@ -93,7 +93,7 @@ bool CentralWidgetMode::isEnabled() const
 
 //==============================================================================
 
-void CentralWidgetMode::setEnabled(const bool &pEnabled)
+void CentralWidgetMode::setEnabled(bool pEnabled)
 {
     // Set whether a mode is enabled
 
@@ -232,41 +232,41 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileCreated(const QString &, const QString &)),
-            this, SLOT(fileCreated(const QString &, const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileDuplicated(const QString &)),
-            this, SLOT(fileDuplicated(const QString &)));
+    connect(fileManagerInstance, &FileManager::fileCreated,
+            this, &CentralWidget::fileCreated);
+    connect(fileManagerInstance, &FileManager::fileDuplicated,
+            this, &CentralWidget::fileDuplicated);
 
     // Some connections to handle changes to a file
 
-    connect(fileManagerInstance, SIGNAL(filePermissionsChanged(const QString &)),
-            this, SLOT(filePermissionsChanged(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileModified(const QString &)),
-            this, SLOT(fileModified(const QString &)));
+    connect(fileManagerInstance, &FileManager::filePermissionsChanged,
+            this, &CentralWidget::filePermissionsChanged);
+    connect(fileManagerInstance, &FileManager::fileModified,
+            this, &CentralWidget::fileModified);
 
     // Some connections to handle our files tab bar
 
-    connect(mFileTabs, SIGNAL(currentChanged(int)),
-            this, SLOT(updateGui()));
-    connect(mFileTabs, SIGNAL(tabMoved(int, int)),
-            this, SLOT(moveFile(const int &, const int &)));
-    connect(mFileTabs, SIGNAL(tabCloseRequested(int)),
-            this, SLOT(closeFile(const int &)));
+    connect(mFileTabs, &TabBarWidget::currentChanged,
+            this, &CentralWidget::updateGui);
+    connect(mFileTabs, &TabBarWidget::tabMoved,
+            this, &CentralWidget::moveFile);
+    connect(mFileTabs, &TabBarWidget::tabCloseRequested,
+            this, QOverload<int>::of(&CentralWidget::closeFile));
 
     // A connection to handle our modes tab bar
 
-    connect(mModeTabs, SIGNAL(currentChanged(int)),
-            this, SLOT(updateGui()));
-    connect(mModeTabs, SIGNAL(currentChanged(int)),
-            this, SLOT(updateFileTabIcons()));
+    connect(mModeTabs, &TabBarWidget::currentChanged,
+            this, &CentralWidget::updateGui);
+    connect(mModeTabs, &TabBarWidget::currentChanged,
+            this, &CentralWidget::updateFileTabIcons);
 
     // Some connections to handle our mode views tab bar
 
     foreach (CentralWidgetMode *mode, mModes) {
-        connect(mode->viewTabs(), SIGNAL(currentChanged(int)),
-                this, SLOT(updateGui()));
-        connect(mode->viewTabs(), SIGNAL(currentChanged(int)),
-                this, SLOT(updateFileTabIcons()));
+        connect(mode->viewTabs(), &TabBarWidget::currentChanged,
+                this, &CentralWidget::updateGui);
+        connect(mode->viewTabs(), &TabBarWidget::currentChanged,
+                this, &CentralWidget::updateFileTabIcons);
     }
 
     // Create our remote file dialog
@@ -298,13 +298,13 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Some connections to handle our remote file dialog
 
-    connect(mRemoteFileDialogUrlValue, SIGNAL(textChanged(const QString &)),
-            this, SLOT(openRemoteFileChanged()));
+    connect(mRemoteFileDialogUrlValue, &QLineEdit::textChanged,
+            this, &CentralWidget::openRemoteFileChanged);
 
-    connect(mRemoteFileDialogButtonBox, SIGNAL(accepted()),
-            this, SLOT(doOpenRemoteFile()));
-    connect(mRemoteFileDialogButtonBox, SIGNAL(rejected()),
-            this, SLOT(cancelOpenRemoteFile()));
+    connect(mRemoteFileDialogButtonBox, &QDialogButtonBox::accepted,
+            this, &CentralWidget::doOpenRemoteFile);
+    connect(mRemoteFileDialogButtonBox, &QDialogButtonBox::rejected,
+            this, &CentralWidget::cancelOpenRemoteFile);
 }
 
 //==============================================================================
@@ -356,24 +356,24 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileChanged(const QString &, const bool &, const bool &)),
-            this, SLOT(fileChanged(const QString &, const bool &, const bool &)));
-    connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
-            this, SLOT(fileDeleted(const QString &)));
+    connect(fileManagerInstance, &FileManager::fileChanged,
+            this, &CentralWidget::fileChanged);
+    connect(fileManagerInstance, &FileManager::fileDeleted,
+            this, &CentralWidget::fileDeleted);
 
     // Some connections to handle an internal change in the state of a file
     // Note: we do it here for the same reason as above (see the note for the
     //       connections to handle an external change in the state of a file)...
 
-    connect(fileManagerInstance, SIGNAL(fileModified(const QString &)),
-            this, SLOT(updateModifiedSettings()));
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(fileReloaded(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(fileRenamed(const QString &, const QString &)));
+    connect(fileManagerInstance, &FileManager::fileModified,
+            this, &CentralWidget::updateModifiedSettings);
+    connect(fileManagerInstance, &FileManager::fileReloaded,
+            this, &CentralWidget::fileReloaded);
+    connect(fileManagerInstance, &FileManager::fileRenamed,
+            this, &CentralWidget::fileRenamed);
 
-    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
-            this, SLOT(fileSaved(const QString &)));
+    connect(fileManagerInstance, &FileManager::fileSaved,
+            this, &CentralWidget::fileSaved);
 
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -681,7 +681,7 @@ QString CentralWidget::localFileName(const QString &pUrl) const
 
 //==============================================================================
 
-void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
+void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 {
     // Update the text, tool tip and icon to be used for the given file tab
 
@@ -735,7 +735,7 @@ void CentralWidget::updateFileTab(const int &pIndex, const bool &pIconOnly)
 //==============================================================================
 
 QString CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
-                                const QString &pUrl, const bool &pShowWarning)
+                                const QString &pUrl, bool pShowWarning)
 {
     // Make sure that modes are available and that the file exists
 
@@ -809,6 +809,8 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
         qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
+
+    return QString();
 }
 
 //==============================================================================
@@ -837,8 +839,7 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-QString CentralWidget::openRemoteFile(const QString &pUrl,
-                                      const bool &pShowWarning)
+QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 {
     // Make sure that pUrl really refers to a remote file
 
@@ -955,7 +956,7 @@ void CentralWidget::openRemoteFile()
 
 //==============================================================================
 
-void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
+void CentralWidget::reloadFile(int pIndex, bool pForce)
 {
     // Ask our file manager to reload the file, but only if it isn't new and if
     // the user wants (in case the file has been modified)
@@ -967,14 +968,14 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
         QString fileName = mFileNames[realIndex];
 
         if (!fileManagerInstance->isNew(fileName)) {
-            bool doReloadFile = true;
+            bool reloadFile = true;
 
             if (!pForce && fileManagerInstance->isModified(fileName)) {
                 // The current file is modified, so ask the user whether s/he
                 // still wants to reload it
 
-                doReloadFile = questionMessageBox(tr("File Modified"),
-                                                  tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(QDir::toNativeSeparators(fileName))) == QMessageBox::Yes;
+                reloadFile = questionMessageBox(tr("File Modified"),
+                                                tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(QDir::toNativeSeparators(fileName))) == QMessageBox::Yes;
             }
 
             // Reload the file, if needed, and consider it as non-modified
@@ -983,7 +984,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
             //       that all the view plugins do their job properly and update
             //       their GUI...
 
-            if (doReloadFile) {
+            if (reloadFile) {
                 // Actually redownload the file, if it is a remote one
 
                 if (fileManagerInstance->isRemote(fileName)) {
@@ -1020,6 +1021,15 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
             }
         }
     }
+}
+
+//==============================================================================
+
+void CentralWidget::reloadFile()
+{
+    // Reload the current file
+
+    reloadFile(-1, false);
 }
 
 //==============================================================================
@@ -1078,7 +1088,7 @@ void CentralWidget::toggleLockedFile()
 
 //==============================================================================
 
-bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
+bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 {
     // Make sure that we have a valid index
 
@@ -1252,7 +1262,7 @@ void CentralWidget::nextFile()
 
 //==============================================================================
 
-bool CentralWidget::canCloseFile(const int &pIndex)
+bool CentralWidget::canCloseFile(int pIndex)
 {
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
@@ -1282,7 +1292,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
 
 //==============================================================================
 
-bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
+bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 {
     // Make sure that we are not updating the GUI
 
@@ -1366,7 +1376,25 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
 //==============================================================================
 
-void CentralWidget::closeAllFiles(const bool &pForceClosing)
+bool CentralWidget::closeFile(int pIndex)
+{
+    // Close the file which index is given
+
+    return closeFile(pIndex, false);
+}
+
+//==============================================================================
+
+bool CentralWidget::closeFile()
+{
+    // Close the current file
+
+    return closeFile(-1, false);
+}
+
+//==============================================================================
+
+void CentralWidget::closeAllFiles(bool pForceClosing)
 {
     // Check whether we can close all the files
 
@@ -1381,7 +1409,16 @@ void CentralWidget::closeAllFiles(const bool &pForceClosing)
 
 //==============================================================================
 
-void CentralWidget::moveFile(const int &pFromIndex, const int &pToIndex)
+void CentralWidget::closeAllFiles()
+{
+    // Close all the files
+
+    closeAllFiles(false);
+}
+
+//==============================================================================
+
+void CentralWidget::moveFile(int pFromIndex, int pToIndex)
 {
     // Update our list of file names to reflect the fact that a tab has been
     // moved
@@ -1552,7 +1589,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-Plugin * CentralWidget::viewPlugin(const int &pIndex) const
+Plugin * CentralWidget::viewPlugin(int pIndex) const
 {
     // Return the view plugin associated with the file, which index is given
 
@@ -1582,8 +1619,7 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
 
 //==============================================================================
 
-QString CentralWidget::viewKey(const int &pMode, const int &pView,
-                               const QString &pFileName)
+QString CentralWidget::viewKey(int pMode, int pView, const QString &pFileName)
 {
     // Return the view key to be used with mViews for the given mode, view and
     // file name
@@ -1594,7 +1630,7 @@ QString CentralWidget::viewKey(const int &pMode, const int &pView,
 //==============================================================================
 
 void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
-                                        const bool &pFileReloaded)
+                                        bool pFileReloaded)
 {
     // Let all our plugins know about the file having been reloaded/saved
 
@@ -1623,23 +1659,22 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
 
 //==============================================================================
 
-void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar,
-                                          const int &pIndex)
+void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
 {
     // Update the current index of the given tab bar widget, after having
     // temporarily disabled its handling of the currentChanged() signal, if
     // needed
 
     if (mState == UpdatingGui) {
-        disconnect(pTabBar, SIGNAL(currentChanged(int)),
-                   this, SLOT(updateGui()));
+        disconnect(pTabBar, &TabBarWidget::currentChanged,
+                   this, &CentralWidget::updateGui);
     }
 
     pTabBar->setCurrentIndex(pIndex);
 
     if (mState == UpdatingGui) {
-        connect(pTabBar, SIGNAL(currentChanged(int)),
-                this, SLOT(updateGui()));
+        connect(pTabBar, &TabBarWidget::currentChanged,
+                this, &CentralWidget::updateGui);
     }
 }
 
@@ -1806,8 +1841,8 @@ void CentralWidget::updateGui()
     ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
 
     if (newViewWidget) {
-        connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
-                this, SLOT(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
+        connect(newViewWidget, &ViewWidget::updateFileTabIcon,
+                this, &CentralWidget::updateFileTabIcon,
                 Qt::UniqueConnection);
 
         updateStatusBarWidgets(newViewWidget->statusBarWidgets());
@@ -1888,7 +1923,7 @@ void CentralWidget::updateGui()
 //==============================================================================
 
 TabBarWidget *CentralWidget::newTabBarWidget(const QTabBar::Shape &pShape,
-                                             const bool &pFileTabs)
+                                             bool pFileTabs)
 {
     // Create and return a tab bar
 
@@ -1925,9 +1960,8 @@ void CentralWidget::updateNoViewMsg()
 
 //==============================================================================
 
-void CentralWidget::fileChanged(const QString &pFileName,
-                                const bool &pFileChanged,
-                                const bool &pDependenciesChanged)
+void CentralWidget::fileChanged(const QString &pFileName, bool pFileChanged,
+                                bool pDependenciesChanged)
 {
     // Make sure that the fact that the file has been changed is still relevant,
     // i.e. the given file has either been modified or it's different from its

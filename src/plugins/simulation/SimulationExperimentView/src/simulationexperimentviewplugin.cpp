@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
+#include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpythonwrapper.h"
 #include "simulationexperimentviewsimulationwidget.h"
@@ -222,7 +223,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     mViewWidget->setObjectName("SimulationExperimentViewWidget");
 
     // Hide our Simulation Experiment view widget since it may not initially be
-    // shown in  our central widget
+    // shown in our central widget
 
     mViewWidget->hide();
 
@@ -305,9 +306,12 @@ QString SimulationExperimentViewPlugin::viewMimeType(const QString &pFileName) c
 
 QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
 {
-    // Return the default file extension we support
+    // Return the default file extension we support, based on the file type of
+    // our simulation
 
-    return CellMLSupport::CellmlFileExtension;
+    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::CellmlFile)?
+               CellMLSupport::CellmlFileExtension:
+               SEDMLSupport::SedmlFileExtension;
 }
 
 //==============================================================================

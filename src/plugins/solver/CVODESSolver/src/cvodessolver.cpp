@@ -151,7 +151,7 @@ CvodesSolver::~CvodesSolver()
 
 //==============================================================================
 
-void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
+void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
                               double *pConstants, double *pRates,
                               double *pStates, double *pAlgebraic,
                               ComputeRatesFunction pComputeRates)
@@ -161,7 +161,7 @@ void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
 //==============================================================================
 
-void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
+void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
                               double *pConstants, double *pRates,
                               double *pStates, double *pAlgebraic,
                               ComputeRatesFunction pComputeRates,
@@ -314,9 +314,8 @@ void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
     // Initialise our ODE solver
 
-    OpenCOR::Solver::OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants,
-                                           pRates, pStates, pAlgebraic,
-                                           pComputeRates);
+    OdeSolver::initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates,
+                          pAlgebraic, pComputeRates);
 
     // Create our states vector
 
@@ -445,7 +444,7 @@ void CvodesSolver::initialize(const double &pVoi, const int &pRatesStatesCount,
 
 //==============================================================================
 
-void CvodesSolver::reinitialize(const double &pVoi)
+void CvodesSolver::reinitialize(double pVoi)
 {
     // Reinitialise our CVODES object
 
@@ -459,7 +458,7 @@ void CvodesSolver::reinitialize(const double &pVoi)
 
 //==============================================================================
 
-void CvodesSolver::solve(double &pVoi, const double &pVoiEnd) const
+void CvodesSolver::solve(double &pVoi, double pVoiEnd) const
 {
     // Solve the model
 

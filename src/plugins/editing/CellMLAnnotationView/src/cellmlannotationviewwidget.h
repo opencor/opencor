@@ -52,10 +52,10 @@ public:
     explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
                                         QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool contains(const QString &pFileName) const;
 
@@ -67,7 +67,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    virtual QWidget * widget(const QString &pFileName);
+    QWidget * widget(const QString &pFileName) override;
 
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 

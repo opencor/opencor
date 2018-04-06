@@ -69,7 +69,7 @@ class CellmlTextViewWidgetData
 {
 public:
     explicit CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
-                                      const QString &pSha1, const bool &pValid,
+                                      const QString &pSha1, bool pValid,
                                       const CellMLSupport::CellmlFile::Version &pCellmlVersion,
                                       QDomDocument pRdfNodes);
     ~CellmlTextViewWidgetData();
@@ -113,14 +113,14 @@ class CellmlTextViewWidget : public Core::ViewWidget
 public:
     explicit CellmlTextViewWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool contains(const QString &pFileName) const;
 
-    void initialize(const QString &pFileName, const bool &pUpdate = true);
+    void initialize(const QString &pFileName, bool pUpdate = true);
     void finalize(const QString &pFileName);
 
     void fileSaved(const QString &pFileName);
@@ -129,7 +129,7 @@ public:
 
     EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName);
+    QWidget * widget(const QString &pFileName) override;
 
     bool isEditorWidgetUseable(const QString &pFileName) const;
     bool isEditorWidgetContentsModified(const QString &pFileName) const;
@@ -137,7 +137,7 @@ public:
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName,
                   bool &pNeedFeedback);
 
-    virtual QList<QWidget *> statusBarWidgets() const;
+    QList<QWidget *> statusBarWidgets() const override;
 
     void reformat(const QString &pFileName);
 
@@ -163,23 +163,22 @@ private:
     QString mContentMathmlEquation;
 
     bool commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
-                                const int &pLineNumber,
-                                const bool &pCommentLine);
+                                int pLineNumber, bool pCommentLine);
 
-    bool parse(const QString &pFileName, const bool &pOnlyErrors = false);
+    bool parse(const QString &pFileName, bool pOnlyErrors = false);
 
-    QString partialStatement(const int &pPosition, int &pFromPosition,
+    QString partialStatement(int pPosition, int &pFromPosition,
                              int &pToPosition) const;
     QString beginningOfPiecewiseStatement(int &pPosition) const;
     QString endOfPiecewiseStatement(int &pPosition) const;
-    QString statement(const int &pPosition) const;
+    QString statement(int pPosition) const;
 
 private slots:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
     void updateViewer();
 
-    void selectFirstItemInEditorList(OpenCOR::EditorWidget::EditorListWidget *pEditorList = 0);
+    void selectFirstItemInEditorList();
 
     void mathmlConversionDone(const QString &pContentMathml,
                               const QString &pPresentationMathml);

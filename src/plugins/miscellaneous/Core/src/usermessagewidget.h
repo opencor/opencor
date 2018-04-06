@@ -56,7 +56,7 @@ public:
     explicit UserMessageWidget(const QString &pIcon, QWidget *pParent);
     explicit UserMessageWidget(QWidget *pParent);
 
-    void setScale(const double &pScale);
+    void setScale(double pScale);
 
     void setIcon(const QString &pIcon);
     void setIconMessage(const QString &pIcon, const QString &pMessage,

@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class SampleWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -46,7 +46,7 @@ class SampleWindowWindow : public Core::WindowWidget
 
 public:
     explicit SampleWindowWindow(QWidget *pParent);
-    ~SampleWindowWindow();
+    ~SampleWindowWindow() override;
 
 private:
     Ui::SampleWindowWindow *mGui;

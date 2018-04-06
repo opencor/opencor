@@ -61,14 +61,14 @@ class RawSedmlViewWidget : public Core::ViewWidget
 public:
     explicit RawSedmlViewWidget(QWidget *pParent);
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool contains(const QString &pFileName) const;
 
-    void initialize(const QString &pFileName, const bool &pUpdate = true);
+    void initialize(const QString &pFileName, bool pUpdate = true);
     void finalize(const QString &pFileName);
 
     void fileSaved(const QString &pFileName);
@@ -77,14 +77,13 @@ public:
 
     EditorWidget::EditorWidget * editorWidget(const QString &pFileName) const;
 
-    virtual QWidget * widget(const QString &pFileName);
+    QWidget * widget(const QString &pFileName) override;
 
-    virtual QList<QWidget *> statusBarWidgets() const;
+    QList<QWidget *> statusBarWidgets() const override;
 
     void reformat(const QString &pFileName);
 
-    bool validate(const QString &pFileName,
-                  const bool &pOnlyErrors = false) const;
+    bool validate(const QString &pFileName, bool pOnlyErrors = false) const;
 
 private:
     bool mNeedLoadingSettings;

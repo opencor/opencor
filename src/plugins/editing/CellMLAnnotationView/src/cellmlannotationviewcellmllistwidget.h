@@ -59,8 +59,8 @@ class CellmlAnnotationViewCellmlElementItemDelegate : public Core::StyledItemDel
 public:
     explicit CellmlAnnotationViewCellmlElementItemDelegate(QObject *pParent);
 
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================
@@ -90,14 +90,14 @@ public:
         VariableMapping       = QStandardItem::UserType+15
     };
 
-    explicit CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText);
+    explicit CellmlAnnotationViewCellmlElementItem(bool pError, const QString &pText);
     explicit CellmlAnnotationViewCellmlElementItem(const Type &pType, const QString &pText);
     explicit CellmlAnnotationViewCellmlElementItem(const Type &pType,
                                                    iface::cellml_api::CellMLElement *pElement,
                                                    const int pNumber = -1);
 
     bool isCategory() const;
-    virtual int type() const;
+    int type() const override;
     int number() const;
 
     iface::cellml_api::CellMLElement * element() const;
@@ -112,11 +112,11 @@ private:
 
     void setIcon(const Type &pType);
 
-    explicit CellmlAnnotationViewCellmlElementItem(const bool &pCategory,
+    explicit CellmlAnnotationViewCellmlElementItem(bool pCategory,
                                                    const Type &pType,
                                                    const QString &pText,
                                                    iface::cellml_api::CellMLElement *pElement,
-                                                   const int &pNumber);
+                                                   int pNumber);
 };
 
 //==============================================================================
@@ -132,7 +132,7 @@ class CellmlAnnotationViewCellmlListWidget : public Core::Widget
 public:
     explicit CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewEditingWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     Core::TreeViewWidget * treeViewWidget() const;
 
@@ -150,7 +150,7 @@ private:
 
     void retranslateDataItem(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem);
 
-    void initializeTreeViewWidget(const bool &pSelectFirstItem = true);
+    void initializeTreeViewWidget(bool pSelectFirstItem = true);
 
     void populateModel();
     void populateUnitsModel(CellmlAnnotationViewCellmlElementItem *pCellmlElementItem,

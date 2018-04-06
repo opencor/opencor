@@ -68,6 +68,15 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->actionNew, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::actionNewTriggered);
+    connect(mGui->actionReload, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::actionReloadTriggered);
+    connect(mGui->actionPreferences, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::actionPreferencesTriggered);
+    connect(mGui->actionPmr, &QAction::triggered,
+            this, &PmrWorkspacesWindowWindow::actionPmrTriggered);
+
     // Create a tool bar widget with different actions
     // Note #1: normally, we would retrieve the folder icon through a call to
     //          QFileIconProvider().icon(QFileIconProvider::Folder), but on
@@ -153,40 +162,40 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
 
-    connect(this, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(retrieveWorkspaces(const bool &)));
+    connect(this, &PmrWorkspacesWindowWindow::visibilityChanged,
+            this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
     // Some connections to process responses from our PMR web service
 
-    connect(mPmrWebService, SIGNAL(busy(const bool &)),
-            this, SLOT(busy(const bool &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, &PmrWorkspacesWindowWindow::busy);
 
-    connect(mPmrWebService, SIGNAL(information(const QString &)),
-            this, SLOT(showInformation(const QString &)));
-    connect(mPmrWebService, SIGNAL(warning(const QString &)),
-            this, SLOT(showWarning(const QString &)));
-    connect(mPmrWebService, SIGNAL(error(const QString &)),
-            this, SLOT(showError(const QString &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::information,
+            this, &PmrWorkspacesWindowWindow::showInformation);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::warning,
+            this, &PmrWorkspacesWindowWindow::showWarning);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::error,
+            this, &PmrWorkspacesWindowWindow::showError);
 
-    connect(mPmrWebService, SIGNAL(authenticated(const bool &)),
-            this, SLOT(updateGui()));
-    connect(mPmrWebService, SIGNAL(authenticationCancelled()),
-            this, SLOT(updateGui()));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::authenticated,
+            this, &PmrWorkspacesWindowWindow::updateGui);
+    connect(mPmrWebService, &PMRSupport::PmrWebService::authenticationCancelled,
+            this, &PmrWorkspacesWindowWindow::updateGui);
 
-    connect(mPmrWebService, SIGNAL(workspaces(const OpenCOR::PMRSupport::PmrWorkspaces &)),
-            mPmrWorkspacesWindowWidget, SLOT(initialize(const OpenCOR::PMRSupport::PmrWorkspaces &)));
+    connect(mPmrWebService, &PMRSupport::PmrWebService::workspaces,
+            mPmrWorkspacesWindowWidget, QOverload<const PMRSupport::PmrWorkspaces &>::of(&PmrWorkspacesWindowWidget::initialize));
 
     // Connections to process requests from our PMR workspaces widget
 
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(information(const QString &)),
-            this, SLOT(showInformation(const QString &)));
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(warning(const QString &)),
-            this, SLOT(showWarning(const QString &)));
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::information,
+            this, &PmrWorkspacesWindowWindow::showInformation);
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::warning,
+            this, &PmrWorkspacesWindowWindow::showWarning);
 
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFileRequested(const QString &)),
-            this, SLOT(openFile(const QString &)));
-    connect(mPmrWorkspacesWindowWidget, SIGNAL(openFilesRequested(const QStringList &)),
-            this, SLOT(openFiles(const QStringList &)));
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::openFileRequested,
+            this, &PmrWorkspacesWindowWindow::openFile);
+    connect(mPmrWorkspacesWindowWidget, &PmrWorkspacesWindowWidget::openFilesRequested,
+            this, &PmrWorkspacesWindowWindow::openFiles);
 
     // Retranslate our GUI
 
@@ -279,7 +288,7 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
     if (pPmrUrl.compare(mPmrUrl)) {
         if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-            mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+            mPmrWorkspacesWindowWidget->initialize();
 
         mPmrUrl = pPmrUrl;
 
@@ -294,7 +303,7 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::busy(const bool &pBusy)
+void PmrWorkspacesWindowWindow::busy(bool pBusy)
 {
     // Show ourselves as busy or not busy anymore
 
@@ -328,7 +337,9 @@ void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
     //       information become available when trying to retrieve the list of
     //       workspaces at startup...
 
-    if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Information, pMessage);
+    else
         Core::informationMessageBox(windowTitle(), pMessage);
 }
 
@@ -342,7 +353,9 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
     //       warning occur when trying to retrieve the list of workspaces at
     //       startup...
 
-    if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Warning, pMessage);
+    else
         Core::warningMessageBox(windowTitle(), pMessage);
 }
 
@@ -358,14 +371,14 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       startup...
 
     if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), pMessage);
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Error, pMessage);
     else
         Core::criticalMessageBox(windowTitle(), pMessage);
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
+void PmrWorkspacesWindowWindow::retrieveWorkspaces(bool pVisible)
 {
     // Update our GUI, if we are becoming visible and the list of workspaces has
     // never been requested before (through a single shot, this to allow other
@@ -379,7 +392,7 @@ void PmrWorkspacesWindowWindow::retrieveWorkspaces(const bool &pVisible)
     if (pVisible && firstTime) {
         firstTime = false;
 
-        QTimer::singleShot(0, this, SLOT(updateGui()));
+        QTimer::singleShot(0, this, &PmrWorkspacesWindowWindow::updateGui);
     }
 }
 
@@ -405,9 +418,9 @@ void PmrWorkspacesWindowWindow::updateGui()
     // ourselves
 
     if (mAuthenticated)
-        on_actionReload_triggered();
+        actionReloadTriggered();
     else if (mInitialized)
-        mPmrWorkspacesWindowWidget->initialize(PMRSupport::PmrWorkspaces(), QString(), false);
+        mPmrWorkspacesWindowWidget->initialize();
 }
 
 //==============================================================================
@@ -427,7 +440,7 @@ void PmrWorkspacesWindowWindow::retranslateActionPmr()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionNew_triggered()
+void PmrWorkspacesWindowWindow::actionNewTriggered()
 {
     // Create a new (owned) workspace
 
@@ -451,7 +464,7 @@ void PmrWorkspacesWindowWindow::on_actionNew_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionReload_triggered()
+void PmrWorkspacesWindowWindow::actionReloadTriggered()
 {
     // Get the list of workspaces from our PMR web service, after making sure
     // that we have cleared existing workspaces from our workspace manager
@@ -463,7 +476,7 @@ void PmrWorkspacesWindowWindow::on_actionReload_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionPreferences_triggered()
+void PmrWorkspacesWindowWindow::actionPreferencesTriggered()
 {
     // Show the preferences for PMR support
 
@@ -472,7 +485,7 @@ void PmrWorkspacesWindowWindow::on_actionPreferences_triggered()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::on_actionPmr_triggered()
+void PmrWorkspacesWindowWindow::actionPmrTriggered()
 {
     // Log on/off to/ PMR
 

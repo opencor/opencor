@@ -133,22 +133,19 @@ class CvodesSolver : public OpenCOR::Solver::OdeSolver
 
 public:
     explicit CvodesSolver();
-    ~CvodesSolver();
+    ~CvodesSolver() override;
 
-    virtual void initialize(const double &pVoi, const int &pRatesStatesCount,
-                            double *pConstants, double *pRates, double *pStates,
-                            double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates);
-    virtual void initialize(const double &pVoiStart,
-                            const int &pRatesStatesCount, double *pConstants,
-                            double *pRates, double *pStates, double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates,
-                            const int &pGradientsCount,
-                            int *pGradientsIndices,
-                            double *pGradients);
-    virtual void reinitialize(const double &pVoi);
+    void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
+                    double *pRates, double *pStates, double *pAlgebraic,
+                    ComputeRatesFunction pComputeRates) override;
+    void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
+                    double *pRates, double *pStates, double *pAlgebraic,
+                    ComputeRatesFunction pComputeRates,
+                    const int &pGradientsCount, int *pGradientsIndices,
+                    double *pGradients) override;
+    void reinitialize(double pVoi) override;
 
-    virtual void solve(double &pVoi, const double &pVoiEnd) const;
+    void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
     void *mSolver;

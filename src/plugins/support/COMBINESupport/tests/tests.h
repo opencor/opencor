@@ -44,7 +44,7 @@ class Tests : public QObject
 private:
     OpenCOR::COMBINESupport::CombineArchive *mCombineArchive;
 
-    void doBasicTests(const QString &pFileName = QString());
+    void basicTests(const QString &pFileName);
 
 private slots:
     void initTestCase();

@@ -67,12 +67,12 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 public:
     explicit GraphPanelPlotGraphProperties(const QString &pTitle = QString(),
                                            const Qt::PenStyle &pLineStyle = Qt::SolidLine,
-                                           const int &pLineWidth = 1,
+                                           int pLineWidth = 1,
                                            const QColor &pLineColor = Qt::darkBlue,
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
-                                           const int &pSymbolSize = 8,
+                                           int pSymbolSize = 8,
                                            const QColor &pSymbolColor = Qt::darkBlue,
-                                           const bool &pSymbolFilled = true,
+                                           bool pSymbolFilled = true,
                                            const QColor &pSymbolFillColor = Qt::white);
 
     QString title() const;
@@ -147,7 +147,7 @@ public:
     GraphPanelPlotGraphRun * lastRun() const;
 
     bool isSelected() const;
-    void setSelected(const bool &pSelected);
+    void setSelected(bool pSelected);
 
     QString fileName() const;
     void setFileName(const QString &pFileName);
@@ -163,20 +163,18 @@ public:
 
     const QwtSymbol * symbol() const;
     void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
-                   const QPen &pPen, const int &pSize);
+                   const QPen &pPen, int pSize);
 
     void setTitle(const QString &pTitle);
 
     bool isVisible() const;
-    void setVisible(const bool &pVisible);
+    void setVisible(bool pVisible);
 
     bool hasData() const;
     quint64 dataSize() const;
 
-    QwtSeriesData<QPointF> *data(const int &pRun = -1) const;
-    void setData(double *pDataX, double *pDataY, const int &pRun,
-                 const int &pSize);
-    void setData(double *pDataX, double *pDataY, const int &pSize);
+    QwtSeriesData<QPointF> *data(int pRun = -1) const;
+    void setData(double *pDataX, double *pDataY, int pSize, int pRun = -1);
 
     QRectF boundingRect();
     QRectF boundingLogRect();
@@ -218,7 +216,7 @@ public:
     QRect zoomRegion() const;
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     enum Position {
@@ -237,9 +235,9 @@ private:
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
-                         const QColor &pForegroundColor, const int &pLineWidth,
+                         const QColor &pForegroundColor, int pLineWidth,
                          const Position &pPosition,
-                         const bool &pCanMovePosition = true);
+                         bool pCanMovePosition = true);
 };
 
 //==============================================================================
@@ -250,7 +248,7 @@ public:
     void retranslateUi();
 
 protected:
-    virtual QwtText label(double pValue) const;
+    QwtText label(double pValue) const override;
 };
 
 //==============================================================================
@@ -271,24 +269,23 @@ public:
     explicit GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pParent);
 
     bool isActive() const;
-    void setActive(const bool &pActive);
+    void setActive(bool pActive);
 
-    virtual bool isEmpty() const;
+    bool isEmpty() const override;
 
-    void setChecked(const int &pIndex, const bool &pChecked);
+    void setChecked(int pIndex, bool pChecked);
 
-    void setFontSize(const int &pFontSize);
+    void setFontSize(int pFontSize);
     void setBackgroundColor(const QColor &pBackgroundColor);
     void setForegroundColor(const QColor &pForegroundColor);
 
     void renderLegend(QPainter *pPainter, const QRectF &pRect,
-                      bool pFillBackground) const;
+                      bool pFillBackground) const override;
 
-    virtual QSize sizeHint() const;
+    QSize sizeHint() const override;
 
 protected:
-    virtual void updateWidget(QWidget *pWidget,
-                              const QwtLegendData &pLegendData);
+    void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
 
 private:
     GraphPanelPlotWidget *mOwner;
@@ -300,10 +297,10 @@ private:
     QColor mForegroundColor;
 
 signals:
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphToggled(GraphPanelPlotGraph *pGraph);
 
 private slots:
-    void checked(const QVariant &pItemInfo);
+    void legendChecked(const QVariant &pItemInfo);
 };
 
 //==============================================================================
@@ -334,11 +331,11 @@ public:
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
                                   GraphPanelWidget *pParent);
-    ~GraphPanelPlotWidget();
+    ~GraphPanelPlotWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    void setActive(const bool &pActive);
+    void setActive(bool pActive);
 
     GraphPanelPlotGraphs graphs() const;
 
@@ -363,7 +360,7 @@ public:
     void setBackgroundColor(const QColor &pBackgroundColor);
 
     int fontSize() const;
-    void setFontSize(const int &pFontSize, const bool &pForceSetting = false);
+    void setFontSize(int pFontSize, bool pForceSetting = false);
 
     QColor foregroundColor() const;
     void setForegroundColor(const QColor &pForegroundColor);
@@ -372,21 +369,21 @@ public:
     void setGridLinesStyle(const Qt::PenStyle &pGridLinesStyle);
 
     int gridLinesWidth() const;
-    void setGridLinesWidth(const int &pGridLinesWidth);
+    void setGridLinesWidth(int pGridLinesWidth);
 
     QColor gridLinesColor() const;
     void setGridLinesColor(const QColor &pGridLinesColor);
 
     bool isLegendActive() const;
-    void setLegendActive(const bool &pLegendActive);
+    void setLegendActive(bool pLegendActive);
 
-    void setLegendWidth(const int &pLegendWidth);
+    void setLegendWidth(int pLegendWidth);
 
     Qt::PenStyle pointCoordinatesStyle() const;
     void setPointCoordinatesStyle(const Qt::PenStyle &pPointCoordinatesStyle);
 
     int pointCoordinatesWidth() const;
-    void setPointCoordinatesWidth(const int &pPointCoordinatesWidth);
+    void setPointCoordinatesWidth(int pPointCoordinatesWidth);
 
     QColor pointCoordinatesColor() const;
     void setPointCoordinatesColor(const QColor &pPointCoordinatesColor);
@@ -403,13 +400,13 @@ public:
     void setTitle(const QString &pTitle);
 
     bool logAxisX() const;
-    void setLogAxisX(const bool &pLogAxisX);
+    void setLogAxisX(bool pLogAxisX);
 
     QString titleAxisX() const;
     void setTitleAxisX(const QString &pTitleAxisX);
 
     bool logAxisY() const;
-    void setLogAxisY(const bool &pLogAxisY);
+    void setLogAxisY(bool pLogAxisY);
 
     QString titleAxisY() const;
     void setTitleAxisY(const QString &pTitleAxisY);
@@ -418,7 +415,7 @@ public:
     void setZoomRegionStyle(const Qt::PenStyle &pZoomRegionStyle);
 
     int zoomRegionWidth() const;
-    void setZoomRegionWidth(const int &pZoomRegionWidth);
+    void setZoomRegionWidth(int pZoomRegionWidth);
 
     QColor zoomRegionColor() const;
     void setZoomRegionColor(const QColor &pZoomRegionColor);
@@ -427,35 +424,29 @@ public:
     void setZoomRegionFontColor(const QColor &pZoomRegionFontColor);
 
     bool zoomRegionFilled() const;
-    void setZoomRegionFilled(const bool &pZoomRegionFilled);
+    void setZoomRegionFilled(bool pZoomRegionFilled);
 
     QColor zoomRegionFillColor() const;
     void setZoomRegionFillColor(const QColor &pZoomRegionFillColor);
 
-    void setDefaultAxesValues(const double &pDefaultMinX,
-                              const double &pDefaultMaxX,
-                              const double &pDefaultMinLogX,
-                              const double &pDefaultMaxLogX,
-                              const double &pDefaultMinY,
-                              const double &pDefaultMaxY,
-                              const double &pDefaultMinLogY,
-                              const double &pDefaultMaxLogY);
+    void setDefaultAxesValues(double pDefaultMinX, double pDefaultMaxX,
+                              double pDefaultMinLogX, double pDefaultMaxLogX,
+                              double pDefaultMinY, double pDefaultMaxY,
+                              double pDefaultMinLogY, double pDefaultMaxLogY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 const bool &pSynchronizeAxes = true,
-                 const bool &pCanReplot = true, const bool &pEmitSignal = true,
-                 const bool &pForceXAxisSetting = false,
-                 const bool &pForceYAxisSetting = false);
+                 bool pSynchronizeAxes = true, bool pCanReplot = true,
+                 bool pEmitSignal = true, bool pForceXAxisSetting = false,
+                 bool pForceYAxisSetting = false);
 
-    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, const quint64 &pFrom);
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
 
     GraphPanelPlotWidgets neighbors() const;
 
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
-    void alignWithNeighbors(const bool &pCanReplot,
-                            const bool &pForceAlignment = false);
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
     void forceAlignWithNeighbors();
 
     Action action() const;
@@ -468,13 +459,13 @@ public:
     QPointF canvasPoint(const QPoint &pPoint) const;
 
 protected:
-    virtual bool eventFilter(QObject *pObject, QEvent *pEvent);
-    virtual void mouseMoveEvent(QMouseEvent *pEvent);
-    virtual void mousePressEvent(QMouseEvent *pEvent);
-    virtual void mouseReleaseEvent(QMouseEvent *pEvent);
-    virtual void paintEvent(QPaintEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
-    virtual void wheelEvent(QWheelEvent *pEvent);
+    bool eventFilter(QObject *pObject, QEvent *pEvent) override;
+    void mouseMoveEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
+    void mouseReleaseEvent(QMouseEvent *pEvent) override;
+    void paintEvent(QPaintEvent *pEvent) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
+    void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
     enum Scaling {
@@ -565,7 +556,7 @@ private:
 
     GraphPanelPlotWidgets mNeighbors;
 
-    void checkAxisValues(const bool &pLogAxis, double &pMin, double &pMax);
+    void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 
     void updateActions();
 
@@ -573,26 +564,25 @@ private:
 
     QRectF realDataRect() const;
 
-    void setAxis(const int &pAxisId, double pMin, double pMax);
+    void setAxis(int pAxisId, double pMin, double pMax);
 
     bool resetAxes();
 
-    bool scaleAxis(const Scaling &pScaling, const bool &pCanZoomIn,
-                   const bool &pCanZoomOut, const QwtScaleMap &pCanvasMap,
-                   const double &pPoint, double &pMin, double &pMax);
+    bool scaleAxis(const Scaling &pScaling, bool pCanZoomIn, bool pCanZoomOut,
+                   const QwtScaleMap &pCanvasMap, double pPoint,
+                   double &pMin, double &pMax);
     void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
                    const Scaling &pScalingY);
 
-    void setTitleAxis(const int &pAxisId, const QString &pTitleAxis);
+    void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 
 signals:
-    void axesChanged(const double &pMinX, const double &pMaxX,
-                     const double &pMinY, const double &pMaxY);
+    void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphToggled(GraphPanelPlotGraph *pGraph);
 
     void legendToggled();
 

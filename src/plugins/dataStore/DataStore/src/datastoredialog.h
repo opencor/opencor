@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class DataStoreDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -52,8 +52,8 @@ class DataItemDelegate : public Core::StyledItemDelegate
 public:
     explicit DataItemDelegate(QObject *pParent);
 
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================
@@ -67,9 +67,9 @@ class DATASTORE_EXPORT DataStoreDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit DataStoreDialog(DataStore *pDataStore, const bool &pIncludeVoi,
+    explicit DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
                              QWidget *pParent);
-    ~DataStoreDialog();
+    ~DataStoreDialog() override;
 
     void addWidget(QWidget *pWidget);
 
@@ -83,16 +83,17 @@ private:
     QMap<QStandardItem *, DataStoreVariable*> mData;
     int mNbOfData;
 
-    DataStoreVariables doSelectedData(QStandardItem *pItem) const;
+    DataStoreVariables selectedData(QStandardItem *pItem) const;
+
+    void checkDataSelectedState(QStandardItem *pItem, int &pNbOfselectedData);
 
     void updateDataSelectedState(QStandardItem *pItem,
                                  const Qt::CheckState &pCheckState);
-    void checkDataSelectedState(QStandardItem *pItem, int &pNbOfselectedData);
 
 private slots:
-    void updateDataSelectedState(QStandardItem *pItem = 0);
+    void allDataCheckBoxClicked();
 
-    void on_allDataCheckBox_clicked();
+    void updateDataSelectedState(QStandardItem *pItem);
 };
 
 //==============================================================================

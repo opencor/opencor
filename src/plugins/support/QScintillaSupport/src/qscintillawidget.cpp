@@ -131,27 +131,27 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Keep track of the change to the UI
 
-    connect(this, SIGNAL(SCN_UPDATEUI(int)),
-            this, SLOT(updateUi()));
+    connect(this, &QScintillaWidget::SCN_UPDATEUI,
+            this, &QScintillaWidget::updateUi);
 
     // Keep track of changes to our editor and resize the margin line numbers
     // accordingly
 
-    connect(this, SIGNAL(textChanged()),
-            this, SLOT(updateMarginLineNumbersWidth()));
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::updateMarginLineNumbersWidth);
 
     // Keep track of changes to our editor that may affect our ability to select
     // all of its text
 
-    connect(this, SIGNAL(selectionChanged()),
-            this, SLOT(checkCanSelectAll()));
-    connect(this, SIGNAL(textChanged()),
-            this, SLOT(checkCanSelectAll()));
+    connect(this, &QScintillaWidget::selectionChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
 
     // Keep track of the change in the cursor position
 
-    connect(this, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(cursorPositionChanged(const int &, const int &)));
+    connect(this, &QScintillaWidget::cursorPositionChanged,
+            this, &QScintillaWidget::updateCursorPosition);
 }
 
 //==============================================================================
@@ -229,7 +229,7 @@ int QScintillaWidget::currentPosition() const
 
 //==============================================================================
 
-void QScintillaWidget::setCurrentPosition(const int &pCurrentPosition)
+void QScintillaWidget::setCurrentPosition(int pCurrentPosition)
 {
     // Set our current position
 
@@ -247,8 +247,7 @@ QString QScintillaWidget::contents() const
 
 //==============================================================================
 
-void QScintillaWidget::setContents(const QString &pContents,
-                                   const bool &pKeepHistory)
+void QScintillaWidget::setContents(const QString &pContents, bool pKeepHistory)
 {
     // Set our contents and keep our history, if required
 
@@ -277,8 +276,7 @@ int QScintillaWidget::contentsSize() const
 
 //==============================================================================
 
-QString QScintillaWidget::textInRange(const int &pStartRange,
-                                      const int &pEndRange) const
+QString QScintillaWidget::textInRange(int pStartRange, int pEndRange) const
 {
     // Retrieve and return the text in the given range, after making sure that
     // the given range makes sense
@@ -304,12 +302,11 @@ QString QScintillaWidget::textInRange(const int &pStartRange,
 
 //==============================================================================
 
-int QScintillaWidget::findTextInRange(const int &pStartRange,
-                                      const int &pEndRange,
+int QScintillaWidget::findTextInRange(int pStartRange, int pEndRange,
                                       const QString &pText,
-                                      const bool &pRegularExpression,
-                                      const bool &pCaseSensitive,
-                                      const bool &pWholeWordsOnly) const
+                                      bool pRegularExpression,
+                                      bool pCaseSensitive,
+                                      bool pWholeWordsOnly) const
 {
     // Keep track of the start and end of the current target
 
@@ -341,7 +338,7 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
 
 //==============================================================================
 
-QString QScintillaWidget::wordAt(const int &pLine, const int &pColumn) const
+QString QScintillaWidget::wordAt(int pLine, int pColumn) const
 {
     // Return the current word, if any
 
@@ -350,7 +347,7 @@ QString QScintillaWidget::wordAt(const int &pLine, const int &pColumn) const
 
 //==============================================================================
 
-void QScintillaWidget::selectWordAt(const int &pLine, const int &pColumn)
+void QScintillaWidget::selectWordAt(int pLine, int pColumn)
 {
     // Return the current word, if any
 
@@ -434,7 +431,7 @@ QString QScintillaWidget::eolString() const
 
 //==============================================================================
 
-QColor QScintillaWidget::backgroundColor(const int &pStyle)
+QColor QScintillaWidget::backgroundColor(int pStyle)
 {
     // Return the background color for the given style
 
@@ -443,7 +440,7 @@ QColor QScintillaWidget::backgroundColor(const int &pStyle)
 
 //==============================================================================
 
-void QScintillaWidget::setBackgroundColor(const int &pStyle,
+void QScintillaWidget::setBackgroundColor(int pStyle,
                                           const QColor &pBackgroundColor)
 {
     // Set the background color for the given style
@@ -453,7 +450,7 @@ void QScintillaWidget::setBackgroundColor(const int &pStyle,
 
 //==============================================================================
 
-QColor QScintillaWidget::foregroundColor(const int &pStyle)
+QColor QScintillaWidget::foregroundColor(int pStyle)
 {
     // Return the foreground color for the given style
 
@@ -462,7 +459,7 @@ QColor QScintillaWidget::foregroundColor(const int &pStyle)
 
 //==============================================================================
 
-void QScintillaWidget::setForegroundColor(const int &pStyle,
+void QScintillaWidget::setForegroundColor(int pStyle,
                                           const QColor &pForegroundColor)
 {
     // Set the foreground color for the given style
@@ -749,8 +746,7 @@ void QScintillaWidget::updateColors()
 
 //==============================================================================
 
-void QScintillaWidget::cursorPositionChanged(const int &pLine,
-                                             const int &pColumn)
+void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 {
     // Update our cursor position
 

@@ -169,17 +169,17 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         if (mEditor) {
             mEditor->setContextMenu(mEditMenu->actions());
 
-            connect(mEditor, SIGNAL(textChanged()),
-                    this, SLOT(updateUndoAndRedoActions()),
+            connect(mEditor, &EditorWidget::EditorWidget::textChanged,
+                    this, &EditingViewPlugin::updateUndoAndRedoActions,
                     Qt::UniqueConnection);
-            connect(mEditor, SIGNAL(copyAvailable(const bool &)),
-                    this, SLOT(updateEditingActions()),
+            connect(mEditor, &EditorWidget::EditorWidget::copyAvailable,
+                    this, &EditingViewPlugin::updateEditingActions,
                     Qt::UniqueConnection);
-            connect(mEditor, SIGNAL(canFindReplace(const bool &)),
-                    this, SLOT(updateFindPreviousNextActions()),
+            connect(mEditor, &EditorWidget::EditorWidget::canFindReplace,
+                    this, &EditingViewPlugin::updateFindPreviousNextActions,
                     Qt::UniqueConnection);
-            connect(mEditor, SIGNAL(canSelectAll(const bool &)),
-                    this, SLOT(updateSelectAllAction()),
+            connect(mEditor, &EditorWidget::EditorWidget::canSelectAll,
+                    this, &EditingViewPlugin::updateSelectAllAction,
                     Qt::UniqueConnection);
         }
     } else {
@@ -342,34 +342,34 @@ void EditingViewPlugin::initializePlugin()
 
     // Keep track of changes to the clipboard
 
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
-            this, SLOT(clipboardDataChanged()));
+    connect(QApplication::clipboard(), &QClipboard::dataChanged,
+            this, &EditingViewPlugin::clipboardDataChanged);
 
     // Some connections to handle our different editing actions
 
-    connect(mEditUndoAction, SIGNAL(triggered(bool)),
-            this, SLOT(doUndo()));
-    connect(mEditRedoAction, SIGNAL(triggered(bool)),
-            this, SLOT(doRedo()));
+    connect(mEditUndoAction, &QAction::triggered,
+            this, &EditingViewPlugin::doUndo);
+    connect(mEditRedoAction, &QAction::triggered,
+            this, &EditingViewPlugin::doRedo);
 
-    connect(mEditCutAction, SIGNAL(triggered(bool)),
-            this, SLOT(doCut()));
-    connect(mEditCopyAction, SIGNAL(triggered(bool)),
-            this, SLOT(doCopy()));
-    connect(mEditPasteAction, SIGNAL(triggered(bool)),
-            this, SLOT(doPaste()));
-    connect(mEditDeleteAction, SIGNAL(triggered(bool)),
-            this, SLOT(doDelete()));
+    connect(mEditCutAction, &QAction::triggered,
+            this, &EditingViewPlugin::doCut);
+    connect(mEditCopyAction, &QAction::triggered,
+            this, &EditingViewPlugin::doCopy);
+    connect(mEditPasteAction, &QAction::triggered,
+            this, &EditingViewPlugin::doPaste);
+    connect(mEditDeleteAction, &QAction::triggered,
+            this, &EditingViewPlugin::doDelete);
 
-    connect(mEditFindReplaceAction, SIGNAL(triggered(bool)),
-            this, SLOT(doFindReplace()));
-    connect(mEditFindNextAction, SIGNAL(triggered(bool)),
-            this, SLOT(doFindNext()));
-    connect(mEditFindPreviousAction, SIGNAL(triggered(bool)),
-            this, SLOT(doFindPrevious()));
+    connect(mEditFindReplaceAction, &QAction::triggered,
+            this, &EditingViewPlugin::doFindReplace);
+    connect(mEditFindNextAction, &QAction::triggered,
+            this, &EditingViewPlugin::doFindNext);
+    connect(mEditFindPreviousAction, &QAction::triggered,
+            this, &EditingViewPlugin::doFindPrevious);
 
-    connect(mEditSelectAllAction, SIGNAL(triggered(bool)),
-            this, SLOT(doSelectAll()));
+    connect(mEditSelectAllAction, &QAction::triggered,
+            this, &EditingViewPlugin::doSelectAll);
 }
 
 //==============================================================================

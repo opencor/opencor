@@ -36,7 +36,7 @@ class QUrl;
 
 namespace Ui {
     class HelpWindowWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -55,12 +55,12 @@ class HelpWindowWindow : public Core::WindowWidget
 
 public:
     explicit HelpWindowWindow(QWidget *pParent);
-    ~HelpWindowWindow();
+    ~HelpWindowWindow() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
 private:
     Ui::HelpWindowWindow *mGui;
@@ -70,14 +70,14 @@ private:
     QMenu *mContextMenu;
 
 private slots:
-    void on_actionHome_triggered();
-    void on_actionBack_triggered();
-    void on_actionForward_triggered();
-    void on_actionCopy_triggered();
-    void on_actionNormalSize_triggered();
-    void on_actionZoomIn_triggered();
-    void on_actionZoomOut_triggered();
-    void on_actionPrint_triggered();
+    void actionHomeTriggered();
+    void actionBackTriggered();
+    void actionForwardTriggered();
+    void actionCopyTriggered();
+    void actionNormalSizeTriggered();
+    void actionZoomInTriggered();
+    void actionZoomOutTriggered();
+    void actionPrintTriggered();
 
     void showCustomContextMenu() const;
 };

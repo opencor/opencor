@@ -45,7 +45,7 @@ class PMRSUPPORT_EXPORT PmrWorkspaceManager : public QObject
 
 public:
     explicit PmrWorkspaceManager();
-    ~PmrWorkspaceManager();
+    ~PmrWorkspaceManager() override;
 
     static PmrWorkspaceManager * instance();
 
@@ -65,9 +65,9 @@ private:
     QMap<QString, PmrWorkspace *> mUrlWorkspaces;
 
 signals:
-    void workspaceCloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceUncloned(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
-    void workspaceSynchronized(OpenCOR::PMRSupport::PmrWorkspace *pWorkspace);
+    void workspaceCloned(PmrWorkspace *pWorkspace);
+    void workspaceUncloned(PmrWorkspace *pWorkspace);
+    void workspaceSynchronized(PmrWorkspace *pWorkspace);
 };
 
 //==============================================================================

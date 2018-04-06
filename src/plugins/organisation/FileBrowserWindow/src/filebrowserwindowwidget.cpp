@@ -70,11 +70,11 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
 
     // Some connections
 
-    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &FileBrowserWindowWidget::itemChanged);
 
-    connect(mModel, SIGNAL(directoryLoaded(const QString &)),
-            this, SLOT(directoryLoaded(const QString &)));
+    connect(mModel, &FileBrowserWindowModel::directoryLoaded,
+            this, &FileBrowserWindowWidget::directoryLoaded);
 }
 
 //==============================================================================
@@ -91,8 +91,8 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     // We are about to begin loading the settings, so we don't want to keep
     // track of the change of item
 
-    disconnect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-               this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+    disconnect(selectionModel(), &QItemSelectionModel::currentChanged,
+               this, &FileBrowserWindowWidget::itemChanged);
 
     // Retrieve the width of each column
 
@@ -293,10 +293,10 @@ void FileBrowserWindowWidget::deselectFolders() const
 
 void FileBrowserWindowWidget::emitItemChangedRelatedSignals()
 {
-    // Let the user know whether the path of the new item is not that of our
-    // home folder, as well as whether we could go to the parent item
+    // Let the user know whether the path of the new item is that of our home
+    // folder, as well as whether we could go to the parent item
 
-    emit notHomeFolder(currentPath() != QDir::homePath());
+    emit homeFolder(!currentPath().compare(QDir::homePath()));
     emit goToParentFolderEnabled(!currentPathParent().isEmpty());
 
     // Let the user know whether we can go to the previous/next file/folder
@@ -356,8 +356,8 @@ void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
     // First, we must stop keeping track of the change of item otherwise it's
     // going to mess things up
 
-    disconnect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-               this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+    disconnect(selectionModel(), &QItemSelectionModel::currentChanged,
+               this, &FileBrowserWindowWidget::itemChanged);
 
     // Retrieve our current path and add it to our list of other items
 
@@ -422,8 +422,8 @@ void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
 
     // Now that we are done, we can once again keep track of the change of item
 
-    connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &FileBrowserWindowWidget::itemChanged);
 
     // Let the user know about a few item changed related things
 
@@ -574,8 +574,8 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
             // We are now done loading the settings for the file browser widget,
             // so we can now keep track of the change of item
 
-            connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-                    this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
+            connect(selectionModel(), &QItemSelectionModel::currentChanged,
+                    this, &FileBrowserWindowWidget::itemChanged);
 
             needInitializing = false;
         }
@@ -584,8 +584,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
 
 //==============================================================================
 
-void FileBrowserWindowWidget::goToPath(const QString &pPath,
-                                       const bool &pExpand)
+void FileBrowserWindowWidget::goToPath(const QString &pPath, bool pExpand)
 {
     // Set the current index to that of the provided path
 

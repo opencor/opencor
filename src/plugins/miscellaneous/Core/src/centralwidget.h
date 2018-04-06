@@ -72,7 +72,7 @@ public:
     ~CentralWidgetMode();
 
     bool isEnabled() const;
-    void setEnabled(const bool &pEnabled);
+    void setEnabled(bool pEnabled);
 
     TabBarWidget * viewTabs() const;
 
@@ -95,19 +95,19 @@ class CORE_EXPORT CentralWidget : public Widget
 
 public:
     explicit CentralWidget(QWidget *pParent);
-    ~CentralWidget();
+    ~CentralWidget() override;
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings) override;
+    void saveSettings(QSettings *pSettings) const override;
 
     void settingsLoaded(const Plugins &pLoadedPlugins);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void addView(Plugin *pPlugin);
 
     TabBarWidget * newTabBarWidget(const QTabBar::Shape &pShape,
-                                   const bool &pFileTabs = false);
+                                   bool pFileTabs = false);
 
     QString currentFileName() const;
     QString localFileName(const QString &pUrl) const;
@@ -115,12 +115,10 @@ public:
     QString openFile(const QString &pFileName,
                      const File::Type &pType = File::Local,
                      const QString &pUrl = QString(),
-                     const bool &pShowWarning = true);
-    QString openFile(const QString &pFileName,
-                     const bool &pShowWarning);
+                     bool pShowWarning = true);
     void openFiles(const QStringList &pFileNames);
 
-    QString openRemoteFile(const QString &pUrl, const bool &pShowWarning = true);
+    QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
 
@@ -128,9 +126,9 @@ public:
     bool selectView(const QString &pViewName);
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *pEvent);
-    virtual void dragMoveEvent(QDragMoveEvent *pEvent);
-    virtual void dropEvent(QDropEvent *pEvent);
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
 
 private:
     enum State {
@@ -177,57 +175,73 @@ private:
 
     QMap<QString, QWidget *> mViews;
 
-    Plugin * viewPlugin(const int &pIndex) const;
+    Plugin * viewPlugin(int pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 
     void updateNoViewMsg();
 
-    bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
+    bool saveFile(int pIndex, bool pNeedNewFileName = false);
 
-    bool canCloseFile(const int &pIndex);
+    bool canCloseFile(int pIndex);
 
-    void updateFileTab(const int &pIndex, const bool &pIconOnly = false);
+    void updateFileTab(int pIndex, bool pIconOnly = false);
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
 
-    QString viewKey(const int &pMode, const int &pView,
-                    const QString &pFileName);
+    QString viewKey(int pMode, int pView, const QString &pFileName);
 
-    void fileReloadedOrSaved(const QString &pFileName,
-                             const bool &pFileReloaded);
+    void fileReloadedOrSaved(const QString &pFileName, bool pFileReloaded);
 
-    void setTabBarCurrentIndex(TabBarWidget *pTabBar, const int &pIndex);
+    void setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex);
+
+    void reloadFile(int pIndex, bool pForce);
+
+    bool closeFile(int pIndex, bool pForceClosing);
+    void closeAllFiles(bool pForceClosing);
 
 signals:
     void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
-    void atLeastOneView(const bool &pAtLeastOneView);
+    void atLeastOneView(bool pAtLeastOneView);
 
-    void canSave(const bool &pEnabled);
-    void canSaveAs(const bool &pEnabled);
-    void canSaveAll(const bool &pEnabled);
+    void canSave(bool pEnabled);
+    void canSaveAs(bool pEnabled);
+    void canSaveAll(bool pEnabled);
 
-    void atLeastOneFile(const bool &pAtLeastOneFile);
-    void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
+    void atLeastOneFile(bool pAtLeastOneFile);
+    void atLeastTwoFiles(bool pAtLeastTwoFiles);
 
-private slots:
-    void updateGui();
-
+public slots:
     void openFile();
 
-    void openRemoteFileChanged();
-    void doOpenRemoteFile();
-    void cancelOpenRemoteFile();
     void openRemoteFile();
 
-    void reloadFile(const int &pIndex = -1, const bool &pForce = false);
+    void reloadFile();
 
     void duplicateFile();
 
     void toggleLockedFile();
 
-    void fileChanged(const QString &pFileName, const bool &pFileChanged,
-                     const bool &pDependenciesChanged);
+    void saveFile();
+    void saveFileAs();
+    void saveAllFiles();
+
+    void previousFile();
+    void nextFile();
+
+    bool closeFile(int pIndex);
+    bool closeFile();
+    void closeAllFiles();
+
+private slots:
+    void updateGui();
+
+    void openRemoteFileChanged();
+    void doOpenRemoteFile();
+    void cancelOpenRemoteFile();
+
+    void fileChanged(const QString &pFileName, bool pFileChanged,
+                     bool pDependenciesChanged);
     void fileDeleted(const QString &pFileName);
 
     void updateModifiedSettings();
@@ -243,17 +257,7 @@ private slots:
 
     void fileSaved(const QString &pFileName);
 
-    void saveFile();
-    void saveFileAs();
-    void saveAllFiles();
-
-    void previousFile();
-    void nextFile();
-
-    bool closeFile(const int &pIndex = -1, const bool &pForceClosing = false);
-    void closeAllFiles(const bool &pForceClosing = false);
-
-    void moveFile(const int &pFromIndex, const int &pToIndex);
+    void moveFile(int pFromIndex, int pToIndex);
 
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);

@@ -80,12 +80,10 @@ public:
         LocallyBound
     };
 
-    explicit CellmlFileRuntimeParameter(const QString &pName,
-                                        const int &pDegree,
+    explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        const ParameterType &pType,
-                                        const int &pIndex);
+                                        const ParameterType &pType, int pIndex);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);
@@ -131,7 +129,7 @@ public:
     typedef void (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
-    ~CellmlFileRuntime();
+    ~CellmlFileRuntime() override;
 
     CellmlFile * cellmlFile();
 
@@ -186,7 +184,7 @@ private:
 
     void resetFunctions();
 
-    void reset(const bool &pRecreateCompilerEngine, const bool &pResetIssues);
+    void reset(bool pRecreateCompilerEngine, bool pResetIssues);
 
     void couldNotGenerateModelCodeIssue(const QString &pExtraInfo);
     void unknownProblemDuringModelCodeGenerationIssue();

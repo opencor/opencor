@@ -97,14 +97,14 @@ public:
                                                   PMRSupport::PmrWorkspace *pWorkspace,
                                                   QTimer *pTimer,
                                                   QWidget *pParent);
-    ~PmrWorkspacesWindowSynchronizeDialog();
+    ~PmrWorkspacesWindowSynchronizeDialog() override;
 
     QString message() const;
 
     QStringList fileNames() const;
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
     typedef struct {
@@ -143,6 +143,8 @@ private:
 
     QMap<QString, QString> mDiffHtmls;
     QMap<QString, QString> mCellmlDiffHtmls;
+
+    int mNbOfCheckableFiles;
 
     QModelIndexList mPreviouslySelectedIndexes;
 

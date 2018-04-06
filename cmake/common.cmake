@@ -269,13 +269,14 @@ macro(add_plugin PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    if(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
+    if(    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
+
         # Copy the entire source directory to the destination
 
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
-                                                                      ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E copy_directory
+                                ${ARG_EXTERNAL_SOURCE_DIR} ${ARG_EXTERNAL_DESTINATION_DIR})
     endif()
 
     # System binaries

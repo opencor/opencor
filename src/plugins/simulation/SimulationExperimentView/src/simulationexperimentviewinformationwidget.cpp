@@ -127,15 +127,15 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 
     graphPanelHeader->setMenu(menu);
 
-    connect(mGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(grapPanelPropertyEditor()));
-    connect(mGraphsAction, SIGNAL(triggered(bool)),
-            this, SLOT(graphsPropertyEditor()));
+    connect(mGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationWidget::grapPanelPropertyEditor);
+    connect(mGraphsAction, &QAction::triggered,
+            this, &SimulationExperimentViewInformationWidget::graphsPropertyEditor);
 
     // A connection to know when our graph panel / graphs panel changes modes
 
-    connect(mGraphPanelAndGraphsWidget, SIGNAL(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)),
-            this, SLOT(graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &)));
+    connect(mGraphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelGraphsModeChanged,
+            this, &SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged);
 
     // Add our collapsible widget to our layout
 
@@ -217,7 +217,7 @@ SimulationExperimentViewInformationParametersWidget * SimulationExperimentViewIn
 
 //==============================================================================
 
-void SimulationExperimentViewInformationWidget::finishEditing(const bool &pPausedSimulation)
+void SimulationExperimentViewInformationWidget::finishEditing(bool pPausedSimulation)
 {
     // Finish the editing of any of the information we support
     // Note: when a simulation is paused, the simulation and solvers widgets are
@@ -252,7 +252,7 @@ void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
 {
     // Our graph panel / graphs mode has changed, so update our corresponding
     // actions and update the title of our collapsible widget's third header's

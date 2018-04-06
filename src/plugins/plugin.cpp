@@ -60,7 +60,7 @@ namespace OpenCOR {
 //==============================================================================
 
 Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
-               const QString &pErrorMessage, const bool &pLoad,
+               const QString &pErrorMessage, bool pLoad,
                PluginManager *pPluginManager) :
     mName(name(pFileName)),
     mInfo(pInfo),
@@ -530,7 +530,7 @@ bool Plugin::load(const QString &pName)
 
 //==============================================================================
 
-void Plugin::setLoad(const QString &pName, const bool &pToBeLoaded)
+void Plugin::setLoad(const QString &pName, bool pToBeLoaded)
 {
     // Keep track of the plugin's loading requirement
     // Note: see the Plugin::load's note...
@@ -547,7 +547,7 @@ void Plugin::setLoad(const QString &pName, const bool &pToBeLoaded)
 //==============================================================================
 
 QStringList Plugin::fullDependencies(const QString &pPluginsDir,
-                                     const QString &pName, const int &pLevel)
+                                     const QString &pName, int pLevel)
 {
     // Return the given plugin's full dependencies
 
