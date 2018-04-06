@@ -1,0 +1,276 @@
+<?xml version='1.0'?>
+<!-- no Ca_cytonetic model here to keep it clean. Also no concentrations: just mol
+ try Cm of 200 pF for whole cell (1e-5 F is TOO LARGE) -->
+<!-- CONVENTION: flow from JSR (q1) to cytosol (q2).-->
+<!-- somehow, release (current != 0) only when Cai spikes.
+ Try : Gpore depend on dCai/dt-->
+<model name="ca_dynamics_bg_1" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="../Units_BG.cellml">
+        <units name="mM" units_ref="mM"/>
+        <units name="per_mol" units_ref="per_mol"/>
+        <units name="J_per_mol" units_ref="J_per_mol"/>
+        <units name="mol_per_s" units_ref="mol_per_s"/>
+        <units name="C_per_mol" units_ref="C_per_mol"/>
+        <units name="J_per_C" units_ref="J_per_C"/>
+        <units name="microm3" units_ref="microm3"/>
+    </import>
+    <import xlink:href="../Units_kinetic.cellml">
+        <units name="microA_per_microF" units_ref="microA_per_microF"/>
+        <units name="millimolar_per_second" units_ref="millimolar_per_second"/>
+        <units name="second_per_mol" units_ref="second_per_mol"/>
+    </import>
+    <units name="millivolt">
+        <unit prefix="milli" units="volt"/>
+    </units>
+    <import xlink:href="ca_i_leak.cellml">
+        <component component_ref="BG_leak" name="BG_leak"/>
+    </import>
+    <import xlink:href="ca_i_rel.cellml">
+        <component component_ref="BG_rel" name="BG_rel"/>
+    </import>
+    <import xlink:href="ca_i_tr.cellml">
+        <component component_ref="BG_tr" name="BG_tr"/>
+    </import>
+    <import xlink:href="ca_i_up.cellml">
+        <component component_ref="BG_up" name="BG_up"/>
+    </import>
+    <component name="environment">
+        <!-- K mols from Pan. vol_c is 1e-15, vol_ext is 1e-14 m3
+ [Ca_JSR] ~= 1.8 mM. use V_myo = 3e-6 uL to calculate moles of Ca_JSR.-->
+        <variable name="time" public_interface="out" units="second"/>
+        <variable initial_value="200e-12" name="C_m" public_interface="out" units="farad"/>
+        <variable initial_value="0.004560e-15" name="qCa_cyto" public_interface="out" units="mole"/>
+        <variable initial_value="4.5e-16" name="qCa_JSR" public_interface="out" units="mole"/>
+        <variable initial_value="3e-15" name="qCa_NSR" public_interface="out" units="mole"/>
+        <variable initial_value="1e-15" name="qEnz_rel" public_interface="out" units="mole"/>
+        <variable initial_value="1e-15" name="qEnz_leak" public_interface="out" units="mole"/>
+        <variable initial_value="1e-15" name="qEnz_tr" public_interface="out" units="mole"/>
+        <variable initial_value="1e-15" name="qEnz_up" public_interface="out" units="mole"/>
+        <variable initial_value="2494.34" name="RT" public_interface="out" units="J_per_mol"/>
+        <variable initial_value="1" name="z" public_interface="out" units="dimensionless"/>
+        <variable initial_value="96500" name="F" public_interface="out" units="C_per_mol"/>
+        <variable name="v_leak" public_interface="in" units="mol_per_s"/>
+        <variable name="v_rel" public_interface="in" units="mol_per_s"/>
+        <variable name="v_tr" public_interface="in" units="mol_per_s"/>
+        <variable name="v_up" public_interface="in" units="mol_per_s"/>
+        <variable name="i_leak" public_interface="out" units="microA_per_microF"/>
+        <variable name="i_rel" public_interface="out" units="microA_per_microF"/>
+        <variable name="i_tr" public_interface="out" units="microA_per_microF"/>
+        <variable name="i_up" public_interface="out" units="microA_per_microF"/>
+        <variable name="dCaidt" public_interface="out" units="dimensionless"/>
+        <variable name="G_pore_rel" public_interface="in" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>qCa_cyto</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <ci>v_leak</ci>
+                        <ci>v_up</ci>
+                    </apply>
+                    <ci>v_rel</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>qCa_JSR</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <minus/>
+                        <ci>v_tr</ci>
+                    </apply>
+                    <ci>v_rel</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>qCa_NSR</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <ci>v_tr</ci>
+                        <ci>v_leak</ci>
+                    </apply>
+                    <ci>v_up</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>qEnz_leak</ci>
+                </apply>
+                <cn cellml:units="mol_per_s">0</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>qEnz_tr</ci>
+                </apply>
+                <cn cellml:units="mol_per_s">0</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>qEnz_up</ci>
+                </apply>
+                <cn cellml:units="mol_per_s">0</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>qEnz_rel</ci>
+                </apply>
+                <cn cellml:units="mol_per_s">0</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>i_leak</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>v_leak</ci>
+                        <ci>F</ci>
+                    </apply>
+                    <ci>C_m</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>i_up</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>v_up</ci>
+                        <ci>F</ci>
+                    </apply>
+                    <ci>C_m</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>i_tr</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>v_tr</ci>
+                        <ci>F</ci>
+                    </apply>
+                    <ci>C_m</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>i_rel</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>v_rel</ci>
+                        <ci>F</ci>
+                    </apply>
+                    <ci>C_m</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dCaidt</ci>
+                <apply>
+                    <minus/>
+                    <ci>v_leak</ci>
+                    <ci>v_up</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <connection>
+        <map_components component_1="environment" component_2="BG_tr"/>
+        <map_variables variable_1="time" variable_2="t"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="z" variable_2="z"/>
+        <map_variables variable_1="F" variable_2="F"/>
+        <map_variables variable_1="qCa_JSR" variable_2="q1"/>
+        <map_variables variable_1="qCa_NSR" variable_2="q2"/>
+        <map_variables variable_1="qEnz_tr" variable_2="q3"/>
+        <map_variables variable_1="C_m" variable_2="C_m"/>
+        <map_variables variable_1="v_tr" variable_2="v_Re1"/>
+    </connection>
+    <connection>
+        <map_components component_1="environment" component_2="BG_leak"/>
+        <map_variables variable_1="time" variable_2="t"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="z" variable_2="z"/>
+        <map_variables variable_1="F" variable_2="F"/>
+        <map_variables variable_1="qCa_NSR" variable_2="q1"/>
+        <map_variables variable_1="qCa_cyto" variable_2="q2"/>
+        <map_variables variable_1="qEnz_leak" variable_2="q3"/>
+        <map_variables variable_1="C_m" variable_2="C_m"/>
+        <map_variables variable_1="v_leak" variable_2="v_Re1"/>
+    </connection>
+    <connection>
+        <map_components component_1="environment" component_2="BG_up"/>
+        <map_variables variable_1="time" variable_2="t"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="z" variable_2="z"/>
+        <map_variables variable_1="F" variable_2="F"/>
+        <map_variables variable_1="qCa_cyto" variable_2="q1"/>
+        <map_variables variable_1="qCa_NSR" variable_2="q2"/>
+        <map_variables variable_1="qEnz_up" variable_2="q3"/>
+        <map_variables variable_1="C_m" variable_2="C_m"/>
+        <map_variables variable_1="v_up" variable_2="v_Re1"/>
+    </connection>
+    <connection>
+        <map_components component_1="environment" component_2="BG_rel"/>
+        <map_variables variable_1="time" variable_2="t"/>
+        <map_variables variable_1="RT" variable_2="RT"/>
+        <map_variables variable_1="z" variable_2="z"/>
+        <map_variables variable_1="F" variable_2="F"/>
+        <map_variables variable_1="qCa_JSR" variable_2="q1"/>
+        <map_variables variable_1="qCa_cyto" variable_2="q2"/>
+        <map_variables variable_1="qEnz_rel" variable_2="q3"/>
+        <map_variables variable_1="C_m" variable_2="C_m"/>
+        <map_variables variable_1="v_rel" variable_2="v_Re1"/>
+        <map_variables variable_1="dCaidt" variable_2="dCaidt"/>
+        <map_variables variable_1="G_pore_rel" variable_2="G_pore"/>
+    </connection>
+</model>

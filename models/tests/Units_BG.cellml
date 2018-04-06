@@ -1,0 +1,223 @@
+<?xml version='1.0'?>
+<model cmeta:id="Units" name="Units" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <!-- area-->
+    <units name="m2">
+        <unit exponent="2" units="metre"/>
+    </units>
+    <!-- volume-->
+    <units name="m3">
+        <unit exponent="3" units="metre"/>
+    </units>
+    <units name="microm3">
+        <unit exponent="3" prefix="micro" units="metre"/>
+    </units>
+    <!--///////////////////////
+ power-->
+    <units name="J_per_s">
+        <unit units="joule"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!--////////////////////////
+ flow (molar)-->
+    <units name="mol_per_s">
+        <unit units="mole"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- flow (current)-->
+    <units name="C_per_s">
+        <unit units="coulomb"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- flow (velocity)-->
+    <units name="m_per_s">
+        <unit units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units name="cm_per_s">
+        <unit prefix="centi" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- flow (volumetric)-->
+    <units name="m3_per_s">
+        <unit exponent="3" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!--////////////////////////
+ potential (chemical)-->
+    <units name="J_per_mol">
+        <unit units="joule"/>
+        <unit exponent="-1" units="mole"/>
+    </units>
+    <!-- potential (voltage)-->
+    <units name="J_per_C">
+        <unit units="joule"/>
+        <unit exponent="-1" units="coulomb"/>
+    </units>
+    <!-- potential (force)-->
+    <units name="J_per_m">
+        <unit units="joule"/>
+        <unit exponent="-1" units="metre"/>
+    </units>
+    <!-- potential (pressure)-->
+    <units name="J_per_m3">
+        <unit units="joule"/>
+        <unit exponent="-3" units="metre"/>
+    </units>
+    <!--//////////////////////
+ inductance-->
+    <units name="Js2_per_mol2">
+        <unit units="joule"/>
+        <unit exponent="2" units="second"/>
+        <unit exponent="-2" units="mole"/>
+    </units>
+    <!-- elastance-->
+    <units name="Js_per_mol2">
+        <unit units="joule"/>
+        <unit units="second"/>
+        <unit exponent="-2" units="mole"/>
+    </units>
+    <!-- resistance-->
+    <units name="J_per_mol2">
+        <unit units="joule"/>
+        <unit exponent="-2" units="mole"/>
+    </units>
+    <!-- conductance-->
+    <units name="C2_per_J_s">
+        <unit exponent="2" units="coulomb"/>
+        <unit exponent="-1" units="joule"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!--///////////////////////
+ concentration (molar)-->
+    <units name="mol_per_m3">
+        <unit units="mole"/>
+        <unit exponent="-3" units="metre"/>
+    </units>
+    <!-- concentration (M)-->
+    <units name="M">
+        <unit units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <!-- concentration (mM)-->
+    <units name="mM">
+        <unit prefix="milli" units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="mM_per_s">
+        <unit prefix="milli" units="mole"/>
+        <unit exponent="-1" units="litre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- concentration (mass)-->
+    <units name="kg_per_m3">
+        <unit units="kilogram"/>
+        <unit exponent="-3" units="metre"/>
+    </units>
+    <!-- concentration (number)-->
+    <units name="per_m3">
+        <unit exponent="-3" units="metre"/>
+    </units>
+    <!--///////////////////////
+ flux (diffusion)-->
+    <units name="mol_per_m2_s">
+        <unit units="mole"/>
+        <unit exponent="-2" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- flux (M)-->
+    <units name="Mm_per_s">
+        <unit units="M"/>
+        <unit units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- flux (volumetric)-->
+    <units name="m_per_s">
+        <unit units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- flux (energy)-->
+    <units name="J_per_m2_s">
+        <unit units="joule"/>
+        <unit exponent="-2" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- flux (mass)-->
+    <units name="Js_per_m4">
+        <unit units="joule"/>
+        <unit units="second"/>
+        <unit exponent="-4" units="metre"/>
+    </units>
+    <!-- flux (momentum)-->
+    <units name="J_per_m3">
+        <unit units="joule"/>
+        <unit exponent="-3" units="metre"/>
+    </units>
+    <!--///////////////////////
+ reaction rate (order0)-->
+    <units name="mol_per_m3_s">
+        <unit units="mole"/>
+        <unit exponent="-3" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units name="umol_per_s_per_cm2">
+        <unit prefix="micro" units="mole"/>
+        <unit exponent="-2" prefix="centi" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- reaction rate (order1)-->
+    <units name="per_s">
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- reaction rate (order2)-->
+    <units name="m3_per_mol_s">
+        <unit exponent="3" units="metre"/>
+        <unit exponent="-1" units="mole"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!-- reaction rate (order3)-->
+    <units name="m6_per_mol2_s">
+        <unit exponent="6" units="metre"/>
+        <unit exponent="-2" units="mole"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <!--///////////////////////
+ rate constant-->
+    <units name="per_mol">
+        <unit exponent="-1" units="mole"/>
+    </units>
+    <!-- gas constant-->
+    <units name="J_per_mol_K">
+        <unit units="joule"/>
+        <unit exponent="-1" units="mole"/>
+        <unit exponent="-1" units="kelvin"/>
+    </units>
+    <!-- faraday constant-->
+    <units name="C_per_mol">
+        <unit units="coulomb"/>
+        <unit exponent="-1" units="mole"/>
+    </units>
+    <!-- convert current to J-->
+    <units name="mM_per_C">
+        <unit units="mole"/>
+        <unit exponent="-3" units="metre"/>
+        <unit exponent="-1" units="coulomb"/>
+    </units>
+    <!-- diffusivity (mass)-->
+    <units name="m2_per_s">
+        <unit exponent="2" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units name="per_C">
+        <unit exponent="-1" units="coulomb"/>
+    </units>
+    <units name="per_m">
+        <unit exponent="-1" units="metre"/>
+    </units>
+    <units name="m3_per_mol">
+        <unit exponent="3" units="metre"/>
+        <unit exponent="-1" units="mole"/>
+    </units>
+    <units name="millivolt">
+        <unit prefix="milli" units="volt"/>
+    </units>
+</model>
