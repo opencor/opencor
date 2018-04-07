@@ -396,9 +396,6 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 
 NumPyPythonWrapper::~NumPyPythonWrapper()
 {
     mArray->decRef();
-
-    if (mArray->refCount() == 0)
-        delete mArray;
 }
 
 //==============================================================================

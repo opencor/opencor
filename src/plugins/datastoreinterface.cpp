@@ -63,7 +63,6 @@ DataStoreArray::DataStoreArray(quint64 pSize) :
 
 DataStoreArray::~DataStoreArray()
 {
-    decRef();
 }
 
 //==============================================================================
@@ -111,7 +110,7 @@ void DataStoreArray::decRef()
     --mRefCount;
     if (mRefCount == 0) {
         delete[] mData;
-        mData = 0;
+        delete this;
     }
 }
 
@@ -120,13 +119,6 @@ void DataStoreArray::decRef()
 void DataStoreArray::incRef()
 {
     ++mRefCount;
-}
-
-//==============================================================================
-
-int DataStoreArray::refCount() const
-{
-    return mRefCount;
 }
 
 //==============================================================================

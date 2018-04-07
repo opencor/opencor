@@ -45,7 +45,6 @@ class DataStoreArray
 {
 public:
     explicit DataStoreArray(quint64 pSize);
-    ~DataStoreArray();
 
     quint64 size() const;
 
@@ -56,12 +55,13 @@ public:
 
     void decRef();
     void incRef();
-    int refCount() const;
 
 private:
     const quint64 mSize;
     int mRefCount;
     double *mData;
+
+    ~DataStoreArray();
 };
 
 //==============================================================================
