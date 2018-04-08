@@ -286,6 +286,41 @@ else()
     endif()
 endif()
 
+# Build the documentation, if we have the right version of Sphinx installed
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+find_package(Sphinx)
+
+set(SPHINX_MESSAGE)
+
+if(SPHINX_FOUND)
+    if(WIN32)
+        execute_process(COMMAND "${SPHINX_EXECUTABLE}" --version
+                        ERROR_VARIABLE SPHINX_VERSION
+                        ERROR_STRIP_TRAILING_WHITESPACE)
+    else()
+        execute_process(COMMAND "${SPHINX_EXECUTABLE}" --version
+                        OUTPUT_VARIABLE SPHINX_VERSION
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    endif()
+
+    string(REGEX REPLACE "^.* " ""
+           SPHINX_VERSION "${SPHINX_VERSION}")
+
+    if(SPHINX_VERSION VERSION_LESS 1.4)
+        set(SPHINX_MESSAGE "version ${SPHINX_VERSION} of Sphinx was found while we need at least version 1.4")
+    endif()
+else()
+    set(SPHINX_MESSAGE "Sphinx could not be found")
+endif()
+
+if("${SPHINX_MESSAGE}" STREQUAL "")
+    message(">>> Build the OpenCOR documentation...")
+else()
+    message("The documentation will not be built (${SPHINX_MESSAGE})...")
+endif()
+
 # A couple of variables that make it easier to specify library file names with a
 # version (e.g. to be able to reference libz.so.1 and libz.1.dylib, we could
 # simply use libz${PRE}.1${POST})
