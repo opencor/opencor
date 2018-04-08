@@ -804,7 +804,8 @@ endif()
 # Build our plugins
 
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
-#          other plugins...
+#          other plugins, and zlib before OpenSSL since the latter needs the
+#          former...
 # Note #2: Python thirdparty plugins must be built in order, after zlib and
 #          OpenSSL, and before any other plugins...
 # Note #3: soft dependencies are determined automatically, so plugins can be
