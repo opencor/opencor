@@ -51,6 +51,29 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
+static SimulationSupport::Simulation *getSimulation(const QString &pFileName,
+                                                    SimulationExperimentViewWidget *pSimulationExperimentViewWidget)
+{
+    SimulationSupport::Simulation *simulation = pSimulationExperimentViewWidget->simulation(pFileName);
+
+    if (simulation) {
+        // Let the simulation's widget know when we start running
+        // Note: connect is also in the PythonQt namespace
+
+        QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
+                         pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
+
+        // Use the simulation's widget to clear our data
+
+        QObject::connect(simulation, &SimulationSupport::Simulation::clearData,
+                         pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::clearData);
+    }
+
+    return simulation;
+}
+
+//==============================================================================
+
 static PyObject *initializeSimulation(const QString &pFileName)
 {
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
@@ -58,20 +81,12 @@ static PyObject *initializeSimulation(const QString &pFileName)
     if (simulationExperimentViewWidget) {
         simulationExperimentViewWidget->initialize(pFileName);
 
-        auto simulation = simulationExperimentViewWidget->simulation(pFileName);
-        if (simulation) {
-            // Allow the simulation to let its widget know when it starts running
+        auto simulation = getSimulation(pFileName, simulationExperimentViewWidget);
 
-            // Note: connect is also in the PythonQt namespace
-
-            QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
-                             simulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
-
-            // Return the simulation as a Python object
-
+        if (simulation)
             return PythonQt::priv()->wrapQObject(simulation);
-        }
     }
+
     Py_RETURN_NONE;
 }
 
@@ -93,7 +108,6 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
 
     QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Local,
                                                       QString(), false);
-
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
         return NULL;
@@ -119,7 +133,6 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     Py_DECREF(bytes);
 
     QString ioError = Core::centralWidget()->openRemoteFile(url, false); // No warning...
-
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
         return NULL;
@@ -140,16 +153,12 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
 
     if (simulationExperimentViewWidget) {
         foreach (const QString &fileName, simulationExperimentViewWidget->fileNames()) {
-            auto simulation = simulationExperimentViewWidget->simulation(fileName);
-
-            // Allow the simulation to let its widget know when it starts running
-
-            QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
-                             simulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
+            auto simulation = getSimulation(fileName, simulationExperimentViewWidget);
 
             // Add the simulation to the dictionary
 
-            PythonSupport::addObject(simulationDict, fileName, simulation);
+            if (simulation)
+                PythonSupport::addObject(simulationDict, fileName, simulation);
         }
     }
 
@@ -165,19 +174,16 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
     if (simulationExperimentViewWidget) {
-        auto simulation = simulationExperimentViewWidget->simulation(Core::centralWidget()->currentFileName());
-
-        // Allow the simulation to let its widget know when it starts running
-
-        QObject::connect(simulation, &SimulationSupport::Simulation::runStarting,
-                         simulationExperimentViewWidget, &SimulationExperimentViewWidget::startingRun);
+        auto simulation = getSimulation(Core::centralWidget()->currentFileName(), simulationExperimentViewWidget);
 
         // Return the simulation as a Python object
 
-        return PythonSupport::wrapQObject(simulation);
-    } else {
-        Py_RETURN_NONE;
+        if (simulation)
+            return PythonQt::priv()->wrapQObject(simulation);
+
     }
+
+    Py_RETURN_NONE;
 }
 
 //==============================================================================

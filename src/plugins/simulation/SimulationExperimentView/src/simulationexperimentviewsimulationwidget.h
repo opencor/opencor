@@ -310,6 +310,9 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
+public slots:
+    void clearSimulationData();
+
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();
@@ -319,7 +322,6 @@ private slots:
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
     void resetModelParameters();
-    void clearSimulationData();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
 

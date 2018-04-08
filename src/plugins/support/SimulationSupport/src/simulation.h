@@ -351,6 +351,7 @@ private:
     bool simulationSettingsOk(bool pEmitSignal = true);
 
 signals:
+    void clearData(const QString &pFileName);
     void runStarting(const QString &pFileName);
 
     void running(bool pIsResuming);

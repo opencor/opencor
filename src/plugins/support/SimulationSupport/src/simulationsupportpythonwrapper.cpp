@@ -77,15 +77,23 @@ void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTi
 
 //==============================================================================
 
-bool SimulationSupportPythonWrapper::reset(Simulation *pSimulation)
+void SimulationSupportPythonWrapper::clearData(Simulation *pSimulation)
 {
-    // Clear our simulation data
+    // Ask our widget to clear our results
 
-    pSimulation->results()->reset();
+    // Note: we get the widget to do this as it needs to clear all
+    // associated graphs...
 
+    emit pSimulation->clearData(pSimulation->fileName());
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
+{
     // Reset our model parameters
 
-    return pSimulation->reset();
+    pSimulation->reset();
 }
 
 //==============================================================================

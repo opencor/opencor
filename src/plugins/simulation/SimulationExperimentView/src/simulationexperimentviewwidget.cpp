@@ -491,6 +491,20 @@ QWidget * SimulationExperimentViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
+void SimulationExperimentViewWidget::clearData(const QString &pFileName)
+{
+    // Clear our simulation data
+
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (!simulationWidget)
+        return;
+
+    simulationWidget->clearSimulationData();
+}
+
+//==============================================================================
+
 quint64 SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
 {
     // Return the results size for the given file name

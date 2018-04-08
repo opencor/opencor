@@ -102,6 +102,7 @@ public:
                                 const SimulationExperimentViewSimulationWidget::Task &pTask = SimulationExperimentViewSimulationWidget::None);
 
 public slots:
+    void clearData(const QString &pFileName);
     void startingRun(const QString &pFileName);
 
 private:
