@@ -124,6 +124,7 @@ public:
     int * gradientIndices();
 
     bool createGradientsArray();
+    void deleteGradientsArray();
 
     double * gradients() const;
 
@@ -239,7 +240,7 @@ public:
     DataStore::DataStoreVariables stateVariables() const;
     DataStore::DataStoreVariables algebraicVariables() const;
 
-    void initialiseGradientsStore();
+    bool initialiseGradientsStore();
 
 public slots:
     void reload();

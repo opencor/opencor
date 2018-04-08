@@ -55,6 +55,7 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mNlaSolverName(QString()),
     mNlaSolverProperties(Solver::Solver::Properties()),
     mGradientIndices(QVector<int>()),
+    mGradients(0),
     mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
 {
     // Create our various arrays
@@ -69,6 +70,7 @@ SimulationData::~SimulationData()
     // Delete some internal objects
 
     deleteArrays();
+    deleteGradientsArray();
 }
 
 //==============================================================================
@@ -516,8 +518,6 @@ void SimulationData::createArrays()
         mConstants = mRates = mStates = mAlgebraic = 0;
         mDummyStates = mInitialConstants = mInitialStates = 0;
     }
-
-    mGradients = 0;
 }
 
 //==============================================================================
@@ -534,9 +534,6 @@ void SimulationData::deleteArrays()
     delete[] mDummyStates;
     delete[] mInitialConstants;
     delete[] mInitialStates;
-
-    if (mGradients)
-        mGradients->decRef();
 }
 
 //==============================================================================
@@ -596,6 +593,17 @@ bool SimulationData::createGradientsArray()
 
         return false;
     }
+}
+
+//==============================================================================
+
+void SimulationData::deleteGradientsArray()
+{
+    // Remove reference to gradients array
+    // Note: this will delete the array if it now has no references
+
+    if (mGradients)
+        mGradients->decRef();
 }
 
 //==============================================================================
@@ -762,7 +770,7 @@ void SimulationResults::deleteDataStore()
 
 //==============================================================================
 
-void SimulationResults::initialiseGradientsStore()
+bool SimulationResults::initialiseGradientsStore()
 {
     // Allocate additional memory for sensitivity analysis
 
@@ -775,6 +783,12 @@ void SimulationResults::initialiseGradientsStore()
         delete mGradientsStore;
 
     SimulationData *data = mSimulation->data();
+
+    // Delete any gradients array
+
+    data->deleteGradientsArray();
+
+    // Create a new gradients array and data store
 
     if (data->createGradientsArray()) {
         mGradientsStore = new DataStore::DataStore(mDataStore->uri() + "/gradients");
@@ -803,11 +817,13 @@ void SimulationResults::initialiseGradientsStore()
         quint64 simulationSize = mSimulation->size();
 
         if (simulationSize)
-            mGradientsStore->addRun(simulationSize);
+            return mGradientsStore->addRun(simulationSize);
     } else {
         mGradientsStore = 0;
         mGradients = DataStore::DataStoreVariables();
+        return true;
     }
+    return false;
 }
 
 //==============================================================================
@@ -1287,7 +1303,8 @@ bool Simulation::run()
 
         // Initialise sensitivity gradients data store
 
-        mResults->initialiseGradientsStore();
+        if (!mResults->initialiseGradientsStore())
+            return false;
 
         // Create our worker
 
