@@ -65,8 +65,8 @@ static SimulationSupport::Simulation *getSimulation(const QString &pFileName,
 
         // Use the simulation's widget to clear our data
 
-        QObject::connect(simulation, &SimulationSupport::Simulation::clearData,
-                         pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::clearData);
+        QObject::connect(simulation, &SimulationSupport::Simulation::clearResults,
+                         pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::clearResults);
     }
 
     return simulation;

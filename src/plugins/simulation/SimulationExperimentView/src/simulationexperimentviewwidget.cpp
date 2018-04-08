@@ -491,7 +491,7 @@ QWidget * SimulationExperimentViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::clearData(const QString &pFileName)
+void SimulationExperimentViewWidget::clearResults(const QString &pFileName)
 {
     // Clear our simulation data
 

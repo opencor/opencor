@@ -77,14 +77,14 @@ void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTi
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::clearData(Simulation *pSimulation)
+void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 {
     // Ask our widget to clear our results
 
     // Note: we get the widget to do this as it needs to clear all
     // associated graphs...
 
-    emit pSimulation->clearData(pSimulation->fileName());
+    emit pSimulation->clearResults(pSimulation->fileName());
 }
 
 //==============================================================================

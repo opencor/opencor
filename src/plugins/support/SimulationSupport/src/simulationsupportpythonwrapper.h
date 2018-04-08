@@ -68,7 +68,7 @@ private:
     QEventLoop *mSimulationRunEventLoop;
 
 public slots:
-    void clearData(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
+    void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
 
     void resetParameters(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
 
