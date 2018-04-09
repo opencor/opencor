@@ -889,8 +889,8 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
     QPointF point = mOwner->canvasPoint(pPoint);
-    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
-                                                      QLocale().toString(point.y(), 'g', 15));
+    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15))
+                                                 .arg(QLocale().toString(point.y(), 'g', 15));
     QPen pen = pPainter->pen();
 
     pen.setStyle(Qt::SolidLine);

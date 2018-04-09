@@ -554,8 +554,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
     if (pItems.count()) {
         // Initialise our web view
 
-        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
-                                                                                        Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)));
+        mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16))
+                                                                                   .arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)));
 
         // Add the items
 

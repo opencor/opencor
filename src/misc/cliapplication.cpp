@@ -155,12 +155,18 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
                 if (pluginInfo->isSelectable()) {
                     Plugin::setLoad(pluginName, pInclude);
 
-                    status = QString("%1 the GUI version of OpenCOR").arg(pInclude?"included to":"excluded from");
+                    status = QString("%1 the GUI version of OpenCOR").arg(pInclude?
+                                                                              "included to":
+                                                                              "excluded from");
                 } else {
-                    status = QString("cannot be directly %1").arg(pInclude?"included":"excluded");
+                    status = QString("cannot be directly %1").arg(pInclude?
+                                                                      "included":
+                                                                      "excluded");
                 }
             } else {
-                status = QString("plugin information not found%1").arg(errorMessage.isEmpty()?QString():QString(" (%1)").arg(errorMessage));
+                status = QString("plugin information not found%1").arg(errorMessage.isEmpty()?
+                                                                           QString():
+                                                                           QString(" (%1)").arg(errorMessage));
             }
         } else {
             status = "unknown plugin";

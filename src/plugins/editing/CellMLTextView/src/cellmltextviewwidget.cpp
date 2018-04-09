@@ -282,7 +282,8 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
                 editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
                                                            successfulConversion?-1:warning.line(),
                                                            successfulConversion?
-                                                               QString("[%1] %2").arg(QString::number(warning.line()), warning.message()):
+                                                               QString("[%1] %2").arg(warning.line())
+                                                                                 .arg(warning.message()):
                                                                warning.message().arg(QString()));
             }
         }
@@ -588,9 +589,9 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
                 && (Core::questionMessageBox(tr("Save File"),
-                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName),
-                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()),
-                                                                                                                                                                                            CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion()))) == QMessageBox::No)) {
+                                             tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName))
+                                                                                                                                                                                       .arg(CellMLSupport::CellmlFile::versionAsString(data->cellmlVersion()))
+                                                                                                                                                                                       .arg(CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion()))) == QMessageBox::No)) {
                 pNeedFeedback = false;
 
                 return false;
