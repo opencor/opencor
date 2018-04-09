@@ -89,7 +89,7 @@ SplashScreenWindow::SplashScreenWindow() :
                           "}"
                           ""
                           "QWidget#infoWidget {"
-                          "    border: %1;"+
+                          "    border: %1;"
                           "}"
 #endif
                           ).arg(borderStyle)

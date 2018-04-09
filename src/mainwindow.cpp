@@ -437,7 +437,7 @@ void MainWindow::registerOpencorUrlScheme()
 #elif defined(Q_OS_LINUX)
     if (!exec("which", QStringList() << "xdg-mime")) {
         QString iconPath = canonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath())
-                                                                                    .arg(qApp->organizationName()
+                                                                                    .arg(qApp->organizationName())
                                                                                     .arg(qApp->applicationName()));
 
         writeResourceToFile(iconPath, ":/app_icon");
@@ -450,7 +450,7 @@ void MainWindow::registerOpencorUrlScheme()
                                         "Icon=%3\n"
                                         "Terminal=false\n"
                                         "MimeType=x-scheme-handler/opencor\n").arg(qApp->applicationName())
-                                                                              .arg(canonicalFileName(qApp->applicationFilePath())
+                                                                              .arg(canonicalFileName(qApp->applicationFilePath()))
                                                                               .arg(iconPath));
 
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
