@@ -500,7 +500,7 @@ void SimulationExperimentViewWidget::clearResults(const QString &pFileName)
     if (!simulationWidget)
         return;
 
-    simulationWidget->clearSimulationData();
+    simulationWidget->clearSimulationResults();
 }
 
 //==============================================================================
