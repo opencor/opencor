@@ -289,7 +289,7 @@ QString QScintillaWidget::textInRange(int pStartRange, int pEndRange) const
         return QString();
     }
 
-    char *text = new char[pEndRange-pStartRange+1];
+    char *text = new char[pEndRange-pStartRange+1] {};
 
     SendScintilla(SCI_GETTEXTRANGE, pStartRange, pEndRange, text);
 

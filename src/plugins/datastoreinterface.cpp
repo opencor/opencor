@@ -58,7 +58,7 @@ DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
 {
     // Create our array of values
 
-    mValues = new double[pCapacity];
+    mValues = new double[pCapacity] {};
 }
 
 //==============================================================================
