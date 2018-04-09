@@ -831,11 +831,13 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             }
 
             if (sedmlFileIssue.line() && sedmlFileIssue.column()) {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(QString::number(sedmlFileIssue.line()),
-                                                                                                                             QString::number(sedmlFileIssue.column()),
-                                                                                                                             issueType, Core::formatMessage(sedmlFileIssue.message()));
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(sedmlFileIssue.line())
+                                                                                                                        .arg(sedmlFileIssue.column())
+                                                                                                                        .arg(issueType)
+                                                                                                                        .arg(Core::formatMessage(sedmlFileIssue.message()));
             } else {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
+                                                                                                                .arg(Core::formatMessage(sedmlFileIssue.message()));
             }
         }
     }
@@ -1646,9 +1648,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
     if (variableDegree) {
         pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
-                                                 "</%1>").arg(SEDMLSupport::VariableDegree,
-                                                              SEDMLSupport::OpencorNamespace,
-                                                              QString::number(variableDegree)).toStdString());
+                                                 "</%1>").arg(SEDMLSupport::VariableDegree)
+                                                         .arg(SEDMLSupport::OpencorNamespace)
+                                                         .arg(variableDegree).toStdString());
     }
 }
 
@@ -1780,14 +1782,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
-        QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor,
-                                                graphPanelProperties[0]->valueAsString())
-                             +SedmlProperty.arg(SEDMLSupport::FontSize,
-                                                graphPanelProperties[1]->valueAsString())
-                             +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
-                                                graphPanelProperties[2]->valueAsString())
-                             +SedmlProperty.arg(SEDMLSupport::Height,
-                                                QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]));
+        QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor)
+                                           .arg(graphPanelProperties[0]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::FontSize)
+                                           .arg(graphPanelProperties[1]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::ForegroundColor)
+                                           .arg(graphPanelProperties[2]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::Height)
+                                           .arg(graphPanelsWidgetSizes[graphPlotCounter-1]);
 
         // Grid lines
 
@@ -1916,10 +1918,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
             libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
-            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                                   QString::number(graphCounter)).toStdString();
-            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                                   QString::number(graphCounter)).toStdString();
+            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(data.graphPlotCounter)
+                                                                              .arg(graphCounter).toStdString();
+            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(data.graphPlotCounter)
+                                                                              .arg(graphCounter).toStdString();
 
             sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
             sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
@@ -1930,13 +1932,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
             QStringList propertyX = properties[2]->value().split('.');
             QStringList propertyY = properties[3]->value().split('.');
 
-            sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableX->setId(QString("xVariable%1_%2").arg(data.graphPlotCounter)
+                                                           .arg(graphCounter).toStdString());
             sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
             addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
 
-            sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableY->setId(QString("yVariable%1_%2").arg(data.graphPlotCounter)
+                                                           .arg(graphCounter).toStdString());
             sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
             addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
 
@@ -1947,8 +1949,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             libsedml::SedCurve *sedmlCurve = data.sedmlPlot2d->createCurve();
 
-            sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                        QString::number(graphCounter)).toStdString());
+            sedmlCurve->setId(QString("curve%1_%2").arg(data.graphPlotCounter)
+                                                   .arg(graphCounter).toStdString());
 
             sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
             sedmlCurve->setLogX(data.logAxisX);
