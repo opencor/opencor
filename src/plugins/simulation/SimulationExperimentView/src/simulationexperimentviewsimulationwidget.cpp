@@ -188,7 +188,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mResetModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
     connect(mClearSimulationDataAction, &QAction::triggered,
-            this, &SimulationExperimentViewSimulationWidget::clearSimulationData);
+            this, &SimulationExperimentViewSimulationWidget::clearSimulationResults);
     connect(mDevelopmentModeAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::developmentMode);
     connect(mAddGraphPanelAction, &QAction::triggered,
@@ -914,7 +914,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
         //       mode, so we are fine...
 
         if (pReloadingView)
-            clearSimulationData();
+            clearSimulationResults();
         else
             updateSimulationMode();
 
@@ -1364,9 +1364,9 @@ void SimulationExperimentViewSimulationWidget::resetModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationData()
+void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 {
-    // Clear our simulation data
+    // Clear our simulation results
     // Note: we temporarily disable updates to prevent the GUI from taking too
     //       long to update itself (something that might happen when we have
     //       several graph panels since they will try to realign themselves)...
