@@ -185,7 +185,7 @@ private:
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
     QAction *mResetModelParametersAction;
-    QAction *mClearSimulationDataAction;
+    QAction *mClearSimulationResultsAction;
     QAction *mDevelopmentModeAction;
     QAction *mAddGraphPanelAction;
     QAction *mRemoveGraphPanelAction;
@@ -311,7 +311,7 @@ signals:
     void graphsSettingsRequested();
 
 public slots:
-    void clearSimulationData();
+    void clearSimulationResults();
 
 private slots:
     void runPauseResumeSimulation();

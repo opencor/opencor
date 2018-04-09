@@ -362,8 +362,8 @@
         <translation>Réinitialiser tous les paramètres du modèle</translation>
     </message>
     <message>
-        <source>Clear Simulation Data</source>
-        <translation>Supprimer Données Simulation</translation>
+        <source>Clear Simulation Results</source>
+        <translation>Supprimer Résultats Simulation</translation>
     </message>
     <message>
         <source>Clear the simulation data</source>
