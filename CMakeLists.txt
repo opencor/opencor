@@ -290,7 +290,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-find_package(Sphinx)
+find_package(Sphinx QUIET)
 
 set(SPHINX_MESSAGE)
 
@@ -309,16 +309,10 @@ if(SPHINX_FOUND)
            SPHINX_VERSION "${SPHINX_VERSION}")
 
     if(SPHINX_VERSION VERSION_LESS 1.4)
-        set(SPHINX_MESSAGE "version ${SPHINX_VERSION} of Sphinx was found while we need at least version 1.4")
+        set(SPHINX_MESSAGE "version ${SPHINX_VERSION} of Sphinx was found, but we need at least version 1.4")
     endif()
 else()
     set(SPHINX_MESSAGE "Sphinx could not be found")
-endif()
-
-if("${SPHINX_MESSAGE}" STREQUAL "")
-    message(">>> Build the OpenCOR documentation...")
-else()
-    message("The documentation will not be built (${SPHINX_MESSAGE})...")
 endif()
 
 # A couple of variables that make it easier to specify library file names with a
@@ -558,6 +552,12 @@ endif()
 # Show what we are about to build
 
 message("${BUILD_INFORMATION} using Qt ${QT_VERSION}...")
+
+if("${SPHINX_MESSAGE}" STREQUAL "")
+    message(">>> Build the OpenCOR documentation...")
+else()
+    message("Note: neither the user nor the developer documentation will be built (${SPHINX_MESSAGE})...")
+endif()
 
 # Keep track of our source and build directories (needed to run our tests)
 
