@@ -70,26 +70,29 @@ SplashScreenWindow::SplashScreenWindow() :
     mGui->setupUi(this);
 
     QColor borderRgb = borderColor();
-    QString borderStyle = "1px solid rgb("+QString::number(borderRgb.red())+", "+QString::number(borderRgb.green())+", "+QString::number(borderRgb.blue())+");";
+    QString borderStyle = QString("1px solid rgb(%1, %2, %3)").arg(borderRgb.red())
+                                                              .arg(borderRgb.green())
+                                                              .arg(borderRgb.blue());
 
-    setStyleSheet("QLabel#splashScreenImage {"
-                  "     background-color: white;"
-                  "}"
+    setStyleSheet(QString("QLabel#splashScreenImage {"
+                          "     background-color: white;"
+                          "}"
 #ifdef Q_OS_MAC
-                  "QWidget#infoWidget {"
-                  "    border-top: "+borderStyle+
-                  "}"
+                          "QWidget#infoWidget {"
+                          "    border-top: %1;"
+                          "}"
 #else
-                  "QLabel#splashScreenImage {"
-                  "    border-top: "+borderStyle+
-                  "    border-left: "+borderStyle+
-                  "    border-right: "+borderStyle+
-                  "}"
-                  ""
-                  "QWidget#infoWidget {"
-                  "    border: "+borderStyle+
-                  "}"
+                          "QLabel#splashScreenImage {"
+                          "    border-top: %1;"
+                          "    border-left: %1;"
+                          "    border-right: %1;"
+                          "}"
+                          ""
+                          "QWidget#infoWidget {"
+                          "    border: %1;"+
+                          "}"
 #endif
+                          ).arg(borderStyle)
                  );
 
     QFont newFont = mGui->infoWidget->font();

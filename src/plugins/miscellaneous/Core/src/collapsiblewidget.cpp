@@ -88,9 +88,9 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
 
     setStyleSheet(QString("QWidget {"
                           "    background: rgb(%1, %2, %3);"
-                          "}").arg(QString::number(winColor.red()),
-                                   QString::number(winColor.green()),
-                                   QString::number(winColor.blue())));
+                          "}").arg(winColor.red())
+                              .arg(winColor.green())
+                              .arg(winColor.blue()));
 
     // Create and customise our button and title
 

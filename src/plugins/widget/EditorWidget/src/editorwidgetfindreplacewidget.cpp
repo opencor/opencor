@@ -395,9 +395,9 @@ void EditorWidgetFindReplaceWidget::updateStyleSheet()
                           ""
                           "QToolButton:pressed {"
                           "    background: rgba(%1, %2, %3, 0.79);"
-                          "}").arg(QString::number(shadowColor.red()),
-                                   QString::number(shadowColor.green()),
-                                   QString::number(shadowColor.blue())));
+                          "}").arg(shadowColor.red())
+                              .arg(shadowColor.green())
+                              .arg(shadowColor.blue()));
 }
 
 //==============================================================================
