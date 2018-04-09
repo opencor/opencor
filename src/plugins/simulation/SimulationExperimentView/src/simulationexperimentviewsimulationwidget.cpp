@@ -175,7 +175,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSedmlExportCombineArchiveAction = (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)?
                                            Core::newAction(mToolBarWidget):
                                            0;
-    mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
+    mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
 
     mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
@@ -303,22 +303,22 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     if (mSedmlExportCombineArchiveAction)
         sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
 
-    QToolButton *simulationDataExportToolButton = new QToolButton(mToolBarWidget);
+    QToolButton *simulationResultsExportToolButton = new QToolButton(mToolBarWidget);
 
-    mSimulationDataExportDropDownMenu = new QMenu(simulationDataExportToolButton);
+    mSimulationResultsExportDropDownMenu = new QMenu(simulationResultsExportToolButton);
 
-    simulationDataExportToolButton->setDefaultAction(mSimulationDataExportAction);
-    simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
-    simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
+    simulationResultsExportToolButton->setDefaultAction(mSimulationResultsExportAction);
+    simulationResultsExportToolButton->setMenu(mSimulationResultsExportDropDownMenu);
+    simulationResultsExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
     foreach (DataStoreInterface *dataStoreInterface, Core::dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
-        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
+        QAction *action = mSimulationResultsExportDropDownMenu->addAction(dataStoreName+"...");
 
         mDataStoreInterfaces.insert(action, dataStoreInterface);
 
         connect(action, &QAction::triggered,
-                this, &SimulationExperimentViewSimulationWidget::simulationDataExport);
+                this, &SimulationExperimentViewSimulationWidget::simulationResultsExport);
     }
 
     updateDataStoreActions();
@@ -346,7 +346,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(simulationDataExportToolButton);
+    mToolBarWidget->addWidget(simulationResultsExportToolButton);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -526,7 +526,7 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
     I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
                                      tr("Reset all the model parameters"));
     I18nInterface::retranslateAction(mClearSimulationResultsAction, tr("Clear Simulation Results"),
-                                     tr("Clear the simulation result"));
+                                     tr("Clear the simulation results"));
     I18nInterface::retranslateAction(mDevelopmentModeAction, tr("Development Mode"),
                                      tr("Enable/disable the development mode"));
     I18nInterface::retranslateAction(mAddGraphPanelAction, tr("Add Graph Panel"),
@@ -552,8 +552,8 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                          tr("Export the simulation to SED-ML using a COMBINE archive"));
     }
 
-    I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
-                                     tr("Export the simulation data"));
+    I18nInterface::retranslateAction(mSimulationResultsExportAction, tr("Simulation Results Export"),
+                                     tr("Export the simulation results"));
 
     // Retranslate our delay and delay value widgets
 
@@ -604,7 +604,7 @@ void SimulationExperimentViewSimulationWidget::updateDataStoreActions()
     foreach (QAction *action, mDataStoreInterfaces.keys()) {
         I18nInterface::retranslateAction(action,
                                          action->text(),
-                                         tr("Export the simulation data to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
+                                         tr("Export the simulation results to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
     }
 }
 
@@ -647,7 +647,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 
     mClearSimulationResultsAction->setEnabled(    mSimulation->results()->size()
                                               && !simulationModeEnabled);
-    mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
+    mSimulationResultsExportAction->setEnabled(    mSimulationResultsExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
 
@@ -911,8 +911,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         mRunPauseResumeSimulationAction->setEnabled(voi);
 
-        // Update our simulation mode or clear our simulation data (should there
-        // be some) in case we are reloading ourselves
+        // Update our simulation mode or clear our simulation results (should
+        // there be some) in case we are reloading ourselves
         // Note: to clear our simualtion data will also update our simulation
         //       mode, so we are fine...
 
@@ -3057,9 +3057,9 @@ void SimulationExperimentViewSimulationWidget::emitSplitterMoved()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationDataExport()
+void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 {
-    // Retrieve some data so that we can effectively export our simulation data
+    // Retrieve some data so that we can effectively export our simulation
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
@@ -3967,7 +3967,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString
     // Display the given error message, if any
 
     if (!pErrorMessage.isEmpty()) {
-        Core::warningMessageBox(tr("Simulation Data Export"),
+        Core::warningMessageBox(tr("Simulation Results Export"),
                                 pErrorMessage);
     }
 }
