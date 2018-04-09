@@ -513,6 +513,13 @@ void SimulationData::deleteArrays()
 
     delete[] mInitialConstants;
     delete[] mInitialStates;
+
+    // Reset our various arrays
+    // Note: this is in case we were ever to come back here before having
+    //       recreated our various arrays...
+
+    mConstants = mRates = mStates = mDummyStates = mAlgebraic = 0;
+    mInitialConstants = mInitialStates = 0;
 }
 
 //==============================================================================
