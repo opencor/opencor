@@ -362,8 +362,8 @@
         <translation>Supprimer Résultats Simulation</translation>
     </message>
     <message>
-        <source>Clear the simulation data</source>
-        <translation>Supprimer les données de la simulation</translation>
+        <source>Clear the simulation results</source>
+        <translation>Supprimer les résultats de la simulation</translation>
     </message>
     <message>
         <source>Development Mode</source>
@@ -438,12 +438,12 @@
         <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
     </message>
     <message>
-        <source>Simulation Data Export</source>
-        <translation>Exporter Données Simulation</translation>
+        <source>Simulation Results Export</source>
+        <translation>Exporter Résultats Simulation</translation>
     </message>
     <message>
-        <source>Export the simulation data</source>
-        <translation>Exporter les données de la simulation</translation>
+        <source>Export the simulation results</source>
+        <translation>Exporter les résultats de la simulation</translation>
     </message>
     <message>
         <source>Simulation Delay</source>
@@ -462,8 +462,8 @@
         <translation>Ouvrir le fichier CellML référencé à l&apos;aide de la vue %1</translation>
     </message>
     <message>
-        <source>Export the simulation data to %1</source>
-        <translation>Exporter les données de la simulation vers %1</translation>
+        <source>Export the simulation results to %1</source>
+        <translation>Exporter les résultats de la simulation vers %1</translation>
     </message>
     <message>
         <source>Resume Simulation</source>
