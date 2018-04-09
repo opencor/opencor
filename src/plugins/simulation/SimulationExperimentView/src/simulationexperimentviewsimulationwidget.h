@@ -177,7 +177,7 @@ private:
 
     Core::ToolBarWidget *mToolBarWidget;
 
-    QMenu *mSimulationDataExportDropDownMenu;
+    QMenu *mSimulationResultsExportDropDownMenu;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -185,7 +185,7 @@ private:
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
     QAction *mResetModelParametersAction;
-    QAction *mClearSimulationDataAction;
+    QAction *mClearSimulationResultsAction;
     QAction *mDevelopmentModeAction;
     QAction *mAddGraphPanelAction;
     QAction *mRemoveGraphPanelAction;
@@ -195,7 +195,7 @@ private:
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
-    QAction *mSimulationDataExportAction;
+    QAction *mSimulationResultsExportAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
@@ -319,13 +319,13 @@ private slots:
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
     void resetModelParameters();
-    void clearSimulationData();
+    void clearSimulationResults();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
 
     void emitSplitterMoved();
 
-    void simulationDataExport();
+    void simulationResultsExport();
 
     void updateDelayValue(double pDelayValue);
 

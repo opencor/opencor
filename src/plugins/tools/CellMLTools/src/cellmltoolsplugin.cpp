@@ -301,8 +301,9 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
         }
 
         Core::warningMessageBox(tr("Export CellML File To %1").arg(format),
-                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
-                                                                                                              format, errorMessage));
+                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName))
+                                                                                                         .arg(format)
+                                                                                                         .arg(errorMessage));
     }
 }
 
@@ -510,9 +511,9 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
         }
 
         Core::warningMessageBox(tr("Export CellML File To User-Defined Format"),
-                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
-                                                                                                                                                   QDir::toNativeSeparators(userDefinedFormatFileName),
-                                                                                                                                                   errorMessage));
+                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName))
+                                                                                                                                              .arg(QDir::toNativeSeparators(userDefinedFormatFileName))
+                                                                                                                                              .arg(errorMessage));
     }
 }
 
