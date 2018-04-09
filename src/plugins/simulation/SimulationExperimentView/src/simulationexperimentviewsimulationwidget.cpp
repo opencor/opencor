@@ -155,8 +155,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                             QKeySequence(Qt::ControlModifier|Qt::Key_F2), mToolBarWidget);
     mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
                                                   mToolBarWidget);
-    mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
-                                                 mToolBarWidget);
+    mClearSimulationResultsAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
+                                                    mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
                                              mToolBarWidget);
     mAddGraphPanelAction = Core::newAction(QIcon(":/oxygen/actions/list-add.png"),
@@ -187,7 +187,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::stopSimulation);
     connect(mResetModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
-    connect(mClearSimulationDataAction, &QAction::triggered,
+    connect(mClearSimulationResultsAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::clearSimulationResults);
     connect(mDevelopmentModeAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::developmentMode);
@@ -329,7 +329,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addAction(mStopSimulationAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mResetModelParametersAction);
-    mToolBarWidget->addAction(mClearSimulationDataAction);
+    mToolBarWidget->addAction(mClearSimulationResultsAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -525,8 +525,8 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                      tr("Stop the simulation"));
     I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
                                      tr("Reset all the model parameters"));
-    I18nInterface::retranslateAction(mClearSimulationDataAction, tr("Clear Simulation Data"),
-                                     tr("Clear the simulation data"));
+    I18nInterface::retranslateAction(mClearSimulationResultsAction, tr("Clear Simulation Results"),
+                                     tr("Clear the simulation result"));
     I18nInterface::retranslateAction(mDevelopmentModeAction, tr("Development Mode"),
                                      tr("Enable/disable the development mode"));
     I18nInterface::retranslateAction(mAddGraphPanelAction, tr("Add Graph Panel"),
@@ -645,8 +645,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 
     // Enable/disable some actions
 
-    mClearSimulationDataAction->setEnabled(    mSimulation->results()->size()
-                                           && !simulationModeEnabled);
+    mClearSimulationResultsAction->setEnabled(    mSimulation->results()->size()
+                                              && !simulationModeEnabled);
     mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
