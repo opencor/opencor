@@ -1379,8 +1379,11 @@ void PmrWorkspacesWindowWidget::duplicateCloneMessage(const QString &pUrl,
     //       everything is initialised, but not when initialising ourselves
     //       (since the message box would show up from nowhere)...
 
-    if (mInitialized)
-        emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl, pPath1, pPath2));
+    if (mInitialized) {
+        emit warning(QString("Workspace '%1' is cloned into both '%2' and '%3'").arg(pUrl)
+                                                                                .arg(pPath1)
+                                                                                .arg(pPath2));
+    }
 }
 
 //==============================================================================
@@ -1615,8 +1618,10 @@ void PmrWorkspacesWindowWidget::aboutWorkspace()
                "\n"
                "<table>\n";
 
-    if (!workspace->owner().isEmpty())
-        message += Entry.arg(tr("Owner:"), workspace->owner());
+    if (!workspace->owner().isEmpty()) {
+        message += Entry.arg(tr("Owner:"))
+                        .arg(workspace->owner());
+    }
 
     message += Entry.arg(tr("PMR:"))
                     .arg(QString("<a href=\"%1\">%1</a>").arg(workspace->url()));

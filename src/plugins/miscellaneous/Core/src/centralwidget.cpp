@@ -412,7 +412,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
 
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::modeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl)
+                                                                          .arg(ViewInterface::modeAsString(fileMode))).toString();
             Plugins viewPlugins = mModes.value(fileMode)->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins.count(); j < jMax; ++j) {
@@ -456,7 +457,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             fileMode = mModeTabIndexModes.value(i);
 
             CentralWidgetMode *mode = mModes.value(fileMode);
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(QString(), ViewInterface::modeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(QString())
+                                                                          .arg(ViewInterface::modeAsString(fileMode))).toString();
             Plugins viewPlugins = mode->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins.count(); j < jMax; ++j) {
@@ -478,7 +480,8 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     static const QString SettingsFileIsRemoteHeader = SettingsFileIsRemote.arg(QString());
     static const QString SettingsFileModeHeader = SettingsFileMode.arg(QString());
-    static const QString SettingsFileModeViewHeader = SettingsFileModeView.arg(QString(), QString());
+    static const QString SettingsFileModeViewHeader = SettingsFileModeView.arg(QString())
+                                                                          .arg(QString());
 
     foreach (const QString &key, pSettings->allKeys()) {
         if (   key.startsWith(SettingsFileIsRemoteHeader)
@@ -529,7 +532,8 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
 
-            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::modeAsString(fileMode)),
+            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl)
+                                                    .arg(ViewInterface::modeAsString(fileMode)),
                                 mModes.value(fileMode)->viewPlugins()[modeViewTabIndexes.value(i)]->name());
         }
     }
@@ -562,7 +566,8 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
         ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
         CentralWidgetMode *mode = mModes.value(fileMode);
 
-        pSettings->setValue(SettingsFileModeView.arg(QString(), ViewInterface::modeAsString(fileMode)),
+        pSettings->setValue(SettingsFileModeView.arg(QString())
+                                                .arg(ViewInterface::modeAsString(fileMode)),
                             mode->viewPlugins()[mode->viewTabs()->currentIndex()]->name());
     }
 }
@@ -887,7 +892,8 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
             if (pShowWarning) {
                 warningMessageBox(tr("Open Remote File"),
-                                  tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage)));
+                                  tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl)
+                                                                                     .arg(formatMessage(errorMessage)));
             }
         }
     } else {
@@ -995,7 +1001,8 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                         fileManagerInstance->reload(fileName);
                     } else {
                         warningMessageBox(tr("Reload Remote File"),
-                                          tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, formatMessage(errorMessage)));
+                                          tr("<strong>%1</strong> could not be reloaded (%2).").arg(url)
+                                                                                               .arg(formatMessage(errorMessage)));
                     }
                 } else {
                     fileManagerInstance->reload(fileName);
@@ -1063,8 +1070,8 @@ void CentralWidget::toggleLockedFile()
         warningMessageBox(fileLocked?
                               tr("Unlock File"):
                               tr("Lock File"),
-                          tr("<strong>%1</strong> could not be %2.").arg(QDir::toNativeSeparators(fileName),
-                                                                         fileLocked?
+                          tr("<strong>%1</strong> could not be %2.").arg(QDir::toNativeSeparators(fileName))
+                                                                    .arg(fileLocked?
                                                                              tr("unlocked"):
                                                                              tr("locked")));
     }
@@ -1098,7 +1105,8 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 
     if (!viewInterface->viewWidget(oldFileName)) {
         warningMessageBox(tr("Save File"),
-                          tr("The <strong>%1</strong> view cannot save <strong>%2</strong>.").arg(viewInterface->viewName(), oldFileName));
+                          tr("The <strong>%1</strong> view cannot save <strong>%2</strong>.").arg(viewInterface->viewName())
+                                                                                             .arg(oldFileName));
 
         return false;
     }
@@ -1146,8 +1154,8 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         if (!fileHandlingInterface->saveFile(oldFileName, newFileName, needFeedback)) {
             if (needFeedback) {
                 warningMessageBox(tr("Save File"),
-                                  tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(),
-                                                                                                             QDir::toNativeSeparators(newFileName)));
+                                  tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName())
+                                                                                                        .arg(QDir::toNativeSeparators(newFileName)));
             }
 
             return false;

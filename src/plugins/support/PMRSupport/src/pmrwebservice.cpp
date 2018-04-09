@@ -238,7 +238,8 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
                                                "  { \"name\": \"form.buttons.add\", \"value\": \"Add\" }"
                                                "] } }";
 
-    QJsonDocument createWorkspaceJson = QJsonDocument::fromJson(QString(CreateWorkspaceJson).arg(pName, pDescription).toUtf8());
+    QJsonDocument createWorkspaceJson = QJsonDocument::fromJson(QString(CreateWorkspaceJson).arg(pName)
+                                                                                            .arg(pDescription).toUtf8());
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(mPmrUrl+"/workspace/+/addWorkspace",
                                                                         true, true, createWorkspaceJson);
 
@@ -391,8 +392,8 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 
                         dirName = getEmptyDirectory();
                     } else {
-                        emit warning(tr("The workspace for %1 is already cloned in %2.").arg(workspaceUrl,
-                                                                                             existingWorkspace->path()));
+                        emit warning(tr("The workspace for %1 is already cloned in %2.").arg(workspaceUrl)
+                                                                                        .arg(existingWorkspace->path()));
                     }
                 } else {
                     // Cloning after creating a new (owned) workspace
@@ -745,7 +746,8 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pUrl)
         // Check that we aren't already managing a clone of the workspace
 
         if (!dirName.isEmpty()) {
-            emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url, dirName));
+            emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url)
+                                                                            .arg(dirName));
         } else {
             PmrWorkspace *existingWorkspace = PmrWorkspaceManager::instance()->workspace(url);
 
@@ -757,7 +759,8 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pUrl)
                 if (!dirName.isEmpty())
                     requestWorkspaceClone(exposure->workspace(), dirName);
             } else {
-                emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url, existingWorkspace->path()));
+                emit warning(tr("The workspace for %1 is already cloned in %2.").arg(url)
+                                                                                .arg(existingWorkspace->path()));
             }
         }
     } else {

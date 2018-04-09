@@ -274,10 +274,14 @@ void CheckForUpdatesDialog::updateGui()
                 if (version.isEmpty())
                     version = mEngine->newerVersions().first();
 
-                if (version.contains('-'))
-                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest", version));
-                else
-                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
+                if (version.contains('-')) {
+                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest")
+                                                                  .arg(version));
+                } else {
+                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version)
+                                                                 .arg(qAppName())
+                                                                 .arg(version));
+                }
             } else {
                 mGui->statusLabel->setText(tr("No newer version or snapshot of %1 is available.").arg(qAppName()));
             }
@@ -295,7 +299,9 @@ void CheckForUpdatesDialog::updateGui()
                 }
             }
 
-            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
+            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version)
+                                                         .arg(qAppName())
+                                                         .arg(version));
         } else {
             mGui->statusLabel->setText(tr("No newer version of %1 is available.").arg(qAppName()));
         }

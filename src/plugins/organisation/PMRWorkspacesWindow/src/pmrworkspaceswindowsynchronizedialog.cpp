@@ -795,11 +795,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         int removeLineNumber = -1;
 
         foreach (const DifferenceData &differenceData, pDifferencesData) {
-            html += Row.arg(differenceData.operation,
-                            differenceData.removeLineNumber,
-                            differenceData.addLineNumber,
-                            differenceData.tag,
-                            (differenceData.tag == '+')?
+            html += Row.arg(differenceData.operation)
+                       .arg(differenceData.removeLineNumber)
+                       .arg(differenceData.addLineNumber)
+                       .arg(differenceData.tag)
+                       .arg((differenceData.tag == '+')?
                                 newDiffStrings[++addLineNumber]:
                                 oldDiffStrings[++removeLineNumber]);
         }
@@ -873,7 +873,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
             removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
 
-            html += Row.arg("header", "...", "...", QString(), difference);
+            html += Row.arg("header")
+                       .arg("...")
+                       .arg("...")
+                       .arg(QString())
+                       .arg(difference);
         } else {
             QString diff = difference;
             QChar tag = diff[0];
@@ -902,9 +906,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                 ++addLineNumber;
                 ++removeLineNumber;
 
-                html += Row.arg((differenceNumber == differenceMaxNumber)?"last default":"default",
-                                QString::number(removeLineNumber), QString::number(addLineNumber),
-                                QString(), diff.toHtmlEscaped()
+                html += Row.arg((differenceNumber == differenceMaxNumber)?
+                                    "last default":
+                                    "default")
+                           .arg(removeLineNumber)
+                           .arg(addLineNumber)
+                           .arg(QString())
+                           .arg(diff.toHtmlEscaped()
                                                .replace(' ', "&nbsp;"));
             }
         }
