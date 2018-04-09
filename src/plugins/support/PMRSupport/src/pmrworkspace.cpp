@@ -1344,10 +1344,12 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 
     const git_error *gitError = giterr_last();
 
-    if (gitError)
-        emit warning(tr("%1\n\nGit message: %2.").arg(pMessage, Core::formatMessage(gitError->message)));
-    else
+    if (gitError) {
+        emit warning(tr("%1\n\nGit message: %2.").arg(pMessage)
+                                                 .arg(Core::formatMessage(gitError->message)));
+    } else {
         emit warning(pMessage);
+    }
 }
 
 //==============================================================================

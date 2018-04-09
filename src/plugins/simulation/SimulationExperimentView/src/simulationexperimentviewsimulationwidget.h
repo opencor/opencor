@@ -177,7 +177,7 @@ private:
 
     Core::ToolBarWidget *mToolBarWidget;
 
-    QMenu *mSimulationDataExportDropDownMenu;
+    QMenu *mSimulationResultsExportDropDownMenu;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -195,7 +195,7 @@ private:
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
-    QAction *mSimulationDataExportAction;
+    QAction *mSimulationResultsExportAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
@@ -325,7 +325,7 @@ private slots:
 
     void emitSplitterMoved();
 
-    void simulationDataExport();
+    void simulationResultsExport();
 
     void updateDelayValue(double pDelayValue);
 

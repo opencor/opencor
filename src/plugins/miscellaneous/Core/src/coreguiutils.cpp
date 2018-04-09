@@ -563,9 +563,9 @@ QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
 
     res->setStyleSheet(QString("QFrame {"
                                "    border: 1px solid rgb(%1, %2, %3);"
-                               "}").arg(QString::number(pColor.red()),
-                                        QString::number(pColor.green()),
-                                        QString::number(pColor.blue())));
+                               "}").arg(pColor.red())
+                                   .arg(pColor.green())
+                                   .arg(pColor.blue()));
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);

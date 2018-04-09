@@ -181,9 +181,9 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
 
     // Generate the web page containing some information about the qualifier
 
-    QByteArray qualifierSvg = pQualifier.startsWith("model:")?
-                                  mModelQualifierSvg:
-                                  mBiologyQualifierSvg;
+    QString qualifierSvg = pQualifier.startsWith("model:")?
+                               mModelQualifierSvg:
+                               mBiologyQualifierSvg;
     QString shortDescription;
     QString longDescription;
 
@@ -242,7 +242,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
         shortDescription = tr("Taxon");
         longDescription = tr("The biological entity represented by the model element is taxonomically restricted, where the restriction is the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to ascribe a species restriction to a biochemical reaction.");
     } else {
-        qualifierSvg = QByteArray();
+        qualifierSvg = QString();
 
         shortDescription = tr("Unknown");
         longDescription = tr("Unknown");
@@ -250,7 +250,10 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
 
     // Show the information
 
-    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier, qualifierSvg, shortDescription, longDescription));
+    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier)
+                                                                .arg(qualifierSvg)
+                                                                .arg(shortDescription)
+                                                                .arg(longDescription));
 }
 
 //==============================================================================
