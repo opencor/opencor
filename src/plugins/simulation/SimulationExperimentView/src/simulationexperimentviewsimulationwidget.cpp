@@ -386,13 +386,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(informationWidget->solversWidget(), &SimulationExperimentViewInformationSolversWidget::propertyChanged,
             this, &SimulationExperimentViewSimulationWidget::solversPropertyChanged);
 
-    // Enable SimulationData to toggle parameter widget's gradients' flag and widget to store index.
-
-    connect(mSimulation->data(), &SimulationSupport::SimulationData::gradientCalculation,
-            informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::gradientToggled);
-    connect(informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::calculateGradients,
-            mSimulation->data(), &SimulationSupport::SimulationData::setGradientCalculationByIndex);
-
     // Keep track of the addition and removal of a graph panel
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
@@ -1336,7 +1329,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // case we were able to allocate all the memory we need
 
             if (runSimulation) {
-                mViewWidget->startingRun(mSimulation->fileName());
+                mViewWidget->checkSimulationResults(mSimulation->fileName(), AddRun);
 
                 mSimulation->run();
             } else {

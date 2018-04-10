@@ -4,6 +4,7 @@ PROJECT(PythonPackagesPlugin)
 
 SET(PACKAGE_NAME PythonPackages)
 SET(PACKAGE_VERSION ${PYTHON_VERSION})
+SET(RELEASE_TAG v${PYTHON_VERSION}_base)
 
 # The repository for our package
 
@@ -11,16 +12,7 @@ SET(PACKAGE_REPOSITORY python)
 
 # The versions of the Python packages we bundle.
 
-SET(NUMPY_VERSION 1.13.3)
-SET(MATPLOTLIB_VERSION 2.1.0)
-SET(SCIPY_VERSION 0.19.0)
-
-SET(IPYKERNEL_VERSION 4.6.1)
-SET(IPYTHON_VERSION 6.2.1)
-SET(QTCONSOLE_VERSION 4.3.1)
-SET(TRAITLETS_VERSION 4.3.2)
-
-SET(LXML_VERSION 4.1.1)
+SET(SPHINX_VERSION 1.7.2)
 
 # Our GitHub archive
 
@@ -37,25 +29,18 @@ SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 # Where Python packages are installed
 
-SET(LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/site-packages)
+SET(LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages)
 
-# Package the include and site-packages directory
+# Package the `bin`, `include` and `lib` directories
 
 SET(PACKAGED_FILES
-    include
-    site-packages
+    bin
+    ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages
 )
 
-# XXXNo files need to have their SHA-1 value checked
-## "35m" needs to come from say ${PYTHON_ABI_VERSION}
+# At least one file must have its SHA-1 value checked...
 
-IF(WIN32)
-    SET(SHA1_FILES site-packages/numpy/core/multiarray.cp35-win_amd64.pyd)
-ELSEIF(APPLE)
-    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-darwin.so)
-ELSEIF(UNIX)
-    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-x86_64-linux-gnu.so)
-ENDIF()
+SET(SHA1_FILES ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py)
 
 # Use the pre-built version of our package unless instructed otherwise
 # Rebuilding Python means we should also re-install its packages
@@ -75,11 +60,12 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                                   SHA1_VALUES 97949f3f839adab391fc785d8f7459f569f63a4f)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 29096b4f2e116f57b2f8e316b616a30ac66948c4
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7f459a2ee51e198caa5557a449d48d9515f1f7d3
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 404333b7075ec857401b22c5de977ad5869dd6fc)
+                              SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 5b26aac0190f0cb1e5b58ee3c34639e339dae135
@@ -107,140 +93,28 @@ ELSE()
     SET(PIP_INSTALL_COMMAND
         ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
         ${PYTHON_EXECUTABLE} -s -m
-        pip install -t ${LOCAL_SITE_PACKAGES_DIR} --upgrade --upgrade-strategy only-if-needed)
-
-    # Install from pre-built wheels under Windows
-
-    IF(WIN32)
-        STRING(REPLACE "." "" VERSION_ABIFLAGS ${PYTHON_FULL_VERSION})
-        STRING(SUBSTRING ${VERSION_ABIFLAGS} 0 2 NUMERIC_VERSION)
-        SET(WHEEL_SUFFIX "cp${NUMERIC_VERSION}-cp${VERSION_ABIFLAGS}-win_amd64.whl")
-    ENDIF()
-
-    # Install numpy, scipy, and matplotlib
-
-    IF(WIN32)
-        # The numpy version we use is linked to the Intel Math Kernel Library
-
-        SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}.mkl-${WHEEL_SUFFIX}")
-        SET(SCIPY_WHEEL "scipy-${SCIPY_VERSION}-${WHEEL_SUFFIX}")
-        SET(MATPLOTLIB_WHEEL "matplotlib-${MATPLOTLIB_VERSION}-${WHEEL_SUFFIX}")
-
-        ADD_CUSTOM_TARGET(science_packages
-            COMMAND ${PIP_INSTALL_COMMAND}
-                ${WHEEL_REPOSITORY}/${NUMPY_WHEEL}
-                ${WHEEL_REPOSITORY}/${SCIPY_WHEEL}
-                ${WHEEL_REPOSITORY}/${MATPLOTLIB_WHEEL}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    ELSE()
-        ADD_CUSTOM_TARGET(science_packages
-            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                numpy==${NUMPY_VERSION}
-                scipy==${SCIPY_VERSION}
-                matplotlib==${MATPLOTLIB_VERSION}
-            VERBATIM
-        )
-    ENDIF()
-
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} science_packages)
-    ADD_DEPENDENCIES(science_packages ${BUILD_DEPENDENCIES})
-
-    # Copy the numpy include directory to a place that OpenCOR can use
-
-    ADD_CUSTOM_TARGET(copy_numpy_headers
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
-        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-    )
-
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} copy_numpy_headers)
-    ADD_DEPENDENCIES(copy_numpy_headers science_packages)
-
-    # Patch matplotlib's Qt backend so that it works with PythonQt
-
-    ADD_CUSTOM_TARGET(patch_matplotlib
-        COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
-            --strip=2
-            --directory=${LOCAL_SITE_PACKAGES_DIR}/matplotlib
-            src/matplotlib_${MATPLOTLIB_VERSION}.diff
-        WORKING_DIRECTORY
-            ${PROJECT_SOURCE_DIR}
-        VERBATIM
-    )
-
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} patch_matplotlib)
-    ADD_DEPENDENCIES(patch_matplotlib science_packages)
-    ADD_DEPENDENCIES(patch_matplotlib ${BUILD_DEPENDENCIES})
-
-    # Install IPython and its dependencies
-
-    ADD_CUSTOM_TARGET(ipython_packages
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            traitlets==${TRAITLETS_VERSION}
-            ipython==${IPYTHON_VERSION}
-            ipykernel==${IPYKERNEL_VERSION}
-            qtconsole==${QTCONSOLE_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
-
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} ipython_packages)
-    ADD_DEPENDENCIES(ipython_packages patch_matplotlib)
-    ADD_DEPENDENCIES(ipython_packages ${BUILD_DEPENDENCIES})
+        pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+                    --upgrade --upgrade-strategy only-if-needed)
 
     # Install other packages we use
 
-    IF(WIN32)
-        SET(LXML_WHEEL "numpy-${LXML_VERSION}.mkl-${WHEEL_SUFFIX}")
-        ADD_CUSTOM_TARGET(science_packages
-            COMMAND ${PIP_INSTALL_COMMAND}
-                ${WHEEL_REPOSITORY}/${LXML_WHEEL}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    ELSE()
-        ADD_CUSTOM_TARGET(other_packages
-            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                lxml==${LXML_VERSION}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    ENDIF()
-
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} other_packages)
-    ADD_DEPENDENCIES(other_packages ipython_packages)
-    ADD_DEPENDENCIES(other_packages ${BUILD_DEPENDENCIES})
-
-    # Upgrade to our versions of packages which have been patched to work with PythonQt
-
-    SET(ARCHIVE_PYTHONQT archive/PythonQt-v)
-
-    ADD_CUSTOM_TARGET(pythonqt_update
-        COMMAND ${PIP_INSTALL_COMMAND} --no-deps
-            ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_VERSION}.zip
-            ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_VERSION}.zip
-            ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_VERSION}.zip
-            ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_VERSION}.zip
+    ADD_CUSTOM_TARGET(other_packages
+        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+            sphinx==${SPHINX_VERSION}
         WORKING_DIRECTORY
             ${FULL_DEST_EXTERNAL_BINARIES_DIR}
         VERBATIM
     )
 
-    ADD_DEPENDENCIES(${PACKAGE_BUILD} pythonqt_update)
-    ADD_DEPENDENCIES(pythonqt_update ipython_packages)
-    ADD_DEPENDENCIES(pythonqt_update ${BUILD_DEPENDENCIES})
+    ADD_DEPENDENCIES(${PACKAGE_BUILD} other_packages)
+    ADD_DEPENDENCIES(other_packages ${BUILD_DEPENDENCIES})
 
     # Package the newly installed Python packages
 
     CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
         ${LOCAL_EXTERNAL_PACKAGE_DIR}
         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+        RELEASE_TAG ${RELEASE_TAG}
         PACKAGED_FILES ${PACKAGED_FILES}
         SHA1_FILES ${SHA1_FILES}
         TARGET ${PACKAGE_BUILD}
@@ -260,10 +134,15 @@ ADD_PLUGIN(PythonPackages
         src/pythonpackagesplugin.h
     PLUGINS
         Python
-    EXTERNAL_DESTINATION_DIR
-        ${PYTHON_SITE_PACKAGES_DIR}
     EXTERNAL_SOURCE_DIR
-        ${LOCAL_SITE_PACKAGES_DIR}
+        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+    EXTERNAL_DESTINATION_DIR
+        ${PYTHON_ROOT_DIR}
     DEPENDS_ON
         ${PLUGIN_DEPENDS_ON}
 )
+
+# Update Python paths for newly copied scripts
+
+ADD_CUSTOM_COMMAND(TARGET PythonPackagesPlugin POST_BUILD
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/distrib/bin/set_python_path.py ${PYTHON_ROOT_DIR})

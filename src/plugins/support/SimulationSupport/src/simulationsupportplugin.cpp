@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "simulationmanager.h"
 #include "simulationsupportplugin.h"
-#include "simulationsupportpythonwrapper.h"
 
 //==============================================================================
 
@@ -40,7 +39,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter des simulations."));
 
     return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "COMBINESupport" << "DataStore" << "PythonSupport",
+                          QStringList() << "COMBINESupport",
                           descriptions);
 }
 
@@ -138,15 +137,6 @@ void SimulationSupportPlugin::retranslateUi()
     // Note: even though we don't handle this interface, we still want to
     //       support it since some other aspects of our plugin are
     //       multilingual...
-}
-
-//==============================================================================
-// Python interface
-//==============================================================================
-
-void SimulationSupportPlugin::registerPythonClasses(PyObject *pModule)
-{
-    mSimulationSupportPythonWrapper = new SimulationSupportPythonWrapper(pModule, this);
 }
 
 //==============================================================================

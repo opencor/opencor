@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "coreglobal.h"
 #include "file.h"
 #include "guiinterface.h"
 #include "widget.h"
@@ -89,7 +88,7 @@ private:
 
 //==============================================================================
 
-class CORE_EXPORT CentralWidget : public Widget
+class CentralWidget : public Widget
 {
     Q_OBJECT
 
@@ -110,15 +109,13 @@ public:
                                    bool pFileTabs = false);
 
     QString currentFileName() const;
-    QString localFileName(const QString &pUrl) const;
 
-    QString openFile(const QString &pFileName,
-                     const File::Type &pType = File::Local,
-                     const QString &pUrl = QString(),
-                     bool pShowWarning = true);
+    void openFile(const QString &pFileName,
+                  const File::Type &pType = File::Local,
+                  const QString &pUrl = QString());
     void openFiles(const QStringList &pFileNames);
 
-    QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
+    void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
 

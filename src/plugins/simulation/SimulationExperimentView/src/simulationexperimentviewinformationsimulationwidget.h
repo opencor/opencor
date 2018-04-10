@@ -63,12 +63,6 @@ public:
     double pointInterval() const;
 
 private:
-    SimulationSupport::Simulation *mSimulation;
-
-public slots:
-    void updateSimulation(const double &pCurrentPoint);
-
-private:
     Core::Property *mStartingPointProperty;
     Core::Property *mEndingPointProperty;
     Core::Property *mPointIntervalProperty;

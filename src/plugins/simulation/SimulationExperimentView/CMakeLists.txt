@@ -11,7 +11,6 @@ add_plugin(SimulationExperimentView
         ../../plugininfo.cpp
         ../../plugininterface.cpp
         ../../pluginmanager.cpp
-        ../../pythoninterface.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
 
@@ -22,7 +21,6 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewinformationsolverswidget.cpp
         src/simulationexperimentviewinformationwidget.cpp
         src/simulationexperimentviewplugin.cpp
-        src/simulationexperimentviewpythonwrapper.cpp
         src/simulationexperimentviewsimulationwidget.cpp
         src/simulationexperimentviewwidget.cpp
     HEADERS_MOC
@@ -38,11 +36,9 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewinformationsolverswidget.h
         src/simulationexperimentviewinformationwidget.h
         src/simulationexperimentviewplugin.h
-        src/simulationexperimentviewpythonwrapper.h
         src/simulationexperimentviewsimulationwidget.h
         src/simulationexperimentviewwidget.h
     PLUGINS
         GraphPanelWidget
-        PythonSupport
         SimulationSupport
 )

@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "corecliutils.h"
 #endif
 #include "datastoreinterface.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -43,83 +42,12 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 3;
+    return 2;
 }
 
 //==============================================================================
 
 namespace DataStore {
-
-//==============================================================================
-
-DataStoreArray::DataStoreArray(quint64 pSize) :
-    mSize(pSize)
-{
-    mData = new double[pSize]{};
-    mRefCount = 1;
-}
-
-//==============================================================================
-
-DataStoreArray::~DataStoreArray()
-{
-}
-
-//==============================================================================
-
-quint64 DataStoreArray::size() const
-{
-    // Return our size
-
-    return mSize;
-}
-
-//==============================================================================
-
-double * DataStoreArray::data() const
-{
-    // Return a pointer to our data
-
-    return mData;
-}
-
-//==============================================================================
-
-double DataStoreArray::data(quint64 pPosition) const
-{
-    // Return the value at the given position
-
-    Q_ASSERT((pPosition < mSize) && mData);
-
-    return mData[pPosition];
-}
-
-//==============================================================================
-
-void DataStoreArray::clear()
-{
-    // Clear our data
-
-    memset(mData, 0, mSize*Solver::SizeOfDouble);
-}
-
-//==============================================================================
-
-void DataStoreArray::decRef()
-{
-    --mRefCount;
-    if (mRefCount == 0) {
-        delete[] mData;
-        delete this;
-    }
-}
-
-//==============================================================================
-
-void DataStoreArray::incRef()
-{
-    ++mRefCount;
-}
 
 //==============================================================================
 
@@ -130,8 +58,7 @@ DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
 {
     // Create our array of values
 
-    mArray = new DataStoreArray(mCapacity);
-    mValues = mArray->data();
+    mValues = new double[pCapacity];
 }
 
 //==============================================================================
@@ -140,7 +67,7 @@ DataStoreVariableRun::~DataStoreVariableRun()
 {
     // Delete some internal objects
 
-    mArray->decRef();
+    delete[] mValues;
 }
 
 //==============================================================================
@@ -176,15 +103,6 @@ void DataStoreVariableRun::addValue(double pValue)
     mValues[mSize] = pValue;
 
     ++mSize;
-}
-
-//==============================================================================
-
-DataStoreArray * DataStoreVariableRun::array() const
-{
-    // Return our data array
-
-    return mArray;
 }
 
 //==============================================================================
@@ -428,44 +346,6 @@ double * DataStoreVariable::values(int pRun) const
             return mRuns.last()->values();
         else
             return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():0;
-    }
-}
-
-//==============================================================================
-
-double DataStoreVariable::getValue() const
-{
-    // Return the value to be added next
-
-    Q_ASSERT(mValue);
-
-    return *mValue;
-}
-
-//==============================================================================
-
-void DataStoreVariable::setValue(double pValue)
-{
-    // Set the value to be added next
-
-    Q_ASSERT(mValue);
-
-    *mValue = pValue;
-}
-
-//==============================================================================
-
-DataStoreArray * DataStoreVariable::array(int pRun) const
-{
-    // Return the data array for the given run, if any
-
-    if (mRuns.isEmpty()) {
-        return 0;
-    } else {
-        if (pRun == -1)
-            return mRuns.last()->array();
-        else
-            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->array():0;
     }
 }
 

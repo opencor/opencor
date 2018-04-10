@@ -31,10 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <functional>
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -42,7 +38,6 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFile;
     class CellmlFileRuntime;
-    class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
 
 //==============================================================================
@@ -63,27 +58,8 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-class SimulationSupportPythonWrapper;
-
-//==============================================================================
-
 class Simulation;
-class SimulationData;
-class SimulationResults;
 class SimulationWorker;
-
-//==============================================================================
-
-// We bind the SimulationData object to the the first parameter of `updateParameters()`
-// to create a function object to be called when simulation parameters are updated
-
-#if defined(_MSC_VER)
-    typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData * const> SimulationDataUpdatedFunction;
-#elif defined(__APPLE__)
-    typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
-#else
-    typedef std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type SimulationDataUpdatedFunction;
-#endif
 
 //==============================================================================
 
@@ -91,67 +67,47 @@ class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
 {
     Q_OBJECT
 
-    friend class SimulationSupportPythonWrapper;
-
 public:
     explicit SimulationData(Simulation *pSimulation);
     ~SimulationData() override;
 
-    void setSimulationResults(SimulationResults *pSimulationResults);
+    void reload();
+
+    Simulation * simulation() const;
 
     double * constants() const;
     double * rates() const;
     double * states() const;
     double * algebraic() const;
 
+    int delay() const;
+    void setDelay(int pDelay);
+
+    double startingPoint() const;
     void setStartingPoint(double pStartingPoint, bool pRecompute = true);
 
+    double endingPoint() const;
     void setEndingPoint(double pEndingPoint);
 
+    double pointInterval() const;
     void setPointInterval(double pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
+
+    QString odeSolverName() const;
+    void setOdeSolverName(const QString &pOdeSolverName);
 
     Solver::Solver::Properties odeSolverProperties() const;
     void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
 
     SolverInterface * nlaSolverInterface() const;
 
+    QString nlaSolverName() const;
+    void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
+
     Solver::Solver::Properties nlaSolverProperties() const;
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               bool pReset = true);
-
-    int * gradientIndices();
-
-    bool createGradientsArray();
-    void deleteGradientsArray();
-
-    double * gradients() const;
-
-    int gradientsCount() const;
-    int gradientsSize() const;
-
-    static void updateParameters(SimulationData *pSimulationData);
-
-public slots:
-    void reload();
-
-    OpenCOR::SimulationSupport::Simulation * simulation() const;
-
-    int delay() const;
-    void setDelay(int pDelay);
-
-    double startingPoint() const;
-
-    double endingPoint() const;
-
-    double pointInterval() const;
-
-    QString odeSolverName() const;
-    void setOdeSolverName(const QString &pOdeSolverName);
-
-    QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
     void reset(bool pInitialize = true);
 
@@ -162,12 +118,8 @@ public slots:
     bool isModified() const;
     void checkForModifications();
 
-    void setGradientCalculation(const QString &pConstantUri, bool pCalculate = true);
-    void setGradientCalculationByIndex(const int &pIndex, bool pCalculate);
-
 private:
     Simulation *mSimulation;
-    SimulationResults *mSimulationResults;
 
     int mDelay;
 
@@ -184,19 +136,14 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
-    DataStore::DataStoreArray *mConstants;
-    DataStore::DataStoreArray *mRates;
-    DataStore::DataStoreArray *mStates;
-    DataStore::DataStoreArray *mAlgebraic;
-
+    double *mConstants;
+    double *mRates;
+    double *mStates;
     double *mDummyStates;
+    double *mAlgebraic;
+
     double *mInitialConstants;
     double *mInitialStates;
-
-    QVector<int> mGradientIndices;
-    DataStore::DataStoreArray *mGradients;
-
-    SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
     void createArrays();
     void deleteArrays();
@@ -207,8 +154,6 @@ signals:
     void updated(double pCurrentPoint);
     void modified(bool pIsModified);
 
-    void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
-
     void error(const QString &pMessage);
 };
 
@@ -218,15 +163,23 @@ class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
 {
     Q_OBJECT
 
-    friend class SimulationSupportPythonWrapper;
-
 public:
     explicit SimulationResults(Simulation *pSimulation);
     ~SimulationResults() override;
 
+    void reload();
+
+    void reset();
+
+    int runsCount() const;
+
     bool addRun();
 
     void addPoint(double pPoint);
+
+    quint64 size(int pRun = -1) const;
+
+    DataStore::DataStore * dataStore() const;
 
     double * points(int pRun = -1) const;
 
@@ -234,24 +187,6 @@ public:
     double * rates(int pIndex, int pRun = -1) const;
     double * states(int pIndex, int pRun = -1) const;
     double * algebraic(int pIndex, int pRun = -1) const;
-
-    DataStore::DataStoreVariables constantVariables() const;
-    DataStore::DataStoreVariables rateVariables() const;
-    DataStore::DataStoreVariables stateVariables() const;
-    DataStore::DataStoreVariables algebraicVariables() const;
-
-    bool initialiseGradientsStore();
-
-public slots:
-    void reload();
-
-    void reset();
-
-    int runsCount() const;
-
-    quint64 size(int pRun = -1) const;
-
-    OpenCOR::DataStore::DataStore * dataStore() const;
 
 private:
     Simulation *mSimulation;
@@ -264,9 +199,6 @@ private:
     DataStore::DataStoreVariables mRates;
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
-
-    DataStore::DataStore *mGradientsStore;
-    DataStore::DataStoreVariables mGradients;
 
     void createDataStore();
     void deleteDataStore();
@@ -290,6 +222,12 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
 
+    QString fileName() const;
+
+    void save();
+    void reload();
+    void rename(const QString &pFileName);
+
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
     SimulationWorker * worker() const;
@@ -300,26 +238,12 @@ public:
     SEDMLSupport::SedmlFile * sedmlFile() const;
     COMBINESupport::CombineArchive * combineArchive() const;
 
-    bool addRun();
-
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
-
-    bool reset();
-
-public slots:
-    QString fileName() const;
-
-    void save();
-    void reload();
-    void rename(const QString &pFileName);
-
-    OpenCOR::SimulationSupport::SimulationData * data() const;
-    OpenCOR::SimulationSupport::SimulationResults * results() const;
+    SimulationData * data() const;
+    SimulationResults * results() const;
 
     int runsCount() const;
+
+    bool addRun();
 
     bool isRunning() const;
     bool isPaused() const;
@@ -330,6 +254,13 @@ public slots:
     void setDelay(int pDelay);
 
     double size();
+
+    bool run();
+    bool pause();
+    bool resume();
+    bool stop();
+
+    bool reset();
 
 private:
     QString mFileName;
@@ -352,9 +283,6 @@ private:
     bool simulationSettingsOk(bool pEmitSignal = true);
 
 signals:
-    void clearResults(const QString &pFileName);
-    void runStarting(const QString &pFileName);
-
     void running(bool pIsResuming);
     void paused();
     void stopped(qint64 pElapsedTime);

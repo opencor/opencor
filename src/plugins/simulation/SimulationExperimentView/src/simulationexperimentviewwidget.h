@@ -101,10 +101,6 @@ public:
     void checkSimulationResults(const QString &pFileName,
                                 const SimulationExperimentViewSimulationWidget::Task &pTask = SimulationExperimentViewSimulationWidget::None);
 
-public slots:
-    void clearResults(const QString &pFileName);
-    void startingRun(const QString &pFileName);
-
 private:
     SimulationExperimentViewPlugin *mPlugin;
 

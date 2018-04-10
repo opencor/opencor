@@ -33,8 +33,7 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 SimulationExperimentViewInformationSimulationWidget::SimulationExperimentViewInformationSimulationWidget(QWidget *pParent) :
-    PropertyEditorWidget(true, pParent),
-    mSimulation(0)
+    PropertyEditorWidget(true, pParent)
 {
     // Populate our property editor
 
@@ -62,10 +61,6 @@ void SimulationExperimentViewInformationSimulationWidget::retranslateUi()
 
 void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
-    // Keep track of the simulation
-
-    mSimulation = pSimulation;
-
     // Iniialise the unit of our different properties
 
     QString unit = pSimulation->runtime()->voi()->unit();
@@ -78,24 +73,6 @@ void SimulationExperimentViewInformationSimulationWidget::initialize(SimulationS
     // reset our simulation the first time round
 
     pSimulation->data()->setStartingPoint(mStartingPointProperty->doubleValue(), false);
-
-    // Keep track of when the simulation data has changed
-
-    connect(pSimulation->data(), &SimulationSupport::SimulationData::updated,
-            this, &SimulationExperimentViewInformationSimulationWidget::updateSimulation);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewInformationSimulationWidget::updateSimulation(const double &pCurrentPoint)
-{
-    Q_UNUSED(pCurrentPoint);
-
-    // Update our data
-
-    mStartingPointProperty->setDoubleValue(mSimulation->data()->startingPoint(), false);
-    mEndingPointProperty->setDoubleValue(mSimulation->data()->endingPoint(), false);
-    mPointIntervalProperty->setDoubleValue(mSimulation->data()->pointInterval(), false);
 }
 
 //==============================================================================

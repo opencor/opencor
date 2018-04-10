@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QObject>
 #ifndef CLI_VERSION
     #include <QIcon>
 #endif
@@ -38,31 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace OpenCOR {
 namespace DataStore {
-
-//==============================================================================
-
-class DataStoreArray
-{
-public:
-    explicit DataStoreArray(quint64 pSize);
-
-    quint64 size() const;
-
-    double * data() const;
-    double data(quint64 pPosition) const;
-
-    void clear();
-
-    void decRef();
-    void incRef();
-
-private:
-    const quint64 mSize;
-    int mRefCount;
-    double *mData;
-
-    ~DataStoreArray();
-};
 
 //==============================================================================
 
@@ -77,7 +51,6 @@ public:
     void addValue();
     void addValue(double pValue);
 
-    DataStoreArray * array() const;
     double value(quint64 pPosition) const;
     double * values() const;
 
@@ -85,7 +58,6 @@ private:
     quint64 mCapacity;
     quint64 mSize;
 
-    DataStoreArray *mArray;
     double *mValue;
     double *mValues;
 };
@@ -96,16 +68,18 @@ typedef QList<DataStoreVariableRun *> DataStoreVariableRuns;
 
 //==============================================================================
 
-class DataStoreVariable : public QObject
+class DataStoreVariable
 {
-    Q_OBJECT
-
 public:
     explicit DataStoreVariable(double *pValue = 0);
     ~DataStoreVariable();
 
     static bool compare(DataStoreVariable *pVariable1,
                         DataStoreVariable *pVariable2);
+
+    bool isVisible() const;
+
+    int runsCount() const;
 
     void addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
@@ -115,32 +89,20 @@ public:
     void setIcon(const QIcon &pIcon);
 #endif
 
+    QString uri() const;
     void setUri(const QString &pUri);
 
+    QString label() const;
     void setLabel(const QString &pLabel);
 
+    QString unit() const;
     void setUnit(const QString &pUnit);
+
+    quint64 size(int pRun = -1) const;
 
     void addValue();
     void addValue(double pValue);
 
-    double getValue() const;
-    void setValue(double pValue);
-
-    DataStoreArray * array(int pRun = -1) const;
-
-public slots:
-    bool isVisible() const;
-
-    int runsCount() const;
-
-    QString uri() const;
-
-    QString label() const;
-
-    QString unit() const;
-
-    quint64 size(int pRun = -1) const;
     double value(quint64 pPosition, int pRun = -1) const;
     double * values(int pRun = -1) const;
 
@@ -159,13 +121,7 @@ private:
 
 //==============================================================================
 
-class DataStoreVariables : public QList<DataStoreVariable *>
-{
-};
-
-//==============================================================================
-
-class DataStore;
+typedef QList<DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 
@@ -191,16 +147,21 @@ private:
 
 //==============================================================================
 
-class DataStore : public QObject
+class DataStore
 {
-    Q_OBJECT
-
 public:
     explicit DataStore(const QString &pUri);
     ~DataStore();
 
+    QString uri() const;
+
+    int runsCount() const;
+
     bool addRun(quint64 pCapacity);
 
+    quint64 size(int pRun = -1) const;
+
+    DataStoreVariable * voi() const;
     DataStoreVariables variables();
     DataStoreVariables voiAndVariables();
 
@@ -208,15 +169,6 @@ public:
     DataStoreVariables addVariables(double *pValues, int pCount);
 
     void addValues(double pVoiValue);
-
-public slots:
-    QString uri() const;
-
-    int runsCount() const;
-
-    quint64 size(int pRun = -1) const;
-
-    OpenCOR::DataStore::DataStoreVariable * voi() const;
 
 private:
     QString mUri;

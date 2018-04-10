@@ -30,8 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QSet>
-#include <QVector>
 #include <QtMath>
 
 //==============================================================================
@@ -43,7 +41,6 @@ namespace SimulationSupport {
 
 SimulationData::SimulationData(Simulation *pSimulation) :
     mSimulation(pSimulation),
-    mSimulationResults(0),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -53,10 +50,7 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mDaeSolverName(QString()),
     mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
-    mNlaSolverProperties(Solver::Solver::Properties()),
-    mGradientIndices(QVector<int>()),
-    mGradients(0),
-    mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
+    mNlaSolverProperties(Solver::Solver::Properties())
 {
     // Create our various arrays
 
@@ -70,14 +64,6 @@ SimulationData::~SimulationData()
     // Delete some internal objects
 
     deleteArrays();
-    deleteGradientsArray();
-}
-
-//==============================================================================
-
-void SimulationData::setSimulationResults(SimulationResults *pSimulationResults)
-{
-    mSimulationResults = pSimulationResults;
 }
 
 //==============================================================================
@@ -105,7 +91,7 @@ double * SimulationData::constants() const
 {
     // Return our constants array
 
-    return mConstants->data();
+    return mConstants;
 }
 
 //==============================================================================
@@ -114,7 +100,7 @@ double * SimulationData::rates() const
 {
     // Return our rates array
 
-    return mRates->data();
+    return mRates;
 }
 
 //==============================================================================
@@ -123,7 +109,7 @@ double * SimulationData::states() const
 {
     // Return our states array
 
-    return mStates->data();
+    return mStates;
 }
 
 //==============================================================================
@@ -132,7 +118,7 @@ double * SimulationData::algebraic() const
 {
     // Return our algebraic array
 
-    return mAlgebraic->data();
+    return mAlgebraic;
 }
 
 //==============================================================================
@@ -386,12 +372,12 @@ void SimulationData::reset(bool pInitialize)
     // Reset our parameter values
 
     if (pInitialize) {
-        mConstants->clear();
-        mRates->clear();
-        mStates->clear();
-        mAlgebraic->clear();
+        memset(mConstants, 0, runtime->constantsCount()*Solver::SizeOfDouble);
+        memset(mRates, 0, runtime->ratesCount()*Solver::SizeOfDouble);
+        memset(mStates, 0, runtime->statesCount()*Solver::SizeOfDouble);
+        memset(mAlgebraic, 0, runtime->algebraicCount()*Solver::SizeOfDouble);
 
-        runtime->initializeConstants()(mConstants->data(), mRates->data(), mStates->data());
+        runtime->initializeConstants()(mConstants, mRates, mStates);
     }
 
     recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
@@ -407,8 +393,8 @@ void SimulationData::reset(bool pInitialize)
     // Keep track of our various initial values
 
     if (pInitialize) {
-        memcpy(mInitialConstants, mConstants->data(), mConstants->size()*Solver::SizeOfDouble);
-        memcpy(mInitialStates, mStates->data(), mStates->size()*Solver::SizeOfDouble);
+        memcpy(mInitialConstants, mConstants, runtime->constantsCount()*Solver::SizeOfDouble);
+        memcpy(mInitialStates, mStates, runtime->statesCount()*Solver::SizeOfDouble);
     }
 
     // Let people know whether our data is 'cleaned', i.e. not modified, and ask
@@ -433,12 +419,9 @@ void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    runtime->computeComputedConstants()(pCurrentPoint, mConstants->data(), mRates->data(),
-                                        pInitialize?mStates->data():mDummyStates, mAlgebraic->data());
-    runtime->computeRates()(pCurrentPoint, mConstants->data(), mRates->data(),
-                            mStates->data(), mAlgebraic->data());
-    runtime->computeVariables()(pCurrentPoint, mConstants->data(), mRates->data(),
-                                mStates->data(), mAlgebraic->data());
+    runtime->computeComputedConstants()(pCurrentPoint, mConstants, mRates, pInitialize?mStates:mDummyStates, mAlgebraic);
+    runtime->computeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+    runtime->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 
     // Let people know that our data has been updated
 
@@ -451,8 +434,7 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 {
     // Recompute our 'variables'
 
-    mSimulation->runtime()->computeVariables()(pCurrentPoint, mConstants->data(), mRates->data(),
-                                               mStates->data(), mAlgebraic->data());
+    mSimulation->runtime()->computeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
 }
 
 //==============================================================================
@@ -464,14 +446,18 @@ bool SimulationData::isModified() const
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
-    for (int i = 0, iMax = mStates->size(); i < iMax; ++i) {
-        if (mStates->data(i) != mInitialStates[i])
-            return true;
-    }
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
 
-    for (int i = 0, iMax = mConstants->size(); i < iMax; ++i) {
-        if (mConstants->data(i) != mInitialConstants[i])
-            return true;
+    if (runtime) {
+        for (int i = 0, iMax = runtime->statesCount(); i < iMax; ++i) {
+            if (mStates[i] != mInitialStates[i])
+                return true;
+        }
+
+        for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
+            if (mConstants[i] != mInitialConstants[i])
+                return true;
+        }
     }
 
     return false;
@@ -488,13 +474,6 @@ void SimulationData::checkForModifications()
 
 //==============================================================================
 
-void SimulationData::updateParameters(SimulationData *pSimulationData)
-{
-    emit pSimulationData->updated(pSimulationData->mStartingPoint);
-}
-
-//==============================================================================
-
 void SimulationData::createArrays()
 {
     // Create our various arrays, if possible
@@ -504,19 +483,19 @@ void SimulationData::createArrays()
     if (runtime) {
         // Create our various arrays to compute our model
 
-        mConstants = new DataStore::DataStoreArray(runtime->constantsCount());
-        mRates = new DataStore::DataStoreArray(runtime->ratesCount());
-        mStates = new DataStore::DataStoreArray(runtime->statesCount());
-        mAlgebraic = new DataStore::DataStoreArray(runtime->algebraicCount());
+        mConstants = new double[runtime->constantsCount()];
+        mRates = new double[runtime->ratesCount()];
+        mStates = new double[runtime->statesCount()];
+        mDummyStates = new double[runtime->statesCount()];
+        mAlgebraic = new double[runtime->algebraicCount()];
 
         // Create our various arrays to keep track of our various initial values
 
-        mDummyStates = new double[mStates->size()];
-        mInitialConstants = new double[mConstants->size()];
-        mInitialStates = new double[mStates->size()];
+        mInitialConstants = new double[runtime->constantsCount()];
+        mInitialStates = new double[runtime->statesCount()];
     } else {
-        mConstants = mRates = mStates = mAlgebraic = 0;
-        mDummyStates = mInitialConstants = mInitialStates = 0;
+        mConstants = mRates = mStates = mDummyStates = mAlgebraic = 0;
+        mInitialConstants = mInitialStates = 0;
     }
 }
 
@@ -526,121 +505,14 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    mConstants->decRef();
-    mRates->decRef();
-    mStates->decRef();
-    mAlgebraic->decRef();
-
+    delete[] mConstants;
+    delete[] mRates;
+    delete[] mStates;
     delete[] mDummyStates;
+    delete[] mAlgebraic;
+
     delete[] mInitialConstants;
     delete[] mInitialStates;
-}
-
-//==============================================================================
-
-void SimulationData::setGradientCalculationByIndex(const int &pIndex, bool pCalculate)
-{
-    // Keep track of the indices of constant parameters that will
-    // have gradients calculated
-
-    int pos = mGradientIndices.indexOf(pIndex);
-
-    if (pCalculate) {
-        if (pos == -1) mGradientIndices.append(pIndex);
-    } else if (pos > -1) {
-        mGradientIndices.remove(pos);
-    }
-}
-
-//==============================================================================
-
-void SimulationData::setGradientCalculation(const QString &pConstantUri, bool pCalculate)
-{
-    // Keep track of the indices of constant parameters that will
-    // have gradients calculated
-
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-
-    for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
-
-        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant
-              && pConstantUri == mSimulationResults->constantVariables()[parameter->index()]->uri()) {
-            setGradientCalculationByIndex(parameter->index(), pCalculate);
-
-            // Update icon in parameter information widget
-
-            emit gradientCalculation(parameter, pCalculate);
-        }
-    }
-}
-//==============================================================================
-
-bool SimulationData::createGradientsArray()
-{
-    // Create our gradients array. We can only do so when
-    // starting a simulation as we need to know what constant
-    // parameters are having their gradients calculated
-
-    if (!mGradientIndices.isEmpty()) {
-        // Allocate the array to hold sensitivity gradients at a single point
-
-        mGradients = new DataStore::DataStoreArray(mGradientIndices.size()*mStates->size());
-
-        return true;
-    } else {
-        mGradients = 0;
-
-        return false;
-    }
-}
-
-//==============================================================================
-
-void SimulationData::deleteGradientsArray()
-{
-    // Remove reference to gradients array
-    // Note: this will delete the array if it now has no references
-
-    if (mGradients)
-        mGradients->decRef();
-}
-
-//==============================================================================
-
-double * SimulationData::gradients() const
-{
-    // Return our gradients array if it has been allocated
-
-    return mGradients?mGradients->data():0;
-}
-
-//==============================================================================
-
-int SimulationData::gradientsSize() const
-{
-    // Return the size of the gradients array
-
-    return mGradients?mGradients->size():0;
-}
-
-//==============================================================================
-
-int * SimulationData::gradientIndices()
-{
-    // Return our gradients array
-
-    return mGradientIndices.data();
-}
-
-//==============================================================================
-
-int SimulationData::gradientsCount() const
-{
-    // Return the number of constant parameters having their gradients
-    // calculated
-
-    return mGradientIndices.size();
 }
 
 //==============================================================================
@@ -652,9 +524,7 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mConstants(DataStore::DataStoreVariables()),
     mRates(DataStore::DataStoreVariables()),
     mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables()),
-    mGradientsStore(0),
-    mGradients(DataStore::DataStoreVariables())
+    mAlgebraic(DataStore::DataStoreVariables())
 {
     // Create our data store
 
@@ -668,9 +538,6 @@ SimulationResults::~SimulationResults()
     // Delete some internal objects
 
     deleteDataStore();
-
-    if (mGradientsStore)
-        delete mGradientsStore;
 }
 
 //==============================================================================
@@ -770,64 +637,6 @@ void SimulationResults::deleteDataStore()
 
 //==============================================================================
 
-bool SimulationResults::initialiseGradientsStore()
-{
-    // Allocate additional memory for sensitivity analysis
-
-    // This can only be done when starting a simulation as only then do we
-    // know what constant parameters are having their gradients calculated
-
-    // Delete the previous run's gradient store if it exists
-
-    if (mGradientsStore)
-        delete mGradientsStore;
-
-    SimulationData *data = mSimulation->data();
-
-    // Delete any gradients array
-
-    data->deleteGradientsArray();
-
-    // Create a new gradients array and data store
-
-    if (data->createGradientsArray()) {
-        mGradientsStore = new DataStore::DataStore(mDataStore->uri() + "/gradients");
-        mGradients = mGradientsStore->addVariables(data->gradients(), data->gradientsSize());
-
-        // Customise our gradient variables
-
-        int *gradientIndices = data->gradientIndices();
-        int statesCount = mStates.size();
-        for (int i = 0; i < data->gradientsCount(); ++i) {
-            DataStore::DataStoreVariable *constant = mConstants[gradientIndices[i]];
-
-            for (int j = 0; j < statesCount; ++j) {
-                DataStore::DataStoreVariable *state = mStates[j];
-                DataStore::DataStoreVariable *gradient = mGradients[i*statesCount + j];
-
-                // Gradient is of state variable wrt each constant
-
-                gradient->setUri(state->uri() + "/gradient_with/" + constant->uri());
-                gradient->setLabel("d(" + state->label() + ")/d(" + constant->label() + ")");
-            }
-        }
-
-        // Allocate data for gradients
-
-        quint64 simulationSize = mSimulation->size();
-
-        if (simulationSize)
-            return mGradientsStore->addRun(simulationSize);
-    } else {
-        mGradientsStore = 0;
-        mGradients = DataStore::DataStoreVariables();
-        return true;
-    }
-    return false;
-}
-
-//==============================================================================
-
 void SimulationResults::reload()
 {
     // Reload ourselves by resetting ourselves
@@ -877,11 +686,6 @@ void SimulationResults::addPoint(double pPoint)
     // Add the data to our data store
 
     mDataStore->addValues(pPoint);
-
-    // Add data to gradients store
-
-    if (mGradientsStore)
-       mGradientsStore->addValues(pPoint);
 }
 
 //==============================================================================
@@ -949,42 +753,6 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 //==============================================================================
 
-DataStore::DataStoreVariables SimulationResults::constantVariables() const
-{
-    // Return our constants data store variables
-
-    return mConstants;
-}
-
-//==============================================================================
-
-DataStore::DataStoreVariables SimulationResults::rateVariables() const
-{
-    // Return our rates data store variables
-
-    return mRates;
-}
-
-//==============================================================================
-
-DataStore::DataStoreVariables SimulationResults::stateVariables() const
-{
-    // Return our states data store variables
-
-    return mStates;
-}
-
-//==============================================================================
-
-DataStore::DataStoreVariables SimulationResults::algebraicVariables() const
-{
-    // Return our algebraic data store variables
-
-    return mAlgebraic;
-}
-
-//==============================================================================
-
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
     mWorker(0)
@@ -997,11 +765,6 @@ Simulation::Simulation(const QString &pFileName) :
 
     mData = new SimulationData(this);
     mResults = new SimulationResults(this);
-
-    // Make sure we can access metadata about result variables
-
-    mData->setSimulationResults(mResults);
-
 
     // Keep track of any error occurring in our data
 
@@ -1299,11 +1062,6 @@ bool Simulation::run()
         // Make sure that the simulation settings we were given are sound
 
         if (!simulationSettingsOk())
-            return false;
-
-        // Initialise sensitivity gradients data store
-
-        if (!mResults->initialiseGradientsStore())
             return false;
 
         // Create our worker

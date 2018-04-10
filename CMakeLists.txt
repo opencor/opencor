@@ -29,7 +29,6 @@ option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth packag
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python library" ON)
 option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
-option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
@@ -836,7 +835,6 @@ set(PLUGINS
 
     thirdParty/Python
     thirdParty/PythonPackages
-    thirdParty/PythonQtAPI
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
@@ -863,8 +861,6 @@ set(PLUGINS
     miscellaneous/Compiler
     miscellaneous/Core
     miscellaneous/HelpWindow
-    miscellaneous/JupyterKernel
-    miscellaneous/PythonQtConsoleWindow
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
@@ -884,7 +880,6 @@ set(PLUGINS
     support/CellMLSupport
     support/COMBINESupport
     support/PMRSupport
-    support/PythonSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/SimulationSupport
@@ -907,13 +902,6 @@ set(PLUGINS
     widget/WebViewerWidget
 )
 
-# Python interface depends on Python headers so we cannot include it when plugins
-# aren't being built (e.g. when building QtWebKit)
-
-set(PYTHON_INTERFACE
-    src/plugins/pythoninterface.cpp
-)
-
 if(ENABLE_TEST_PLUGINS)
     list(APPEND PLUGINS
         thirdParty/Zinc
@@ -927,8 +915,6 @@ if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
     # plugins since some of them may require access to QtWebKit
 
     set(PLUGINS)
-    set(PYTHON_INTERFACE)
-    add_definitions(-DEXCLUDE_PYTHON)
 endif()
 
 foreach(PLUGIN ${PLUGINS})
@@ -962,7 +948,6 @@ if(APPLE)
 endif()
 
 add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
-    ${PYTHON_INTERFACE}
     ${SOURCES}
     ${SOURCES_MOC}
     ${SOURCES_UIS}
@@ -1018,7 +1003,6 @@ if(WIN32)
     set(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_com)
 
     add_executable(${WINDOWS_CLI_PROJECT_NAME}
-        ${PYTHON_INTERFACE}
         ${WINDOWS_CLI_SOURCES}
         ${WINDOWS_CLI_SOURCES_MOC}
         ${WINDOWS_CLI_SOURCES_RCS}
