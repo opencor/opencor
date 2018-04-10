@@ -3357,8 +3357,7 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(GraphPanelWidge
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    mPlots.removeOne(plot);
-    mUpdatablePlotViewports.remove(plot);
+    removePlot(plot);
 
     // Check our graph panels and their graphs
 
@@ -3435,7 +3434,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::G
     // Note: this ensures that our plot is updated at once...
 
     if (plot->graphs().isEmpty())
-        mPlots.removeOne(plot);
+        removePlot(plot);
 
     // Check our graph panels and their graphs
 
@@ -3493,6 +3492,17 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::Gr
     // plots are up to date
 
     graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot)
+{
+    // Stop tracking the given plot
+qDebug("Removing %p from mPlots...", pPlot);
+
+    mPlots.removeOne(pPlot);
+    mUpdatablePlotViewports.remove(pPlot);
 }
 
 //==============================================================================

@@ -252,6 +252,7 @@ private:
 
     void updateInvalidModelMessageWidget();
 
+    void removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot);
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     bool pCanSetAxes = true, bool pForceReplot = false);
 
