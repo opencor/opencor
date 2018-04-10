@@ -344,8 +344,7 @@ private slots:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                         bool pActive);
+    void graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
     void graphPanelRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,

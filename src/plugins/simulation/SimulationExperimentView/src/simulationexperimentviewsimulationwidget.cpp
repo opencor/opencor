@@ -3299,11 +3299,8 @@ void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Prop
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               bool pActive)
+void SimulationExperimentViewSimulationWidget::graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    Q_UNUSED(pActive);
-
     // Keep track of the fact that we want to know if a graph panel's plot's
     // axes have been changed
     // Note: we don't need to keep track of the graph panel's plot (in mPlots)
