@@ -3377,11 +3377,8 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                          GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                          const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
+                                                          GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
-    Q_UNUSED(pGraphProperties);
-
     // A new graph has been added, so add runs to it, if our simulation has some
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)

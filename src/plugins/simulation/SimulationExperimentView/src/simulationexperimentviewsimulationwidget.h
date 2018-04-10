@@ -352,8 +352,7 @@ private slots:
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                    const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
+                    GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
