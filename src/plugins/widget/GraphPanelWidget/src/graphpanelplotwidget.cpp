@@ -407,7 +407,7 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
 
 const QPen & GraphPanelPlotGraph::pen() const
 {
-    // Return the pen of our current (i.e. last) run
+    // Return the pen of our dummy run
 
     Q_ASSERT(mDummyRun);
 
@@ -432,7 +432,7 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
 const QwtSymbol * GraphPanelPlotGraph::symbol() const
 {
-    // Return the symbol of our current (i.e. last) run
+    // Return the symbol of our dummy run
 
     Q_ASSERT(mDummyRun);
 
@@ -473,7 +473,7 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 
 bool GraphPanelPlotGraph::isVisible() const
 {
-    // Return whether our current (i.e. last) run is visible
+    // Return whether our dummy run is visible
 
     Q_ASSERT(mDummyRun);
 
