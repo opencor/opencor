@@ -390,9 +390,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    // Remove all our graphs
+    // Remove all the graphs associated with the given graph panel
 
-    removeAllGraphs();
+    pGraphPanel->removeAllGraphs();
 
     // Remove track of the link betwen our graph panel and our graph panel and
     // graphs property editors
