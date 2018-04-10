@@ -892,9 +892,7 @@ set(PLUGINS
     widget/WebViewerWidget
 )
 set(PLUGINS
-    miscellaneous/Core
-
-    support/QScintillaSupport
+    thirdParty/QScintilla
 )
 
 if(ENABLE_TEST_PLUGINS)
