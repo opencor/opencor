@@ -123,6 +123,16 @@ ELSE()
     SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
 ENDIF()
 
+# Allow other packages to use our scripts
+
+IF(WIN32)
+    SET(SPHINX_BUILD_EXECUTABLE sphinx-build.exe)
+ELSE()
+    SET(SPHINX_BUILD_EXECUTABLE sphinx-build)
+ENDIF()
+
+SET(SPHINX_BUILD_EXECUTABLE ${PYTHON_ROOT_DIR}/bin/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE)
+
 # Add the plugin
 
 ADD_PLUGIN(PythonPackages
