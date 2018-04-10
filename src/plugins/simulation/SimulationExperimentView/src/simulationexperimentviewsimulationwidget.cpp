@@ -3496,7 +3496,6 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::Gr
 void SimulationExperimentViewSimulationWidget::removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot)
 {
     // Stop tracking the given plot
-qDebug("Removing %p from mPlots...", pPlot);
 
     mPlots.removeOne(pPlot);
     mUpdatablePlotViewports.remove(pPlot);
