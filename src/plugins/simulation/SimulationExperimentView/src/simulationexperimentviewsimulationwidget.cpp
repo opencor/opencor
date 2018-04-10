@@ -2434,8 +2434,8 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
         }
     }
 
-    // Go through the runtime parameters to see one of them correspond to our
-    // given SED-ML variable
+    // Go through the runtime parameters to see if one of them corresponds to
+    // our given SED-ML variable
 
     pCellmlComponent = componentName;
     pCellmlVariable = variableName+QString(variableDegree, '\'');
