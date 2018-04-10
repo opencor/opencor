@@ -12,9 +12,9 @@ SET(GIT_TAG "opencor")
 
 # Git tags of Python package installers
 
-SET(PIP_GIT_TAG "9.0.1")
-SET(SETUPTOOLS_GIT_TAG "v36.5.0")
-SET(WHEEL_GIT_TAG "0.30.0")
+SET(PIP_GIT_TAG "9.0.3")
+SET(SETUPTOOLS_GIT_TAG "v39.0.1")
+SET(WHEEL_GIT_TAG "0.31.0")
 
 # Name and version of our package
 
@@ -155,10 +155,10 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
                                               f6a8d78478101d906647651d562e9d7668b217f5)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 22786346f56097485b8542593599ff90c3005d71
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 80cf0c6ea628d3037d90ed3f458ae6b8026ff4b8
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES d87312719ed58dddbb4e16a3ad9db28776b2a4b5)
+                              SHA1_VALUES 48d8641446d5294ef7557de796f70df57d9cdaa9)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} d8a57ee388d1b25cd3c937f6d7a00d23c86f3348
