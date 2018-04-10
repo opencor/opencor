@@ -892,6 +892,8 @@ set(PLUGINS
     widget/WebViewerWidget
 )
 set(PLUGINS
+    miscellaneous/Core
+
     support/QScintillaSupport
 )
 
