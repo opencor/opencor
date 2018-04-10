@@ -632,7 +632,17 @@ void SimulationResults::deleteDataStore()
 
     delete mDataStore;
 
+    // Reset our data store and our different data store variable/s
+    // Note: this is in case we are not able to recreate a data store...
+
     mDataStore = 0;
+
+    mPoints = 0;
+
+    mConstants = DataStore::DataStoreVariables();
+    mRates = DataStore::DataStoreVariables();
+    mStates = DataStore::DataStoreVariables();
+    mAlgebraic = DataStore::DataStoreVariables();
 }
 
 //==============================================================================
