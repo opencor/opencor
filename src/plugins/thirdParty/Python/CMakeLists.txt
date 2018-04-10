@@ -254,8 +254,10 @@ ELSE()
     # The type of build
 
     IF(WIN32)
+        SET(APPLY_PATCHES ON)
         SET(BUILD_TYPE Release)
     ELSE()
+        SET(APPLY_PATCHES OFF)
         SET(BUILD_TYPE ${CMAKE_BUILD_TYPE})
     ENDIF()
 
@@ -304,6 +306,9 @@ ELSE()
             -DINSTALL_MANUAL=OFF
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
+
+            # Optionally patch sources (for Windows)
+            -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
 
             # Disable extension modules that we don't use
             # or the platform doesn't provide
