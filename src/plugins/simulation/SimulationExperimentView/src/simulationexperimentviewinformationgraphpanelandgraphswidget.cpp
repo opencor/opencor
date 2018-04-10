@@ -264,9 +264,12 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Si
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 {
-    // Clear our graph parameters context menu
+    // Clear our graph parameters context menu and the the parameters associated
+    // with our model parameter actions
 
     mGraphParametersContextMenu->clear();
+
+    mParameterActions.clear();
 }
 
 //==============================================================================
@@ -387,6 +390,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
+    // Remove all our graphs
+
+    removeAllGraphs();
+
     // Remove track of the link betwen our graph panel and our graph panel and
     // graphs property editors
 
