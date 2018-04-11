@@ -49,6 +49,9 @@ import argparse
 import subprocess
 from types import CodeType
 
+# Additional flags to be added to Python invocation
+python_flags = ['-s']
+
 windows = (os.name == 'nt')
 
 python_exe = 'python.exe' if windows else 'python'
@@ -90,13 +93,18 @@ def update_script(script_filename, new_path):
 
     add_quote = (' ' in new_path)
     new_bin = os.path.join(new_path, 'bin', python_exe)
-    if new_bin == args[0] and has_quote == add_quote:
+
+    if (new_bin == args[0]
+    and has_quote == add_quote
+    and set(args[1:]) == set(python_flags)):
         return
 
     if add_quote:
         args[0] = '%s%s%s' % (quote, new_bin, quote)
     else:
         args[0] = new_bin
+
+    args[1:] = list(set(args[1:]) | set(python_flags))
 
     logging.info('S: %s', script_filename)
     lines[0] = '#!%s\n' % ' '.join(args)
