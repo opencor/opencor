@@ -74,8 +74,8 @@ void HeunSolver::initialize(double pVoi, int pRatesStatesCount,
     delete[] mK;
     delete[] mYk;
 
-    mK = new double[pRatesStatesCount];
-    mYk = new double[pRatesStatesCount];
+    mK = new double[pRatesStatesCount] {};
+    mYk = new double[pRatesStatesCount] {};
 }
 
 //==============================================================================

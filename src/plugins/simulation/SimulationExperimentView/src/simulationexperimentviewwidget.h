@@ -130,8 +130,6 @@ private:
     QMap<QString, quint64> mSimulationResultsSizes;
     QStringList mSimulationCheckResults;
 
-    QStringList mNeedReloading;
-
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
 
 private slots:

@@ -177,7 +177,7 @@ private:
 
     Core::ToolBarWidget *mToolBarWidget;
 
-    QMenu *mSimulationDataExportDropDownMenu;
+    QMenu *mSimulationResultsExportDropDownMenu;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -195,7 +195,7 @@ private:
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
-    QAction *mSimulationDataExportAction;
+    QAction *mSimulationResultsExportAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
@@ -252,14 +252,16 @@ private:
 
     void updateInvalidModelMessageWidget();
 
+    void removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot);
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     bool pCanSetAxes = true, bool pForceReplot = false);
 
-    double * data(SimulationSupport::Simulation *pSimulation, int pRun,
-                  CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
+    double * data(SimulationSupport::Simulation *pSimulation,
+                  CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                  int pRun) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         int pRun, quint64 pSize);
+                         quint64 pSize, int pRun);
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          quint64 pSize);
 
@@ -304,6 +306,8 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
+    void clearSimulationResults(bool pCheckSimulationResults);
+
 signals:
     void splitterMoved(const QIntList &pSizes);
 
@@ -325,7 +329,7 @@ private slots:
 
     void emitSplitterMoved();
 
-    void simulationDataExport();
+    void simulationResultsExport();
 
     void updateDelayValue(double pDelayValue);
 
@@ -343,16 +347,14 @@ private slots:
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
 
-    void graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                         bool pActive);
+    void graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
     void graphPanelRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
     void addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
     void graphAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                    const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
+                    GraphPanelWidget::GraphPanelPlotGraph *pGraph);
     void graphsRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                        const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 

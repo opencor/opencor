@@ -407,7 +407,7 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
 
 const QPen & GraphPanelPlotGraph::pen() const
 {
-    // Return the pen of our current (i.e. last) run
+    // Return the pen of our dummy run
 
     Q_ASSERT(mDummyRun);
 
@@ -432,7 +432,7 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
 const QwtSymbol * GraphPanelPlotGraph::symbol() const
 {
-    // Return the symbol of our current (i.e. last) run
+    // Return the symbol of our dummy run
 
     Q_ASSERT(mDummyRun);
 
@@ -473,7 +473,7 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 
 bool GraphPanelPlotGraph::isVisible() const
 {
-    // Return whether our current (i.e. last) run is visible
+    // Return whether our dummy run is visible
 
     Q_ASSERT(mDummyRun);
 
@@ -889,8 +889,8 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
     QPointF point = mOwner->canvasPoint(pPoint);
-    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
-                                                      QLocale().toString(point.y(), 'g', 15));
+    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15))
+                                                 .arg(QLocale().toString(point.y(), 'g', 15));
     QPen pen = pPainter->pen();
 
     pen.setStyle(Qt::SolidLine);

@@ -483,16 +483,16 @@ void SimulationData::createArrays()
     if (runtime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[runtime->constantsCount()];
-        mRates = new double[runtime->ratesCount()];
-        mStates = new double[runtime->statesCount()];
-        mDummyStates = new double[runtime->statesCount()];
-        mAlgebraic = new double[runtime->algebraicCount()];
+        mConstants = new double[runtime->constantsCount()] {};
+        mRates = new double[runtime->ratesCount()] {};
+        mStates = new double[runtime->statesCount()] {};
+        mDummyStates = new double[runtime->statesCount()] {};
+        mAlgebraic = new double[runtime->algebraicCount()] {};
 
         // Create our various arrays to keep track of our various initial values
 
-        mInitialConstants = new double[runtime->constantsCount()];
-        mInitialStates = new double[runtime->statesCount()];
+        mInitialConstants = new double[runtime->constantsCount()] {};
+        mInitialStates = new double[runtime->statesCount()] {};
     } else {
         mConstants = mRates = mStates = mDummyStates = mAlgebraic = 0;
         mInitialConstants = mInitialStates = 0;
@@ -632,7 +632,17 @@ void SimulationResults::deleteDataStore()
 
     delete mDataStore;
 
+    // Reset our data store and our different data store variable/s
+    // Note: this is in case we are not able to recreate a data store...
+
     mDataStore = 0;
+
+    mPoints = 0;
+
+    mConstants = DataStore::DataStoreVariables();
+    mRates = DataStore::DataStoreVariables();
+    mStates = DataStore::DataStoreVariables();
+    mAlgebraic = DataStore::DataStoreVariables();
 }
 
 //==============================================================================

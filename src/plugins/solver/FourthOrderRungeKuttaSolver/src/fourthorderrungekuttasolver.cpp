@@ -78,9 +78,9 @@ void FourthOrderRungeKuttaSolver::initialize(double pVoi, int pRatesStatesCount,
     delete[] mK23;
     delete[] mYk123;
 
-    mK1 = new double[pRatesStatesCount];
-    mK23 = new double[pRatesStatesCount];
-    mYk123 = new double[pRatesStatesCount];
+    mK1 = new double[pRatesStatesCount] {};
+    mK23 = new double[pRatesStatesCount] {};
+    mYk123 = new double[pRatesStatesCount] {};
 }
 
 //==============================================================================
