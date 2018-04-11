@@ -54,10 +54,11 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 47119dd449b75490a90c18d8cc71945af080247f
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} e17dc11f97286835ae91785c3704ca45968716aa
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 97949f3f839adab391fc785d8f7459f569f63a4f)
+                                  SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
