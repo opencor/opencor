@@ -256,11 +256,12 @@ private:
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                     bool pCanSetAxes = true, bool pForceReplot = false);
 
-    double * data(SimulationSupport::Simulation *pSimulation, int pRun,
-                  CellMLSupport::CellmlFileRuntimeParameter *pParameter) const;
+    double * data(SimulationSupport::Simulation *pSimulation,
+                  CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                  int pRun) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         int pRun, quint64 pSize);
+                         quint64 pSize, int pRun);
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          quint64 pSize);
 

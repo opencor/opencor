@@ -1177,10 +1177,10 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         // Only export our simulation to a SED-ML file if we are not dealing
         // with a new SED-ML file
         // Note: indeed, if we were to do that, we would end up with an
-        //       unloadable SED-ML file (since since it doesn’t contain
-        //       everything it should). So, instead, we should just save our
-        //       default SED-ML template, i.e. as if we were to save the SED-ML
-        //       file using the Raw SED-ML or Raw Text view...
+        //       unloadable SED-ML file (since it doesn’t contain everything it
+        //       should). So, instead, we should just save our default SED-ML
+        //       template, i.e. as if we were to save the SED-ML file using the
+        //       Raw SED-ML or Raw Text view...
 
         if (Core::FileManager::instance()->isNew(mSimulation->fileName()))
             QFile::copy(mSimulation->fileName(), pFileName);
@@ -3400,7 +3400,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::Grap
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
-        updateGraphData(pGraph, i, mSimulation->results()->size(i));
+        updateGraphData(pGraph, mSimulation->results()->size(i), i);
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
@@ -3657,8 +3657,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 //==============================================================================
 
 double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
-                                                        int pRun,
-                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                                                        int pRun) const
 {
     // Return the array of data points associated with the given parameter
 
@@ -3685,16 +3685,16 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               int pRun,
-                                                               quint64 pSize)
+                                                               quint64 pSize,
+                                                               int pRun)
 {
     // Update our graph's data from the given run
 
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setData(data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                        data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+        pGraph->setData(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX()), pRun),
+                        data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY()), pRun),
                         pSize, pRun);
     }
 }
@@ -3706,7 +3706,7 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
 {
     // Update our graph's data from the last run
 
-    updateGraphData(pGraph, -1, pSize);
+    updateGraphData(pGraph, pSize, -1);
 }
 
 //==============================================================================
