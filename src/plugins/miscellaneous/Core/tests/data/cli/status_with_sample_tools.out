@@ -10,6 +10,7 @@ The following plugins are available:
  - EditorWidget: the plugin is loaded and fully functional.
  - LLVMClang: the plugin is loaded and fully functional.
  - MathMLViewerWidget: the plugin is loaded and fully functional.
+ - OpenSSL: the plugin is loaded and fully functional.
  - Python: the plugin is loaded and fully functional.
  - QScintilla: the plugin is loaded and fully functional.
  - QScintillaSupport: the plugin is loaded and fully functional.
@@ -17,3 +18,4 @@ The following plugins are available:
  - Sample: the plugin is loaded and fully functional.
  - SampleTools: the plugin is loaded and fully functional.
  - StandardSupport: the plugin is loaded and fully functional.
+ - zlib: the plugin is loaded and fully functional.
