@@ -31,10 +31,10 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 set(LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages)
 
-# Package the `bin`, `include` and `lib` directories
+# Directories we package
 
 set(PACKAGED_FILES
-    bin
+    ${PYTHON_RELATIVE_SCRIPT_DIR}
     ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages
 )
 

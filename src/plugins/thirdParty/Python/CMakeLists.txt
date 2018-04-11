@@ -63,14 +63,16 @@ else()
     set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/..)
 endif()
 
-# Include and library directories
+# Include, library and script directories
 
 if(WIN32)
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
+    set(SCRIPT_DIR Scripts)
 else()
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
+    set(SCRIPT_DIR bin)
 endif()
 
 # Retrieve our package's binaries
@@ -548,6 +550,9 @@ else()
 endif()
 
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} PARENT_SCOPE)
+
+set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
+set(PYTHON_SCRIPT_DIR  ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
 
 set(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
 set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
