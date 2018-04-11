@@ -38,10 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <algorithm>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CVODESSolver {
 
@@ -120,8 +116,6 @@ CvodesSolver::CvodesSolver() :
     mMatrix(0),
     mLinearSolver(0),
     mUserData(0),
-    mSensitivityVectors(0),
-    mSensitivityVectorsSize(0),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
@@ -141,9 +135,6 @@ CvodesSolver::~CvodesSolver()
     SUNLinSolFree(mLinearSolver);
     SUNMatDestroy(mMatrix);
 
-    if (mSensitivityVectors)
-        N_VDestroyVectorArray_Serial(mSensitivityVectors, mSensitivityVectorsSize);
-
     CVodeFree(&mSolver);
 
     delete mUserData;
@@ -155,19 +146,6 @@ void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
                               double *pConstants, double *pRates,
                               double *pStates, double *pAlgebraic,
                               ComputeRatesFunction pComputeRates)
-{
-    initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates, 0, 0, 0);
-}
-
-//==============================================================================
-
-void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
-                              double *pConstants, double *pRates,
-                              double *pStates, double *pAlgebraic,
-                              ComputeRatesFunction pComputeRates,
-                              const int &pGradientsCount,
-                              int *pGradientsIndices,
-                              double *pGradients)
 {
     // Retrieve our properties
 
@@ -408,38 +386,6 @@ void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
     // Set our relative and absolute tolerances
 
     CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
-
-    // See if we are performing a sensitivity analysis
-
-    if (pGradientsCount && pGradients) {
-
-        // The number of constants that state variables have gradients computed
-
-        mSensitivityVectorsSize = pGradientsCount;
-
-        // Allocate senstivity vectors
-
-        mSensitivityVectors = N_VCloneVectorArrayEmpty_Serial(mSensitivityVectorsSize, mStatesVector);
-
-        for (int i = 0; i < mSensitivityVectorsSize; i++) {
-            NV_DATA_S(mSensitivityVectors[i]) = pGradients;
-            pGradients += pRatesStatesCount;
-        }
-
-        // Initialise sensitivity code
-
-        CVodeSensInit1(mSolver, mSensitivityVectorsSize, CV_SIMULTANEOUS, NULL, mSensitivityVectors);
-
-        CVodeSensEEtolerances(mSolver);
-
-        CVodeSetSensErrCon(mSolver, SUNTRUE);
-
-        CVodeSetSensDQMethod(mSolver, CV_CENTERED, 0.0);
-
-        // Specify which constants will have gradients calculated
-
-        CVodeSetSensParams(mSolver, mUserData->constants(), NULL, pGradientsIndices);
-    }
 }
 
 //==============================================================================
@@ -449,11 +395,6 @@ void CvodesSolver::reinitialize(double pVoi)
     // Reinitialise our CVODES object
 
     CVodeReInit(mSolver, pVoi, mStatesVector);
-
-    // Reinitialise sensitivity analysis
-
-    if (mSensitivityVectors)
-        CVodeSensReInit(mSolver, CV_SIMULTANEOUS, mSensitivityVectors);
 }
 
 //==============================================================================
@@ -465,22 +406,17 @@ void CvodesSolver::solve(double &pVoi, double pVoiEnd) const
     if (!mInterpolateSolution)
         CVodeSetStopTime(mSolver, pVoiEnd);
 
-    if (CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL) >= 0) {
-        // Get the sensitivity solution vectors if we are doing sensitivity analysis
+    CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 
-        if (mSensitivityVectors)
-            CVodeGetSens(mSolver, &pVoi, mSensitivityVectors);
+    // Compute the rates one more time to get up to date values for the rates
+    // Note: another way of doing this would be to copy the contents of the
+    //       calculated rates in rhsFunction, but that's bound to be more time
+    //       consuming since a call to CVode() is likely to generate at least a
+    //       few calls to rhsFunction(), so that would be quite a few memory
+    //       transfers while here we 'only' compute the rates one more time...
 
-        // Compute the rates one more time to get up to date values for the rates
-        // Note: another way of doing this would be to copy the contents of the
-        //       calculated rates in rhsFunction, but that's bound to be more time
-        //       consuming since a call to CVode() is likely to generate at least a
-        //       few calls to rhsFunction(), so that would be quite a few memory
-        //       transfers while here we 'only' compute the rates one more time...
-
-        mComputeRates(pVoiEnd, mConstants, mRates,
-                      N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
-    }
+    mComputeRates(pVoiEnd, mConstants, mRates,
+                  N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);
 }
 
 //==============================================================================
