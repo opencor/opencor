@@ -188,7 +188,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mResetModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
     connect(mClearSimulationResultsAction, &QAction::triggered,
-            this, &SimulationExperimentViewSimulationWidget::clearSimulationResults);
+            this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::clearSimulationResults));
     connect(mDevelopmentModeAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::developmentMode);
     connect(mAddGraphPanelAction, &QAction::triggered,
@@ -917,7 +917,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
         //       mode, so we are fine...
 
         if (pReloadingView)
-            clearSimulationResults();
+            clearSimulationResults(false);
         else
             updateSimulationMode();
 
@@ -1367,7 +1367,7 @@ void SimulationExperimentViewSimulationWidget::resetModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationResults()
+void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pCheckSimulationResults)
 {
     // Clear our simulation results
     // Note: we temporarily disable updates to prevent the GUI from taking too
@@ -1378,13 +1378,23 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 
     mSimulation->results()->reset();
 
-    // Update our simulation mode and check for results
+    // Update our simulation mode and check for results, if requested
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+    if (pCheckSimulationResults)
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
 
     setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::clearSimulationResults()
+{
+    // Clear our simulation results
+
+    clearSimulationResults(true);
 }
 
 //==============================================================================

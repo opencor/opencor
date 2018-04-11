@@ -305,6 +305,8 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
+    void clearSimulationResults(bool pCheckSimulationResults);
+
 signals:
     void splitterMoved(const QIntList &pSizes);
 
