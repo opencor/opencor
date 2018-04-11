@@ -540,15 +540,20 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     if (   simulation->isRunning()
         || (simulationResultsSize != simulation->results()->size())) {
-        // Note: we cannot ask QTimer::singleShot() to call
-        //       checkSimulationResults() directly since it expects a file name
-        //       as a parameter, so instead we call a method with no arguments
-        //       that will make use of our list to know which file name should
-        //       be passed as an argument to checkSimulationResults()...
+        // Note #1: we cannot ask QTimer::singleShot() to call
+        //          checkSimulationResults() directly since it expects a file
+        //          name as a parameter, so instead we call a method with no
+        //          arguments that will make use of our list to know which file
+        //          name should be passed as an argument to
+        //          checkSimulationResults()...
+        // Note #2: we would normally use the new signal/slot mechanism, but it
+        //          won't call callCheckSimulationResults() as often as we would
+        //          expect, so we use the old mechanism instead (see issue
+        //          #1613)...
 
         mSimulationCheckResults << pFileName;
 
-        QTimer::singleShot(0, this, &SimulationExperimentViewWidget::callCheckSimulationResults);
+        QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
         // the simulation progress of the given file
