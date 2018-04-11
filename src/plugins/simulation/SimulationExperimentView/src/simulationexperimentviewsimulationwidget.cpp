@@ -188,7 +188,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(mResetModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
     connect(mClearSimulationResultsAction, &QAction::triggered,
-            this, &SimulationExperimentViewSimulationWidget::clearSimulationResults);
+            this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::clearSimulationResults));
     connect(mDevelopmentModeAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::developmentMode);
     connect(mAddGraphPanelAction, &QAction::triggered,
@@ -917,7 +917,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
         //       mode, so we are fine...
 
         if (pReloadingView)
-            clearSimulationResults();
+            clearSimulationResults(false);
         else
             updateSimulationMode();
 
@@ -1177,10 +1177,10 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         // Only export our simulation to a SED-ML file if we are not dealing
         // with a new SED-ML file
         // Note: indeed, if we were to do that, we would end up with an
-        //       unloadable SED-ML file (since since it doesn’t contain
-        //       everything it should). So, instead, we should just save our
-        //       default SED-ML template, i.e. as if we were to save the SED-ML
-        //       file using the Raw SED-ML or Raw Text view...
+        //       unloadable SED-ML file (since it doesn’t contain everything it
+        //       should). So, instead, we should just save our default SED-ML
+        //       template, i.e. as if we were to save the SED-ML file using the
+        //       Raw SED-ML or Raw Text view...
 
         if (Core::FileManager::instance()->isNew(mSimulation->fileName()))
             QFile::copy(mSimulation->fileName(), pFileName);
@@ -1367,7 +1367,7 @@ void SimulationExperimentViewSimulationWidget::resetModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationResults()
+void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pCheckSimulationResults)
 {
     // Clear our simulation results
     // Note: we temporarily disable updates to prevent the GUI from taking too
@@ -1378,13 +1378,23 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 
     mSimulation->results()->reset();
 
-    // Update our simulation mode and check for results
+    // Update our simulation mode and check for results, if requested
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+    if (pCheckSimulationResults)
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
 
     setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::clearSimulationResults()
+{
+    // Clear our simulation results
+
+    clearSimulationResults(true);
 }
 
 //==============================================================================
@@ -2434,8 +2444,8 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
         }
     }
 
-    // Go through the runtime parameters to see one of them correspond to our
-    // given SED-ML variable
+    // Go through the runtime parameters to see if one of them corresponds to
+    // our given SED-ML variable
 
     pCellmlComponent = componentName;
     pCellmlVariable = variableName+QString(variableDegree, '\'');
@@ -3299,11 +3309,8 @@ void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Prop
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               bool pActive)
+void SimulationExperimentViewSimulationWidget::graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    Q_UNUSED(pActive);
-
     // Keep track of the fact that we want to know if a graph panel's plot's
     // axes have been changed
     // Note: we don't need to keep track of the graph panel's plot (in mPlots)
@@ -3357,8 +3364,7 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(GraphPanelWidge
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    mPlots.removeOne(plot);
-    mUpdatablePlotViewports.remove(plot);
+    removePlot(plot);
 
     // Check our graph panels and their graphs
 
@@ -3378,11 +3384,8 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                          GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                          const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
+                                                          GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
-    Q_UNUSED(pGraphProperties);
-
     // A new graph has been added, so add runs to it, if our simulation has some
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
@@ -3397,7 +3400,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::Grap
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
-        updateGraphData(pGraph, i, mSimulation->results()->size(i));
+        updateGraphData(pGraph, mSimulation->results()->size(i), i);
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
@@ -3435,7 +3438,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::G
     // Note: this ensures that our plot is updated at once...
 
     if (plot->graphs().isEmpty())
-        mPlots.removeOne(plot);
+        removePlot(plot);
 
     // Check our graph panels and their graphs
 
@@ -3493,6 +3496,16 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::Gr
     // plots are up to date
 
     graphsUpdated(GraphPanelWidget::GraphPanelPlotGraphs() << pGraph);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot)
+{
+    // Stop tracking the given plot
+
+    mPlots.removeOne(pPlot);
+    mUpdatablePlotViewports.remove(pPlot);
 }
 
 //==============================================================================
@@ -3644,8 +3657,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 //==============================================================================
 
 double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
-                                                        int pRun,
-                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                                                        int pRun) const
 {
     // Return the array of data points associated with the given parameter
 
@@ -3672,16 +3685,16 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               int pRun,
-                                                               quint64 pSize)
+                                                               quint64 pSize,
+                                                               int pRun)
 {
     // Update our graph's data from the given run
 
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setData(data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                        data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+        pGraph->setData(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX()), pRun),
+                        data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY()), pRun),
                         pSize, pRun);
     }
 }
@@ -3693,7 +3706,7 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
 {
     // Update our graph's data from the last run
 
-    updateGraphData(pGraph, -1, pSize);
+    updateGraphData(pGraph, pSize, -1);
 }
 
 //==============================================================================
