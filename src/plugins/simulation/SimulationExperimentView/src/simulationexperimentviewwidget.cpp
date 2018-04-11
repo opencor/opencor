@@ -541,11 +541,10 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     if (   simulation->isRunning()
         || (simulationResultsSize != simulation->results()->size())) {
         // Note: we cannot ask QTimer::singleShot() to call
-        //       callCheckSimulationResults() since it expects a simulation
-        //       widget as a parameter, so instead we call a method with no
-        //       arguments that will make use of our list to know which
-        //       simulation should be passed as an argument to
-        //       checkSimulationResults()...
+        //       checkSimulationResults() directly since it expects a file name
+        //       as a parameter, so instead we call a method with no arguments
+        //       that will make use of our list to know which file name should
+        //       be passed as an argument to checkSimulationResults()...
 
         mSimulationCheckResults << pFileName;
 
