@@ -94,12 +94,11 @@ int PythonPlugin::executeCommand(const QString &pCommand,
 
         return runPythonShell(pArguments);
     } else {
-        // Not a CLI command that we support so take
-        // it as the name of a module to run
+        // Not a CLI command that we support, so show our help and leave
 
-        QStringList arguments = QStringList() << "-m" << pCommand << pArguments;
+        runHelpCommand();
 
-        return runPythonShell(arguments);
+        return -1;
     }
 }
 
@@ -232,8 +231,7 @@ void PythonPlugin::runHelpCommand()
     std::cout << "      help" << std::endl;
     std::cout << " * Run a Python module:" << std::endl;
     std::cout << "      MODULE_NAME ..." << std::endl;
-    std::cout << " * Run a Python interpreter:" << std::endl;
-    std::cout << "      shell ..." << std::endl;
+    std::cout << " * Run a Python interpreter." << std::endl;
 }
 
 //==============================================================================
