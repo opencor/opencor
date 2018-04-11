@@ -90,24 +90,40 @@ else()
 
     # Use our installed pip
 
+    file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
+
     set(PIP_INSTALL_COMMAND
         ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
         ${PYTHON_EXECUTABLE} -s -m
-        pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+        pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
                     --upgrade --upgrade-strategy only-if-needed)
 
-    # Install other packages we use
+    # Install Sphinx
 
-    add_custom_target(other_packages
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            sphinx==${SPHINX_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+    if(NOT WIN32)
+        add_custom_target(install_sphinx
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                sphinx==${SPHINX_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+    else()
+        # For Windows we need to explicitly install Sphinx to create
+        # the `*-script-py` files that can then be modified at OpenCOR
+        # installation time to reference our newly installed Python.
 
-    add_dependencies(${PACKAGE_BUILD} other_packages)
-    add_dependencies(other_packages ${BUILD_DEPENDENCIES})
+        add_custom_target(install_sphinx
+            COMMAND ${PIP_INSTALL_COMMAND}
+                https://github.com/opencor/sphinx/archive/v${SPHINX_VERSION}.tar.gz
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+    endif()
+
+    add_dependencies(${PACKAGE_BUILD} install_sphinx)
+    add_dependencies(install_sphinx ${BUILD_DEPENDENCIES})
 
     # Package the newly installed Python packages
 
@@ -131,7 +147,7 @@ else()
     set(SPHINX_BUILD_EXECUTABLE sphinx-build)
 endif()
 
-set(SPHINX_BUILD_EXECUTABLE ${PYTHON_ROOT_DIR}/bin/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE)
+set(SPHINX_BUILD_EXECUTABLE ${PYTHON_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE)
 
 # Add the plugin
 
