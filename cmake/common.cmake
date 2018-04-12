@@ -275,8 +275,8 @@ macro(add_plugin PLUGIN_NAME)
         # Copy the entire source directory to the destination
 
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy_directory
-                                ${ARG_EXTERNAL_SOURCE_DIR} ${ARG_EXTERNAL_DESTINATION_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
+                                                                      ${ARG_EXTERNAL_DESTINATION_DIR})
     endif()
 
     # System binaries
