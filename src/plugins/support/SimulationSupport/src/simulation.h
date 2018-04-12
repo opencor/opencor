@@ -189,6 +189,11 @@ private:
     DataStore::DataStoreArray *mStates;
     DataStore::DataStoreArray *mAlgebraic;
 
+    DataStore::DataStoreValues *mConstantsValues;
+    DataStore::DataStoreValues *mRatesValues;
+    DataStore::DataStoreValues *mStatesValues;
+    DataStore::DataStoreValues *mAlgebraicValues;
+
     double *mDummyStates;
     double *mInitialConstants;
     double *mInitialStates;

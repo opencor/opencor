@@ -69,6 +69,7 @@ typedef struct {
 
 class DataStore;
 class DataStoreArray;
+class DataStoreValues;
 class DataStoreVariable;
 class DataStoreVariables;
 
@@ -86,7 +87,7 @@ public:
     static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreArray *pDataStoreArray);
     static DATASTORE_EXPORT PyObject * newNumPyArray(DataStoreVariable *pDataStoreVariable, const int &pRun);
 
-    static DATASTORE_EXPORT PyObject *dataStoreValuesDict(const DataStoreVariables &pDataStoreVariables,
+    static DATASTORE_EXPORT PyObject *dataStoreValuesDict(const DataStoreValues *pDataStoreValues,
                                                           SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction=NULL);
     static DATASTORE_EXPORT PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 

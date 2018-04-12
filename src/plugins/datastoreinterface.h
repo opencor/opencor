@@ -66,6 +66,40 @@ private:
 
 //==============================================================================
 
+class DataStoreValue : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreValue(double *pValue = 0);
+    ~DataStoreValue();
+
+    void setUri(const QString &pUri);
+
+public slots:
+    QString uri() const;
+
+    double value() const;
+    void setValue(double pValue);
+
+private:
+    QString mUri;
+
+    double *mValue;
+};
+
+//==============================================================================
+
+class DataStoreValues : public QList<DataStoreValue *>
+{
+public:
+    explicit DataStoreValues();
+    explicit DataStoreValues(DataStoreArray *pDataStoreArray);
+    ~DataStoreValues();
+};
+
+//==============================================================================
+
 class DataStoreVariableRun
 {
 public:

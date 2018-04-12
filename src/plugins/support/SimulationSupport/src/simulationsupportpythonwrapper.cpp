@@ -180,7 +180,7 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
 PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulationData) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->mSimulationResults->mAlgebraic,
+        pSimulationData->algebraicValues(),
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
@@ -189,7 +189,7 @@ PyObject * SimulationSupportPythonWrapper::algebraic(SimulationData *pSimulation
 PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulationData) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->mSimulationResults->mConstants,
+        pSimulationData->constantsValues(),
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
@@ -198,7 +198,7 @@ PyObject * SimulationSupportPythonWrapper::constants(SimulationData *pSimulation
 PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->mSimulationResults->mRates,
+        pSimulationData->ratesValues(),
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 
@@ -207,7 +207,7 @@ PyObject * SimulationSupportPythonWrapper::rates(SimulationData *pSimulationData
 PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationData) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreValuesDict(
-        pSimulationData->mSimulationResults->mStates,
+        pSimulationData->statesValues(),
         &(pSimulationData->mSimulationDataUpdatedFunction));
 }
 

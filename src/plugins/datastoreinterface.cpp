@@ -123,6 +123,95 @@ void DataStoreArray::incRef()
 
 //==============================================================================
 
+DataStoreValue::DataStoreValue(double *pValue) :
+    mUri(QString()),
+    mValue(pValue)
+{
+}
+
+//==============================================================================
+
+DataStoreValue::~DataStoreValue()
+{
+}
+
+//==============================================================================
+
+void DataStoreValue::setUri(const QString &pUri)
+{
+    // Set our URI
+
+    mUri = pUri;
+}
+
+//==============================================================================
+
+QString DataStoreValue::uri() const
+{
+    // Return our URI
+
+    return mUri;
+}
+
+//==============================================================================
+
+double DataStoreValue::value() const
+{
+    // Return our value
+
+    Q_ASSERT(mValue);
+
+    return *mValue;
+}
+
+//==============================================================================
+
+void DataStoreValue::setValue(double pValue)
+{
+    // Set our value
+
+    Q_ASSERT(mValue);
+
+    *mValue = pValue;
+}
+
+//==============================================================================
+
+DataStoreValues::DataStoreValues()
+{
+}
+
+//==============================================================================
+
+DataStoreValues::DataStoreValues(DataStoreArray *pDataStoreArray)
+{
+    // Create a list of DataStoreValues
+
+    double *d = pDataStoreArray->data();
+    int i = pDataStoreArray->size();
+
+    while (i-- > 0) {
+        auto v = new DataStoreValue(d);
+        *this << v;
+        ++d;
+    }
+}
+
+//==============================================================================
+
+DataStoreValues::~DataStoreValues()
+{
+    // Delete our DataStoreValues
+
+    while (count() > 0) {
+        delete last();
+
+        removeLast();
+    }
+}
+
+//==============================================================================
+
 DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
     mCapacity(pCapacity),
     mSize(0),

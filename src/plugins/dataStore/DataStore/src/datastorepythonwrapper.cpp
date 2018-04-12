@@ -51,18 +51,18 @@ static bool init_numpy()
 
 //==============================================================================
 
-static DataStoreVariable *getVariable(PyObject *valuesDict, PyObject *key)
+static DataStoreValue *getDataStoreValue(PyObject *valuesDict, PyObject *key)
 {
-    DataStoreVariable *variable = 0;
+    DataStoreValue *dataStoreValue = 0;
 
     PyObject *obj = PyDict_GetItem(valuesDict, key);
 
     if (obj && PyObject_TypeCheck(obj, &PythonQtInstanceWrapper_Type)) {
         PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)obj;
-        variable = (DataStoreVariable *)wrap->_objPointerCopy;
+        dataStoreValue = (DataStoreValue *)wrap->_objPointerCopy;
     }
 
-    return variable;
+    return dataStoreValue;
 }
 
 //==============================================================================
@@ -71,10 +71,10 @@ static DataStoreVariable *getVariable(PyObject *valuesDict, PyObject *key)
 
 static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *key)
 {
-    DataStoreVariable *variable = getVariable(valuesDict, key);
+    auto *dataStoreValue = getDataStoreValue(valuesDict, key);
 
-    if (variable) {
-        return PyFloat_FromDouble(variable->getValue());
+    if (dataStoreValue) {
+        return PyFloat_FromDouble(dataStoreValue->value());
     } else {
         Py_RETURN_NONE;
     }
@@ -91,13 +91,13 @@ static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key
     }
 
     else if (PyNumber_Check(value)) {
-        DataStoreVariable *variable = getVariable(valuesDict, key);
+        auto *dataStoreValue = getDataStoreValue(valuesDict, key);
 
-        if (variable) {
-            double newValue = PyFloat_AS_DOUBLE(PyNumber_Float(value));
+        if (dataStoreValue) {
+            auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(value));
 
-            if (variable->getValue() != newValue) {
-                variable->setValue(newValue);
+            if (dataStoreValue->value() != newValue) {
+                dataStoreValue->setValue(newValue);
 
                 // Let our SimulationData object know that data values have changed
 
@@ -187,9 +187,9 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
 
         if (PyObject_TypeCheck(value, &PythonQtInstanceWrapper_Type)) {
             PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)value;
-            DataStoreVariable *variable = (DataStoreVariable *)wrap->_objPointerCopy;
+            DataStoreValue *dataStoreValue = (DataStoreValue *)wrap->_objPointerCopy;
             Py_CLEAR(value);
-            value = PyFloat_FromDouble(variable->getValue());
+            value = PyFloat_FromDouble(dataStoreValue->value());
         }
 
         s = PyObject_Repr(value);
@@ -227,8 +227,8 @@ error:
 #   pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
-// A `DataStoreValuesDict` is a dictionary sub-class for mapping between the next values
-// of a DataStoreVariables list and Python.
+// A `DataStoreValuesDict` is a dictionary sub-class for mapping between the values
+// of a DataStoreValues list and Python.
 
 PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
@@ -283,6 +283,7 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pPare
     PyType_Ready(&DataStoreValuesDict_Type);
 
     PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStore::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStoreValue::staticMetaObject);
     PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStoreVariable::staticMetaObject);
 
     PythonQtSupport::addInstanceDecorators(this);
@@ -336,7 +337,7 @@ PyObject * DataStorePythonWrapper::values(DataStoreVariable *pDataStoreVariable,
 //==============================================================================
 
 PyObject * DataStorePythonWrapper::dataStoreValuesDict(
-    const DataStoreVariables &pDataStoreVariables,
+    const DataStoreValues *pDataStoreValues,
     SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
     PyObject *valuesDict = PyDict_Type.tp_new(&DataStoreValuesDict_Type, NULL, NULL);
@@ -344,8 +345,11 @@ PyObject * DataStorePythonWrapper::dataStoreValuesDict(
 
     ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
 
-    foreach (DataStoreVariable *variable, pDataStoreVariables)
-        PythonQtSupport::addObject(valuesDict, variable->uri(), variable);
+    for (int i = 0; i < pDataStoreValues->size(); ++i) {
+        DataStoreValue *value = pDataStoreValues->at(i);
+
+        PythonQtSupport::addObject(valuesDict, value->uri(), value);
+    }
 
     return valuesDict;
 }

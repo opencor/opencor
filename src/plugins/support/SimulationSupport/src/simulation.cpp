@@ -137,6 +137,42 @@ double * SimulationData::algebraic() const
 
 //==============================================================================
 
+DataStore::DataStoreValues * SimulationData::constantsValues() const
+{
+    // Return our constants DataStoreValues
+
+    return mConstantsValues;
+}
+
+//==============================================================================
+
+DataStore::DataStoreValues * SimulationData::ratesValues() const
+{
+    // Return our rates DataStoreValues
+
+    return mRatesValues;
+}
+
+//==============================================================================
+
+DataStore::DataStoreValues * SimulationData::statesValues() const
+{
+    // Return our states DataStoreValues
+
+    return mStatesValues;
+}
+
+//==============================================================================
+
+DataStore::DataStoreValues * SimulationData::algebraicValues() const
+{
+    // Return our algebraic DataStoreValues
+
+    return mAlgebraicValues;
+}
+
+//==============================================================================
+
 int SimulationData::delay() const
 {
     // Return our delay
@@ -509,6 +545,13 @@ void SimulationData::createArrays()
         mStates = new DataStore::DataStoreArray(runtime->statesCount());
         mAlgebraic = new DataStore::DataStoreArray(runtime->algebraicCount());
 
+        // Create DataStoreValues to hold properties of our model's arrays
+
+        mConstantsValues = new DataStore::DataStoreValues(mConstantsArray);
+        mRatesValues = new DataStore::DataStoreValues(mRatesArray);
+        mStatesValues = new DataStore::DataStoreValues(mStatesArray);
+        mAlgebraicValues = new DataStore::DataStoreValues(mAlgebraicArray);
+
         // Create our various arrays to keep track of our various initial values
 
         mDummyStates = new double[mStates->size()];
@@ -516,6 +559,7 @@ void SimulationData::createArrays()
         mInitialStates = new double[mStates->size()];
     } else {
         mConstants = mRates = mStates = mAlgebraic = 0;
+        mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = 0;
         mDummyStates = mInitialConstants = mInitialStates = 0;
     }
 }
@@ -530,6 +574,11 @@ void SimulationData::deleteArrays()
     mRates->decRef();
     mStates->decRef();
     mAlgebraic->decRef();
+
+    delete mConstantsValues;
+    delete mRatesValues;
+    delete mStatesValues;
+    delete mAlgebraicValues;
 
     delete[] mDummyStates;
     delete[] mInitialConstants;
@@ -709,11 +758,17 @@ void SimulationResults::createDataStore()
     mStates = mDataStore->addVariables(data->states(), runtime->statesCount());
     mAlgebraic = mDataStore->addVariables(data->algebraic(), runtime->algebraicCount());
 
+    DataStore::DataStoreValues *constantsValues = data->constantsValues();
+    DataStore::DataStoreValues *ratesValues = data->ratesValues();
+    DataStore::DataStoreValues *statesValues = data->statesValues();
+    DataStore::DataStoreValues *algebraicValues = data->algebraicValues();
+
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
 
     for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
+        DataStore::DataStoreValue *value = 0;
         DataStore::DataStoreVariable *variable = 0;
 
         switch (parameter->type()) {
@@ -728,24 +783,32 @@ void SimulationResults::createDataStore()
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
         case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
             variable = mConstants[parameter->index()];
+            value = constantsValues->at(parameter->index());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Rate:
             variable = mRates[parameter->index()];
+            value = ratesValues->at(parameter->index());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::State:
             variable = mStates[parameter->index()];
+            value = statesValues->at(parameter->index());
 
             break;
         case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
             variable = mAlgebraic[parameter->index()];
+            value = algebraicValues->at(parameter->index());
 
             break;
         default:
             // Not a relevant type, so do nothing
 
             ;
+        }
+
+        if (value) {
+            value->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
         }
 
         if (variable) {
