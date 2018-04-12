@@ -995,8 +995,10 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
     # Create our destination folder, if needed
 
-    string(REPLACE "${PLATFORM_DIR}" "ext"
-           REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+    set(REAL_DIRNAME ${CMAKE_SOURCE_DIR}/${DIRNAME}/ext)
+
+    string(REGEX REPLACE "${PLATFORM_DIR}/ext$" "ext"
+           REAL_DIRNAME "${REAL_DIRNAME}")
 
     if(NOT EXISTS ${REAL_DIRNAME})
         file(MAKE_DIRECTORY ${REAL_DIRNAME})
