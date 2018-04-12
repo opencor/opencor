@@ -102,13 +102,13 @@ public slots:
 
 //==============================================================================
 
-class NumPyPythonWrapper : public QObject
+class NumpyPythonWrapper : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit NumPyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize=0);
-    ~NumPyPythonWrapper();
+    explicit NumpyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize=0);
+    ~NumpyPythonWrapper();
 
     PyObject * numpyArray() const;
     PyObject * pythonObject() const;

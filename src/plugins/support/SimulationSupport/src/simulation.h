@@ -104,6 +104,11 @@ public:
     double * states() const;
     double * algebraic() const;
 
+    DataStore::DataStoreValues * constantsValues() const;
+    DataStore::DataStoreValues * ratesValues() const;
+    DataStore::DataStoreValues * statesValues() const;
+    DataStore::DataStoreValues * algebraicValues() const;
+
     void setStartingPoint(double pStartingPoint, bool pRecompute = true);
 
     void setEndingPoint(double pEndingPoint);
@@ -184,10 +189,10 @@ private:
     QString mNlaSolverName;
     Solver::Solver::Properties mNlaSolverProperties;
 
-    DataStore::DataStoreArray *mConstants;
-    DataStore::DataStoreArray *mRates;
-    DataStore::DataStoreArray *mStates;
-    DataStore::DataStoreArray *mAlgebraic;
+    DataStore::DataStoreArray *mConstantsArray;
+    DataStore::DataStoreArray *mRatesArray;
+    DataStore::DataStoreArray *mStatesArray;
+    DataStore::DataStoreArray *mAlgebraicArray;
 
     DataStore::DataStoreValues *mConstantsValues;
     DataStore::DataStoreValues *mRatesValues;
@@ -199,7 +204,7 @@ private:
     double *mInitialStates;
 
     QVector<int> mGradientIndices;
-    DataStore::DataStoreArray *mGradients;
+    DataStore::DataStoreArray *mGradientsArray;
 
     SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 

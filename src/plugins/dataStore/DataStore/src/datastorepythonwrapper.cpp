@@ -294,7 +294,7 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pPare
 PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray)
 {
     if (pDataStoreArray) {
-        auto numpyArray = new NumPyPythonWrapper(pDataStoreArray);
+        auto numpyArray = new NumpyPythonWrapper(pDataStoreArray);
         return numpyArray->numpyArray();
     } else {
         Py_RETURN_NONE;
@@ -306,7 +306,7 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
 PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVariable, const int &pRun)
 {
     if (pDataStoreVariable && pDataStoreVariable->array(pRun)) {
-        auto numpyArray = new NumPyPythonWrapper(pDataStoreVariable->array(pRun), pDataStoreVariable->size());
+        auto numpyArray = new NumpyPythonWrapper(pDataStoreVariable->array(pRun), pDataStoreVariable->size());
         return numpyArray->numpyArray();
     } else {
         Py_RETURN_NONE;
@@ -382,7 +382,7 @@ PyObject * DataStorePythonWrapper::voiAndVariables(DataStore *pDataStore)
 
 //==============================================================================
 
-NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize) :
+NumpyPythonWrapper::NumpyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 pSize) :
     mArray(pDataStoreArray)
 {
     npy_intp dims[1];
@@ -397,21 +397,21 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 
 
 //==============================================================================
 
-NumPyPythonWrapper::~NumPyPythonWrapper()
+NumpyPythonWrapper::~NumpyPythonWrapper()
 {
     mArray->decRef();
 }
 
 //==============================================================================
 
-PyObject * NumPyPythonWrapper::numpyArray() const
+PyObject * NumpyPythonWrapper::numpyArray() const
 {
     return mNumPyArray;
 }
 
 //==============================================================================
 
-PyObject * NumPyPythonWrapper::pythonObject() const
+PyObject * NumpyPythonWrapper::pythonObject() const
 {
     return mPythonObject;
 }
