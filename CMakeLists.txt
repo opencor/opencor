@@ -24,10 +24,10 @@ option(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML AP
 
 option(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
-option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang plugin" ON)
+option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python library" ON)
+option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
@@ -375,7 +375,6 @@ if(APPLE)
         QtPrintSupport
         QtQml
         QtQuick
-        QtQuickWidgets
         QtSensors
         QtSql
         QtSvg
@@ -799,11 +798,10 @@ if(ENABLE_TESTS)
 endif()
 
 # Build our plugins
-
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
 #          former...
-# Note #2: Python thirdparty plugins must be built in order, after zlib and
+# Note #2: Python third-party plugins must be built in order, after zlib and
 #          OpenSSL, and before any other plugins...
 # Note #3: soft dependencies are determined automatically, so plugins can be
 #          listed in any order...
@@ -954,13 +952,6 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
 
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
 
-# We can't compile Python interface code until after the Python headers are in
-# place
-
-if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
-    add_dependencies(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
-endif()
-
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
@@ -968,8 +959,9 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 
 if(WIN32)
     target_link_libraries(${CMAKE_PROJECT_NAME}
-        ${Qt5Core_QTMAIN_LIBRARIES}
         ${PYTHON_LIBRARY}
+
+        ${Qt5Core_QTMAIN_LIBRARIES}
     )
 endif()
 
@@ -979,13 +971,22 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
     )
 endforeach()
 
-# Under Linux the Python library needs linking directly to the executable
-# as otherwise extension DSOs (which are loaded using dlopen()) can't find
-# symbols. (See https://www.akkadia.org/drepper/dsohowto.pdf for details.)
+# For the Python's interface code to compile, we need the Python headers to be
+# in place
+
+if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+    add_dependencies(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+endif()
+
+# Under Linux, the Python library needs to be linked directly to OpenCOR
+# otherwise extension DSOs (which are loaded using dlopen()) won't be able to
+# find symbols (see https://www.akkadia.org/drepper/dsohowto.pdf for details)
 
 if(NOT WIN32 AND NOT APPLE)
     include_directories(${PYTHON_INCLUDE_DIR})
+
     target_link_libraries(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
+
     add_dependencies(${CMAKE_PROJECT_NAME} PythonPlugin)
 endif()
 
@@ -1006,17 +1007,6 @@ if(WIN32)
         ${WINDOWS_CLI_SOURCES_RCS}
     )
 
-    # We can't compile Python interface code until after the Python headers are
-    # in place
-
-    if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
-        add_dependencies(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
-    endif()
-
-    target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
-        ${PYTHON_LIBRARY}
-    )
-
     target_compile_definitions(${WINDOWS_CLI_PROJECT_NAME}
                                PRIVATE CLI_VERSION)
 
@@ -1025,9 +1015,19 @@ if(WIN32)
     )
 
     target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
+        ${PYTHON_LIBRARY}
+
         Qt5::Core
         Qt5::Network
     )
+
+    # For the Python's interface code to compile, we need the Python headers to
+    # be in place
+
+    if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+        add_dependencies(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+    endif()
+
 endif()
 
 # Some post-processing specific stuff
@@ -1172,7 +1172,7 @@ else()
         # machines that don't have 'proper' OpenGL support (e.g. on a Linux
         # virtual machine in VirtualBox)
 
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/mesa)
+        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
     endif()
 endif()
 
@@ -1233,10 +1233,10 @@ if(WIN32)
 
     # Python runtime libraries and utilities
 
-    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
+    install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
-    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
+    install(FILES ${PROJECT_SOURCE_DIR}/distrib/windows/set_python_path.py
             DESTINATION Python/Scripts)
 
     # Qt libraries required by OpenCOR
