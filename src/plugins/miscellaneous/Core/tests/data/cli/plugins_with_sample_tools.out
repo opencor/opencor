@@ -1,5 +1,5 @@
 The following CLI plugins are available:
  - CellMLTextView: a plugin to edit CellML files using the CellML Text format.
  - CellMLTools: a plugin to access various CellML-related tools.
- - Python: a plugin to provide the Python language.
+ - Python: a plugin to access the Python language.
  - SampleTools: a plugin that provides an addition tool.

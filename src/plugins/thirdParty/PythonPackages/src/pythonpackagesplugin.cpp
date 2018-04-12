@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python site-packages plugin
+// PythonPackages plugin
 //==============================================================================
 
 #include "pythonpackagesplugin.h"
@@ -34,8 +34,8 @@ PLUGININFO_FUNC PythonPackagesPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to provide the <a href=\"https://www.python.org/\">Python</a> site-packages."));
-    descriptions.insert("fr", QString::fromUtf8("une extension ..."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://www.python.org/\">Python</a> packages."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder aux paquets <a href=\"https://www.python.org/\">Python</a>."));
 
     return new PluginInfo(PluginInfo::ThirdParty, false, false,
                           QStringList() << "Python",

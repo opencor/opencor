@@ -18,12 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python library plugin
+// Python plugin
 //==============================================================================
 
-// This must be the first include file
-
 #include "Python.h"
+// Note: this must be our first include file...
 
 //==============================================================================
 
@@ -35,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QSettings>
 
-#ifdef _WIN32
+#ifdef Q_OS_WIN
     #include <QDir>
 #endif
 
@@ -44,14 +43,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <clocale>
 #include <iostream>
 
-#ifdef _WIN32
+#ifdef Q_OS_WIN
     #include <io.h>
     #include <Windows.h>
 #else
     #include <unistd.h>
 #endif
 
-#ifdef __FreeBSD__
+#ifdef Q_OS_LINUX
     #include <fenv.h>
 #endif
 
@@ -66,11 +65,11 @@ PLUGININFO_FUNC PythonPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to provide the <a href=\"https://www.python.org/\">Python</a> language."));
-    descriptions.insert("fr", QString::fromUtf8("une extension ..."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://www.python.org/\">Python</a> language."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au langage <a href=\"https://www.python.org/\">Python</a>."));
 
     return new PluginInfo(PluginInfo::ThirdParty, false, true,
-                          QStringList() << "zlib" << "OpenSSL",
+                          QStringList() << "OpenSSL" << "zlib",
                           descriptions);
 }
 
@@ -79,9 +78,9 @@ PLUGININFO_FUNC PythonPluginInfo()
 //==============================================================================
 
 int PythonPlugin::executeCommand(const QString &pCommand,
-                                        const QStringList &pArguments)
+                                 const QStringList &pArguments)
 {
-    // Pass the given CLI command to the Python interpreter
+    // Run the given CLI command or, by default, the Python interpreter
 
     if (!pCommand.compare("help")) {
         // Display the commands that we support
@@ -92,9 +91,9 @@ int PythonPlugin::executeCommand(const QString &pCommand,
     } else if (pCommand.isEmpty() || !pCommand.compare("shell")) {
         // Run the Python interpreter
 
-        return runPythonShell(pArguments);
+        return runShellCommand(pArguments);
     } else {
-        // Not a CLI command that we support, so show our help and leave
+        // Not a CLI command that we support
 
         runHelpCommand();
 
@@ -130,48 +129,55 @@ bool PythonPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonPlugin::initializePlugin()
 {
-    // We must set PYTHONHOME to where Python is 'installed' **before** calling
-    // any Python library code. Calling `Py_SetPythonHome()` doesn't work as
-    // the `Py_Initialize()` code first checks the environment and, if PYTHONHOME
-    // isn't set, uses the installation path compiled in at Python build time...
+    // We must set the environment variable PYTHONHOME to the location of our
+    // copy of Python and this before calling any Python library code
+    // Note: to call Py_SetPythonHome() doesn't work since Py_Initialize() first
+    //       checks the environment and, if PYTHONHOME isn't set, uses the
+    //       installation path compiled in at Python build time...
 
     QStringList applicationDirectories = QCoreApplication::applicationDirPath().split("/");
+
     applicationDirectories.removeLast();
 
     QString pythonHome = QString();
-#if __APPLE__
-    pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
-#elif _WIN32
+
+#if defined(Q_OS_WIN)
     pythonHome = (applicationDirectories << "Python").join("/");
-#else
+#elif defined(Q_OS_LINUX)
     pythonHome = applicationDirectories.join("/");
+#elif defined(Q_OS_MAC)
+    pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
+#else
+    #error Unsupported platform
 #endif
+
     qputenv("PYTHONHOME", pythonHome.toUtf8());
 
     // Put our Python script directories at the head of the system PATH
 
-#if _WIN32
-    const char pathSeparator = ';';
+#ifdef Q_OS_WIN
+    static const char PathSeparator = ';';
 #else
-    const char pathSeparator = ':';
+    static const char PathSeparator = ':';
 #endif
-    QByteArrayList systemPath = qgetenv("PATH").split(pathSeparator);
+    QByteArrayList systemPath = qgetenv("PATH").split(PathSeparator);
 
-    systemPath.prepend((pythonHome + "/bin").toUtf8());
-#if _WIN32
-    systemPath.prepend((pythonHome + "/Scripts").toUtf8());
+    systemPath.prepend((pythonHome+"/bin").toUtf8());
+#ifdef Q_OS_WIN
+    systemPath.prepend((pythonHome+"/Scripts").toUtf8());
 #endif
 
-    qputenv("PATH", systemPath.join(pathSeparator));
+    qputenv("PATH", systemPath.join(PathSeparator));
 
-    // Ensure the user's Python site directory (in ~/.local etc) isn't used
+    // Ensure the user's Python site directory (in ~/.local, etc.) isn't used
 
     Py_NoUserSiteDirectory = 1;
 
-#if _WIN32
-    // For Windows we need to specify the location of the DLLs we have bundled with OpenCOR
+#ifdef Q_OS_WIN
+    // On Windows, we need to specify the location of the DLLs we have bundled
+    // with OpenCOR
 
-    SetDllDirectoryW((LPCWSTR)QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).utf16());
+    SetDllDirectoryW((LPCWSTR) QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).utf16());
 #endif
 }
 
@@ -197,7 +203,7 @@ void PythonPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
-    // TODO: Retrieve our Python settings
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -206,7 +212,7 @@ void PythonPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
-    // TODO: Keep track of our Python settings
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -230,72 +236,80 @@ void PythonPlugin::runHelpCommand()
     std::cout << " * Display the commands supported by the Python plugin:" << std::endl;
     std::cout << "      help" << std::endl;
     std::cout << " * Run a Python module:" << std::endl;
-    std::cout << "      MODULE_NAME ..." << std::endl;
+    std::cout << "      <module_name> ..." << std::endl;
     std::cout << " * Run a Python interpreter." << std::endl;
 }
 
 //==============================================================================
 
-int PythonPlugin::runPythonShell(const QStringList &pArguments)
+int PythonPlugin::runShellCommand(const QStringList &pArguments)
 {
-    // The following has been adapted from `Programs/python.c` in the Python sources.
+    // The following is adapted from Programs/python.c in the Python sources
 
-    const int argc = pArguments.size() + 1;
-    wchar_t **argv_copy;
-    /* We need a second copy, as Python might modify the first one. */
-    wchar_t **argv_copy2;
-    int i, res;
-    char *oldloc;
+    // Allocate some memory to keep track of our arguments
+    // Note: a second copy since Python might modify our first one...
 
-    argv_copy = (wchar_t **)PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1));
-    argv_copy2 = (wchar_t **)PyMem_RawMalloc(sizeof(wchar_t*) * (argc+1));
-    if (!argv_copy || !argv_copy2) {
-        fprintf(stderr, "out of memory\n");
+    const int argC = pArguments.size()+1;
+    wchar_t **argV = (wchar_t **) PyMem_RawMalloc(sizeof(wchar_t *)*(argC+1));
+    wchar_t **argV2 = (wchar_t **) PyMem_RawMalloc(sizeof(wchar_t *)*(argC+1));
+
+    if (!argV || !argV2) {
+        std::cerr << "Out of memory." << std::endl;
+
         return 1;
     }
 
-    /* 754 requires that FP exceptions run in "no stop" mode by default,
-     * and until C vendors implement C99's ways to control FP exceptions,
-     * Python requires non-stop mode.  Alas, some platforms enable FP
-     * exceptions by default.  Here we disable them.
-     */
-#ifdef __FreeBSD__
+    // Disable floating point exceptions on Linux
+    // Note: 754 requires that FP exceptions run in "no stop" mode by default,
+    //       and until C vendors implement C99's ways to control FP exceptions,
+    //       Python requires non-stop mode. Alas, some platforms enable FP
+    //       exceptions by default. Here, we disable them...
+
+#ifdef Q_OS_LINUX
     fedisableexcept(FE_OVERFLOW);
 #endif
 
-    oldloc = _PyMem_RawStrdup(setlocale(LC_ALL, NULL));
-    if (!oldloc) {
-        fprintf(stderr, "out of memory\n");
+    char *oldLocale = _PyMem_RawStrdup(setlocale(LC_ALL, 0));
+
+    if (!oldLocale) {
+        std::cerr << "Out of memory." << std::endl;
+
         return 1;
     }
 
     setlocale(LC_ALL, "");
-    argv_copy2[0] = argv_copy[0] = Py_DecodeLocale("python", NULL);
-    for (i = 1; i < argc; i++) {
-        argv_copy[i] = Py_DecodeLocale(pArguments[i-1].toUtf8().constData(), NULL);
-        if (!argv_copy[i]) {
-            PyMem_RawFree(oldloc);
-            fprintf(stderr, "Fatal Python error: "
-                            "unable to decode the command line argument #%i\n",
-                            i + 1);
+
+    argV2[0] = argV[0] = Py_DecodeLocale("python", 0);
+
+    for (int i = 1; i < argC; ++i) {
+        argV[i] = Py_DecodeLocale(pArguments[i-1].toUtf8().constData(), 0);
+
+        if (!argV[i]) {
+            PyMem_RawFree(oldLocale);
+
+            std::cerr << "Fatal Python error: unable to decode the command line argument #" << i+1 << "." << std::endl;
+
             return 1;
         }
-        argv_copy2[i] = argv_copy[i];
+
+        argV2[i] = argV[i];
     }
-    argv_copy2[argc] = argv_copy[argc] = NULL;
 
-    setlocale(LC_ALL, oldloc);
-    PyMem_RawFree(oldloc);
+    argV2[argC] = argV[argC] = 0;
 
-    // N.B. PyMain() calls Py_Initialize() and Py_Finalize()
+    setlocale(LC_ALL, oldLocale);
 
-    res = Py_Main(argc, argv_copy);
+    PyMem_RawFree(oldLocale);
 
-    for (i = 0; i < argc; i++) {
-        PyMem_RawFree(argv_copy2[i]);
-    }
-    PyMem_RawFree(argv_copy);
-    PyMem_RawFree(argv_copy2);
+    int res = Py_Main(argC, argV);
+    // Note: Py_Main() calls Py_Initialize() and Py_Finalize()...
+
+    for (int i = 0; i < argC; ++i)
+        PyMem_RawFree(argV2[i]);
+
+    PyMem_RawFree(argV);
+    PyMem_RawFree(argV2);
+
     return res;
 }
 
