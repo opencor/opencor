@@ -144,12 +144,15 @@ endif()
 # Allow other packages to use our scripts
 
 if(WIN32)
-    set(SPHINX_BUILD_EXECUTABLE sphinx-build.exe)
+    set(SPHINX_BUILD_COMMAND sphinx-build.exe)
 else()
-    set(SPHINX_BUILD_EXECUTABLE sphinx-build)
+    set(SPHINX_BUILD_COMMAND sphinx-build)
 endif()
 
-set(SPHINX_BUILD_EXECUTABLE ${PYTHON_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE)
+set(SPHINX_BUILD_COMMAND
+    ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
+    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_COMMAND} PARENT_SCOPE
+    )
 
 # Add the plugin
 
@@ -162,15 +165,6 @@ add_plugin(PythonPackages
         src/pythonpackagesplugin.h
     PLUGINS
         Python
-    EXTERNAL_SOURCE_DIR
-        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-    EXTERNAL_DESTINATION_DIR
-        ${PYTHON_ROOT_DIR}
     DEPENDS_ON
         ${PLUGIN_DEPENDS_ON}
 )
-
-# Update Python paths for newly copied scripts
-
-add_custom_command(TARGET PythonPackagesPlugin POST_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/distrib/set_python_path.py ${PYTHON_ROOT_DIR})
