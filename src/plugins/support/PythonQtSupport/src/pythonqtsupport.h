@@ -18,16 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt Support plugin
+// Python Qt support functions
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "pythonsupportglobal.h"
+#include "pythonqtsupportglobal.h"
 
 //==============================================================================
 
@@ -35,42 +33,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class ctkAbstractPythonManager;
+#include <QObject>
+#include <QMetaObject>
+#include <QString>
+#include <QVariant>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonSupport {
+namespace PythonQtSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonSupportPluginInfo();
+PYTHONQTSUPPORT_EXPORT
+void addInstanceDecorators(QObject *pQObject);
+
+PYTHONQTSUPPORT_EXPORT
+void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
+
+PYTHONQTSUPPORT_EXPORT
+QVariant evalScript(const QString &pScript);
+
+PYTHONQTSUPPORT_EXPORT
+void registerClass(const QMetaObject *pMetaObject);
+
+PYTHONQTSUPPORT_EXPORT
+PyObject *wrapQObject(QObject *pQObject);
 
 //==============================================================================
 
-class PYTHONSUPPORT_EXPORT PythonSupportPlugin : public QObject, public PluginInterface
-{
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonSupportPlugin" FILE "pythonsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-    explicit PythonSupportPlugin();
-
-#include "plugininterface.inl"
-
-private:
-    ctkAbstractPythonManager *mPythonManager;
-    PythonQtObjectPtr mOpenCORModule;
-};
-
-//==============================================================================
-
-}   // namespace PythonSupport
+}   // namespace PythonQtSupport
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
+

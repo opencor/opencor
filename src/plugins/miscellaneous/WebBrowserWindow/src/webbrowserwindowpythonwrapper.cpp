@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python wrapper for web browser window
 //==============================================================================
 
-#include "pythonsupport.h"
+#include "pythonqtsupport.h"
 #include "webbrowserwindowplugin.h"
 #include "webbrowserwindowpythonwrapper.h"
 #include "webbrowserwindowwidget.h"
@@ -42,7 +42,7 @@ static PyObject *browserWebView(PyObject *self, PyObject *args)
     Q_UNUSED(self);
     Q_UNUSED(args);
 
-    return PythonSupport::wrapQObject(WebBrowserWindowPlugin::instance()->browserWidget()->webView());
+    return PythonQtSupport::wrapQObject(WebBrowserWindowPlugin::instance()->browserWidget()->webView());
 }
 
 //==============================================================================

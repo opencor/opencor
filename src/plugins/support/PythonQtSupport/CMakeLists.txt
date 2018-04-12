@@ -1,8 +1,8 @@
-PROJECT(PythonSupportPlugin)
+PROJECT(PythonQtSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(PythonSupport
+ADD_PLUGIN(PythonQtSupport
     SOURCES
         ../../plugin.cpp
         ../../pluginmanager.cpp
@@ -10,15 +10,15 @@ ADD_PLUGIN(PythonSupport
         ../../plugininterface.cpp
 
         src/CTK/ctkAbstractPythonManager.cpp
-        src/pythonsupport.cpp
-        src/pythonsupportplugin.cpp
+        src/pythonqtsupport.cpp
+        src/pythonqtsupportplugin.cpp
 
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
 
         src/CTK/ctkAbstractPythonManager.h
-        src/pythonsupportplugin.h
+        src/pythonqtsupportplugin.h
     PLUGINS
         Python
         PythonQtAPI

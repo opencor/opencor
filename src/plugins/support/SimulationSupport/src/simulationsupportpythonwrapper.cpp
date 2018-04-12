@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfileruntime.h"
 #include "datastoreinterface.h"
 #include "datastorepythonwrapper.h"
-#include "pythonsupport.h"
+#include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationsupportplugin.h"
 #include "simulationsupportpythonwrapper.h"
@@ -53,10 +53,10 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
 {
     Q_UNUSED(pModule);
 
-    PythonSupport::registerClass(&OpenCOR::SimulationSupport::Simulation::staticMetaObject);
-    PythonSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
-    PythonSupport::registerClass(&OpenCOR::SimulationSupport::SimulationResults::staticMetaObject);
-    PythonSupport::addInstanceDecorators(this);
+    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::Simulation::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationResults::staticMetaObject);
+    PythonQtSupport::addInstanceDecorators(this);
 }
 
 //==============================================================================
@@ -283,7 +283,7 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
                 stateGradientsDictionaries[state->uri()] = stateGradientsDict;
             }
 
-            PythonSupport::addObject(stateGradientsDict, constant->uri(), gradient);
+            PythonQtSupport::addObject(stateGradientsDict, constant->uri(), gradient);
         }
     }
     return gradientsDict;

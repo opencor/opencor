@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "datastoreinterface.h"
 #include "datastorepythonwrapper.h"  // Needs to come before numpy includes
 #include "datastorenumpy.h"
-#include "pythonsupport.h"
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
@@ -282,10 +282,10 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pPare
 
     PyType_Ready(&DataStoreValuesDict_Type);
 
-    PythonSupport::registerClass(&OpenCOR::DataStore::DataStore::staticMetaObject);
-    PythonSupport::registerClass(&OpenCOR::DataStore::DataStoreVariable::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStore::staticMetaObject);
+    PythonQtSupport::registerClass(&OpenCOR::DataStore::DataStoreVariable::staticMetaObject);
 
-    PythonSupport::addInstanceDecorators(this);
+    PythonQtSupport::addInstanceDecorators(this);
 }
 
 //==============================================================================
@@ -345,7 +345,7 @@ PyObject * DataStorePythonWrapper::dataStoreValuesDict(
     ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
 
     foreach (DataStoreVariable *variable, pDataStoreVariables)
-        PythonSupport::addObject(valuesDict, variable->uri(), variable);
+        PythonQtSupport::addObject(valuesDict, variable->uri(), variable);
 
     return valuesDict;
 }
@@ -357,7 +357,7 @@ PyObject * DataStorePythonWrapper::dataStoreVariablesDict(
 {
     PyObject *variablesDict = PyDict_New();
     foreach (DataStoreVariable *variable, pDataStoreVariables)
-        PythonSupport::addObject(variablesDict, variable->uri(), variable);
+        PythonQtSupport::addObject(variablesDict, variable->uri(), variable);
 
     return variablesDict;
 }
@@ -387,7 +387,7 @@ NumPyPythonWrapper::NumPyPythonWrapper(DataStoreArray *pDataStoreArray, quint64 
     mArray->incRef();
     mNumPyArray = PyArray_SimpleNewFromData(1, dims, NPY_DOUBLE, (void *)mArray->data());
 
-    mPythonObject = PythonSupport::wrapQObject(this);
+    mPythonObject = PythonQtSupport::wrapQObject(this);
     PyArray_SetBaseObject((PyArrayObject *)mNumPyArray, mPythonObject);
 }
 

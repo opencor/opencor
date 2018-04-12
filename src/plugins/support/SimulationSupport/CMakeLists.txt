@@ -28,5 +28,5 @@ add_plugin(SimulationSupport
     PLUGINS
         COMBINESupport
         DataStore
-        PythonSupport
+        PythonQtSupport
 )

@@ -43,6 +43,6 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewwidget.h
     PLUGINS
         GraphPanelWidget
-        PythonSupport
+        PythonQtSupport
         SimulationSupport
 )

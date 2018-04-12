@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "coreguiutils.h"
 #include "file.h"
-#include "pythonsupport.h"
+#include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpythonwrapper.h"
@@ -158,7 +158,7 @@ static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
             // Add the simulation to the dictionary
 
             if (simulation)
-                PythonSupport::addObject(simulationDict, fileName, simulation);
+                PythonQtSupport::addObject(simulationDict, fileName, simulation);
         }
     }
 

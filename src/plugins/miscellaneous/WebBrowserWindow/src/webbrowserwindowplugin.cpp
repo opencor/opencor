@@ -47,7 +47,7 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour naviguer sur le Web."));
 
     return new PluginInfo(PluginInfo::Miscellaneous, true, false,
-                          QStringList() << "Core" << "PythonSupport" << "WebViewerWidget",
+                          QStringList() << "Core" << "PythonQtSupport" << "WebViewerWidget",
                           descriptions);
 }
 

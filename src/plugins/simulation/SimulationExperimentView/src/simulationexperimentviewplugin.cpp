@@ -54,7 +54,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Simulation, true, false,
-                          QStringList() << "GraphPanelWidget" << "PythonSupport" << "SimulationSupport",
+                          QStringList() << "GraphPanelWidget" << "PythonQtSupport" << "SimulationSupport",
                           descriptions);
 }
 

@@ -884,7 +884,7 @@ set(PLUGINS
     support/CellMLSupport
     support/COMBINESupport
     support/PMRSupport
-    support/PythonSupport
+    support/PythonQtSupport
     support/QScintillaSupport
     support/SEDMLSupport
     support/SimulationSupport

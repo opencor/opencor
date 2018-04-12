@@ -40,7 +40,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter des simulations."));
 
     return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "COMBINESupport" << "DataStore" << "PythonSupport",
+                          QStringList() << "COMBINESupport" << "DataStore" << "PythonQtSupport",
                           descriptions);
 }
 

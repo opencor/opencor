@@ -23,7 +23,7 @@ add_plugin(WebBrowserWindow
         src/webbrowserwindowwindow.ui
     PLUGINS
         Core
-        PythonSupport
+        PythonQtSupport
         WebViewerWidget
     QT_MODULES
         PrintSupport
