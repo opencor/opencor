@@ -18,5 +18,5 @@ Commands supported by the Python plugin:
  * Display the commands supported by the Python plugin:
       help
  * Run a Python module:
-      MODULE_NAME ...
+      <module_name> ...
  * Run a Python interpreter.
