@@ -1236,7 +1236,7 @@ if(WIN32)
     install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
-    install(FILES ${PROJECT_SOURCE_DIR}/distrib/windows/set_python_path.py
+    install(FILES ${PROJECT_SOURCE_DIR}/distrib/set_python_path.py
             DESTINATION Python/Scripts)
 
     # Qt libraries required by OpenCOR

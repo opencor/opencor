@@ -591,7 +591,7 @@ add_plugin(Python
 # Update Python paths for newly copied scripts
 
 add_custom_command(TARGET PythonPlugin POST_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/distrib/bin/set_python_path.py ${ROOT_DIR})
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/distrib/set_python_path.py ${ROOT_DIR})
 
 # Update our list of Python dependencies for other plugins
 
