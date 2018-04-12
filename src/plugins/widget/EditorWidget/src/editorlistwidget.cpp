@@ -56,12 +56,16 @@ EditorListItem::EditorListItem(const Type &pType, int pLine, int pColumn,
     static const QIcon InformationIcon = QIcon(":/oxygen/actions/help-about.png");
     static const QIcon FatalIcon       = QIcon(":/oxygen/status/edit-bomb.png");
 
-    if ((pLine == -1) && (pColumn == -1))
+    if ((pLine == -1) && (pColumn == -1)) {
         setText(pMessage);
-    else if (pColumn == -1)
-        setText(QString("[%1] %2").arg(QString::number(pLine), pMessage));
-    else
-        setText(QString("[%1:%2] %3").arg(QString::number(pLine), QString::number(pColumn), pMessage));
+    } else if (pColumn == -1) {
+        setText(QString("[%1] %2").arg(pLine)
+                                  .arg(pMessage));
+    } else {
+        setText(QString("[%1:%2] %3").arg(pLine)
+                                     .arg(pColumn)
+                                     .arg(pMessage));
+    }
 
     setToolTip(text());
 

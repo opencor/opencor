@@ -289,7 +289,7 @@ QString QScintillaWidget::textInRange(int pStartRange, int pEndRange) const
         return QString();
     }
 
-    char *text = new char[pEndRange-pStartRange+1];
+    char *text = new char[pEndRange-pStartRange+1] {};
 
     SendScintilla(SCI_GETTEXTRANGE, pStartRange, pEndRange, text);
 
@@ -750,8 +750,8 @@ void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 {
     // Update our cursor position
 
-    mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(QString::number(pLine+1),
-                                                                    QString::number(pColumn+1)));
+    mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(pLine+1)
+                                                               .arg(pColumn+1));
 }
 
 //==============================================================================

@@ -147,7 +147,7 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 
     // Retrieve the text to style
 
-    char *data = new char[pBytesEnd-pBytesStart+1];
+    char *data = new char[pBytesEnd-pBytesStart+1] {};
 
     editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE,
                             pBytesStart, pBytesEnd, data);

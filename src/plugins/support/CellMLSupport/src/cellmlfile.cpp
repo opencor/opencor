@@ -292,7 +292,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                             if (isLocalFile && (pModel == mModel))
                                 dependencies << fileNameOrUrl;
                         } else {
-                            throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved").arg(xmlBaseFileNameOrUrl, xlinkHrefString)));
+                            throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved").arg(xmlBaseFileNameOrUrl)
+                                                                                                                                                  .arg(xlinkHrefString)));
                         }
                     }
 
@@ -302,7 +303,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
 
                     if (!importModel)
-                        throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(xmlBaseFileNameOrUrl, xlinkHrefString)));
+                        throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(xmlBaseFileNameOrUrl)
+                                                                                                                                                   .arg(xlinkHrefString)));
 
                     retrieveImports(isLocalFile?
                                         QUrl::fromLocalFile(fileNameOrUrl).toString():

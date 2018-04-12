@@ -336,7 +336,8 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                   pPropertyNode.getLine(),
                                   pPropertyNode.getColumn(),
-                                  tr("the '%1' property must have a value of %2").arg(pPropertyName, values));
+                                  tr("the '%1' property must have a value of %2").arg(pPropertyName)
+                                                                                 .arg(values));
 
         return false;
     } else {
@@ -1273,7 +1274,8 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                 }
             } else {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                          tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+                                          tr("%1 could not be retrieved (%2)").arg(modelSource)
+                                                                              .arg(Core::formatMessage(errorMessage)));
             }
         }
     }

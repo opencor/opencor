@@ -72,7 +72,7 @@ void SecondOrderRungeKuttaSolver::initialize(double pVoi, int pRatesStatesCount,
 
     delete[] mYk1;
 
-    mYk1 = new double[pRatesStatesCount];
+    mYk1 = new double[pRatesStatesCount] {};
 }
 
 //==============================================================================

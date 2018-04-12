@@ -95,10 +95,12 @@ void CheckForUpdatesEngine::check()
                 if (!versionMajor && !versionMinor && !versionPatch) {
                     versionVersion = versionDate;
                 } else {
-                    versionVersion = QString("%1.%2").arg(QString::number(versionMajor), QString::number(versionMinor));
+                    versionVersion = QString("%1.%2").arg(versionMajor)
+                                                     .arg(versionMinor);
 
                     if (versionPatch)
-                        versionVersion = QString("%1.%2").arg(versionVersion, QString::number(versionPatch));
+                        versionVersion = QString("%1.%2").arg(versionVersion)
+                                                         .arg(versionPatch);
                 }
 
                 // Check whether the version is newer and, if so, add it to our
@@ -272,10 +274,14 @@ void CheckForUpdatesDialog::updateGui()
                 if (version.isEmpty())
                     version = mEngine->newerVersions().first();
 
-                if (version.contains('-'))
-                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest", version));
-                else
-                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
+                if (version.contains('-')) {
+                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest")
+                                                                  .arg(version));
+                } else {
+                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version)
+                                                                 .arg(qAppName())
+                                                                 .arg(version));
+                }
             } else {
                 mGui->statusLabel->setText(tr("No newer version or snapshot of %1 is available.").arg(qAppName()));
             }
@@ -293,7 +299,9 @@ void CheckForUpdatesDialog::updateGui()
                 }
             }
 
-            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
+            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version)
+                                                         .arg(qAppName())
+                                                         .arg(version));
         } else {
             mGui->statusLabel->setText(tr("No newer version of %1 is available.").arg(qAppName()));
         }

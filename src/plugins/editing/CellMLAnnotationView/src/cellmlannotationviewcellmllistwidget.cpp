@@ -181,18 +181,18 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
     case ComponentMapping: {
         ObjRef<iface::cellml_api::MapComponents> mapComponents = dynamic_cast<iface::cellml_api::MapComponents *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()),
-                                        QChar(RightArrow),
-                                        QString::fromStdWString(mapComponents->secondComponentName())));
+        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()))
+                                   .arg(QChar(RightArrow))
+                                   .arg(QString::fromStdWString(mapComponents->secondComponentName())));
 
         break;
     }
     case VariableMapping: {
         ObjRef<iface::cellml_api::MapVariables> mapVariables = dynamic_cast<iface::cellml_api::MapVariables *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()),
-                                        QChar(RightArrow),
-                                        QString::fromStdWString(mapVariables->secondVariableName())));
+        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()))
+                                   .arg(QChar(RightArrow))
+                                   .arg(QString::fromStdWString(mapVariables->secondVariableName())));
 
         break;
     }
@@ -540,9 +540,9 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
         foreach (const CellMLSupport::CellmlFileIssue &issue, mCellmlFile->issues()) {
             mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issue.type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                                     QString("[%1:%2] %3").arg(QString::number(issue.line()),
-                                                                                                                               QString::number(issue.column()),
-                                                                                                                               issue.formattedMessage())));
+                                                                                                     QString("[%1:%2] %3").arg(issue.line())
+                                                                                                                          .arg(issue.column())
+                                                                                                                          .arg(issue.formattedMessage())));
         }
 
         return;

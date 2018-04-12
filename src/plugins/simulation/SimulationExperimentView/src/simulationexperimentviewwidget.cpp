@@ -71,8 +71,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
     mSimulationResultsSizes(QMap<QString, quint64>()),
-    mSimulationCheckResults(QStringList()),
-    mNeedReloading(QStringList())
+    mSimulationCheckResults(QStringList())
 {
 }
 
@@ -222,13 +221,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
                 this, &SimulationExperimentViewWidget::graphsSettingsRequested);
     } else {
         // We already have a simulation widget, so just make sure that its GUI
-        // is up to date, after having reloaded our file, if needed
-
-        if (mNeedReloading.contains(pFileName)) {
-            mNeedReloading.removeOne(pFileName);
-
-            mSimulationWidget->fileReloaded();
-        }
+        // is up to date
 
         mSimulationWidget->updateGui();
     }
@@ -360,11 +353,26 @@ void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 
 void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 {
-    // Keep track of the fact that we will need to reload ourselves the next
-    // time we will be initialised
+    // Let the simulation widget, if any, associated with the given file name
+    // know that a file has been reloaded
 
-    if (!mNeedReloading.contains(pFileName))
-        mNeedReloading << pFileName;
+    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
+
+    if (simulationWidget) {
+        simulationWidget->fileReloaded();
+
+        // Make sure that our simulation's contents' information GUI is up to
+        // date
+        // Note: this is, at least, necessary for our paramaters widget since we
+        //       repopulate it, meaning that its columns' width will be reset...
+
+        updateContentsInformationGui(simulationWidget);
+
+        // Make sure that the GUI of our simulation widgets is up to date
+
+        foreach (SimulationExperimentViewSimulationWidget *simulationWidget, mSimulationWidgets)
+            simulationWidget->updateGui(true);
+    }
 }
 
 //==============================================================================
@@ -546,16 +554,20 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     if (   simulation->isRunning()
         || (simulationResultsSize != simulation->results()->size())) {
-        // Note: we cannot ask QTimer::singleShot() to call
-        //       callCheckSimulationResults() since it expects a simulation
-        //       widget as a parameter, so instead we call a method with no
-        //       arguments that will make use of our list to know which
-        //       simulation should be passed as an argument to
-        //       checkSimulationResults()...
+        // Note #1: we cannot ask QTimer::singleShot() to call
+        //          checkSimulationResults() directly since it expects a file
+        //          name as a parameter, so instead we call a method with no
+        //          arguments that will make use of our list to know which file
+        //          name should be passed as an argument to
+        //          checkSimulationResults()...
+        // Note #2: we would normally use the new signal/slot mechanism, but it
+        //          won't call callCheckSimulationResults() as often as we would
+        //          expect, so we use the old mechanism instead (see issue
+        //          #1613)...
 
         mSimulationCheckResults << pFileName;
 
-        QTimer::singleShot(0, this, &SimulationExperimentViewWidget::callCheckSimulationResults);
+        QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
         // the simulation progress of the given file
