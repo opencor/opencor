@@ -97,7 +97,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
             // VOI values
 
             for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j)
-                voiValues << dataStore->voi()->value(j, i);
+                voiValues << dataStore->voi()->valueAt(j, i);
 
             // Variables
 
@@ -180,8 +180,8 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                         else
                             rowData += ',';
 
-                        if (dataStore->voi()->value(runsIndex[j], j) == voiValue) {
-                            rowData += QString::number(variableRun->value(runsIndex[j], j));
+                        if (dataStore->voi()->valueAt(runsIndex[j], j) == voiValue) {
+                            rowData += QString::number(variableRun->valueAt(runsIndex[j], j));
 
                             updateRunsIndex[j] = true;
                         }

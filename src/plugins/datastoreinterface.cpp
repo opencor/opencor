@@ -189,7 +189,7 @@ DataStoreArray * DataStoreVariableRun::array() const
 
 //==============================================================================
 
-double DataStoreVariableRun::value(quint64 pPosition) const
+double DataStoreVariableRun::valueAt(quint64 pPosition) const
 {
     // Return the value at the given position
 
@@ -400,18 +400,18 @@ void DataStoreVariable::addValue(double pValue)
 
 //==============================================================================
 
-double DataStoreVariable::value(quint64 pPosition, int pRun) const
+double DataStoreVariable::valueAt(quint64 pPosition, int pRun) const
 {
     // Return the value at the given position and this for the given run
 
     Q_ASSERT(!mRuns.isEmpty());
 
     if (pRun == -1) {
-        return mRuns.last()->value(pPosition);
+        return mRuns.last()->valueAt(pPosition);
     } else {
         Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
 
-        return mRuns[pRun]->value(pPosition);
+        return mRuns[pRun]->valueAt(pPosition);
     }
 }
 

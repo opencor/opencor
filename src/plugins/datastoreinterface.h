@@ -78,7 +78,7 @@ public:
     void addValue(double pValue);
 
     DataStoreArray * array() const;
-    double value(quint64 pPosition) const;
+    double valueAt(quint64 pPosition) const;
     double * values() const;
 
 private:
@@ -141,7 +141,7 @@ public slots:
     QString unit() const;
 
     quint64 size(int pRun = -1) const;
-    double value(quint64 pPosition, int pRun = -1) const;
+    double valueAt(quint64 pPosition, int pRun = -1) const;
     double * values(int pRun = -1) const;
 
 private:

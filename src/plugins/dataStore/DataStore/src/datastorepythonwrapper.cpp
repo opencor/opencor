@@ -315,11 +315,11 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
 
 //==============================================================================
 
-double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
-                                     const quint64 &pPosition, const int &pRun) const
+double DataStorePythonWrapper::valueAt(DataStoreVariable *pDataStoreVariable,
+                                       const quint64 &pPosition, const int &pRun) const
 {
     if (pDataStoreVariable && pDataStoreVariable->array()) {
-        return pDataStoreVariable->value(pPosition, pRun);
+        return pDataStoreVariable->valueAt(pPosition, pRun);
     } else {
         throw std::runtime_error("'NoneType' object is not subscriptable");
         return 0.0;
