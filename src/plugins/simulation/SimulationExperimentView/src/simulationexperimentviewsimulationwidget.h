@@ -146,7 +146,10 @@ public:
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
-                                 const Task &pTask = None);
+                                 int pSimulationRun, const Task &pTask);
+    void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                 quint64 pSimulationResultsSize,
+                                 const Task &pTask);
 
     void resetSimulationProgress();
 

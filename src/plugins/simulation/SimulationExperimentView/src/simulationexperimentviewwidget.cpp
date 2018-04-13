@@ -518,12 +518,31 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     if (!simulationWidget)
         return;
 
+    // Make sure that our previous run, if any, is complete, if we are coming
+    // here as a result of having added a new run
+
+    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
+    int simulationRunsCount = simulation->runsCount();
+
+    if (   (pTask == SimulationExperimentViewSimulationWidget::AddRun)
+        && (simulationRunsCount > 1)) {
+        quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
+
+        if (previousSimulationResultsSize != mSimulationResultsSizes.value(pFileName)) {
+            foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
+                currentSimulationWidget->updateSimulationResults(simulationWidget,
+                                                                 previousSimulationResultsSize,
+                                                                 simulationRunsCount-2,
+                                                                 SimulationExperimentViewSimulationWidget::None);
+            }
+        }
+    }
+
     // Update all of our simulation widgets' results, but only if needed
     // Note: to update only the given simulation widget's results is not enough
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     quint64 simulationResultsSize = simulation->results()->size();
 
     if (   (pTask != SimulationExperimentViewSimulationWidget::None)
@@ -533,6 +552,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
             currentSimulationWidget->updateSimulationResults(simulationWidget,
                                                              simulationResultsSize,
+                                                             simulationRunsCount-1,
                                                              pTask);
         }
     }

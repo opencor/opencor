@@ -3739,6 +3739,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
+                                                                       int pSimulationRun,
                                                                        const Task &pTask)
 {
     // Update our simulation results
@@ -3796,7 +3797,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 if (visible)
                     mOldDataSizes.insert(graph, oldDataSize);
 
-                updateGraphData(graph, pSimulationResultsSize);
+                updateGraphData(graph, pSimulationResultsSize, pSimulationRun);
 
                 // We need to update our plot, if we are drawing this graph's
                 // first segment or if we were invisible at some point during
@@ -3826,8 +3827,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                         for (quint64 i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data()->sample(i).x();
-                            double valY = graph->data()->sample(i).y();
+                            double valX = graph->data(pSimulationRun)->sample(i).x();
+                            double valY = graph->data(pSimulationRun)->sample(i).y();
 
                             minX = qMin(minX, valX);
                             maxX = qMax(maxX, valX);
@@ -3916,6 +3917,17 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             }
         }
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                       quint64 pSimulationResultsSize,
+                                                                       const Task &pTask)
+{
+    // Update our simulation results
+
+    updateSimulationResults(pSimulationWidget, pSimulationResultsSize, -1, pTask);
 }
 
 //==============================================================================
