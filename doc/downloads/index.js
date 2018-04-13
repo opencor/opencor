@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> fixed some seemingly random crashes (especially on Windows; see issue <a href=\"https://github.com/opencor/opencor/issues/1574\">#1574</a>)." },
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.5 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1615\">#1615</a>). Fixed some seemingly random crashes (especially on Windows; see issue <a href=\"https://github.com/opencor/opencor/issues/1574\">#1574</a>)." },
                        { "change": "<strong>Data store interface:</strong> fixed a problem with the returned size of a data store being wrong in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1579\">#1579</a>)." },
                        { "change": "<strong>PMR support:</strong> fixed a problem with the PMR Workspaces window potentially not reflecting the Git status of a folder (see issue <a href=\"https://github.com/opencor/opencor/issues/1582\">#1582</a>). Updated the description of our different PMR instances (see issue <a href=\"https://github.com/opencor/opencor/issues/1583\">#1583</a>)." },
                        { "change": "<strong>CellML support:</strong> now provide more information when imports cannot be fully instantiated (see issue <a href=\"https://github.com/opencor/opencor/issues/1595\">#1595</a>)." },
