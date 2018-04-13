@@ -135,9 +135,14 @@ elseif(WIN32)
     list(APPEND PACKAGED_FILES Scripts)
 endif()
 
+# Our package build target
+
+set(PACKAGE_BUILD PythonBuild)
+
 # Use the pre-built version of our package unless instructed otherwise
 
 if(USE_PREBUILT_PYTHON_PACKAGE)
+
     # Retrieve the plugin's package
 
     string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -165,6 +170,10 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                               SHA1_VALUES 62c58fa8c94b094097ee41907dbd64d670e3dbee
                                           81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
     endif()
+
+    # Building PythonPackages depends on PythonBuild
+
+    add_custom_target(${PACKAGE_BUILD} DEPENDS ${SHA1_FILES})
 else()
     # Set platform specific configuration options
 
@@ -261,8 +270,6 @@ else()
     endif()
 
     # Build Python as an external project
-
-    set(PACKAGE_BUILD PythonBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS

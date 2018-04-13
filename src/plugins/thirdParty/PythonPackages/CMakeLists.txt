@@ -84,7 +84,7 @@ else()
 
     # Python package installation requires Python
 
-    set(BUILD_DEPENDENCIES PythonPlugin)
+    set(BUILD_DEPENDENCIES PythonBuild)
 
     # Ensure local site packages directory exists
 
