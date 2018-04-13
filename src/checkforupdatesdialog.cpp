@@ -312,15 +312,6 @@ void CheckForUpdatesDialog::updateGui()
 
 //==============================================================================
 
-void CheckForUpdatesDialog::buttonBoxAccepted()
-{
-    // Simply close ourselves
-
-    close();
-}
-
-//==============================================================================
-
 void CheckForUpdatesDialog::statusLabelLinkActivated(const QString &pLink)
 {
     // Open the link in the user's browser
@@ -363,6 +354,15 @@ void CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled(bool pChecked)
                         mGui->includeSnapshotsCheckBox->isChecked());
 
     updateGui();
+}
+
+//==============================================================================
+
+void CheckForUpdatesDialog::buttonBoxAccepted()
+{
+    // Simply close ourselves
+
+    close();
 }
 
 //==============================================================================

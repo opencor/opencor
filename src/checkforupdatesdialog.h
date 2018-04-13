@@ -55,8 +55,6 @@ static const auto SettingsIncludeSnapshots         = QStringLiteral("IncludeSnap
 
 class CheckForUpdatesEngine : public QObject
 {
-    Q_OBJECT
-
 public:
     explicit CheckForUpdatesEngine(const QString &pApplicationDate);
 
