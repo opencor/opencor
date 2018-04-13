@@ -171,9 +171,9 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                                           81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
     endif()
 
-    # Building PythonPackages depends on PythonBuild
+    # Since we don't use `add_plugin` we need a dependency
 
-    add_custom_target(${PACKAGE_BUILD} DEPENDS ${SHA1_FILES})
+    add_custom_target(${PACKAGE_BUILD} DEPENDS ${REAL_DIRNAME}/${LIBRARY_DIR}/${SHARED_LIBRARY})
 else()
     # Set platform specific configuration options
 
@@ -561,3 +561,8 @@ set(PYTHON_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${RUNTIME_DIR}/s
 
 set(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
 set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_SCOPE)
+
+# We need to specify the dependency if not using add_plugin
+
+add_dependencies(OpenCORBuild ${PACKAGE_BUILD})
+

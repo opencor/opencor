@@ -797,6 +797,10 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
+# We need a target to build non-library packages
+
+add_custom_target(OpenCORBuild ALL)
+
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the

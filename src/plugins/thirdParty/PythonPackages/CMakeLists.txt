@@ -42,6 +42,10 @@ set(PACKAGED_FILES
 
 set(SHA1_FILES ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py)
 
+# Our package build target
+
+set(PACKAGE_BUILD PythonPackagesBuild)
+
 # Use the pre-built version of our package unless instructed otherwise
 # Rebuilding Python means we should also re-install its packages
 
@@ -75,10 +79,12 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
     endif()
+
+    # Since we don't use `add_plugin` we need a dependency
+
+    add_custom_target(${PACKAGE_BUILD} DEPENDS ${REAL_DIRNAME}/${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py)
 else()
     # Install Python packages using pip
-
-    set(PACKAGE_BUILD PythonPackagesBuild)
 
     add_custom_target(${PACKAGE_BUILD})
 
@@ -153,3 +159,8 @@ set(SPHINX_BUILD_COMMAND
     ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
     ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_COMMAND} PARENT_SCOPE
     )
+
+# We need to specify the dependency if not using add_plugin
+
+add_dependencies(OpenCORBuild ${PACKAGE_BUILD})
+
