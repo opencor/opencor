@@ -135,9 +135,9 @@ elseif(WIN32)
     list(APPEND PACKAGED_FILES Scripts)
 endif()
 
-# Our package build target
+# The target we are creating
 
-set(PACKAGE_BUILD PythonBuild)
+add_custom_target(${PROJECT_NAME})
 
 # Use the pre-built version of our package unless instructed otherwise
 
@@ -168,10 +168,6 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                               SHA1_VALUES 62c58fa8c94b094097ee41907dbd64d670e3dbee
                                           81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
     endif()
-
-    # Since we don't use `add_plugin` we need a dependency
-
-    add_custom_target(${PACKAGE_BUILD} DEPENDS ${REAL_DIRNAME}/${LIBRARY_DIR}/${SHARED_LIBRARY})
 else()
     # Set platform specific configuration options
 
@@ -268,6 +264,8 @@ else()
     endif()
 
     # Build Python as an external project
+
+    set(PACKAGE_BUILD PythonBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
@@ -562,5 +560,8 @@ set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_
 
 # We need to specify the dependency if not using add_plugin
 
-add_dependencies(OpenCORBuild ${PACKAGE_BUILD})
+add_dependencies(OpenCORBuild ${PROJECT_NAME})
 
+if(NOT "${PLUGIN_DEPENDS_ON}" STREQUAL "")
+    add_dependencies(${PROJECT_NAME} ${PLUGIN_DEPENDS_ON})
+endif()

@@ -42,9 +42,9 @@ set(PACKAGED_FILES
 
 set(SHA1_FILES ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py)
 
-# Our package build target
+# The target we are creating
 
-set(PACKAGE_BUILD PythonPackagesBuild)
+add_custom_target(${PROJECT_NAME})
 
 # Use the pre-built version of our package unless instructed otherwise
 # Rebuilding Python means we should also re-install its packages
@@ -79,18 +79,16 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
     endif()
-
-    # Since we don't use `add_plugin` we need a dependency
-
-    add_custom_target(${PACKAGE_BUILD} DEPENDS ${REAL_DIRNAME}/${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py)
 else()
     # Install Python packages using pip
+
+    set(PACKAGE_BUILD PythonPackagesBuild)
 
     add_custom_target(${PACKAGE_BUILD})
 
     # Python package installation requires Python
 
-    set(BUILD_DEPENDENCIES PythonBuild)
+    set(BUILD_DEPENDENCIES PythonPlugin)
 
     # Ensure local site packages directory exists
 
@@ -162,5 +160,8 @@ set(SPHINX_BUILD_COMMAND
 
 # We need to specify the dependency if not using add_plugin
 
-add_dependencies(OpenCORBuild ${PACKAGE_BUILD})
+add_dependencies(OpenCORBuild ${PROJECT_NAME})
 
+if(NOT "${PLUGIN_DEPENDS_ON}" STREQUAL "")
+    add_dependencies(${PROJECT_NAME} ${PLUGIN_DEPENDS_ON})
+endif()
