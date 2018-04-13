@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QMutex>
 #include <QThread>
 #include <QXmlQuery>
 
@@ -98,14 +97,10 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 
     // Start/resume our thread, if needed
 
-    if (!mThread->isRunning()) {
+    if (!mThread->isRunning())
         mThread->start();
-    } else {
-        // Resume our thread, if needed
-
-        if (mPaused)
-            mPausedCondition.wakeOne();
-    }
+    else if (mPaused)
+        mPausedCondition.wakeOne();
 }
 
 //==============================================================================
