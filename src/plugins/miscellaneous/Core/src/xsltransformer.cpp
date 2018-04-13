@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QMutex>
 #include <QThread>
 #include <QXmlQuery>
 
@@ -94,18 +93,16 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 {
     // Add a new job to our list
 
-    mJobs << XslTransformerJob(pInput, pXsl);
+    mJobsMutex.lock();
+        mJobs << XslTransformerJob(pInput, pXsl);
+    mJobsMutex.unlock();
 
     // Start/resume our thread, if needed
 
-    if (!mThread->isRunning()) {
+    if (!mThread->isRunning())
         mThread->start();
-    } else {
-        // Resume our thread, if needed
-
-        if (mPaused)
-            mPausedCondition.wakeOne();
-    }
+    else if (mPaused)
+        mPausedCondition.wakeOne();
 }
 
 //==============================================================================
@@ -152,9 +149,11 @@ void XslTransformer::started()
         while (mJobs.count() && !mStopped) {
             // Retrieve the first job in our list
 
-            XslTransformerJob job = mJobs.first();
+            mJobsMutex.lock();
+                XslTransformerJob job = mJobs.first();
 
-            mJobs.removeFirst();
+                mJobs.removeFirst();
+            mJobsMutex.unlock();
 
             // Customise our XML query object
 
