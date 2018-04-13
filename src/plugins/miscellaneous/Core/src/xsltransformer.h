@@ -77,6 +77,8 @@ private:
     bool mPaused;
     bool mStopped;
 
+    QMutex mJobsMutex;
+
     QWaitCondition mPausedCondition;
 
     QList<XslTransformerJob> mJobs;

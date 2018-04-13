@@ -93,7 +93,9 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 {
     // Add a new job to our list
 
-    mJobs << XslTransformerJob(pInput, pXsl);
+    mJobsMutex.lock();
+        mJobs << XslTransformerJob(pInput, pXsl);
+    mJobsMutex.unlock();
 
     // Start/resume our thread, if needed
 
@@ -147,9 +149,11 @@ void XslTransformer::started()
         while (mJobs.count() && !mStopped) {
             // Retrieve the first job in our list
 
-            XslTransformerJob job = mJobs.first();
+            mJobsMutex.lock();
+                XslTransformerJob job = mJobs.first();
 
-            mJobs.removeFirst();
+                mJobs.removeFirst();
+            mJobsMutex.unlock();
 
             // Customise our XML query object
 
