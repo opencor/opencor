@@ -108,7 +108,6 @@ private slots:
     void recheckButtonClicked();
     void checkForUpdatesAtStartupCheckBoxToggled(bool pChecked);
     void includeSnapshotsCheckBoxToggled(bool pChecked);
-    void buttonBoxAccepted();
 };
 
 //==============================================================================
