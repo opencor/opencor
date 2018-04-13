@@ -3751,15 +3751,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                                                                        quint64 pSimulationResultsSize,
                                                                        const Task &pTask)
 {
-    // Update the modified state of our simulation's corresponding file, if
-    // needed
-    // Note: normally, our simulation worker would, for each point interval,
-    //       call
-    //       SimulationExperimentViewSimulationData::checkForModifications(),
-    //       but this would result in a signal being emitted (and then handled
-    //       by
-    //       SimulationExperimentViewSimulationWidget::simulationDataModified()),
-    //       resulting in some time overhead, so we check things here instead...
+    // Update our simulation results
 
     SimulationSupport::Simulation *simulation = pSimulationWidget->simulation();
 
