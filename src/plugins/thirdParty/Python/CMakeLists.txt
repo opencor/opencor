@@ -149,13 +149,23 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     if(WIN32)
-        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 0bef54c1816b2492be5ed4fabf74fffadcd75e5e
-                              SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES a25177a2023aba0ef198daa29752e41ee47d5e82
-                                          ef9568913a983473eb1013dc4dfba263de5b2c68
-                                          3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                          65a31aeafe260b7cb34e94da3a32c9d30916a2ce)
+        if(RELEASE_MODE)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0bef54c1816b2492be5ed4fabf74fffadcd75e5e
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES a25177a2023aba0ef198daa29752e41ee47d5e82
+                                              ef9568913a983473eb1013dc4dfba263de5b2c68
+                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
+                                              65a31aeafe260b7cb34e94da3a32c9d30916a2ce)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b8e73e7881b5638b18c292eb3b264b13ae9f3418
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 85067a1029b2b4bc7b2c07feccffe764ba75c237
+                                              bce763074ed196f584130b6f0f673ba765e1155e
+                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
+                                              af95b843f3bfd71c0db3d0ed4965d07e27191e5b)
+        endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 80cf0c6ea628d3037d90ed3f458ae6b8026ff4b8
