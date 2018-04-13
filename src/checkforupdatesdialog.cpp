@@ -189,7 +189,7 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
     connect(mGui->includeSnapshotsCheckBox, &QCheckBox::toggled,
             this, &CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled);
     connect(mGui->buttonBox, &QDialogButtonBox::accepted,
-            this, &CheckForUpdatesDialog::buttonBoxAccepted);
+            this, &CheckForUpdatesDialog::accept);
 
     // Create/set our engine and check for updates in the former case
 
@@ -308,15 +308,6 @@ void CheckForUpdatesDialog::updateGui()
     } else {
         mGui->statusLabel->setText(mEngine->status());
     }
-}
-
-//==============================================================================
-
-void CheckForUpdatesDialog::buttonBoxAccepted()
-{
-    // Simply close ourselves
-
-    close();
 }
 
 //==============================================================================
