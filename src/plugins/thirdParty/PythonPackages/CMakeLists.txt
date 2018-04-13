@@ -153,18 +153,3 @@ set(SPHINX_BUILD_COMMAND
     ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
     ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_COMMAND} PARENT_SCOPE
     )
-
-# Add the plugin
-
-add_plugin(PythonPackages
-    SOURCES
-        ../../plugininfo.cpp
-
-        src/pythonpackagesplugin.cpp
-    HEADERS_MOC
-        src/pythonpackagesplugin.h
-    PLUGINS
-        Python
-    DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
-)

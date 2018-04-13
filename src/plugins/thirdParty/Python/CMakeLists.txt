@@ -561,22 +561,3 @@ set(PYTHON_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${RUNTIME_DIR}/s
 
 set(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
 set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_SCOPE)
-
-# Add the plugin
-
-add_plugin(Python
-    SOURCES
-        ../../cliinterface.cpp
-        ../../plugininfo.cpp
-        ../../plugininterface.cpp
-
-        src/pythonplugin.cpp
-    HEADERS_MOC
-        src/pythonplugin.h
-    PLUGINS
-        Core
-        OpenSSL
-        zlib
-    DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
-)
