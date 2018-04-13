@@ -3701,16 +3701,6 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               quint64 pSize)
-{
-    // Update our graph's data from the last run
-
-    updateGraphData(pGraph, pSize, -1);
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 {
     // Make sure that we are visible, if requested
