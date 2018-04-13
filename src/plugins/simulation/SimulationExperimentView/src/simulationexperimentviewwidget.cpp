@@ -530,8 +530,11 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
-        foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
-            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pTask);
+        foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
+            currentSimulationWidget->updateSimulationResults(simulationWidget,
+                                                             simulationResultsSize,
+                                                             pTask);
+        }
     }
 
     // Ask to recheck our simulation widget's results, but only if its
