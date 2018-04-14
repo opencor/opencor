@@ -12,9 +12,9 @@ SET(GIT_TAG "opencor")
 
 # Git tags of Python package installers
 
-SET(PIP_GIT_TAG "9.0.1")
-SET(SETUPTOOLS_GIT_TAG "v36.5.0")
-SET(WHEEL_GIT_TAG "0.30.0")
+SET(PIP_GIT_TAG "9.0.3")
+SET(SETUPTOOLS_GIT_TAG "v39.0.1")
+SET(WHEEL_GIT_TAG "0.31.0")
 
 # Name and version of our package
 
@@ -144,28 +144,36 @@ IF(USE_PREBUILT_PYTHON_PACKAGE)
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
-    IF(WIN32)
-        IF(RELEASE_MODE)
-            RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 6b15a0ef0ec6fe0abc2605c56ed131af5dc2bd86
+    if(WIN32)
+        if(RELEASE_MODE)
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0bef54c1816b2492be5ed4fabf74fffadcd75e5e
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES ed38584233dcb07a1dcbf53d94308b97a114ab8f
-                                              b21827a348a8bf32d0127d1a91611ed6d24fc488
+                                  SHA1_VALUES a25177a2023aba0ef198daa29752e41ee47d5e82
+                                              ef9568913a983473eb1013dc4dfba263de5b2c68
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              f6a8d78478101d906647651d562e9d7668b217f5)
-        ENDIF()
-    ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 22786346f56097485b8542593599ff90c3005d71
+                                              65a31aeafe260b7cb34e94da3a32c9d30916a2ce)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b8e73e7881b5638b18c292eb3b264b13ae9f3418
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 85067a1029b2b4bc7b2c07feccffe764ba75c237
+                                              bce763074ed196f584130b6f0f673ba765e1155e
+                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
+                                              af95b843f3bfd71c0db3d0ed4965d07e27191e5b)
+        endif()
+    elseif(APPLE)
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 80cf0c6ea628d3037d90ed3f458ae6b8026ff4b8
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES d87312719ed58dddbb4e16a3ad9db28776b2a4b5)
-    ELSE()
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} d8a57ee388d1b25cd3c937f6d7a00d23c86f3348
+                              SHA1_VALUES 48d8641446d5294ef7557de796f70df57d9cdaa9)
+    else()
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 3d3fcc223d569729ab6fa2f11112fe5eb93e68b5
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES cc91186729aee93876495836da0af1b82d2858ea
+                              SHA1_VALUES 62c58fa8c94b094097ee41907dbd64d670e3dbee
                                           81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
-    ENDIF()
+    endif()
 ELSE()
     # Set platform specific configuration options
 
