@@ -31,9 +31,6 @@ endif()
 
 set(PYTHON_ABIFLAGS "m")
 if(WIN32)
-    if(NOT RELEASE_MODE)
-        message(FATAL_ERROR "${CURRENT_PROJECT_NAME} can only be built in release mode...")
-    endif()
     set(PYTHON_BUILT_VERSION ${NUMERIC_LIBRARY_VERSION})
 else()
     set(PYTHON_BUILT_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS})
@@ -138,9 +135,14 @@ elseif(WIN32)
     list(APPEND PACKAGED_FILES Scripts)
 endif()
 
+# The target we are creating
+
+add_custom_target(${PROJECT_NAME})
+
 # Use the pre-built version of our package unless instructed otherwise
 
 if(USE_PREBUILT_PYTHON_PACKAGE)
+
     # Retrieve the plugin's package
 
     string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -155,6 +157,14 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                                               ef9568913a983473eb1013dc4dfba263de5b2c68
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
                                               65a31aeafe260b7cb34e94da3a32c9d30916a2ce)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b8e73e7881b5638b18c292eb3b264b13ae9f3418
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 85067a1029b2b4bc7b2c07feccffe764ba75c237
+                                              bce763074ed196f584130b6f0f673ba765e1155e
+                                              3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
+                                              af95b843f3bfd71c0db3d0ed4965d07e27191e5b)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -539,60 +549,29 @@ endif()
 
 # Allow other external projects to find our Python
 
-set(PYTHON_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
-
-set(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
+set(PYTHON_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 
 if(WIN32)
-    set(PYTHON_EXECUTABLE ${ROOT_DIR}/bin/python.exe)
+    set(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
 else()
-    set(PYTHON_EXECUTABLE ${ROOT_DIR}/bin/python)
+    set(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
 endif()
 
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
-set(PYTHON_SCRIPT_DIR  ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
+set(PYTHON_SCRIPT_DIR  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
 
-set(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
 set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
-set(PYTHON_SITE_PACKAGES_DIR ${ROOT_DIR}/${RUNTIME_DIR}/site-packages PARENT_SCOPE)
+set(PYTHON_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${RUNTIME_DIR}/site-packages PARENT_SCOPE)
 
 set(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
 set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_SCOPE)
 
-# Add the plugin
+# We need to specify the dependency if not using add_plugin
 
-add_plugin(Python
-    SOURCES
-        ../../cliinterface.cpp
-        ../../plugininfo.cpp
-        ../../plugininterface.cpp
+add_dependencies(OpenCORBuild ${PROJECT_NAME})
 
-        src/pythonplugin.cpp
-    HEADERS_MOC
-        src/pythonplugin.h
-    PLUGINS
-        Core
-        OpenSSL
-        zlib
-    EXTERNAL_BINARIES_DIR
-        ${EXTERNAL_BINARIES_DIR}
-    EXTERNAL_BINARIES
-        ${EXTERNAL_BINARIES}
-    EXTERNAL_SOURCE_DIR
-        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-    EXTERNAL_DESTINATION_DIR
-        ${ROOT_DIR}
-    DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
-)
-
-# Update Python paths for newly copied scripts
-
-add_custom_command(TARGET PythonPlugin POST_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/distrib/set_python_path.py ${ROOT_DIR})
-
-# Update our list of Python dependencies for other plugins
-
-set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)
+if(NOT "${PLUGIN_DEPENDS_ON}" STREQUAL "")
+    add_dependencies(${PROJECT_NAME} ${PLUGIN_DEPENDS_ON})
+endif()

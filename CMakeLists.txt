@@ -797,6 +797,10 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
+# We need a target to build non-library packages
+
+add_custom_target(OpenCORBuild ALL)
+
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
@@ -959,8 +963,6 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 
 if(WIN32)
     target_link_libraries(${CMAKE_PROJECT_NAME}
-        ${PYTHON_LIBRARY}
-
         ${Qt5Core_QTMAIN_LIBRARIES}
     )
 endif()
@@ -970,25 +972,6 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         Qt5::${REQUIRED_QT_MODULE}
     )
 endforeach()
-
-# For the Python's interface code to compile, we need the Python headers to be
-# in place
-
-if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
-    add_dependencies(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
-endif()
-
-# Under Linux, the Python library needs to be linked directly to OpenCOR
-# otherwise extension DSOs (which are loaded using dlopen()) won't be able to
-# find symbols (see https://www.akkadia.org/drepper/dsohowto.pdf for details)
-
-if(NOT WIN32 AND NOT APPLE)
-    include_directories(${PYTHON_INCLUDE_DIR})
-
-    target_link_libraries(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
-
-    add_dependencies(${CMAKE_PROJECT_NAME} PythonPlugin)
-endif()
 
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
@@ -1015,18 +998,9 @@ if(WIN32)
     )
 
     target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
-        ${PYTHON_LIBRARY}
-
         Qt5::Core
         Qt5::Network
     )
-
-    # For the Python's interface code to compile, we need the Python headers to
-    # be in place
-
-    if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
-        add_dependencies(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
-    endif()
 
 endif()
 
@@ -1231,14 +1205,6 @@ if(WIN32)
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})
 
-    # Python runtime libraries and utilities
-
-    install(DIRECTORY ${PROJECT_BUILD_DIR}/Python
-            DESTINATION .)
-
-    install(FILES ${PROJECT_SOURCE_DIR}/distrib/set_python_path.py
-            DESTINATION Python/Scripts)
-
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
@@ -1289,12 +1255,6 @@ if(WIN32)
         set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
             \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
             System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
-        ")
-
-        # Update Python scripts to refer to our installed Python
-
-        set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
-           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\"'
         ")
     endif()
 elseif(APPLE)

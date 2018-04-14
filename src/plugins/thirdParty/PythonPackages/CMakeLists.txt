@@ -42,6 +42,10 @@ set(PACKAGED_FILES
 
 set(SHA1_FILES ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py)
 
+# The target we are creating
+
+add_custom_target(${PROJECT_NAME})
+
 # Use the pre-built version of our package unless instructed otherwise
 # Rebuilding Python means we should also re-install its packages
 
@@ -54,7 +58,14 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} e17dc11f97286835ae91785c3704ca45968716aa
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4b980929824fbb9324eba6db221396cd4fd30b32
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c5d302fda38d1f94a29a7eb8ca5211e6067c59c8
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -62,14 +73,14 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7f459a2ee51e198caa5557a449d48d9515f1f7d3
+                              ${RELATIVE_PROJECT_SOURCE_DIR} de19e8a6d17b8908c2e396fde5252e5dab0a050f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 2263dd6a7d15772d9da3321e06c6055361f8eebd
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 2bdb262c6599dc8dfd13a592baa580c621b2839c
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
@@ -149,28 +160,15 @@ else()
     set(SPHINX_BUILD_EXECUTABLE sphinx-build)
 endif()
 
-set(SPHINX_BUILD_EXECUTABLE ${PYTHON_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE)
+set(SPHINX_BUILD_EXECUTABLE
+    ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
+    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE
+    )
 
-# Add the plugin
+# We need to specify the dependency if not using add_plugin
 
-add_plugin(PythonPackages
-    SOURCES
-        ../../plugininfo.cpp
+add_dependencies(OpenCORBuild ${PROJECT_NAME})
 
-        src/pythonpackagesplugin.cpp
-    HEADERS_MOC
-        src/pythonpackagesplugin.h
-    PLUGINS
-        Python
-    EXTERNAL_SOURCE_DIR
-        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-    EXTERNAL_DESTINATION_DIR
-        ${PYTHON_ROOT_DIR}
-    DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
-)
-
-# Update Python paths for newly copied scripts
-
-add_custom_command(TARGET PythonPackagesPlugin POST_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/distrib/set_python_path.py ${PYTHON_ROOT_DIR})
+if(NOT "${PLUGIN_DEPENDS_ON}" STREQUAL "")
+    add_dependencies(${PROJECT_NAME} ${PLUGIN_DEPENDS_ON})
+endif()
