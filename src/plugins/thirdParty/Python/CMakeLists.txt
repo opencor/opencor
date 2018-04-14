@@ -31,9 +31,6 @@ endif()
 
 set(PYTHON_ABIFLAGS "m")
 if(WIN32)
-    if(NOT RELEASE_MODE)
-        message(FATAL_ERROR "${CURRENT_PROJECT_NAME} can only be built in release mode...")
-    endif()
     set(PYTHON_BUILT_VERSION ${NUMERIC_LIBRARY_VERSION})
 else()
     set(PYTHON_BUILT_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS})
@@ -63,14 +60,16 @@ else()
     set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/..)
 endif()
 
-# Include and library directories
+# Include, library and script directories
 
 if(WIN32)
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
+    set(SCRIPT_DIR Scripts)
 else()
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
+    set(SCRIPT_DIR bin)
 endif()
 
 # Retrieve our package's binaries
@@ -262,8 +261,10 @@ else()
     # The type of build
 
     if(WIN32)
+        set(APPLY_PATCHES ON)
         set(BUILD_TYPE Release)
     else()
+        set(APPLY_PATCHES OFF)
         set(BUILD_TYPE ${CMAKE_BUILD_TYPE})
     endif()
 
@@ -312,6 +313,9 @@ else()
             -DINSTALL_MANUAL=OFF
             -DBUILD_TESTING=OFF
             -DINSTALL_TEST=OFF
+
+            # Optionally patch sources (for Windows)
+            -DPYTHON_APPLY_PATCHES=${APPLY_PATCHES}
 
             # Disable extension modules that we don't use
             # or the platform doesn't provide
@@ -553,6 +557,11 @@ endif()
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
 set(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
+
+set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
+set(PYTHON_SCRIPT_DIR  ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
+
+set(PYTHON_RELATIVE_RUNTIME_DIR ${RUNTIME_DIR} PARENT_SCOPE)
 set(PYTHON_SITE_PACKAGES_DIR ${ROOT_DIR}/${RUNTIME_DIR}/site-packages PARENT_SCOPE)
 
 set(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
