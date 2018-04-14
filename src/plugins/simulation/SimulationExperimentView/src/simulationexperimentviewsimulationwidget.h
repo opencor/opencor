@@ -146,7 +146,10 @@ public:
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
-                                 const Task &pTask = None);
+                                 int pSimulationRun, const Task &pTask);
+    void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                 quint64 pSimulationResultsSize,
+                                 const Task &pTask);
 
     void resetSimulationProgress();
 
@@ -261,9 +264,7 @@ private:
                   int pRun) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         quint64 pSize, int pRun);
-    void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         quint64 pSize);
+                         quint64 pSize, int pRun = -1);
 
     void updateSimulationProperties(Core::Property *pProperty = 0);
     void updateSolversProperties(Core::Property *pProperty,

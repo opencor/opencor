@@ -3708,16 +3708,6 @@ void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget:
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               quint64 pSize)
-{
-    // Update our graph's data from the last run
-
-    updateGraphData(pGraph, pSize, -1);
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 {
     // Make sure that we are visible, if requested
@@ -3756,17 +3746,10 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
+                                                                       int pSimulationRun,
                                                                        const Task &pTask)
 {
-    // Update the modified state of our simulation's corresponding file, if
-    // needed
-    // Note: normally, our simulation worker would, for each point interval,
-    //       call
-    //       SimulationExperimentViewSimulationData::checkForModifications(),
-    //       but this would result in a signal being emitted (and then handled
-    //       by
-    //       SimulationExperimentViewSimulationWidget::simulationDataModified()),
-    //       resulting in some time overhead, so we check things here instead...
+    // Update our simulation results
 
     SimulationSupport::Simulation *simulation = pSimulationWidget->simulation();
 
@@ -3821,7 +3804,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 if (visible)
                     mOldDataSizes.insert(graph, oldDataSize);
 
-                updateGraphData(graph, pSimulationResultsSize);
+                updateGraphData(graph, pSimulationResultsSize, pSimulationRun);
 
                 // We need to update our plot, if we are drawing this graph's
                 // first segment or if we were invisible at some point during
@@ -3851,8 +3834,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                         for (quint64 i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data()->sample(i).x();
-                            double valY = graph->data()->sample(i).y();
+                            double valX = graph->data(pSimulationRun)->sample(i).x();
+                            double valY = graph->data(pSimulationRun)->sample(i).y();
 
                             minX = qMin(minX, valX);
                             maxX = qMax(maxX, valX);
@@ -3941,6 +3924,17 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             }
         }
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                       quint64 pSimulationResultsSize,
+                                                                       const Task &pTask)
+{
+    // Update our simulation results
+
+    updateSimulationResults(pSimulationWidget, pSimulationResultsSize, -1, pTask);
 }
 
 //==============================================================================

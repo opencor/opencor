@@ -176,7 +176,7 @@ public slots:
     void replaceAll();
 
 private slots:
-    void emitZoomLevelChanged();
+    void zoomLevelChanged();
 
     void keepTrackOfCursorPosition(int pLine, int pColumn);
 

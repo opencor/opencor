@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QList>
+#include <QMutex>
 #include <QObject>
 #include <QString>
 #include <QWaitCondition>
@@ -76,6 +77,8 @@ private:
 
     bool mPaused;
     bool mStopped;
+
+    QMutex mJobsMutex;
 
     QWaitCondition mPausedCondition;
 

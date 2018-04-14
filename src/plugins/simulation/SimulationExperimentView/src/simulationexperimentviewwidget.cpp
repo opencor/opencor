@@ -70,8 +70,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidget(0),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
-    mSimulationResultsSizes(QMap<QString, quint64>()),
-    mSimulationCheckResults(QStringList())
+    mSimulationResultsSizes(QMap<QString, quint64>())
 {
 }
 
@@ -533,20 +532,43 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     if (!simulationWidget)
         return;
 
+    // Make sure that our previous run, if any, is complete, if we are coming
+    // here as a result of having added a new run
+
+    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
+    int simulationRunsCount = simulation->runsCount();
+
+    if (   (pTask == SimulationExperimentViewSimulationWidget::AddRun)
+        && (simulationRunsCount > 1)) {
+        quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
+
+        if (previousSimulationResultsSize != mSimulationResultsSizes.value(pFileName)) {
+            foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
+                currentSimulationWidget->updateSimulationResults(simulationWidget,
+                                                                 previousSimulationResultsSize,
+                                                                 simulationRunsCount-2,
+                                                                 SimulationExperimentViewSimulationWidget::None);
+            }
+        }
+    }
+
     // Update all of our simulation widgets' results, but only if needed
     // Note: to update only the given simulation widget's results is not enough
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     quint64 simulationResultsSize = simulation->results()->size();
 
     if (   (pTask != SimulationExperimentViewSimulationWidget::None)
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
-        foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
-            currentSimulationWidget->updateSimulationResults(simulationWidget, simulationResultsSize, pTask);
+        foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
+            currentSimulationWidget->updateSimulationResults(simulationWidget,
+                                                             simulationResultsSize,
+                                                             simulationRunsCount-1,
+                                                             pTask);
+        }
     }
 
     // Ask to recheck our simulation widget's results, but only if its
@@ -554,20 +576,10 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     if (   simulation->isRunning()
         || (simulationResultsSize != simulation->results()->size())) {
-        // Note #1: we cannot ask QTimer::singleShot() to call
-        //          checkSimulationResults() directly since it expects a file
-        //          name as a parameter, so instead we call a method with no
-        //          arguments that will make use of our list to know which file
-        //          name should be passed as an argument to
-        //          checkSimulationResults()...
-        // Note #2: we would normally use the new signal/slot mechanism, but it
-        //          won't call callCheckSimulationResults() as often as we would
-        //          expect, so we use the old mechanism instead (see issue
-        //          #1613)...
-
-        mSimulationCheckResults << pFileName;
-
-        QTimer::singleShot(0, this, SLOT(callCheckSimulationResults()));
+        QTimer::singleShot(0, this, std::bind(&SimulationExperimentViewWidget::checkSimulationResults,
+                                              this,
+                                              pFileName,
+                                              SimulationExperimentViewSimulationWidget::None));
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
         // the simulation progress of the given file
@@ -576,20 +588,6 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
         simulationWidget->resetSimulationProgress();
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::callCheckSimulationResults()
-{
-    // Retrieve the simulation widget for which we want to call checkResults()
-    // and then call checkResults() for it
-
-    QString fileName = mSimulationCheckResults.first();
-
-    mSimulationCheckResults.removeFirst();
-
-    checkSimulationResults(fileName);
 }
 
 //==============================================================================

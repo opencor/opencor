@@ -132,7 +132,6 @@ private:
     QStringList mFileNames;
 
     QMap<QString, quint64> mSimulationResultsSizes;
-    QStringList mSimulationCheckResults;
 
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
 
@@ -154,8 +153,6 @@ private slots:
     void parametersHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
 
     void graphPanelSectionExpanded(int pSection, bool pExpanded);
-
-    void callCheckSimulationResults();
 };
 
 //==============================================================================
