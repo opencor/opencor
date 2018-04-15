@@ -42,14 +42,13 @@ SET(PACKAGED_FILES
 )
 
 # Some files need to have their SHA-1 value checked
-## "35m" needs to come from say ${PYTHON_ABI_VERSION}
 
 IF(WIN32)
-    SET(SHA1_FILES site-packages/numpy/core/multiarray.cp35-win_amd64.pyd)
+    SET(SHA1_FILES site-packages/numpy/core/multiarray.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
 ELSEIF(APPLE)
-    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-darwin.so)
+    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-darwin.so)
 ELSEIF(UNIX)
-    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-35m-x86_64-linux-gnu.so)
+    SET(SHA1_FILES site-packages/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-x86_64-linux-gnu.so)
 ENDIF()
 
 # Use the pre-built version of our package unless instructed otherwise
