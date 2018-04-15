@@ -797,7 +797,7 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
-# We need a target to build non-library packages
+# Specify a target to build our non-library packages (e.g. Python)
 
 add_custom_target(OpenCORBuild ALL)
 
