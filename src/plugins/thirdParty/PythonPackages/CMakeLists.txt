@@ -11,25 +11,20 @@ SET(PACKAGE_REPOSITORY python)
 
 # The versions of the Python packages we bundle.
 
-SET(NUMPY_VERSION 1.13.3)
-SET(MATPLOTLIB_VERSION 2.1.0)
-SET(SCIPY_VERSION 0.19.0)
+SET(NUMPY_VERSION 1.14.2)
+SET(MATPLOTLIB_VERSION 2.2.2)
+SET(SCIPY_VERSION 1.0.1)
 
-SET(IPYKERNEL_VERSION 4.6.1)
-SET(IPYTHON_VERSION 6.2.1)
+SET(IPYKERNEL_VERSION 4.8.2)
+SET(IPYTHON_VERSION 6.3.1)
 SET(QTCONSOLE_VERSION 4.3.1)
 SET(TRAITLETS_VERSION 4.3.2)
 
-SET(LXML_VERSION 4.1.1)
+SET(LXML_VERSION 4.2.1)
 
 # Our GitHub archive
 
 SET(GITHUB_OPENCOR https://github.com/opencor)
-
-# We use our own copies of some Windows packages from
-# http://www.lfd.uci.edu/~gohlke/pythonlibs/
-
-SET(WHEEL_REPOSITORY ${GITHUB_OPENCOR}/python/releases/download/wheels)
 
 # Specify where our local package will be installed
 
@@ -46,7 +41,7 @@ SET(PACKAGED_FILES
     site-packages
 )
 
-# XXXNo files need to have their SHA-1 value checked
+# Some files need to have their SHA-1 value checked
 ## "35m" needs to come from say ${PYTHON_ABI_VERSION}
 
 IF(WIN32)
@@ -75,11 +70,11 @@ IF(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                                   SHA1_VALUES 97949f3f839adab391fc785d8f7459f569f63a4f)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 29096b4f2e116f57b2f8e316b616a30ac66948c4
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 10c77b619d7b98ca33250c379b5899ebddb3d9ce
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 404333b7075ec857401b22c5de977ad5869dd6fc)
+                              SHA1_VALUES 13f1ca249d663cd76ea70873b659fa2a0c90e6bc)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 5b26aac0190f0cb1e5b58ee3c34639e339dae135
@@ -109,41 +104,15 @@ ELSE()
         ${PYTHON_EXECUTABLE} -s -m
         pip install -t ${LOCAL_SITE_PACKAGES_DIR} --upgrade --upgrade-strategy only-if-needed)
 
-    # Install from pre-built wheels under Windows
-
-    IF(WIN32)
-        STRING(REPLACE "." "" VERSION_ABIFLAGS ${PYTHON_FULL_VERSION})
-        STRING(SUBSTRING ${VERSION_ABIFLAGS} 0 2 NUMERIC_VERSION)
-        SET(WHEEL_SUFFIX "cp${NUMERIC_VERSION}-cp${VERSION_ABIFLAGS}-win_amd64.whl")
-    ENDIF()
-
     # Install numpy, scipy, and matplotlib
 
-    IF(WIN32)
-        # The numpy version we use is linked to the Intel Math Kernel Library
-
-        SET(NUMPY_WHEEL "numpy-${NUMPY_VERSION}.mkl-${WHEEL_SUFFIX}")
-        SET(SCIPY_WHEEL "scipy-${SCIPY_VERSION}-${WHEEL_SUFFIX}")
-        SET(MATPLOTLIB_WHEEL "matplotlib-${MATPLOTLIB_VERSION}-${WHEEL_SUFFIX}")
-
-        ADD_CUSTOM_TARGET(science_packages
-            COMMAND ${PIP_INSTALL_COMMAND}
-                ${WHEEL_REPOSITORY}/${NUMPY_WHEEL}
-                ${WHEEL_REPOSITORY}/${SCIPY_WHEEL}
-                ${WHEEL_REPOSITORY}/${MATPLOTLIB_WHEEL}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    ELSE()
-        ADD_CUSTOM_TARGET(science_packages
-            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                numpy==${NUMPY_VERSION}
-                scipy==${SCIPY_VERSION}
-                matplotlib==${MATPLOTLIB_VERSION}
-            VERBATIM
-        )
-    ENDIF()
+    ADD_CUSTOM_TARGET(science_packages
+        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+            numpy==${NUMPY_VERSION}
+            scipy==${SCIPY_VERSION}
+            matplotlib==${MATPLOTLIB_VERSION}
+        VERBATIM
+    )
 
     ADD_DEPENDENCIES(${PACKAGE_BUILD} science_packages)
     ADD_DEPENDENCIES(science_packages ${BUILD_DEPENDENCIES})
@@ -194,24 +163,13 @@ ELSE()
 
     # Install other packages we use
 
-    IF(WIN32)
-        SET(LXML_WHEEL "numpy-${LXML_VERSION}.mkl-${WHEEL_SUFFIX}")
-        ADD_CUSTOM_TARGET(science_packages
-            COMMAND ${PIP_INSTALL_COMMAND}
-                ${WHEEL_REPOSITORY}/${LXML_WHEEL}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    ELSE()
-        ADD_CUSTOM_TARGET(other_packages
-            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                lxml==${LXML_VERSION}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    ENDIF()
+    ADD_CUSTOM_TARGET(other_packages
+        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+            lxml==${LXML_VERSION}
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+        VERBATIM
+    )
 
     ADD_DEPENDENCIES(${PACKAGE_BUILD} other_packages)
     ADD_DEPENDENCIES(other_packages ipython_packages)
@@ -220,6 +178,8 @@ ELSE()
     # Upgrade to our versions of packages which have been patched to work with PythonQt
 
     SET(ARCHIVE_PYTHONQT archive/PythonQt-v)
+
+    SET(DJB_BUILD /Users/dave/build)
 
     ADD_CUSTOM_TARGET(pythonqt_update
         COMMAND ${PIP_INSTALL_COMMAND} --no-deps
