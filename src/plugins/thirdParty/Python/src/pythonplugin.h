@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python library plugin
+// Python plugin
 //==============================================================================
 
 #pragma once
@@ -40,8 +40,7 @@ PLUGININFO_FUNC PythonPluginInfo();
 
 //==============================================================================
 
-class PythonPlugin : public QObject, public CliInterface,
-                            public PluginInterface
+class PythonPlugin : public QObject, public CliInterface, public PluginInterface
 {
     Q_OBJECT
 
@@ -56,7 +55,7 @@ public:
 
 private:
     void runHelpCommand();
-    int runPythonShell(const QStringList &pArguments);
+    int runShellCommand(const QStringList &pArguments);
 };
 
 //==============================================================================
