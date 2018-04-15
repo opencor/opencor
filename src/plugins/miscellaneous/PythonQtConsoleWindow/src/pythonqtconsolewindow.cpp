@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "CTK/ctkAbstractPythonManager.h"
 #include "pythonqtconsolewindow.h"
 #include "pythonqtsupportplugin.h"
 
@@ -89,8 +88,9 @@ class QtConsole(object):
     def widget(self):
         return self._widget
 
-# The console we are creating -- it's a global so it doesn't get
-# garbage collected.
+# The console we are creating
+
+# Note: we make it a global so it doesn't get garbage collected
 
 qt_console = None
 
