@@ -1001,7 +1001,6 @@ if(WIN32)
         Qt5::Core
         Qt5::Network
     )
-
 endif()
 
 # Some post-processing specific stuff
