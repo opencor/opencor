@@ -397,7 +397,9 @@ else()
                                  COMMAND install_name_tool -add_rpath ${FULL_DEST_EXTERNAL_BINARIES_DIR} bin/python
                                  COMMAND install_name_tool -add_rpath @executable_path/.. bin/python
                                  COMMAND install_name_tool -add_rpath @executable_path/../.. bin/python
-                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY} @rpath/lib/${SHARED_LIBRARY} bin/python
+                                 COMMAND install_name_tool -change ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}
+                                                                   @rpath/lib/${SHARED_LIBRARY}
+                                                                   bin/python
                                  COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} lib/${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
