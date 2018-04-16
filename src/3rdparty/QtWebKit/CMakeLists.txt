@@ -222,7 +222,7 @@ else()
         find_package(JPEG REQUIRED)
         find_package(PNG REQUIRED)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibraries
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibraries
                                  COMMAND ${CMAKE_COMMAND} -E copy ${JPEG_LIBRARY} ${JPEG_FILENAME}
                                  COMMAND chmod 755 ${JPEG_FILENAME}
                                  COMMAND strip -x ${JPEG_FILENAME}
@@ -234,7 +234,7 @@ else()
 
         # Fix the RPATH information
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+        ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                  COMMAND install_name_tool -change /usr/local/opt/jpeg/lib/${JPEG_FILENAME}
                                                                    @rpath/${JPEG_FILENAME}
                                                                    ${QTWEBKIT_SHARED_LIBRARY}

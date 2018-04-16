@@ -170,7 +170,7 @@ else()
     if(WIN32)
         # Windows requires an additional configuration step
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} PostConfigure
+        ExternalProject_Add_Step(${PACKAGE_BUILD} postConfigure
                                  COMMAND "ms/do_win64a"
                                  WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
                                  DEPENDEES configure
@@ -178,7 +178,7 @@ else()
 
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLLs
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
@@ -187,7 +187,7 @@ else()
         # Make our libraries writable
         # Note: indeed, the build process creates write-protected libraries...
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} MakeWritable
+        ExternalProject_Add_Step(${PACKAGE_BUILD} makeWritable
                                  COMMAND chmod 755 ${CRYPTO_SHARED_LIBRARY}
                                  COMMAND chmod 755 ${SSL_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
@@ -196,14 +196,14 @@ else()
         if(APPLE)
             # Fix the RPATH information
 
-            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+            ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                      COMMAND install_name_tool -id @rpath/${CRYPTO_SHARED_LIBRARY} ${CRYPTO_SHARED_LIBRARY}
                                      COMMAND install_name_tool -id @rpath/${SSL_SHARED_LIBRARY} ${SSL_SHARED_LIBRARY}
                                      COMMAND install_name_tool -change ${EXTERNAL_BINARIES_DIR}/${CRYPTO_SHARED_LIBRARY}
                                                                        @rpath/${CRYPTO_SHARED_LIBRARY}
                                                                        ${SSL_SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
-                                     DEPENDEES MakeWritable)
+                                     DEPENDEES makeWritable)
         endif()
     endif()
 

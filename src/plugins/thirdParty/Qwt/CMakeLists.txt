@@ -143,14 +143,14 @@ else()
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyQwtLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyQwtLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${QWT_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}qwt${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${QWT_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyQwtmathmlLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyQwtmathmlLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${QWTMATHML_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}qwtmathml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${QWTMATHML_SHARED_LIBRARY}
@@ -160,7 +160,7 @@ else()
         if(APPLE)
             # Fix the RPATH information
 
-            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+            ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                      COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWT_SHARED_LIBRARY}
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWT_SHARED_LIBRARY}
                                      COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWTMATHML_SHARED_LIBRARY}
@@ -169,7 +169,7 @@ else()
                                                                        @rpath/${QWT_SHARED_LIBRARY}
                                                                        ${QWTMATHML_SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
-                                     DEPENDEES CopyQwtmathmlLibrary)
+                                     DEPENDEES copyQwtmathmlLibrary)
         endif()
     endif()
 

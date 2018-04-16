@@ -24,9 +24,11 @@ option(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML AP
 
 option(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
-option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang plugin" ON)
+option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
+option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
+option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
@@ -830,11 +832,17 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
+# Specify a target to build our non-library packages (e.g. Python)
+
+add_custom_target(OpenCORBuild ALL)
+
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
 #          former...
-# Note #2: soft dependencies are determined automatically, so plugins can be
+# Note #2: Python third-party plugins must be built in order, after zlib and
+#          OpenSSL, and before any other plugins...
+# Note #3: soft dependencies are determined automatically, so plugins can be
 #          listed in any order...
 
 if(ENABLE_SAMPLE_PLUGINS)
@@ -859,6 +867,9 @@ endif()
 set(PLUGINS
     thirdParty/zlib
     thirdParty/OpenSSL
+
+    thirdParty/Python
+    thirdParty/PythonPackages
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
@@ -1169,7 +1180,7 @@ else()
         # machines that don't have 'proper' OpenGL support (e.g. on a Linux
         # virtual machine in VirtualBox)
 
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/mesa)
+        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
     endif()
 endif()
 

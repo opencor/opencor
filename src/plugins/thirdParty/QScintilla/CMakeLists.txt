@@ -129,7 +129,7 @@ else()
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}qscintilla2_qt${QT_VERSION_MAJOR}${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SHARED_LIBRARY}
@@ -139,11 +139,11 @@ else()
         if(APPLE)
             # Fix the RPATH information
 
-            ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
+            ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                      COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${SHARED_LIBRARY}
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
-                                     DEPENDEES CopyLibrary)
+                                     DEPENDEES copyLibrary)
         endif()
     endif()
 

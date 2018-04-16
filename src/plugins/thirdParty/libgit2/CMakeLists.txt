@@ -141,7 +141,7 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDll
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
@@ -149,7 +149,7 @@ else()
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SHARED_LIBRARY}
