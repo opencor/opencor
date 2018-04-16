@@ -574,17 +574,13 @@ set(PYTHON_VERSION ${LIBRARY_VERSION} PARENT_SCOPE)
 
 add_plugin(Python
     SOURCES
-        ../../cliinterface.cpp
         ../../plugininfo.cpp
-        ../../plugininterface.cpp
 
         src/pythonplugin.cpp
     HEADERS_MOC
         src/pythonplugin.h
-    PLUGINS
+    QT_MODULES
         Core
-        OpenSSL
-        zlib
     EXTERNAL_BINARIES_DIR
         ${EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
