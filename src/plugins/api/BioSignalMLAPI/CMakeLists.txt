@@ -116,7 +116,7 @@ if(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
 else()
     # Build typedobject as an external project
 
-    ExternalProject_Add(TypedObjectBuild
+    ExternalProject_Add(typedObjectBuild
         SOURCE_DIR
             ${CMAKE_SOURCE_DIR}/ext/typedobject
         INSTALL_DIR
@@ -162,7 +162,7 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLLs
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${BIOSIGNALML_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${TYPEDOBJECT_SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
@@ -171,7 +171,7 @@ else()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibraries
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibraries
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${BIOSIGNALML_SHARED_LIBRARY}
                                                                        ${TYPEDOBJECT_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}biosignalml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${BIOSIGNALML_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
