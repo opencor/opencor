@@ -1,138 +1,138 @@
-PROJECT(PythonQtAPIPlugin)
+project(PythonQtAPIPlugin)
 
 # Name and version of our package
 
-SET(PACKAGE_NAME PythonQt)
-SET(PACKAGE_VERSION "3.2.1")
+set(PACKAGE_NAME PythonQt)
+set(PACKAGE_VERSION "3.2.1")
 
 # Release tag of our packaged library
 
-SET(RELEASE_TAG opencor-v3.2.1)
+set(RELEASE_TAG opencor-v3.2.1)
 
 # Version of our library
 
-SET(MAJOR_LIBRARY_VERSION "3")
-SET(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.2.0")
+set(MAJOR_LIBRARY_VERSION "3")
+set(LIBRARY_VERSION "${MAJOR_LIBRARY_VERSION}.2.0")
 
 # Git tag for our library
 
-SET(GIT_TAG opencor-v3.2.1)
+set(GIT_TAG opencor-v3.2.1)
 
 # Specify where our local package will be installed
 
-SET(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
+set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
 
 # Name of our package's shared libraries (and of their import libraries, if any)
 
-IF(WIN32)
-    SET(SHARED_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(IMPORT_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
-ELSE()
-    IF(APPLE)
-        SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    ELSE()
-        SET(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
-    ENDIF()
-    SET(IMPORT_LIBRARY ${SHARED_LIBRARY})
-ENDIF()
+if(WIN32)
+    set(SHARED_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(IMPORT_LIBRARY PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
+else()
+    if(APPLE)
+        set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    else()
+        set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
+    endif()
+    set(IMPORT_LIBRARY ${SHARED_LIBRARY})
+endif()
 
 # Retrieve our package's binaries
 
-SET(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
+set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib)
 
-SET(EXTERNAL_BINARIES
+set(EXTERNAL_BINARIES
     ${SHARED_LIBRARY}
 )
 
 # Specify the files that need to have their SHA-1 value checked
 
-SET(SHA1_FILES
+set(SHA1_FILES
     lib/${SHARED_LIBRARY}
 )
 
-IF(WIN32)
-    LIST(APPEND SHA1_FILES
+if(WIN32)
+    list(APPEND SHA1_FILES
         lib/${IMPORT_LIBRARY}
     )
-ENDIF()
+endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-IF(USE_PREBUILT_PYTHONQT_PACKAGE)
+if(USE_PREBUILT_PYTHONQT_PACKAGE)
     # Retrieve the plugin's package
 
-    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
+    string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
-    IF(WIN32)
-        IF(RELEASE_MODE)
+    if(WIN32)
+        if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} b1598259fcd2de1901c6d840b38c36e570668bc8
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES bcae917b414bbfe2ae4bfa0641e241586d87b281
                                               ffed9bec762dc7f7ab1de5ba22f62d928609e106)
-        ENDIF()
-    ELSEIF(APPLE)
+        endif()
+    elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} a6469dd0a7dbf873b7faec0f2e72da993c3c1b43
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES ccbda93cd43f35412d4acd4587c35ebb1deaa63e)
-    ELSE()
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    else()
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 57bcc2f58e9d141535554bafd429418155b50b74
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES f43df980cbe0315066a631a0ac64be1ed7b0b3fe)
-    ENDIF()
-ELSE()
+    endif()
+else()
     # Set platform specific configuration options and tool names
 
-    IF(WIN32)
-        SET(QMAKE_LFLAGS_OPTION)
-        SET(MAKE_COMMAND nmake)
-        SET(QUIET_MAKE -c)
-    ELSE()
-        IF(NOT APPLE)
+    if(WIN32)
+        set(QMAKE_LFLAGS_OPTION)
+        set(MAKE_COMMAND nmake)
+        set(QUIET_MAKE -c)
+    else()
+        if(NOT APPLE)
           # Make sure correct value of RPATH is set in library
 
-            SET(QMAKE_LFLAGS_OPTION "QMAKE_LFLAGS+=\\'-Wl,-rpath,\\\$\\\$ORIGIN/../lib\\'")
-        ELSEIF()
-            SET(QMAKE_LFLAGS_OPTION)
-        ENDIF()
+            set(QMAKE_LFLAGS_OPTION "QMAKE_LFLAGS+=\\'-Wl,-rpath,\\\$\\\$ORIGIN/../lib\\'")
+        elseif()
+            set(QMAKE_LFLAGS_OPTION)
+        endif()
 
-        SET(MAKE_COMMAND make)
-        SET(QUIET_MAKE --quiet)
-    ENDIF()
+        set(MAKE_COMMAND make)
+        set(QUIET_MAKE --quiet)
+    endif()
 
-    IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        SET(QMAKE_DEBUG_OPTION "CONFIG+=debug")
-    ELSEIF()
-        SET(QMAKE_DEBUG_OPTION)
-    ENDIF()
+    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        set(QMAKE_DEBUG_OPTION "CONFIG+=debug")
+    elseif()
+        set(QMAKE_DEBUG_OPTION)
+    endif()
 
     # Wrap our WebKit
 
-    SET(QMAKE_INCLUDE_PATH "INCLUDEPATH+=${QTWEBKIT_INCLUDE_DIR}")
+    set(QMAKE_INCLUDE_PATH "INCLUDEPATH+=${QTWEBKIT_INCLUDE_DIR}")
 
     # Configure qmake project files with our settings
 
-    SET(PYTHONQT_INSTALL_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
-    SET(PYTHONQT_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
+    set(PYTHONQT_INSTALL_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
+    set(PYTHONQT_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/proj)
 
-    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/qmake/PythonQtOpenCOR.pro.in
+    configure_file(${PROJECT_SOURCE_DIR}/qmake/PythonQtOpenCOR.pro.in
                    ${PROJECT_BINARY_DIR}/PythonQtOpenCOR.pro
                    @ONLY)
-    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/qmake/build/common.prf.in
+    configure_file(${PROJECT_SOURCE_DIR}/qmake/build/common.prf.in
                    ${PROJECT_BINARY_DIR}/build/common.prf
                    @ONLY)
-    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/qmake/build/python.prf.in
+    configure_file(${PROJECT_SOURCE_DIR}/qmake/build/python.prf.in
                    ${PROJECT_BINARY_DIR}/build/python.prf
                    @ONLY)
 
     # Build PythonQt as an external project
 
-    SET(PACKAGE_BUILD PythonQtAPIBuild)
+    set(PACKAGE_BUILD PythonQtAPIBuild)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         DEPENDS
@@ -176,52 +176,52 @@ ELSE()
 
     # Do some post-processing that is specific to each platform
 
-    IF(NOT WIN32)
+    if(NOT WIN32)
         # Dereference the symbolic link to the library since CMake's tar can't
         # do this
 
-        SET(FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY})
+        set(FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY})
 
-        IF(APPLE)
-            SET(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
-        ELSE()
-            SET(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
-        ENDIF()
+        if(APPLE)
+            set(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        else()
+            set(REAL_FULL_SHARED_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}PythonQt${CMAKE_SHARED_LIBRARY_SUFFIX}.${LIBRARY_VERSION})
+        endif()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${FULL_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${REAL_FULL_SHARED_LIBRARY} ${FULL_SHARED_LIBRARY}
                                  DEPENDEES install)
 
-        IF(APPLE)
+        if(APPLE)
             # Set RPATH in library to enable linking independent of location
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} set_rpath
                                      COMMAND install_name_tool -id @rpath/${SHARED_LIBRARY} ${FULL_SHARED_LIBRARY}
                                      DEPENDEES CopyLibrary)
-        ENDIF()
+        endif()
 
-    ENDIF()
+    endif()
 
     # Package our external project
 
-    CREATE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
+    create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    SET(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
-ENDIF()
+    set(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+endif()
 
 # Allow other external projects to find our PythonQt package
 
-SET(PYTHONQT_ROOT_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(PYTHONQT_ROOT_DIR ${LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 
 # Add the plugin
 
-ADD_PLUGIN(PythonQtAPI
+add_plugin(PythonQtAPI
     SOURCES
         ../../plugininfo.cpp
 
@@ -240,4 +240,4 @@ ADD_PLUGIN(PythonQtAPI
 
 # Update our list of Python dependencies for other plugins
 
-SET(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)
+set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)
