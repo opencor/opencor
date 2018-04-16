@@ -903,6 +903,13 @@ set(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
 )
+set(PLUGINS
+    thirdParty/zlib
+    thirdParty/OpenSSL
+
+    thirdParty/Python
+    thirdParty/PythonPackages
+)
 
 if(ENABLE_TEST_PLUGINS)
     list(APPEND PLUGINS
