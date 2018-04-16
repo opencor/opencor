@@ -74,11 +74,11 @@ IF(USE_PREBUILT_PYTHONQT_PACKAGE)
                                               ffed9bec762dc7f7ab1de5ba22f62d928609e106)
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 18bc8c67135bb0c1ea0d302ed68f9dc89383e38d
+        retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a6469dd0a7dbf873b7faec0f2e72da993c3c1b43
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3b511fb9ed6fc1c78db5591cec53b7c0ea45c896)
+                              SHA1_VALUES ccbda93cd43f35412d4acd4587c35ebb1deaa63e)
     ELSE()
         RETRIEVE_PACKAGE_FILE(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 57bcc2f58e9d141535554bafd429418155b50b74
