@@ -429,9 +429,9 @@ else()
 
     if(WIN32)
         # On Windows, we need to explicitly install setuptools, pip and wheel in
-        # order to create *-script-py files that we can then modify during the
-        # the installation of OpenCOR, so that they reference our newly
-        # installed Python executable
+        # order to create *-script-py files that can then be modified during the
+        # installation of OpenCOR, so that they reference our newly installed
+        # Python executable
 
         # Install the Python setuptools package
 
