@@ -15,7 +15,7 @@
 # Find the native SQLite3 headers and libraries
 #
 # SQLITE3_INCLUDE_DIRS - Where to find sqlite3.h, etc.
-# SQLITE3_LIBRARIES    - List of libraries when using SQLite3
+# SQLITE3_LIBRARIES    - List of SQLite3 libraries
 # SQLITE3_FOUND        - True if SQLite3 was found
 
 # Look for the header file
@@ -24,7 +24,7 @@ find_path(SQLITE3_INCLUDE_DIR NAMES sqlite3.h)
 
 # Look for the library
 
-find_library(SQLITE3_LIBRARY NAMES sqlite)
+find_library(SQLITE3_LIBRARY sqlite3)
 
 # Handle the QUIETLY and REQUIRED arguments and set SQLITE3_FOUND to TRUE if all
 # listed variables are TRUE
