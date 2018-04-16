@@ -181,7 +181,7 @@ else()
     set(DJB_BUILD /Users/dave/build)
 
     add_custom_target(pythonqt_update
-        COMMAND ${PIP_INSTALL_COMMAND} --no-deps
+        COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
             ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_VERSION}.zip
             ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_VERSION}.zip
             ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_VERSION}.zip
