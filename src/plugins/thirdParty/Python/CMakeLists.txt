@@ -188,8 +188,8 @@ else()
             file(DOWNLOAD https://sqlite.org/2017/${SQLITE3_SOURCES_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_SOURCES_ZIP}
                  SHOW_PROGRESS)
 
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf zips/${SQLITE3_SOURCES_ZIP}
-                                                                 sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_SOURCES_ZIP}
+                                                                sqlite-amalgamation-${SQLITE3_VERSION}/sqlite3.h
                             WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                             OUTPUT_QUIET)
         endif()
@@ -202,7 +202,7 @@ else()
             file(DOWNLOAD https://sqlite.org/2017/${SQLITE3_DLL_ZIP} ${SQLITE3_LIBRARY_DIR}/zips/${SQLITE3_DLL_ZIP}
                  SHOW_PROGRESS)
 
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar zxf zips/${SQLITE3_DLL_ZIP} --format=zip
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf zips/${SQLITE3_DLL_ZIP} --format=zip
                             WORKING_DIRECTORY ${SQLITE3_LIBRARY_DIR}
                             OUTPUT_QUIET)
             execute_process(COMMAND lib /verbose /def:sqlite3.def /out:sqlite3.lib /machine:x64

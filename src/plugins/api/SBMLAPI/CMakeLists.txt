@@ -114,7 +114,7 @@ else()
             list(GET STATUS 0 STATUS_CODE)
 
             if(${STATUS_CODE} EQUAL 0)
-                execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_DEPENDENCIES_FILENAME}
+                execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${REAL_DEPENDENCIES_FILENAME}
                                 WORKING_DIRECTORY ${DEPENDENCIES_DIR}
                                 OUTPUT_QUIET)
                 execute_process(COMMAND ${CMAKE_COMMAND} -E rename "libSBML Dependencies-1.0.0-b1-win64" ${MODE}
