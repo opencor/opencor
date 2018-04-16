@@ -178,8 +178,6 @@ else()
 
     set(ARCHIVE_PYTHONQT archive/PythonQt-v)
 
-    set(DJB_BUILD /Users/dave/build)
-
     add_custom_target(pythonqt_update
         COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
             ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_VERSION}.zip
