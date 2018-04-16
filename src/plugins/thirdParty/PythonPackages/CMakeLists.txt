@@ -4,17 +4,17 @@ project(PythonPackagesPlugin)
 
 set(PACKAGE_NAME PythonPackages)
 set(PACKAGE_VERSION ${PYTHON_VERSION})
-set(RELEASE_TAG v${PYTHON_VERSION}_base)
 
-# The repository for our package
+# Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
+set(RELEASE_TAG v${PYTHON_VERSION}_base)
 
-# The versions of the Python packages we bundle.
+# The versions of the Python packages we bundle
 
 set(SPHINX_VERSION 1.7.2)
 
-# Our GitHub archive
+# Our GitHub organisation
 
 set(GITHUB_OPENCOR https://github.com/opencor)
 
@@ -34,17 +34,16 @@ set(LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE
 # Directories we package
 
 set(PACKAGED_FILES
-    ${PYTHON_RELATIVE_SCRIPT_DIR}
     ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages
+    ${PYTHON_RELATIVE_SCRIPT_DIR}
 )
 
-# At least one file must have its SHA-1 value checked...
+# Specify the files that need to have their SHA-1 value checked
+# Note: at least one file must have its SHA-1 value checked...
 
-set(SHA1_FILES ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py)
-
-# The target we are creating
-
-add_custom_target(${PROJECT_NAME})
+set(SHA1_FILES
+    ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py
+)
 
 # Use the pre-built version of our package unless instructed otherwise
 # Rebuilding Python means we should also re-install its packages
@@ -93,7 +92,7 @@ else()
 
     add_custom_target(${PACKAGE_BUILD})
 
-    # Python package installation requires Python
+    # Python packages installation requires Python
 
     set(BUILD_DEPENDENCIES PythonPlugin)
 
@@ -113,43 +112,42 @@ else()
 
     # Install Sphinx
 
-    if(NOT WIN32)
-        add_custom_target(install_sphinx
-            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                sphinx==${SPHINX_VERSION}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    else()
-        # For Windows we need to explicitly install Sphinx to create
-        # the `*-script-py` files that can then be modified at OpenCOR
-        # installation time to reference our newly installed Python.
+    if(WIN32)
+        # On Windows, we need to explicitly install Sphinx to create *-script-py
+        # files that can then be modified during the installation of OpenCOR, so
+        # that they reference our newly installed Python executable
 
-        add_custom_target(install_sphinx
+        add_custom_target(installSphinx
             COMMAND ${PIP_INSTALL_COMMAND}
                 https://github.com/opencor/sphinx/archive/v${SPHINX_VERSION}.tar.gz
             WORKING_DIRECTORY
                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}
             VERBATIM
         )
+    else()
+        add_custom_target(installSphinx
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                sphinx==${SPHINX_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
     endif()
 
-    add_dependencies(${PACKAGE_BUILD} install_sphinx)
-    add_dependencies(install_sphinx ${BUILD_DEPENDENCIES})
+    add_dependencies(${PACKAGE_BUILD} installSphinx)
+    add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
 
     # Package the newly installed Python packages
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}
-        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-        RELEASE_TAG ${RELEASE_TAG}
-        PACKAGED_FILES ${PACKAGED_FILES}
-        SHA1_FILES ${SHA1_FILES}
-        TARGET ${PACKAGE_BUILD}
-        )
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        RELEASE_TAG ${RELEASE_TAG}
+                        PACKAGED_FILES ${PACKAGED_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
 
-    set(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+    set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
 
 # Allow other packages to use our scripts
@@ -163,12 +161,15 @@ endif()
 set(SPHINX_BUILD_EXECUTABLE
     ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
     ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE
-    )
+)
 
-# We need to specify the dependency if not using add_plugin
+# We are not relying on add_plugin() to build our Python site packages, so we
+# need to specify some dependencies
+
+add_custom_target(${PROJECT_NAME})
 
 add_dependencies(OpenCORBuild ${PROJECT_NAME})
 
-if(NOT "${PLUGIN_DEPENDS_ON}" STREQUAL "")
-    add_dependencies(${PROJECT_NAME} ${PLUGIN_DEPENDS_ON})
+if(NOT "${DEPENDS_ON}" STREQUAL "")
+    add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
 endif()
