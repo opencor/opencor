@@ -285,6 +285,8 @@ public:
     QSize sizeHint() const override;
 
 protected:
+    void resizeEvent(QResizeEvent *pEvent) override;
+
     void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
 
 private:

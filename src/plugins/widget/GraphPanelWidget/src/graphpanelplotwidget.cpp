@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
+#include <QScrollBar>
 
 //==============================================================================
 
@@ -1178,12 +1179,28 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
 
     foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
+        int legendScrollBarWidth = legend->verticalScrollBar()->isVisible()?
+                                       legend->verticalScrollBar()->width():
+                                       0;
 
         if (legend->isActive())
-            res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()));
+            res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()+legendScrollBarWidth));
     }
 
     return res;
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    QwtLegend::resizeEvent(pEvent);
+
+    // Make sure that we are still properly aligned with our parent's neighbours
+
+    mOwner->forceAlignWithNeighbors();
 }
 
 //==============================================================================
