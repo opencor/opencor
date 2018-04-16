@@ -27,6 +27,8 @@ option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff 
 option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang plugin" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
+option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python library" ON)
+option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
@@ -373,6 +375,7 @@ if(APPLE)
         QtPrintSupport
         QtQml
         QtQuick
+        QtQuickWidgets
         QtSensors
         QtSql
         QtSvg
@@ -796,10 +799,13 @@ if(ENABLE_TESTS)
 endif()
 
 # Build our plugins
+
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
 #          former...
-# Note #2: soft dependencies are determined automatically, so plugins can be
+# Note #2: Python thirdparty plugins must be built in order, after zlib and
+#          OpenSSL, and before any other plugins...
+# Note #3: soft dependencies are determined automatically, so plugins can be
 #          listed in any order...
 
 if(ENABLE_SAMPLE_PLUGINS)
@@ -824,6 +830,9 @@ endif()
 set(PLUGINS
     thirdParty/zlib
     thirdParty/OpenSSL
+
+    thirdParty/Python
+    thirdParty/PythonPackages
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
@@ -945,6 +954,13 @@ add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
 
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
 
+# We can't compile Python interface code until after the Python headers are in
+# place
+
+if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+    add_dependencies(${CMAKE_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+endif()
+
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${CMAKE_PROJECT_NAME}
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
@@ -953,6 +969,7 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 if(WIN32)
     target_link_libraries(${CMAKE_PROJECT_NAME}
         ${Qt5Core_QTMAIN_LIBRARIES}
+        ${PYTHON_LIBRARY}
     )
 endif()
 
@@ -961,6 +978,16 @@ foreach(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         Qt5::${REQUIRED_QT_MODULE}
     )
 endforeach()
+
+# Under Linux the Python library needs linking directly to the executable
+# as otherwise extension DSOs (which are loaded using dlopen()) can't find
+# symbols. (See https://www.akkadia.org/drepper/dsohowto.pdf for details.)
+
+if(NOT WIN32 AND NOT APPLE)
+    include_directories(${PYTHON_INCLUDE_DIR})
+    target_link_libraries(${CMAKE_PROJECT_NAME} ${PYTHON_LIBRARY})
+    add_dependencies(${CMAKE_PROJECT_NAME} PythonPlugin)
+endif()
 
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
@@ -977,6 +1004,17 @@ if(WIN32)
         ${WINDOWS_CLI_SOURCES}
         ${WINDOWS_CLI_SOURCES_MOC}
         ${WINDOWS_CLI_SOURCES_RCS}
+    )
+
+    # We can't compile Python interface code until after the Python headers are
+    # in place
+
+    if(NOT "${PYTHON_DEPENDENCIES}" STREQUAL "")
+        add_dependencies(${WINDOWS_CLI_PROJECT_NAME} ${PYTHON_DEPENDENCIES})
+    endif()
+
+    target_link_libraries(${WINDOWS_CLI_PROJECT_NAME}
+        ${PYTHON_LIBRARY}
     )
 
     target_compile_definitions(${WINDOWS_CLI_PROJECT_NAME}
@@ -1193,6 +1231,14 @@ if(WIN32)
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})
 
+    # Python runtime libraries and utilities
+
+    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
+            DESTINATION .)
+
+    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
+            DESTINATION Python/Scripts)
+
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
@@ -1243,6 +1289,12 @@ if(WIN32)
         set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
             \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
             System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+        ")
+
+        # Update Python scripts to refer to our installed Python
+
+        set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
+           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\"'
         ")
     endif()
 elseif(APPLE)
