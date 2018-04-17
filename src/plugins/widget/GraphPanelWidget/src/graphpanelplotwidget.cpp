@@ -194,6 +194,18 @@ static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 //==============================================================================
 
+QList<QColor> GraphPanelPlotGraph::RunColours =  {
+    QColor::fromRgb(0xe41a1c),
+    QColor::fromRgb(0x377eb8),
+    QColor::fromRgb(0x4daf4a),
+    QColor::fromRgb(0x984ea3),
+    QColor::fromRgb(0xff7f00),
+    QColor::fromRgb(0xffff33),
+    QColor::fromRgb(0xa65628),
+    QColor::fromRgb(0xf781bf)};
+
+//==============================================================================
+
 GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mSelected(true),
     mFileName(QString()),
@@ -288,7 +300,11 @@ void GraphPanelPlotGraph::addRun()
         const QwtSymbol *symbol = mDummyRun->symbol();
         int symbolSize = symbol->size().width();
 
-        run->setPen(mDummyRun->pen());
+        auto runPen = QPen(mDummyRun->pen());
+        auto runColour = RunColours[mRuns.size() % RunColours.size()];
+        runPen.setColor(runColour);
+        run->setPen(runPen);
+
         run->setSymbol(new QwtSymbol(symbol->style(), symbol->brush(),
                                      symbol->pen(), QSize(symbolSize, symbolSize)));
         run->setTitle(mDummyRun->title());
