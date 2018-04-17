@@ -1048,9 +1048,9 @@ void GraphPanelPlotLegendWidget::setActive(bool pActive)
 
 bool GraphPanelPlotLegendWidget::isEmpty() const
 {
-    // Return whether we are empty, based on whether we are active
+    // Return whether we are empty, based on whether we have a zero size hint
 
-    return sizeHint() == QSize(0, 0);
+    return sizeHint().isNull();
 }
 
 //==============================================================================
