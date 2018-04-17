@@ -111,8 +111,11 @@ Sample code
     # Run a simulation
     s.run()
 
-    # Reset a simulation's run
-    s.reset()
+    # Reset a simulation's parameters
+    s.resetParameters()
+
+    # Clear a simulation's results
+    s.clearResults()
 
     # Access a simultaion's results
     r = s.results()
