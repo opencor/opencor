@@ -18,48 +18,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt Support plugin
+// Python Support plugin
 //==============================================================================
 
-#include "CTK/ctkAbstractPythonManager.h"
-#include "corecliutils.h"
-#include "pythoninterface.h"
-#include "pythonqtsupportplugin.h"
-#include "solverinterface.h"
+#include "pythoninclude.h"
+#include "pythonsupportplugin.h"
 
 //==============================================================================
 
-#include <PythonQt/PythonQt.h>
-#include <PythonQt/PythonQt_QtAll.h>
-
-//==============================================================================
-
-#include <Qt>
+#include <QCoreApplication>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtSupport {
+namespace PythonSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC PythonQtSupportPluginInfo()
+PLUGININFO_FUNC PythonSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("the Python Qt support plugin."));
-    descriptions.insert("fr", QString::fromUtf8("the Python Qt support plugin."));
+    descriptions.insert("en", QString::fromUtf8("the Python support plugin."));
+    descriptions.insert("fr", QString::fromUtf8("the Python support plugin."));
 
     return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "PythonQtAPI" << "PythonSupport",
+                          QStringList() << "Python",
                           descriptions);
 }
 
 //==============================================================================
 
-PythonQtSupportPlugin::PythonQtSupportPlugin() :
-    mPythonManager(0),
-    mOpenCORModule(0)
+PythonSupportPlugin::PythonSupportPlugin()
 {
 }
 
@@ -67,7 +57,7 @@ PythonQtSupportPlugin::PythonQtSupportPlugin() :
 // Plugin interface
 //==============================================================================
 
-bool PythonQtSupportPlugin::definesPluginInterfaces()
+bool PythonSupportPlugin::definesPluginInterfaces()
 {
     // We don't handle this interface...
 
@@ -76,7 +66,7 @@ bool PythonQtSupportPlugin::definesPluginInterfaces()
 
 //==============================================================================
 
-bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
+bool PythonSupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                                QObject *pInstance)
 {
     Q_UNUSED(pFileName);
@@ -89,59 +79,78 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 //==============================================================================
 
-void PythonQtSupportPlugin::initializePlugin()
+void PythonSupportPlugin::initializePlugin()
 {
-    // Use our (patched) matplotlib backend for PythonQt
+    // We must set the environment variable PYTHONHOME to the location of our
+    // copy of Python and this before calling any Python library code
+    // Note: to call Py_SetPythonHome() doesn't work since Py_Initialize() first
+    //       checks the environment and, if PYTHONHOME isn't set, uses the
+    //       installation path compiled in at Python build time...
 
-    qputenv("MPLBACKEND", "module://matplotlib.backends.backend_qt5agg");
+    QStringList applicationDirectories = QCoreApplication::applicationDirPath().split("/");
 
-    // Create and initialise a new CTK Python manager
+    applicationDirectories.removeLast();
 
-    mPythonManager = new ctkAbstractPythonManager(this);
+    QString pythonHome = QString();
 
-    // This also initialises Python Qt
+#if defined(Q_OS_WIN)
+    pythonHome = (applicationDirectories << "Python").join("/");
+#elif defined(Q_OS_LINUX)
+    pythonHome = applicationDirectories.join("/");
+#elif defined(Q_OS_MAC)
+    pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
+#else
+    #error Unsupported platform
+#endif
 
-    mPythonManager->initialize();
+    qputenv("PYTHONHOME", pythonHome.toUtf8());
 
-    // Enable the Qt bindings for Python
+    // Put our Python script directories at the head of the system PATH
 
-    PythonQt_QtAll::init();
+#ifdef Q_OS_WIN
+    static const char PathSeparator = ';';
+#else
+    static const char PathSeparator = ':';
+#endif
+    QByteArrayList systemPath = qgetenv("PATH").split(PathSeparator);
 
-    // Create a Python module to access OpenCOR's objects
+    systemPath.prepend((pythonHome+"/bin").toUtf8());
+#ifdef Q_OS_WIN
+    systemPath.prepend((pythonHome+"/Scripts").toUtf8());
+#endif
 
-    mOpenCORModule = PythonQt::self()->createModuleFromScript("OpenCOR");
+    qputenv("PATH", systemPath.join(PathSeparator));
+
+    // Ensure the user's Python site directory (in ~/.local, etc.) isn't used
+
+    Py_NoUserSiteDirectory = 1;
+
+#ifdef Q_OS_WIN
+    // On Windows, we need to specify the location of the DLLs we have bundled
+    // with OpenCOR
+
+    SetDllDirectoryW((LPCWSTR) QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).utf16());
+#endif
 }
 
 //==============================================================================
 
-void PythonQtSupportPlugin::finalizePlugin()
+void PythonSupportPlugin::finalizePlugin()
 {
-    delete mPythonManager;
 }
 
 //==============================================================================
 
-void PythonQtSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PythonSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // We need to register the Solver::Properties class with Qt so it gets automatically
-    // wrapped to Python
+    Q_UNUSED(pLoadedPlugins);
 
-    qRegisterMetaType<OpenCOR::Solver::Solver::Properties>("Solver::Solver::Properties");
-
-    // Register wrappers for every plugin that has a Python interface
-
-    foreach (Plugin *plugin, pLoadedPlugins) {
-        PythonInterface *pythonInterface = qobject_cast<PythonInterface *>(plugin->instance());
-
-        if (pythonInterface) {
-            pythonInterface->registerPythonClasses(mOpenCORModule);
-        }
-    }
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PythonQtSupportPlugin::loadSettings(QSettings *pSettings)
+void PythonSupportPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -150,7 +159,7 @@ void PythonQtSupportPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PythonQtSupportPlugin::saveSettings(QSettings *pSettings) const
+void PythonSupportPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
@@ -159,7 +168,7 @@ void PythonQtSupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
+void PythonSupportPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -168,7 +177,7 @@ void PythonQtSupportPlugin::handleUrl(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
+}   // namespace PythonSupport
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -18,41 +18,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python interface
+// Python Support plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugin.h"
-#include "pythoninclude.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace PythonSupport {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int pythonInterfaceVersion();
+PLUGININFO_FUNC PythonSupportPluginInfo();
 
 //==============================================================================
 
-class PythonInterface
+class PythonSupportPlugin : public QObject, public PluginInterface
 {
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtSupportPlugin" FILE "pythonqtsupportplugin.json")
+
+    Q_INTERFACES(OpenCOR::PluginInterface)
+
 public:
-#define INTERFACE_DEFINITION
-    #include "pythoninterface.inl"
-#undef INTERFACE_DEFINITION
+    explicit PythonSupportPlugin();
+
+#include "plugininterface.inl"
 };
 
 //==============================================================================
 
+}   // namespace PythonSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::PythonInterface, "OpenCOR::PythonInterface")
 
 //==============================================================================
 // End of file
