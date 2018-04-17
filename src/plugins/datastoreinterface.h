@@ -161,6 +161,8 @@ public:
     void addValue();
     void addValue(double pValue);
 
+    double * values(int pRun = -1) const;
+
 public slots:
     bool isVisible() const;
 
@@ -178,7 +180,6 @@ public slots:
     void setValue(double pValue);
 
     double valueAt(quint64 pPosition, int pRun = -1) const;
-    double * values(int pRun = -1) const;
 
 private:
 #ifndef CLI_VERSION
