@@ -7,6 +7,7 @@ ADD_PLUGIN(PythonSupport
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
+        ../../pluginmanager.cpp
 
         src/pythonsupportplugin.cpp
     HEADERS_MOC

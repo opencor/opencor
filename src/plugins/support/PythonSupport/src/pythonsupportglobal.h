@@ -18,46 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Support plugin
+// Python Support global
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "pythonsupportglobal.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace PythonSupport {
-
-//==============================================================================
-
-PLUGININFO_FUNC PythonSupportPluginInfo();
-
-//==============================================================================
-
-class PYTHONSUPPORT_EXPORT PythonSupportPlugin : public QObject, public PluginInterface
-{
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.PythonQtSupportPlugin" FILE "pythonqtsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-    explicit PythonSupportPlugin();
-
-#include "plugininterface.inl"
-};
-
-//==============================================================================
-
-}   // namespace PythonSupport
-}   // namespace OpenCOR
+#ifdef _WIN32
+    #ifdef PythonSupport_PLUGIN
+        #define PYTHONSUPPORT_EXPORT __declspec(dllexport)
+    #else
+        #define PYTHONSUPPORT_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define PYTHONSUPPORT_EXPORT
+#endif
 
 //==============================================================================
 // End of file

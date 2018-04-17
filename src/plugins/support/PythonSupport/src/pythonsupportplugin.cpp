@@ -27,6 +27,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QCoreApplication>
+#ifdef Q_OS_WIN
+    #include <QDir>
+#endif
+
+//==============================================================================
+
+#ifdef Q_OS_WIN
+    #include <Windows.h>
+#endif
 
 //==============================================================================
 
