@@ -1200,7 +1200,6 @@ void GraphPanelPlotLegendWidget::resizeEvent(QResizeEvent *pEvent)
 
     // Resize our parents' neighbours' legend and make sure that we are still
     // properly aligned with our parent's neighbours
-    // Note: handlingEvent is used to prevent reentry...
 
     static bool handlingEvent = false;
 
