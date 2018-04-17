@@ -1198,9 +1198,25 @@ void GraphPanelPlotLegendWidget::resizeEvent(QResizeEvent *pEvent)
 
     QwtLegend::resizeEvent(pEvent);
 
-    // Make sure that we are still properly aligned with our parent's neighbours
+    // Resize our parents' neighbours' legend and make sure that we are still
+    // properly aligned with our parent's neighbours
+    // Note: handlingEvent is used to prevent reentry...
 
-    mOwner->forceAlignWithNeighbors();
+    static bool handlingEvent = false;
+
+    if (!handlingEvent) {
+        handlingEvent = true;
+
+        foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
+            GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
+
+            legend->resize(QSize(pEvent->size().width(), legend->height()));
+        }
+
+        mOwner->forceAlignWithNeighbors();
+
+        handlingEvent = false;
+    }
 }
 
 //==============================================================================
