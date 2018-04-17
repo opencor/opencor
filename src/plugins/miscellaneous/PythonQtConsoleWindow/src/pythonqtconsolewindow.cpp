@@ -131,6 +131,8 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
         mPythonQtConsoleWidget = (QWidget *)widgetWrapper->_objPointerCopy;
 
+        this->setFocusProxy(mPythonQtConsoleWidget);
+
         // Add the widget to our window
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)

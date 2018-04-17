@@ -32,7 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QMap>
+#include <QWidget>
 
 //==============================================================================
 
@@ -100,6 +102,8 @@ void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
 
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
+    QWidget *focusWidget = 0;
+
     // A successful run will set elapsed time
 
     mElapsedTime = -1;
@@ -117,8 +121,11 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
     // case we were able to allocate all the memory we need
 
     if (runSimulation) {
+        // Save the keyboard focus, which will be to our IPython console
 
-        // Let our widget know we are starting
+        focusWidget = QApplication::focusWidget();
+
+        // Let the simulation widget know we are starting
 
         emit pSimulation->runStarting(pSimulation->fileName());
 
@@ -143,6 +150,11 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         throw std::runtime_error(
             tr("We could not allocate the memory required for the simulation.").toStdString());
     }
+
+    // Restore the keyboard focus back to IPython
+
+    if (focusWidget)
+        focusWidget->setFocus();
 
     return mElapsedTime >= 0;
 }
