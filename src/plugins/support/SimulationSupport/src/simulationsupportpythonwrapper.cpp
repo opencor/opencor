@@ -213,35 +213,40 @@ PyObject * SimulationSupportPythonWrapper::states(SimulationData *pSimulationDat
 
 //==============================================================================
 
-const OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(SimulationResults *pSimulationResults) const
+const OpenCOR::DataStore::DataStoreVariable * SimulationSupportPythonWrapper::points(
+    SimulationResults *pSimulationResults) const
 {
     return pSimulationResults->mPoints;
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::algebraic(SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::algebraic(
+    SimulationResults *pSimulationResults) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mAlgebraic);
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::constants(SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::constants(
+    SimulationResults *pSimulationResults) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mConstants);
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::rates(SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::rates(
+    SimulationResults *pSimulationResults) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mRates);
 }
 
 //==============================================================================
 
-PyObject * SimulationSupportPythonWrapper::states(SimulationResults *pSimulationResults) const
+PyObject * SimulationSupportPythonWrapper::states(
+    SimulationResults *pSimulationResults) const
 {
     return DataStore::DataStorePythonWrapper::dataStoreVariablesDict(pSimulationResults->mStates);
 }
