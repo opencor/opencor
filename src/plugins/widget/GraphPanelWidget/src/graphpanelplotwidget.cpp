@@ -1191,61 +1191,64 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
 void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
-    // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
-    // to the legend of our dummy run
+    // Check whether we are dealing with one of our main legend labels
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
     bool mainLegendLabel = mLegendLabels.values().contains(legendLabel);
 
-    if (!mainLegendLabel) {
+    if (mainLegendLabel) {
+        // We are dealing with a main legend label, i.e. a legend label
+        // associated with our dummy run, so start with the default handling of
+        // our method
+
+        QwtLegend::updateWidget(pWidget, pLegendData);
+
+        // Update our visible state
+
+        legendLabel->setAutoFillBackground(true);
+        legendLabel->setVisible(mActive);
+
+        // Update our font size, as well as background and foreground colours
+
+        QFont newFont = legendLabel->font();
+
+        newFont.setPointSize(mFontSize);
+
+        legendLabel->setFont(newFont);
+
+        QPalette newPalette = legendLabel->palette();
+
+        newPalette.setColor(QPalette::Window, mBackgroundColor);
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+
+        legendLabel->setPalette(newPalette);
+
+        // Make sure that the width of our owner's neighbours' legend is the
+        // same as ours
+
+        int legendWidth = sizeHint().width();
+
+        foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
+            ownerNeighbor->setLegendWidth(legendWidth);
+
+        // Make sure that updates are enabled
+        // Note: indeed, when setting its data, QwtLegendLabel (which is used by
+        //       QwtLegend) prevents itself from updating, and then reallows
+        //       itself to be updated, if it was originally allowed. Now, the
+        //       problem is that if one of our ancestors decides to temporarily
+        //       disable updates (e.g. our simulation experiment view) then
+        //       QwtLegendLabel won't reenable itself, which means that the
+        //       legend may not actually be visible in some cases (e.g. when
+        //       opening a SED-ML file)...
+
+        pWidget->setUpdatesEnabled(true);
+    } else {
+        // This is not one of our main legend label, so ignore it (i.e. minimise
+        // and hide it)
+
         legendLabel->resize(0, 0);
         legendLabel->hide();
-
-        return;
     }
-
-    // Default handling
-
-    QwtLegend::updateWidget(pWidget, pLegendData);
-
-    // Update our visible state
-
-    legendLabel->setAutoFillBackground(true);
-    legendLabel->setVisible(mActive);
-
-    // Update our font size, as well as background and foreground colours
-
-    QFont newFont = legendLabel->font();
-
-    newFont.setPointSize(mFontSize);
-
-    legendLabel->setFont(newFont);
-
-    QPalette newPalette = legendLabel->palette();
-
-    newPalette.setColor(QPalette::Window, mBackgroundColor);
-    newPalette.setColor(QPalette::Text, mForegroundColor);
-
-    legendLabel->setPalette(newPalette);
-
-    // Make sure that the width of our owner's neighbours' legend is the same as
-    // ours
-
-    int legendWidth = sizeHint().width();
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
-        ownerNeighbor->setLegendWidth(legendWidth);
-
-    // Make sure that updates are enabled
-    // Note: indeed, when setting its data, QwtLegendLabel (which is used by
-    //       QwtLegend) prevents itself from updating, and then reallows itself
-    //       to be updated, if it was originally allowed. Now, the problem is
-    //       that if one of our ancestors decides to temporarily disable updates
-    //       (e.g. our simulation experiment view) then QwtLegendLabel won't
-    //       reenable itself, which means that the legend may not actually be
-    //       visible in some cases (e.g. when opening a SED-ML file)...
-
-    pWidget->setUpdatesEnabled(true);
 }
 
 //==============================================================================
