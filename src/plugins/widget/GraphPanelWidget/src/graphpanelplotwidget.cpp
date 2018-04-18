@@ -1192,34 +1192,6 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::resizeEvent(QResizeEvent *pEvent)
-{
-    // Default handling of the event
-
-    QwtLegend::resizeEvent(pEvent);
-
-    // Resize our parents' neighbours' legend and make sure that we are still
-    // properly aligned with our parent's neighbours
-
-    static bool handlingEvent = false;
-
-    if (!handlingEvent) {
-        handlingEvent = true;
-
-        foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
-            GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
-
-            legend->resize(QSize(pEvent->size().width(), legend->height()));
-        }
-
-        mOwner->forceAlignWithNeighbors();
-
-        handlingEvent = false;
-    }
-}
-
-//==============================================================================
-
 void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
@@ -1254,14 +1226,6 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
         newPalette.setColor(QPalette::Text, mForegroundColor);
 
         legendLabel->setPalette(newPalette);
-
-        // Make sure that the width of our owner's neighbours' legend is the
-        // same as ours
-
-        int legendWidth = sizeHint().width();
-
-        foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
-            ownerNeighbor->setLegendWidth(legendWidth);
 
         // Make sure that updates are enabled
         // Note: indeed, when setting its data, QwtLegendLabel (which is used by
@@ -3022,6 +2986,19 @@ void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
     // Update the size of our overlay widget
 
     mOverlayWidget->resize(pEvent->size());
+
+    // Resize our legend and that of our neighbours, and make sure that we are
+    // still properly aligned with our neighbours
+
+    int legendWidth = legend()->width();
+
+    foreach (GraphPanelPlotWidget *ownerNeighbor, mNeighbors) {
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
+
+        legend->resize(QSize(legendWidth, legend->height()));
+    }
+
+    forceAlignWithNeighbors();
 }
 
 //==============================================================================

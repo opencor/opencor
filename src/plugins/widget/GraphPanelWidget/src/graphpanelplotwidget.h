@@ -289,8 +289,6 @@ public:
     void removeGraph(GraphPanelPlotGraph *pGraph);
 
 protected:
-    void resizeEvent(QResizeEvent *pEvent) override;
-
     void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
 
 private:
