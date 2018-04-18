@@ -1122,7 +1122,7 @@ void Property::setColorValue(const QPoint &pPoint)
         //       time round, we will have to click anywhere in OpenCOR for
         //       OpenCOR to get the focus back...
 
-        QCoreApplication::processEvents();
+        mOwner->processEvents();
     }
 }
 
