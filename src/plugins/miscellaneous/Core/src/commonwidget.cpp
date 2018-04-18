@@ -202,11 +202,14 @@ void CommonWidget::setBusyWidgetProgress(double pProgress)
 
 void CommonWidget::processEvents()
 {
-    // Process events, but only if our parent is visible, and we or our central
-    // widget is not showing our or its busy widget
+    // Process events, but only if our parent is visible and updates are enabled
+    // for it, and we or our central widget is not showing our or its busy
+    // widget
 
-    if (mParent->isVisible() && !mBusyWidget && !centralWidget()->isBusyWidgetVisible())
+    if (    mParent->isVisible() && mParent->updatesEnabled()
+        && !mBusyWidget && !centralWidget()->isBusyWidgetVisible()) {
         QCoreApplication::processEvents();
+    }
 }
 
 //==============================================================================
