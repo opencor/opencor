@@ -63,7 +63,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5dd535bc479f747597ebab5739c0ce967416bef6
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} a680f787e7811dfa886faa2eee72395eeaf4b0a0
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES bd2befaf0efacb2d4ee4957ab58a4315290ec804)
@@ -133,6 +133,7 @@ else()
         COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
             --strip=2
             --directory=${LOCAL_SITE_PACKAGES_DIR}/matplotlib
+            --verbose
             src/matplotlib_${MATPLOTLIB_VERSION}.diff
         WORKING_DIRECTORY
             ${PROJECT_SOURCE_DIR}
