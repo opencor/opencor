@@ -194,7 +194,7 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     // Note: indeed, to process pending events only in directoryLoaded() is not
     //       good enough (anymore?!) on macOS...
 
-    QCoreApplication::processEvents();
+    processEvents();
 
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -535,7 +535,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         // Windows doesn't need this, Linux and macOS definitely do and it can't
         // harm having it for all three environments)
 
-        QCoreApplication::processEvents();
+        processEvents();
 
         QModelIndex initPathDirIndex = mModel->index(mInitPathDir);
 
