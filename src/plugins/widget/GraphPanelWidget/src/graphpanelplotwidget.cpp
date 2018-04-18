@@ -347,7 +347,7 @@ void GraphPanelPlotGraph::setSelected(bool pSelected)
 
     // Un/check our corresponding legend item
 
-    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(mPlot->graphIndex(this), pSelected);
+    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(this, pSelected);
 }
 
 //==============================================================================
@@ -1004,7 +1004,8 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mActive(false),
     mFontSize(pParent->fontSize()),
     mBackgroundColor(pParent->backgroundColor()),
-    mForegroundColor(pParent->surroundingAreaForegroundColor())
+    mForegroundColor(pParent->surroundingAreaForegroundColor()),
+    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>())
 {
     // Have our legend items use as much horizontal space as possible
 
@@ -1049,20 +1050,19 @@ void GraphPanelPlotLegendWidget::setActive(bool pActive)
 
 bool GraphPanelPlotLegendWidget::isEmpty() const
 {
-    // Return whether we are empty, based on whether we have a size hint
+    // Return whether we are empty, based on whether we have a zero size hint
 
     return sizeHint().isNull();
 }
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setChecked(int pIndex, bool pChecked)
+void GraphPanelPlotLegendWidget::setChecked(GraphPanelPlotGraph *pGraph,
+                                            bool pChecked)
 {
-    // Un/check the graph which index is given
-    // Note: the +1 is because the first child of our contents widget is our
-    //       layout...
+    // Un/check the legend label associated with the given graph
 
-    static_cast<QwtLegendLabel *>(contentsWidget()->children()[pIndex+1])->setChecked(pChecked);
+    mLegendLabels.value(pGraph)->setChecked(pChecked);
 }
 
 //==============================================================================
@@ -1223,71 +1223,82 @@ void GraphPanelPlotLegendWidget::resizeEvent(QResizeEvent *pEvent)
 void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
-    // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
-    // to the legend of our dummy run
-    // Note: we start at 1 because the first child of our contents widget is our
-    //       layout...
+    // Check whether we are dealing with one of our main legend labels
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
-    bool mainLegendLabel = false;
+    bool mainLegendLabel = mLegendLabels.values().contains(legendLabel);
 
-    for (int i = 1, iMax = 1+mOwner->graphs().count(); i < iMax; ++i) {
-        if (legendLabel == static_cast<QwtLegendLabel *>(contentsWidget()->children()[i])) {
-            mainLegendLabel = true;
+    if (mainLegendLabel) {
+        // We are dealing with a main legend label, i.e. a legend label
+        // associated with our dummy run, so start with the default handling of
+        // our method
 
-            break;
-        }
-    }
+        QwtLegend::updateWidget(pWidget, pLegendData);
 
-    if (!mainLegendLabel) {
+        // Update our visible state
+
+        legendLabel->setAutoFillBackground(true);
+        legendLabel->setVisible(mActive);
+
+        // Update our font size, as well as background and foreground colours
+
+        QFont newFont = legendLabel->font();
+
+        newFont.setPointSize(mFontSize);
+
+        legendLabel->setFont(newFont);
+
+        QPalette newPalette = legendLabel->palette();
+
+        newPalette.setColor(QPalette::Window, mBackgroundColor);
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+
+        legendLabel->setPalette(newPalette);
+
+        // Make sure that the width of our owner's neighbours' legend is the
+        // same as ours
+
+        int legendWidth = sizeHint().width();
+
+        foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
+            ownerNeighbor->setLegendWidth(legendWidth);
+
+        // Make sure that updates are enabled
+        // Note: indeed, when setting its data, QwtLegendLabel (which is used by
+        //       QwtLegend) prevents itself from updating, and then reallows
+        //       itself to be updated, if it was originally allowed. Now, the
+        //       problem is that if one of our ancestors decides to temporarily
+        //       disable updates (e.g. our simulation experiment view) then
+        //       QwtLegendLabel won't reenable itself, which means that the
+        //       legend may not actually be visible in some cases (e.g. when
+        //       opening a SED-ML file)...
+
+        pWidget->setUpdatesEnabled(true);
+    } else {
+        // This is not one of our main legend label, so ignore it (i.e. minimise
+        // and hide it)
+
         legendLabel->resize(0, 0);
         legendLabel->hide();
-
-        return;
     }
+}
 
-    // Default handling
+//==============================================================================
 
-    QwtLegend::updateWidget(pWidget, pLegendData);
+void GraphPanelPlotLegendWidget::addGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Associate our last contents widget's child with the given graph
 
-    // Update our visible state
+    mLegendLabels.insert(pGraph, static_cast<QwtLegendLabel *>(contentsWidget()->children().last()));
+}
 
-    legendLabel->setAutoFillBackground(true);
-    legendLabel->setVisible(mActive);
+//==============================================================================
 
-    // Update our font size, as well as background and foreground colours
+void GraphPanelPlotLegendWidget::removeGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Stop associating our last contents widget's child with the given graph
 
-    QFont newFont = legendLabel->font();
-
-    newFont.setPointSize(mFontSize);
-
-    legendLabel->setFont(newFont);
-
-    QPalette newPalette = legendLabel->palette();
-
-    newPalette.setColor(QPalette::Window, mBackgroundColor);
-    newPalette.setColor(QPalette::Text, mForegroundColor);
-
-    legendLabel->setPalette(newPalette);
-
-    // Make sure that the width of our owner's neighbours' legend is the same as
-    // ours
-
-    int legendWidth = sizeHint().width();
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
-        ownerNeighbor->setLegendWidth(legendWidth);
-
-    // Make sure that updates are enabled
-    // Note: indeed, when setting its data, QwtLegendLabel (which is used by
-    //       QwtLegend) prevents itself from updating, and then reallows itself
-    //       to be updated, if it was originally allowed. Now, the problem is
-    //       that if one of our ancestors decides to temporarily disable updates
-    //       (e.g. our simulation experiment view) then QwtLegendLabel won't
-    //       reenable itself, which means that the legend may not actually be
-    //       visible in some cases (e.g. when opening a SED-ML file)...
-
-    pWidget->setUpdatesEnabled(true);
+    mLegendLabels.remove(pGraph);
 }
 
 //==============================================================================
@@ -3056,15 +3067,18 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     if (mGraphs.contains(pGraph))
         return false;
 
-    // Attach the given graph to ourselves and keep track of it
+    // Attach the given graph to ourselves and keep track of it, as well as ask
+    // our legend to keep track of it too
 
     pGraph->attach(this);
 
     mGraphs << pGraph;
 
+    mLegend->addGraph(pGraph);
+
     // Initialise the checked state of the corresponding legend item
 
-    mLegend->setChecked(mGraphs.count()-1, true);
+    mLegend->setChecked(pGraph, true);
 
     // To add a graph may result in the legend getting shown, so we need to make
     // sure that our neighbours are aware of it
@@ -3083,11 +3097,14 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     if (!mGraphs.contains(pGraph))
         return false;
 
-    // Detach the given graph from ourselves, stop tracking it and delete it
+    // Detach the given graph from ourselves, stop tracking it (and ask our
+    // legend to do the same) and delete it
 
     pGraph->detach();
 
     mGraphs.removeOne(pGraph);
+
+    mLegend->removeGraph(pGraph);
 
     delete pGraph;
 
