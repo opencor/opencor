@@ -46,6 +46,7 @@ class QMenu;
 
 //==============================================================================
 
+class QwtLegendLabel;
 class QwtPlotDirectPainter;
 class QwtPlotGrid;
 
@@ -273,7 +274,7 @@ public:
 
     bool isEmpty() const override;
 
-    void setChecked(int pIndex, bool pChecked);
+    void setChecked(GraphPanelPlotGraph *pGraph, bool pChecked);
 
     void setFontSize(int pFontSize);
     void setBackgroundColor(const QColor &pBackgroundColor);
@@ -283,6 +284,9 @@ public:
                       bool pFillBackground) const override;
 
     QSize sizeHint() const override;
+
+    void addGraph(GraphPanelPlotGraph *pGraph);
+    void removeGraph(GraphPanelPlotGraph *pGraph);
 
 protected:
     void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
@@ -295,6 +299,8 @@ private:
     int mFontSize;
     QColor mBackgroundColor;
     QColor mForegroundColor;
+
+    QMap<GraphPanelPlotGraph *, QwtLegendLabel *> mLegendLabels;
 
 signals:
     void graphToggled(GraphPanelPlotGraph *pGraph);

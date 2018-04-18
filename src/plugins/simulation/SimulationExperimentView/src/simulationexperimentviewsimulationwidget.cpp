@@ -3377,8 +3377,17 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
                                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Ask the current graph panel to add a new graph for the given parameters
+    // Note: due to the way legend labels are handled by Qwt, we temporarily
+    //       disable their update (and reenable it once the graph has been
+    //       added; see graphAdded()) since otherwise we may see the label flash
+    //       due to its properties (e.g. font size) not being the same as those
+    //       of QwtLegendLabel...
 
-    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
+    GraphPanelWidget::GraphPanelWidget *graphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+
+    graphPanel->plot()->legend()->setUpdatesEnabled(false);
+
+    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
 }
 
 //==============================================================================
@@ -3391,13 +3400,17 @@ void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::Grap
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
         pGraph->addRun();
 
+    // Allow our plot's legend to get updated
+
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
+
+    plot->legend()->setUpdatesEnabled(true);
+
     // Now, keep track of the graph and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as a
     //       result, replot the graphs including our new one. On the other hand,
     //       if the plot's axes don't get updated, we need to draw our new
     //       graph...
-
-    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
         updateGraphData(pGraph, mSimulation->results()->size(i), i);

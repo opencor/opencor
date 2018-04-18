@@ -392,7 +392,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         break;
     }
     case Property::Color:
-        editor = new ColorEditorWidget(pParent);
+        editor = textEditor = new ColorEditorWidget(pParent);
 
         break;
     }
