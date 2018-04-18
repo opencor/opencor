@@ -2,7 +2,30 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>GraphPanelPlotLegendWidget</name>
+    <name>GraphPanelWidgetCustomAxesDialog</name>
+    <message>
+        <source>Custom Axes</source>
+        <translation>Axes Personnalisés</translation>
+    </message>
+    <message>
+        <source>X-min:</source>
+        <translation>X-min :</translation>
+    </message>
+    <message>
+        <source>X-max:</source>
+        <translation>X-max :</translation>
+    </message>
+    <message>
+        <source>Y-min:</source>
+        <translation>Y-min :</translation>
+    </message>
+    <message>
+        <source>Y-max:</source>
+        <translation>Y-max :</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::GraphPanelWidget::GraphPanelPlotWidget</name>
     <message>
         <source>Export To...</source>
         <translation type="unfinished">Exporter Vers...</translation>
@@ -134,29 +157,6 @@
     <message>
         <source>Export To</source>
         <translation type="unfinished">Exporter Vers</translation>
-    </message>
-</context>
-<context>
-    <name>GraphPanelWidgetCustomAxesDialog</name>
-    <message>
-        <source>Custom Axes</source>
-        <translation>Axes Personnalisés</translation>
-    </message>
-    <message>
-        <source>X-min:</source>
-        <translation>X-min :</translation>
-    </message>
-    <message>
-        <source>X-max:</source>
-        <translation>X-max :</translation>
-    </message>
-    <message>
-        <source>Y-min:</source>
-        <translation>Y-min :</translation>
-    </message>
-    <message>
-        <source>Y-max:</source>
-        <translation>Y-max :</translation>
     </message>
 </context>
 <context>
