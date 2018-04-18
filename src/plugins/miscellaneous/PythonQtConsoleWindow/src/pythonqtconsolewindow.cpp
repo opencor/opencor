@@ -75,7 +75,7 @@ class QtConsole(object):
         # Create a Jupyter widget and connect it with our kernel and
         # its client
 
-        self._widget = QtInProcessRichJupyterWidget(font_size=10)
+        self._widget = QtInProcessRichJupyterWidget(font_size=10, enable_calltips=False)
         self._widget.kernel_manager = self._kernel_manager
         self._widget.kernel_client = self._kernel_client
 
