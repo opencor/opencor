@@ -1251,7 +1251,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 
 void GraphPanelPlotLegendWidget::addGraph(GraphPanelPlotGraph *pGraph)
 {
-    // Associate our last contents widget's child with the given graph
+    // Associate the given graph with our last contents widget's child
 
     mLegendLabels.insert(pGraph, static_cast<QwtLegendLabel *>(contentsWidget()->children().last()));
 }
