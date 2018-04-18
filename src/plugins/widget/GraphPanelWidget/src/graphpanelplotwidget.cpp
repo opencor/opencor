@@ -346,7 +346,7 @@ void GraphPanelPlotGraph::setSelected(bool pSelected)
 
     // Un/check our corresponding legend item
 
-    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(mPlot->graphIndex(this), pSelected);
+    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(this, pSelected);
 }
 
 //==============================================================================
@@ -1003,7 +1003,8 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mActive(false),
     mFontSize(pParent->fontSize()),
     mBackgroundColor(pParent->backgroundColor()),
-    mForegroundColor(pParent->surroundingAreaForegroundColor())
+    mForegroundColor(pParent->surroundingAreaForegroundColor()),
+    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>())
 {
     // Have our legend items use as much horizontal space as possible
 
@@ -1055,13 +1056,12 @@ bool GraphPanelPlotLegendWidget::isEmpty() const
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setChecked(int pIndex, bool pChecked)
+void GraphPanelPlotLegendWidget::setChecked(GraphPanelPlotGraph *pGraph,
+                                            bool pChecked)
 {
-    // Un/check the graph which index is given
-    // Note: the +1 is because the first child of our contents widget is our
-    //       layout...
+    // Un/check the legend label associated with the given graph
 
-    static_cast<QwtLegendLabel *>(contentsWidget()->children()[pIndex+1])->setChecked(pChecked);
+    mLegendLabels.value(pGraph)->setChecked(pChecked);
 }
 
 //==============================================================================
@@ -1193,19 +1193,9 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 {
     // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
     // to the legend of our dummy run
-    // Note: we start at 1 because the first child of our contents widget is our
-    //       layout...
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
-    bool mainLegendLabel = false;
-
-    for (int i = 1, iMax = 1+mOwner->graphs().count(); i < iMax; ++i) {
-        if (legendLabel == static_cast<QwtLegendLabel *>(contentsWidget()->children()[i])) {
-            mainLegendLabel = true;
-
-            break;
-        }
-    }
+    bool mainLegendLabel = mLegendLabels.values().contains(legendLabel);
 
     if (!mainLegendLabel) {
         legendLabel->resize(0, 0);
@@ -1256,6 +1246,24 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
     //       visible in some cases (e.g. when opening a SED-ML file)...
 
     pWidget->setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::addGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Associate our last contents widget's child with the given graph
+
+    mLegendLabels.insert(pGraph, static_cast<QwtLegendLabel *>(contentsWidget()->children().last()));
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::removeGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Stop associating our last contents widget's child with the given graph
+
+    mLegendLabels.remove(pGraph);
 }
 
 //==============================================================================
@@ -3024,15 +3032,18 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     if (mGraphs.contains(pGraph))
         return false;
 
-    // Attach the given graph to ourselves and keep track of it
+    // Attach the given graph to ourselves and keep track of it, as well as ask
+    // our legend to keep track of it too
 
     pGraph->attach(this);
 
     mGraphs << pGraph;
 
+    mLegend->addGraph(pGraph);
+
     // Initialise the checked state of the corresponding legend item
 
-    mLegend->setChecked(mGraphs.count()-1, true);
+    mLegend->setChecked(pGraph, true);
 
     // To add a graph may result in the legend getting shown, so we need to make
     // sure that our neighbours are aware of it
@@ -3051,11 +3062,14 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     if (!mGraphs.contains(pGraph))
         return false;
 
-    // Detach the given graph from ourselves, stop tracking it and delete it
+    // Detach the given graph from ourselves, stop tracking it (and ask our
+    // legend to do the same) and delete it
 
     pGraph->detach();
 
     mGraphs.removeOne(pGraph);
+
+    mLegend->removeGraph(pGraph);
 
     delete pGraph;
 
