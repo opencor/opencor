@@ -3033,7 +3033,7 @@ void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
 
     mOverlayWidget->resize(pEvent->size());
 
-    // Resize our legend (and that of our neighbours)
+    // Update our GUI (and that of our neighbours)
 
     updateGui();
 }
@@ -3095,7 +3095,8 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
     mLegend->setChecked(pGraph, true);
 
-    // To add a graph may affect our GUI, so update it
+    // To add a graph may affect our GUI (and that of our neighbours), so update
+    // it
 
     updateGui();
 
@@ -3122,7 +3123,8 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 
     delete pGraph;
 
-    // To add a graph may affect our GUI, so update it
+    // To remoev a graph may affect our GUI (and that of our neighbours), so
+    // update it
 
     updateGui();
 
