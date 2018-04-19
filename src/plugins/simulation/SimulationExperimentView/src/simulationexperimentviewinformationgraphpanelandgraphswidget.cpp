@@ -1421,9 +1421,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
     graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
 
-    graphPanelPlot->setUpdatesEnabled(true);
+    graphPanelPlot->updateGui();
 
-    graphPanelPlot->forceAlignWithNeighbors();
+    graphPanelPlot->setUpdatesEnabled(true);
 }
 
 //==============================================================================

@@ -268,7 +268,7 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
     // if any
 
     if (!mGraphPanels.isEmpty())
-        mActiveGraphPanel->plot()->forceAlignWithNeighbors();
+        mActiveGraphPanel->plot()->updateGui();
 
     return true;
 }

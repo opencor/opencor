@@ -2756,42 +2756,43 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 
         setAxisTitle(pAxisId, axisTitle);
     }
-
-    forceAlignWithNeighbors();
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::resizeLegend()
+void GraphPanelPlotWidget::updateGui()
 {
     // Resize our legend and that of our neighbours
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     int legendWidth = 0;
-    int scollBarWidth = legend()->scrollExtent(Qt::Vertical);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
+        if (legend) {
+            legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
 
-        if (legend->legendLabelsHeight() > legend->height()) {
-            legendWidth = qMax(legendWidth,
-                               legend->QwtLegend::sizeHint().width()+scollBarWidth);
+            if (legend->legendLabelsHeight() > legend->height()) {
+                legendWidth = qMax(legendWidth,
+                                   legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
+            }
         }
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        legend->setSizeHintWidth((legend->legendLabelsHeight() > legend->height())?
-                                     legendWidth-scollBarWidth:
-                                     legendWidth);
+        if (legend) {
+            legend->setSizeHintWidth((legend->legendLabelsHeight() > legend->height())?
+                                         legendWidth-legend->scrollExtent(Qt::Vertical):
+                                         legendWidth);
+        }
     }
 
     // Make sure that we are still properly aligned with our neighbours
 
-    forceAlignWithNeighbors();
+    alignWithNeighbors(true, true);
 }
 
 //==============================================================================
@@ -3034,7 +3035,7 @@ void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
 
     // Resize our legend (and that of our neighbours)
 
-    resizeLegend();
+    updateGui();
 }
 
 //==============================================================================
@@ -3094,10 +3095,9 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
     mLegend->setChecked(pGraph, true);
 
-    // To add a graph may result in the legend getting shown, so we need to make
-    // sure that our neighbours are aware of it
+    // To add a graph may affect our GUI, so update it
 
-    forceAlignWithNeighbors();
+    updateGui();
 
     return true;
 }
@@ -3122,10 +3122,9 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 
     delete pGraph;
 
-    // To remove a graph may result in the legend getting hidden, so we need to
-    // make sure that our neighbours are aware of it
+    // To add a graph may affect our GUI, so update it
 
-    forceAlignWithNeighbors();
+    updateGui();
 
     return true;
 }
@@ -3277,15 +3276,6 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
             }
         }
     }
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::forceAlignWithNeighbors()
-{
-    // Force the re-alignment with our neighbours
-
-    alignWithNeighbors(true, true);
 }
 
 //==============================================================================

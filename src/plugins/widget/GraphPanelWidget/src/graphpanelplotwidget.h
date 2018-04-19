@@ -458,9 +458,6 @@ public:
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
-    void forceAlignWithNeighbors();
-
     Action action() const;
 
     bool canZoomInX() const;
@@ -469,6 +466,8 @@ public:
     bool canZoomOutY() const;
 
     QPointF canvasPoint(const QPoint &pPoint) const;
+
+    void updateGui();
 
 protected:
     bool eventFilter(QObject *pObject, QEvent *pEvent) override;
@@ -588,7 +587,7 @@ private:
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 
-    void resizeLegend();
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
 
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
