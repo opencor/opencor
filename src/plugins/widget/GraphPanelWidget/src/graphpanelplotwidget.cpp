@@ -2770,24 +2770,20 @@ void GraphPanelPlotWidget::updateGui()
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        if (legend) {
-            legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
+        legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
 
-            if (legend->legendLabelsHeight() > legend->height()) {
-                legendWidth = qMax(legendWidth,
-                                   legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
-            }
+        if (legend->legendLabelsHeight() > legend->height()) {
+            legendWidth = qMax(legendWidth,
+                               legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
         }
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        if (legend) {
-            legend->setSizeHintWidth((legend->legendLabelsHeight() > legend->height())?
-                                         legendWidth-legend->scrollExtent(Qt::Vertical):
-                                         legendWidth);
-        }
+        legend->setSizeHintWidth((legend->legendLabelsHeight() > legend->height())?
+                                     legendWidth-legend->scrollExtent(Qt::Vertical):
+                                     legendWidth);
     }
 
     // Make sure that we are still properly aligned with our neighbours
