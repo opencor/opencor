@@ -2787,6 +2787,11 @@ void GraphPanelPlotWidget::doUpdateGui()
                                      legendWidth);
     }
 
+    // Reenable updates for our legend
+    // Note: see addGraph() for the reasoning behind it...
+
+    legend()->setUpdatesEnabled(true);
+
     // Make sure that we are still properly aligned with our neighbours
 
     alignWithNeighbors(true, true);
@@ -3093,6 +3098,12 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
     // Attach the given graph to ourselves and keep track of it, as well as ask
     // our legend to keep track of it too
+    // Note: we temporarily disable updates for our legend, this to avoid some
+    //       black areas from quickly appearing on macOS (when adding a graph
+    //       that results in the vertical scroll bar being shown). It gets
+    //       reenabled in updateGUI()...
+
+    legend()->setUpdatesEnabled(false);
 
     pGraph->attach(this);
 
@@ -3127,6 +3138,10 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 
     // Detach the given graph from ourselves, stop tracking it (and ask our
     // legend to do the same) and delete it
+    // Note: see addGraph() when it comes to temporarily disabling updates for
+    //       our legend...
+
+    legend()->setUpdatesEnabled(false);
 
     pGraph->detach();
 
