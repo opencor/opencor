@@ -2768,25 +2768,25 @@ void GraphPanelPlotWidget::resizeLegend()
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     int legendWidth = 0;
-    bool needLegendScrollBar = false;
+    int scollBarWidth = legend()->scrollExtent(Qt::Vertical);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
 
-        if (legend->legendLabelsHeight() > legend->height())
-            needLegendScrollBar = true;
+        if (legend->legendLabelsHeight() > legend->height()) {
+            legendWidth = qMax(legendWidth,
+                               legend->QwtLegend::sizeHint().width()+scollBarWidth);
+        }
     }
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        legend->setSizeHintWidth( legendWidth
-                                 +((   needLegendScrollBar
-                                    && (legend->legendLabelsHeight() <= legend->height()))?
-                                       legend->scrollExtent(Qt::Vertical):
-                                       0));
+        legend->setSizeHintWidth((legend->legendLabelsHeight() > legend->height())?
+                                     legendWidth-scollBarWidth:
+                                     legendWidth);
     }
 
     // Make sure that we are still properly aligned with our neighbours
