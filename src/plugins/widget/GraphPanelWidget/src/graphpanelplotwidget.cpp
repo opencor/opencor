@@ -3109,7 +3109,7 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     // Note: we do it through a single shot since otherwise the new legend label
     //       won't have been added yet and our legend may not be of the right
     //       width (e.g. after having added a graph that would result in the
-    //       legend's vertical scrollbar to appear)...
+    //       legend's vertical scroll bar to appear)...
 
     updateGui(true);
 
