@@ -3046,7 +3046,8 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
     if (   !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
         // Make sure that we are not already carrying out a action
 
         if (mAction == None) {
