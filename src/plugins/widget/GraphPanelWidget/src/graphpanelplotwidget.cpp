@@ -1261,16 +1261,16 @@ void GraphPanelPlotLegendWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 
 //==============================================================================
 
-int GraphPanelPlotLegendWidget::legendLabelsHeight() const
+bool GraphPanelPlotLegendWidget::needScrollBar() const
 {
-    // Determine and return the height taken by our legend labels
+    // Determine and return whether we need a (vertical) scroll bar
 
-    int res = 0;
+    int legendLabelsHeight = 0;
 
     foreach (QwtLegendLabel *legendLabel, mLegendLabels)
-        res += legendLabel->height();
+        legendLabelsHeight += legendLabel->height();
 
-    return res;
+    return !pos().y() && (legendLabelsHeight > height());
 }
 
 //==============================================================================
@@ -2769,7 +2769,7 @@ void GraphPanelPlotWidget::doUpdateGui()
 
         legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
 
-        if (legend->legendLabelsHeight() > legend->height()) {
+        if (legend->needScrollBar()) {
             legendWidth = qMax(legendWidth,
                                legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
         }
@@ -2778,7 +2778,7 @@ void GraphPanelPlotWidget::doUpdateGui()
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
-        legend->setSizeHintWidth((legend->legendLabelsHeight() > legend->height())?
+        legend->setSizeHintWidth(legend->needScrollBar()?
                                      legendWidth-legend->scrollExtent(Qt::Vertical):
                                      legendWidth);
     }

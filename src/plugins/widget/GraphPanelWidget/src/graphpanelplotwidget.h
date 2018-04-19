@@ -290,7 +290,7 @@ public:
     void addGraph(GraphPanelPlotGraph *pGraph);
     void removeGraph(GraphPanelPlotGraph *pGraph);
 
-    int legendLabelsHeight() const;
+    bool needScrollBar() const;
 
 protected:
     void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
