@@ -2794,9 +2794,9 @@ void GraphPanelPlotWidget::resizeLegend()
 
         legend->setSizeHintWidth( legendWidth
                                  +((   needLegendScrollBar
-                                    && (legend->legendLabelsHeight() > legend->height()))?
-                                       0:
-                                       legend->scrollExtent(Qt::Vertical)));
+                                    && (legend->legendLabelsHeight() <= legend->height()))?
+                                       legend->scrollExtent(Qt::Vertical):
+                                       0));
     }
 
     // Make sure that we are still properly aligned with our neighbours
