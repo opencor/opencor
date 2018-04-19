@@ -1181,11 +1181,7 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
     // Return our size hint, based on our internal size hint width and the
     // height of our default size hint
 
-    return mActive?
-                QwtLegend::isEmpty()?
-                    QSize(0, 0):
-                    QSize(mSizeHintWidth, QwtLegend::sizeHint().height()):
-                QSize(0, 0);
+    return QSize(mSizeHintWidth, QwtLegend::sizeHint().height());
 }
 
 //==============================================================================
