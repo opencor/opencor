@@ -285,7 +285,6 @@ public:
 
     void setSizeHintWidth(int pSizeHintWidth);
 
-    QSize defaultSizeHint() const;
     QSize sizeHint() const override;
 
     void addGraph(GraphPanelPlotGraph *pGraph);
