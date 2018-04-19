@@ -2603,14 +2603,14 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
                 && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
             } else if (xAxisValuesChanged && mSynchronizeXAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(), false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(), false, false, false);
             } else if (yAxisValuesChanged && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY, false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY, false, false, false);
             }
 
             alignWithNeighbors(pCanReplot,
