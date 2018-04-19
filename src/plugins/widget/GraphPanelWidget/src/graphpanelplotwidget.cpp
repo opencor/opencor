@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
-#include <QScrollBar>
 
 //==============================================================================
 
@@ -1005,7 +1004,8 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mFontSize(pParent->fontSize()),
     mBackgroundColor(pParent->backgroundColor()),
     mForegroundColor(pParent->surroundingAreaForegroundColor()),
-    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>())
+    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>()),
+    mSizeHintWidth(0)
 {
     // Have our legend items use as much horizontal space as possible
 
@@ -1166,28 +1166,35 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
 
 //==============================================================================
 
+void GraphPanelPlotLegendWidget::setSizeHintWidth(int pSizeHintWidth)
+{
+    // Set our internal size hint width
+
+    mSizeHintWidth = pSizeHintWidth;
+}
+
+//==============================================================================
+
+QSize GraphPanelPlotLegendWidget::defaultSizeHint() const
+{
+    // Determine and return our size hint, based on our active state and on
+    // whether we actually have a legen to show
+
+    return mActive?
+                QwtLegend::isEmpty()?
+                    QSize(0, 0):
+                    QwtLegend::sizeHint():
+                QSize(0, 0);
+}
+
+//==============================================================================
+
 QSize GraphPanelPlotLegendWidget::sizeHint() const
 {
-    // Determine and return our size hint, based on our active state and on the
-    // 'raw' size hint of our owner's neigbours' legend, if any
+    // Return our size hint, based on our internal size hint width and the
+    // height of our default size hint
 
-    QSize res = mActive?
-                    QwtLegend::isEmpty()?
-                        QSize(0, 0):
-                        QwtLegend::sizeHint():
-                    QSize(0, 0);
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
-        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
-        int legendScrollBarWidth = legend->verticalScrollBar()->isVisible()?
-                                       legend->verticalScrollBar()->width():
-                                       0;
-
-        if (legend->isActive())
-            res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()+legendScrollBarWidth));
-    }
-
-    return res;
+    return QSize(mSizeHintWidth, defaultSizeHint().height());
 }
 
 //==============================================================================
@@ -1263,6 +1270,20 @@ void GraphPanelPlotLegendWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     // Stop associating our last contents widget's child with the given graph
 
     mLegendLabels.remove(pGraph);
+}
+
+//==============================================================================
+
+int GraphPanelPlotLegendWidget::legendLabelsHeight() const
+{
+    // Determine and return the height taken by our legend labels
+
+    int res = 0;
+
+    foreach (QwtLegendLabel *legendLabel, mLegendLabels)
+        res += legendLabel->height();
+
+    return res;
 }
 
 //==============================================================================
@@ -2751,6 +2772,40 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 
 //==============================================================================
 
+void GraphPanelPlotWidget::resizeLegend()
+{
+    // Resize our legend and that of our neighbours
+
+    GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+    int legendWidth = 0;
+    bool needLegendScrollBar = false;
+
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+
+        legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
+
+        if (legend->legendLabelsHeight() > legend->height())
+            needLegendScrollBar = true;
+    }
+
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+
+        legend->setSizeHintWidth( legendWidth
+                                 +((   needLegendScrollBar
+                                    && (legend->legendLabelsHeight() > legend->height()))?
+                                       0:
+                                       legend->scrollExtent(Qt::Vertical)));
+    }
+
+    // Make sure that we are still properly aligned with our neighbours
+
+    forceAlignWithNeighbors();
+}
+
+//==============================================================================
+
 QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint) const
 {
     // Return the mouse position using canvas coordinates, making sure that they
@@ -2987,18 +3042,9 @@ void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
 
     mOverlayWidget->resize(pEvent->size());
 
-    // Resize our legend and that of our neighbours, and make sure that we are
-    // still properly aligned with our neighbours
+    // Resize our legend (and that of our neighbours)
 
-    int legendWidth = legend()->width();
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mNeighbors) {
-        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
-
-        legend->resize(QSize(legendWidth, legend->height()));
-    }
-
-    forceAlignWithNeighbors();
+    resizeLegend();
 }
 
 //==============================================================================

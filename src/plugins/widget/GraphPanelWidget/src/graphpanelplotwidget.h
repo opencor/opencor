@@ -283,10 +283,15 @@ public:
     void renderLegend(QPainter *pPainter, const QRectF &pRect,
                       bool pFillBackground) const override;
 
+    void setSizeHintWidth(int pSizeHintWidth);
+
+    QSize defaultSizeHint() const;
     QSize sizeHint() const override;
 
     void addGraph(GraphPanelPlotGraph *pGraph);
     void removeGraph(GraphPanelPlotGraph *pGraph);
+
+    int legendLabelsHeight() const;
 
 protected:
     void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
@@ -301,6 +306,8 @@ private:
     QColor mForegroundColor;
 
     QMap<GraphPanelPlotGraph *, QwtLegendLabel *> mLegendLabels;
+
+    int mSizeHintWidth;
 
 signals:
     void graphToggled(GraphPanelPlotGraph *pGraph);
@@ -581,6 +588,8 @@ private:
                    const Scaling &pScalingY);
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
+
+    void resizeLegend();
 
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
