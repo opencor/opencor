@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
+#include <QTimer>
 
 //==============================================================================
 
@@ -2760,7 +2761,7 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::updateGui()
+void GraphPanelPlotWidget::doUpdateGui()
 {
     // Resize our legend and that of our neighbours
 
@@ -2789,6 +2790,18 @@ void GraphPanelPlotWidget::updateGui()
     // Make sure that we are still properly aligned with our neighbours
 
     alignWithNeighbors(true, true);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::updateGui(bool pSingleShot)
+{
+    // Update our GUI, either through a single shot or directly
+
+    if (pSingleShot)
+        QTimer::singleShot(0, this, &GraphPanelPlotWidget::doUpdateGui);
+    else
+        doUpdateGui();
 }
 
 //==============================================================================
@@ -3093,8 +3106,12 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 
     // To add a graph may affect our GUI (and that of our neighbours), so update
     // it
+    // Note: we do it through a single shot since otherwise the new legend label
+    //       won't have been added yet and our legend may not be of the right
+    //       width (e.g. after having added a graph that would result in the
+    //       legend's vertical scrollbar to appear)...
 
-    updateGui();
+    updateGui(true);
 
     return true;
 }
@@ -3119,7 +3136,7 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 
     delete pGraph;
 
-    // To remoev a graph may affect our GUI (and that of our neighbours), so
+    // To remove a graph may affect our GUI (and that of our neighbours), so
     // update it
 
     updateGui();

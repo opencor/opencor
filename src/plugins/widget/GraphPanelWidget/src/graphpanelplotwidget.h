@@ -467,7 +467,7 @@ public:
 
     QPointF canvasPoint(const QPoint &pPoint) const;
 
-    void updateGui();
+    void updateGui(bool pSingleShot = false);
 
 protected:
     bool eventFilter(QObject *pObject, QEvent *pEvent) override;
@@ -601,6 +601,9 @@ signals:
 
     void logarithmicXAxisToggled();
     void logarithmicYAxisToggled();
+
+public slots:
+    void doUpdateGui();
 
 private slots:
     void cannotUpdateActions();
