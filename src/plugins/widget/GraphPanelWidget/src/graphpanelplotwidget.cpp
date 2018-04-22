@@ -3252,6 +3252,11 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        plot->setUpdatesEnabled(false);
+        // Note: this is needed on Windows and Linux otherwise to resize our
+        //       graph panels will result in the X axis flashing due to our call
+        //       to xScaleWidget->setMinBorderDist(0, 0) below...
+
         QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
 
         xScaleWidget->setMinBorderDist(0, 0);
@@ -3312,6 +3317,8 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                 replot();
             }
         }
+
+        plot->setUpdatesEnabled(true);
     }
 }
 
