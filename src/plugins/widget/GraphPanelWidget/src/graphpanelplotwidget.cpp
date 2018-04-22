@@ -458,6 +458,17 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 
 //==============================================================================
 
+QString GraphPanelPlotGraph::title() const
+{
+    // Return our title
+
+    Q_ASSERT(mDummyRun);
+
+    return mDummyRun->title().text();
+}
+
+//==============================================================================
+
 void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 {
     // Set the title of our different runs

@@ -166,6 +166,7 @@ public:
     void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
                    const QPen &pPen, int pSize);
 
+    QString title() const;
     void setTitle(const QString &pTitle);
 
     bool isVisible() const;
