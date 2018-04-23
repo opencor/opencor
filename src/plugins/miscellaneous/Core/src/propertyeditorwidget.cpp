@@ -1205,7 +1205,7 @@ void Property::setVisible(bool pVisible)
 void Property::select() const
 {
     // Have our owner select ourselves (i.e. our value), preserving the position
-    // of our horizontal scrollbar
+    // of our horizontal scroll bar
 
     int horizontalScrollBarValue = mOwner->horizontalScrollBar()->value();
 
