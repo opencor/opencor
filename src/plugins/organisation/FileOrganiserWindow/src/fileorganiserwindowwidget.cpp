@@ -1271,7 +1271,7 @@ void FileOrganiserWindowWidget::deleteItems()
     collapseEmptyFolders(mModel->invisibleRootItem());
 
     // Resize the widget to its contents in case its width was too wide (and
-    // therefore required a horizontal scrollbar), but is now fine
+    // therefore required a horizontal scroll bar), but is now fine
 
     resizeToContents();
 }

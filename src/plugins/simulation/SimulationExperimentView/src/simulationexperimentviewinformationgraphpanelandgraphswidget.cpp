@@ -1243,6 +1243,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     // Update the graph's title
 
+    QString oldTitle = graph->title();
+
     graph->setTitle(properties[1]->value());
 
     // Check that the parameters represented by the value of the X and Y
@@ -1312,10 +1314,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     graph->setSymbol(symbolStyle, symbolFillColor, symbolColor, symbolSize);
 
-    // Let people know if the X and/or Y parameters of our graph have changed or
-    // replot it if its settings have changed
+    // Update our graph's GUI if the title of our graph is different (which may
+    // result in our legend's width being updated), let people know if the X
+    // and/or Y parameters of our graph have changed, or replot it if its
+    // settings have changed
 
-    if (   (oldParameterX != graph->parameterX())
+    if (oldTitle != graph->title()) {
+        graph->plot()->updateGui();
+    } else if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
     } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
@@ -1421,9 +1427,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
     graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
 
-    graphPanelPlot->setUpdatesEnabled(true);
+    graphPanelPlot->updateGui();
 
-    graphPanelPlot->forceAlignWithNeighbors();
+    graphPanelPlot->setUpdatesEnabled(true);
 }
 
 //==============================================================================
