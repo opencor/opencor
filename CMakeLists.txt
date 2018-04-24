@@ -803,6 +803,18 @@ endif()
 
 add_custom_target(OpenCORBuild ALL)
 
+# On Linux, add our copy of the ICU and Mesa libraries
+# Note #1: ICU is needed so that our external projects that need ICU (e.g.
+#          QtWebKit) can rely on the ICU version that we want to use...
+# Note #2: Mesa is needed so that we can run OpenCOR on machines that don't have
+#          'proper' OpenGL support (e.g. on a Linux virtual machine in
+#          VirtualBox)...
+
+if(NOT WIN32 AND NOT APPLE)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+endif()
+
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
@@ -1145,17 +1157,6 @@ else()
 
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-    else()
-        # Add our copy of the ICU and Mesa libraries
-        # Note #1: ICU is needed so that our external projects that need ICU
-        #          (e.g. QtWebKit) can rely on the ICU version that we want to
-        #           use...
-        # Note #2: Mesa is needed so that we can run OpenCOR on machines that
-        #          don't have 'proper' OpenGL support (e.g. on a Linux virtual
-        #          machine in VirtualBox)...
-
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
     endif()
 endif()
 
@@ -1352,15 +1353,14 @@ else()
         linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     endforeach()
 
-    if(NOT ENABLE_TRAVIS_CI)
-        # We are building OpenCOR locally, so we can deploy the ICU libraries
-        # Note: indeed, on Travis CI, the PPA we use doesn't have those
-        #       libraries...
+    # Deploy our ICU libraries
 
-        foreach(QT_FILE icudata icui18n icuuc)
-            linux_deploy_qt_library(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
-        endforeach()
-    endif()
+    foreach(ICU_LIBRARY ${ICU_LIBRARIES})
+        get_filename_component(DIRNAME ${ICU_LIBRARY} DIRECTORY)
+        get_filename_component(FILENAME ${ICU_LIBRARY} NAME)
+
+        linux_deploy_qt_library(${DIRNAME} ${FILENAME})
+    endforeach()
 
     # Qt plugins required by OpenCOR
 
