@@ -59,7 +59,7 @@ else()
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
-            https://github.com/opencor/icu4c
+            https://github.com/opencor/icu
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
