@@ -50,15 +50,12 @@ else()
     # Build ICU as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
-    set(PACKAGE_BUILD_DIR ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME})
 
     ExternalProject_Add(${PACKAGE_BUILD}
-        DOWNLOAD_DIR
-            ${PACKAGE_BUILD_DIR}
         SOURCE_DIR
-            ${PACKAGE_BUILD_DIR}
+            ${CMAKE_SOURCE_DIR}/ext/${PACKAGE_NAME}
         BINARY_DIR
-            ${PACKAGE_BUILD_DIR}
+            ${EXTERNAL_PROJECT_BUILD_DIR}/Build/${PACKAGE_BUILD}
         INSTALL_DIR
             ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
         GIT_REPOSITORY
@@ -66,7 +63,7 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            source/runConfigureICU Linux --prefix=<INSTALL_DIR>
+            <SOURCE_DIR>/source/runConfigureICU Linux --prefix=<INSTALL_DIR>
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${ICUDATA_SHARED_LIBRARY}
             <INSTALL_DIR>/lib/${ICUI18N_SHARED_LIBRARY}
