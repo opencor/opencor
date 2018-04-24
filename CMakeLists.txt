@@ -11,8 +11,10 @@ option(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 option(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 if(NOT WIN32 AND NOT APPLE)
+    option(USE_PREBUILT_ICU_PACKAGE "Use the pre-built version of the ICU package" ON)
     option(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 endif()
+set(USE_PREBUILT_ICU_PACKAGE OFF)
 
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
@@ -1145,10 +1147,15 @@ else()
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
     else()
-        # Add our copy of the Mesa library so that we can run OpenCOR on
-        # machines that don't have 'proper' OpenGL support (e.g. on a Linux
-        # virtual machine in VirtualBox)
+        # Add our copy of the ICU and Mesa libraries
+        # Note #1: ICU is needed so that our external projects that need ICU
+        #          (e.g. QtWebKit) can rely on the ICU version that we want to
+        #           use...
+        # Note #2: Mesa is needed so that we can run OpenCOR on machines that
+        #          don't have 'proper' OpenGL support (e.g. on a Linux virtual
+        #          machine in VirtualBox)...
 
+        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
         add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
     endif()
 endif()
