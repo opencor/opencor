@@ -13,7 +13,6 @@ option(ENABLE_TESTS "Enable the tests to be built" OFF)
 if(NOT WIN32 AND NOT APPLE)
     option(USE_PREBUILT_ICU_PACKAGE "Use the pre-built version of the ICU package" ON)
     option(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
-set(USE_PREBUILT_ICU_PACKAGE OFF)
 endif()
 
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
