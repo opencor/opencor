@@ -41,11 +41,11 @@ if(USE_PREBUILT_ICU_PACKAGE)
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${RELATIVE_PROJECT_SOURCE_DIR} XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                          ${RELATIVE_PROJECT_SOURCE_DIR} 37cf2e70a0e2aa3f3814360e182a45269c7001f6
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                                      XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)
+                          SHA1_VALUES 09c48c1e7ecaee2ce66d2214eb791bf14a58ed9c
+                                      8ce5cb893e638bc02060271c0fc2f7cbf0156590
+                                      34be5958abf7a7af5f624893925b60cf069f7c43)
 else()
     # Build ICU as an external project
 
