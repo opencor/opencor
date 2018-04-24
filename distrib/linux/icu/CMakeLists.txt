@@ -74,7 +74,7 @@ else()
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
-                        PACKAGED_FILES ${SHA1_FILES}
+                        PACKAGED_FILES include lib
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 endif()
