@@ -84,7 +84,7 @@ if(USE_PREBUILT_SBMLAPI_PACKAGE)
                               SHA1_VALUES 032edbbf75dde4457afcf36d62fc96ca4aff7e11)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 20a00698c35c909570ce4d2936b327ad7090a26a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1426f433d5c8ec57e35b5015e0318e59b24fc8dd
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 3fce349986f1abaff0710b205f431f97c37d3f51)
