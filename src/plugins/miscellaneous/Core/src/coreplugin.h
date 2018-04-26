@@ -109,6 +109,8 @@ private:
 
     QStringList mRecentFileNamesOrUrls;
 
+    QList<QAction *> mRecentFileNameOrUrlActions;
+
     void updateNewModifiedSensitiveActions();
 
     void reopenFile(const QString &pFileName);
