@@ -3,7 +3,7 @@
 SETLOCAL ENABLEDELAYEDEXPANSION
 
 CALL clean
-CALL make Package %*
+CALL make %*
 
 SET ExitCode=!ERRORLEVEL!
 

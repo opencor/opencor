@@ -1,19 +1,12 @@
 #!/bin/sh
 
 cmakeBuildType=$1
-cmakePackage=$2
 
 if [ "$cmakeBuildType" = "Release" ]; then
     enableTests=OFF
 else
     cmakeBuildType=Debug
     enableTests=ON
-fi
-
-if [ "$cmakePackage" = "Package" ]; then
-    enablePackage=ON
-else
-    enablePackage=OFF
 fi
 
 if [ "`hash ninja 2>&1`" = "" ]; then
@@ -36,7 +29,7 @@ echo "\033[44;37;1mMaking OpenCOR$titleTests (using $generator)...\033[0m"
 
 cd build
 
-cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests -DENABLE_PACKAGE=$enablePackage ..
+cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=$cmakeBuildType -DENABLE_TESTS=$enableTests ..
 
 exitCode=$?
 

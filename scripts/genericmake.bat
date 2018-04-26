@@ -1,19 +1,12 @@
 SETLOCAL ENABLEDELAYEDEXPANSION
 
 SET CMakeBuildType=%1
-SET CMakePackage=%2
 
 IF "!CMakeBuildType!" == "Release" (
     SET EnableTests=OFF
 ) ELSE (
     SET CMakeBuildType=Debug
     SET EnableTests=ON
-)
-
-IF "!CMakePackage!" == "Package" (
-    SET EnablePackage=ON
-) ELSE (
-    SET EnablePackage=OFF
 )
 
 FOR %%X IN (ninja.exe) DO (
@@ -44,7 +37,7 @@ IF DEFINED NinjaFound (
     SET CMakeGenerator=NMake Makefiles JOM
 )
 
-cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!EnableTests! -DENABLE_PACKAGE=!EnablePackage! ..
+cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=!CMakeBuildType! -DENABLE_TESTS=!EnableTests! ..
 
 SET ExitCode=!ERRORLEVEL!
 
