@@ -827,7 +827,7 @@ void CorePlugin::reopenMostRecentFile()
     // Note: we don't want to get a reference to mRecentFileNamesOrUrls' first
     //       item, hence we construct a new string from it. Indeed, reopenFile()
     //       is going to remove that item from mRecentFileNamesOrUrls, so if we
-    //       were to use the reference, it would eventually become an empty
+    //       were to use a reference, it would eventually become an empty
     //       string...
 
     reopenFile(QString(mRecentFileNamesOrUrls.first()));
