@@ -10,7 +10,7 @@ else
     enableTests=ON
 fi
 
-if [ "$cmakeBuildType" = "Package" ]; then
+if [ "$cmakePackage" = "Package" ]; then
     enablePackage=OFF
 else
     enablePackage=ON

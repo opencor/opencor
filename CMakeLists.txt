@@ -1235,8 +1235,8 @@ if(ENABLE_PACKAGE)
         windows_deploy_qt_plugin(printsupport windowsprintersupport)
         windows_deploy_qt_plugin(sqldrivers qsqlite)
 
-        # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
-        # version of OpenCOR)
+        # Batch and VBScript files to run OpenCOR (useful when downloading a
+        # ZIPped version of OpenCOR)
 
         set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
         set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
@@ -1253,8 +1253,8 @@ if(ENABLE_PACKAGE)
 
         # File type association
         # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
-        #       file icons (so that it is clear to the user that an extension has
-        #       been (un)registered...
+        #       file icons (so that it is clear to the user that an extension
+        #       has been (un)registered...
 
         if(NSIS_FOUND)
             set(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
@@ -1285,8 +1285,8 @@ if(ENABLE_PACKAGE)
         install(TARGETS ${CMAKE_PROJECT_NAME} BUNDLE
                 DESTINATION .)
 
-        # Shell script to run OpenCOR (useful when downloading a ZIPped version of
-        # OpenCOR)
+        # Shell script to run OpenCOR (useful when downloading a ZIPped version
+        # of OpenCOR)
 
         set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
@@ -1337,11 +1337,11 @@ if(ENABLE_PACKAGE)
                 DESTINATION lib)
 
         # Qt libraries required by OpenCOR
-        # Note: unlike for Windows and macOS, we don't have a macro for deploying
-        #       all of our Qt libraries at once. Indeed, on Linux, the version of a
-        #       file is appended to its suffix, so unless making the macro
-        #       unnecessarily cumbersome to use, it's better to deploy one Qt
-        #       library at a time...
+        # Note: unlike for Windows and macOS, we don't have a macro for
+        #       deploying all of our Qt libraries at once. Indeed, on Linux, the
+        #       version of a file is appended to its suffix, so unless making
+        #       the macro unnecessarily cumbersome to use, it's better to deploy
+        #       one Qt library at a time...
 
         foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
             if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
