@@ -1160,298 +1160,300 @@ else()
     endif()
 endif()
 
-# Package OpenCOR
+# Package OpenCOR, if required
 
-set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
-set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
-set(CPACK_PACKAGE_EXECUTABLES "${CMAKE_PROJECT_NAME}" "${CMAKE_PROJECT_NAME}")
-set(CPACK_PACKAGE_VENDOR "Physiome Project")
-set(CPACK_PACKAGE_VERSION "${VERSION}")
+if(ENABLE_PACKAGE)
+    set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
+    set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
+    set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CMAKE_PROJECT_NAME}")
+    set(CPACK_PACKAGE_EXECUTABLES "${CMAKE_PROJECT_NAME}" "${CMAKE_PROJECT_NAME}")
+    set(CPACK_PACKAGE_VENDOR "Physiome Project")
+    set(CPACK_PACKAGE_VERSION "${VERSION}")
 
-if(SNAPSHOT)
-    set(CPACK_PACKAGE_VERSION_PATCH "")
-else()
-    set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
-endif()
-
-if(WIN32)
-    # Select NSIS, if available, and ZIP as the packagers on Windows
-
-    if(   EXISTS "C:/Program\ Files/NSIS/makensis.exe"
-       OR EXISTS "C:/Program\ Files\ (x86)/NSIS/makensis.exe")
-        set(NSIS_FOUND TRUE)
-        set(NSIS_GENERATOR NSIS)
+    if(SNAPSHOT)
+        set(CPACK_PACKAGE_VERSION_PATCH "")
     else()
-        set(NSIS_FOUND FALSE)
-        set(NSIS_GENERATOR)
+        set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
     endif()
 
-    set(CPACK_GENERATOR ${NSIS_GENERATOR} ZIP)
-    set(CPACK_SYSTEM_NAME "Windows")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+    if(WIN32)
+        # Select NSIS, if available, and ZIP as the packagers on Windows
 
-    # Specify the default installation directory
-
-    if(NSIS_FOUND)
-        set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
-        set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\${CMAKE_PROJECT_NAME}.exe")
-    endif()
-
-    # Install both the GUI and CLI versions of OpenCOR
-
-    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
-    install(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
-            DESTINATION bin)
-
-    # Additional files required by OpenCOR (incl. the Mesa library)
-
-    install(FILES ${ADDITIONAL_FILES}
-            DESTINATION bin)
-
-    install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
-            DESTINATION bin
-            RENAME ${DEST_MESA_FILENAME})
-
-    # Qt libraries required by OpenCOR
-
-    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
-        windows_deploy_qt_library(Qt5${QT_LIBRARY})
-    endforeach()
-
-    if(USE_PREBUILT_QTWEBKIT_PACKAGE)
-        foreach(QT_LIBRARY icudt icuin icuuc)
-            windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
-        endforeach()
-    endif()
-
-    # Qt plugins required by OpenCOR
-
-    windows_deploy_qt_plugin(imageformats qjpeg)
-    windows_deploy_qt_plugin(platforms qwindows)
-    windows_deploy_qt_plugin(printsupport windowsprintersupport)
-    windows_deploy_qt_plugin(sqldrivers qsqlite)
-
-    # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
-    # version of OpenCOR)
-
-    set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
-    set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
-
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
-                   ${BAT_FILENAME})
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
-                   ${VBS_FILENAME})
-
-    install(FILES ${BAT_FILENAME}
-            DESTINATION .)
-    install(FILES ${VBS_FILENAME}
-            DESTINATION .)
-
-    # File type association
-    # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
-    #       file icons (so that it is clear to the user that an extension has
-    #       been (un)registered...
-
-    if(NSIS_FOUND)
-        set(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
-
-        set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-            \\\${RegisterExtension} \\\"\\\$INSTDIR\\\\bin\\\\${CMAKE_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\\\" \\\".cellml\\\" \\\"CellML File\\\"
-            System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
-        ")
-        set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
-            \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
-            System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
-        ")
-    endif()
-elseif(APPLE)
-    # Select PackageMaker and ZIP as the packagers on macOS
-    # Note: this is actually done within the package script, so that the ZIP
-    #       package can be done 'properly', i.e. we don't have the full tree
-    #       structure in the ZIP file...
-
-    set(CPACK_SYSTEM_NAME "macOS")
-
-    set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
-
-    set(CPACK_SET_DESTDIR TRUE)
-
-    install(TARGETS ${CMAKE_PROJECT_NAME} BUNDLE
-            DESTINATION .)
-
-    # Shell script to run OpenCOR (useful when downloading a ZIPped version of
-    # OpenCOR)
-
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
-
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
-                   ${SH_FILENAME})
-
-    install(FILES ${SH_FILENAME}
-            DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-else()
-    # Select TGZ as the packager on Linux
-
-    set(CPACK_GENERATOR TGZ)
-    set(CPACK_SYSTEM_NAME "Linux")
-
-    # OpenCOR itself
-
-    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
-
-    # Libraries needed on Ubuntu
-
-    foreach(LIBRARY app base interfaces pbutils reamer video)
-        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
-
-        get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-        install(FILES ${REAL_FULL_LIBRARY}
-                DESTINATION lib
-                RENAME ${FULL_LIBRARY})
-    endforeach()
-
-    # Library needed on Fedora, but not on Ubuntu
-
-    foreach(LIBRARY bz2.so.1.0)
-        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
-
-        get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-        install(FILES ${REAL_FULL_LIBRARY}
-                DESTINATION lib
-                RENAME ${FULL_LIBRARY})
-    endforeach()
-
-    # Mesa library
-
-    install(FILES ${MESA_LIBRARY}
-            DESTINATION lib)
-
-    # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and macOS, we don't have a macro for deploying
-    #       all of our Qt libraries at once. Indeed, on Linux, the version of a
-    #       file is appended to its suffix, so unless making the macro
-    #       unnecessarily cumbersome to use, it's better to deploy one Qt
-    #       library at a time...
-
-    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
-        if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
-           OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
-            set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
+        if(   EXISTS "C:/Program\ Files/NSIS/makensis.exe"
+           OR EXISTS "C:/Program\ Files\ (x86)/NSIS/makensis.exe")
+            set(NSIS_FOUND TRUE)
+            set(NSIS_GENERATOR NSIS)
         else()
-            set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
+            set(NSIS_FOUND FALSE)
+            set(NSIS_GENERATOR)
         endif()
 
-        linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
-    endforeach()
+        set(CPACK_GENERATOR ${NSIS_GENERATOR} ZIP)
+        set(CPACK_SYSTEM_NAME "Windows")
+        set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
-    # Deploy our ICU libraries
+        # Specify the default installation directory
 
-    foreach(ICU_LIBRARY ${ICU_LIBRARIES})
-        get_filename_component(DIRNAME ${ICU_LIBRARY} DIRECTORY)
-        get_filename_component(FILENAME ${ICU_LIBRARY} NAME)
+        if(NSIS_FOUND)
+            set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+            set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\${CMAKE_PROJECT_NAME}.exe")
+        endif()
 
-        linux_deploy_qt_library(${DIRNAME} ${FILENAME})
-    endforeach()
+        # Install both the GUI and CLI versions of OpenCOR
 
-    # Qt plugins required by OpenCOR
+        install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
+        install(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
+                DESTINATION bin)
 
-    linux_deploy_qt_plugin(imageformats qjpeg)
-    linux_deploy_qt_plugin(platforms qxcb)
-    linux_deploy_qt_plugin(printsupport cupsprintersupport)
-    linux_deploy_qt_plugin(sqldrivers qsqlite)
+        # Additional files required by OpenCOR (incl. the Mesa library)
 
-    if(NOT ENABLE_TRAVIS_CI)
-        # We are building OpenCOR locally, so we can deploy the
-        # xcbglintegrations plugins
-        # Note: indeed, on Travis CI, the PPA we use doesn't have those
-        #       plugins...
+        install(FILES ${ADDITIONAL_FILES}
+                DESTINATION bin)
 
-        linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+        install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
+                DESTINATION bin
+                RENAME ${DEST_MESA_FILENAME})
+
+        # Qt libraries required by OpenCOR
+
+        foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
+            windows_deploy_qt_library(Qt5${QT_LIBRARY})
+        endforeach()
+
+        if(USE_PREBUILT_QTWEBKIT_PACKAGE)
+            foreach(QT_LIBRARY icudt icuin icuuc)
+                windows_deploy_qt_library(${QT_LIBRARY}${ICU_VERSION})
+            endforeach()
+        endif()
+
+        # Qt plugins required by OpenCOR
+
+        windows_deploy_qt_plugin(imageformats qjpeg)
+        windows_deploy_qt_plugin(platforms qwindows)
+        windows_deploy_qt_plugin(printsupport windowsprintersupport)
+        windows_deploy_qt_plugin(sqldrivers qsqlite)
+
+        # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
+        # version of OpenCOR)
+
+        set(BAT_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.bat")
+        set(VBS_FILENAME "${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.vbs")
+
+        configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in
+                       ${BAT_FILENAME})
+        configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in
+                       ${VBS_FILENAME})
+
+        install(FILES ${BAT_FILENAME}
+                DESTINATION .)
+        install(FILES ${VBS_FILENAME}
+                DESTINATION .)
+
+        # File type association
+        # Note: the calls to SHChangeNotify are to ensure that Windows refreshes
+        #       file icons (so that it is clear to the user that an extension has
+        #       been (un)registered...
+
+        if(NSIS_FOUND)
+            set(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
+
+            set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+                \\\${RegisterExtension} \\\"\\\$INSTDIR\\\\bin\\\\${CMAKE_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\\\" \\\".cellml\\\" \\\"CellML File\\\"
+                System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+            ")
+            set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+                \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
+                System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+            ")
+        endif()
+    elseif(APPLE)
+        # Select PackageMaker and ZIP as the packagers on macOS
+        # Note: this is actually done within the package script, so that the ZIP
+        #       package can be done 'properly', i.e. we don't have the full tree
+        #       structure in the ZIP file...
+
+        set(CPACK_SYSTEM_NAME "macOS")
+
+        set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/macos/welcome.txt")
+        set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
+        set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+
+        set(CPACK_SET_DESTDIR TRUE)
+
+        install(TARGETS ${CMAKE_PROJECT_NAME} BUNDLE
+                DESTINATION .)
+
+        # Shell script to run OpenCOR (useful when downloading a ZIPped version of
+        # OpenCOR)
+
+        set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+
+        configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
+                       ${SH_FILENAME})
+
+        install(FILES ${SH_FILENAME}
+                DESTINATION .
+                RENAME ${CMAKE_PROJECT_NAME}
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    else()
+        # Select TGZ as the packager on Linux
+
+        set(CPACK_GENERATOR TGZ)
+        set(CPACK_SYSTEM_NAME "Linux")
+
+        # OpenCOR itself
+
+        install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
+
+        # Libraries needed on Ubuntu
+
+        foreach(LIBRARY app base interfaces pbutils reamer video)
+            set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
+
+            get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+            install(FILES ${REAL_FULL_LIBRARY}
+                    DESTINATION lib
+                    RENAME ${FULL_LIBRARY})
+        endforeach()
+
+        # Library needed on Fedora, but not on Ubuntu
+
+        foreach(LIBRARY bz2.so.1.0)
+            set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
+
+            get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
+
+            install(FILES ${REAL_FULL_LIBRARY}
+                    DESTINATION lib
+                    RENAME ${FULL_LIBRARY})
+        endforeach()
+
+        # Mesa library
+
+        install(FILES ${MESA_LIBRARY}
+                DESTINATION lib)
+
+        # Qt libraries required by OpenCOR
+        # Note: unlike for Windows and macOS, we don't have a macro for deploying
+        #       all of our Qt libraries at once. Indeed, on Linux, the version of a
+        #       file is appended to its suffix, so unless making the macro
+        #       unnecessarily cumbersome to use, it's better to deploy one Qt
+        #       library at a time...
+
+        foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
+            if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
+               OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
+                set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
+            else()
+                set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
+            endif()
+
+            linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        endforeach()
+
+        # Deploy our ICU libraries
+
+        foreach(ICU_LIBRARY ${ICU_LIBRARIES})
+            get_filename_component(DIRNAME ${ICU_LIBRARY} DIRECTORY)
+            get_filename_component(FILENAME ${ICU_LIBRARY} NAME)
+
+            linux_deploy_qt_library(${DIRNAME} ${FILENAME})
+        endforeach()
+
+        # Qt plugins required by OpenCOR
+
+        linux_deploy_qt_plugin(imageformats qjpeg)
+        linux_deploy_qt_plugin(platforms qxcb)
+        linux_deploy_qt_plugin(printsupport cupsprintersupport)
+        linux_deploy_qt_plugin(sqldrivers qsqlite)
+
+        if(NOT ENABLE_TRAVIS_CI)
+            # We are building OpenCOR locally, so we can deploy the
+            # xcbglintegrations plugins
+            # Note: indeed, on Travis CI, the PPA we use doesn't have those
+            #       plugins...
+
+            linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+        endif()
+
+        # Shell script to run OpenCOR
+
+        set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+
+        configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
+                       ${SH_FILENAME})
+
+        install(FILES ${SH_FILENAME}
+                DESTINATION .
+                RENAME ${CMAKE_PROJECT_NAME}
+                PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
     endif()
 
-    # Shell script to run OpenCOR
+    # Specify the package file name, depending on whether we are generating a
+    # snapshot version of OpenCOR
 
-    set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
+    if(SNAPSHOT)
+        set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${DATE}-${CPACK_SYSTEM_NAME})
+    else()
+        set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${PROJECT_VERSION_MAJOR}-${PROJECT_VERSION_MINOR})
 
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
-                   ${SH_FILENAME})
+        if(NOT "${PROJECT_VERSION_PATCH}" STREQUAL "")
+            set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}-${PROJECT_VERSION_PATCH})
+        endif()
 
-    install(FILES ${SH_FILENAME}
-            DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
-            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-endif()
-
-# Specify the package file name, depending on whether we are generating a
-# snapshot version of OpenCOR
-
-if(SNAPSHOT)
-    set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${DATE}-${CPACK_SYSTEM_NAME})
-else()
-    set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${PROJECT_VERSION_MAJOR}-${PROJECT_VERSION_MINOR})
-
-    if(NOT "${PROJECT_VERSION_PATCH}" STREQUAL "")
-        set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}-${PROJECT_VERSION_PATCH})
+        set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}-${CPACK_SYSTEM_NAME})
     endif()
 
-    set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}-${CPACK_SYSTEM_NAME})
+    # Notice and license files
+
+    set(NOTICE_FILENAME ${PROJECT_BUILD_DIR}/NOTICE.txt)
+
+    configure_file(${CMAKE_SOURCE_DIR}/NOTICE.txt.in
+                   ${NOTICE_FILENAME})
+
+    set(FILES
+        ${CMAKE_SOURCE_DIR}/LICENSE.txt
+        ${NOTICE_FILENAME}
+    )
+
+    foreach(FILE ${FILES})
+        install(FILES ${FILE}
+                DESTINATION .
+                PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
+    endforeach()
+
+    # Some sample CellML files
+
+    set(MODEL_FILES
+        hodgkin_huxley_squid_axon_model_1952.cellml
+        noble_model_1962.cellml
+        van_der_pol_model_1928.cellml
+    )
+
+    foreach(MODEL_FILE ${MODEL_FILES})
+        install(FILES ${CMAKE_SOURCE_DIR}/models/${MODEL_FILE}
+                DESTINATION models
+                PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
+    endforeach()
+
+    # Some user-defined format files
+
+    set(FORMAT_FILES
+        C.xml
+        F77.xml
+        MATLAB.xml
+        Python.xml
+        README.txt
+    )
+
+    foreach(FORMAT_FILE ${FORMAT_FILES})
+        install(FILES ${CMAKE_SOURCE_DIR}/formats/${FORMAT_FILE}
+                DESTINATION formats
+                PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
+    endforeach()
+
+    include(CPack)
 endif()
-
-# Notice and license files
-
-set(NOTICE_FILENAME ${PROJECT_BUILD_DIR}/NOTICE.txt)
-
-configure_file(${CMAKE_SOURCE_DIR}/NOTICE.txt.in
-               ${NOTICE_FILENAME})
-
-set(FILES
-    ${CMAKE_SOURCE_DIR}/LICENSE.txt
-    ${NOTICE_FILENAME}
-)
-
-foreach(FILE ${FILES})
-    install(FILES ${FILE}
-            DESTINATION .
-            PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
-endforeach()
-
-# Some sample CellML files
-
-set(MODEL_FILES
-    hodgkin_huxley_squid_axon_model_1952.cellml
-    noble_model_1962.cellml
-    van_der_pol_model_1928.cellml
-)
-
-foreach(MODEL_FILE ${MODEL_FILES})
-    install(FILES ${CMAKE_SOURCE_DIR}/models/${MODEL_FILE}
-            DESTINATION models
-            PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
-endforeach()
-
-# Some user-defined format files
-
-set(FORMAT_FILES
-    C.xml
-    F77.xml
-    MATLAB.xml
-    Python.xml
-    README.txt
-)
-
-foreach(FORMAT_FILE ${FORMAT_FILES})
-    install(FILES ${CMAKE_SOURCE_DIR}/formats/${FORMAT_FILE}
-            DESTINATION formats
-            PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
-endforeach()
-
-include(CPack)
