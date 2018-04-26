@@ -704,17 +704,16 @@ void CorePlugin::newFile()
 void CorePlugin::updateFileReopenMenu(bool pEnabled)
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
+    // Note: we skip the first two and last two actions since they are for
+    //       reopening our most recent file, clearing our list of most recent
+    //       files and two separators...
 
-    foreach (QAction *action, mFileReopenSubMenu->actions()) {
-        if (   (action != mFileReopenMostRecentFileAction)
-            && (action != mFileReopenSubMenuSeparator1)
-            && (action != mFileReopenSubMenuSeparator2)) {
-            mFileReopenSubMenu->removeAction(action);
+    QList<QAction *> actions = mFileReopenSubMenu->actions();
 
-            delete action;
-        } else if (action == mFileReopenSubMenuSeparator2) {
-            break;
-        }
+    for (int i = 2, iMax = actions.count()-2; i < iMax; ++i) {
+        mFileReopenSubMenu->removeAction(actions[i]);
+
+        delete actions[i];
     }
 
     // Add the recent files to our Reopen sub-menu
