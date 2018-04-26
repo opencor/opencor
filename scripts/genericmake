@@ -11,9 +11,9 @@ else
 fi
 
 if [ "$cmakePackage" = "Package" ]; then
-    enablePackage=OFF
-else
     enablePackage=ON
+else
+    enablePackage=OFF
 fi
 
 if [ "`hash ninja 2>&1`" = "" ]; then

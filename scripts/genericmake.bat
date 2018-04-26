@@ -11,9 +11,9 @@ IF "!CMakeBuildType!" == "Release" (
 )
 
 IF "!CMakePackage!" == "Package" (
-    SET EnablePackage=OFF
-) ELSE (
     SET EnablePackage=ON
+) ELSE (
+    SET EnablePackage=OFF
 )
 
 FOR %%X IN (ninja.exe) DO (
