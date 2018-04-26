@@ -1307,18 +1307,6 @@ else()
                 RENAME ${FULL_LIBRARY})
     endforeach()
 
-    # Library needed on Fedora, but not on Ubuntu
-
-    foreach(LIBRARY bz2.so.1.0)
-        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
-
-        get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-        install(FILES ${REAL_FULL_LIBRARY}
-                DESTINATION lib
-                RENAME ${FULL_LIBRARY})
-    endforeach()
-
     # Mesa library
 
     install(FILES ${MESA_LIBRARY}
