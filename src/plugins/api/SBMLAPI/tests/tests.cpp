@@ -46,11 +46,11 @@ void Tests::basicTests()
 
     // Check against which libraries libSBML has been compiled
 
-    QVERIFY( libsbml::isLibSBMLCompiledWith("bzip2"));
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("bzip2"));
     QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
     QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
     QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
-    QVERIFY( libsbml::isLibSBMLCompiledWith("zip"));
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("zip"));
 
     // Create an SBML document with a model inside it, then set the name of the
     // model and check that it has been properly set

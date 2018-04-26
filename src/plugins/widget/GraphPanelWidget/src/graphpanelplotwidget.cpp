@@ -3252,10 +3252,15 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
         plot->setUpdatesEnabled(false);
-        // Note: this is needed on Windows and Linux otherwise to resize our
-        //       graph panels will result in the X axis flashing due to our call
-        //       to xScaleWidget->setMinBorderDist(0, 0) below...
+        // Note #1: this is needed on Windows and Linux otherwise to resize our
+        //          graph panels will result in the X axis flashing due to our
+        //          call to xScaleWidget->setMinBorderDist(0, 0) below...
+        // Note #2: to have this on macOS may result in a graph panel becoming
+        //          black, so we definitely don't want to do it on that
+        //          platform...
+#endif
 
         QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
 
@@ -3318,7 +3323,9 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
             }
         }
 
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
         plot->setUpdatesEnabled(true);
+#endif
     }
 }
 

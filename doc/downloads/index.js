@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 3, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 4, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,15 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.5 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1615\">#1615</a>). Fixed some seemingly random crashes (especially on Windows; see issue <a href=\"https://github.com/opencor/opencor/issues/1574\">#1574</a>)." },
-                       { "change": "<strong>Data store interface:</strong> fixed a problem with the returned size of a data store being wrong in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1579\">#1579</a>)." },
-                       { "change": "<strong>Graph Panel widget:</strong> fixed a problem with graph panels not always being properly aligned (see issue <a href=\"https://github.com/opencor/opencor/issues/1619\">#1619</a>)." },
-                       { "change": "<strong>PMR support:</strong> fixed a problem with the PMR Workspaces window potentially not reflecting the Git status of a folder (see issue <a href=\"https://github.com/opencor/opencor/issues/1582\">#1582</a>). Updated the description of our different PMR instances (see issue <a href=\"https://github.com/opencor/opencor/issues/1583\">#1583</a>)." },
-                       { "change": "<strong>CellML support:</strong> now provide more information when imports cannot be fully instantiated (see issue <a href=\"https://github.com/opencor/opencor/issues/1595\">#1595</a>)." },
-                       { "change": "<strong>SED-ML support:</strong> fixed a problem with OpenCOR crashing when saving an empty SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1572\">#1572</a>)." },
-                       { "change": "<strong>PMR Workspaces window:</strong> fixed a problem that resulted in the the window being empty until reauthentication (see issue <a href=\"https://github.com/opencor/opencor/issues/1581\">#1581</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> prevent a model with no ODEs/DAEs from crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1576\">#1576</a>). Fixed an issue with some results being potentially not plotted at all (see issue <a href=\"https://github.com/opencor/opencor/issues/1613\">#1613</a>). Fixed a problem with legend labels not always being right (see issue <a href=\"https://github.com/opencor/opencor/issues/1620\">#1620</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> have libgit2 use our copy of zlib rather than the one provided by the system (see issue <a href=\"https://github.com/opencor/opencor/issues/1577\">#1577</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1588\">#1588</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2o (see issue <a href=\"https://github.com/opencor/opencor/issues/1589\">#1589</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1608\">#1608</a>)." }
+                       { "change": "<strong>SBML API:</strong> hadon't build libSBML with bzip2 or zip compression anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1628\">#1628</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
