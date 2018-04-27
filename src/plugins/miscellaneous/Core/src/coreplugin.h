@@ -115,14 +115,16 @@ private:
 
     void reopenFile(const QString &pFileName);
 
+    void updateFileReopenMenu();
+
 private slots:
     void newFile();
-
-    void updateFileReopenMenu(bool pEnabled = true);
 
     void reopenRecentFile();
     void reopenMostRecentFile();
     void clearReopenSubMenu();
+
+    void doUpdateFileReopenMenu();
 };
 
 //==============================================================================
