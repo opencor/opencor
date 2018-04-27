@@ -67,7 +67,7 @@ PLUGININFO_FUNC CorePluginInfo()
 
 CorePlugin::CorePlugin() :
     mRecentFileNamesOrUrls(QStringList()),
-    mRecentFileNameOrUrlActions(QList<QAction *>())
+    mRecentFileActions(QList<QAction *>())
 {
 }
 
@@ -706,13 +706,13 @@ void CorePlugin::updateFileReopenMenu(bool pEnabled)
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
-    foreach (QAction *action, mRecentFileNameOrUrlActions) {
+    foreach (QAction *action, mRecentFileActions) {
         mFileReopenSubMenu->removeAction(action);
 
         delete action;
     }
 
-    mRecentFileNameOrUrlActions.clear();
+    mRecentFileActions.clear();
 
     // Add the recent files to our Reopen sub-menu
 
@@ -727,7 +727,7 @@ void CorePlugin::updateFileReopenMenu(bool pEnabled)
 
         mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator2, action);
 
-        mRecentFileNameOrUrlActions << action;
+        mRecentFileActions << action;
     }
 
     // Enable/disable our reopen sub-menu actions depending on whether we have
