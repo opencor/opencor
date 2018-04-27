@@ -37,7 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>SBML API:</strong> hadon't build libSBML with bzip2 or zip compression anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1628\">#1628</a>)." }
+                       { "change": "<strong>SBML API:</strong> don't build libSBML with bzip2 or zip compression anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1628\">#1628</a>)." },
+                       { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
+                       { "change": "<strong>Simualtion Experiment view:</strong> fixed a problem with a SED-ML file being considered as modified under certain conditions (see issue <a href=\"https://github.com/opencor/opencor/issues/1626\">#1626</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
