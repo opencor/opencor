@@ -299,63 +299,63 @@ else()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyAnnotoolsLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyAnnotoolsLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${ANNOTOOLS_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}annotools${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${ANNOTOOLS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${ANNOTOOLS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCcgsLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyCcgsLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CCGS_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}ccgs${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CCGS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CCGS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCeledsLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyCeledsLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CELEDS_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}celeds${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CELEDS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CELEDS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCeledsexporterLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyCeledsexporterLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CELEDSEXPORTER_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}celedsexporter${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CELEDSEXPORTER_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CELEDSEXPORTER_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCellmlLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyCellmlLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CELLML_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}cellml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CELLML_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CELLML_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCevasLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyCevasLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CEVAS_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}cevas${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CEVAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CEVAS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCusesLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyCusesLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CUSES_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}cuses${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CUSES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CUSES_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyMalaesLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyMalaesLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${MALAES_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}malaes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MALAES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${MALAES_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyVacssLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyVacssLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${VACSS_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}vacss${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${VACSS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${VACSS_SHARED_LIBRARY}

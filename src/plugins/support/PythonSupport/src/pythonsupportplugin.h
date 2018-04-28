@@ -49,8 +49,6 @@ class PYTHONSUPPORT_EXPORT PythonSupportPlugin : public QObject, public PluginIn
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-    explicit PythonSupportPlugin();
-
 #include "plugininterface.inl"
 };
 

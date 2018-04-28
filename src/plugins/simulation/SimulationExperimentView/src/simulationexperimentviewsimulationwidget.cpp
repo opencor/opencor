@@ -386,13 +386,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     connect(informationWidget->solversWidget(), &SimulationExperimentViewInformationSolversWidget::propertyChanged,
             this, &SimulationExperimentViewSimulationWidget::solversPropertyChanged);
 
-    // Enable SimulationData to toggle parameter widget's gradients' flag and widget to store index.
-
-    connect(mSimulation->data(), &SimulationSupport::SimulationData::gradientCalculation,
-            informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::gradientToggled);
-    connect(informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::calculateGradients,
-            mSimulation->data(), &SimulationSupport::SimulationData::setGradientCalculationByIndex);
-
     // Keep track of the addition and removal of a graph panel
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
@@ -1339,7 +1332,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // case we were able to allocate all the memory we need
 
             if (runSimulation) {
-                mViewWidget->startingRun(mSimulation->fileName());
+                mViewWidget->checkSimulationResults(mSimulation->fileName(), AddRun);
 
                 mSimulation->run();
             } else {
@@ -3384,8 +3377,17 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
                                                         CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Ask the current graph panel to add a new graph for the given parameters
+    // Note: due to the way legend labels are handled by Qwt, we temporarily
+    //       disable their update (and reenable it once the graph has been
+    //       added; see graphAdded()) since otherwise we may see the label flash
+    //       due to its properties (e.g. font size) not being the same as those
+    //       of QwtLegendLabel...
 
-    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
+    GraphPanelWidget::GraphPanelWidget *graphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+
+    graphPanel->plot()->legend()->setUpdatesEnabled(false);
+
+    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
 }
 
 //==============================================================================
@@ -3398,13 +3400,17 @@ void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::Grap
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
         pGraph->addRun();
 
+    // Allow our plot's legend to get updated
+
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
+
+    plot->legend()->setUpdatesEnabled(true);
+
     // Now, keep track of the graph and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as a
     //       result, replot the graphs including our new one. On the other hand,
     //       if the plot's axes don't get updated, we need to draw our new
     //       graph...
-
-    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
         updateGraphData(pGraph, mSimulation->results()->size(i), i);
@@ -3715,6 +3721,20 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
     if (pCheckVisibility && !isVisible())
         return;
 
+    // We need to update our GUI, which means that we can initialise
+    // mGraphPanelsWidgetSizes, if needed, as well as
+    // mGraphPanelPropertiesModified and mGraphsPropertiesModified by calling
+    // checkGraphPanelsAndGraphs()
+    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
+    //       graph panels widget's sizes in furtherInitialize(), we don't end up
+    //       with the final sizes since nothing is visible yet...
+
+    if (mGraphPanelsWidgetSizes.isEmpty()) {
+        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+
+        checkGraphPanelsAndGraphs();
+    }
+
     // Make sure that our graph panel and graphs widget's GUI is up to date
 
     mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->updateGui();
@@ -3993,28 +4013,6 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pP
     // There has been some progress with our export, so update our busy widget
 
     Core::centralWidget()->setBusyWidgetProgress(pProgress);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWidget::paintEvent(pEvent);
-
-    // We have been rendered, so we can initialise mGraphPanelsWidgetSizes, if
-    // needed, as well as mGraphPanelPropertiesModified and
-    // mGraphsPropertiesModified by calling checkGraphPanelsAndGraphs()
-    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
-    //       graph panels widget's sizes in furtherInitialize(), we don't end up
-    //       with the final sizes since nothing is visible yet...
-
-    if (mGraphPanelsWidgetSizes.isEmpty()) {
-        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
-
-        checkGraphPanelsAndGraphs();
-    }
 }
 
 //==============================================================================

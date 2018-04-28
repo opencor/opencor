@@ -738,7 +738,7 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 {
     // Update our simualtion widget's GUI and that of its children
     // Note: for column widths, we set the last column width to zero to avoid
-    //       potential issues, should the vertical scrollbar be visible...
+    //       potential issues, should the vertical scroll bar be visible...
 
     pSimulationWidget->setSizes(mSimulationWidgetSizes);
 

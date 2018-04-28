@@ -63,31 +63,31 @@ if(USE_PREBUILT_SBMLAPI_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} e45f13c13f47f6b672e5d95b0bde6a7fe8eefbbb
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} ca2eef818a6a1ea5c717a0b6c1f09bee3509b667
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 04079417caa3c4542acc4d04131be02d91bc42ce
-                                              efab157439ecb681c7bdec310d991af75f2437bf)
+                                  SHA1_VALUES 6b46f6ee6d0af8480e21f365f9b332f804a8c5d1
+                                              71de6d57060841d7a109b1e8137df836ed7f5fab)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c61704db02f2316fc2a64d436197cce91e798dd7
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} cf2c0431a83ac1d9f5778229fe516e311155aedd
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 319c46e94103012416adc2af82cdd24d46dbeab9
-                                              562d624ac501f8f439c7be458b27534dce2f713d)
+                                  SHA1_VALUES dbfe9bc7c1b8c48aa1a616bbe80df6bdd88f0412
+                                              f7f60e508009a01b1db08e6a5c51eea52b09afdd)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} adc952722dbd8c5a6535d700b8e5179bf3d57b99
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 057474b665d11fb2cbb33289f75f7648f4321aa7
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 1b6a911d1b8320fb57db48c78f06432bc5b4f975)
+                              SHA1_VALUES 032edbbf75dde4457afcf36d62fc96ca4aff7e11)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} ba10ad4f50b7a4f111a9e8bec7db7559645cc1fd
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1426f433d5c8ec57e35b5015e0318e59b24fc8dd
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7b6ae4e1a6c715b01607c9a3308fc65e0d345507)
+                              SHA1_VALUES 3fce349986f1abaff0710b205f431f97c37d3f51)
     endif()
 else()
     # Download some dependencies for Windows, if needed
@@ -114,7 +114,7 @@ else()
             list(GET STATUS 0 STATUS_CODE)
 
             if(${STATUS_CODE} EQUAL 0)
-                execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_DEPENDENCIES_FILENAME}
+                execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${REAL_DEPENDENCIES_FILENAME}
                                 WORKING_DIRECTORY ${DEPENDENCIES_DIR}
                                 OUTPUT_QUIET)
                 execute_process(COMMAND ${CMAKE_COMMAND} -E rename "libSBML Dependencies-1.0.0-b1-win64" ${MODE}
@@ -160,8 +160,10 @@ else()
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLIBSBML_DEPENDENCY_DIR=${DEPENDENCIES_MODE_DIR}
+            -DWITH_BZIP2=OFF
             -DWITH_CPP_NAMESPACE=ON
             -DWITH_SWIG=OFF
+            -DWITH_ZLIB=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
@@ -171,7 +173,7 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDll
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
@@ -179,7 +181,7 @@ else()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SHARED_LIBRARY}

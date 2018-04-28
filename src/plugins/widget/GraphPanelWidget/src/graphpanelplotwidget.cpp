@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
+#include <QTimer>
 
 //==============================================================================
 
@@ -362,7 +363,7 @@ void GraphPanelPlotGraph::setSelected(bool pSelected)
 
     // Un/check our corresponding legend item
 
-    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(mPlot->graphIndex(this), pSelected);
+    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(this, pSelected);
 }
 
 //==============================================================================
@@ -469,6 +470,17 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
+}
+
+//==============================================================================
+
+QString GraphPanelPlotGraph::title() const
+{
+    // Return our title
+
+    Q_ASSERT(mDummyRun);
+
+    return mDummyRun->title().text();
 }
 
 //==============================================================================
@@ -1019,7 +1031,9 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mActive(false),
     mFontSize(pParent->fontSize()),
     mBackgroundColor(pParent->backgroundColor()),
-    mForegroundColor(pParent->surroundingAreaForegroundColor())
+    mForegroundColor(pParent->surroundingAreaForegroundColor()),
+    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>()),
+    mSizeHintWidth(0)
 {
     // Have our legend items use as much horizontal space as possible
 
@@ -1064,20 +1078,19 @@ void GraphPanelPlotLegendWidget::setActive(bool pActive)
 
 bool GraphPanelPlotLegendWidget::isEmpty() const
 {
-    // Return whether we are empty, based on whether we are active
+    // Return whether we are empty, based on whether we have a zero size hint
 
-    return sizeHint() == QSize(0, 0);
+    return sizeHint().isNull();
 }
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setChecked(int pIndex, bool pChecked)
+void GraphPanelPlotLegendWidget::setChecked(GraphPanelPlotGraph *pGraph,
+                                            bool pChecked)
 {
-    // Un/check the graph which index is given
-    // Note: the +1 is because the first child of our contents widget is our
-    //       layout...
+    // Un/check the legend label associated with the given graph
 
-    static_cast<QwtLegendLabel *>(contentsWidget()->children()[pIndex+1])->setChecked(pChecked);
+    mLegendLabels.value(pGraph)->setChecked(pChecked);
 }
 
 //==============================================================================
@@ -1181,25 +1194,21 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
 
 //==============================================================================
 
+void GraphPanelPlotLegendWidget::setSizeHintWidth(int pSizeHintWidth)
+{
+    // Set our internal size hint width
+
+    mSizeHintWidth = pSizeHintWidth;
+}
+
+//==============================================================================
+
 QSize GraphPanelPlotLegendWidget::sizeHint() const
 {
-    // Determine and return our size hint, based on our active state and on the
-    // 'raw' size hint of our owner's neigbours' legend, if any
+    // Return our size hint, based on our internal size hint width and the
+    // height of our default size hint
 
-    QSize res = mActive?
-                    QwtLegend::isEmpty()?
-                        QSize(0, 0):
-                        QwtLegend::sizeHint():
-                    QSize(0, 0);
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
-        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
-
-        if (legend->isActive())
-            res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()));
-    }
-
-    return res;
+    return QSize(mSizeHintWidth, QwtLegend::sizeHint().height());
 }
 
 //==============================================================================
@@ -1207,71 +1216,88 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
 void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
-    // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
-    // to the legend of our dummy run
-    // Note: we start at 1 because the first child of our contents widget is our
-    //       layout...
+    // Check whether we are dealing with one of our main legend labels
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
-    bool mainLegendLabel = false;
+    bool mainLegendLabel = mLegendLabels.values().contains(legendLabel);
 
-    for (int i = 1, iMax = 1+mOwner->graphs().count(); i < iMax; ++i) {
-        if (legendLabel == static_cast<QwtLegendLabel *>(contentsWidget()->children()[i])) {
-            mainLegendLabel = true;
+    if (mainLegendLabel) {
+        // We are dealing with a main legend label, i.e. a legend label
+        // associated with our dummy run, so start with the default handling of
+        // our method
 
-            break;
-        }
-    }
+        QwtLegend::updateWidget(pWidget, pLegendData);
 
-    if (!mainLegendLabel) {
+        // Update our visible state
+
+        legendLabel->setAutoFillBackground(true);
+        legendLabel->setVisible(mActive);
+
+        // Update our font size, as well as background and foreground colours
+
+        QFont newFont = legendLabel->font();
+
+        newFont.setPointSize(mFontSize);
+
+        legendLabel->setFont(newFont);
+
+        QPalette newPalette = legendLabel->palette();
+
+        newPalette.setColor(QPalette::Window, mBackgroundColor);
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+
+        legendLabel->setPalette(newPalette);
+
+        // Make sure that updates are enabled
+        // Note: indeed, when setting its data, QwtLegendLabel (which is used by
+        //       QwtLegend) prevents itself from updating, and then reallows
+        //       itself to be updated, if it was originally allowed. Now, the
+        //       problem is that if one of our ancestors decides to temporarily
+        //       disable updates (e.g. our simulation experiment view) then
+        //       QwtLegendLabel won't reenable itself, which means that the
+        //       legend may not actually be visible in some cases (e.g. when
+        //       opening a SED-ML file)...
+
+        pWidget->setUpdatesEnabled(true);
+    } else {
+        // This is not one of our main legend label, so ignore it (i.e. minimise
+        // and hide it)
+
         legendLabel->resize(0, 0);
         legendLabel->hide();
-
-        return;
     }
+}
 
-    // Default handling
+//==============================================================================
 
-    QwtLegend::updateWidget(pWidget, pLegendData);
+void GraphPanelPlotLegendWidget::addGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Associate the given graph with our last contents widget's child
 
-    // Update our visible state
+    mLegendLabels.insert(pGraph, static_cast<QwtLegendLabel *>(contentsWidget()->children().last()));
+}
 
-    legendLabel->setAutoFillBackground(true);
-    legendLabel->setVisible(mActive);
+//==============================================================================
 
-    // Update our font size, as well as background and foreground colours
+void GraphPanelPlotLegendWidget::removeGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Stop associating our last contents widget's child with the given graph
 
-    QFont newFont = legendLabel->font();
+    mLegendLabels.remove(pGraph);
+}
 
-    newFont.setPointSize(mFontSize);
+//==============================================================================
 
-    legendLabel->setFont(newFont);
+bool GraphPanelPlotLegendWidget::needScrollBar() const
+{
+    // Determine and return whether we need a (vertical) scroll bar
 
-    QPalette newPalette = legendLabel->palette();
+    int legendLabelsHeight = 0;
 
-    newPalette.setColor(QPalette::Window, mBackgroundColor);
-    newPalette.setColor(QPalette::Text, mForegroundColor);
+    foreach (QwtLegendLabel *legendLabel, mLegendLabels)
+        legendLabelsHeight += legendLabel->height();
 
-    legendLabel->setPalette(newPalette);
-
-    // Make sure that the width of our owner's neighbours' legend is the same as
-    // ours
-
-    int legendWidth = sizeHint().width();
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
-        ownerNeighbor->setLegendWidth(legendWidth);
-
-    // Make sure that updates are enabled
-    // Note: indeed, when setting its data, QwtLegendLabel (which is used by
-    //       QwtLegend) prevents itself from updating, and then reallows itself
-    //       to be updated, if it was originally allowed. Now, the problem is
-    //       that if one of our ancestors decides to temporarily disable updates
-    //       (e.g. our simulation experiment view) then QwtLegendLabel won't
-    //       reenable itself, which means that the legend may not actually be
-    //       visible in some cases (e.g. when opening a SED-ML file)...
-
-    pWidget->setUpdatesEnabled(true);
+    return !pos().y() && (legendLabelsHeight > height());
 }
 
 //==============================================================================
@@ -2612,14 +2638,14 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
                 && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
             } else if (xAxisValuesChanged && mSynchronizeXAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(), false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(), false, false, false);
             } else if (yAxisValuesChanged && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY, false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY, false, false, false);
             }
 
             alignWithNeighbors(pCanReplot,
@@ -2754,8 +2780,56 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 
         setAxisTitle(pAxisId, axisTitle);
     }
+}
 
-    forceAlignWithNeighbors();
+//==============================================================================
+
+void GraphPanelPlotWidget::doUpdateGui()
+{
+    // Resize our legend and that of our neighbours
+
+    GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+    int legendWidth = 0;
+
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+
+        legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
+
+        if (legend->needScrollBar()) {
+            legendWidth = qMax(legendWidth,
+                               legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
+        }
+    }
+
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+
+        legend->setSizeHintWidth(legend->needScrollBar()?
+                                     legendWidth-legend->scrollExtent(Qt::Vertical):
+                                     legendWidth);
+    }
+
+    // Reenable updates for our legend
+    // Note: see addGraph() for the reasoning behind it...
+
+    legend()->setUpdatesEnabled(true);
+
+    // Make sure that we are still properly aligned with our neighbours
+
+    alignWithNeighbors(true, true);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::updateGui(bool pSingleShot)
+{
+    // Update our GUI, either through a single shot or directly
+
+    if (pSingleShot)
+        QTimer::singleShot(0, this, &GraphPanelPlotWidget::doUpdateGui);
+    else
+        doUpdateGui();
 }
 
 //==============================================================================
@@ -2995,6 +3069,10 @@ void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
     // Update the size of our overlay widget
 
     mOverlayWidget->resize(pEvent->size());
+
+    // Update our GUI (and that of our neighbours)
+
+    updateGui();
 }
 
 //==============================================================================
@@ -3006,7 +3084,8 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
     if (   !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
         // Make sure that we are not already carrying out a action
 
         if (mAction == None) {
@@ -3040,20 +3119,33 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     if (mGraphs.contains(pGraph))
         return false;
 
-    // Attach the given graph to ourselves and keep track of it
+    // Attach the given graph to ourselves and keep track of it, as well as ask
+    // our legend to keep track of it too
+    // Note: we temporarily disable updates for our legend, this to avoid some
+    //       black areas from quickly appearing on macOS (when adding a graph
+    //       that results in the vertical scroll bar being shown). It gets
+    //       reenabled in updateGUI()...
+
+    legend()->setUpdatesEnabled(false);
 
     pGraph->attach(this);
 
     mGraphs << pGraph;
 
+    mLegend->addGraph(pGraph);
+
     // Initialise the checked state of the corresponding legend item
 
-    mLegend->setChecked(mGraphs.count()-1, true);
+    mLegend->setChecked(pGraph, true);
 
-    // To add a graph may result in the legend getting shown, so we need to make
-    // sure that our neighbours are aware of it
+    // To add a graph may affect our GUI (and that of our neighbours), so update
+    // it
+    // Note: we do it through a single shot since otherwise the new legend label
+    //       won't have been added yet and our legend may not be of the right
+    //       width (e.g. after having added a graph that would result in the
+    //       legend's vertical scroll bar to appear)...
 
-    forceAlignWithNeighbors();
+    updateGui(true);
 
     return true;
 }
@@ -3067,18 +3159,25 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     if (!mGraphs.contains(pGraph))
         return false;
 
-    // Detach the given graph from ourselves, stop tracking it and delete it
+    // Detach the given graph from ourselves, stop tracking it (and ask our
+    // legend to do the same) and delete it
+    // Note: see addGraph() when it comes to temporarily disabling updates for
+    //       our legend...
+
+    legend()->setUpdatesEnabled(false);
 
     pGraph->detach();
 
     mGraphs.removeOne(pGraph);
 
+    mLegend->removeGraph(pGraph);
+
     delete pGraph;
 
-    // To remove a graph may result in the legend getting hidden, so we need to
-    // make sure that our neighbours are aware of it
+    // To remove a graph may affect our GUI (and that of our neighbours), so
+    // update it
 
-    forceAlignWithNeighbors();
+    updateGui();
 
     return true;
 }
@@ -3169,6 +3268,16 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(false);
+        // Note #1: this is needed on Windows and Linux otherwise to resize our
+        //          graph panels will result in the X axis flashing due to our
+        //          call to xScaleWidget->setMinBorderDist(0, 0) below...
+        // Note #2: to have this on macOS may result in a graph panel becoming
+        //          black, so we definitely don't want to do it on that
+        //          platform...
+#endif
+
         QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
 
         xScaleWidget->setMinBorderDist(0, 0);
@@ -3229,16 +3338,11 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                 replot();
             }
         }
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(true);
+#endif
     }
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::forceAlignWithNeighbors()
-{
-    // Force the re-alignment with our neighbours
-
-    alignWithNeighbors(true, true);
 }
 
 //==============================================================================

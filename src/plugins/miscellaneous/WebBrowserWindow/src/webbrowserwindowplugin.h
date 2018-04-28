@@ -46,7 +46,6 @@ class WebBrowserWindowPythonWrapper;
 class WebBrowserWindowWidget;
 class WebBrowserWindowWindow;
 
-
 //==============================================================================
 
 class WebBrowserWindowPlugin : public QObject, public I18nInterface,

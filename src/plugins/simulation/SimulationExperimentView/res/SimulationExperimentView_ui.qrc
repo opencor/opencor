@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/SimulationExperimentView">
         <file>blank.png</file>
-        <file>constantWithGradient.png</file>
     </qresource>
 </RCC>

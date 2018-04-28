@@ -392,7 +392,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         break;
     }
     case Property::Color:
-        editor = new ColorEditorWidget(pParent);
+        editor = textEditor = new ColorEditorWidget(pParent);
 
         break;
     }
@@ -1122,7 +1122,7 @@ void Property::setColorValue(const QPoint &pPoint)
         //       time round, we will have to click anywhere in OpenCOR for
         //       OpenCOR to get the focus back...
 
-        QCoreApplication::processEvents();
+        mOwner->processEvents();
     }
 }
 
@@ -1205,7 +1205,7 @@ void Property::setVisible(bool pVisible)
 void Property::select() const
 {
     // Have our owner select ourselves (i.e. our value), preserving the position
-    // of our horizontal scrollbar
+    // of our horizontal scroll bar
 
     int horizontalScrollBarValue = mOwner->horizontalScrollBar()->value();
 

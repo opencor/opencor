@@ -46,6 +46,7 @@ class QMenu;
 
 //==============================================================================
 
+class QwtLegendLabel;
 class QwtPlotDirectPainter;
 class QwtPlotGrid;
 
@@ -167,6 +168,7 @@ public:
     void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
                    const QPen &pPen, int pSize);
 
+    QString title() const;
     void setTitle(const QString &pTitle);
 
     bool isVisible() const;
@@ -275,7 +277,7 @@ public:
 
     bool isEmpty() const override;
 
-    void setChecked(int pIndex, bool pChecked);
+    void setChecked(GraphPanelPlotGraph *pGraph, bool pChecked);
 
     void setFontSize(int pFontSize);
     void setBackgroundColor(const QColor &pBackgroundColor);
@@ -284,7 +286,14 @@ public:
     void renderLegend(QPainter *pPainter, const QRectF &pRect,
                       bool pFillBackground) const override;
 
+    void setSizeHintWidth(int pSizeHintWidth);
+
     QSize sizeHint() const override;
+
+    void addGraph(GraphPanelPlotGraph *pGraph);
+    void removeGraph(GraphPanelPlotGraph *pGraph);
+
+    bool needScrollBar() const;
 
 protected:
     void updateWidget(QWidget *pWidget, const QwtLegendData &pLegendData) override;
@@ -297,6 +306,10 @@ private:
     int mFontSize;
     QColor mBackgroundColor;
     QColor mForegroundColor;
+
+    QMap<GraphPanelPlotGraph *, QwtLegendLabel *> mLegendLabels;
+
+    int mSizeHintWidth;
 
 signals:
     void graphToggled(GraphPanelPlotGraph *pGraph);
@@ -448,9 +461,6 @@ public:
     void addNeighbor(GraphPanelPlotWidget *pPlot);
     void removeNeighbor(GraphPanelPlotWidget *pPlot);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
-    void forceAlignWithNeighbors();
-
     Action action() const;
 
     bool canZoomInX() const;
@@ -459,6 +469,8 @@ public:
     bool canZoomOutY() const;
 
     QPointF canvasPoint(const QPoint &pPoint) const;
+
+    void updateGui(bool pSingleShot = false);
 
 protected:
     bool eventFilter(QObject *pObject, QEvent *pEvent) override;
@@ -578,6 +590,8 @@ private:
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
+
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
 
@@ -590,6 +604,9 @@ signals:
 
     void logarithmicXAxisToggled();
     void logarithmicYAxisToggled();
+
+public slots:
+    void doUpdateGui();
 
 private slots:
     void cannotUpdateActions();

@@ -212,7 +212,7 @@ else()
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
 
-    set(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+    set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
 
 # Allow other external projects to find our PythonQt package
@@ -235,7 +235,7 @@ add_plugin(PythonQtAPI
     EXTERNAL_BINARIES
         ${EXTERNAL_BINARIES}
     DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
+        ${DEPENDS_ON}
 )
 
 # Update our list of Python dependencies for other plugins

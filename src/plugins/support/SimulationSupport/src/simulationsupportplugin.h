@@ -46,8 +46,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo();
 //==============================================================================
 
 class SimulationSupportPlugin : public QObject, public FileHandlingInterface,
-                                public I18nInterface,
-                                public PythonInterface
+                                public I18nInterface, public PythonInterface
 {
     Q_OBJECT
 

@@ -54,8 +54,6 @@ class DataStorePlugin : public QObject, public I18nInterface, public PythonInter
     Q_INTERFACES(OpenCOR::PythonInterface)
 
 public:
-    explicit DataStorePlugin();
-
 #include "i18ninterface.inl"
 #include "pythoninterface.inl"
 

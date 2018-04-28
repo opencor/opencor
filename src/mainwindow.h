@@ -75,9 +75,6 @@ public:
 
     void showSelf();
 
-    bool eventLoopPluginUseExec();
-    int eventLoopPluginExec();
-
 protected:
     void changeEvent(QEvent *pEvent) override;
     void closeEvent(QCloseEvent *pEvent) override;
@@ -116,8 +113,6 @@ private:
     bool mDockedWindowsVisible;
 
     QByteArray mDockedWindowsState;
-
-    Plugin *mEventLoopPlugin;
 
     void registerOpencorUrlScheme();
 

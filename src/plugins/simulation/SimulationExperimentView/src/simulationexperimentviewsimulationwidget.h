@@ -153,9 +153,6 @@ public:
 
     void resetSimulationProgress();
 
-protected:
-    void paintEvent(QPaintEvent *pEvent) override;
-
 private:
     enum ErrorType {
         General,

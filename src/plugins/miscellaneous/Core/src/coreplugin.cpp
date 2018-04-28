@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QPalette>
 #include <QSettings>
+#include <QTimer>
 
 //==============================================================================
 
@@ -66,7 +67,8 @@ PLUGININFO_FUNC CorePluginInfo()
 //==============================================================================
 
 CorePlugin::CorePlugin() :
-    mRecentFileNamesOrUrls(QStringList())
+    mRecentFileNamesOrUrls(QStringList()),
+    mRecentFileActions(QList<QAction *>())
 {
 }
 
@@ -508,8 +510,6 @@ void CorePlugin::initializePlugin()
             mFileOpenAction, &QAction::setEnabled);
     connect(mCentralWidget, &CentralWidget::atLeastOneView,
             mFileOpenRemoteAction, &QAction::setEnabled);
-    connect(mCentralWidget, &CentralWidget::atLeastOneView,
-            this, &CorePlugin::updateFileReopenMenu);
 
     connect(mCentralWidget, &CentralWidget::canSave,
             mFileSaveAction, &QAction::setEnabled);
@@ -701,45 +701,58 @@ void CorePlugin::newFile()
 
 //==============================================================================
 
-void CorePlugin::updateFileReopenMenu(bool pEnabled)
+void CorePlugin::doUpdateFileReopenMenu()
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
-    foreach (QAction *action, mFileReopenSubMenu->actions()) {
-        if (   (action != mFileReopenMostRecentFileAction)
-            && (action != mFileReopenSubMenuSeparator1)
-            && (action != mFileReopenSubMenuSeparator2)) {
-            mFileReopenSubMenu->removeAction(action);
+    foreach (QAction *action, mRecentFileActions) {
+        mFileReopenSubMenu->removeAction(action);
 
-            delete action;
-        } else if (action == mFileReopenSubMenuSeparator2) {
-            break;
-        }
+        delete action;
     }
 
+    mRecentFileActions.clear();
+
     // Add the recent files to our Reopen sub-menu
+
+    bool enabled = mFileOpenAction->isEnabled();
 
     foreach (const QString &recentFile, mRecentFileNamesOrUrls) {
         QAction *action = newAction(mainWindow());
 
-        action->setEnabled(pEnabled);
+        action->setEnabled(enabled);
         action->setText(recentFile);
 
         connect(action, &QAction::triggered,
                 this, &CorePlugin::reopenRecentFile);
 
         mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator2, action);
+
+        mRecentFileActions << action;
     }
 
-    // Enable/disable our reopen sub-menu actions depending on whether we have
-    // recent file names
+    // Enable/disable our reopen sub-menu actions
 
-    bool hasRecentFileNamesOrUrls = !mRecentFileNamesOrUrls.isEmpty();
+    enabled = enabled && !mRecentFileNamesOrUrls.isEmpty();
 
-    mFileReopenMostRecentFileAction->setEnabled(hasRecentFileNamesOrUrls);
-    mFileClearReopenSubMenuAction->setEnabled(hasRecentFileNamesOrUrls);
+    mFileReopenMostRecentFileAction->setEnabled(enabled);
+    mFileClearReopenSubMenuAction->setEnabled(enabled);
 
-    showEnableAction(mFileReopenSubMenuSeparator2, hasRecentFileNamesOrUrls);
+    showEnableAction(mFileReopenSubMenuSeparator2, enabled);
+}
+
+//==============================================================================
+
+void CorePlugin::updateFileReopenMenu()
+{
+    // Update the contents of our Reopen sub-menu
+    // Note #1: we need to do this through a single shot otherwise, on macOS,
+    //          our menu items will look disabled (before looking enabled; see
+    //          issue #1633)...
+    // Note #2: it all used to work fine before, so could it be an issue with
+    //          Qt?...
+
+    QTimer::singleShot(0, this, &CorePlugin::doUpdateFileReopenMenu);
 }
 
 //==============================================================================
@@ -827,7 +840,7 @@ void CorePlugin::reopenMostRecentFile()
     // Note: we don't want to get a reference to mRecentFileNamesOrUrls' first
     //       item, hence we construct a new string from it. Indeed, reopenFile()
     //       is going to remove that item from mRecentFileNamesOrUrls, so if we
-    //       were to use the reference, it would eventually become an empty
+    //       were to use a reference, it would eventually become an empty
     //       string...
 
     reopenFile(QString(mRecentFileNamesOrUrls.first()));

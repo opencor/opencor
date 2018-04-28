@@ -24,10 +24,10 @@ option(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML AP
 
 option(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
 option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
-option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang plugin" ON)
+option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
 option(USE_PREBUILT_OPENSSL_PACKAGE "Use the pre-built version of the OpenSSL package" ON)
-option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python library" ON)
+option(USE_PREBUILT_PYTHON_PACKAGE "Use the pre-built version of the Python package" ON)
 option(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE "Use the pre-built version of Python site packages" ON)
 option(USE_PREBUILT_PYTHONQT_PACKAGE "Use the pre-built version of Python Qt" ON)
 option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScintilla package" ON)
@@ -604,6 +604,7 @@ set(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
+    src/plugins/pythoninterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -802,11 +803,10 @@ if(ENABLE_TESTS)
 endif()
 
 # Build our plugins
-
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
 #          former...
-# Note #2: Python thirdparty plugins must be built in order, after zlib and
+# Note #2: Python third-party plugins must be built in order, after zlib and
 #          OpenSSL, and before any other plugins...
 # Note #3: soft dependencies are determined automatically, so plugins can be
 #          listed in any order...
@@ -863,7 +863,6 @@ set(PLUGINS
     miscellaneous/Compiler
     miscellaneous/Core
     miscellaneous/HelpWindow
-    miscellaneous/JupyterKernel
     miscellaneous/PythonQtConsoleWindow
     miscellaneous/WebBrowserWindow
 
@@ -1191,7 +1190,7 @@ else()
         # machines that don't have 'proper' OpenGL support (e.g. on a Linux
         # virtual machine in VirtualBox)
 
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/mesa)
+        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
     endif()
 endif()
 
@@ -1361,18 +1360,6 @@ else()
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
 
         get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-        install(FILES ${REAL_FULL_LIBRARY}
-                DESTINATION lib
-                RENAME ${FULL_LIBRARY})
-    endforeach()
-
-    # Library needed on Fedora, but not on Ubuntu
-
-    foreach(LIBRARY bz2.so.1.0)
-        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
-
-        get_filename_component(REAL_FULL_LIBRARY /lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
 
         install(FILES ${REAL_FULL_LIBRARY}
                 DESTINATION lib

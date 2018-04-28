@@ -275,8 +275,8 @@ macro(add_plugin PLUGIN_NAME)
         # Copy the entire source directory to the destination
 
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy_directory
-                                ${ARG_EXTERNAL_SOURCE_DIR} ${ARG_EXTERNAL_DESTINATION_DIR})
+                           COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
+                                                                      ${ARG_EXTERNAL_DESTINATION_DIR})
     endif()
 
     # System binaries
@@ -995,8 +995,12 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
     # Create our destination folder, if needed
 
-    string(REPLACE "${PLATFORM_DIR}" "ext"
-           REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+    set(REAL_DIRNAME ${CMAKE_SOURCE_DIR}/${DIRNAME}/ext)
+
+    string(REGEX REPLACE "${REMOTE_EXTERNAL_PACKAGE_DIR}/ext$" "${LOCAL_EXTERNAL_PACKAGE_DIR}"
+           REAL_DIRNAME "${REAL_DIRNAME}")
+    string(REGEX REPLACE "${PLATFORM_DIR}/ext$" "ext"
+           REAL_DIRNAME "${REAL_DIRNAME}")
 
     if(NOT EXISTS ${REAL_DIRNAME})
         file(MAKE_DIRECTORY ${REAL_DIRNAME})
@@ -1047,7 +1051,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
                 message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
             endif()
 
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${FULL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME}
                             OUTPUT_QUIET)
 

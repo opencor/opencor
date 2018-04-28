@@ -5,11 +5,11 @@ project(PythonPackagesPlugin)
 set(PACKAGE_NAME PythonPackages)
 set(PACKAGE_VERSION ${PYTHON_VERSION})
 
-# The repository for our package
+# Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
 
-# The versions of the Python packages we bundle.
+# The versions of the Python packages we bundle
 
 set(NUMPY_VERSION 1.14.2)
 set(MATPLOTLIB_VERSION 2.2.2)
@@ -22,7 +22,9 @@ set(TRAITLETS_VERSION 4.3.2)
 
 set(LXML_VERSION 4.2.1)
 
-# Our GitHub archive
+set(SPHINX_VERSION 1.7.2)
+
+# Our GitHub organisation
 
 set(GITHUB_OPENCOR https://github.com/opencor)
 
@@ -32,23 +34,26 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 # Where Python packages are installed
 
-set(LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/site-packages)
+set(LOCAL_SITE_PACKAGES_DIR ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages)
+set(FULL_LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LOCAL_SITE_PACKAGES_DIR})
 
-# Package the include and site-packages directory
+# Directories we package
 
 set(PACKAGED_FILES
-    include
-    site-packages
+    ${LOCAL_SITE_PACKAGES_DIR}
+    ${PYTHON_RELATIVE_SCRIPT_DIR}
 )
 
-# Some files need to have their SHA-1 value checked
+
+# Specify the files that need to have their SHA-1 value checked
+# Note: at least one file must have its SHA-1 value checked...
 
 if(WIN32)
-    set(SHA1_FILES site-packages/numpy/core/multiarray.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
+    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/multiarray.cp${PYTHON_ABI_VERSION}-win_amd64.pyd)
 elseif(APPLE)
-    set(SHA1_FILES site-packages/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-darwin.so)
+    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-darwin.so)
 elseif(UNIX)
-    set(SHA1_FILES site-packages/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-x86_64-linux-gnu.so)
+    set(SHA1_FILES ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/multiarray.cpython-${PYTHON_ABI_VERSION}-x86_64-linux-gnu.so)
 endif()
 
 # Use the pre-built version of our package unless instructed otherwise
@@ -67,10 +72,16 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES bd2befaf0efacb2d4ee4957ab58a4315290ec804)
+        else()
+            retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c5d302fda38d1f94a29a7eb8ca5211e6067c59c8
+                                  PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  SHA1_FILES ${SHA1_FILES}
+                                  SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 97eff767ed79fe7ad9087cf161a218381a573804
+                              ${RELATIVE_PROJECT_SOURCE_DIR} de19e8a6d17b8908c2e396fde5252e5dab0a050f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 13f1ca249d663cd76ea70873b659fa2a0c90e6bc)
@@ -79,7 +90,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                               ${RELATIVE_PROJECT_SOURCE_DIR} 5b26aac0190f0cb1e5b58ee3c34639e339dae135
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 87041b5f0c84bca528d15de443cb9f0e35fa53e0)
+                              SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
     endif()
 else()
     # Install Python packages using pip
@@ -88,51 +99,57 @@ else()
 
     add_custom_target(${PACKAGE_BUILD})
 
-    # Python package installation requires Python
+    # Python packages installation requires Python
 
     set(BUILD_DEPENDENCIES PythonPlugin)
 
     # Ensure local site packages directory exists
 
-    file(MAKE_DIRECTORY ${LOCAL_SITE_PACKAGES_DIR})
+    file(MAKE_DIRECTORY ${FULL_LOCAL_SITE_PACKAGES_DIR})
 
     # Use our installed pip
 
+    file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
+
     set(PIP_INSTALL_COMMAND
-        ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
+        ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
         ${PYTHON_EXECUTABLE} -s -m
-        pip install -t ${LOCAL_SITE_PACKAGES_DIR} --upgrade --upgrade-strategy only-if-needed)
+        pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
+                    --upgrade --upgrade-strategy only-if-needed)
 
     # Install numpy, scipy, and matplotlib
 
-    add_custom_target(science_packages
+    add_custom_target(sciencePackages
         COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
             numpy==${NUMPY_VERSION}
             scipy==${SCIPY_VERSION}
             matplotlib==${MATPLOTLIB_VERSION}
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
         VERBATIM
     )
 
-    add_dependencies(${PACKAGE_BUILD} science_packages)
-    add_dependencies(science_packages ${BUILD_DEPENDENCIES})
+    add_dependencies(${PACKAGE_BUILD} sciencePackages)
+    add_dependencies(sciencePackages ${BUILD_DEPENDENCIES})
 
     # Copy the numpy include directory to a place that OpenCOR can use
 
-    add_custom_target(copy_numpy_headers
+    add_custom_target(copyNumpyHeaders
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
+            ${FULL_LOCAL_SITE_PACKAGES_DIR}/numpy/core/include include
         WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
     )
 
-    add_dependencies(${PACKAGE_BUILD} copy_numpy_headers)
-    add_dependencies(copy_numpy_headers science_packages)
+    add_dependencies(${PACKAGE_BUILD} copyNumpyHeaders)
+    add_dependencies(copyNumpyHeaders sciencePackages)
+    add_dependencies(copyNumpyHeaders ${BUILD_DEPENDENCIES})
 
     # Patch matplotlib's Qt backend so that it works with PythonQt
 
-    add_custom_target(patch_matplotlib
+    add_custom_target(patchMatplotlib
         COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
             --strip=2
-            --directory=${LOCAL_SITE_PACKAGES_DIR}/matplotlib
+            --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
             --verbose
             src/matplotlib_${MATPLOTLIB_VERSION}.diff
         WORKING_DIRECTORY
@@ -140,13 +157,13 @@ else()
         VERBATIM
     )
 
-    add_dependencies(${PACKAGE_BUILD} patch_matplotlib)
-    add_dependencies(patch_matplotlib science_packages)
-    add_dependencies(patch_matplotlib ${BUILD_DEPENDENCIES})
+    add_dependencies(${PACKAGE_BUILD} patchMatplotlib)
+    add_dependencies(patchMatplotlib sciencePackages)
+    add_dependencies(patchMatplotlib ${BUILD_DEPENDENCIES})
 
     # Install IPython and its dependencies
 
-    add_custom_target(ipython_packages
+    add_custom_target(ipythonPackages
         COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
             traitlets==${TRAITLETS_VERSION}
             ipython==${IPYTHON_VERSION}
@@ -157,29 +174,15 @@ else()
         VERBATIM
     )
 
-    add_dependencies(${PACKAGE_BUILD} ipython_packages)
-    add_dependencies(ipython_packages patch_matplotlib)
-    add_dependencies(ipython_packages ${BUILD_DEPENDENCIES})
-
-    # Install other packages we use
-
-    add_custom_target(other_packages
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            lxml==${LXML_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
-
-    add_dependencies(${PACKAGE_BUILD} other_packages)
-    add_dependencies(other_packages ipython_packages)
-    add_dependencies(other_packages ${BUILD_DEPENDENCIES})
+    add_dependencies(${PACKAGE_BUILD} ipythonPackages)
+    add_dependencies(ipythonPackages patchMatplotlib)
+    add_dependencies(ipythonPackages ${BUILD_DEPENDENCIES})
 
     # Upgrade to our versions of packages which have been patched to work with PythonQt
 
     set(ARCHIVE_PYTHONQT archive/PythonQt-v)
 
-    add_custom_target(pythonqt_update
+    add_custom_target(pythonQtUpdate
         COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
             ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_VERSION}.zip
             ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_VERSION}.zip
@@ -190,22 +193,76 @@ else()
         VERBATIM
     )
 
-    add_dependencies(${PACKAGE_BUILD} pythonqt_update)
-    add_dependencies(pythonqt_update ipython_packages)
-    add_dependencies(pythonqt_update ${BUILD_DEPENDENCIES})
+    add_dependencies(${PACKAGE_BUILD} pythonQtUpdate)
+    add_dependencies(pythonQtUpdate ipythonPackages)
+    add_dependencies(pythonQtUpdate ${BUILD_DEPENDENCIES})
+
+    # Install other packages we use
+
+    add_custom_target(otherPackages
+        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+            lxml==${LXML_VERSION}
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+        VERBATIM
+    )
+
+    add_dependencies(${PACKAGE_BUILD} otherPackages)
+    add_dependencies(otherPackages ipythonPackages)
+    add_dependencies(otherPackages ${BUILD_DEPENDENCIES})
+
+    # Install Sphinx
+
+    if(WIN32)
+        # On Windows, we need to explicitly install Sphinx to create *-script-py
+        # files that can then be modified during the installation of OpenCOR, so
+        # that they reference our newly installed Python executable
+
+        add_custom_target(installSphinx
+            COMMAND ${PIP_INSTALL_COMMAND}
+                https://github.com/opencor/sphinx/archive/v${SPHINX_VERSION}.tar.gz
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+    else()
+        add_custom_target(installSphinx
+            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+                sphinx==${SPHINX_VERSION}
+            WORKING_DIRECTORY
+                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+            VERBATIM
+        )
+    endif()
+
+    add_dependencies(${PACKAGE_BUILD} installSphinx)
+    add_dependencies(installSphinx otherPackages)
+    add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
 
     # Package the newly installed Python packages
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-        ${LOCAL_EXTERNAL_PACKAGE_DIR}
-        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
-        PACKAGED_FILES ${PACKAGED_FILES}
-        SHA1_FILES ${SHA1_FILES}
-        TARGET ${PACKAGE_BUILD}
-        )
+                        ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        PACKAGED_FILES ${PACKAGED_FILES}
+                        SHA1_FILES ${SHA1_FILES}
+                        TARGET ${PACKAGE_BUILD})
 
-    set(PLUGIN_DEPENDS_ON ${PACKAGE_BUILD})
+    set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
+
+# Allow other packages to use our scripts
+
+if(WIN32)
+    set(SPHINX_BUILD_EXECUTABLE sphinx-build.exe)
+else()
+    set(SPHINX_BUILD_EXECUTABLE sphinx-build)
+endif()
+
+set(SPHINX_BUILD_EXECUTABLE
+    ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
+    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE
+)
 
 # Add the plugin
 
@@ -221,7 +278,7 @@ add_plugin(PythonPackages
     EXTERNAL_DESTINATION_DIR
         ${PYTHON_SITE_PACKAGES_DIR}
     EXTERNAL_SOURCE_DIR
-        ${LOCAL_SITE_PACKAGES_DIR}
+        ${FULL_LOCAL_SITE_PACKAGES_DIR}
     DEPENDS_ON
-        ${PLUGIN_DEPENDS_ON}
+        ${DEPENDS_ON}
 )

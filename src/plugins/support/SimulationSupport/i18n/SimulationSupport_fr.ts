@@ -16,11 +16,4 @@
         <translation>l&apos;agent de simulation n&apos;a pas pu être créé</translation>
     </message>
 </context>
-<context>
-    <name>OpenCOR::SimulationSupport::SimulationSupportPythonWrapper</name>
-    <message>
-        <source>We could not allocate the memory required for the simulation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
 </TS>

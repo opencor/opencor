@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QList>
-#include <QMetaType>
 #include <QVariant>
 
 //==============================================================================
@@ -58,7 +57,7 @@ class Solver : public QObject
     Q_OBJECT
 
 public:
-    typedef QVariantMap Properties;
+    typedef QMap<QString, QVariant> Properties;
 
     explicit Solver();
 
@@ -86,13 +85,6 @@ public:
                             double *pConstants, double *pRates, double *pStates,
                             double *pAlgebraic,
                             ComputeRatesFunction pComputeRates);
-    virtual void initialize(double pVoi, int pRatesStatesCount,
-                            double *pConstants, double *pRates, double *pStates,
-                            double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates,
-                            const int &pGradientsCount,
-                            int *pGradientsIndices,
-                            double *pGradients);
     virtual void reinitialize(double pVoi);
 
     virtual void solve(double &pVoi, double pVoiEnd) const = 0;
@@ -203,8 +195,6 @@ typedef QList<SolverInterface *> SolverInterfaces;
 //==============================================================================
 
 Q_DECLARE_INTERFACE(OpenCOR::SolverInterface, "OpenCOR::SolverInterface")
-
-Q_DECLARE_METATYPE(OpenCOR::Solver::Solver::Properties)
 
 //==============================================================================
 // End of file

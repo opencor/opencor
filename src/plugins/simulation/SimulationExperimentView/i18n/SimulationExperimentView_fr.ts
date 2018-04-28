@@ -258,10 +258,6 @@
         <source>algebraic</source>
         <translation>algébrique</translation>
     </message>
-    <message>
-        <source>Toggle gradient calculation for constant</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationSimulationWidget</name>

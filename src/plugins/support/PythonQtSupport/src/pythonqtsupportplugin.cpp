@@ -56,14 +56,6 @@ PLUGININFO_FUNC PythonQtSupportPluginInfo()
 }
 
 //==============================================================================
-
-PythonQtSupportPlugin::PythonQtSupportPlugin() :
-    mPythonManager(0),
-    mOpenCORModule(0)
-{
-}
-
-//==============================================================================
 // Plugin interface
 //==============================================================================
 
