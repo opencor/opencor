@@ -95,7 +95,7 @@ if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
 else()
     # Install Python packages using pip
 
-    set(PACKAGE_BUILD PythonPackagesBuild)
+    set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     add_custom_target(${PACKAGE_BUILD})
 

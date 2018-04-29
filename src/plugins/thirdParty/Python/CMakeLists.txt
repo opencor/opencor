@@ -263,7 +263,7 @@ else()
 
     # Build Python as an external project
 
-    set(PACKAGE_BUILD PythonBuild)
+    set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
