@@ -169,22 +169,27 @@ macro(add_plugin PLUGIN_NAME)
         )
     endforeach()
 
+    IF((NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
+    OR (    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
+        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL ""))
+        # Create a custom target for installing files
+        # Note: this is to prevent Ninja from getting confused with circular
+        #       references...
+        # Note: we also use this target in some Python build scripts
+
+        SET(INSTALL_EXTERNAL_FILES_TARGET "${PROJECT_NAME}_INSTALL_EXTERNAL_FILES")
+
+        ADD_CUSTOM_TARGET(${INSTALL_EXTERNAL_FILES_TARGET})
+        ADD_DEPENDENCIES(${PROJECT_NAME} ${INSTALL_EXTERNAL_FILES_TARGET})
+
+        IF(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
+            ADD_DEPENDENCIES(${INSTALL_EXTERNAL_FILES_TARGET} ${ARG_DEPENDS_ON})
+        ENDIF()
+    ENDIF()
+
     # External binaries
 
     if(NOT "${ARG_EXTERNAL_BINARIES_DIR}" STREQUAL "")
-        # Create a custom target for copying binaries
-        # Note: this is to prevent Ninja from getting confused with circular
-        #       references...
-
-        set(COPY_EXTERNAL_BINARIES_TARGET "COPY_${PROJECT_NAME}_EXTERNAL_BINARIES")
-
-        add_custom_target(${COPY_EXTERNAL_BINARIES_TARGET})
-        add_dependencies(${PROJECT_NAME} ${COPY_EXTERNAL_BINARIES_TARGET})
-
-        if(NOT "${ARG_DEPENDS_ON}" STREQUAL "")
-            add_dependencies(${COPY_EXTERNAL_BINARIES_TARGET} ${ARG_DEPENDS_ON})
-        endif()
-
         foreach(ARG_EXTERNAL_BINARY ${ARG_EXTERNAL_BINARIES})
             # Make sure that the external binary exists
 
@@ -197,7 +202,7 @@ macro(add_plugin PLUGIN_NAME)
                AND "${ARG_DEPENDS_ON}" STREQUAL "")
                 set(COPY_TARGET DIRECT)
             else()
-                set(COPY_TARGET ${COPY_EXTERNAL_BINARIES_TARGET})
+                set(COPY_TARGET ${INSTALL_EXTERNAL_FILES_TARGET})
             endif()
 
             # Copy the external binary to its destination directory, so we can
@@ -217,7 +222,7 @@ macro(add_plugin PLUGIN_NAME)
                 if(${COPY_TARGET} STREQUAL "DIRECT")
                     execute_process(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                    add_custom_command(TARGET ${INSTALL_EXTERNAL_FILES_TARGET} POST_BUILD
                                        COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
             endif()
@@ -248,7 +253,7 @@ macro(add_plugin PLUGIN_NAME)
                 if(${COPY_TARGET} STREQUAL "DIRECT")
                     execute_process(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                    add_custom_command(TARGET ${INSTALL_EXTERNAL_FILES_TARGET} POST_BUILD
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
@@ -274,7 +279,7 @@ macro(add_plugin PLUGIN_NAME)
 
         # Copy the entire source directory to the destination
 
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        add_custom_command(TARGET ${INSTALL_EXTERNAL_FILES_TARGET}
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
                                                                       ${ARG_EXTERNAL_DESTINATION_DIR})
     endif()
