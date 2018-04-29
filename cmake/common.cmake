@@ -65,6 +65,7 @@ macro(add_plugin PLUGIN_NAME)
         SYSTEM_BINARIES
         DEPENDS_ON
         TESTS
+        BYPRODUCTS
     )
 
     cmake_parse_arguments(ARG "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}" ${ARGN})
@@ -281,7 +282,8 @@ macro(add_plugin PLUGIN_NAME)
 
         add_custom_command(TARGET ${INSTALL_EXTERNAL_FILES_TARGET}
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
-                                                                      ${ARG_EXTERNAL_DESTINATION_DIR})
+                                                                      ${ARG_EXTERNAL_DESTINATION_DIR}
+                           BYPRODUCTS ${ARG_BYPRODUCTS})
     endif()
 
     # System binaries

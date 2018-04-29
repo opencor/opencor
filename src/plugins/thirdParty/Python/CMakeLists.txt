@@ -592,6 +592,8 @@ add_plugin(Python
         ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
     DEPENDS_ON
         ${DEPENDS_ON}
+    BYPRODUCTS
+        ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY}
 )
 
 # Update Python paths for newly copied scripts
