@@ -57,9 +57,8 @@ elseif(UNIX)
 endif()
 
 # Use the pre-built version of our package unless instructed otherwise
-# Rebuilding Python means we should also re-install its packages
 
-if(USE_PREBUILT_PYTHON_PACKAGE AND USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
+if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     # Retrieve the plugin's package
 
     string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""

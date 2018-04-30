@@ -17,7 +17,7 @@ set(GIT_TAG "opencor")
 
 # Git tags of Python package installers
 
-set(PIP_GIT_TAG "9.0.3")
+set(PIP_GIT_TAG "10.0.1")
 set(SETUPTOOLS_GIT_TAG "v39.0.1")
 set(WHEEL_GIT_TAG "0.31.0")
 
@@ -455,7 +455,7 @@ else()
             INSTALL_DIR
                 ${SETUPTOOLS_SOURCE_DIR}
             GIT_REPOSITORY
-                https://github.com/opencor/setuptools.git
+                https://github.com/pypa/setuptools.git
             GIT_TAG
                 ${SETUPTOOLS_GIT_TAG}
             CONFIGURE_COMMAND
@@ -482,7 +482,7 @@ else()
             INSTALL_DIR
                 ${PIP_SOURCE_DIR}
             GIT_REPOSITORY
-                https://github.com/opencor/pip.git
+                https://github.com/pypa/pip.git
             GIT_TAG
                 ${PIP_GIT_TAG}
             CONFIGURE_COMMAND
@@ -509,7 +509,7 @@ else()
             INSTALL_DIR
                 ${WHEEL_SOURCE_DIR}
             GIT_REPOSITORY
-                https://github.com/opencor/wheel.git
+                https://github.com/pypa/wheel.git
             GIT_TAG
                 ${WHEEL_GIT_TAG}
             CONFIGURE_COMMAND
