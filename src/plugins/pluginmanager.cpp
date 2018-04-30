@@ -44,7 +44,8 @@ PluginManager::PluginManager(bool pGuiMode) :
     mGuiMode(pGuiMode),
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
-    mCorePlugin(0)
+    mCorePlugin(0),
+    mSimulationSupportPlugin(0)
 {
     // Retrieve OpenCOR's plugins directory
     // Note #1: the plugin's directory is retrieved in main()...
@@ -183,6 +184,8 @@ PluginManager::PluginManager(bool pGuiMode) :
 
             if (!pluginName.compare(CorePluginName))
                 mCorePlugin = plugin;
+            else if (!pluginName.compare(SimulationSupportPluginName))
+                mSimulationSupportPlugin = plugin;
         }
     }
 }
@@ -271,6 +274,15 @@ Plugin * PluginManager::corePlugin() const
     // Return our Core plugin
 
     return mCorePlugin;
+}
+
+//==============================================================================
+
+Plugin * PluginManager::simulationSupportPlugin() const
+{
+    // Return our Simulation Support plugin
+
+    return mSimulationSupportPlugin;
 }
 
 //==============================================================================

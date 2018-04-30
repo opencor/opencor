@@ -18,50 +18,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation support plugin
+// Simulation interface
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "simulationinterface.h"
+#include "plugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SimulationSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC SimulationSupportPluginInfo();
+extern "C" Q_DECL_EXPORT int simulationInterfaceVersion();
 
 //==============================================================================
 
-class SimulationSupportPlugin : public QObject, public FileHandlingInterface,
-                                public I18nInterface, public SimulationInterface
+class SimulationInterface
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.SimulationSupportPlugin" FILE "simulationsupportplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::SimulationInterface)
-
 public:
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
-#include "simulationinterface.inl"
+#define INTERFACE_DEFINITION
+    #include "simulationinterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace SimulationSupport
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::SimulationInterface, "OpenCOR::SimulationInterface")
 
 //==============================================================================
 // End of file

@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "guiinterface.h"
 #include "interfaces.h"
+#include "simulationinterface.h"
 #include "tabbarwidget.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
@@ -576,7 +577,9 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
-    // Determine which loaded plugins support a given interface
+    // Determine which loaded plugins support a given interface, as well as
+    // retrieve the simulation interface of our Simulation Support plugin,
+    // should it be loaded
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         if (qobject_cast<FileHandlingInterface *>(plugin->instance()))
@@ -590,6 +593,9 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
         if (qobject_cast<ViewInterface *>(plugin->instance()))
             mLoadedViewPlugins << plugin;
+
+        if (!plugin->name().compare(SimulationSupportPluginName))
+            mSimulationInterface = qobject_cast<SimulationInterface *>(plugin->instance());
     }
 
     // Update our state now that our plugins  are fully ready

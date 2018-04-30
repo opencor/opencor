@@ -50,6 +50,7 @@ namespace OpenCOR {
 //==============================================================================
 
 class Plugin;
+class SimulationInterface;
 
 //==============================================================================
 
@@ -143,6 +144,8 @@ private:
     Plugins mLoadedFileTypePlugins;
     Plugins mLoadedGuiPlugins;
     Plugins mLoadedViewPlugins;
+
+    SimulationInterface *mSimulationInterface;
 
     TabBarWidget *mModeTabs;
     TabBarWidget *mFileTabs;

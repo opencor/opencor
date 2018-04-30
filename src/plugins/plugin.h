@@ -54,7 +54,8 @@ static const auto SettingsPlugins = QStringLiteral("Plugins");
 
 //==============================================================================
 
-static const auto CorePluginName = QStringLiteral("Core");
+static const auto CorePluginName              = QStringLiteral("Core");
+static const auto SimulationSupportPluginName = QStringLiteral("SimulationSupport");
 
 //==============================================================================
 

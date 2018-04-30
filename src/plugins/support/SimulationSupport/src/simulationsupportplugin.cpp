@@ -140,6 +140,39 @@ void SimulationSupportPlugin::retranslateUi()
 }
 
 //==============================================================================
+// Simulation interface
+//==============================================================================
+
+void SimulationSupportPlugin::save(const QString &pFileName)
+{
+    // The given file has been saved, so let our simulation manager know about
+    // it
+
+    SimulationManager::instance()->save(pFileName);
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::reload(const QString &pFileName)
+{
+    // The given file has been reloaded, so let our simulation manager know
+    // about it
+
+    SimulationManager::instance()->reload(pFileName);
+}
+
+//==============================================================================
+
+void SimulationSupportPlugin::rename(const QString &pOldFileName,
+                                     const QString &pNewFileName)
+{
+    // The given file has been renamed, so let our simulation manager know
+    // about it
+
+    SimulationManager::instance()->rename(pOldFileName, pNewFileName);
+}
+
+//==============================================================================
 
 }   // namespace SimulationSupport
 }   // namespace OpenCOR
