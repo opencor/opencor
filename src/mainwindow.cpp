@@ -986,8 +986,11 @@ void MainWindow::handleArguments(const QStringList &pArguments)
             arguments << stringFromPercentEncoding(argument);
     }
 
-    if (!arguments.isEmpty() && mPluginManager->corePlugin())
+    if (!arguments.isEmpty() && mPluginManager->corePlugin()) {
         qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(arguments);
+        // Note: if the Core plugin is loaded, then it means it supports the
+        //       Core interface, so no need to check anything...
+    }
 
     // Make sure that our status bar is shown/hidden, depending on its action's
     // status
