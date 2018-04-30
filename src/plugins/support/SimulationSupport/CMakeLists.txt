@@ -5,7 +5,6 @@ project(SimulationSupportPlugin)
 add_plugin(SimulationSupport
     SOURCES
         ../../datastoreinterface.cpp
-        ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../simulationinterface.cpp
