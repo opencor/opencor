@@ -142,12 +142,12 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0bef54c1816b2492be5ed4fabf74fffadcd75e5e
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 80db75c6e1d5352dd161f9ca45d0b035f50492c7
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a25177a2023aba0ef198daa29752e41ee47d5e82
-                                              ef9568913a983473eb1013dc4dfba263de5b2c68
+                                  SHA1_VALUES 113534a88c69e5f2e42610780241cc4c360e8a9e
+                                              d77a93a60a9836b4b8bed7e78351c5cdfae560be
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              65a31aeafe260b7cb34e94da3a32c9d30916a2ce)
+                                              d8977d62ed146e8772e130b4e2cfd89ae39038a2)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} b8e73e7881b5638b18c292eb3b264b13ae9f3418
@@ -159,9 +159,9 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 80cf0c6ea628d3037d90ed3f458ae6b8026ff4b8
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a9780980aea194ea5a0c50b571a6bd9a3c81ecd6
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 48d8641446d5294ef7557de796f70df57d9cdaa9)
+                              SHA1_VALUES b6eb87411dd4397064294cbc38b0cd15a2e62ca7)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 3d3fcc223d569729ab6fa2f11112fe5eb93e68b5
