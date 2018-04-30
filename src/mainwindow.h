@@ -50,6 +50,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class CoreInterface;
 class PluginManager;
 
 //==============================================================================
@@ -91,6 +92,8 @@ private:
     Plugins mLoadedGuiPlugins;
     Plugins mLoadedPreferencesPlugins;
     Plugins mLoadedWindowPlugins;
+
+    CoreInterface *mCoreInterface;
 
     QString mRawLocale;
 

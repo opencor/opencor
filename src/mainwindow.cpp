@@ -96,6 +96,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mLoadedGuiPlugins(Plugins()),
     mLoadedPreferencesPlugins(Plugins()),
     mLoadedWindowPlugins(Plugins()),
+    mCoreInterface(0),
     mRawLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
     mFileNewMenu(0),
@@ -157,6 +158,11 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
         if (qobject_cast<WindowInterface *>(plugin->instance()))
             mLoadedWindowPlugins << plugin;
     }
+
+    // Retrieve our Core plugin's interface, should the Core plugin be loaded
+
+    if (mPluginManager->corePlugin())
+        mCoreInterface = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance());
 
     // Set up the GUI
 
@@ -383,11 +389,8 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
     bool canClose = true;
 
-    if (mPluginManager->corePlugin()) {
-        canClose = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->canClose();
-        // Note: if the Core plugin is loaded, then it means it supports the
-        //       Core interface, so no need to check anything...
-    }
+    if (mCoreInterface)
+        canClose = mCoreInterface->canClose();
 
     // Close ourselves, if possible
 
@@ -691,11 +694,8 @@ void MainWindow::loadSettings()
     // settings
     // Note: this is similar to initializePlugin() vs. pluginsInitialized()...
 
-    if (mPluginManager->corePlugin()) {
-        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->settingsLoaded(mPluginManager->loadedPlugins());
-        // Note: if the Core plugin is loaded, then it means it supports the
-        //       Core interface, so no need to check anything...
-    }
+    if (mCoreInterface)
+        mCoreInterface->settingsLoaded(mPluginManager->loadedPlugins());
 
     // Remove the File menu when on macOS, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on macOS
@@ -986,11 +986,8 @@ void MainWindow::handleArguments(const QStringList &pArguments)
             arguments << stringFromPercentEncoding(argument);
     }
 
-    if (!arguments.isEmpty() && mPluginManager->corePlugin()) {
-        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(arguments);
-        // Note: if the Core plugin is loaded, then it means it supports the
-        //       Core interface, so no need to check anything...
-    }
+    if (!arguments.isEmpty() && mCoreInterface)
+        mCoreInterface->handleArguments(arguments);
 
     // Make sure that our status bar is shown/hidden, depending on its action's
     // status
