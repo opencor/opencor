@@ -478,7 +478,7 @@ void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint
 
     // Let people know that our data has been updated
 
-    emit updated(pCurrentPoint);
+    emit updatedParameters(pCurrentPoint);
 }
 
 //==============================================================================
@@ -526,7 +526,7 @@ void SimulationData::checkForModifications()
 
 void SimulationData::updateParameters(SimulationData *pSimulationData)
 {
-    emit pSimulationData->updated(pSimulationData->mStartingPoint);
+    emit pSimulationData->updatedParameters(pSimulationData->mStartingPoint);
 }
 
 //==============================================================================

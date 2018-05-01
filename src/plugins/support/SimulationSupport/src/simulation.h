@@ -214,7 +214,9 @@ private:
     SolverInterface * solverInterface(const QString &pSolverName) const;
 
 signals:
-    void updated(double pCurrentPoint);
+    void updatedParameters(double pCurrentPoint);
+    void updatedPointData();
+
     void modified(bool pIsModified);
 
     void gradientCalculation(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate=true);
