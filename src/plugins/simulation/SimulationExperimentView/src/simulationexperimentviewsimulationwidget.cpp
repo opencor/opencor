@@ -3721,6 +3721,20 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
     if (pCheckVisibility && !isVisible())
         return;
 
+    // We need to update our GUI, which means that we can initialise
+    // mGraphPanelsWidgetSizes, if needed, as well as
+    // mGraphPanelPropertiesModified and mGraphsPropertiesModified by calling
+    // checkGraphPanelsAndGraphs()
+    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
+    //       graph panels widget's sizes in furtherInitialize(), we don't end up
+    //       with the final sizes since nothing is visible yet...
+
+    if (mGraphPanelsWidgetSizes.isEmpty()) {
+        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+
+        checkGraphPanelsAndGraphs();
+    }
+
     // Make sure that our graph panel and graphs widget's GUI is up to date
 
     mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->updateGui();
@@ -3999,28 +4013,6 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pP
     // There has been some progress with our export, so update our busy widget
 
     Core::centralWidget()->setBusyWidgetProgress(pProgress);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWidget::paintEvent(pEvent);
-
-    // We have been rendered, so we can initialise mGraphPanelsWidgetSizes, if
-    // needed, as well as mGraphPanelPropertiesModified and
-    // mGraphsPropertiesModified by calling checkGraphPanelsAndGraphs()
-    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
-    //       graph panels widget's sizes in furtherInitialize(), we don't end up
-    //       with the final sizes since nothing is visible yet...
-
-    if (mGraphPanelsWidgetSizes.isEmpty()) {
-        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
-
-        checkGraphPanelsAndGraphs();
-    }
 }
 
 //==============================================================================
