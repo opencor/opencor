@@ -79,6 +79,8 @@ private:
     bool mNeedClearing;
     bool mVoiAccessible;
 
+    QSet<int> mGradientIndices;
+
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
@@ -90,13 +92,19 @@ signals:
     void graphRequired(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY);
 
+    void calculateGradients(const int &pIndex, const bool &pCalculate);
+
 public slots:
     void updateParameters(double pCurrentPoint);
+
+    void gradientToggled(CellMLSupport::CellmlFileRuntimeParameter *pParameter, const bool &pCalculate);
 
 private slots:
     void propertyChanged(Core::Property *pProperty);
 
     void emitGraphRequired();
+
+    void toggleGradientFlag();
 };
 
 //==============================================================================

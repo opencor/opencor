@@ -134,6 +134,23 @@ void OdeSolver::initialize(double pVoi, int pRatesStatesCount,
     mComputeRates = pComputeRates;
 }
 
+ //==============================================================================
+
+void OdeSolver::initialize(double pVoi, int pRatesStatesCount,
+                           double *pConstants, double *pRates, double *pStates,
+                           double *pAlgebraic,
+                           ComputeRatesFunction pComputeRates,
+                           const int &pGradientsCount,
+                           int *pGradientsIndices,
+                           double *pGradients)
+{
+    Q_UNUSED(pGradientsCount);
+    Q_UNUSED(pGradientsIndices);
+    Q_UNUSED(pGradients);
+
+    initialize(pVoi, pRatesStatesCount, pConstants, pRates, pStates, pAlgebraic, pComputeRates);
+}
+
 //==============================================================================
 
 void OdeSolver::reinitialize(double pVoi)

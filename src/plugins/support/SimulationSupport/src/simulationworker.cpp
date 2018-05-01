@@ -248,7 +248,10 @@ void SimulationWorker::started()
                           mSimulation->data()->rates(),
                           mSimulation->data()->states(),
                           mSimulation->data()->algebraic(),
-                          mRuntime->computeRates());
+                          mRuntime->computeRates(),
+                          mSimulation->data()->gradientsCount(),
+                          mSimulation->data()->gradientIndices(),
+                          mSimulation->data()->gradients());
 
     // Initialise our NLA solver, if any
 
