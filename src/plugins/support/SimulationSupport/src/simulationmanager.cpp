@@ -86,7 +86,7 @@ void SimulationManager::unmanage(const QString &pFileName)
 
 //==============================================================================
 
-void SimulationManager::stop(const QString &pFileName)
+void SimulationManager::stop(const QString &pFileName, bool pElapsedTime)
 {
     // Check whether we are already managing the corresponding simulation and,
     // if so, stop it
@@ -94,7 +94,7 @@ void SimulationManager::stop(const QString &pFileName)
     Simulation *crtSimulation = simulation(pFileName);
 
     if (crtSimulation)
-        crtSimulation->stop();
+        crtSimulation->stop(pElapsedTime);
 }
 
 //==============================================================================

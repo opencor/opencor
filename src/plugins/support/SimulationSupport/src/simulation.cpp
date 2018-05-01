@@ -1117,11 +1117,11 @@ bool Simulation::resume()
 
 //==============================================================================
 
-bool Simulation::stop()
+bool Simulation::stop(bool pElapsedTime)
 {
     // Stop our worker
 
-    return mWorker?mWorker->stop():false;
+    return mWorker?mWorker->stop(pElapsedTime):false;
 }
 
 //==============================================================================

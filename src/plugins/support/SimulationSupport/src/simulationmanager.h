@@ -55,7 +55,7 @@ public:
     void manage(const QString &pFileName);
     void unmanage(const QString &pFileName);
 
-    void stop(const QString &pFileName);
+    void stop(const QString &pFileName, bool pElapsedTime);
 
     void save(const QString &pFileName);
     void reload(const QString &pFileName);

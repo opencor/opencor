@@ -144,11 +144,11 @@ void SimulationSupportPlugin::retranslateUi()
 // Simulation interface
 //==============================================================================
 
-void SimulationSupportPlugin::stop(const QString &pFileName)
+void SimulationSupportPlugin::stop(const QString &pFileName, bool pElapsedTime)
 {
     // Stop the simulation for the given file
 
-    SimulationManager::instance()->stop(pFileName);
+    SimulationManager::instance()->stop(pFileName, pElapsedTime);
 }
 
 //==============================================================================

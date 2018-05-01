@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     // Note: make sure to update simulationInterfaceVersion() whenever you
     //       update this interface...
 
-    virtual void stop(const QString &pFileName) PURE;
+    virtual void stop(const QString &pFileName, bool pElapsedTime) PURE;
 
 #undef PURE
 

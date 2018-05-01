@@ -258,7 +258,7 @@ public:
     bool run();
     bool pause();
     bool resume();
-    bool stop();
+    bool stop(bool pElapsedTime = true);
 
     bool reset();
 

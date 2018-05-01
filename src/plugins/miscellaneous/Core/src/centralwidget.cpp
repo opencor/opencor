@@ -985,7 +985,7 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                 // that the corresponding simulation, if any, has been stopped
 
                 if (mSimulationInterface)
-                    mSimulationInterface->stop(fileName);
+                    mSimulationInterface->stop(fileName, false);
 
                 // Actually redownload the file, if it is a remote one
 

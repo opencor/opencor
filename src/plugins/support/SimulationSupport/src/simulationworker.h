@@ -64,7 +64,7 @@ public:
     bool run();
     bool pause();
     bool resume();
-    bool stop();
+    bool stop(bool pReloaded);
 
     bool reset();
 
@@ -78,7 +78,9 @@ private:
     double mCurrentPoint;
 
     bool mPaused;
-    bool mStopped;
+
+    bool mStoppedWithElapsedTime;
+    bool mStoppedWithNoElapsedTime;
 
     bool mReset;
 

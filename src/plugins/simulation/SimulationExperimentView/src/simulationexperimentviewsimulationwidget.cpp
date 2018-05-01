@@ -3123,16 +3123,9 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
 void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsedTime)
 {
-    // Output the given elapsed time, if our simulation's runtime is still valid
-    // and if its elapsed time is valid
-    // Note: to check whether our simulation's runtime is still valid is needed
-    //       in case we, for example, ran a SED-ML file and then modified its
-    //       corresponding CellML file (and made it invalid), resulting in the
-    //       simulation being stopped and the SED-ML file being reloaded.
-    //       However, because the simulation's runtime won't be valid anymore,
-    //       we don't need (and don't want) to output the simulation time...
+    // Output the given elapsed time, if valid
 
-    if (mSimulation->runtime()->isValid() && (pElapsedTime != -1)) {
+    if (pElapsedTime != -1) {
         QString solversInformation = mSimulation->data()->odeSolverName();
 
         if (!mSimulation->data()->nlaSolverName().isEmpty())
