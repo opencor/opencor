@@ -117,7 +117,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mGraphPanelsWidgetSizes(QIntList()),
     mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
-    mNeedReloadView(false),
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
 {
@@ -1229,40 +1228,14 @@ void SimulationExperimentViewSimulationWidget::fileModified()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::reloadView()
+void SimulationExperimentViewSimulationWidget::fileReloaded()
 {
-    // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
-    // that we have effectively been closed and (re)opened
+    // The given file has been reloaded, so reload ourselves, i.e. finalise and
+    // (re)initialise ourselves, meaning that we have effectively been closed
+    // and (re)opened
 
     finalize();
     initialize(true);
-
-    mNeedReloadView = false;
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::fileReloaded()
-{
-    // The given file has been reloaded, so stop its current simulation
-
-    bool needReloadView = true;
-
-    mNeedReloadView = true;
-
-    if (mSimulation->stop()) {
-        needReloadView = false;
-        // Note: we don't need to reload ourselves since stopping the simulation
-        //       will result in the stopped() signal being received and,
-        //       therefore, the simulationStopped() slot being called, which is
-        //       where we should reload ourselves since we cannot tell how long
-        //       the signal/slot mechanism is going to take...
-    }
-
-    // Reload ourselves, if needed
-
-    if (needReloadView)
-        reloadView();
 }
 
 //==============================================================================
@@ -3150,9 +3123,16 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
 void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsedTime)
 {
-    // Output the given elapsed time, if valid
+    // Output the given elapsed time, if our simulation's runtime is still valid
+    // and if its elapsed time is valid
+    // Note: to check whether our simulation's runtime is still valid is needed
+    //       in case we, for example, ran a SED-ML file and then modified its
+    //       corresponding CellML file (and made it invalid), resulting in the
+    //       simulation being stopped and the SED-ML file being reloaded.
+    //       However, because the simulation's runtime won't be valid anymore,
+    //       we don't need (and don't want) to output the simulation time...
 
-    if (pElapsedTime != -1) {
+    if (mSimulation->runtime()->isValid() && (pElapsedTime != -1)) {
         QString solversInformation = mSimulation->data()->odeSolverName();
 
         if (!mSimulation->data()->nlaSolverName().isEmpty())
@@ -3171,11 +3151,6 @@ void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsed
     // Stop keeping track of our simulation progress
 
     mProgress = -1;
-
-    // Reload ourselves, if needed (see fileReloaded())
-
-    if (mNeedReloadView)
-        reloadView();
 
     // Note: our simulation progress gets reset in resetSimulationProgress(),
     //       which is called by
@@ -3229,17 +3204,10 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
         ResetDelay = 169
     };
 
-    if (isVisible()) {
-        if (mNeedReloadView)
-            resetProgressBar();
-        else
-            QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
-    } else {
-        if (mNeedReloadView)
-            resetFileTabIcon();
-        else
-            QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
-    }
+    if (isVisible())
+        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
+    else
+        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
 }
 
 //==============================================================================

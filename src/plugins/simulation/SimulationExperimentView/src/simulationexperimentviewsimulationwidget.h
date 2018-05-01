@@ -232,13 +232,9 @@ private:
 
     bool mCanUpdatePlotsForUpdatedGraphs;
 
-    bool mNeedReloadView;
-
     bool mNeedUpdatePlots;
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
-
-    void reloadView();
 
     void output(const QString &pMessage);
 
