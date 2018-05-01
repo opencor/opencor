@@ -3876,7 +3876,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
     // Update our progress bar or our tab icon, if needed
 
-    if (simulation == mSimulation) {
+    if ((simulation == mSimulation) && mSimulation->isRunning()) {
         QString simulationFileName = mSimulation->fileName();
         double simulationProgress = mViewWidget->simulationResultsSize(simulationFileName)/simulation->size();
 
