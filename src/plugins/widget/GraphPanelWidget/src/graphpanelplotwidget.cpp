@@ -441,8 +441,14 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
-        run->setPen(pPen);
+    int runNumber = 0;
+    foreach (GraphPanelPlotGraphRun *run, mRuns) {
+        auto runPen = QPen(pPen);
+        auto runColour = RunColours[runNumber % RunColours.size()];
+        runPen.setColor(runColour);
+        run->setPen(runPen);
+        runNumber += 1;
+    }
 }
 
 //==============================================================================
