@@ -55,6 +55,8 @@ public:
     void manage(const QString &pFileName);
     void unmanage(const QString &pFileName);
 
+    void stop(const QString &pFileName);
+
     void save(const QString &pFileName);
     void reload(const QString &pFileName);
     void rename(const QString &pOldFileName, const QString &pNewFileName);

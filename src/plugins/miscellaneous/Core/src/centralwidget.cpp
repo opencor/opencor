@@ -982,10 +982,10 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
 
             if (reloadFile) {
                 // Before we can actually reload the file, we need to make sure
-                // that the corresponding simulation, if any, has been reloaded
+                // that the corresponding simulation, if any, has been stopped
 
                 if (mSimulationInterface)
-                    mSimulationInterface->reload(fileName);
+                    mSimulationInterface->stop(fileName);
 
                 // Actually redownload the file, if it is a remote one
 
@@ -1183,11 +1183,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         // Update its file name, if needed
 
         if (hasNewFileName) {
-            // Ask our file manager to rename the file, after having made sure
-            // that the corresponding simulation, if any, has been renamed too
-
-            if (mSimulationInterface)
-                mSimulationInterface->rename(oldFileName, newFileName);
+            // Ask our file manager to rename the file
 
 #ifdef QT_DEBUG
             FileManager::Status renameStatus =
@@ -1202,12 +1198,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 #endif
         }
 
-        // The file has been saved, so ask our file manager to 'save' it too,
-        // after having made sure that the corresponding simulation, if any, has
-        // been saved too
-
-        if (mSimulationInterface)
-            mSimulationInterface->save(newFileName);
+        // The file has been saved, so ask our file manager to 'save' it too
 
         fileManagerInstance->save(newFileName);
 

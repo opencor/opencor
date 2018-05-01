@@ -30,10 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     // Note: make sure to update simulationInterfaceVersion() whenever you
     //       update this interface...
 
-    virtual void save(const QString &pFileName) PURE;
-    virtual void reload(const QString &pFileName) PURE;
-    virtual void rename(const QString &pOldFileName,
-                        const QString &pNewFileName) PURE;
+    virtual void stop(const QString &pFileName) PURE;
 
 #undef PURE
 

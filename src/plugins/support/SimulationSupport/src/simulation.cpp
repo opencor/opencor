@@ -867,12 +867,6 @@ void Simulation::save()
 
 void Simulation::reload()
 {
-    // Stop our worker
-    // Note: we don't need to delete mWorker since it will be done as part of
-    //       its thread being stopped...
-
-    stop();
-
     // Retrieve our file details
 
     retrieveFileDetails();
