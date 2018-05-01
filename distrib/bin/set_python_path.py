@@ -154,12 +154,13 @@ def update_pycs(lib_dir, new_path, lib_name):
             return os.path.join(new_path, filename[len(lib_dir) + 1:])
 
     for dirname, dirnames, filenames in os.walk(lib_dir):
-        for filename in filenames:
-            if filename.endswith(('.pyc', '.pyo')):
-                filename = os.path.join(dirname, filename)
-                local_path = get_new_path(filename)
-                if local_path is not None:
-                    update_pyc(filename, local_path)
+        if len(dirnames) == 0 or dirnames[-1] != '__pycache__':
+            for filename in filenames:
+                if filename.endswith(('.pyc', '.pyo')):
+                    filename = os.path.join(dirname, filename)
+                    local_path = get_new_path(filename)
+                    if local_path is not None:
+                        update_pyc(filename, local_path)
 
 
 def update_paths(base, new_path):
