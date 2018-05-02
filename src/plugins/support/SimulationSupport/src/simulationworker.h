@@ -64,7 +64,7 @@ public:
     bool run();
     bool pause();
     bool resume();
-    bool stop(bool pReloaded);
+    bool stop(bool pElapsedTime);
 
     bool reset();
 
