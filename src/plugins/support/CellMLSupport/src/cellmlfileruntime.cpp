@@ -625,7 +625,7 @@ void CellmlFileRuntime::update()
 
     reset(true, true);
 
-    // Retrieve the ML model associated with the CellML file
+    // Retrieve the CellML model associated with the CellML file
 
     iface::cellml_api::Model *model = mCellmlFile->model();
 
