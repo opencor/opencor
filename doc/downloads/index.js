@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> added support for exiting full-screen mode when pressing the Esc key on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1637\">#1637</a>)." },
                        { "change": "<strong>SBML API:</strong> don't build libSBML with bzip2 or zip compression anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1628\">#1628</a>)." },
                        { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
                        { "change": "<strong>Simualtion Experiment view:</strong> fixed a problem with a SED-ML file being considered as modified under certain conditions (see issue <a href=\"https://github.com/opencor/opencor/issues/1626\">#1626</a>)." }
