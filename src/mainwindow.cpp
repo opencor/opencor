@@ -258,6 +258,14 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 #endif
 
 #ifdef Q_OS_MAC
+    // A special shortcut to have OpenCOR exit full-screen mode on macOS when
+    // pressing Esc
+    // Note: indeed, when pressing Esc on macOS, the active application is
+    //       expected to exit full-screen mode, but it doesn't using Qt only...
+
+    new QShortcut(QKeySequence(Qt::Key_Escape),
+                  this, SLOT(exitFullScreenMode()));
+
     // A special shortcut to have OpenCOR minimised on macOS when pressing Cmd+M
     // Note: indeed, when pressing Cmd+M on macOS, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
@@ -1223,6 +1231,16 @@ void MainWindow::actionAboutTriggered()
                     "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                     "<p align=center><em>"+copyright()+"</em></p>"
                     "<p>"+applicationDescription()+"</p>");
+}
+
+//==============================================================================
+
+void MainWindow::exitFullScreenMode()
+{
+    // Exit full-screen mode, if possible
+
+    if (isFullScreen())
+        showNormal();
 }
 
 //==============================================================================

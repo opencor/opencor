@@ -161,6 +161,8 @@ private slots:
     void resetAll();
 
     void handleUrl(const QUrl &pUrl);
+
+    void exitFullScreenMode();
 };
 
 //==============================================================================
