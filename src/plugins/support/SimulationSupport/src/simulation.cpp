@@ -671,7 +671,7 @@ int SimulationResults::runsCount() const
 {
     // Return the number of runs held by our data store
 
-    return mDataStore->runsCount();
+    return mDataStore?mDataStore->runsCount():0;
 }
 
 //==============================================================================
