@@ -8,7 +8,6 @@ add_plugin(SimulationSupport
         ../../filehandlinginterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
-        ../../simulationinterface.cpp
         ../../solverinterface.cpp
 
         src/simulation.cpp

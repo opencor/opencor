@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "guiinterface.h"
 #include "interfaces.h"
-#include "simulationinterface.h"
 #include "tabbarwidget.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
@@ -593,9 +592,6 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
         if (qobject_cast<ViewInterface *>(plugin->instance()))
             mLoadedViewPlugins << plugin;
-
-        if (!plugin->name().compare(SimulationSupportPluginName))
-            mSimulationInterface = qobject_cast<SimulationInterface *>(plugin->instance());
     }
 
     // Update our state now that our plugins  are fully ready
@@ -981,12 +977,6 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
             //       their GUI...
 
             if (reloadFile) {
-                // Before we can actually reload the file, we need to make sure
-                // that the corresponding simulation, if any, has been stopped
-
-                if (mSimulationInterface)
-                    mSimulationInterface->stop(fileName, false);
-
                 // Actually redownload the file, if it is a remote one
 
                 if (fileManagerInstance->isRemote(fileName)) {

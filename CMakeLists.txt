@@ -601,7 +601,6 @@ set(SOURCES
     src/plugins/plugininterface.cpp
     src/plugins/pluginmanager.cpp
     src/plugins/preferencesinterface.cpp
-    src/plugins/simulationinterface.cpp
     src/plugins/solverinterface.cpp
     src/plugins/viewinterface.cpp
     src/plugins/windowinterface.cpp
@@ -656,7 +655,6 @@ if(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/plugininterface.cpp
         src/plugins/pluginmanager.cpp
-        src/plugins/simulationinterface.cpp
         src/plugins/solverinterface.cpp
 
         src/windows/main.cpp

@@ -16,7 +16,6 @@ add_plugin(Core
         ../../plugininterface.cpp
         ../../pluginmanager.cpp
         ../../preferencesinterface.cpp
-        ../../simulationinterface.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
         ../../windowinterface.cpp

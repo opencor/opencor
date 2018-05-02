@@ -61,7 +61,6 @@ public:
 
     Plugin * plugin(const QString &pName) const;
     Plugin * corePlugin() const;
-    Plugin * simulationSupportPlugin() const;
 
 private:
     bool mGuiMode;
@@ -72,7 +71,6 @@ private:
     Plugins mLoadedPlugins;
 
     Plugin *mCorePlugin;
-    Plugin *mSimulationSupportPlugin;
 };
 
 //==============================================================================

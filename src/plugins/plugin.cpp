@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CLI_VERSION
     #include "preferencesinterface.h"
 #endif
-#include "simulationinterface.h"
 #include "solverinterface.h"
 #ifndef CLI_VERSION
     #include "viewinterface.h"
@@ -129,7 +128,6 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                     CliInterface *cliInterface = qobject_cast<CliInterface *>(mInstance);
                     CoreInterface *coreInterface = qobject_cast<CoreInterface *>(mInstance);
                     PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(mInstance);
-                    SimulationInterface *simulationInterface = qobject_cast<SimulationInterface *>(mInstance);
 
                     if (   (   cliInterface
                             && (interfaceVersion(pFileName, "cliInterfaceVersion") != cliInterfaceVersion()))
@@ -153,8 +151,6 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                         || (   qobject_cast<PreferencesInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "preferencesInterfaceVersion") != preferencesInterfaceVersion()))
 #endif
-                        || (   simulationInterface
-                            && (interfaceVersion(pFileName, "simulationInterfaceVersion") != simulationInterfaceVersion()))
                         || (   qobject_cast<SolverInterface *>(mInstance)
                             && (interfaceVersion(pFileName, "solverInterfaceVersion") != solverInterfaceVersion()))
 #ifndef CLI_VERSION
