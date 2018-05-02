@@ -1041,6 +1041,13 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     }
 
     setUpdatesEnabled(true);
+
+    // Keep track of the initial size of our different graph panels
+    // Note: we do this through a single shot to give time to be certain that
+    //       the GUI is ready and that the size of our different graph panels is
+    //       therefore final...
+
+    QTimer::singleShot(0, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
 }
 
 //==============================================================================
@@ -2996,6 +3003,19 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::finalFurtherInitialize()
+{
+    // The GUI is all ready, so we can initialise mGraphPanelsWidgetSizes, as
+    // well as mGraphPanelPropertiesModified and mGraphsPropertiesModified by
+    // calling checkGraphPanelsAndGraphs()
+
+    mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+
+    checkGraphPanelsAndGraphs();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::initializeGui(bool pValidSimulationEnvironment)
 {
     // Show/hide some widgets based on whether we have a valid simulation
@@ -3681,20 +3701,6 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 
     if (pCheckVisibility && !isVisible())
         return;
-
-    // We need to update our GUI, which means that we can initialise
-    // mGraphPanelsWidgetSizes, if needed, as well as
-    // mGraphPanelPropertiesModified and mGraphsPropertiesModified by calling
-    // checkGraphPanelsAndGraphs()
-    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
-    //       graph panels widget's sizes in furtherInitialize(), we don't end up
-    //       with the final sizes since nothing is visible yet...
-
-    if (mGraphPanelsWidgetSizes.isEmpty()) {
-        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
-
-        checkGraphPanelsAndGraphs();
-    }
 
     // Make sure that our graph panel and graphs widget's GUI is up to date
 
