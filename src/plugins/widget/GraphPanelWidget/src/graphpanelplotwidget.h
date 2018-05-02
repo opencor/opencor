@@ -69,7 +69,7 @@ public:
     explicit GraphPanelPlotGraphProperties(const QString &pTitle = QString(),
                                            const Qt::PenStyle &pLineStyle = Qt::SolidLine,
                                            int pLineWidth = 1,
-                                           const QColor &pLineColor = Qt::darkBlue,
+                                           const QColor &pLineColor = QColor(),
                                            const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
                                            int pSymbolSize = 8,
                                            const QColor &pSymbolColor = Qt::darkBlue,

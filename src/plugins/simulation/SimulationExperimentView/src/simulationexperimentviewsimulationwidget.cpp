@@ -2916,7 +2916,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             QString title = QString();
             Qt::PenStyle lineStyle = Qt::SolidLine;
             double lineWidth = 1.0;
-            QColor lineColor = Qt::darkBlue;
+            QColor lineColor = QColor();
             QwtSymbol::Style symbolStyle = QwtSymbol::NoSymbol;
             int symbolSize = 8;
             QColor symbolColor = Qt::darkBlue;
