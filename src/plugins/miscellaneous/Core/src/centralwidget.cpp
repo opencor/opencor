@@ -576,9 +576,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
-    // Determine which loaded plugins support a given interface, as well as
-    // retrieve the simulation interface of our Simulation Support plugin,
-    // should it be loaded
+    // Determine which loaded plugins support a given interface
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         if (qobject_cast<FileHandlingInterface *>(plugin->instance()))
