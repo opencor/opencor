@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
 #include "interfaces.h"
 #include "sedmlfilemanager.h"
@@ -765,6 +766,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
+    mRuntime(0),
     mWorker(0)
 {
     // Retrieve our file details
@@ -791,6 +793,8 @@ Simulation::~Simulation()
     stop();
 
     // Delete some internal objects
+
+    delete mRuntime;
 
     delete mResults;
     delete mData;
@@ -822,7 +826,9 @@ void Simulation::retrieveFileDetails()
     if (mSedmlFile)
         mCellmlFile = mSedmlFile->cellmlFile();
 
-    // Keep track of our runtime, if any
+    // Get a (new) runtime, if possible
+
+    delete mRuntime;
 
     mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
 }
@@ -861,6 +867,12 @@ void Simulation::save()
 
 void Simulation::reload()
 {
+    // Stop our worker
+    // Note: we don't need to delete mWorker since it will be done as part of
+    //       its thread being stopped...
+
+    stop(false);
+
     // Retrieve our file details
 
     retrieveFileDetails();
