@@ -176,7 +176,7 @@ GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
 
     setLegendAttribute(LegendShowLine);
     setLegendAttribute(LegendShowSymbol);
-    setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(QColor(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(RenderAntialiased);
 }
 
@@ -302,8 +302,10 @@ void GraphPanelPlotGraph::addRun()
         int symbolSize = symbol->size().width();
 
         auto runPen = QPen(mDummyRun->pen());
-        auto runColour = RunColours[mRuns.size() % RunColours.size()];
-        runPen.setColor(runColour);
+        if (!runPen.color().isValid()) {
+            auto runColour = RunColours[mRuns.size() % RunColours.size()];
+            runPen.setColor(runColour);
+        }
         run->setPen(runPen);
 
         run->setSymbol(new QwtSymbol(symbol->style(), symbol->brush(),
@@ -441,13 +443,18 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    int runNumber = 0;
-    foreach (GraphPanelPlotGraphRun *run, mRuns) {
-        auto runPen = QPen(pPen);
-        auto runColour = RunColours[runNumber % RunColours.size()];
-        runPen.setColor(runColour);
-        run->setPen(runPen);
-        runNumber += 1;
+    if (pPen.color().isValid()) {
+        foreach (GraphPanelPlotGraphRun *run, mRuns)
+            run->setPen(pPen);
+    } else {
+        int runNumber = 0;
+        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+            auto runPen = QPen(pPen);
+            auto runColour = RunColours[runNumber % RunColours.size()];
+            runPen.setColor(runColour);
+            run->setPen(runPen);
+            runNumber += 1;
+        }
     }
 }
 
