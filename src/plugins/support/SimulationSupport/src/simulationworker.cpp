@@ -45,8 +45,7 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation,
     mRuntime(pSimulation->runtime()),
     mCurrentPoint(0.0),
     mPaused(false),
-    mStoppedWithElapsedTime(false),
-    mStoppedWithNoElapsedTime(false),
+    mStopped(false),
     mReset(false),
     mError(false),
     mSelf(pSelf)
@@ -153,17 +152,14 @@ bool SimulationWorker::resume()
 
 //==============================================================================
 
-bool SimulationWorker::stop(bool pElapsedTime)
+bool SimulationWorker::stop()
 {
     // Check that we are either running or paused
 
     if (isRunning() || isPaused()) {
         // Ask our thread to stop
 
-        if (pElapsedTime)
-            mStoppedWithElapsedTime = true;
-        else
-            mStoppedWithNoElapsedTime = true;
+        mStopped = true;
 
         // Resume our thread, if needed
 
@@ -223,8 +219,7 @@ void SimulationWorker::started()
 
     // Keep track of any error that might be reported by any of our solvers
 
-    mStoppedWithElapsedTime = false;
-    mStoppedWithNoElapsedTime = false;
+    mStopped = false;
 
     mError = false;
 
@@ -324,8 +319,7 @@ void SimulationWorker::started()
 
             // Some post-processing, if needed
 
-            if (   (mCurrentPoint == endingPoint)
-                || mStoppedWithElapsedTime || mStoppedWithNoElapsedTime) {
+            if ((mCurrentPoint == endingPoint) || mStopped) {
                 // We have reached our ending point or we have been asked to
                 // stop, so leave our main work loop
 
@@ -371,7 +365,7 @@ void SimulationWorker::started()
 
         // Retrieve the total elapsed time, should no error have occurred
 
-        if (!mError && !mStoppedWithNoElapsedTime)
+        if (!mError)
             elapsedTime += timer.elapsed();
     }
 
@@ -394,7 +388,7 @@ void SimulationWorker::started()
 
     // Let people know that we are done and give them the elapsed time
 
-    emit finished((mError || mStoppedWithNoElapsedTime)?-1:elapsedTime);
+    emit finished(mError?-1:elapsedTime);
 }
 
 //==============================================================================

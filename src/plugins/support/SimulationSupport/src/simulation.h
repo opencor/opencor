@@ -288,7 +288,7 @@ private:
 
     bool simulationSettingsOk(bool pEmitSignal = true);
 
-    bool doStop(bool pElapsedTime);
+    bool doStop();
 
 signals:
     void running(bool pIsResuming);
