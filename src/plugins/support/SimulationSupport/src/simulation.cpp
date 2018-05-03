@@ -1145,15 +1145,13 @@ bool Simulation::doStop(bool pElapsedTime)
 {
     // Stop our worker, if any, and wait for it to be done
 
-    bool res = false;
-
     if (mWorker && mWorker->stop(pElapsedTime)) {
         mWorkerFinishedEventLoop->exec();
 
-        res = true;
+        return true;
+    } else {
+        return false;
     }
-
-    return res;
 }
 
 //==============================================================================
