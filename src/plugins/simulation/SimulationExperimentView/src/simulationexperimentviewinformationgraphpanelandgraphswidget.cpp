@@ -270,6 +270,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
     mGraphParametersContextMenu->clear();
 
     mParameterActions.clear();
+
+    // Remove all our graphs' runs
+
+    foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, mGraphs)
+        graph->removeRuns();
 }
 
 //==============================================================================
