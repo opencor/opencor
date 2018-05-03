@@ -262,7 +262,7 @@ public:
     bool run();
     bool pause();
     bool resume();
-    bool stop(bool pElapsedTime = true);
+    bool stop();
 
     bool reset();
 
@@ -287,6 +287,8 @@ private:
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
     bool simulationSettingsOk(bool pEmitSignal = true);
+
+    bool doStop(bool pElapsedTime);
 
 signals:
     void running(bool pIsResuming);

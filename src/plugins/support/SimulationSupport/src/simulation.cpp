@@ -878,7 +878,7 @@ void Simulation::reload()
     // Note: we don't need to delete mWorker since it will be done as part of
     //       its thread being stopped...
 
-    stop(false);
+    doStop(false);
 
     // Retrieve our file details
 
@@ -1141,7 +1141,7 @@ bool Simulation::resume()
 
 //==============================================================================
 
-bool Simulation::stop(bool pElapsedTime)
+bool Simulation::doStop(bool pElapsedTime)
 {
     // Stop our worker, if any, and wait for it to be done
 
@@ -1156,6 +1156,15 @@ bool Simulation::stop(bool pElapsedTime)
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool Simulation::stop()
+{
+    // Stop our worker
+
+    return doStop(true);
 }
 
 //==============================================================================
