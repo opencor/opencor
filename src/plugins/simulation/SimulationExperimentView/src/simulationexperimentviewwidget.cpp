@@ -339,13 +339,14 @@ void SimulationExperimentViewWidget::fileModified(const QString &pFileName)
 
 void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 {
-    // The given file has been saved, so consider it reloaded, but only if it
-    // has a corresponding widget that is invisible
+    // The given file has been saved, so reload its simulation and consider the
+    // file reloaded, but only if it has a corresponding widget that is
+    // invisible
 
     SimulationExperimentViewSimulationWidget *crtSimulationWidget = simulationWidget(pFileName);
 
     if (crtSimulationWidget && !crtSimulationWidget->isVisible()) {
-        crtSimulationWidget->simulation()->stop(false);
+        crtSimulationWidget->simulation()->reload();
 
         fileReloaded(pFileName);
     }
