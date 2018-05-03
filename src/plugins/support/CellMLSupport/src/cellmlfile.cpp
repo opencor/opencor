@@ -91,7 +91,6 @@ QString CellmlFileException::message() const
 CellmlFile::CellmlFile(const QString &pFileName) :
     StandardSupport::StandardFile(pFileName),
     mRdfTriples(CellmlFileRdfTriples(this)),
-    mRuntime(new CellmlFileRuntime(this)),
     mUpdated(false)
 {
     // Reset ourselves
@@ -106,10 +105,6 @@ CellmlFile::~CellmlFile()
     // Reset ourselves
 
     reset();
-
-    // Delete some internal objects
-
-    delete mRuntime;
 }
 
 //==============================================================================
@@ -141,7 +136,6 @@ void CellmlFile::reset()
 
     mLoadingNeeded = true;
     mFullInstantiationNeeded = true;
-    mRuntimeUpdateNeeded = true;
     mDependenciesNeeded = true;
 
     mImportContents.clear();
@@ -767,27 +761,15 @@ CellmlFileIssues CellmlFile::issues() const
 
 CellmlFileRuntime * CellmlFile::runtime(bool pWithBusyWidget)
 {
-    // Check whether the runtime needs to be updated
-
-    if (!mRuntimeUpdateNeeded)
-        return mRuntime;
-
     // Load (but not reload!) ourselves, if needed
 
     if (load()) {
-        // Make sure that our imports, if any, are fully instantiated
+        // Make sure that our imports, if any, are fully instantiated before
+        // returning our runtime
 
-        if (fullyInstantiateImports(mModel, mIssues, pWithBusyWidget)) {
-            // Now, we can return an updated version of our runtime
-
-            mRuntime->update();
-
-            mRuntimeUpdateNeeded = false;
-
-            return mRuntime;
-        } else {
-            return 0;
-        }
+        return fullyInstantiateImports(mModel, mIssues, pWithBusyWidget)?
+                   new CellmlFileRuntime(this):
+                   0;
     } else {
         return 0;
     }

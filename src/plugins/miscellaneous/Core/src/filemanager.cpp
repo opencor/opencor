@@ -499,6 +499,11 @@ void FileManager::reload(const QString &pFileName)
         file->reset();
 
         emit fileReloaded(fileName);
+
+        // Reset our modified state and let people know about it, if needed
+
+        if (file->setModified(false))
+            emit fileModified(fileName);
     }
 }
 

@@ -162,11 +162,8 @@ private:
 
     CellmlFileIssues mIssues;
 
-    CellmlFileRuntime *mRuntime;
-
     bool mLoadingNeeded;
     bool mFullInstantiationNeeded;
-    bool mRuntimeUpdateNeeded;
     bool mDependenciesNeeded;
 
     QMap<QString, QString> mImportContents;

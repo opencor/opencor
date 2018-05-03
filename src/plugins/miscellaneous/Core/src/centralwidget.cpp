@@ -1006,8 +1006,6 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                     }
                 } else {
                     fileManagerInstance->reload(fileName);
-
-                    fileManagerInstance->setModified(fileName, false);
                 }
             }
         }

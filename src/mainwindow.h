@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "guiinterface.h"
 #include "plugin.h"
 
 //==============================================================================
@@ -51,7 +50,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class GuiInterface;
+class CoreInterface;
 class PluginManager;
 
 //==============================================================================
@@ -93,6 +92,8 @@ private:
     Plugins mLoadedGuiPlugins;
     Plugins mLoadedPreferencesPlugins;
     Plugins mLoadedWindowPlugins;
+
+    CoreInterface *mCoreInterface;
 
     QString mRawLocale;
 
