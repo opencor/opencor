@@ -886,7 +886,11 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
                 if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
                     foreach (const CellMLSupport::CellmlFileIssue &issue,
-                             runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
+                             runtime?
+                                 runtime->issues():
+                                 mSimulation->cellmlFile()?
+                                     mSimulation->cellmlFile()->issues():
+                                     CellMLSupport::CellmlFileIssues()) {
                         information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"))
                                                                                                                         .arg(issue.message());
                     }
