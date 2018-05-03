@@ -325,7 +325,7 @@ void SimulationWorker::started()
             // Some post-processing, if needed
 
             if (   (mCurrentPoint == endingPoint)
-                || mStoppedWithElapsedTime|| mStoppedWithNoElapsedTime) {
+                || mStoppedWithElapsedTime || mStoppedWithNoElapsedTime) {
                 // We have reached our ending point or we have been asked to
                 // stop, so leave our main work loop
 
