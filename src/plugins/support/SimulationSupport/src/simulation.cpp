@@ -802,7 +802,7 @@ Simulation::~Simulation()
 
 //==============================================================================
 
-void Simulation::retrieveFileDetails()
+void Simulation::retrieveFileDetails(bool pRecreateRuntime)
 {
     // Retrieve our CellML and SED-ML files, as well as COMBINE archive
 
@@ -828,9 +828,11 @@ void Simulation::retrieveFileDetails()
 
     // Get a (new) runtime, if possible
 
-    delete mRuntime;
+    if (pRecreateRuntime) {
+        delete mRuntime;
 
-    mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+        mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+    }
 }
 
 //==============================================================================
@@ -850,7 +852,7 @@ void Simulation::save()
 
     bool needReloading = !mRuntime;
 
-    retrieveFileDetails();
+    retrieveFileDetails(false);
 
     // Ask our data and results to update themselves, if needed
     // Note: this is, for example, needed when we open an invalid file (in which

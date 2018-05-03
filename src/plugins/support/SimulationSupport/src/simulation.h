@@ -278,7 +278,7 @@ private:
     SimulationData *mData;
     SimulationResults *mResults;
 
-    void retrieveFileDetails();
+    void retrieveFileDetails(bool pRecreateRuntime = true);
 
     bool simulationSettingsOk(bool pEmitSignal = true);
 
