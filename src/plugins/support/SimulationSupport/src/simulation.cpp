@@ -1143,8 +1143,6 @@ bool Simulation::resume()
 
 bool Simulation::stop()
 {
-    // Stop our worker
-
     // Stop our worker, if any, and wait for it to be done
 
     if (mWorker && mWorker->stop()) {
