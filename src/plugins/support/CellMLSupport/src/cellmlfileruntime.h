@@ -153,8 +153,6 @@ public:
 
     CellmlFileRuntimeParameters parameters() const;
 
-    void update();
-
     CellmlFileRuntimeParameter * voi() const;
 
 private:
