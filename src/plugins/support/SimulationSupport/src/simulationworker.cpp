@@ -220,7 +220,6 @@ void SimulationWorker::started()
     // Keep track of any error that might be reported by any of our solvers
 
     mStopped = false;
-
     mError = false;
 
     connect(odeSolver, &Solver::OdeSolver::error,
