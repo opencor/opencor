@@ -35,6 +35,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QEventLoop>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SimulationSupport {
 
@@ -767,7 +771,8 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
     mRuntime(0),
-    mWorker(0)
+    mWorker(0),
+    mWorkerFinishedEventLoop(new QEventLoop())
 {
     // Retrieve our file details
 
@@ -1105,6 +1110,11 @@ bool Simulation::run()
         connect(mWorker, &SimulationWorker::error,
                 this, &Simulation::error);
 
+        // Track of when our worker is finished
+
+        connect(mWorker, &SimulationWorker::finished,
+                mWorkerFinishedEventLoop, &QEventLoop::quit);
+
         // Start our worker
 
         return mWorker->run();
@@ -1133,9 +1143,19 @@ bool Simulation::resume()
 
 bool Simulation::stop(bool pElapsedTime)
 {
-    // Stop our worker
+    // Stop our worker, if any, and wait for it to be done
 
-    return mWorker?mWorker->stop(pElapsedTime):false;
+    if (mWorker) {
+        if (mWorker->stop(pElapsedTime)) {
+            mWorkerFinishedEventLoop->exec();
+
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

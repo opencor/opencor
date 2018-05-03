@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+class QEventLoop;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -277,6 +281,8 @@ private:
 
     SimulationData *mData;
     SimulationResults *mResults;
+
+    QEventLoop *mWorkerFinishedEventLoop;
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
