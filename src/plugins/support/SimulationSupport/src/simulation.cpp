@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
 #include "interfaces.h"
 #include "sedmlfilemanager.h"
@@ -33,6 +34,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSet>
 #include <QVector>
 #include <QtMath>
+
+//==============================================================================
+
+#include <QEventLoop>
 
 //==============================================================================
 
@@ -931,7 +936,7 @@ int SimulationResults::runsCount() const
 {
     // Return the number of runs held by our data store
 
-    return mDataStore->runsCount();
+    return mDataStore?mDataStore->runsCount():0;
 }
 
 //==============================================================================
@@ -1067,7 +1072,9 @@ DataStore::DataStoreVariables SimulationResults::algebraicVariables() const
 
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
-    mWorker(0)
+    mRuntime(0),
+    mWorker(0),
+    mWorkerFinishedEventLoop(new QEventLoop())
 {
     // Retrieve our file details
 
@@ -1099,13 +1106,15 @@ Simulation::~Simulation()
 
     // Delete some internal objects
 
+    delete mRuntime;
+
     delete mResults;
     delete mData;
 }
 
 //==============================================================================
 
-void Simulation::retrieveFileDetails()
+void Simulation::retrieveFileDetails(bool pRecreateRuntime)
 {
     // Retrieve our CellML and SED-ML files, as well as COMBINE archive
 
@@ -1129,9 +1138,13 @@ void Simulation::retrieveFileDetails()
     if (mSedmlFile)
         mCellmlFile = mSedmlFile->cellmlFile();
 
-    // Keep track of our runtime, if any
+    // Get a (new) runtime, if possible
 
-    mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+    if (pRecreateRuntime) {
+        delete mRuntime;
+
+        mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+    }
 }
 
 //==============================================================================
@@ -1151,7 +1164,7 @@ void Simulation::save()
 
     bool needReloading = !mRuntime;
 
-    retrieveFileDetails();
+    retrieveFileDetails(false);
 
     // Ask our data and results to update themselves, if needed
     // Note: this is, for example, needed when we open an invalid file (in which
@@ -1409,6 +1422,11 @@ bool Simulation::run()
         connect(mWorker, &SimulationWorker::error,
                 this, &Simulation::error);
 
+        // Track of when our worker is finished
+
+        connect(mWorker, &SimulationWorker::finished,
+                mWorkerFinishedEventLoop, &QEventLoop::quit);
+
         // Start our worker
 
         return mWorker->run();
@@ -1437,9 +1455,15 @@ bool Simulation::resume()
 
 bool Simulation::stop()
 {
-    // Stop our worker
+    // Stop our worker, if any, and wait for it to be done
 
-    return mWorker?mWorker->stop():false;
+    if (mWorker && mWorker->stop()) {
+        mWorkerFinishedEventLoop->exec();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

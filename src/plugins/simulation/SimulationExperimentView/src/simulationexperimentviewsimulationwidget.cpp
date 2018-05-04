@@ -117,7 +117,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mGraphPanelsWidgetSizes(QIntList()),
     mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
-    mNeedReloadView(false),
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
 {
@@ -894,7 +893,11 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
                 if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
                     foreach (const CellMLSupport::CellmlFileIssue &issue,
-                             runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
+                             runtime?
+                                 runtime->issues():
+                                 mSimulation->cellmlFile()?
+                                     mSimulation->cellmlFile()->issues():
+                                     CellMLSupport::CellmlFileIssues()) {
                         information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"))
                                                                                                                         .arg(issue.message());
                     }
@@ -1049,6 +1052,13 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     }
 
     setUpdatesEnabled(true);
+
+    // Keep track of the initial size of our different graph panels
+    // Note: we do this through a single shot to give time to be certain that
+    //       the GUI is ready and that the size of our different graph panels is
+    //       therefore final...
+
+    QTimer::singleShot(0, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
 }
 
 //==============================================================================
@@ -1236,40 +1246,14 @@ void SimulationExperimentViewSimulationWidget::fileModified()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::reloadView()
+void SimulationExperimentViewSimulationWidget::fileReloaded()
 {
-    // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
-    // that we have effectively been closed and (re)opened
+    // The given file has been reloaded, so reload ourselves, i.e. finalise and
+    // (re)initialise ourselves, meaning that we have effectively been closed
+    // and (re)opened
 
     finalize();
     initialize(true);
-
-    mNeedReloadView = false;
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::fileReloaded()
-{
-    // The given file has been reloaded, so stop its current simulation
-
-    bool needReloadView = true;
-
-    mNeedReloadView = true;
-
-    if (mSimulation->stop()) {
-        needReloadView = false;
-        // Note: we don't need to reload ourselves since stopping the simulation
-        //       will result in the stopped() signal being received and,
-        //       therefore, the simulationStopped() slot being called, which is
-        //       where we should reload ourselves since we cannot tell how long
-        //       the signal/slot mechanism is going to take...
-    }
-
-    // Reload ourselves, if needed
-
-    if (needReloadView)
-        reloadView();
 }
 
 //==============================================================================
@@ -3030,6 +3014,19 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::finalFurtherInitialize()
+{
+    // The GUI is all ready, so we can initialise mGraphPanelsWidgetSizes, as
+    // well as mGraphPanelPropertiesModified and mGraphsPropertiesModified by
+    // calling checkGraphPanelsAndGraphs()
+
+    mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+
+    checkGraphPanelsAndGraphs();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::initializeGui(bool pValidSimulationEnvironment)
 {
     // Show/hide some widgets based on whether we have a valid simulation
@@ -3179,11 +3176,6 @@ void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsed
 
     mProgress = -1;
 
-    // Reload ourselves, if needed (see fileReloaded())
-
-    if (mNeedReloadView)
-        reloadView();
-
     // Note: our simulation progress gets reset in resetSimulationProgress(),
     //       which is called by
     //       SimulationExperimentViewWidget::checkSimulationResults(). To reset
@@ -3236,17 +3228,10 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
         ResetDelay = 169
     };
 
-    if (isVisible()) {
-        if (mNeedReloadView)
-            resetProgressBar();
-        else
-            QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
-    } else {
-        if (mNeedReloadView)
-            resetFileTabIcon();
-        else
-            QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
-    }
+    if (isVisible())
+        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
+    else
+        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
 }
 
 //==============================================================================
@@ -3727,20 +3712,6 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 
     if (pCheckVisibility && !isVisible())
         return;
-
-    // We need to update our GUI, which means that we can initialise
-    // mGraphPanelsWidgetSizes, if needed, as well as
-    // mGraphPanelPropertiesModified and mGraphsPropertiesModified by calling
-    // checkGraphPanelsAndGraphs()
-    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
-    //       graph panels widget's sizes in furtherInitialize(), we don't end up
-    //       with the final sizes since nothing is visible yet...
-
-    if (mGraphPanelsWidgetSizes.isEmpty()) {
-        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
-
-        checkGraphPanelsAndGraphs();
-    }
 
     // Make sure that our graph panel and graphs widget's GUI is up to date
 
