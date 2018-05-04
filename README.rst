@@ -13,4 +13,3 @@ Please `contact us <http://www.opencor.ws/user/contactUs.html>`_ if you have any
 
 .. |Build Status| image:: https://travis-ci.org/opencor/opencor.svg?branch=master
    :target: https://travis-ci.org/opencor/opencor
-
