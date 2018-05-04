@@ -1160,7 +1160,7 @@ else()
     endif()
 endif()
 
-# Package OpenCOR, if required
+# Package OpenCOR
 
 set(CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
