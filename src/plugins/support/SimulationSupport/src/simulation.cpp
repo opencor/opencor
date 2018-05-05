@@ -575,10 +575,17 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    mConstantsArray->decRef();
-    mRatesArray->decRef();
-    mStatesArray->decRef();
-    mAlgebraicArray->decRef();
+    if (mConstantsArray)
+        mConstantsArray->decRef();
+
+    if (mRatesArray)
+        mRatesArray->decRef();
+
+    if (mStatesArray)
+        mStatesArray->decRef();
+
+    if (mAlgebraicArray)
+        mAlgebraicArray->decRef();
 
     delete mConstantsValues;
     delete mRatesValues;
