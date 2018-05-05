@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QEventLoop>
 #include <QList>
 #include <QObject>
 
@@ -65,7 +64,6 @@ public:
 private:
     qint64 mElapsedTime;
     QString mErrorMessage;
-    QEventLoop *mSimulationRunEventLoop;
 
 public slots:
     void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
@@ -107,6 +105,9 @@ public slots:
 private slots:
     void error(const QString &pErrorMessage);
     void simulationFinished(const qint64 &pElapsedTime);
+
+signals:
+    void gotElapsedTime();
 };
 
 //==============================================================================

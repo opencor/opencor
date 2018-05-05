@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
+#include <QEventLoop>
 #include <QMap>
 #include <QWidget>
 
@@ -50,8 +51,7 @@ namespace SimulationSupport {
 SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule, QObject *pParent) :
     QObject(pParent),
     mElapsedTime(-1),
-    mErrorMessage(QString()),
-    mSimulationRunEventLoop(new QEventLoop())
+    mErrorMessage(QString())
 {
     Q_UNUSED(pModule);
 
@@ -72,9 +72,11 @@ void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
 
 void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTime)
 {
+    // Save the elapsed time of the simulation
+
     mElapsedTime = pElapsedTime;
 
-    QMetaObject::invokeMethod(mSimulationRunEventLoop, "quit", Qt::QueuedConnection);
+    emit gotElapsedTime();
 }
 
 //==============================================================================
@@ -129,20 +131,31 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         emit pSimulation->runStarting(pSimulation->fileName());
 
-        // Signal our event loop when the simulation has finished
+        // Get the elapsed time when the simulation has finished
 
         connect(pSimulation, &Simulation::stopped,
-                this, &SimulationSupportPythonWrapper::simulationFinished);
+                this, &SimulationSupportPythonWrapper::simulationFinished, Qt::QueuedConnection);
 
         // Get error messages from the simulation
 
         connect(pSimulation, &Simulation::error,
                 this, &SimulationSupportPythonWrapper::error);
 
+        // Use an event loop so we don't busy wait
+
+        QEventLoop waitForCompletion;
+
+        connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
+                &waitForCompletion, &QEventLoop::quit);
+
         // Start the simulation and wait for it to complete
 
         if (pSimulation->run())
-            mSimulationRunEventLoop->exec();
+            waitForCompletion.exec();
+
+        // Disconnect our signal handlers now that the simulation has finished
+
+        disconnect(pSimulation, 0, this, 0);
 
         if (!mErrorMessage.isEmpty())
             throw std::runtime_error(mErrorMessage.toStdString());
