@@ -369,8 +369,6 @@ private:
 
     bool simulationSettingsOk(bool pEmitSignal = true);
 
-    bool doStop();
-
 signals:
     void clearResults(const QString &pFileName);
     void runStarting(const QString &pFileName);
