@@ -13,7 +13,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tag for our library
 
-set(GIT_TAG v5.212.0-alpha2)
+set(GIT_TAG v5.212.0-alpha2-72cfbd7)
 
 # Release tag
 
