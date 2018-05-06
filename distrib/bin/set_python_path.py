@@ -64,6 +64,7 @@ def update_script(script_filename, new_path):
             lines = list(f)
     except (IsADirectoryError, UnicodeDecodeError):
         return
+
     if not lines:
         return
 
@@ -154,13 +155,13 @@ def update_pycs(lib_dir, new_path, lib_name):
             return os.path.join(new_path, filename[len(lib_dir) + 1:])
 
     for dirname, dirnames, filenames in os.walk(lib_dir):
-        if len(dirnames) == 0 or dirnames[-1] != '__pycache__':
-            for filename in filenames:
-                if filename.endswith(('.pyc', '.pyo')):
-                    filename = os.path.join(dirname, filename)
-                    local_path = get_new_path(filename)
-                    if local_path is not None:
-                        update_pyc(filename, local_path)
+        for filename in filenames:
+            filename = os.path.join(dirname, filename)
+            if (filename.endswith(('.pyc', '.pyo'))
+            and not os.path.dirname(filename).endswith('__pycache__')):
+                local_path = get_new_path(filename)
+                if local_path is not None:
+                    update_pyc(filename, local_path)
 
 
 def update_paths(base, new_path):
