@@ -308,6 +308,18 @@ if(WIN32)
     set(ICU_VERSION 57)
 endif()
 
+# On Linux, add our copy of the ICU and Mesa libraries
+# Note #1: ICU is needed so that our external projects that need ICU (e.g.
+#          QtWebKit) can rely on the ICU version that we want to use...
+# Note #2: Mesa is needed so that we can run OpenCOR on machines that don't have
+#          'proper' OpenGL support (e.g. on a Linux virtual machine in
+#          VirtualBox)...
+
+if(NOT WIN32 AND NOT APPLE)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+endif()
+
 # Retrieve or build our copy of QtWebKit
 
 add_subdirectory(src/3rdparty/QtWebKit)
@@ -802,18 +814,6 @@ endif()
 # Specify a target to build our non-library packages (e.g. Python)
 
 add_custom_target(OpenCORBuild ALL)
-
-# On Linux, add our copy of the ICU and Mesa libraries
-# Note #1: ICU is needed so that our external projects that need ICU (e.g.
-#          QtWebKit) can rely on the ICU version that we want to use...
-# Note #2: Mesa is needed so that we can run OpenCOR on machines that don't have
-#          'proper' OpenGL support (e.g. on a Linux virtual machine in
-#          VirtualBox)...
-
-if(NOT WIN32 AND NOT APPLE)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
-endif()
 
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
