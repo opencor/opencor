@@ -159,6 +159,12 @@ else()
             -DICUIN_SHARED_LIBRARY=${ICUIN_SHARED_LIBRARY}
             -DICUUC_SHARED_LIBRARY=${ICUUC_SHARED_LIBRARY}
         )
+    elseif(NOT APPLE)
+        set(CMAKE_EXTRA_ARGS
+            -DICU_ROOT_DIR=${ICU_ROOT_DIR}
+            -DICU_ICUI18N_LIBRARY=${ICU_ICUI18N_LIBRARY}
+            -DICU_ICUUC_LIBRARY=${ICU_ICUUC_LIBRARY}
+        )
     endif()
 
     ExternalProject_Add(${PACKAGE_BUILD}
