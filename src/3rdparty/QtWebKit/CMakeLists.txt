@@ -106,38 +106,38 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4e12a551320fbc9ab6b967cb96f7e4451fd8efc2
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} e23924945aef287186ef81c5c52b3789283e7cf8
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 28d1cdb58863f084355864e7ce99646bc59db6fc
-                                              84f7a27c2dfa03c239b07533262387f2473b2bd1
+                                  SHA1_VALUES 00a473546911c3790c1b2e52e2f852031c481a67
+                                              8db0a39e62584ce35748606ddf0671e8d675b323
                                               874175a6db51afe0902882f0b00f7855ab498c79
                                               47cb72ba7c899ca218be75dd89a0c0f900b968b8
                                               a386658900a742f31f1f08d55c0915d577af2d7e
-                                              76bf04efaa836ef76eed2b6ed22c9b2e29bb31ad
-                                              44f6e6f1106ebb1ebb3029ae0636d377ff254b8f)
+                                              2fa2e092ac53a7962a28e304c6fb3bdfd8bf02b7
+                                              16089ad4d6d4f8ad5b0d8a350c38eaab1073b1a4)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 7270bbc47a668e383def1513a23cde7bc341b1e9
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8f7d0ebd288de615842c46398fdd15062a8898e4
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES aa46f4c753aab3b514802a1404ca1d98c0260795
-                                              1c4779d99c6379a1361d22718a65b6f74e0f5ca2
+                                  SHA1_VALUES 9bedec01f53ff0e60ad18fe014c301141f0d596b
+                                              2483d5d995ce8b5cccf91be2a40c90baf9f07cdf
                                               43497bf1a89173badccc0b945b43473cf5d5f12a
                                               2ef114df767c6fe4184ef458545ff8d71f4f4917
                                               5eeaf7c066cca05413a35bba5efc71526c46f478
-                                              13e16b8509579a170eab540d93050adde0d2f760
-                                              995567217f17abd65322dd4dcb108dedc89c1bfa)
+                                              504f6aa0ff6a6db90bf94fb2482ffdf61fb30600
+                                              81a80ab272e675442e44b3c2f8ecaf7e237027f1)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 6e1c99acef94f66adcff77f6f68d51c3c37b38e0
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c7439eb9b523e0ca4bf8fb7d7ed88907e63d6ba4
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 869f0640969325793ee1620d4c941f20050b27bd
-                                          fb40bf07a6cde27fc57122b5c47a02a8023ffd60
-                                          b45f5b149930f86ee6009e06569e4b339d45808a
-                                          3d2fd6309859eb5ba306b9c6a5be578784562a48)
+                              SHA1_VALUES fd894999e2a81e06da967e447622ed0f1d80578d
+                                          17b3339432e9f99f9b702d4d85c04225c4d3c9d1
+                                          8db6c231add451213cd7cc74423b19cfc4916689
+                                          27a5b4f86dbb6644adb94693c593a2b9452bbd46)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} d37d37c8d537add58870b967795968bae57ddea4
