@@ -302,20 +302,17 @@ elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 endif()
 
-# Version of ICU that we are using on Windows
+# On Windows, specify the version of ICU that we are using while on Linux, add
+# our copy of the ICU and Mesa libraries
+# Note #1: On Linux, ICU is needed so that our external projects that need ICU
+#          (e.g. QtWebKit) can rely on the ICU version that we want to use...
+# Note #2: On Linux, Mesa is needed so that we can run OpenCOR on machines that
+#          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
+#          in VirtualBox)...
 
 if(WIN32)
     set(ICU_VERSION 57)
-endif()
-
-# On Linux, add our copy of the ICU and Mesa libraries
-# Note #1: ICU is needed so that our external projects that need ICU (e.g.
-#          QtWebKit) can rely on the ICU version that we want to use...
-# Note #2: Mesa is needed so that we can run OpenCOR on machines that don't have
-#          'proper' OpenGL support (e.g. on a Linux virtual machine in
-#          VirtualBox)...
-
-if(NOT WIN32 AND NOT APPLE)
+elseif(NOT APPLE)
     add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
     add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
 endif()
