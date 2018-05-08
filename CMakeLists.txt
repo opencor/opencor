@@ -13,9 +13,11 @@ option(ENABLE_TESTS "Enable the tests to be built" OFF)
 if(NOT WIN32 AND NOT APPLE)
     option(USE_PREBUILT_ICU_PACKAGE "Use the pre-built version of the ICU package" ON)
     option(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
+set(USE_PREBUILT_ICU_PACKAGE OFF)
 endif()
 
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
+set(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
 
 option(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE "Use the pre-built version of the BioSignalML API package" ON)
 option(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
@@ -319,6 +321,12 @@ endif()
 # Retrieve or build our copy of QtWebKit
 
 add_subdirectory(src/3rdparty/QtWebKit)
+
+# On Linux, make sure that ICU is handled before QtWebKit
+
+if(NOT WIN32 AND NOT APPLE)
+    add_dependencies(QtWebKit ICU)
+endif()
 
 # Required Qt modules
 
