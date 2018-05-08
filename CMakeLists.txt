@@ -322,12 +322,6 @@ endif()
 
 add_subdirectory(src/3rdparty/QtWebKit)
 
-# On Linux, make sure that ICU is handled before QtWebKit
-
-if(NOT WIN32 AND NOT APPLE)
-    add_dependencies(QtWebKit ICU)
-endif()
-
 # Required Qt modules
 
 if(ENABLE_TESTS)
