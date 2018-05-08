@@ -17,7 +17,7 @@ set(GIT_TAG v5.212.0-alpha2-72cfbd7)
 
 # Release tag
 
-set(RELEASE_TAG v5.212.0-alpha2)
+set(RELEASE_TAG v5.212.0-alpha2-72cfbd7)
 
 # Specify where our local package will be installed
 
