@@ -42,8 +42,14 @@ if(WIN32)
     set(ICUIN_SHARED_LIBRARY icuin${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(ICUUC_SHARED_LIBRARY icuuc${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 elseif(APPLE)
-    set(JPEG_FILENAME libjpeg.9.dylib)
-    set(PNG_FILENAME libpng16.16.dylib)
+    find_package(JPEG REQUIRED)
+    find_package(PNG REQUIRED)
+
+    get_filename_component(REAL_JPEG_LIBRARY ${JPEG_LIBRARY} REALPATH)
+    get_filename_component(REAL_PNG_LIBRARY ${PNG_LIBRARY} REALPATH)
+
+    get_filename_component(JPEG_FILENAME ${REAL_JPEG_LIBRARY} NAME)
+    get_filename_component(PNG_FILENAME ${REAL_PNG_LIBRARY} NAME)
 
     set(QTWEBKIT_SHARED_LIBRARY_DIR QtWebKit.framework/Versions/${QT_VERSION_MAJOR})
     set(QTWEBKIT_SHARED_LIBRARY ${QTWEBKIT_SHARED_LIBRARY_DIR}/QtWebKit)
@@ -230,9 +236,6 @@ else()
 
     if(APPLE)
         # Copy over some libraries needed by QtWebKit package
-
-        find_package(JPEG REQUIRED)
-        find_package(PNG REQUIRED)
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibraries
                                  COMMAND ${CMAKE_COMMAND} -E copy ${JPEG_LIBRARY} ${JPEG_FILENAME}
