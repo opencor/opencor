@@ -323,10 +323,13 @@ macro(add_plugin PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # Clean up our plugin, if we are on macOS
+    # Clean up our plugin, if we are on macOS, our make sure that it uses RPATH
+    # rather than RUNPATH on Linux
 
     if(APPLE)
         macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+    elseif(NOT WIN32)
+        runpath2rpath(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
     endif()
 
     # Package the plugin, but only if we are not on macOS since it will have
