@@ -610,7 +610,7 @@ macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    copy_file_to_build_dir(${PROJECT_TARGET} ${DIRNAME} ${PROJECT_BUILD_DIR}/lib ${FILENAME})
+    copy_file_to_build_dir(${PROJECT_TARGET} ${DIRNAME} lib ${FILENAME})
 
     # Make sure that the RUNPATH value is converted to an RPATH value
 
@@ -640,19 +640,19 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
         # Copy the Qt plugin to the plugins folder
 
         set(PLUGIN_ORIG_DIRNAME ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
-        set(PLUGIN_DEST_DIRNAME ${PROJECT_BUILD_DIR}/plugins/${PLUGIN_CATEGORY})
+        set(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
         set(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         copy_file_to_build_dir(DIRECT ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
         # Make sure that the RUNPATH value is converted to an RPATH value
 
-        runpath2rpath(DIRECT ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+        runpath2rpath(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all its local symbols
 
         if(RELEASE_MODE)
-            execute_process(COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         endif()
 
         # Deploy the Qt plugin
