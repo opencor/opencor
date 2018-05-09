@@ -1336,15 +1336,6 @@ else()
         linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     endforeach()
 
-    # Deploy our ICU libraries
-
-    foreach(ICU_LIBRARY ${ICU_LIBRARIES})
-        get_filename_component(DIRNAME ${ICU_LIBRARY} DIRECTORY)
-        get_filename_component(FILENAME ${ICU_LIBRARY} NAME)
-
-        linux_deploy_qt_library(${DIRNAME} ${FILENAME})
-    endforeach()
-
     # Qt plugins required by OpenCOR
 
     linux_deploy_qt_plugin(imageformats qjpeg)
