@@ -988,7 +988,7 @@ endforeach()
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
 #       ${CMAKE_PROJECT_NAME}.com, but Ninja found a duplicate rule (from a copy
-#       command), so now we use '_' instead of '.'...
+#       command), so now we use '_' instead...
 
 if(WIN32)
     qt5_wrap_cpp(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
