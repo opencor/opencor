@@ -586,35 +586,45 @@ endmacro()
 
 #===============================================================================
 
-macro(runpath2rpath FILENAME)
+macro(runpath2rpath PROJECT_TARGET FILENAME)
     # Convert the RUNPATH value, if any, of the given ELF file to an RPATH value
 
-    execute_process(COMMAND ${RUNPATH2RPATH} ${FILENAME}
-                    RESULT_VARIABLE RESULT)
+    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+        execute_process(COMMAND ${RUNPATH2RPATH} ${FILENAME}
+                        RESULT_VARIABLE RESULT)
 
-    if(NOT RESULT EQUAL 0)
-        message(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to an RPATH value...")
+        if(NOT RESULT EQUAL 0)
+            message(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to an RPATH value...")
+        endif()
+    else()
+        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND ${RUNPATH2RPATH} ${FILENAME})
     endif()
 endmacro()
 
 #===============================================================================
 
-macro(linux_deploy_qt_library DIRNAME FILENAME)
+macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    copy_file_to_build_dir(DIRECT ${DIRNAME} lib ${FILENAME})
+    copy_file_to_build_dir(${PROJECT_TARGET} ${DIRNAME} lib ${FILENAME})
 
     # Make sure that the RUNPATH value is converted to an RPATH value
 
-    runpath2rpath(lib/${FILENAME})
+    runpath2rpath(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
 
     # Strip the Qt library of all its local symbols
 
     if(RELEASE_MODE)
-        execute_process(COMMAND strip -x lib/${FILENAME})
+        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
+        else()
+            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
+        endif()
     endif()
 
     # Deploy the Qt library
@@ -637,12 +647,12 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
 
         # Make sure that the RUNPATH value is converted to an RPATH value
 
-        runpath2rpath(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+        runpath2rpath(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all its local symbols
 
         if(RELEASE_MODE)
-            execute_process(COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         endif()
 
         # Deploy the Qt plugin

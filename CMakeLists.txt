@@ -11,6 +11,7 @@ option(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 option(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 if(NOT WIN32 AND NOT APPLE)
+    option(USE_PREBUILT_ICU_PACKAGE "Use the pre-built version of the ICU package" ON)
     option(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 endif()
 
@@ -300,10 +301,19 @@ elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 endif()
 
-# Version of ICU that we are using on Windows
+# On Windows, specify the version of ICU that we are using while on Linux, add
+# our copy of the ICU and Mesa libraries
+# Note #1: On Linux, ICU is needed so that our external projects that need ICU
+#          (e.g. QtWebKit) can rely on the ICU version that we want to use...
+# Note #2: On Linux, Mesa is needed so that we can run OpenCOR on machines that
+#          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
+#          in VirtualBox)...
 
 if(WIN32)
     set(ICU_VERSION 57)
+elseif(NOT APPLE)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
 endif()
 
 # Retrieve or build our copy of QtWebKit
@@ -976,7 +986,7 @@ endforeach()
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
 #       ${CMAKE_PROJECT_NAME}.com, but Ninja found a duplicate rule (from a copy
-#       command), so now we use '_' instead of '.'...
+#       command), so now we use '_' instead...
 
 if(WIN32)
     qt5_wrap_cpp(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
@@ -1140,12 +1150,6 @@ else()
 
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-    else()
-        # Add our copy of the Mesa library so that we can run OpenCOR on
-        # machines that don't have 'proper' OpenGL support (e.g. on a Linux
-        # virtual machine in VirtualBox)
-
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
     endif()
 endif()
 
@@ -1327,18 +1331,8 @@ else()
             set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         endif()
 
-        linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        linux_deploy_qt_library(DIRECT ${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     endforeach()
-
-    if(NOT ENABLE_TRAVIS_CI)
-        # We are building OpenCOR locally, so we can deploy the ICU libraries
-        # Note: indeed, on Travis CI, the PPA we use doesn't have those
-        #       libraries...
-
-        foreach(QT_FILE icudata icui18n icuuc)
-            linux_deploy_qt_library(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
-        endforeach()
-    endif()
 
     # Qt plugins required by OpenCOR
 
@@ -1355,6 +1349,22 @@ else()
 
         linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
     endif()
+
+    # JPEG and PNG are needed by QtWebKit and may not be present on a user's
+    # system
+
+    find_package(JPEG REQUIRED QUIET)
+    find_package(PNG REQUIRED QUIET)
+
+    get_filename_component(REAL_JPEG_LIBRARY ${JPEG_LIBRARY} REALPATH)
+    get_filename_component(REAL_PNG_LIBRARY ${PNG_LIBRARY} REALPATH)
+
+    install(FILES ${REAL_JPEG_LIBRARY}
+            DESTINATION lib
+            RENAME libjpeg.so.8)
+    install(FILES ${REAL_PNG_LIBRARY}
+            DESTINATION lib
+            RENAME libpng12.so.0)
 
     # Shell script to run OpenCOR
 
