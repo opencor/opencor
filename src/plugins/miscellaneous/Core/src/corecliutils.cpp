@@ -770,8 +770,9 @@ void cleanDomElement(QDomElement &pDomElement,
     // before removing them from the element and adding a new attribute that
     // will later on be used for string replacement
 
+    static const int AttributeNumberWidth = ceil(log(ULLONG_MAX));
+
     static quint64 attributeNumber = 0;
-    static const int ULLONG_WIDTH = ceil(log(ULLONG_MAX));
 
     if (pDomElement.hasAttributes()) {
         QStringList serialisedAttributes = QStringList();
@@ -825,7 +826,7 @@ void cleanDomElement(QDomElement &pDomElement,
 
         // Keep track of the serialisation of the element's attribute
 
-        QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
+        QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, AttributeNumberWidth, 10, QChar('0'));
 
         pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(' ').toUtf8());
 
