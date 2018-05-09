@@ -1350,6 +1350,22 @@ else()
         linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
     endif()
 
+    # JPEG and PNG are needed by QtWebKit and may not be present on a user's
+    # system
+
+    find_package(JPEG REQUIRED QUIET)
+    find_package(PNG REQUIRED QUIET)
+
+    get_filename_component(REAL_JPEG_LIBRARY ${JPEG_LIBRARY} REALPATH)
+    get_filename_component(REAL_PNG_LIBRARY ${PNG_LIBRARY} REALPATH)
+
+    install(FILES ${REAL_JPEG_LIBRARY}
+            DESTINATION lib
+            RENAME libjpeg.so.8)
+    install(FILES ${REAL_PNG_LIBRARY}
+            DESTINATION lib
+            RENAME libpng12.so.0)
+
     # Shell script to run OpenCOR
 
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
