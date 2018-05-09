@@ -95,16 +95,15 @@ set(ICU_LIBRARIES
 )
 set(ICU_PKGCONFIG_DIR ${LOCAL_ICU_LIB_DIR}/pkgconfig PARENT_SCOPE)
 
-# Copy and deploy our copy of the ICU libraries
+# (Copy and) deploy our copy of the ICU libraries
 
 if(USE_PREBUILT_ICU_PACKAGE)
-    set(COPY_TARGET DIRECT)
+    set(DEPLOY_TARGET DIRECT)
 else()
-    set(COPY_TARGET ${PACKAGE_BUILD})
+    set(DEPLOY_TARGET ${PACKAGE_BUILD})
 endif()
+message(">>> DEPLOY_TARGET: >${DEPLOY_TARGET}<")
 
 foreach(ICU_LIBRARY ${ICUDATA_SHARED_LIBRARY} ${ICUI18N_SHARED_LIBRARY} ${ICUUC_SHARED_LIBRARY})
-    copy_file_to_build_dir(${COPY_TARGET} ${LOCAL_ICU_LIB_DIR} lib ${ICU_LIBRARY})
-
-    linux_deploy_qt_library(${LOCAL_ICU_LIB_DIR} ${ICU_LIBRARY})
+    linux_deploy_qt_library(${DEPLOY_TARGET} ${LOCAL_ICU_LIB_DIR} ${ICU_LIBRARY})
 endforeach()

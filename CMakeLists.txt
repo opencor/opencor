@@ -1333,7 +1333,7 @@ else()
             set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         endif()
 
-        linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        linux_deploy_qt_library(DIRECT ${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     endforeach()
 
     # Qt plugins required by OpenCOR
