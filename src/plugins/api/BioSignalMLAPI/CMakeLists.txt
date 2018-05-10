@@ -134,6 +134,8 @@ else()
             <INSTALL_DIR>/lib/${TYPEDOBJECT_IMPORT_LIBRARY}
     )
 
+    # Build BioSignalML as an external project
+
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
 
     ExternalProject_Add(${PACKAGE_BUILD}
