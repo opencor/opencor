@@ -1303,16 +1303,16 @@ else()
 
     install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
 
-    # Libraries needed on Ubuntu
+    # Libraries needed on Ubuntu 16.04 LTS
 
     foreach(LIBRARY app base interfaces pbutils reamer video)
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
 
         get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
 
-        install(FILES ${REAL_FULL_LIBRARY}
-                DESTINATION lib
-                RENAME ${FULL_LIBRARY})
+        if(EXISTS ${REAL_FULL_LIBRARY})
+            linux_deploy_system_library(${REAL_FULL_LIBRARY} ${FULL_LIBRARY})
+        endif()
     endforeach()
 
     # Mesa library
@@ -1356,19 +1356,14 @@ else()
 
     # JPEG and PNG are needed by QtWebKit and may not be present on a user's
     # system
+    # Note: this works for Ubuntu 16.04 LTS, so for other versions QtWebKit will
+    #       have to be rebuilt and the JPEG and PNG library versions updated...
 
     find_package(JPEG REQUIRED QUIET)
     find_package(PNG REQUIRED QUIET)
 
-    get_filename_component(REAL_JPEG_LIBRARY ${JPEG_LIBRARY} REALPATH)
-    get_filename_component(REAL_PNG_LIBRARY ${PNG_LIBRARY} REALPATH)
-
-    install(FILES ${REAL_JPEG_LIBRARY}
-            DESTINATION lib
-            RENAME libjpeg.so.8)
-    install(FILES ${REAL_PNG_LIBRARY}
-            DESTINATION lib
-            RENAME libpng12.so.0)
+    linux_deploy_system_library(${JPEG_LIBRARY} libjpeg.so.8)
+    linux_deploy_system_library(${PNG_LIBRARY} libpng12.so.0)
 
     # Shell script to run OpenCOR
 

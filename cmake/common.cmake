@@ -667,6 +667,25 @@ endmacro()
 
 #===============================================================================
 
+macro(linux_deploy_system_library FILENAME NEW_FILENAME)
+    # Copy the system library to the build/lib folder, so we can test things
+    # without first having to deploy OpenCOR
+
+    get_filename_component(REAL_FULL_FILENAME ${FILENAME} REALPATH)
+    get_filename_component(REAL_DIRNAME ${REAL_FULL_FILENAME} DIRECTORY)
+    get_filename_component(REAL_FILENAME ${REAL_FULL_FILENAME} NAME)
+
+    copy_file_to_build_dir(DIRECT ${REAL_DIRNAME} lib ${REAL_FILENAME} ${NEW_FILENAME})
+
+    # Deploy the system library
+
+    install(FILES ${REAL_FULL_FILENAME}
+            DESTINATION lib
+            RENAME ${NEW_FILENAME})
+endmacro()
+
+#===============================================================================
+
 macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
     # Strip the file of all its local symbols
 
