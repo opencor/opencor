@@ -21,8 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML API end
 //==============================================================================
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     #pragma warning(pop)
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic pop
+#elif !defined(Q_OS_MAC)
+    #error Unsupported platform
 #endif
 
 //==============================================================================

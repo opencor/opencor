@@ -323,10 +323,13 @@ macro(add_plugin PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # Clean up our plugin, if we are on macOS
+    # Clean up our plugin, if we are on macOS, our make sure that it uses RPATH
+    # rather than RUNPATH on Linux
 
     if(APPLE)
         macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+    elseif(NOT WIN32)
+        runpath2rpath(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
     endif()
 
     # Package the plugin, but only if we are not on macOS since it will have
@@ -660,6 +663,25 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
         install(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME}
                 DESTINATION ${PLUGIN_DEST_DIRNAME})
     endforeach()
+endmacro()
+
+#===============================================================================
+
+macro(linux_deploy_system_library FILENAME NEW_FILENAME)
+    # Copy the system library to the build/lib folder, so we can test things
+    # without first having to deploy OpenCOR
+
+    get_filename_component(REAL_FULL_FILENAME ${FILENAME} REALPATH)
+    get_filename_component(REAL_DIRNAME ${REAL_FULL_FILENAME} DIRECTORY)
+    get_filename_component(REAL_FILENAME ${REAL_FULL_FILENAME} NAME)
+
+    copy_file_to_build_dir(DIRECT ${REAL_DIRNAME} lib ${REAL_FILENAME} ${NEW_FILENAME})
+
+    # Deploy the system library
+
+    install(FILES ${REAL_FULL_FILENAME}
+            DESTINATION lib
+            RENAME ${NEW_FILENAME})
 endmacro()
 
 #===============================================================================
