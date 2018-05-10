@@ -16,6 +16,7 @@ if(NOT WIN32 AND NOT APPLE)
 endif()
 
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
+set(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
 
 option(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE "Use the pre-built version of the BioSignalML API package" ON)
 option(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
