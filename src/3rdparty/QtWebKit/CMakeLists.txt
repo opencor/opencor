@@ -16,6 +16,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 set(GIT_TAG v5.212.0-alpha2-72cfbd7-extra)
 set(GIT_TAG_LIBJPEG 1.5.90)
 set(GIT_TAG_LIBPNG v1.6.34)
+set(GIT_TAG_ZLIB v1.2.11)
 
 # Release tag
 
@@ -155,7 +156,7 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           48c5de3d1723388885aea0771a63730dc30a9040)
     endif()
 else()
-    # Build JPEG and PNG as external projects, if on Linux or macOS
+    # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS
 
     if(NOT WIN32)
         # JPEG
@@ -202,6 +203,27 @@ else()
             BUILD_BYPRODUCTS
                 ${LIBPNG_STATIC_LIBRARY}
         )
+
+        # ZLIB
+
+        set(ZLIB_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libz${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        ExternalProject_Add(zlibBuild
+            SOURCE_DIR
+                ${CMAKE_SOURCE_DIR}/ext/zlib
+            INSTALL_DIR
+                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/zlib
+            GIT_TAG
+                ${GIT_TAG_ZLIB}
+            CMAKE_GENERATOR
+                ${CMAKE_GENERATOR}
+            CMAKE_ARGS
+                -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+            BUILD_BYPRODUCTS
+                ${ZLIB_STATIC_LIBRARY}
+        )
     endif()
 
     # Build QtWebKit as an external project
@@ -222,8 +244,11 @@ else()
             -DJPEG_INCLUDE_DIR=$${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
             -DJPEG_LIBRARIES=${LIBJPEG_STATIC_LIBRARY}
             -DQT_BUNDLED_PNG=ON
-            -DPNG_INCLUDE_DIR=$${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+            -DPNG_INCLUDE_DIRS=$${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
             -DPNG_LIBRARIES=${LIBPNG_STATIC_LIBRARY}
+            -DQT_BUNDLED_ZLIB=ON
+            -DZLIB_INCLUDE_DIRS=$${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+            -DZLIB_LIBRARIES=${ZLIB_STATIC_LIBRARY}
         )
 
         if(NOT APPLE)
