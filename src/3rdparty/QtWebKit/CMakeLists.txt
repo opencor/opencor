@@ -159,13 +159,13 @@ else()
     # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS
 
     if(NOT WIN32)
-        set(DEPENDS JPEGBuild PNGBuild ZLIBBuild)
+        set(DEPENDS libjpegBuild libpngBuild zlibBuild)
 
         # JPEG
 
         set(LIBJPEG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libturbojpeg${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-        ExternalProject_Add(JPEGBuild
+        ExternalProject_Add(libjpegBuild
             SOURCE_DIR
                 ${CMAKE_SOURCE_DIR}/ext/libjpeg-turbo
             INSTALL_DIR
@@ -177,6 +177,7 @@ else()
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
+                ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
                 -DENABLE_SHARED=OFF
             BUILD_BYPRODUCTS
@@ -187,7 +188,7 @@ else()
 
         set(LIBPNG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libpng16${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-        ExternalProject_Add(PNGBuild
+        ExternalProject_Add(libpngBuild
             SOURCE_DIR
                 ${CMAKE_SOURCE_DIR}/ext/libpng
             INSTALL_DIR
@@ -199,6 +200,7 @@ else()
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
+                ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
                 -DPNG_SHARED=OFF
                 -DPNG_TESTS=OFF
@@ -210,7 +212,7 @@ else()
 
         set(ZLIB_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libz${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-        ExternalProject_Add(ZLIBBuild
+        ExternalProject_Add(zlibBuild
             SOURCE_DIR
                 ${CMAKE_SOURCE_DIR}/ext/zlib
             INSTALL_DIR
@@ -222,6 +224,7 @@ else()
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
+                ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             BUILD_BYPRODUCTS
                 ${ZLIB_STATIC_LIBRARY}
