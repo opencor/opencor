@@ -17,7 +17,7 @@ In order to build `QtWebKit <https://wiki.qt.io/QtWebKit>`_, we need to:
 
   ::
 
-    sudo apt install bison gperf libsqlite3-dev libxml2-dev libxslt1-dev ruby zlib1g-dev
+    sudo apt install bison gperf libsqlite3-dev libxml2-dev libxslt1-dev nasm ruby zlib1g-dev
 
 - **macOS:** run the following command from the terminal:
 
