@@ -11,9 +11,11 @@ set(MAJOR_LIBRARY_VERSION 5)
 set(MINOR_LIBRARY_VERSION 212)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
-# Git tag for our library
+# Git tags for our libraries
 
 set(GIT_TAG v5.212.0-alpha2-72cfbd7-extra)
+set(GIT_TAG_LIBJPEG 1.5.90)
+set(GIT_TAG_LIBPNG v1.6.34)
 
 # Release tag
 
@@ -153,10 +155,12 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           48c5de3d1723388885aea0771a63730dc30a9040)
     endif()
 else()
-    # Build JPEG as an external project, if on Linux or macOS
+    # Build JPEG and PNG as external projects, if on Linux or macOS
 
     if(NOT WIN32)
-        set(LIBJPEG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libjpeg${CMAKE_STATIC_LIBRARY_SUFFIX})
+        # JPEG
+
+        set(LIBJPEG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libturbojpeg${CMAKE_STATIC_LIBRARY_SUFFIX})
 
         ExternalProject_Add(libjpegBuild
             SOURCE_DIR
@@ -166,15 +170,37 @@ else()
             GIT_REPOSITORY
                 https://github.com/opencor/libjpeg-turbo
             GIT_TAG
-                ${GIT_TAG_TYPEDOBJECT}
+                ${GIT_TAG_LIBJPEG}
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
                 -DENABLE_SHARED=OFF
-                -DWITH_TURBOJPEG=OFF
             BUILD_BYPRODUCTS
                 ${LIBJPEG_STATIC_LIBRARY}
+        )
+
+        # PNG
+
+        set(LIBPNG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libpng16${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        ExternalProject_Add(libpngBuild
+            SOURCE_DIR
+                ${CMAKE_SOURCE_DIR}/ext/libpng
+            INSTALL_DIR
+                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/libpng
+            GIT_TAG
+                ${GIT_TAG_LIBPNG}
+            CMAKE_GENERATOR
+                ${CMAKE_GENERATOR}
+            CMAKE_ARGS
+                -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DPNG_SHARED=OFF
+                -DPNG_TESTS=OFF
+            BUILD_BYPRODUCTS
+                ${LIBPNG_STATIC_LIBRARY}
         )
     endif()
 
@@ -195,6 +221,9 @@ else()
             -DQT_BUNDLED_JPEG=ON
             -DJPEG_INCLUDE_DIR=$${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
             -DJPEG_LIBRARIES=${LIBJPEG_STATIC_LIBRARY}
+            -DQT_BUNDLED_PNG=ON
+            -DPNG_INCLUDE_DIR=$${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+            -DPNG_LIBRARIES=${LIBPNG_STATIC_LIBRARY}
         )
 
         if(NOT APPLE)
