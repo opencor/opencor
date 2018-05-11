@@ -175,6 +175,7 @@ else()
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
+                ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
                 -DENABLE_SHARED=OFF
             BUILD_BYPRODUCTS
@@ -197,6 +198,7 @@ else()
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
+                ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
                 -DPNG_SHARED=OFF
                 -DPNG_TESTS=OFF
@@ -220,6 +222,7 @@ else()
             CMAKE_GENERATOR
                 ${CMAKE_GENERATOR}
             CMAKE_ARGS
+                ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             BUILD_BYPRODUCTS
                 ${ZLIB_STATIC_LIBRARY}
