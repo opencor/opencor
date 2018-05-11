@@ -159,11 +159,13 @@ else()
     # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS
 
     if(NOT WIN32)
+        set(DEPENDS JPEGBuild PNGBuild ZLIBBuild)
+
         # JPEG
 
         set(LIBJPEG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libturbojpeg${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-        ExternalProject_Add(libjpegBuild
+        ExternalProject_Add(JPEGBuild
             SOURCE_DIR
                 ${CMAKE_SOURCE_DIR}/ext/libjpeg-turbo
             INSTALL_DIR
@@ -186,7 +188,7 @@ else()
 
         set(LIBPNG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libpng16${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-        ExternalProject_Add(libpngBuild
+        ExternalProject_Add(PNGBuild
             SOURCE_DIR
                 ${CMAKE_SOURCE_DIR}/ext/libpng
             INSTALL_DIR
@@ -210,7 +212,7 @@ else()
 
         set(ZLIB_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libz${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-        ExternalProject_Add(zlibBuild
+        ExternalProject_Add(ZLIBBuild
             SOURCE_DIR
                 ${CMAKE_SOURCE_DIR}/ext/zlib
             INSTALL_DIR
@@ -320,6 +322,8 @@ else()
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/${IMPORT_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
             <INSTALL_DIR>/${IMPORT_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
+        DEPENDS
+            ${DEPENDS}
     )
 
     # Do some post-processing that is specific to each platform
