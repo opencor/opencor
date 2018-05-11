@@ -13,11 +13,11 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
 # Git tag for our library
 
-set(GIT_TAG v5.212.0-alpha2-72cfbd7)
+set(GIT_TAG v5.212.0-alpha2-72cfbd7-extra)
 
 # Release tag
 
-set(RELEASE_TAG v5.212.0-alpha2-72cfbd7)
+set(RELEASE_TAG v5.212.0-alpha2-72cfbd7-extra)
 
 # Specify where our local package will be installed
 
@@ -153,6 +153,31 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
                                           48c5de3d1723388885aea0771a63730dc30a9040)
     endif()
 else()
+    # Build JPEG as an external project, if on Linux or macOS
+
+    if(NOT WIN32)
+        set(LIBJPEG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libjpeg${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        ExternalProject_Add(libjpegBuild
+            SOURCE_DIR
+                ${CMAKE_SOURCE_DIR}/ext/libjpeg-turbo
+            INSTALL_DIR
+                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/libjpeg-turbo
+            GIT_TAG
+                ${GIT_TAG_TYPEDOBJECT}
+            CMAKE_GENERATOR
+                ${CMAKE_GENERATOR}
+            CMAKE_ARGS
+                -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DENABLE_SHARED=OFF
+                -DWITH_TURBOJPEG=OFF
+            BUILD_BYPRODUCTS
+                ${LIBJPEG_STATIC_LIBRARY}
+        )
+    endif()
+
     # Build QtWebKit as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
@@ -165,12 +190,20 @@ else()
             -DICUIN_SHARED_LIBRARY=${ICUIN_SHARED_LIBRARY}
             -DICUUC_SHARED_LIBRARY=${ICUUC_SHARED_LIBRARY}
         )
-    elseif(NOT APPLE)
+    else()
         set(CMAKE_EXTRA_ARGS
-            -DICU_ROOT_DIR=${ICU_ROOT_DIR}
-            -DICU_ICUI18N_LIBRARY=${ICU_ICUI18N_LIBRARY}
-            -DICU_ICUUC_LIBRARY=${ICU_ICUUC_LIBRARY}
+            -DQT_BUNDLED_JPEG=ON
+            -DJPEG_INCLUDE_DIR=$${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+            -DJPEG_LIBRARIES=${LIBJPEG_STATIC_LIBRARY}
         )
+
+        if(NOT APPLE)
+            list(APPEND CMAKE_EXTRA_ARGS
+                -DICU_ROOT_DIR=${ICU_ROOT_DIR}
+                -DICU_ICUI18N_LIBRARY=${ICU_ICUI18N_LIBRARY}
+                -DICU_ICUUC_LIBRARY=${ICU_ICUUC_LIBRARY}
+            )
+        endif()
     endif()
 
     ExternalProject_Add(${PACKAGE_BUILD}
