@@ -179,6 +179,7 @@ else()
             CMAKE_ARGS
                 ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DCMAKE_POSITION_INDEPENDENT_CODE=ON
                 -DENABLE_SHARED=OFF
             BUILD_BYPRODUCTS
                 ${LIBJPEG_STATIC_LIBRARY}
@@ -202,6 +203,7 @@ else()
             CMAKE_ARGS
                 ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DCMAKE_POSITION_INDEPENDENT_CODE=ON
                 -DPNG_SHARED=OFF
                 -DPNG_TESTS=OFF
             BUILD_BYPRODUCTS
@@ -226,6 +228,7 @@ else()
             CMAKE_ARGS
                 ${CMAKE_ARGS}
                 -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DCMAKE_POSITION_INDEPENDENT_CODE=ON
             BUILD_BYPRODUCTS
                 ${ZLIB_STATIC_LIBRARY}
         )
