@@ -337,6 +337,16 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
 MainWindow::~MainWindow()
 {
+    // Stop tracking the showing/hiding of the different window widgets
+    // Note: indeed, to call updateDockWidgetsVisibility() when shutting down
+    //       (e.g. as a result of selecting Tools | Reset All) doesn't make
+    //       sense and will, in fact, crash OpenCOR...
+
+    foreach (Plugin *plugin, mLoadedWindowPlugins) {
+        disconnect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), &QDockWidget::visibilityChanged,
+                   this, &MainWindow::updateDockWidgetsVisibility);
+    }
+
     // Finalise our plugins
     // Note: we do this in reverse to ensure that dependent objects are deleted
     //       in the correct order...
