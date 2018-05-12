@@ -1354,17 +1354,6 @@ else()
         linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
     endif()
 
-    # JPEG and PNG are needed by QtWebKit and may not be present on a user's
-    # system
-    # Note: this works for Ubuntu 16.04 LTS, so for other versions QtWebKit will
-    #       have to be rebuilt and the JPEG and PNG library versions updated...
-
-    find_package(JPEG REQUIRED QUIET)
-    find_package(PNG REQUIRED QUIET)
-
-    linux_deploy_system_library(${JPEG_LIBRARY} libjpeg.so.8)
-    linux_deploy_system_library(${PNG_LIBRARY} libpng12.so.0)
-
     # Shell script to run OpenCOR
 
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
