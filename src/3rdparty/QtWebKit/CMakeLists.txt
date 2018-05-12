@@ -100,28 +100,28 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} e23924945aef287186ef81c5c52b3789283e7cf8
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 6b0c986ad56f9cf3ac70963363cf540d8a0d5574
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 00a473546911c3790c1b2e52e2f852031c481a67
-                                              8db0a39e62584ce35748606ddf0671e8d675b323
+                                  SHA1_VALUES 010bb916e3a7f249722b0938d26d0ed656542582
+                                              85cd25ab94c275bf588432ccd75fdd01794f3f3b
                                               874175a6db51afe0902882f0b00f7855ab498c79
                                               47cb72ba7c899ca218be75dd89a0c0f900b968b8
                                               a386658900a742f31f1f08d55c0915d577af2d7e
-                                              2fa2e092ac53a7962a28e304c6fb3bdfd8bf02b7
-                                              16089ad4d6d4f8ad5b0d8a350c38eaab1073b1a4)
+                                              8e3ce5f7def8eaf5e47ee7ae66441c4d02beaf04
+                                              cdb7055f969699db92e7d2ea9c61256c1bf5ce61)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8f7d0ebd288de615842c46398fdd15062a8898e4
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d028b2a6aed6db705b553aac3b1069659536ad29
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9bedec01f53ff0e60ad18fe014c301141f0d596b
-                                              2483d5d995ce8b5cccf91be2a40c90baf9f07cdf
+                                  SHA1_VALUES e940b8734e9e24fc691177d0c889319cd2c2867f
+                                              07d4256e33ff38686f2400ac35373095f86bce4a
                                               43497bf1a89173badccc0b945b43473cf5d5f12a
                                               2ef114df767c6fe4184ef458545ff8d71f4f4917
                                               5eeaf7c066cca05413a35bba5efc71526c46f478
-                                              504f6aa0ff6a6db90bf94fb2482ffdf61fb30600
-                                              81a80ab272e675442e44b3c2f8ecaf7e237027f1)
+                                              dfedab7aa19ff1ac525b40f467679ee021969ab3
+                                              5b2832be2417c293f750babb57093e8e171f371a)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
