@@ -45,17 +45,7 @@ if(WIN32)
     set(ICUIN_SHARED_LIBRARY icuin${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(ICUUC_SHARED_LIBRARY icuuc${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 elseif(APPLE)
-    find_package(JPEG REQUIRED QUIET)
-    find_package(PNG REQUIRED QUIET)
-
-    get_filename_component(REAL_JPEG_LIBRARY ${JPEG_LIBRARY} REALPATH)
-    get_filename_component(REAL_PNG_LIBRARY ${PNG_LIBRARY} REALPATH)
-
-    get_filename_component(JPEG_FILENAME ${REAL_JPEG_LIBRARY} NAME)
-    get_filename_component(PNG_FILENAME ${REAL_PNG_LIBRARY} NAME)
-
-    set(QTWEBKIT_SHARED_LIBRARY_DIR QtWebKit.framework/Versions/${QT_VERSION_MAJOR})
-    set(QTWEBKIT_SHARED_LIBRARY ${QTWEBKIT_SHARED_LIBRARY_DIR}/QtWebKit)
+    set(QTWEBKIT_SHARED_LIBRARY QtWebKit.framework/Versions/${QT_VERSION_MAJOR}/QtWebKit)
     set(QTWEBKIT_IMPORT_LIBRARY ${QTWEBKIT_SHARED_LIBRARY})
 
     set(QTWEBKITWIDGETS_SHARED_LIBRARY QtWebKitWidgets.framework/Versions/${QT_VERSION_MAJOR}/QtWebKitWidgets)
@@ -96,11 +86,6 @@ if(WIN32)
 
         ${IMPORT_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
         ${IMPORT_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
-    )
-elseif(APPLE)
-    list(APPEND SHA1_FILES
-        ${SHARED_LIBRARIES_DIR}/${JPEG_FILENAME}
-        ${SHARED_LIBRARIES_DIR}/${PNG_FILENAME}
     )
 endif()
 
@@ -329,34 +314,6 @@ else()
             ${DEPENDS}
     )
 
-    # Do some post-processing that is specific to each platform
-
-    if(APPLE)
-        # Copy over some libraries needed by QtWebKit package
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibraries
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${JPEG_LIBRARY} ${JPEG_FILENAME}
-                                 COMMAND chmod 755 ${JPEG_FILENAME}
-                                 COMMAND strip -x ${JPEG_FILENAME}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${PNG_LIBRARY} ${PNG_FILENAME}
-                                 COMMAND chmod 755 ${PNG_FILENAME}
-                                 COMMAND strip -x ${PNG_FILENAME}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
-                                 DEPENDEES install)
-
-        # Fix the RPATH information
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
-                                 COMMAND install_name_tool -change /usr/local/opt/jpeg/lib/${JPEG_FILENAME}
-                                                                   @rpath/${JPEG_FILENAME}
-                                                                   ${QTWEBKIT_SHARED_LIBRARY}
-                                 COMMAND install_name_tool -change /usr/local/opt/libpng/lib/${PNG_FILENAME}
-                                                                   @rpath/${PNG_FILENAME}
-                                                                   ${QTWEBKIT_SHARED_LIBRARY}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
-                                 DEPENDEES install)
-    endif()
-
     # Package our external project
 
     if(NOT WIN AND NOT APPLE)
@@ -408,8 +365,3 @@ set(QTWEBKIT_LIBRARIES
     ${REAL_FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     PARENT_SCOPE
 )
-
-if(APPLE)
-    set(QTWEBKIT_JPEG_LIBRARY ${JPEG_FILENAME} PARENT_SCOPE)
-    set(QTWEBKIT_PNG_LIBRARY ${PNG_FILENAME} PARENT_SCOPE)
-endif()
