@@ -76,6 +76,7 @@ public:
     bool hasWarnings() const;
     CellMLTextViewConverterWarnings warnings() const;
 
+    QDomNode documentationNode() const;
     QDomDocument rdfNodes() const;
 
 private:
@@ -121,10 +122,12 @@ private:
 
     CellMLTextViewConverterWarnings mWarnings;
 
+    QDomNode mModelNode;
+    QDomNode mDocumentationNode;
+    QDomNode mTopMathmlNode;
+
     QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;
-
-    QDomNode mTopMathmlNode;
 
     bool mAssignmentDone;
 
