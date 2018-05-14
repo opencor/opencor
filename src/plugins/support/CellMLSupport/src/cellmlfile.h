@@ -51,6 +51,7 @@ static const auto Cellml_Latest = Cellml_1_1;
 
 static const auto Cellml_1_0_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.0#");
 static const auto Cellml_1_1_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.1#");
+static const auto TmpDocumentation     = QStringLiteral("http://cellml.org/tmp-documentation");
 static const auto CmetaIdNamespace     = QStringLiteral("http://www.cellml.org/metadata/1.0#");
 static const auto MathmlNamespace      = QStringLiteral("http://www.w3.org/1998/Math/MathML");
 static const auto RdfNamespace         = QStringLiteral("http://www.w3.org/1999/02/22-rdf-syntax-ns#");

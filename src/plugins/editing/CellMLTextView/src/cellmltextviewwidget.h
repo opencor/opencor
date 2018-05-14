@@ -71,7 +71,8 @@ public:
     explicit CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
                                       const QString &pSha1, bool pValid,
                                       const CellMLSupport::CellmlFile::Version &pCellmlVersion,
-                                      QDomDocument pRdfNodes);
+                                      const QDomNode &pDocumentationNode,
+                                      const QDomDocument &pRdfNodes);
     ~CellmlTextViewWidgetData();
 
     void retranslateUi();
@@ -86,6 +87,7 @@ public:
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
     void setCellmlVersion(const CellMLSupport::CellmlFile::Version &pCellmlVersion);
 
+    QDomNode documentationNode() const;
     QDomDocument rdfNodes() const;
 
     QString fileContents() const;
@@ -99,6 +101,7 @@ private:
     QString mSha1;
     bool mValid;
     CellMLSupport::CellmlFile::Version mCellmlVersion;
+    QDomNode mDocumentationNode;
     QDomDocument mRdfNodes;
     QString mFileContents;
     QString mConvertedFileContents;

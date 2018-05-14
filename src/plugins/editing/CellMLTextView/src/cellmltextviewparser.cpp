@@ -88,6 +88,7 @@ QString CellmlTextViewParserMessage::message() const
 CellmlTextViewParser::CellmlTextViewParser() :
     mCellmlVersion(CellMLSupport::CellmlFile::Cellml_1_0),
     mDomDocument(QDomDocument()),
+    mModelElement(QDomElement()),
     mMessages(CellmlTextViewParserMessages()),
     mNamespaces(QMap<QString, QString>())
 {
@@ -116,13 +117,13 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     // Create our model element
 
-    QDomElement modelElement = newDomElement(mDomDocument, "model");
+    mModelElement = newDomElement(mDomDocument, "model");
 
     // Try to parse for a cmeta:id
 
     mScanner.getNextToken();
 
-    if (!parseCmetaId(modelElement))
+    if (!parseCmetaId(mModelElement))
         return false;
 
     // Expect an identifier
@@ -132,7 +133,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     // Set our model name
 
-    modelElement.setAttribute("name", mScanner.tokenString());
+    mModelElement.setAttribute("name", mScanner.tokenString());
 
     // Expect "as"
 
@@ -145,26 +146,26 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     mScanner.getNextToken();
 
-    if (!parseModelDefinition(modelElement))
+    if (!parseModelDefinition(mModelElement))
         return false;
 
     // Expect "enddef"
 
-    if (!enddefToken(modelElement))
+    if (!enddefToken(mModelElement))
         return false;
 
     // Expect ";"
 
     mScanner.getNextToken();
 
-    if (!semiColonToken(modelElement))
+    if (!semiColonToken(mModelElement))
         return false;
 
     // Expect the end of the file
 
     mScanner.getNextToken();
 
-    if (!tokenType(modelElement, tr("the end of the file"),
+    if (!tokenType(mModelElement, tr("the end of the file"),
                    CellmlTextViewScanner::EofToken)) {
         return false;
     }
@@ -284,6 +285,15 @@ QDomDocument CellmlTextViewParser::domDocument() const
     // Return our DOM document
 
     return mDomDocument;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::modelElement() const
+{
+    // Return our model element
+
+    return mModelElement;
 }
 
 //==============================================================================

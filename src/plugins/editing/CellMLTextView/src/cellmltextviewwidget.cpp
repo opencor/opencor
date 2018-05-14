@@ -62,11 +62,13 @@ CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellMLEditingView::CellmlEdit
                                                    const QString &pSha1,
                                                    bool pValid,
                                                    const CellMLSupport::CellmlFile::Version &pCellmlVersion,
-                                                   QDomDocument pRdfNodes) :
+                                                   const QDomNode &pDocumentationNode,
+                                                   const QDomDocument &pRdfNodes) :
     mEditingWidget(pEditingWidget),
     mSha1(pSha1),
     mValid(pValid),
     mCellmlVersion(pCellmlVersion),
+    mDocumentationNode(pDocumentationNode),
     mRdfNodes(pRdfNodes),
     mFileContents(QString()),
     mConvertedFileContents(QString())
@@ -143,6 +145,15 @@ void CellmlTextViewWidgetData::setCellmlVersion(const CellMLSupport::CellmlFile:
     // Set our CellML version value
 
     mCellmlVersion = pCellmlVersion;
+}
+
+//==============================================================================
+
+QDomNode CellmlTextViewWidgetData::documentationNode() const
+{
+    // Return our documentation node
+
+    return mDocumentationNode;
 }
 
 //==============================================================================
@@ -336,7 +347,12 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
                                             Core::sha1(editingWidget->editorWidget()->contents()),
                                             successfulConversion,
                                             cellmlVersion,
-                                            fileIsEmpty?QDomDocument(QString()):mConverter.rdfNodes());
+                                            fileIsEmpty?
+                                                QDomNode():
+                                                mConverter.documentationNode(),
+                                            fileIsEmpty?
+                                                QDomDocument(QString()):
+                                                mConverter.rdfNodes());
 
         mData.insert(pFileName, data);
 
@@ -598,6 +614,11 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             }
 
             data->setCellmlVersion(mParser.cellmlVersion());
+
+            // Add the documentation, if any, to our model element
+
+            if (!data->documentationNode().isNull())
+                mParser.modelElement().appendChild(data->documentationNode().cloneNode());
 
             // Add the metadata to our DOM document
 
