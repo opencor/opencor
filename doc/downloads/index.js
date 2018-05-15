@@ -42,7 +42,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
                        { "change": "<strong>CellML Text view:</strong> keep track of a CellML file’s documentation (see issue <a href=\"https://github.com/opencor/opencor/issues/1642\">#1642</a>)." },
                        { "change": "<strong>Simualtion Experiment view:</strong> fixed a problem with a SED-ML file being considered as modified under certain conditions (see issue <a href=\"https://github.com/opencor/opencor/issues/1626\">#1626</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1643\">#1643</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 6.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1552\">#1552</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1643\">#1643</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
