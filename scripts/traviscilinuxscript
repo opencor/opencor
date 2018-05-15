@@ -12,6 +12,8 @@
 && ninja \
 && bin/runtests
 
+ldd bin/OpenCOR
+
 bin/OpenCOR -c Unknown
 bin/OpenCOR -p
 bin/OpenCOR -s
