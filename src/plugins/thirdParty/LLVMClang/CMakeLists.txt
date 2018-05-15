@@ -72,14 +72,14 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 35fc45b92ad9098986720544cec1074b2d9bbd5f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 8978c11462d76f607f86f53fcdd9ba4e58940814
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ee72ba0c6e583cdafa83ecd91d4e631c39c74232)
+                              SHA1_VALUES 1adac16d0e20f006a9bc9a1608671f975bf96db2)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 9ecb8fe1709e14c5c15303ce504842837e1b129c
+                              ${RELATIVE_PROJECT_SOURCE_DIR} bf1bf90cf7ee72a42e512e0d7972f4a6cde584dc
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES fed9a4885b52586e7f607463ce9ba20e67916e59)
+                              SHA1_VALUES 24bba92cb8adf0d7cbb56d71a56396a821438101)
     endif()
 else()
     # Allow for big objects and ignore some warnings
