@@ -22,3 +22,5 @@ bin/OpenCOR -c CellMLTextView::import non_existing_file
 bin/OpenCOR -c CellMLTextView::export non_existing_file
 bin/OpenCOR -c CellMLTools
 bin/OpenCOR -c CellMLTextView
+
+ls -alR
