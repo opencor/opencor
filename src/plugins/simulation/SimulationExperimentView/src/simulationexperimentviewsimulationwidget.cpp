@@ -1063,7 +1063,7 @@ void SimulationExperimentViewSimulationWidget::finalize()
     // reloading ourselves
 
     if (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)
-        initialiseTrackers();
+        initializeTrackers();
 
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
@@ -1440,7 +1440,7 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initialiseTrackers()
+void SimulationExperimentViewSimulationWidget::initializeTrackers()
 {
     // Keep track of our simulation, solver, graph panel and graph properties,
     // and check for changes whenever a property gets changed
@@ -2064,7 +2064,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
         // Reinitialise our trackers, if we are not dealing with a CellML file
 
         if (!isCellmlFile)
-            initialiseTrackers();
+            initializeTrackers();
     }
 }
 
@@ -2239,7 +2239,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         // file nor a SED-ML file
 
         if (!isCellmlOrSedmlFile)
-            initialiseTrackers();
+            initializeTrackers();
     }
 }
 
@@ -3000,7 +3000,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Initialise our trackers, so we know if a SED-ML file or COMBINE archive
     // has been modified
 
-    initialiseTrackers();
+    initializeTrackers();
 
     return true;
 }

@@ -274,7 +274,7 @@ private:
     void initializeGui(bool pValidSimulationEnvironment);
     void initializeSimulation();
 
-    void initialiseTrackers();
+    void initializeTrackers();
 
     QString fileName(const QString &pFileName, const QString &pBaseFileName,
                      const QString &pFileExtension, const QString &pCaption,
