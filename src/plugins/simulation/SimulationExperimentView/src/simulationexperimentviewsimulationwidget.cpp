@@ -1440,7 +1440,7 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initializeTrackers()
+void SimulationExperimentViewSimulationWidget::initializeTrackers(bool pInitialzeGraphPanelsWidgetSizes)
 {
     // Keep track of our simulation, solver, graph panel and graph properties,
     // and check for changes whenever a property gets changed
@@ -1491,7 +1491,7 @@ void SimulationExperimentViewSimulationWidget::initializeTrackers()
                 Qt::UniqueConnection);
     }
 
-    mGraphPanelsWidgetSizes = QIntList();
+    mGraphPanelsWidgetSizes = pInitialzeGraphPanelsWidgetSizes?mContentsWidget->graphPanelsWidget()->sizes():QIntList();
     mGraphPanelsWidgetSizesModified = false;
 }
 
@@ -2064,7 +2064,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
         // Reinitialise our trackers, if we are not dealing with a CellML file
 
         if (!isCellmlFile)
-            initializeTrackers();
+            initializeTrackers(true);
     }
 }
 
@@ -2239,7 +2239,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         // file nor a SED-ML file
 
         if (!isCellmlOrSedmlFile)
-            initializeTrackers();
+            initializeTrackers(true);
     }
 }
 
