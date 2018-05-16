@@ -77,9 +77,9 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
                               SHA1_VALUES 1adac16d0e20f006a9bc9a1608671f975bf96db2)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 16aabf439759e5712b087e6e44a560570a10461a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} bf1bf90cf7ee72a42e512e0d7972f4a6cde584dc
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 0fde261d7003eb7c9c9bf2893ec4a9f3dc85fb16)
+                              SHA1_VALUES 24bba92cb8adf0d7cbb56d71a56396a821438101)
     endif()
 else()
     # Allow for big objects and ignore some warnings
@@ -116,8 +116,17 @@ else()
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLLVMCLANG_BUILD_SHARED_LIB=ON
             -DLLVM_BUILD_RUNTIME=OFF
+            -DLLVM_ENABLE_ASSERTIONS=OFF
+            -DLLVM_ENABLE_BACKTRACES=OFF
+            -DLLVM_ENABLE_CRASH_OVERRIDES=OFF
             -DLLVM_ENABLE_DIA_SDK=OFF
+            -DLLVM_ENABLE_LIBEDIT=OFF
             -DLLVM_ENABLE_LIBXML2=OFF
+            -DLLVM_ENABLE_MODULE_DEBUGGING=OFF
+            -DLLVM_ENABLE_OCAMLDOC=OFF
+            -DLLVM_ENABLE_PEDANTIC=OFF
+            -DLLVM_ENABLE_TERMINFO=OFF
+            -DLLVM_ENABLE_WARNINGS=OFF
             -DLLVM_INCLUDE_DOCS=OFF
             -DLLVM_INCLUDE_EXAMPLES=OFF
             -DLLVM_INCLUDE_GO_TESTS=OFF
