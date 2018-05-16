@@ -7,7 +7,7 @@ RUN apt -y install software-properties-common
 RUN apt-add-repository -y ppa:beineri/opt-qt595-xenial
 
 RUN apt -y -qq update
-RUN apt -y -qq install cmake g++-5 git libgstreamer-plugins-base0.10-0 mesa-common-dev ninja-build
+RUN apt -y -qq install cmake g++-5 git libgl1-mesa-dev libglu1-mesa-dev ninja-build
 RUN apt -y -qq install qt59location qt59multimedia qt59sensors qt59svg qt59tools qt59webchannel
 
 RUN ln -s /usr/bin/g++-5 /usr/bin/g++
