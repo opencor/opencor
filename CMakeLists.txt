@@ -1039,17 +1039,10 @@ if(APPLE)
     macos_clean_up_file_with_qt_dependencies(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Qt libraries required by OpenCOR
-    # Note: the Qt Brew formula that we use on Travis CI somehow results in some
-    #       of our tests generating messages about two frameworks being
-    #       available and that one of them will be used, but that we don't know
-    #       which one. So, to avoid those messages, we simply don't deploy the
-    #       Qt frameworks...
 
-    if(NOT ENABLE_TRAVIS_CI)
-        foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-            macos_deploy_qt_library(${QT_LIBRARY})
-        endforeach()
-    endif()
+    foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+        macos_deploy_qt_library(${QT_LIBRARY})
+    endforeach()
 
     # Qt plugins required by OpenCOR
 
@@ -1344,15 +1337,7 @@ else()
     linux_deploy_qt_plugin(platforms qxcb)
     linux_deploy_qt_plugin(printsupport cupsprintersupport)
     linux_deploy_qt_plugin(sqldrivers qsqlite)
-
-    if(NOT ENABLE_TRAVIS_CI)
-        # We are building OpenCOR locally, so we can deploy the
-        # xcbglintegrations plugins
-        # Note: indeed, on Travis CI, the PPA we use doesn't have those
-        #       plugins...
-
-        linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
-    endif()
+    linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
 
     # Shell script to run OpenCOR
 

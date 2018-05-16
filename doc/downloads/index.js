@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> fixed an issue with version 55 of ICU being wrongly needed on some Linux systems (see issue <a href=\"https://github.com/opencor/opencor/issues/1627\">#1627</a>). Added support for exiting full-screen mode when pressing the Esc key on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1637\">#1637</a>)." },
+                       { "change": "<strong>General:</strong> fixed an issue with version 55 of ICU being wrongly needed on some Linux systems (see issue <a href=\"https://github.com/opencor/opencor/issues/1627\">#1627</a>). Added support for exiting full-screen mode when pressing the Esc key on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1637\">#1637</a>). Stopped using <a href=\"https://travis-ci.org/\">Travis CI</a> (since we now have everything set up and working nicely on <a href=\"http://autotest.bioeng.auckland.ac.nz/jenkins/view/OpenCOR/\">Jenkins</a>)." },
                        { "change": "<strong>SBML API:</strong> don't build libSBML with bzip2 or zip compression anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1628\">#1628</a>)." },
                        { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
                        { "change": "<strong>CellML Text view:</strong> keep track of a CellML file’s documentation (see issue <a href=\"https://github.com/opencor/opencor/issues/1642\">#1642</a>)." },
