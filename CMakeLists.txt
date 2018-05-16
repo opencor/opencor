@@ -1371,6 +1371,11 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
+    # Python runtime libraries
+
+    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/${PYTHON_RELATIVE_RUNTIME_DIR}
+            DESTINATION lib)
+
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
     #       all of our Qt libraries at once. Indeed, on Linux, the version of a
