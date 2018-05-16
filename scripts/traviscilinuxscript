@@ -11,16 +11,3 @@
 && cmake -G Ninja -DCMAKE_PREFIX_PATH=/opt/qt59 -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DUSE_PREBUILT_QSCINTILLA_PACKAGE=OFF -DENABLE_SAMPLE_PLUGINS=ON -DENABLE_TEST_PLUGINS=ON -DENABLE_TESTS=ON .. \
 && ninja \
 && bin/runtests
-
-ldd bin/OpenCOR
-
-bin/OpenCOR -c Unknown
-bin/OpenCOR -p
-bin/OpenCOR -s
-bin/OpenCOR -c CellMLTextView
-bin/OpenCOR -c CellMLTextView::import non_existing_file
-bin/OpenCOR -c CellMLTextView::export non_existing_file
-bin/OpenCOR -c CellMLTools
-bin/OpenCOR -c CellMLTextView
-
-ls -alR
