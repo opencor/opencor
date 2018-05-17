@@ -38,7 +38,8 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Text-based view",
                              "entries": [
-                               { "type": "added", "description": "Line numbers." }
+                               { "type": "added", "description": "Line numbers." },
+                               { "type": "added", "description": "Word wrap." }
                              ]
                            },
                            { "type": "subCategory", "name": "CellML Annotation view",
