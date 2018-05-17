@@ -153,6 +153,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
 //==============================================================================
 
+static const auto SettingsEditorWidgetWordWrap  = QStringLiteral("EditorWidgetWordWrap");
 static const auto SettingsEditorWidgetZoomLevel = QStringLiteral("EditorWidgetZoomLevel");
 
 //==============================================================================
@@ -161,6 +162,7 @@ void EditorWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our settings
 
+    setWordWrap(pSettings->value(SettingsEditorWidgetWordWrap, false).toBool());
     setZoomLevel(pSettings->value(SettingsEditorWidgetZoomLevel, 0).toInt());
 }
 
@@ -170,6 +172,7 @@ void EditorWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
+    pSettings->setValue(SettingsEditorWidgetWordWrap, wordWrap());
     pSettings->setValue(SettingsEditorWidgetZoomLevel, zoomLevel());
 }
 
@@ -191,8 +194,9 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
     if (!pEditorWidget || (pEditorWidget == this))
         return;
 
-    // Update our zoom level
+    // Update our word wrap mode and zoom level
 
+    setWordWrap(pEditorWidget->wordWrap());
     setZoomLevel(pEditorWidget->zoomLevel());
 
     // Show/hide our find/replace widget
@@ -458,6 +462,15 @@ void EditorWidget::selectAll()
     // Select all the text, if any, in our editor
 
     mEditor->selectAll();
+}
+
+//==============================================================================
+
+bool EditorWidget::wordWrap() const
+{
+    // Return whether we word wrap the text
+
+    return mEditor->wrapMode() == QsciScintilla::WrapWord;
 }
 
 //==============================================================================

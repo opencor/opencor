@@ -181,6 +181,8 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             connect(mEditor, &EditorWidget::EditorWidget::canSelectAll,
                     this, &EditingViewPlugin::updateSelectAllAction,
                     Qt::UniqueConnection);
+
+            mEditWordWrapAction->setChecked(mEditor->wordWrap());
         }
     } else {
         mEditor = 0;

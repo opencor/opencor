@@ -123,6 +123,7 @@ public:
 
     void selectAll();
 
+    bool wordWrap() const;
     void setWordWrap(bool pWordWrap);
 
     void resetUndoHistory();
