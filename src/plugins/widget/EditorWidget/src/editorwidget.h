@@ -172,10 +172,6 @@ public slots:
     bool findPrevious();
     bool findNext();
 
-    void replace();
-    void replaceAndFind();
-    void replaceAll();
-
 private slots:
     void keepTrackOfCursorPosition(int pLine, int pColumn);
 
@@ -183,6 +179,10 @@ private slots:
     void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
     void findTextChanged(const QString &pText);
+
+    void replace();
+    void replaceAndFind();
+    void replaceAll();
 };
 
 //==============================================================================
