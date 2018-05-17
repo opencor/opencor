@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFrame>
 #include <QKeyEvent>
 #include <QLabel>
+#include <QMainWindow>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QVBoxLayout>
@@ -770,7 +771,8 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 {
     // Some key combinations from our editor
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+    if (    mFindReplaceVisible
+        && !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
@@ -780,6 +782,12 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         pHandled = true;
     } else {
         pHandled = false;
+
+        // Propagate the key event to our main window, in case it needs to
+        // handle some key event (e.g. handle Esc to exit full-screen mode on
+        // macOS)
+
+        QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
     }
 }
 

@@ -77,6 +77,9 @@ public:
 protected:
     void changeEvent(QEvent *pEvent) override;
     void closeEvent(QCloseEvent *pEvent) override;
+#ifdef Q_OS_MAC
+    void keyPressEvent(QKeyEvent *pEvent) override;
+#endif
 
 private:
     Ui::MainWindow *mGui;
@@ -161,8 +164,6 @@ private slots:
     void resetAll();
 
     void handleUrl(const QUrl &pUrl);
-
-    void exitFullScreenMode();
 };
 
 //==============================================================================
