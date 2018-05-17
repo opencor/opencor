@@ -86,9 +86,11 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     mEditor->setFocusPolicy(Qt::NoFocus);
 
-    // Define an indicator for our highlighting
+    // Define and customise an indicator for our highlighting
 
     mHighlightIndicatorNumber = mEditor->indicatorDefine(QsciScintilla::RoundBoxIndicator);
+
+    mEditor->setIndicatorForegroundColor(QColor(255, 239, 11, 69), mHighlightIndicatorNumber);
 
     // Forward some signals that are emitted by our editor
     // Note: we cannot use the new connect() syntax since the signal is located
@@ -732,7 +734,7 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 
     mEditor->QsciScintilla::setCursorPosition(0, 0);
 
-    // Hihghlight / replace all occurrences
+    // Hihghlight/replace all occurrences
 
     int firstLine = -1;
     int firstColumn = -1;
