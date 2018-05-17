@@ -258,14 +258,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 #endif
 
 #ifdef Q_OS_MAC
-    // A special shortcut to have OpenCOR exit full-screen mode on macOS when
-    // pressing Esc
-    // Note: indeed, when pressing Esc on macOS, the active application is
-    //       expected to exit full-screen mode, but it doesn't using Qt only...
-
-    new QShortcut(QKeySequence(Qt::Key_Escape),
-                  this, SLOT(exitFullScreenMode()));
-
     // A special shortcut to have OpenCOR minimised on macOS when pressing Cmd+M
     // Note: indeed, when pressing Cmd+M on macOS, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
@@ -436,6 +428,36 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
         pEvent->ignore();
     }
 }
+
+//==============================================================================
+
+#ifdef Q_OS_MAC
+void MainWindow::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Exit full-screen mode on macOS when pressing Esc
+    // Note #1: indeed, when pressing Esc on macOS, the active application is
+    //          expected to exit full-screen mode, but it doesn't using Qt
+    //          only...
+    // Note #2: normally, we would do this through a shortcut (as we are doing
+    //          with Cmd+M to minimise OpenCOR on macOS, but then we wouldn't be
+    //          able to close the find/replace widget of a text editor...
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  (pEvent->key() == Qt::Key_Escape)) {
+        if (isFullScreen())
+            showNormal();
+
+        pEvent->accept();
+    } else {
+        // Default handling of the event
+
+        QMainWindow::keyPressEvent(pEvent);
+    }
+}
+#endif
 
 //==============================================================================
 
@@ -1241,16 +1263,6 @@ void MainWindow::actionAboutTriggered()
                     "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
                     "<p align=center><em>"+copyright()+"</em></p>"
                     "<p>"+applicationDescription()+"</p>");
-}
-
-//==============================================================================
-
-void MainWindow::exitFullScreenMode()
-{
-    // Exit full-screen mode, if possible
-
-    if (isFullScreen())
-        showNormal();
 }
 
 //==============================================================================
