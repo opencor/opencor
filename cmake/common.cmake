@@ -717,20 +717,13 @@ macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
 
     macos_clean_up_file(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
 
-    # Make sure that the file refers to our embedded copy of the Qt libraries,
-    # but only if we are not on Travis CI (since we don't embed the Qt libraries
-    # in that case; see the main CMakeLists.txt file)
+    # Make sure that the file refers to our embedded copy of the Qt libraries
 
     foreach(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
         set(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
 
-        if(ENABLE_TRAVIS_CI)
-            set(OLD_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
-            set(NEW_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
-        else()
-            set(OLD_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
-            set(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
-        endif()
+        set(OLD_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
+        set(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
 
         if("${PROJECT_TARGET}" STREQUAL "DIRECT")
             execute_process(COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
