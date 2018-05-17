@@ -465,6 +465,15 @@ void EditorWidget::selectAll()
 
 //==============================================================================
 
+void EditorWidget::setWordWrap(bool pWordWrap)
+{
+    // Word wrap (or not) the text
+
+    mEditor->setWrapMode(pWordWrap?QsciScintilla::WrapWord:QsciScintilla::WrapNone);
+}
+
+//==============================================================================
+
 void EditorWidget::resetUndoHistory()
 {
     // Reset the undo history of our editor

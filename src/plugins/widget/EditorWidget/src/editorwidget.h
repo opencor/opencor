@@ -123,6 +123,8 @@ public:
 
     void selectAll();
 
+    void setWordWrap(bool pWordWrap);
+
     void resetUndoHistory();
 
     QLabel * cursorPositionWidget() const;

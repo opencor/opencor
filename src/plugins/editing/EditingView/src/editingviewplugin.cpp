@@ -204,6 +204,8 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
     Core::showEnableAction(mEditSelectAllAction, mEditingViewInterface, mEditor);
 
+    Core::showEnableAction(mEditWordWrapAction, mEditingViewInterface, mEditor);
+
     // Finish updating our GUI
 
     updateGui(pFileName);
@@ -262,6 +264,9 @@ void EditingViewPlugin::retranslateUi()
 
     retranslateAction(mEditSelectAllAction, tr("Select All"),
                       tr("Select all the text"));
+
+    retranslateAction(mEditWordWrapAction, tr("Word Wrap"),
+                      tr("Word wrap the text"));
 }
 
 //==============================================================================
@@ -324,6 +329,8 @@ void EditingViewPlugin::initializePlugin()
 
     mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, Core::mainWindow());
 
+    mEditWordWrapAction = Core::newAction(true, Core::mainWindow());
+
     // Populate our Edit menu
 
     mEditMenu->addAction(mEditUndoAction);
@@ -339,6 +346,8 @@ void EditingViewPlugin::initializePlugin()
     mEditMenu->addAction(mEditFindPreviousAction);
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditSelectAllAction);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditWordWrapAction);
 
     // Keep track of changes to the clipboard
 
@@ -370,6 +379,9 @@ void EditingViewPlugin::initializePlugin()
 
     connect(mEditSelectAllAction, &QAction::triggered,
             this, &EditingViewPlugin::doSelectAll);
+
+    connect(mEditWordWrapAction, &QAction::triggered,
+            this, &EditingViewPlugin::doWordWrap);
 }
 
 //==============================================================================
@@ -616,6 +628,15 @@ void EditingViewPlugin::doSelectAll()
     mEditor->selectAll();
 
     updateSelectAllAction();
+}
+
+//==============================================================================
+
+void EditingViewPlugin::doWordWrap()
+{
+    // Word wrap (or not) the text
+
+    mEditor->setWordWrap(mEditWordWrapAction->isChecked());
 }
 
 //==============================================================================
