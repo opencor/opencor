@@ -48,6 +48,8 @@ class MathmlTests : public QObject
     Q_OBJECT
 
 private:
+    QString mQuery;
+
     void tests(const QString &pCategory);
 
 private slots:
