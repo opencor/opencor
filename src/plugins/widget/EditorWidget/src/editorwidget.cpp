@@ -672,9 +672,9 @@ void EditorWidget::replace()
         // Replace the currently selected text if we have a match
 
         if (!crtSelectedText.compare(mFindReplace->findText(),
-                                         mFindReplace->isCaseSensitive()?
-                                             Qt::CaseSensitive:
-                                             Qt::CaseInsensitive)) {
+                                     mFindReplace->isCaseSensitive()?
+                                         Qt::CaseSensitive:
+                                         Qt::CaseInsensitive)) {
             mEditor->replace(mFindReplace->replaceText());
         }
     }
@@ -727,7 +727,7 @@ void EditorWidget::replaceAll()
 
         // Make sure that our new position is not 'before' our old one
 
-        if (   (newLine < oldLine)
+        if (    (newLine < oldLine)
             || ((newLine == oldLine) && (newColumn < oldColumn))) {
             break;
         }
