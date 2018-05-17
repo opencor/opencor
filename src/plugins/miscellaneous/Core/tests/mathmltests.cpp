@@ -73,6 +73,10 @@ void MathmlTests::initTestCase()
     // We don't want to see warning messages (about QXmlQuery and threading)
 
     gOrigMessageHandler = qInstallMessageHandler(messageHandler);
+
+    // Retrieve our query
+
+    mQuery = OpenCOR::rawFileContents(":/Core/web-xslt/ctopff.xsl");
 }
 
 //==============================================================================
@@ -91,8 +95,10 @@ void MathmlTests::tests(const QString &pCategory)
     xmlQuery.setMessageHandler(&dummyMessageHandler);
 
     foreach (const QString &fileName, QDir(dirName).entryList(QStringList() << "*.in")) {
-        xmlQuery.setFocus(OpenCOR::rawFileContents(dirName+fileName));
-        xmlQuery.setQuery(OpenCOR::rawFileContents(":/Core/web-xslt/ctopff.xsl"));
+        QString focus = OpenCOR::rawFileContents(dirName+fileName);
+
+        xmlQuery.setFocus(focus);
+        xmlQuery.setQuery(mQuery);
 
         if (xmlQuery.evaluateTo(&actualOutput)) {
             actualOutput = OpenCOR::Core::formatXml(OpenCOR::Core::cleanPresentationMathml(actualOutput));
@@ -102,7 +108,7 @@ void MathmlTests::tests(const QString &pCategory)
                 if (!failMessage.isEmpty())
                     failMessage += QString("\nFAIL!  : MathmlTests::%1Tests() ").arg(pCategory);
 
-                failMessage += QString("Failed to convert '%1/%2'\n%3\n%4\n%5").arg(pCategory, fileName, OpenCOR::rawFileContents(dirName+fileName), actualOutput, expectedOutput);
+                failMessage += QString("Failed to convert '%1/%2'\n%3\n%4\n%5").arg(pCategory, fileName, focus, actualOutput, expectedOutput);
             }
         } else {
             if (!failMessage.isEmpty())
