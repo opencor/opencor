@@ -90,9 +90,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     //       in our QScintilla plugin and that we don't know anything about
     //       it...
 
-    connect(mEditor, SIGNAL(SCN_ZOOM()),
-            this, SLOT(zoomLevelChanged()));
-
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
             this, SIGNAL(cursorPositionChanged(int, int)));
 
@@ -740,15 +737,6 @@ void EditorWidget::replaceAll()
     origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
 
     mEditor->QsciScintilla::setCursorPosition(origLine, origColumn);
-}
-
-//==============================================================================
-
-void EditorWidget::zoomLevelChanged()
-{
-    // Let people know that the zoom level has changed
-
-    emit zoomLevelChanged(zoomLevel());
 }
 
 //==============================================================================

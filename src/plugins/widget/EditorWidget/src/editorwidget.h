@@ -157,8 +157,6 @@ private:
     bool findText(const QString &pText, bool pForward);
 
 signals:
-    void zoomLevelChanged(int pZoomLevel);
-
     void cursorPositionChanged(int pRow, int pColumn);
 
     void textChanged();
@@ -178,8 +176,6 @@ public slots:
     void replaceAll();
 
 private slots:
-    void zoomLevelChanged();
-
     void keepTrackOfCursorPosition(int pLine, int pColumn);
 
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
