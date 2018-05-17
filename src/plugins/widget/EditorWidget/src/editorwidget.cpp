@@ -589,6 +589,8 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
         } else {
             mFindReplace->selectFindText();
         }
+    } else {
+        clearHighlighting();
     }
 
     // Show/hide our find/replace widget
@@ -704,6 +706,18 @@ void EditorWidget::replaceAndFind()
 
 //==============================================================================
 
+void EditorWidget::clearHighlighting()
+{
+    // Clear the current highlighting
+
+    int lastLine, lastIndex;
+
+    mEditor->lineIndexFromPosition(mEditor->text().length(), &lastLine, &lastIndex);
+    mEditor->clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
+}
+
+//==============================================================================
+
 void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 {
     // Highlight/replace all the occurences of the text
@@ -715,12 +729,8 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 
     // Clear any previous hihghlighting, if needed
 
-    if (pHighlightAll) {
-        int lastLine, lastIndex;
-
-        mEditor->lineIndexFromPosition(mEditor->text().length(), &lastLine, &lastIndex);
-        mEditor->clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
-    }
+    if (pHighlightAll)
+        clearHighlighting();
 
     // Keep track of the first visible line and of our position
 
@@ -894,6 +904,8 @@ void EditorWidget::findTextChanged(const QString &pText)
     // original position
 
     if (pText.isEmpty()) {
+        clearHighlighting();
+
         mEditor->setSelection(mCurrentLine, mCurrentColumn,
                               mCurrentLine, mCurrentColumn);
     } else {
