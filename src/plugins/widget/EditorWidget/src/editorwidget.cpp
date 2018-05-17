@@ -90,9 +90,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     //       in our QScintilla plugin and that we don't know anything about
     //       it...
 
-    connect(mEditor, SIGNAL(SCN_ZOOM()),
-            this, SLOT(zoomLevelChanged()));
-
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
             this, SIGNAL(cursorPositionChanged(int, int)));
 
@@ -156,6 +153,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
 //==============================================================================
 
+static const auto SettingsEditorWidgetWordWrap  = QStringLiteral("EditorWidgetWordWrap");
 static const auto SettingsEditorWidgetZoomLevel = QStringLiteral("EditorWidgetZoomLevel");
 
 //==============================================================================
@@ -164,6 +162,7 @@ void EditorWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our settings
 
+    setWordWrap(pSettings->value(SettingsEditorWidgetWordWrap, false).toBool());
     setZoomLevel(pSettings->value(SettingsEditorWidgetZoomLevel, 0).toInt());
 }
 
@@ -173,6 +172,7 @@ void EditorWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
+    pSettings->setValue(SettingsEditorWidgetWordWrap, wordWrap());
     pSettings->setValue(SettingsEditorWidgetZoomLevel, zoomLevel());
 }
 
@@ -194,8 +194,9 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
     if (!pEditorWidget || (pEditorWidget == this))
         return;
 
-    // Update our zoom level
+    // Update our word wrap mode and zoom level
 
+    setWordWrap(pEditorWidget->wordWrap());
     setZoomLevel(pEditorWidget->zoomLevel());
 
     // Show/hide our find/replace widget
@@ -461,6 +462,24 @@ void EditorWidget::selectAll()
     // Select all the text, if any, in our editor
 
     mEditor->selectAll();
+}
+
+//==============================================================================
+
+bool EditorWidget::wordWrap() const
+{
+    // Return whether we word wrap the text
+
+    return mEditor->wrapMode() == QsciScintilla::WrapWord;
+}
+
+//==============================================================================
+
+void EditorWidget::setWordWrap(bool pWordWrap)
+{
+    // Word wrap (or not) the text
+
+    mEditor->setWrapMode(pWordWrap?QsciScintilla::WrapWord:QsciScintilla::WrapNone);
 }
 
 //==============================================================================
@@ -731,15 +750,6 @@ void EditorWidget::replaceAll()
     origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
 
     mEditor->QsciScintilla::setCursorPosition(origLine, origColumn);
-}
-
-//==============================================================================
-
-void EditorWidget::zoomLevelChanged()
-{
-    // Let people know that the zoom level has changed
-
-    emit zoomLevelChanged(zoomLevel());
 }
 
 //==============================================================================
