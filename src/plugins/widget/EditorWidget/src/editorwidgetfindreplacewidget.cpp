@@ -565,6 +565,10 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
     }
 
     mDropDownAction->setIcon(dropDownPixmap);
+
+    // Let people know that our search options have changed
+
+    emit searchOptionsChanged();
 }
 
 //==============================================================================

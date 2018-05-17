@@ -86,6 +86,10 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     mEditor->setFocusPolicy(Qt::NoFocus);
 
+    // Define an indicator for our highlighting
+
+    mHighlightIndicatorNumber = mEditor->indicatorDefine(QsciScintilla::RoundBoxIndicator);
+
     // Forward some signals that are emitted by our editor
     // Note: we cannot use the new connect() syntax since the signal is located
     //       in our QScintilla plugin and that we don't know anything about
@@ -136,6 +140,9 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
             this, &EditorWidget::replaceAndFind);
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceAllRequested,
             this, &EditorWidget::replaceAll);
+
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::searchOptionsChanged,
+            this, &EditorWidget::highlightAll);
 
     // Add our editor and find/replace widgets to our layout
 
@@ -559,7 +566,8 @@ bool EditorWidget::findReplaceIsVisible() const
 
 void EditorWidget::setFindReplaceVisible(bool pVisible)
 {
-    // Set our find text, if we are to show our find/replace widget
+    // Set our find text and highlight all its occurrences, if we are to show
+    // our find/replace widget
     // Note: if we are over a word, then we want it to become our find text, but
     //       if we make it so then a call to findText() will be triggered if the
     //       find text is different. Clearly, we don't want this to happen,
@@ -574,6 +582,8 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
 
                 mFindReplace->setFindText(crtWord);
             mFindReplace->setActive(true);
+
+            highlightAll();
         } else {
             mFindReplace->selectFindText();
         }
@@ -692,14 +702,23 @@ void EditorWidget::replaceAndFind()
 
 //==============================================================================
 
-void EditorWidget::replaceAll()
+void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 {
-    // Replace all the occurences of the text
+    // Highlight/replace all the occurences of the text
     // Note: the original plan was to call mEditor->findFirst() the first time
     //       round and with wrapping disabled, and then mEditor->findNext()
     //       until we have found all occurrences, but for some reasons this can
     //       result in some occurrences being missed, hence the way we do it
     //       below...
+
+    // Clear any previous hihghlighting, if needed
+
+    if (pHighlightAll) {
+        int lastLine, lastIndex;
+
+        mEditor->lineIndexFromPosition(mEditor->text().length(), &lastLine, &lastIndex);
+        mEditor->clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
+    }
 
     // Keep track of the first visible line and of our position
 
@@ -713,33 +732,39 @@ void EditorWidget::replaceAll()
 
     mEditor->QsciScintilla::setCursorPosition(0, 0);
 
-    // Replace all occurrences
+    // Hihghlight / replace all occurrences
 
-    int oldLine = 0;
-    int oldColumn = 0;
-    int newLine;
-    int newColumn;
+    int firstLine = -1;
+    int firstColumn = -1;
+    int line;
+    int column;
 
     while (findNext()) {
         // Retrieve our new position
 
-        mEditor->getCursorPosition(&newLine, &newColumn);
+        mEditor->getCursorPosition(&line, &column);
 
-        // Make sure that our new position is not 'before' our old one
+        // Check whether we are back to our first line/column
 
-        if (    (newLine < oldLine)
-            || ((newLine == oldLine) && (newColumn < oldColumn))) {
+        if ((line == firstLine) && (column == firstColumn))
             break;
+
+        // Our new position is fine, so highlight/replace the occurrence
+
+        if (pHighlightAll) {
+            mEditor->fillIndicatorRange(line, column-mFindReplace->findText().length(),
+                                        line, column,
+                                        mHighlightIndicatorNumber);
+        } else {
+            mEditor->replace(mFindReplace->replaceText());
         }
 
-        // Our new position is fine, so replace the occurrence
+        // Initialise our first line/column, if needed
 
-        mEditor->replace(mFindReplace->replaceText());
-
-        // Get ready for the next occurrence
-
-        oldLine = newLine;
-        oldColumn = newColumn;
+        if ((firstLine == -1) && (firstColumn == -1)) {
+            firstLine = line;
+            firstColumn = column;
+        }
     }
 
     // Reset the first visible line and go to our original position, after
@@ -751,6 +776,24 @@ void EditorWidget::replaceAll()
     origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
 
     mEditor->QsciScintilla::setCursorPosition(origLine, origColumn);
+}
+
+//==============================================================================
+
+void EditorWidget::replaceAll()
+{
+    // Replace all the occurences of the text
+
+    doHighlightAllOrReplaceAll(false);
+}
+
+//==============================================================================
+
+void EditorWidget::highlightAll()
+{
+    // Highlight all the occurences of the text
+
+    doHighlightAllOrReplaceAll(true);
 }
 
 //==============================================================================
@@ -852,6 +895,11 @@ void EditorWidget::findTextChanged(const QString &pText)
         mEditor->setSelection(mCurrentLine, mCurrentColumn,
                               mCurrentLine, mCurrentColumn);
     } else {
+        // Look for the first occurrence of the given text in our editor, but
+        // first highlight all the occurrences of the given text
+
+        highlightAll();
+
         findText(pText, true);
     }
 }

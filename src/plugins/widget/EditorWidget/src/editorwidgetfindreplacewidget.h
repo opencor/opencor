@@ -119,6 +119,8 @@ signals:
     void replaceAndFindRequested();
     void replaceAllRequested();
 
+    void searchOptionsChanged();
+
 private slots:
     void findPreviousButtonClicked();
     void findNextButtonClicked();

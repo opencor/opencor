@@ -146,6 +146,8 @@ private:
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
 
+    int mHighlightIndicatorNumber;
+
     int mCurrentLine;
     int mCurrentColumn;
 
@@ -156,6 +158,8 @@ private:
     EditorWidgetFindReplaceWidget * findReplace();
 
     bool findText(const QString &pText, bool pForward);
+
+    void doHighlightAllOrReplaceAll(bool pHighlightAll);
 
 signals:
     void cursorPositionChanged(int pRow, int pColumn);
@@ -183,6 +187,8 @@ private slots:
     void replace();
     void replaceAndFind();
     void replaceAll();
+
+    void highlightAll();
 };
 
 //==============================================================================
