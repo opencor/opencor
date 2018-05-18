@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QMenu>
 #include <QMimeData>
+#include <QPainter>
 
 //==============================================================================
 
@@ -40,6 +41,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace OpenCOR {
 namespace QScintillaSupport {
+
+//==============================================================================
+
+QScintillaScrollBar::QScintillaScrollBar(QScintillaWidget *pParent) :
+    QScrollBar(pParent),
+    mOwner(pParent)
+{
+}
+
+//==============================================================================
+
+void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
+{
+    // Default handling of the event
+
+    QScrollBar::paintEvent(pEvent);
+
+    // Draw our position
+
+    static const QColor PositionColor = Qt::darkGray;
+
+    int line;
+    int lastLine;
+    int dummy;
+
+    mOwner->getCursorPosition(&line, &dummy);
+    mOwner->lineIndexFromPosition(mOwner->text().length(), &lastLine, &dummy);
+
+    int cursorPosition = line*height()/(lastLine+1);
+
+    QPainter painter(this);
+
+    painter.fillRect(0, cursorPosition, width(), 3, PositionColor);
+}
 
 //==============================================================================
 

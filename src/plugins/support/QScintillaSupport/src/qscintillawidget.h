@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QFont>
+#include <QScrollBar>
 #include <QString>
 
 //==============================================================================
@@ -50,6 +51,26 @@ class QWheelEvent;
 
 namespace OpenCOR {
 namespace QScintillaSupport {
+
+//==============================================================================
+
+class QScintillaWidget;
+
+//==============================================================================
+
+class QSCINTILLASUPPORT_EXPORT QScintillaScrollBar : public QScrollBar
+{
+    Q_OBJECT
+
+public:
+    explicit QScintillaScrollBar(QScintillaWidget *pParent);
+
+protected:
+    void paintEvent(QPaintEvent *pEvent) override;
+
+private:
+    QScintillaWidget *mOwner;
+};
 
 //==============================================================================
 
@@ -120,6 +141,8 @@ private:
     QFont mFont;
 
     QMenu *mContextMenu;
+
+    QScintillaScrollBar *mVerticalScrollBar;
 
     bool mCanSelectAll;
 
