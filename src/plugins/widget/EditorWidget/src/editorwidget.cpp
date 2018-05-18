@@ -88,9 +88,11 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     // Define and customise an indicator for our highlighting
 
+    static const QColor HihghlightingColor = QColor(255, 239, 11, 69);
+
     mHighlightIndicatorNumber = mEditor->indicatorDefine(QsciScintilla::RoundBoxIndicator);
 
-    mEditor->setIndicatorForegroundColor(QColor(255, 239, 11, 69), mHighlightIndicatorNumber);
+    mEditor->setIndicatorForegroundColor(HihghlightingColor, mHighlightIndicatorNumber);
 
     // Forward some signals that are emitted by our editor
     // Note: we cannot use the new connect() syntax since the signal is located
