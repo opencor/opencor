@@ -732,15 +732,13 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     if (pHighlightAll)
         clearHighlighting();
 
-    // Keep track of the first visible line and of our position
+    // Keep track of the first visible line and of our current line/column
 
-    int origFirstVisibleLine = mEditor->firstVisibleLine();
-    int origLine;
-    int origColumn;
+    int currentFirstVisibleLine = mEditor->firstVisibleLine();
+    int currentLine = mCurrentLine;
+    int currentColumn = mCurrentColumn;
 
-    mEditor->getCursorPosition(&origLine, &origColumn);
-
-    // Go to the beginning of the of the editor
+    // Go to the beginning of the of our editor
 
     mEditor->QsciScintilla::setCursorPosition(0, 0);
 
@@ -779,15 +777,18 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
         }
     }
 
-    // Reset the first visible line and go to our original position, after
-    // having corrected it, if needed
+    // Reset the first visible line and go to our original current position,
+    // after having corrected it, if needed
 
-    mEditor->setFirstVisibleLine(origFirstVisibleLine);
+    mEditor->setFirstVisibleLine(currentFirstVisibleLine);
 
-    origLine = qMin(origLine, mEditor->lines()-1);
-    origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
+    currentLine = qMin(currentLine, mEditor->lines()-1);
+    currentColumn = qMin(currentColumn, mEditor->lineLength(currentLine)-1);
 
-    mEditor->QsciScintilla::setCursorPosition(origLine, origColumn);
+    mCurrentLine = currentLine;
+    mCurrentColumn = currentColumn;
+
+    mEditor->QsciScintilla::setCursorPosition(currentLine, currentColumn);
 }
 
 //==============================================================================
