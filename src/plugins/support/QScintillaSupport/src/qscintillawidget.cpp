@@ -58,6 +58,24 @@ void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
 
     QScrollBar::paintEvent(pEvent);
 
+    // Retrieve the height of our arrow buttons on Windows and Linux
+    // Note: I was hoping to use styleOption.initFrom(this) and thus have a
+    //       truly cross-platform solution, but although it rightly returns 0 on
+    //       macOS, it returns the height of the whole scroll bar on Windows and
+    //       Linux...
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    QStyleOptionSlider styleOption;
+
+    initStyleOption(&styleOption);
+
+    int arrowButtonHeight = style()->subControlRect(QStyle::CC_ScrollBar, &styleOption, QStyle::SC_ScrollBarAddLine, this).height();
+#elif defined(Q_OS_MAC)
+    int arrowButtonHeight = 0;
+#else
+    #error Unsupported platform
+#endif
+
     // Draw our position
 
     static const QPen PositionPen = QPen(Qt::darkGray);
@@ -69,8 +87,8 @@ void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
     mOwner->getCursorPosition(&line, &dummy);
     mOwner->lineIndexFromPosition(mOwner->text().length(), &lastLine, &dummy);
 
-    double positionScaling = double(height()-1)/lastLine;
-    int cursorPosition = line*positionScaling;
+    double positionScaling = double(height()-2*arrowButtonHeight-1)/lastLine;
+    int cursorPosition = arrowButtonHeight+line*positionScaling;
 
     QPainter painter(this);
 
