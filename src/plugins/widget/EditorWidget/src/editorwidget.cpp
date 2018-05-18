@@ -102,7 +102,7 @@ void EditorScrollBar::paintEvent(QPaintEvent *pEvent)
     painter.setPen(HighlightPen);
 
     foreach (int highlightedLine, mOwner->highlightedLines()) {
-        cursorPosition = highlightedLine*positionScaling;
+        cursorPosition = arrowButtonHeight+highlightedLine*positionScaling;
 
         painter.drawLine(0, cursorPosition, width(), cursorPosition);
     }
