@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QKeyEvent>
 #include <QLabel>
 #include <QMainWindow>
+#include <QPainter>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QVBoxLayout>
@@ -43,9 +44,76 @@ namespace EditorWidget {
 
 //==============================================================================
 
+EditorScrollBar::EditorScrollBar(EditorWidget *pParent) :
+    QScrollBar(pParent),
+    mOwner(pParent)
+{
+}
+
+//==============================================================================
+
+void EditorScrollBar::paintEvent(QPaintEvent *pEvent)
+{
+    // Default handling of the event
+
+    QScrollBar::paintEvent(pEvent);
+
+    // Retrieve the height of our arrow buttons on Windows and Linux
+    // Note: I was hoping to use styleOption.initFrom(this) and thus have a
+    //       truly cross-platform solution, but although it rightly returns 0 on
+    //       macOS, it returns the height of the whole scroll bar on Windows and
+    //       Linux...
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    QStyleOptionSlider styleOption;
+
+    initStyleOption(&styleOption);
+
+    int arrowButtonHeight = style()->subControlRect(QStyle::CC_ScrollBar, &styleOption, QStyle::SC_ScrollBarAddLine, this).height();
+#elif defined(Q_OS_MAC)
+    int arrowButtonHeight = 0;
+#else
+    #error Unsupported platform
+#endif
+
+    // Draw our position
+
+    static const QPen PositionPen = QPen(Qt::darkGray);
+
+    int line;
+    int lastLine;
+    int dummy;
+
+    mOwner->editor()->getCursorPosition(&line, &dummy);
+    mOwner->editor()->lineIndexFromPosition(mOwner->editor()->text().length(), &lastLine, &dummy);
+
+    double positionScaling = double(height()-2*arrowButtonHeight-1)/lastLine;
+    int cursorPosition = arrowButtonHeight+line*positionScaling;
+
+    QPainter painter(this);
+
+    painter.setPen(PositionPen);
+    painter.drawLine(0, cursorPosition, width(), cursorPosition);
+
+    // Draw our highlights
+
+    static const QPen HighlightPen = QColor(0, 192, 0);
+
+    painter.setPen(HighlightPen);
+
+    foreach (int highlightedLine, mOwner->highlightedLines()) {
+        cursorPosition = highlightedLine*positionScaling;
+
+        painter.drawLine(0, cursorPosition, width(), cursorPosition);
+    }
+}
+
+//==============================================================================
+
 EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
     Core::Widget(pParent),
+    mHighlightedLines(QIntList()),
     mCurrentLine(0),
     mCurrentColumn(0),
     mFindReplaceVisible(false),
@@ -65,6 +133,21 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     mEditor = new QScintillaSupport::QScintillaWidget(pLexer, this);
     mSeparator = Core::newLineWidget(this);
     mFindReplace = new EditorWidgetFindReplaceWidget(this);
+
+    // Define and customise an indicator for our highlighting
+
+    static const QColor HihghlightingColor = QColor(255, 239, 11, 69);
+
+    mHighlightIndicatorNumber = mEditor->indicatorDefine(QsciScintilla::StraightBoxIndicator);
+
+    mEditor->setIndicatorForegroundColor(HihghlightingColor, mHighlightIndicatorNumber);
+
+    // Use our own vertical scroll bar for our editor, so that we can show the
+    // position of our highlighting
+
+    mVerticalScrollBar = new EditorScrollBar(this);
+
+    mEditor->replaceVerticalScrollBar(mVerticalScrollBar);
 
     // Check which styles can have their background changed when making them
     // read-only or writable
@@ -107,6 +190,8 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
             this, SLOT(keepTrackOfCursorPosition(int, int)));
+    connect(this, &EditorWidget::cursorPositionChanged,
+            mVerticalScrollBar, QOverload<>::of(&EditorScrollBar::update));
 
     // Keep track of whenever a key is being pressed in our editor or
     // find/replace widget
@@ -584,7 +669,7 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
             mFindReplace->selectFindText();
         }
     } else {
-        mEditor->clearHighlighting();
+        clearHighlighting();
     }
 
     // Show/hide our find/replace widget
@@ -712,7 +797,7 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     // Clear any previous hihghlighting, if needed
 
     if (pHighlightAll)
-        mEditor->clearHighlighting();
+        clearHighlighting();
 
     // Keep track of the first visible line, of our current line/column, and of
     // the position of our scrollbars
@@ -749,7 +834,7 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
         // Our new position is fine, so highlight/replace the occurrence
 
         if (pHighlightAll)
-            mEditor->addHighlighting(line, column-mFindReplace->findText().length(), line, column);
+            addHighlighting(line, column-mFindReplace->findText().length(), line, column);
         else
             mEditor->replace(mFindReplace->replaceText());
 
@@ -776,6 +861,50 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 
     mEditor->horizontalScrollBar()->setValue(horizontalScrollBarPosition);
     mEditor->verticalScrollBar()->setValue(verticalScrollBarPosition);
+}
+
+//==============================================================================
+
+QIntList EditorWidget::highlightedLines() const
+{
+    // Return our highlighted lines
+
+    return mHighlightedLines;
+}
+
+//==============================================================================
+
+void EditorWidget::clearHighlighting()
+{
+    // Clear the current highlighting
+
+    if (!mHighlightedLines.isEmpty()) {
+        int lastLine, lastIndex;
+
+        mEditor->lineIndexFromPosition(mEditor->text().length(), &lastLine, &lastIndex);
+        mEditor->clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
+
+        mHighlightedLines = QIntList();
+
+        mVerticalScrollBar->update();
+    }
+}
+
+//==============================================================================
+
+void EditorWidget::addHighlighting(int pFromLine, int pFromColumn,
+                                   int pToLine, int pToColumn)
+{
+    // Clear the current highlighting
+
+    mEditor->fillIndicatorRange(pFromLine, pFromColumn, pToLine, pToColumn,
+                                mHighlightIndicatorNumber);
+
+    if (!mHighlightedLines.contains(pFromLine)) {
+        mHighlightedLines << pFromLine;
+
+        mVerticalScrollBar->update();
+    }
 }
 
 //==============================================================================
@@ -892,7 +1021,7 @@ void EditorWidget::findTextChanged(const QString &pText)
     // original position
 
     if (pText.isEmpty()) {
-        mEditor->clearHighlighting();
+        clearHighlighting();
 
         mEditor->setSelection(mCurrentLine, mCurrentColumn,
                               mCurrentLine, mCurrentColumn);

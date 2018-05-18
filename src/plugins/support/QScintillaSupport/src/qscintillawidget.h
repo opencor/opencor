@@ -25,13 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "corecliutils.h"
 #include "qscintillasupportglobal.h"
 
 //==============================================================================
 
 #include <QFont>
-#include <QScrollBar>
 #include <QString>
 
 //==============================================================================
@@ -52,26 +50,6 @@ class QWheelEvent;
 
 namespace OpenCOR {
 namespace QScintillaSupport {
-
-//==============================================================================
-
-class QScintillaWidget;
-
-//==============================================================================
-
-class QSCINTILLASUPPORT_EXPORT QScintillaScrollBar : public QScrollBar
-{
-    Q_OBJECT
-
-public:
-    explicit QScintillaScrollBar(QScintillaWidget *pParent);
-
-protected:
-    void paintEvent(QPaintEvent *pEvent) override;
-
-private:
-    QScintillaWidget *mOwner;
-};
 
 //==============================================================================
 
@@ -126,12 +104,6 @@ public:
 
     int zoomLevel() const;
 
-    QIntList highlightedLines() const;
-
-    void clearHighlighting();
-    void addHighlighting(int pFromLine, int pFromColumn,
-                         int pToLine, int pToColumn);
-
     static QString specials(const QString &pString);
 
 protected:
@@ -149,18 +121,12 @@ private:
 
     QMenu *mContextMenu;
 
-    QScintillaScrollBar *mVerticalScrollBar;
-
     bool mCanSelectAll;
 
     bool mInsertMode;
 
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;
-
-    QIntList mHighlightedLines;
-
-    int mHighlightIndicatorNumber;
 
     void updateColors();
 

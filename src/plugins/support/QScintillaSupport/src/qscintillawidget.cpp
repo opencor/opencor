@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QMenu>
 #include <QMimeData>
-#include <QPainter>
 
 //==============================================================================
 
@@ -44,77 +43,10 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-QScintillaScrollBar::QScintillaScrollBar(QScintillaWidget *pParent) :
-    QScrollBar(pParent),
-    mOwner(pParent)
-{
-}
-
-//==============================================================================
-
-void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QScrollBar::paintEvent(pEvent);
-
-    // Retrieve the height of our arrow buttons on Windows and Linux
-    // Note: I was hoping to use styleOption.initFrom(this) and thus have a
-    //       truly cross-platform solution, but although it rightly returns 0 on
-    //       macOS, it returns the height of the whole scroll bar on Windows and
-    //       Linux...
-
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    QStyleOptionSlider styleOption;
-
-    initStyleOption(&styleOption);
-
-    int arrowButtonHeight = style()->subControlRect(QStyle::CC_ScrollBar, &styleOption, QStyle::SC_ScrollBarAddLine, this).height();
-#elif defined(Q_OS_MAC)
-    int arrowButtonHeight = 0;
-#else
-    #error Unsupported platform
-#endif
-
-    // Draw our position
-
-    static const QPen PositionPen = QPen(Qt::darkGray);
-
-    int line;
-    int lastLine;
-    int dummy;
-
-    mOwner->getCursorPosition(&line, &dummy);
-    mOwner->lineIndexFromPosition(mOwner->text().length(), &lastLine, &dummy);
-
-    double positionScaling = double(height()-2*arrowButtonHeight-1)/lastLine;
-    int cursorPosition = arrowButtonHeight+line*positionScaling;
-
-    QPainter painter(this);
-
-    painter.setPen(PositionPen);
-    painter.drawLine(0, cursorPosition, width(), cursorPosition);
-
-    // Draw our highlights
-
-    static const QPen HighlightPen = QColor(0, 192, 0);
-
-    painter.setPen(HighlightPen);
-
-    foreach (int highlightedLine, mOwner->highlightedLines()) {
-        cursorPosition = highlightedLine*positionScaling;
-
-        painter.drawLine(0, cursorPosition, width(), cursorPosition);
-    }
-}
-
-//==============================================================================
-
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
     mCanSelectAll(false),
-    mInsertMode(true),
-    mHighlightedLines(QIntList())
+    mInsertMode(true)
 {
     // Customise ourselves
 
@@ -129,13 +61,6 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     setMatchedBraceForegroundColor(Qt::red);
     setTabWidth(4);
     setUtf8(true);
-
-    // Use our own vertical scroll bar so that we can show the position of our
-    // highlighting
-
-    mVerticalScrollBar = new QScintillaScrollBar(this);
-
-    replaceVerticalScrollBar(mVerticalScrollBar);
 
     // Set our font
 
@@ -167,14 +92,6 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     // Initialise our colours by 'updating' them
 
     updateColors();
-
-    // Define and customise an indicator for our highlighting
-
-    static const QColor HihghlightingColor = QColor(255, 239, 11, 69);
-
-    mHighlightIndicatorNumber = indicatorDefine(QsciScintilla::StraightBoxIndicator);
-
-    setIndicatorForegroundColor(HihghlightingColor, mHighlightIndicatorNumber);
 
     // Clear some key mappings inherited from QsciScintilla
     // Note #1: indeed, QsciScintilla handles some shortcuts (e.g. Ctrl+L),
@@ -235,8 +152,6 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     connect(this, &QScintillaWidget::cursorPositionChanged,
             this, &QScintillaWidget::updateCursorPosition);
-    connect(this, &QScintillaWidget::cursorPositionChanged,
-            mVerticalScrollBar, QOverload<>::of(&QScintillaScrollBar::update));
 }
 
 //==============================================================================
@@ -559,50 +474,6 @@ int QScintillaWidget::zoomLevel() const
     // Return our zoom level
 
     return SendScintilla(SCI_GETZOOM);
-}
-
-//==============================================================================
-
-QIntList QScintillaWidget::highlightedLines() const
-{
-    // Return our highlighted lines
-
-    return mHighlightedLines;
-}
-
-//==============================================================================
-
-void QScintillaWidget::clearHighlighting()
-{
-    // Clear the current highlighting
-
-    if (!mHighlightedLines.isEmpty()) {
-        int lastLine, lastIndex;
-
-        lineIndexFromPosition(text().length(), &lastLine, &lastIndex);
-        clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
-
-        mHighlightedLines = QIntList();
-
-        mVerticalScrollBar->update();
-    }
-}
-
-//==============================================================================
-
-void QScintillaWidget::addHighlighting(int pFromLine, int pFromColumn,
-                                       int pToLine, int pToColumn)
-{
-    // Clear the current highlighting
-
-    fillIndicatorRange(pFromLine, pFromColumn, pToLine, pToColumn,
-                       mHighlightIndicatorNumber);
-
-    if (!mHighlightedLines.contains(pFromLine)) {
-        mHighlightedLines << pFromLine;
-
-        mVerticalScrollBar->update();
-    }
 }
 
 //==============================================================================

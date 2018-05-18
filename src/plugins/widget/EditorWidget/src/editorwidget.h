@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QColor>
+#include <QScrollBar>
 #include <QString>
 
 //==============================================================================
@@ -61,7 +62,24 @@ namespace EditorWidget {
 
 //==============================================================================
 
+class EditorWidget;
 class EditorWidgetFindReplaceWidget;
+
+//==============================================================================
+
+class EDITORWIDGET_EXPORT EditorScrollBar : public QScrollBar
+{
+    Q_OBJECT
+
+public:
+    explicit EditorScrollBar(EditorWidget *pParent);
+
+protected:
+    void paintEvent(QPaintEvent *pEvent) override;
+
+private:
+    EditorWidget *mOwner;
+};
 
 //==============================================================================
 
@@ -141,10 +159,18 @@ public:
 
     int styleAt(int pPosition) const;
 
+    QIntList highlightedLines() const;
+
 private:
     QScintillaSupport::QScintillaWidget *mEditor;
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
+
+    EditorScrollBar *mVerticalScrollBar;
+
+    int mHighlightIndicatorNumber;
+
+    QIntList mHighlightedLines;
 
     int mCurrentLine;
     int mCurrentColumn;
@@ -158,6 +184,10 @@ private:
     bool findText(const QString &pText, bool pForward);
 
     void doHighlightAllOrReplaceAll(bool pHighlightAll);
+
+    void clearHighlighting();
+    void addHighlighting(int pFromLine, int pFromColumn,
+                         int pToLine, int pToColumn);
 
 signals:
     void cursorPositionChanged(int pRow, int pColumn);
