@@ -851,8 +851,10 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 
     mEditor->setFirstVisibleLine(currentFirstVisibleLine);
 
-    currentLine = qMin(currentLine, mEditor->lines()-1);
-    currentColumn = qMin(currentColumn, mEditor->lineLength(currentLine)-1);
+    if (!pHighlightAll) {
+        currentLine = qMin(currentLine, mEditor->lines()-1);
+        currentColumn = qMin(currentColumn, mEditor->lineLength(currentLine)-1);
+    }
 
     mCurrentLine = currentLine;
     mCurrentColumn = currentColumn;
