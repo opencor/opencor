@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QMainWindow>
 #include <QRegularExpression>
+#include <QScrollBar>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -734,11 +735,15 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     if (pHighlightAll)
         clearHighlighting();
 
-    // Keep track of the first visible line and of our current line/column
+    // Keep track of the first visible line, of our current line/column, and of
+    // the position of our scrollbars
 
     int currentFirstVisibleLine = mEditor->firstVisibleLine();
     int currentLine = mCurrentLine;
     int currentColumn = mCurrentColumn;
+
+    int horizontalScrollBarPosition = mEditor->horizontalScrollBar()->value();
+    int verticalScrollBarPosition = mEditor->verticalScrollBar()->value();
 
     // Go to the beginning of the of our editor
 
@@ -791,6 +796,9 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     mCurrentColumn = currentColumn;
 
     mEditor->QsciScintilla::setCursorPosition(currentLine, currentColumn);
+
+    mEditor->horizontalScrollBar()->setValue(horizontalScrollBarPosition);
+    mEditor->verticalScrollBar()->setValue(verticalScrollBarPosition);
 }
 
 //==============================================================================
