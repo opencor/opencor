@@ -74,6 +74,21 @@ void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
     QPainter painter(this);
 
     painter.fillRect(0, cursorPosition, width(), 3, PositionColor);
+
+    // Draw our highlights
+
+    static const QPen HighlightFillColor   = QColor(255, 221, 0);
+    static const QPen HighlightBorderColor = QColor(204, 170, 0);
+
+    foreach (int highlightedLine, mOwner->highlightedLines()) {
+        cursorPosition = highlightedLine*height()/(lastLine+1);
+
+        painter.setPen(HighlightFillColor);
+        painter.drawLine(1, cursorPosition, width()-2, cursorPosition);
+
+        painter.setPen(HighlightBorderColor);
+        painter.drawRect(0, cursorPosition-1, width()-1, 2);
+    }
 }
 
 //==============================================================================
@@ -81,7 +96,8 @@ void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
     mCanSelectAll(false),
-    mInsertMode(true)
+    mInsertMode(true),
+    mHighlightedLines(QIntList())
 {
     // Customise ourselves
 
@@ -96,6 +112,13 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     setMatchedBraceForegroundColor(Qt::red);
     setTabWidth(4);
     setUtf8(true);
+
+    // Use our own vertical scroll bar so that we can show the position of our
+    // highlighting
+
+    mVerticalScrollBar = new QScintillaScrollBar(this);
+
+    replaceVerticalScrollBar(mVerticalScrollBar);
 
     // Set our font
 
@@ -127,6 +150,14 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     // Initialise our colours by 'updating' them
 
     updateColors();
+
+    // Define and customise an indicator for our highlighting
+
+    static const QColor HihghlightingColor = QColor(255, 239, 11, 69);
+
+    mHighlightIndicatorNumber = indicatorDefine(QsciScintilla::StraightBoxIndicator);
+
+    setIndicatorForegroundColor(HihghlightingColor, mHighlightIndicatorNumber);
 
     // Clear some key mappings inherited from QsciScintilla
     // Note #1: indeed, QsciScintilla handles some shortcuts (e.g. Ctrl+L),
@@ -187,6 +218,8 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     connect(this, &QScintillaWidget::cursorPositionChanged,
             this, &QScintillaWidget::updateCursorPosition);
+    connect(this, &QScintillaWidget::cursorPositionChanged,
+            mVerticalScrollBar, QOverload<>::of(&QScintillaScrollBar::update));
 }
 
 //==============================================================================
@@ -509,6 +542,50 @@ int QScintillaWidget::zoomLevel() const
     // Return our zoom level
 
     return SendScintilla(SCI_GETZOOM);
+}
+
+//==============================================================================
+
+QIntList QScintillaWidget::highlightedLines() const
+{
+    // Return our highlighted lines
+
+    return mHighlightedLines;
+}
+
+//==============================================================================
+
+void QScintillaWidget::clearHighlighting()
+{
+    // Clear the current highlighting
+
+    if (!mHighlightedLines.isEmpty()) {
+        int lastLine, lastIndex;
+
+        lineIndexFromPosition(text().length(), &lastLine, &lastIndex);
+        clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
+
+        mHighlightedLines = QIntList();
+
+        mVerticalScrollBar->update();
+    }
+}
+
+//==============================================================================
+
+void QScintillaWidget::addHighlighting(int pFromLine, int pFromColumn,
+                                       int pToLine, int pToColumn)
+{
+    // Clear the current highlighting
+
+    fillIndicatorRange(pFromLine, pFromColumn, pToLine, pToColumn,
+                       mHighlightIndicatorNumber);
+
+    if (!mHighlightedLines.contains(pFromLine)) {
+        mHighlightedLines << pFromLine;
+
+        mVerticalScrollBar->update();
+    }
 }
 
 //==============================================================================

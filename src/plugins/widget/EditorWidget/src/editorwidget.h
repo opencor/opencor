@@ -146,8 +146,6 @@ private:
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
 
-    int mHighlightIndicatorNumber;
-
     int mCurrentLine;
     int mCurrentColumn;
 
@@ -159,7 +157,6 @@ private:
 
     bool findText(const QString &pText, bool pForward);
 
-    void clearHighlighting();
     void doHighlightAllOrReplaceAll(bool pHighlightAll);
 
 signals:

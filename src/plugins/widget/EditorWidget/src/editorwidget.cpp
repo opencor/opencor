@@ -86,14 +86,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     mEditor->setFocusPolicy(Qt::NoFocus);
 
-    // Define and customise an indicator for our highlighting
-
-    static const QColor HihghlightingColor = QColor(255, 239, 11, 69);
-
-    mHighlightIndicatorNumber = mEditor->indicatorDefine(QsciScintilla::RoundBoxIndicator);
-
-    mEditor->setIndicatorForegroundColor(HihghlightingColor, mHighlightIndicatorNumber);
-
     // Forward some signals that are emitted by our editor
     // Note: we cannot use the new connect() syntax since the signal is located
     //       in our QScintilla plugin and that we don't know anything about
@@ -592,7 +584,7 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
             mFindReplace->selectFindText();
         }
     } else {
-        clearHighlighting();
+        mEditor->clearHighlighting();
     }
 
     // Show/hide our find/replace widget
@@ -708,18 +700,6 @@ void EditorWidget::replaceAndFind()
 
 //==============================================================================
 
-void EditorWidget::clearHighlighting()
-{
-    // Clear the current highlighting
-
-    int lastLine, lastIndex;
-
-    mEditor->lineIndexFromPosition(mEditor->text().length(), &lastLine, &lastIndex);
-    mEditor->clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
-}
-
-//==============================================================================
-
 void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 {
     // Highlight/replace all the occurences of the text
@@ -732,7 +712,7 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     // Clear any previous hihghlighting, if needed
 
     if (pHighlightAll)
-        clearHighlighting();
+        mEditor->clearHighlighting();
 
     // Keep track of the first visible line, of our current line/column, and of
     // the position of our scrollbars
@@ -744,7 +724,8 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     int horizontalScrollBarPosition = mEditor->horizontalScrollBar()->value();
     int verticalScrollBarPosition = mEditor->verticalScrollBar()->value();
 
-    // Go to the beginning of the of our editor
+    // Go to the beginning of the of our editor and clear any existing
+    // highlighting
 
     mEditor->QsciScintilla::setCursorPosition(0, 0);
 
@@ -767,13 +748,10 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 
         // Our new position is fine, so highlight/replace the occurrence
 
-        if (pHighlightAll) {
-            mEditor->fillIndicatorRange(line, column-mFindReplace->findText().length(),
-                                        line, column,
-                                        mHighlightIndicatorNumber);
-        } else {
+        if (pHighlightAll)
+            mEditor->addHighlighting(line, column-mFindReplace->findText().length(), line, column);
+        else
             mEditor->replace(mFindReplace->replaceText());
-        }
 
         // Initialise our first line/column, if needed
 
@@ -914,7 +892,7 @@ void EditorWidget::findTextChanged(const QString &pText)
     // original position
 
     if (pText.isEmpty()) {
-        clearHighlighting();
+        mEditor->clearHighlighting();
 
         mEditor->setSelection(mCurrentLine, mCurrentColumn,
                               mCurrentLine, mCurrentColumn);

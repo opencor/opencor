@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "corecliutils.h"
 #include "qscintillasupportglobal.h"
 
 //==============================================================================
@@ -125,6 +126,12 @@ public:
 
     int zoomLevel() const;
 
+    QIntList highlightedLines() const;
+
+    void clearHighlighting();
+    void addHighlighting(int pFromLine, int pFromColumn,
+                         int pToLine, int pToColumn);
+
     static QString specials(const QString &pString);
 
 protected:
@@ -150,6 +157,10 @@ private:
 
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;
+
+    QIntList mHighlightedLines;
+
+    int mHighlightIndicatorNumber;
 
     void updateColors();
 
