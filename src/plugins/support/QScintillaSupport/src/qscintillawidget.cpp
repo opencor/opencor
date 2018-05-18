@@ -60,7 +60,7 @@ void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
 
     // Draw our position
 
-    static const QColor PositionColor = Qt::darkGray;
+    static const QPen PositionPen = QPen(Qt::darkGray);
 
     int line;
     int lastLine;
@@ -69,25 +69,24 @@ void QScintillaScrollBar::paintEvent(QPaintEvent *pEvent)
     mOwner->getCursorPosition(&line, &dummy);
     mOwner->lineIndexFromPosition(mOwner->text().length(), &lastLine, &dummy);
 
-    int cursorPosition = line*height()/(lastLine+1);
+    double positionScaling = double(height()-1)/lastLine;
+    int cursorPosition = line*positionScaling;
 
     QPainter painter(this);
 
-    painter.fillRect(0, cursorPosition, width(), 3, PositionColor);
+    painter.setPen(PositionPen);
+    painter.drawLine(0, cursorPosition, width(), cursorPosition);
 
     // Draw our highlights
 
-    static const QPen HighlightFillColor   = QColor(255, 221, 0);
-    static const QPen HighlightBorderColor = QColor(204, 170, 0);
+    static const QPen HighlightPen = QColor(0, 192, 0);
+
+    painter.setPen(HighlightPen);
 
     foreach (int highlightedLine, mOwner->highlightedLines()) {
-        cursorPosition = highlightedLine*height()/(lastLine+1);
+        cursorPosition = highlightedLine*positionScaling;
 
-        painter.setPen(HighlightFillColor);
-        painter.drawLine(1, cursorPosition, width()-2, cursorPosition);
-
-        painter.setPen(HighlightBorderColor);
-        painter.drawRect(0, cursorPosition-1, width()-1, 2);
+        painter.drawLine(0, cursorPosition, width(), cursorPosition);
     }
 }
 
