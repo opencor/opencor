@@ -175,8 +175,6 @@ private:
     int mCurrentLine;
     int mCurrentColumn;
 
-    bool mFindReplaceVisible;
-
     QIntList mReadOnlyStyles;
 
     EditorWidgetFindReplaceWidget * findReplace();

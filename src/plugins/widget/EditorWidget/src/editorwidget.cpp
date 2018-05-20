@@ -116,7 +116,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     mHighlightedLines(QIntList()),
     mCurrentLine(0),
     mCurrentColumn(0),
-    mFindReplaceVisible(false),
     mReadOnlyStyles(QIntList())
 {
     // Create and set our vertical layout
@@ -640,7 +639,7 @@ bool EditorWidget::findReplaceIsVisible() const
 {
     // Return whether our find/replace widget is visible
 
-    return mFindReplaceVisible;
+    return mFindReplace->isVisible();
 }
 
 //==============================================================================
@@ -673,8 +672,6 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
     }
 
     // Show/hide our find/replace widget
-
-    mFindReplaceVisible = pVisible;
 
     mSeparator->setVisible(pVisible);
     mFindReplace->setVisible(pVisible);
@@ -945,7 +942,7 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 {
     // Some key combinations from our editor
 
-    if (    mFindReplaceVisible
+    if (    mFindReplace->isVisible()
         && !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
