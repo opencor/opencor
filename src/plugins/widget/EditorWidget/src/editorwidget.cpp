@@ -806,8 +806,7 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     int horizontalScrollBarPosition = mEditor->horizontalScrollBar()->value();
     int verticalScrollBarPosition = mEditor->verticalScrollBar()->value();
 
-    // Go to the beginning of the of our editor and clear any existing
-    // highlighting
+    // Go to the beginning of our editor
 
     mEditor->QsciScintilla::setCursorPosition(0, 0);
 
