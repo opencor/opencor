@@ -951,11 +951,19 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
     } else {
         pHandled = false;
 
-        // Propagate the key event to our main window, in case it needs to
-        // handle some key event (e.g. handle Esc to exit full-screen mode on
-        // macOS)
+        // Update our highlighting all if our find/replace widget is visible and
+        // has some find text, otherwise propagate the key event to our main
+        // window, in case it needs to handle some key event (e.g. handle Esc to
+        // exit full-screen mode on macOS)
+        // Note: regarding highlighting all, we need to do that in case we have
+        //       some highlighting and then add some text, in which case the new
+        //       text might indeed need highlighting and our vertical scroll bar
+        //       updating...
 
-        QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
+        if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty())
+            highlightAll();
+        else
+            QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
     }
 }
 
