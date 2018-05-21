@@ -660,12 +660,12 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
 
         if (!word.isEmpty()) {
             mFindReplace->setActive(false);
-                mEditor->selectWordAt(line, column);
-
                 mFindReplace->setFindText(word);
             mFindReplace->setActive(true);
 
             highlightAll();
+
+            mEditor->selectWordAt(line, column);
         } else {
             mFindReplace->selectFindText();
         }
