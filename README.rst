@@ -8,8 +8,3 @@ Here are a few links, which you might find useful:
 You might also be interested in our `users <https://groups.google.com/forum/#!forum/opencor-users>`_ and/or `developers <https://groups.google.com/forum/#!forum/opencor-developers>`_ mailing lists, as well as in our `published article <http://dx.doi.org/10.3389/fphys.2015.00026>`_.
 
 Please `contact us <http://www.opencor.ws/user/contactUs.html>`_ if you have any questions about OpenCOR.
-
-|Build Status|
-
-.. |Build Status| image:: https://travis-ci.org/opencor/opencor.svg?branch=master
-   :target: https://travis-ci.org/opencor/opencor

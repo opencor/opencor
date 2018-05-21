@@ -1070,7 +1070,7 @@ void SimulationExperimentViewSimulationWidget::finalize()
     // reloading ourselves
 
     if (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)
-        initialiseTrackers();
+        initializeTrackers();
 
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
@@ -1447,7 +1447,7 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initialiseTrackers()
+void SimulationExperimentViewSimulationWidget::initializeTrackers(bool pInitialzeGraphPanelsWidgetSizes)
 {
     // Keep track of our simulation, solver, graph panel and graph properties,
     // and check for changes whenever a property gets changed
@@ -1498,7 +1498,7 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
                 Qt::UniqueConnection);
     }
 
-    mGraphPanelsWidgetSizes = QIntList();
+    mGraphPanelsWidgetSizes = pInitialzeGraphPanelsWidgetSizes?mContentsWidget->graphPanelsWidget()->sizes():QIntList();
     mGraphPanelsWidgetSizesModified = false;
 }
 
@@ -2073,7 +2073,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
         // Reinitialise our trackers, if we are not dealing with a CellML file
 
         if (!isCellmlFile)
-            initialiseTrackers();
+            initializeTrackers(true);
     }
 }
 
@@ -2248,7 +2248,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         // file nor a SED-ML file
 
         if (!isCellmlOrSedmlFile)
-            initialiseTrackers();
+            initializeTrackers(true);
     }
 }
 
@@ -3009,7 +3009,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Initialise our trackers, so we know if a SED-ML file or COMBINE archive
     // has been modified
 
-    initialiseTrackers();
+    initializeTrackers();
 
     return true;
 }

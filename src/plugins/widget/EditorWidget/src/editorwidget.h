@@ -123,6 +123,9 @@ public:
 
     void selectAll();
 
+    bool wordWrap() const;
+    void setWordWrap(bool pWordWrap);
+
     void resetUndoHistory();
 
     QLabel * cursorPositionWidget() const;
@@ -155,8 +158,6 @@ private:
     bool findText(const QString &pText, bool pForward);
 
 signals:
-    void zoomLevelChanged(int pZoomLevel);
-
     void cursorPositionChanged(int pRow, int pColumn);
 
     void textChanged();
@@ -176,8 +177,6 @@ public slots:
     void replaceAll();
 
 private slots:
-    void zoomLevelChanged();
-
     void keepTrackOfCursorPosition(int pLine, int pColumn);
 
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);

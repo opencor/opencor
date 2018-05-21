@@ -105,6 +105,7 @@ public:
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
 
     QDomDocument domDocument() const;
+    QDomElement modelElement() const;
 
     CellmlTextViewParserMessages messages() const;
 
@@ -116,6 +117,7 @@ private:
     CellMLSupport::CellmlFile::Version mCellmlVersion;
 
     QDomDocument mDomDocument;
+    QDomElement mModelElement;
 
     CellmlTextViewParserMessages mMessages;
 

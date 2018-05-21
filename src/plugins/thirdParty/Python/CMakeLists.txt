@@ -274,7 +274,10 @@ else()
             https://github.com/opencor/python-cmake-buildsystem.git
         GIT_TAG
             ${GIT_TAG}
+        CMAKE_GENERATOR
+            ${CMAKE_GENERATOR}
         CMAKE_ARGS
+            ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             ${CMAKE_INSTALL_RPATH_OPTION}

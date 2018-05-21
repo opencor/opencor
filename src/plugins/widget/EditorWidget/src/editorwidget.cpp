@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFrame>
 #include <QKeyEvent>
 #include <QLabel>
+#include <QMainWindow>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QVBoxLayout>
@@ -89,9 +90,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     // Note: we cannot use the new connect() syntax since the signal is located
     //       in our QScintilla plugin and that we don't know anything about
     //       it...
-
-    connect(mEditor, SIGNAL(SCN_ZOOM()),
-            this, SLOT(zoomLevelChanged()));
 
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
             this, SIGNAL(cursorPositionChanged(int, int)));
@@ -156,6 +154,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
 //==============================================================================
 
+static const auto SettingsEditorWidgetWordWrap  = QStringLiteral("EditorWidgetWordWrap");
 static const auto SettingsEditorWidgetZoomLevel = QStringLiteral("EditorWidgetZoomLevel");
 
 //==============================================================================
@@ -164,6 +163,7 @@ void EditorWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our settings
 
+    setWordWrap(pSettings->value(SettingsEditorWidgetWordWrap, false).toBool());
     setZoomLevel(pSettings->value(SettingsEditorWidgetZoomLevel, 0).toInt());
 }
 
@@ -173,6 +173,7 @@ void EditorWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
+    pSettings->setValue(SettingsEditorWidgetWordWrap, wordWrap());
     pSettings->setValue(SettingsEditorWidgetZoomLevel, zoomLevel());
 }
 
@@ -194,8 +195,9 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
     if (!pEditorWidget || (pEditorWidget == this))
         return;
 
-    // Update our zoom level
+    // Update our word wrap mode and zoom level
 
+    setWordWrap(pEditorWidget->wordWrap());
     setZoomLevel(pEditorWidget->zoomLevel());
 
     // Show/hide our find/replace widget
@@ -461,6 +463,24 @@ void EditorWidget::selectAll()
     // Select all the text, if any, in our editor
 
     mEditor->selectAll();
+}
+
+//==============================================================================
+
+bool EditorWidget::wordWrap() const
+{
+    // Return whether we word wrap the text
+
+    return mEditor->wrapMode() == QsciScintilla::WrapWord;
+}
+
+//==============================================================================
+
+void EditorWidget::setWordWrap(bool pWordWrap)
+{
+    // Word wrap (or not) the text
+
+    mEditor->setWrapMode(pWordWrap?QsciScintilla::WrapWord:QsciScintilla::WrapNone);
 }
 
 //==============================================================================
@@ -735,15 +755,6 @@ void EditorWidget::replaceAll()
 
 //==============================================================================
 
-void EditorWidget::zoomLevelChanged()
-{
-    // Let people know that the zoom level has changed
-
-    emit zoomLevelChanged(zoomLevel());
-}
-
-//==============================================================================
-
 void EditorWidget::keepTrackOfCursorPosition(int pLine, int pColumn)
 {
     // Keep track of our new position within our editor
@@ -760,7 +771,8 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 {
     // Some key combinations from our editor
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+    if (    mFindReplaceVisible
+        && !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
@@ -770,6 +782,12 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         pHandled = true;
     } else {
         pHandled = false;
+
+        // Propagate the key event to our main window, in case it needs to
+        // handle some key event (e.g. handle Esc to exit full-screen mode on
+        // macOS)
+
+        QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
     }
 }
 

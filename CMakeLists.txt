@@ -11,6 +11,7 @@ option(ENABLE_TEST_PLUGINS "Enable the test plugins to be built" OFF)
 option(ENABLE_TESTS "Enable the tests to be built" OFF)
 
 if(NOT WIN32 AND NOT APPLE)
+    option(USE_PREBUILT_ICU_PACKAGE "Use the pre-built version of the ICU package" ON)
     option(USE_PREBUILT_MESA_PACKAGE "Use the pre-built version of the Mesa package" ON)
 endif()
 
@@ -301,10 +302,19 @@ elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 endif()
 
-# Version of ICU that we are using on Windows
+# On Windows, specify the version of ICU that we are using while on Linux, add
+# our copy of the ICU and Mesa libraries
+# Note #1: On Linux, ICU is needed so that our external projects that need ICU
+#          (e.g. QtWebKit) can rely on the ICU version that we want to use...
+# Note #2: On Linux, Mesa is needed so that we can run OpenCOR on machines that
+#          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
+#          in VirtualBox)...
 
 if(WIN32)
     set(ICU_VERSION 57)
+elseif(NOT APPLE)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
 endif()
 
 # Retrieve or build our copy of QtWebKit
@@ -1009,7 +1019,7 @@ endif()
 # Build the CLI version of OpenCOR (Windows specific)
 # Note: when it comes to WINDOWS_CLI_PROJECT_NAME, we used to have it set to
 #       ${CMAKE_PROJECT_NAME}.com, but Ninja found a duplicate rule (from a copy
-#       command), so now we use '_' instead of '.'...
+#       command), so now we use '_' instead...
 
 if(WIN32)
     qt5_wrap_cpp(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
@@ -1074,17 +1084,10 @@ if(APPLE)
     macos_clean_up_file_with_qt_dependencies(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${CMAKE_PROJECT_NAME})
 
     # Qt libraries required by OpenCOR
-    # Note: the Qt Brew formula that we use on Travis CI somehow results in some
-    #       of our tests generating messages about two frameworks being
-    #       available and that one of them will be used, but that we don't know
-    #       which one. So, to avoid those messages, we simply don't deploy the
-    #       Qt frameworks...
 
-    if(NOT ENABLE_TRAVIS_CI)
-        foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
-            macos_deploy_qt_library(${QT_LIBRARY})
-        endforeach()
-    endif()
+    foreach(QT_LIBRARY ${MACOS_QT_LIBRARIES})
+        macos_deploy_qt_library(${QT_LIBRARY})
+    endforeach()
 
     # Qt plugins required by OpenCOR
 
@@ -1186,11 +1189,9 @@ else()
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
     else()
-        # Add our copy of the Mesa library so that we can run OpenCOR on
-        # machines that don't have 'proper' OpenGL support (e.g. on a Linux
-        # virtual machine in VirtualBox)
+        # Make sure that OpenCOR uses RPATH rather than RUNPATH
 
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
+        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME})
     endif()
 endif()
 
@@ -1354,16 +1355,16 @@ else()
 
     install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
 
-    # Libraries needed on Ubuntu
+    # Libraries needed on Ubuntu 16.04 LTS
 
     foreach(LIBRARY app base interfaces pbutils reamer video)
         set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
 
         get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
 
-        install(FILES ${REAL_FULL_LIBRARY}
-                DESTINATION lib
-                RENAME ${FULL_LIBRARY})
+        if(EXISTS ${REAL_FULL_LIBRARY})
+            linux_deploy_system_library(${REAL_FULL_LIBRARY} ${FULL_LIBRARY})
+        endif()
     endforeach()
 
     # Mesa library
@@ -1391,18 +1392,8 @@ else()
             set(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR})
         endif()
 
-        linux_deploy_qt_library(${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+        linux_deploy_qt_library(DIRECT ${REAL_QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     endforeach()
-
-    if(NOT ENABLE_TRAVIS_CI)
-        # We are building OpenCOR locally, so we can deploy the ICU libraries
-        # Note: indeed, on Travis CI, the PPA we use doesn't have those
-        #       libraries...
-
-        foreach(QT_FILE icudata icui18n icuuc)
-            linux_deploy_qt_library(${QT_LIBRARY_DIR} ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.56)
-        endforeach()
-    endif()
 
     # Qt plugins required by OpenCOR
 
@@ -1410,15 +1401,7 @@ else()
     linux_deploy_qt_plugin(platforms qxcb)
     linux_deploy_qt_plugin(printsupport cupsprintersupport)
     linux_deploy_qt_plugin(sqldrivers qsqlite)
-
-    if(NOT ENABLE_TRAVIS_CI)
-        # We are building OpenCOR locally, so we can deploy the
-        # xcbglintegrations plugins
-        # Note: indeed, on Travis CI, the PPA we use doesn't have those
-        #       plugins...
-
-        linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
-    endif()
+    linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
 
     # Shell script to run OpenCOR
 
