@@ -748,23 +748,23 @@ void EditorWidget::replace()
         // Make sure that the currently selected text is a whole word, should
         // this be requested
 
-        QString crtSelectedText = mEditor->selectedText();
-        int crtLine;
-        int crtColumn;
+        QString selectedText = mEditor->selectedText();
+        int line;
+        int column;
 
-        mEditor->getCursorPosition(&crtLine, &crtColumn);
+        mEditor->getCursorPosition(&line, &column);
 
         if (   mFindReplace->searchWholeWordsOnly()
-            && crtSelectedText.compare(mEditor->wordAt(crtLine, crtColumn))) {
+            && selectedText.compare(mEditor->wordAt(line, column))) {
             return;
         }
 
         // Replace the currently selected text if we have a match
 
-        if (!crtSelectedText.compare(mFindReplace->findText(),
-                                     mFindReplace->isCaseSensitive()?
-                                         Qt::CaseSensitive:
-                                         Qt::CaseInsensitive)) {
+        if (!selectedText.compare(mFindReplace->findText(),
+                                  mFindReplace->isCaseSensitive()?
+                                      Qt::CaseSensitive:
+                                      Qt::CaseInsensitive)) {
             mEditor->replace(mFindReplace->replaceText());
         }
     }
