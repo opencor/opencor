@@ -114,8 +114,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
     Core::Widget(pParent),
     mHighlightedLines(QIntList()),
-    mCurrentLine(0),
-    mCurrentColumn(0),
     mReadOnlyStyles(QIntList())
 {
     // Create and set our vertical layout
@@ -185,10 +183,9 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     connect(mEditor, SIGNAL(canSelectAll(bool)),
             this, SIGNAL(canSelectAll(bool)));
 
-    // Keep track of our position within our editor
+    // Update our editor's vertical scroll bar whenever our cursor position
+    // changes
 
-    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(keepTrackOfCursorPosition(int, int)));
     connect(this, &EditorWidget::cursorPositionChanged,
             mVerticalScrollBar, QOverload<>::of(&EditorScrollBar::update));
 
@@ -654,11 +651,16 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
     //       hence we inactivate and then reactivate our find/replace widget...
 
     if (pVisible) {
-        QString crtWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
+        int line;
+        int column;
+
+        mEditor->getCursorPosition(&line, &column);
+
+        QString crtWord = mEditor->wordAt(line, column);
 
         if (!crtWord.isEmpty()) {
             mFindReplace->setActive(false);
-                mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
+                mEditor->selectWordAt(line, column);
 
                 mFindReplace->setFindText(crtWord);
             mFindReplace->setActive(true);
@@ -704,7 +706,6 @@ bool EditorWidget::findPrevious()
     int oldPosition = mEditor->currentPosition();
 
     mEditor->setCurrentPosition(oldPosition-mEditor->selectedText().length());
-    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
 
     bool res = findText(mFindReplace->findText(), false);
 
@@ -719,8 +720,6 @@ bool EditorWidget::findPrevious()
 bool EditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
-
-    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
 
     return findText(mFindReplace->findText(), true);
 }
@@ -787,11 +786,12 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     // Highlight/replace all the occurences of the text
     // Note: the original plan was to call mEditor->findFirst() the first time
     //       round and with wrapping disabled, and then mEditor->findNext()
-    //       until we have found all occurrences, but for some reasons this can
-    //       result in some occurrences being missed, hence the way we do it
+    //       until we had found all the occurrences, but for some reasons this
+    //       can result in some occurrences being missed, hence the way we do it
     //       below...
 
-    // Clear any previous hihghlighting, if needed
+    // Clear any previous hihghlighting, in case we want to highlight all the
+    // occurences of the text
 
     if (pHighlightAll)
         clearHighlighting();
@@ -799,9 +799,11 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     // Keep track of the first visible line, of our current line/column, and of
     // the position of our scrollbars
 
-    int currentFirstVisibleLine = mEditor->firstVisibleLine();
-    int currentLine = mCurrentLine;
-    int currentColumn = mCurrentColumn;
+    int firstVisibleLine = mEditor->firstVisibleLine();
+    int line;
+    int column;
+
+    mEditor->getCursorPosition(&line, &column);
 
     int horizontalScrollBarPosition = mEditor->horizontalScrollBar()->value();
     int verticalScrollBarPosition = mEditor->verticalScrollBar()->value();
@@ -814,51 +816,59 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
 
     int firstLine = -1;
     int firstColumn = -1;
-    int line;
-    int column;
+    int crtLine;
+    int crtColumn;
 
     while (findNext()) {
         // Retrieve our new position
 
-        mEditor->getCursorPosition(&line, &column);
+        mEditor->getCursorPosition(&crtLine, &crtColumn);
 
-        // Check whether we are back to our first line/column
+        // Check whether we are back to our first line/column, in case we are
+        // trying to highlight all the occurrences of the text
 
-        if ((line == firstLine) && (column == firstColumn))
+        if (    pHighlightAll
+            && (crtLine == firstLine) && (crtColumn == firstColumn)) {
             break;
+        }
 
-        // Our new position is fine, so highlight/replace the occurrence
+        // Our new position is fine, so highlight/replace the occurrence of the
+        // text
 
         if (pHighlightAll)
-            addHighlighting(line, column-mFindReplace->findText().length(), line, column);
+            addHighlighting(crtLine, crtColumn-mFindReplace->findText().length(), crtLine, crtColumn);
         else
             mEditor->replace(mFindReplace->replaceText());
 
         // Initialise our first line/column, if needed
 
         if ((firstLine == -1) && (firstColumn == -1)) {
-            firstLine = line;
-            firstColumn = column;
+            firstLine = crtLine;
+            firstColumn = crtColumn;
         }
     }
 
-    // Reset the first visible line and go to our original current position,
-    // after having corrected it, if needed
+    // Go back to our original first visible line and position, after having
+    // corrected it (if needed, i.e. in case we replaced all the occurrences of
+    // the text), and original scroll bar positions
 
-    mEditor->setFirstVisibleLine(currentFirstVisibleLine);
+    mEditor->setFirstVisibleLine(firstVisibleLine);
 
     if (!pHighlightAll) {
-        currentLine = qMin(currentLine, mEditor->lines()-1);
-        currentColumn = qMin(currentColumn, mEditor->lineLength(currentLine)-1);
+        line = qMin(line, mEditor->lines()-1);
+        column = qMin(column, mEditor->lineLength(line)-1);
     }
 
-    mCurrentLine = currentLine;
-    mCurrentColumn = currentColumn;
-
-    mEditor->QsciScintilla::setCursorPosition(currentLine, currentColumn);
+    mEditor->QsciScintilla::setCursorPosition(line, column);
 
     mEditor->horizontalScrollBar()->setValue(horizontalScrollBarPosition);
     mEditor->verticalScrollBar()->setValue(verticalScrollBarPosition);
+
+    // Clear any previous hihghlighting, in case we replaced all the occurences
+    // of the text
+
+    if (!pHighlightAll)
+        clearHighlighting();
 }
 
 //==============================================================================
@@ -921,18 +931,6 @@ void EditorWidget::highlightAll()
     // Highlight all the occurences of the text
 
     doHighlightAllOrReplaceAll(true);
-}
-
-//==============================================================================
-
-void EditorWidget::keepTrackOfCursorPosition(int pLine, int pColumn)
-{
-    // Keep track of our new position within our editor
-
-    if (mEditor->hasFocus()) {
-        mCurrentLine = pLine;
-        mCurrentColumn = pColumn;
-    }
 }
 
 //==============================================================================
@@ -1003,11 +1001,16 @@ bool EditorWidget::findText(const QString &pText, bool pForward)
 {
     // Find the previous/next occurrence of the given text
 
+    int line;
+    int column;
+
+    mEditor->getCursorPosition(&line, &column);
+
     return mEditor->findFirst(pText,
                               mFindReplace->useRegularExpression(),
                               mFindReplace->isCaseSensitive(),
                               mFindReplace->searchWholeWordsOnly(),
-                              true, pForward, mCurrentLine, mCurrentColumn);
+                              true, pForward, line, column);
 }
 
 //==============================================================================
@@ -1021,8 +1024,7 @@ void EditorWidget::findTextChanged(const QString &pText)
     if (pText.isEmpty()) {
         clearHighlighting();
 
-        mEditor->setSelection(mCurrentLine, mCurrentColumn,
-                              mCurrentLine, mCurrentColumn);
+        mEditor->setSelection(0, 0, 0, 0);
     } else {
         // Look for the first occurrence of the given text in our editor, but
         // first highlight all the occurrences of the given text

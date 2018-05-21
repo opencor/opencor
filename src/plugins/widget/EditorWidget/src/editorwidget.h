@@ -172,9 +172,6 @@ private:
 
     QIntList mHighlightedLines;
 
-    int mCurrentLine;
-    int mCurrentColumn;
-
     QIntList mReadOnlyStyles;
 
     EditorWidgetFindReplaceWidget * findReplace();
@@ -203,8 +200,6 @@ public slots:
     bool findNext();
 
 private slots:
-    void keepTrackOfCursorPosition(int pLine, int pColumn);
-
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
     void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
