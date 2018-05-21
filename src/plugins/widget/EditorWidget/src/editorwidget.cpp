@@ -849,18 +849,17 @@ void EditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
     }
 
     // Go back to our original first visible line, position (after having
-    // corrected it) and scroll bar positions
-    // Note: regarding our original position, we only need to go back to it if
-    //       we replaced all the occurrences of the text...
+    // corrected it, but only if we replaced all the occurrences of the text)
+    // and scroll bar positions
 
     mEditor->setFirstVisibleLine(firstVisibleLine);
 
     if (!pHighlightAll) {
         line = qMin(line, mEditor->lines()-1);
         column = qMin(column, mEditor->lineLength(line)-1);
-
-        mEditor->QsciScintilla::setCursorPosition(line, column);
     }
+
+    mEditor->QsciScintilla::setCursorPosition(line, column);
 
     mEditor->horizontalScrollBar()->setValue(horizontalScrollBarPosition);
     mEditor->verticalScrollBar()->setValue(verticalScrollBarPosition);
