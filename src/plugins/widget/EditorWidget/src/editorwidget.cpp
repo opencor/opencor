@@ -656,13 +656,13 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
 
         mEditor->getCursorPosition(&line, &column);
 
-        QString crtWord = mEditor->wordAt(line, column);
+        QString word = mEditor->wordAt(line, column);
 
-        if (!crtWord.isEmpty()) {
+        if (!word.isEmpty()) {
             mFindReplace->setActive(false);
                 mEditor->selectWordAt(line, column);
 
-                mFindReplace->setFindText(crtWord);
+                mFindReplace->setFindText(word);
             mFindReplace->setActive(true);
 
             highlightAll();

@@ -340,7 +340,7 @@ int QScintillaWidget::findTextInRange(int pStartRange, int pEndRange,
 
 QString QScintillaWidget::wordAt(int pLine, int pColumn) const
 {
-    // Return the current word, if any
+    // Return the word, if any, at the given line/column
 
     return wordAtLineIndex(pLine, pColumn);
 }
@@ -349,7 +349,7 @@ QString QScintillaWidget::wordAt(int pLine, int pColumn) const
 
 void QScintillaWidget::selectWordAt(int pLine, int pColumn)
 {
-    // Return the current word, if any
+    // Select the word, if any, at the given line/column
 
     int position = positionFromLineIndex(pLine, pColumn);
 
