@@ -87,7 +87,7 @@ public:
 
     bool isSelectAllAvailable() const;
 
-    void del();
+    virtual void del();
 
     void resetUndoHistory();
 
@@ -132,8 +132,6 @@ private:
 
 signals:
     void canSelectAll(bool pCanSelectAll);
-
-    void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
 public slots:
     void zoomIn() override;

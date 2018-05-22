@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
-#include "editorwidget.h"
 #include "mathmlviewerwidget.h"
 
 //==============================================================================
@@ -39,6 +38,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace OpenCOR {
 namespace CellMLEditingView {
+
+//==============================================================================
+
+CellmlEditingViewWidgetEditorWidget::CellmlEditingViewWidgetEditorWidget(const QString &pContents,
+                                                                         bool pReadOnly,
+                                                                         QsciLexer *pLexer,
+                                                                         CellmlEditingViewWidget *pParent) :
+    EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, pParent),
+    mOwner(pParent)
+{
+}
+
+//==============================================================================
+
+bool CellmlEditingViewWidgetEditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
+{
+    // Give our owner a chance to handle our editor's key press event, if it
+    // wants
+
+    return mOwner->handleEditorKeyPressEvent(pEvent);
+}
 
 //==============================================================================
 
@@ -61,7 +81,7 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
     // Create our MathML viewer, editor and editor list widgets
 
     mMathmlViewerWidget = new MathMLViewerWidget::MathmlViewerWidget(this);
-    mEditorWidget = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
+    mEditorWidget = new CellmlEditingViewWidgetEditorWidget(pContents, pReadOnly, pLexer, this);
     mEditorListWidget = new EditorWidget::EditorListWidget(this);
 
     mMathmlViewerWidget->setObjectName("MathmlViewerWidget");
@@ -166,6 +186,17 @@ void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pEditingWi
 
     mMathmlViewerWidget->updateSettings(pEditingWidget->mathmlViewer());
     mEditorWidget->updateSettings(pEditingWidget->editorWidget());
+}
+
+//==============================================================================
+
+bool CellmlEditingViewWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // By default, we don't handle our editor's key press event
+
+    return false;
 }
 
 //==============================================================================

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "cellmleditingviewwidget.h"
 #include "cellmlfile.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
@@ -39,12 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace CellMLEditingView {
-    class CellmlEditingViewWidget;
-}   // namespace CellMLEditingView
 
 //==============================================================================
 
@@ -65,10 +60,14 @@ namespace CellMLTextView {
 
 //==============================================================================
 
+class CellmlTextViewWidgetEditingWidget;
+
+//==============================================================================
+
 class CellmlTextViewWidgetData
 {
 public:
-    explicit CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
+    explicit CellmlTextViewWidgetData(CellmlTextViewWidgetEditingWidget *pEditingWidget,
                                       const QString &pSha1, bool pValid,
                                       const CellMLSupport::CellmlFile::Version &pCellmlVersion,
                                       const QDomNode &pDocumentationNode,
@@ -77,7 +76,7 @@ public:
 
     void retranslateUi();
 
-    CellMLEditingView::CellmlEditingViewWidget * editingWidget() const;
+    CellmlTextViewWidgetEditingWidget * editingWidget() const;
 
     QString sha1() const;
     void setSha1(const QString &pSha1);
@@ -97,7 +96,7 @@ public:
     void setConvertedFileContents(const QString &pConvertedFileContents);
 
 private:
-    CellMLEditingView::CellmlEditingViewWidget *mEditingWidget;
+    CellmlTextViewWidgetEditingWidget *mEditingWidget;
     QString mSha1;
     bool mValid;
     CellMLSupport::CellmlFile::Version mCellmlVersion;
@@ -105,6 +104,25 @@ private:
     QDomDocument mRdfNodes;
     QString mFileContents;
     QString mConvertedFileContents;
+};
+
+//==============================================================================
+
+class CellmlTextViewWidgetEditingWidget : public CellMLEditingView::CellmlEditingViewWidget
+{
+    Q_OBJECT
+
+public:
+    explicit CellmlTextViewWidgetEditingWidget(const QString &pContents,
+                                               bool pReadOnly,
+                                               QsciLexer *pLexer,
+                                               QWidget *pParent);
+
+    bool handleEditorKeyPressEvent(QKeyEvent *pEvent) override;
+
+private:
+    bool commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
+                                int pLineNumber, bool pCommentLine);
 };
 
 //==============================================================================
@@ -150,7 +168,7 @@ private:
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 
-    CellMLEditingView::CellmlEditingViewWidget *mEditingWidget;
+    CellmlTextViewWidgetEditingWidget *mEditingWidget;
 
     QMap<QString, CellmlTextViewWidgetData *> mData;
 
@@ -165,9 +183,6 @@ private:
 
     QString mContentMathmlEquation;
 
-    bool commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
-                                int pLineNumber, bool pCommentLine);
-
     bool parse(const QString &pFileName, bool pOnlyErrors = false);
 
     QString partialStatement(int pPosition, int &pFromPosition,
@@ -177,8 +192,6 @@ private:
     QString statement(int pPosition) const;
 
 private slots:
-    void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
-
     void updateViewer();
 
     void selectFirstItemInEditorList();
