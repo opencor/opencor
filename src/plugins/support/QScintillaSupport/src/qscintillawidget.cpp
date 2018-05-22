@@ -580,46 +580,34 @@ void QScintillaWidget::focusOutEvent(QFocusEvent *pEvent)
 
 void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
 {
-    // Let people know that a key has been pressed
+    // Increase/decrease/reset the font size, if needed
 
-    bool handled = false;
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        if (pEvent->key() == Qt::Key_0) {
+            zoomTo(0);
 
-    emit keyPressed(pEvent, handled);
+            pEvent->accept();
+        } else if (   (pEvent->key() == Qt::Key_Plus)
+                   || (pEvent->key() == Qt::Key_Equal)) {
+            zoomIn();
 
-    // Carry on as normal, if the event wasn't handled
+            pEvent->accept();
+        } else if (pEvent->key() == Qt::Key_Minus) {
+            zoomOut();
 
-    if (handled) {
-        pEvent->accept();
-    } else {
-        // Reset the font size, if needed
-
-        if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-            &&  (pEvent->modifiers() & Qt::ControlModifier)
-            && !(pEvent->modifiers() & Qt::AltModifier)
-            && !(pEvent->modifiers() & Qt::MetaModifier)) {
-            if (pEvent->key() == Qt::Key_0) {
-                zoomTo(0);
-
-                pEvent->accept();
-            } else if (   (pEvent->key() == Qt::Key_Plus)
-                       || (pEvent->key() == Qt::Key_Equal)) {
-                zoomIn();
-
-                pEvent->accept();
-            } else if (pEvent->key() == Qt::Key_Minus) {
-                zoomOut();
-
-                pEvent->accept();
-            } else {
-                // Default handling of the event
-
-                QsciScintilla::keyPressEvent(pEvent);
-            }
+            pEvent->accept();
         } else {
             // Default handling of the event
 
             QsciScintilla::keyPressEvent(pEvent);
         }
+    } else {
+        // Default handling of the event
+
+        QsciScintilla::keyPressEvent(pEvent);
     }
 }
 

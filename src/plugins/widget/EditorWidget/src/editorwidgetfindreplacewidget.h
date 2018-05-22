@@ -112,8 +112,8 @@ signals:
 
     void canFindReplace(bool pCanFindReplace);
 
-    void findPreviousRequested();
     void findNextRequested();
+    void findPreviousRequested();
 
     void replaceRequested();
     void replaceAndFindRequested();

@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
 #include "qscintillawidget.h"
@@ -358,8 +359,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         // Add support for some key mappings to our editor
 
-        connect(editingWidget->editorWidget()->editor(), &QScintillaSupport::QScintillaWidget::keyPressed,
-                this, &CellmlTextViewWidget::editorKeyPressed);
+//---ISSUE1414--- FIND A WAY TO GET RID OF THE BELOW...
+//        connect(editingWidget->editorWidget()->editor(), &QScintillaSupport::QScintillaWidget::keyPressed,
+//                this, &CellmlTextViewWidget::editorKeyPressed);
     }
 
     // Update our editing widget, if required

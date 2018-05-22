@@ -25,19 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "corecliutils.h"
+//#include "corecliutils.h"
 #include "editorwidgetglobal.h"
 #include "widget.h"
 
 //==============================================================================
 
-#include <QColor>
-#include <QScrollBar>
-#include <QString>
-
-//==============================================================================
-
-class QAction;
 class QFrame;
 class QLabel;
 class QMenu;
@@ -49,37 +42,12 @@ class QsciLexer;
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace QScintillaSupport {
-    class QScintillaWidget;
-}   // namespace QScintillaSupport
-
-//==============================================================================
-
 namespace EditorWidget {
 
 //==============================================================================
 
-class EditorWidget;
+class EditorWidgetEditorWidget;
 class EditorWidgetFindReplaceWidget;
-
-//==============================================================================
-
-class EDITORWIDGET_EXPORT EditorScrollBar : public QScrollBar
-{
-    Q_OBJECT
-
-public:
-    explicit EditorScrollBar(EditorWidget *pParent);
-
-protected:
-    void paintEvent(QPaintEvent *pEvent) override;
-
-private:
-    EditorWidget *mOwner;
-};
 
 //==============================================================================
 
@@ -98,7 +66,7 @@ public:
 
     void updateSettings(EditorWidget *pEditorWidget);
 
-    QScintillaSupport::QScintillaWidget * editor() const;
+    EditorWidgetEditorWidget * editor() const;
 
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
@@ -159,30 +127,15 @@ public:
 
     int styleAt(int pPosition) const;
 
-    QIntList highlightedLines() const;
+    bool findNext();
+    bool findPrevious();
 
 private:
-    QScintillaSupport::QScintillaWidget *mEditor;
+    EditorWidgetEditorWidget *mEditor;
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
 
-    EditorScrollBar *mVerticalScrollBar;
-
-    int mHighlightIndicatorNumber;
-
-    QIntList mHighlightedLines;
-
-    QIntList mReadOnlyStyles;
-
     EditorWidgetFindReplaceWidget * findReplace();
-
-    bool findText(const QString &pText, bool pForward);
-
-    void doHighlightAllOrReplaceAll(bool pHighlightAll);
-
-    void clearHighlighting();
-    void addHighlighting(int pFromLine, int pFromColumn,
-                         int pToLine, int pToColumn);
 
 signals:
     void cursorPositionChanged(int pRow, int pColumn);
@@ -195,21 +148,10 @@ signals:
 
     void canSelectAll(bool pCanSelectAll);
 
-public slots:
-    bool findPrevious();
-    bool findNext();
-
 private slots:
-    void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
     void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
-    void findTextChanged(const QString &pText);
-
-    void replace();
-    void replaceAndFind();
-    void replaceAll();
-
-    void highlightAll();
+    void hideFindReplace();
 };
 
 //==============================================================================
