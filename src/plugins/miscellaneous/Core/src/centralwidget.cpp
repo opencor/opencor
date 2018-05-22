@@ -739,8 +739,8 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 
 //==============================================================================
 
-QString CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
-                                const QString &pUrl, bool pShowWarning)
+void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
+                             const QString &pUrl)
 {
     // Make sure that modes are available and that the file exists
 
@@ -749,7 +749,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
         // if we are not starting OpenCOR, i.e. only if our main window is
         // visible
 
-        if (pShowWarning && mainWindow()->isVisible()) {
+        if (mainWindow()->isVisible()) {
             warningMessageBox(pUrl.isEmpty()?
                                   tr("Open File"):
                                   tr("Open Remote File"),
@@ -758,7 +758,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
                                                                                      pFileName));
         }
 
-        return tr("'%1' could not be opened.").arg(pFileName);
+        return;
     }
 
     // Check whether the file is already opened and, if so, select it and leave
@@ -769,7 +769,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
         if (!mFileNames[i].compare(fileName)) {
             setTabBarCurrentIndex(mFileTabs, i);
 
-            return QString();
+            return;
         }
     }
 
@@ -814,8 +814,6 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
         qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
-
-    return QString();
 }
 
 //==============================================================================
@@ -844,7 +842,7 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
+void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 {
     // Make sure that pUrl really refers to a remote file
 
@@ -860,7 +858,9 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         //     /home/me/mymodel.cellml
         // so open the file as a local file and leave
 
-        return openFile(fileNameOrUrl, File::Local, QString(), pShowWarning);
+        openFile(fileNameOrUrl);
+
+        return;
     }
 
     // Check whether the remote file is already opened and if so select it,
@@ -888,18 +888,18 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             // our file manager to create a new remote file
 
             FileManager *fileManagerInstance = FileManager::instance();
-            FileManager::Status createStatus = fileManagerInstance->create(fileNameOrUrl, fileContents);
 
+#ifdef QT_DEBUG
+            FileManager::Status createStatus =
+#endif
+            fileManagerInstance->create(fileNameOrUrl, fileContents);
+
+#ifdef QT_DEBUG
             // Make sure that the file has indeed been created
 
-            if (createStatus != FileManager::Created) {
-#ifdef QT_DEBUG
+            if (createStatus != FileManager::Created)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
-                return tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
-            } else {
-                return QString("");
-            }
         } else {
             // We were not able to retrieve the contents of the remote file, so
             // let the user know about it
@@ -909,11 +909,9 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
                                   tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl)
                                                                                      .arg(formatMessage(errorMessage)));
             }
-
-            return tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
         }
     } else {
-        return openFile(fileName, File::Remote, fileNameOrUrl, pShowWarning);
+        openFile(fileName, File::Remote, fileNameOrUrl);
     }
 }
 
