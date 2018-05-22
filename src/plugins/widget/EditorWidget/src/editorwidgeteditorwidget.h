@@ -83,9 +83,6 @@ private:
 
     bool findText(const QString &pText, bool pForward);
 
-signals:
-    void hideFindReplaceWidgetRequested();
-
 public slots:
     void highlightAll();
     void replaceAll();

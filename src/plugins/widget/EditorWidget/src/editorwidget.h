@@ -122,7 +122,7 @@ public:
     int zoomLevel() const;
     void setZoomLevel(int pZoomLevel);
 
-    bool findReplaceIsVisible() const;
+    bool isFindReplaceVisible() const;
     void setFindReplaceVisible(bool pVisible);
 
     int styleAt(int pPosition) const;
@@ -147,9 +147,6 @@ signals:
     void canFindReplace(bool pCanFindReplace);
 
     void canSelectAll(bool pCanSelectAll);
-
-public slots:
-    void hideFindReplace();
 };
 
 //==============================================================================

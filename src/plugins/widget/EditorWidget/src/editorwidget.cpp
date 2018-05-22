@@ -111,11 +111,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::searchOptionsChanged,
             mEditor, &EditorWidgetEditorWidget::highlightAll);
 
-    // Keep track of when to hide our find/replace widget
-
-    connect(mEditor, &EditorWidgetEditorWidget::hideFindReplaceWidgetRequested,
-            this, &EditorWidget::hideFindReplace);
-
     // Add our editor and find/replace widgets to our layout
 
     layout->addWidget(mEditor);
@@ -128,7 +123,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     // Initially hide our find/replace widget
 
-    hideFindReplace();
+    setFindReplaceVisible(false);
 }
 
 //==============================================================================
@@ -181,7 +176,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
     // Show/hide our find/replace widget
 
-    setFindReplaceVisible(pEditorWidget->findReplaceIsVisible());
+    setFindReplaceVisible(pEditorWidget->isFindReplaceVisible());
 
     // Update the find/replace widget itself
     // Note: we must inactivate (and then reactivate) our find/replace widget
@@ -518,7 +513,7 @@ EditorWidgetFindReplaceWidget * EditorWidget::findReplace()
 
 //==============================================================================
 
-bool EditorWidget::findReplaceIsVisible() const
+bool EditorWidget::isFindReplaceVisible() const
 {
     // Return whether our find/replace widget is visible
 
@@ -598,15 +593,6 @@ bool EditorWidget::findPrevious()
     // Find the previous occurrence of the text in our editor
 
     return mEditor->findPrevious();
-}
-
-//==============================================================================
-
-void EditorWidget::hideFindReplace()
-{
-    // Hide our find/replace widget
-
-    setFindReplaceVisible(false);
 }
 
 //==============================================================================

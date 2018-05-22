@@ -407,7 +407,7 @@ void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
         &&  (pEvent->key() == Qt::Key_Escape)) {
-        mOwner->hideFindReplace();
+        mOwner->setFindReplaceVisible(false);
 
         pEvent->accept();
     } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)

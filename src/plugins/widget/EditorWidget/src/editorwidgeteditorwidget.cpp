@@ -94,7 +94,6 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
         &&  (pEvent->key() == Qt::Key_Escape)) {
-        emit hideFindReplaceWidgetRequested();
         mOwner->setFindReplaceVisible(false);
 
         pEvent->accept();
