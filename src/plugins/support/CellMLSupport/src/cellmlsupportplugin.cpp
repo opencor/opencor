@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlfileruntime.h"
 #include "cellmlinterface.h"
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"
@@ -61,6 +62,24 @@ CellMLSupportPlugin::CellMLSupportPlugin()
     static CellmlInterfaceData data(qobject_cast<FileTypeInterface *>(this));
 
     Core::globalInstance(CellmlInterfaceDataSignature, &data);
+
+    // Determine the mapping between a parameter type and its corresponding icon
+
+    static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
+    static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
+    static const QIcon ComputedConstantIcon = QIcon(":/CellMLSupport/computedConstant.png");
+    static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
+    static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
+    static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
+
+    CellmlFileRuntimeParameterIcons = QMap<int, QIcon>();
+
+    CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
+    CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
+    CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
+    CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
+    CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::State, StateIcon);
+    CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
 }
 
 //==============================================================================

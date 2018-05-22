@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QIcon>
 #include <QList>
+#include <QMap>
 #ifdef Q_OS_WIN
     #include <QSet>
     #include <QVector>
@@ -101,8 +102,6 @@ public:
 
     QString formattedUnit(const QString &pVoiUnit) const;
 
-    QIcon icon() const;
-
 private:
     QString mName;
     int mDegree;
@@ -115,6 +114,10 @@ private:
 //==============================================================================
 
 typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
+
+//==============================================================================
+
+extern QMap<int, QIcon> CellmlFileRuntimeParameterIcons;
 
 //==============================================================================
 

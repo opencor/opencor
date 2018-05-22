@@ -372,7 +372,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
 
-        property->setIcon(parameter->icon());
+        property->setIcon(CellMLSupport::CellmlFileRuntimeParameterIcons.value(parameter->type()));
 
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
@@ -478,7 +478,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
         // Add the current parameter to the 'current' component menu
 
-        QAction *parameterAction = componentMenu->addAction(parameter->icon(),
+        QAction *parameterAction = componentMenu->addAction(CellMLSupport::CellmlFileRuntimeParameterIcons.value(parameter->type()),
                                                             parameter->formattedName());
 
         // Create a connection to handle the graph requirement against our

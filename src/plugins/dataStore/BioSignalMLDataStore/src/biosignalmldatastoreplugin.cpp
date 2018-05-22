@@ -80,11 +80,12 @@ QString BioSignalMLDataStorePlugin::dataStoreName() const
 //==============================================================================
 
 DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pFileName,
-                                                               DataStore::DataStore *pDataStore) const
+                                                               DataStore::DataStore *pDataStore,
+                                                               const QMap<int, QIcon> &pIcons) const
 {
     // Ask which data should be exported, as well as some other information
 
-    BiosignalmlDataStoreDialog biosignalmlDataStoreDialog(pDataStore, Core::mainWindow());
+    BiosignalmlDataStoreDialog biosignalmlDataStoreDialog(pDataStore, pIcons, Core::mainWindow());
 
     if (biosignalmlDataStoreDialog.exec()) {
         // Now that we have the information we need, we can ask for the name of

@@ -70,6 +70,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 //==============================================================================
 
 DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
+                                 const QMap<int, QIcon> &pIcons,
                                  QWidget *pParent) :
     Core::Dialog(pParent),
     mGui(new Ui::DataStoreDialog),
@@ -158,7 +159,12 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
                 dataHierarchy = crtDataHierarchy;
             }
 
-            QStandardItem *dataItem = new QStandardItem(variable->icon(),
+            static const QIcon ErrorNodeIcon = QIcon(":/oxygen/emblems/emblem-important.png");
+
+            QIcon variableIcon = pIcons.value(variable->type());
+            QStandardItem *dataItem = new QStandardItem(variableIcon.isNull()?
+                                                            ErrorNodeIcon:
+                                                            variableIcon,
                                                         variable->label());
 
             dataItem->setCheckable(true);
