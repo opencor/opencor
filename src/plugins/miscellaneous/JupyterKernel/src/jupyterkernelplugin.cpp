@@ -151,17 +151,10 @@ void JupyterKernelPlugin::handleUrl(const QUrl &pUrl)
 static QString jupyterKernel = R"PYTHON(
 import os
 
-from ipykernel.eventloops import register_integration, enable_gui, loop_qt4
+from ipykernel.eventloops import register_integration, enable_gui
 from ipykernel.ipkernel import IPythonKernel
 
 import matplotlib
-
-
-@register_integration('opencor')
-def loop_opencor(kernel):
-    """Start a kernel with PyQt5 event loop integration."""
-    os.environ['QT_API'] = 'opencor'
-    return loop_qt4(kernel)
 
 
 class OpenCORKernel(IPythonKernel):
@@ -174,7 +167,7 @@ class OpenCORKernel(IPythonKernel):
         # Use the Jupyter notebook backend for matplotlib
         matplotlib.use('nbagg')
         # Work nicely with OpenCOR's Qt exec() loop
-        enable_gui('opencor', self)
+        enable_gui('pythonqt', self)
 
     def do_shutdown(self, restart):
         from PythonQt import QtGui
