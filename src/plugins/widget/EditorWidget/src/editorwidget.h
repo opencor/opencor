@@ -148,9 +148,7 @@ signals:
 
     void canSelectAll(bool pCanSelectAll);
 
-private slots:
-    void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);
-
+public slots:
     void hideFindReplace();
 };
 

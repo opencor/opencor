@@ -40,11 +40,10 @@ namespace EditorWidget {
 //==============================================================================
 
 EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
-                                                   EditorWidget *pOwner,
                                                    EditorWidgetFindReplaceWidget *pFindReplace,
-                                                   QWidget *pParent) :
+                                                   EditorWidget *pParent) :
     QScintillaSupport::QScintillaWidget(pLexer, pParent),
-    mOwner(pOwner),
+    mOwner(pParent),
     mFindReplace(pFindReplace),
     mReadOnlyStyles(QIntList()),
     mHighlightedLines(QIntList())

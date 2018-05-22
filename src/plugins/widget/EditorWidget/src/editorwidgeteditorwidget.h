@@ -47,9 +47,9 @@ class EDITORWIDGET_EXPORT EditorWidgetEditorWidget : public QScintillaSupport::Q
     Q_OBJECT
 
 public:
-    explicit EditorWidgetEditorWidget(QsciLexer *pLexer, EditorWidget *pOwner,
+    explicit EditorWidgetEditorWidget(QsciLexer *pLexer,
                                       EditorWidgetFindReplaceWidget *pFindReplace,
-                                      QWidget *pParent);
+                                      EditorWidget *pParent);
 
     void setReadOnly(bool pReadOnly) override;
 

@@ -58,7 +58,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     mSeparator = Core::newLineWidget(this);
     mFindReplace = new EditorWidgetFindReplaceWidget(this);
 
-    mEditor = new EditorWidgetEditorWidget(pLexer, this, mFindReplace, this);
+    mEditor = new EditorWidgetEditorWidget(pLexer, mFindReplace, this);
 
     // Set our contents and our read-only state
 
@@ -86,11 +86,6 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     connect(mEditor, SIGNAL(canSelectAll(bool)),
             this, SIGNAL(canSelectAll(bool)));
-
-    // Keep track of whenever a key is being pressed in our find/replace widget
-
-    connect(mFindReplace, &EditorWidgetFindReplaceWidget::keyPressed,
-            this, &EditorWidget::findReplaceKeyPressed);
 
     // Keep track of whenever the find text changes
 
@@ -603,42 +598,6 @@ bool EditorWidget::findPrevious()
     // Find the previous occurrence of the text in our editor
 
     return mEditor->findPrevious();
-}
-
-//==============================================================================
-
-void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
-{
-    // Some key combinations from our find/replace widget
-
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Escape)) {
-        hideFindReplace();
-
-        pHandled = true;
-    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-               && !(pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
-               &&  (   (pEvent->key() == Qt::Key_Return)
-                    || (pEvent->key() == Qt::Key_Enter))) {
-        if (mFindReplace->findEditHasFocus()) {
-            mEditor->findNext();
-
-            pHandled = true;
-        } else if (mFindReplace->replaceEditHasFocus()) {
-            mEditor->replaceAndFind();
-
-            pHandled = true;
-        } else {
-            pHandled = false;
-        }
-    } else {
-        pHandled = false;
-    }
 }
 
 //==============================================================================

@@ -50,12 +50,16 @@ namespace EditorWidget {
 
 //==============================================================================
 
+class EditorWidget;
+
+//==============================================================================
+
 class EditorWidgetFindReplaceWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit EditorWidgetFindReplaceWidget(QWidget *pParent);
+    explicit EditorWidgetFindReplaceWidget(EditorWidget *pParent);
     ~EditorWidgetFindReplaceWidget() override;
 
     void retranslateUi() override;
@@ -77,9 +81,6 @@ public:
 
     QString replaceText() const;
 
-    bool findEditHasFocus() const;
-    bool replaceEditHasFocus() const;
-
     bool isActive() const;
     void setActive(bool pActive);
 
@@ -90,6 +91,8 @@ protected:
 
 private:
     Ui::EditorWidgetFindReplaceWidget *mGui;
+
+    EditorWidget *mOwner;
 
     QAction *mDropDownAction;
 
@@ -106,8 +109,6 @@ private:
     void updateStyleSheet();
 
 signals:
-    void keyPressed(QKeyEvent *pEvent, bool &pHandled);
-
     void findTextChanged(const QString &pText);
 
     void canFindReplace(bool pCanFindReplace);
