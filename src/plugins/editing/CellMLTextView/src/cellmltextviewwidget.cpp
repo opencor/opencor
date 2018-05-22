@@ -59,7 +59,7 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellMLEditingView::CellmlEditingViewWidget *pEditingWidget,
+CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellmlTextViewWidgetEditingWidget *pEditingWidget,
                                                    const QString &pSha1,
                                                    bool pValid,
                                                    const CellMLSupport::CellmlFile::Version &pCellmlVersion,
@@ -96,7 +96,7 @@ void CellmlTextViewWidgetData::retranslateUi()
 
 //==============================================================================
 
-CellMLEditingView::CellmlEditingViewWidget * CellmlTextViewWidgetData::editingWidget() const
+CellmlTextViewWidgetEditingWidget * CellmlTextViewWidgetData::editingWidget() const
 {
     // Return our editing widget
 
@@ -204,6 +204,215 @@ void CellmlTextViewWidgetData::setConvertedFileContents(const QString &pConverte
 
 //==============================================================================
 
+CellmlTextViewWidgetEditingWidget::CellmlTextViewWidgetEditingWidget(const QString &pContents,
+                                                                     bool pReadOnly,
+                                                                     QsciLexer *pLexer,
+                                                                     QWidget *pParent) :
+    CellMLEditingView::CellmlEditingViewWidget(pContents, pReadOnly, pLexer, pParent)
+{
+}
+
+//==============================================================================
+
+static const auto SingleLineCommentString = QStringLiteral("//");
+static const int SingleLineCommentLength  = SingleLineCommentString.length();
+
+//==============================================================================
+
+static const auto StartMultilineCommentString = QStringLiteral("/*");
+static const auto EndMultilineCommentString   = QStringLiteral("*/");
+static const int StartMultilineCommentLength  = StartMultilineCommentString.length();
+static const int EndMultilineCommentLength    = EndMultilineCommentString.length();
+
+//==============================================================================
+
+bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
+{
+    // Some key combinations from our editor
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  (pEvent->key() == Qt::Key_Slash)) {
+        // We want to (un)comment the selected text, if any, or the current
+        // line, so start by retrieving the position of our cursor within our
+        // editor
+
+        EditorWidget::EditorWidgetEditorWidget *editor = editorWidget()->editor();
+        int lineNumber, columnNumber;
+
+        editor->getCursorPosition(&lineNumber, &columnNumber);
+
+        // Check whether some text is selected
+
+        if (editor->hasSelectedText()) {
+            // Some text is selected, so check whether full lines are selected
+            // or 'random' text
+
+            int lineFrom, columnFrom, lineTo, columnTo;
+
+            editor->getSelection(&lineFrom, &columnFrom, &lineTo, &columnTo);
+
+            int selectedTextEndPosition = editor->positionFromLineIndex(lineTo, columnTo);
+            QString editorEolString = editor->eolString();
+
+            if (    !columnFrom
+                && (   !columnTo
+                    ||  (selectedTextEndPosition == editor->length())
+                    || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+editorEolString.length()).compare(editorEolString)
+                    || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+1).compare("\0"))) {
+                // The selected text consists of full lines, so check whether
+                // it's surrounded by /* XXX */
+
+                QString trimmedSelectedText = editor->selectedText().trimmed();
+
+                if (   trimmedSelectedText.startsWith(StartMultilineCommentString)
+                    && trimmedSelectedText.endsWith(EndMultilineCommentString)) {
+                    // The full lines are surrounded by /* XXX */, so simply
+                    // remove them
+
+                    QString selectedText = editor->selectedText();
+
+                    selectedText.remove(selectedText.indexOf(StartMultilineCommentString), StartMultilineCommentLength);
+                    selectedText.remove(selectedText.indexOf(EndMultilineCommentString), EndMultilineCommentLength);
+
+                    editor->replaceSelectedText(selectedText);
+
+                    // Prepare ourselves for reselecting the lines
+
+                    columnTo -= EndMultilineCommentLength;
+                } else {
+                    // The full lines are not surrounded by /* XXX */, so simply
+                    // (un)comment them
+
+                    bool commentLine = false;
+                    QString line;
+                    int iMax = columnTo?lineTo:lineTo-1;
+
+                    // Determine whether we should be commenting or uncommenting
+                    // the lines
+
+                    for (int i = lineFrom; i <= iMax; ++i) {
+                        line = editor->text(i).trimmed();
+
+                        commentLine = commentLine || (!line.isEmpty() && !line.startsWith(SingleLineCommentString));
+                    }
+
+                    // (Un)comment the lines as one 'big' action
+
+                    editor->beginUndoAction();
+
+                    for (int i = lineFrom; i <= iMax; ++i)
+                        commentOrUncommentLine(editor, i, commentLine);
+
+                    editor->endUndoAction();
+
+                    // Prepare ourselves for reselecting the lines
+
+                    columnTo += columnTo?
+                                    commentLine?SingleLineCommentLength:-SingleLineCommentLength:
+                                    0;
+                }
+            } else {
+                // The selected text doesn't consist of full lines, so simply
+                // (un)comment it
+
+                QString selectedText = editor->selectedText();
+                bool commentSelectedText =    !selectedText.startsWith(StartMultilineCommentString)
+                                           || !selectedText.endsWith(EndMultilineCommentString);
+
+                if (commentSelectedText) {
+                    // The selected text is not commented, so comment it
+
+                    editor->replaceSelectedText(StartMultilineCommentString+selectedText+EndMultilineCommentString);
+                } else {
+                    // The selected text is commented, so uncomment it
+
+                    editor->replaceSelectedText(selectedText.mid(StartMultilineCommentLength, selectedText.length()-StartMultilineCommentLength-EndMultilineCommentLength));
+                }
+
+                // Prepare ourselves for reselecting the text
+
+                columnTo += (commentSelectedText?1:-1)*(StartMultilineCommentLength+(lineFrom == lineTo)*EndMultilineCommentLength);
+            }
+
+            // Reselect the text/lines
+
+            if ((lineNumber == lineFrom) && (columnNumber == columnFrom))
+                editor->setSelection(lineTo, columnTo, lineFrom, columnFrom);
+            else
+                editor->setSelection(lineFrom, columnFrom, lineTo, columnTo);
+        } else {
+            // No text is selected, so simply (un)comment the current line
+
+            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(SingleLineCommentString);
+
+            if (commentOrUncommentLine(editor, lineNumber, commentLine)) {
+                if (commentLine) {
+                    // We commented the line, so our position will be fine
+                    // unless we were at the beginning of the line, in which
+                    // case we need to update it
+
+                    if (!columnNumber)
+                        editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+SingleLineCommentLength);
+                } else {
+                    // We uncommented the line, so go back to our original
+                    // position (since uncommenting the line will have shifted
+                    // it a bit)
+
+                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-SingleLineCommentLength);
+                }
+            }
+        }
+
+        pEvent->accept();
+
+        return true;
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+bool CellmlTextViewWidgetEditingWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
+                                                               int pLineNumber,
+                                                               bool pCommentLine)
+{
+    // (Un)comment the current line
+
+    QString line = pEditorWidget->text(pLineNumber).trimmed();
+
+    if (line.isEmpty())
+        return false;
+
+    // We are not dealing with an empty line, so we can (un)comment it
+
+    if (pCommentLine) {
+        pEditorWidget->insertAt(SingleLineCommentString, pLineNumber, 0);
+    } else {
+        // Uncomment the line, should it be commented
+
+        if (line.startsWith(SingleLineCommentString)) {
+            int commentLineNumber, commentColumnNumber;
+
+            pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
+                                                                                pEditorWidget->contentsSize(), SingleLineCommentString,
+                                                                                false, false, false),
+                                                 &commentLineNumber, &commentColumnNumber);
+
+            pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
+                                        commentLineNumber, commentColumnNumber+SingleLineCommentLength);
+            pEditorWidget->removeSelectedText();
+        }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
 CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mNeedLoadingSettings(true),
@@ -283,9 +492,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         // Create an editing widget for the given CellML file
 
-        CellMLEditingView::CellmlEditingViewWidget *editingWidget = new CellMLEditingView::CellmlEditingViewWidget(fileIsEmpty?QString():mConverter.output(),
-                                                                                                                   !fileManagerInstance->isReadableAndWritable(pFileName),
-                                                                                                                   0, parentWidget());
+        CellmlTextViewWidgetEditingWidget *editingWidget = new CellmlTextViewWidgetEditingWidget(fileIsEmpty?QString():mConverter.output(),
+                                                                                                 !fileManagerInstance->isReadableAndWritable(pFileName),
+                                                                                                 0, parentWidget());
 
         // Add the warnings, if any, that were generated by the converter
 
@@ -356,20 +565,14 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
                                                 mConverter.rdfNodes());
 
         mData.insert(pFileName, data);
-
-        // Add support for some key mappings to our editor
-
-//---ISSUE1414--- FIND A WAY TO GET RID OF THE BELOW...
-//        connect(editingWidget->editorWidget()->editor(), &QScintillaSupport::QScintillaWidget::keyPressed,
-//                this, &CellmlTextViewWidget::editorKeyPressed);
     }
 
     // Update our editing widget, if required
 
-    CellMLEditingView::CellmlEditingViewWidget *newEditingWidget = data->editingWidget();
+    CellmlTextViewWidgetEditingWidget *newEditingWidget = data->editingWidget();
 
     if (pUpdate) {
-        CellMLEditingView::CellmlEditingViewWidget *oldEditingWidget = mEditingWidget;
+        CellmlTextViewWidgetEditingWidget *oldEditingWidget = mEditingWidget;
 
         mEditingWidget = newEditingWidget;
 
@@ -432,7 +635,7 @@ void CellmlTextViewWidget::finalize(const QString &pFileName)
         // settings and reset our memory of the current editing widget, if
         // needed
 
-        CellMLEditingView::CellmlEditingViewWidget *editingWidget = data->editingWidget();
+        CellmlTextViewWidgetEditingWidget *editingWidget = data->editingWidget();
 
         if (mEditingWidget == editingWidget) {
             QSettings settings;
@@ -724,55 +927,6 @@ bool CellmlTextViewWidget::validate(const QString &pFileName)
 
 //==============================================================================
 
-static const auto SingleLineCommentString = QStringLiteral("//");
-static const int SingleLineCommentLength  = SingleLineCommentString.length();
-
-//==============================================================================
-
-static const auto StartMultilineCommentString = QStringLiteral("/*");
-static const auto EndMultilineCommentString   = QStringLiteral("*/");
-static const int StartMultilineCommentLength  = StartMultilineCommentString.length();
-static const int EndMultilineCommentLength    = EndMultilineCommentString.length();
-
-//==============================================================================
-
-bool CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
-                                                  int pLineNumber,
-                                                  bool pCommentLine)
-{
-    // (Un)comment the current line
-
-    QString line = pEditorWidget->text(pLineNumber).trimmed();
-
-    if (line.isEmpty())
-        return false;
-
-    // We are not dealing with an empty line, so we can (un)comment it
-
-    if (pCommentLine) {
-        pEditorWidget->insertAt(SingleLineCommentString, pLineNumber, 0);
-    } else {
-        // Uncomment the line, should it be commented
-
-        if (line.startsWith(SingleLineCommentString)) {
-            int commentLineNumber, commentColumnNumber;
-
-            pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
-                                                                                pEditorWidget->contentsSize(), SingleLineCommentString,
-                                                                                false, false, false),
-                                                 &commentLineNumber, &commentColumnNumber);
-
-            pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
-                                        commentLineNumber, commentColumnNumber+SingleLineCommentLength);
-            pEditorWidget->removeSelectedText();
-        }
-    }
-
-    return true;
-}
-
-//==============================================================================
-
 bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
 {
     // Parse the given file, should it exist
@@ -780,7 +934,7 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
     if (data) {
-        CellMLEditingView::CellmlEditingViewWidget *editingWidget = data->editingWidget();
+        CellmlTextViewWidgetEditingWidget *editingWidget = data->editingWidget();
 
         editingWidget->editorListWidget()->clear();
 
@@ -806,155 +960,6 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
         return res;
     } else {
         return false;
-    }
-}
-
-//==============================================================================
-
-void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
-{
-    // Some key combinations from our editor
-
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        &&  (pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Slash)) {
-        // We want to (un)comment the selected text, if any, or the current line
-
-        QScintillaSupport::QScintillaWidget *editor = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender());
-
-        // Retrieve the position of our cursor within the editor
-
-        int lineNumber, columnNumber;
-
-        editor->getCursorPosition(&lineNumber, &columnNumber);
-
-        // Check whether some text is selected
-
-        if (editor->hasSelectedText()) {
-            // Some text is selected, so check whether full lines are selected
-            // or 'random' text
-
-            int lineFrom, columnFrom, lineTo, columnTo;
-
-            editor->getSelection(&lineFrom, &columnFrom, &lineTo, &columnTo);
-
-            int selectedTextEndPosition = editor->positionFromLineIndex(lineTo, columnTo);
-            QString editorEolString = editor->eolString();
-
-            if (    !columnFrom
-                && (   !columnTo
-                    ||  (selectedTextEndPosition == editor->length())
-                    || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+editorEolString.length()).compare(editorEolString)
-                    || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+1).compare("\0"))) {
-                // The selected text consists of full lines, so check whether
-                // it's surrounded by /* XXX */
-
-                QString trimmedSelectedText = editor->selectedText().trimmed();
-
-                if (   trimmedSelectedText.startsWith(StartMultilineCommentString)
-                    && trimmedSelectedText.endsWith(EndMultilineCommentString)) {
-                    // The full lines are surrounded by /* XXX */, so simply
-                    // remove them
-
-                    QString selectedText = editor->selectedText();
-
-                    selectedText.remove(selectedText.indexOf(StartMultilineCommentString), StartMultilineCommentLength);
-                    selectedText.remove(selectedText.indexOf(EndMultilineCommentString), EndMultilineCommentLength);
-
-                    editor->replaceSelectedText(selectedText);
-
-                    // Prepare ourselves for reselecting the lines
-
-                    columnTo -= EndMultilineCommentLength;
-                } else {
-                    // The full lines are not surrounded by /* XXX */, so simply
-                    // (un)comment them
-
-                    bool commentLine = false;
-                    QString line;
-                    int iMax = columnTo?lineTo:lineTo-1;
-
-                    // Determine whether we should be commenting or uncommenting
-                    // the lines
-
-                    for (int i = lineFrom; i <= iMax; ++i) {
-                        line = editor->text(i).trimmed();
-
-                        commentLine = commentLine || (!line.isEmpty() && !line.startsWith(SingleLineCommentString));
-                    }
-
-                    // (Un)comment the lines as one 'big' action
-
-                    editor->beginUndoAction();
-
-                    for (int i = lineFrom; i <= iMax; ++i)
-                        commentOrUncommentLine(editor, i, commentLine);
-
-                    editor->endUndoAction();
-
-                    // Prepare ourselves for reselecting the lines
-
-                    columnTo += columnTo?
-                                    commentLine?SingleLineCommentLength:-SingleLineCommentLength:
-                                    0;
-                }
-            } else {
-                // The selected text doesn't consist of full lines, so simply
-                // (un)comment it
-
-                QString selectedText = editor->selectedText();
-                bool commentSelectedText =    !selectedText.startsWith(StartMultilineCommentString)
-                                           || !selectedText.endsWith(EndMultilineCommentString);
-
-                if (commentSelectedText) {
-                    // The selected text is not commented, so comment it
-
-                    editor->replaceSelectedText(StartMultilineCommentString+selectedText+EndMultilineCommentString);
-                } else {
-                    // The selected text is commented, so uncomment it
-
-                    editor->replaceSelectedText(selectedText.mid(StartMultilineCommentLength, selectedText.length()-StartMultilineCommentLength-EndMultilineCommentLength));
-                }
-
-                // Prepare ourselves for reselecting the text
-
-                columnTo += (commentSelectedText?1:-1)*(StartMultilineCommentLength+(lineFrom == lineTo)*EndMultilineCommentLength);
-            }
-
-            // Reselect the text/lines
-
-            if ((lineNumber == lineFrom) && (columnNumber == columnFrom))
-                editor->setSelection(lineTo, columnTo, lineFrom, columnFrom);
-            else
-                editor->setSelection(lineFrom, columnFrom, lineTo, columnTo);
-        } else {
-            // No text is selected, so simply (un)comment the current line
-
-            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(SingleLineCommentString);
-
-            if (commentOrUncommentLine(editor, lineNumber, commentLine)) {
-                if (commentLine) {
-                    // We commented the line, so our position will be fine
-                    // unless we were at the beginning of the line, in which
-                    // case we need to update it
-
-                    if (!columnNumber)
-                        editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+SingleLineCommentLength);
-                } else {
-                    // We uncommented the line, so go back to our original
-                    // position (since uncommenting the line will have shifted
-                    // it a bit)
-
-                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-SingleLineCommentLength);
-                }
-            }
-        }
-
-        pHandled = true;
-    } else {
-        pHandled = false;
     }
 }
 

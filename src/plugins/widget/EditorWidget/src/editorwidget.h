@@ -68,6 +68,8 @@ public:
 
     EditorWidgetEditorWidget * editor() const;
 
+    virtual bool handleEditorKeyPressEvent(QKeyEvent *pEvent);
+
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 

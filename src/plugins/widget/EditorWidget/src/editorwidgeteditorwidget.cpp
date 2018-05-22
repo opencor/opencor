@@ -98,6 +98,12 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         pEvent->accept();
     } else {
+        // Get any derived class a chance to handle our editor's key press
+        // event, if they want
+
+        if (mOwner->handleEditorKeyPressEvent(pEvent))
+            return;
+
         // Default handling of the event
 
         QScintillaSupport::QScintillaWidget::keyPressEvent(pEvent);

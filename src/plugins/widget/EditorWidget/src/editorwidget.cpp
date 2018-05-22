@@ -200,6 +200,17 @@ EditorWidgetEditorWidget * EditorWidget::editor() const
 
 //==============================================================================
 
+bool EditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // By default, we don't handle our editor's key press event
+
+    return false;
+}
+
+//==============================================================================
+
 QMenu * EditorWidget::contextMenu() const
 {
     // Return the context menu of our editor
