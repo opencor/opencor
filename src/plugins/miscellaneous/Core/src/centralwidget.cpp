@@ -143,7 +143,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
     mFileNames(QStringList()),
     mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
-    mRemoteLocalFileNames(QMap<QString, QString>()),
     mViews(QMap<QString, QWidget *>())
 {
     // Create and set our horizontal layout
@@ -433,7 +432,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     QString crtFileNameOrUrl = pSettings->value(SettingsCurrentFileNameOrUrl).toString();
     QString crtFileName = pSettings->value(SettingsFileIsRemote.arg(crtFileNameOrUrl)).toBool()?
-                              mRemoteLocalFileNames.value(crtFileNameOrUrl):
+                              fileManagerInstance->fileName(crtFileNameOrUrl):
                               crtFileNameOrUrl;
 
     if (mFileNames.contains(crtFileName)) {
@@ -763,12 +762,6 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     FileManager::instance()->manage(fileName, pType, pUrl);
 
-    // Keep track of the mapping between the remote file and its local version,
-    // if needed
-
-    if (!pUrl.isEmpty())
-        mRemoteLocalFileNames.insert(pUrl, fileName);
-
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
@@ -852,7 +845,8 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
     // Check whether the remote file is already opened and if so select it,
     // otherwise retrieve its contents
 
-    QString fileName = mRemoteLocalFileNames.value(fileNameOrUrl);
+    FileManager *fileManagerInstance = FileManager::instance();
+    QString fileName = fileManagerInstance->fileName(fileNameOrUrl);
 
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents
@@ -873,8 +867,6 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
-            FileManager *fileManagerInstance = FileManager::instance();
-
 #ifdef QT_DEBUG
             FileManager::Status createStatus =
 #endif
@@ -888,9 +880,11 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 #endif
         } else {
             // We were not able to retrieve the contents of the remote file, so
-            // let the user know about it
+            // let the user know about it, after having hidden our busy widget
 
             if (pShowWarning) {
+                hideBusyWidget();
+
                 warningMessageBox(tr("Open Remote File"),
                                   tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl)
                                                                                      .arg(formatMessage(errorMessage)));
@@ -1322,11 +1316,6 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
         mFileModeTabIndexes.remove(fileName);
         mFileModeViewTabIndexes.remove(fileName);
 
-        FileManager *fileManagerInstance = FileManager::instance();
-
-        if (fileManagerInstance->isRemote(fileName))
-            mRemoteLocalFileNames.remove(fileManagerInstance->url(fileName));
-
         // Remove the file tab
 
         mFileTabs->removeTab(realIndex);
@@ -1352,7 +1341,7 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 
         // Unregister the file from our file manager
 
-        fileManagerInstance->unmanage(fileName);
+        FileManager::instance()->unmanage(fileName);
 
         // Update our modified settings
 
