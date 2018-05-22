@@ -671,20 +671,6 @@ QString CentralWidget::currentFileName() const
 
 //==============================================================================
 
-QString CentralWidget::localFileName(const QString &pUrl) const
-{
-    // Return the local file name, if any
-
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
-
-    return isLocalFile ? pUrl : mRemoteLocalFileNames.value(fileNameOrUrl);
-}
-
-//==============================================================================
-
 void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 {
     // Update the text, tool tip and icon to be used for the given file tab
@@ -752,7 +738,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
             warningMessageBox(pUrl.isEmpty()?
                                   tr("Open File"):
                                   tr("Open Remote File"),
-                              tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
+                                  tr("<strong>%1</strong> could not be opened.").arg(pUrl.isEmpty()?
                                                                                      QDir::toNativeSeparators(pFileName):
                                                                                      pFileName));
         }

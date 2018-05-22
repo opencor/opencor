@@ -109,7 +109,6 @@ public:
                                    bool pFileTabs = false);
 
     QString currentFileName() const;
-    QString localFileName(const QString &pUrl) const;
 
     void openFile(const QString &pFileName,
                   const File::Type &pType = File::Local,

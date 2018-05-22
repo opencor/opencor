@@ -141,6 +141,8 @@ void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
                                     bool &pOutIsLocalFile,
                                     QString &pOutFileNameOrUrl);
 
+QString CORE_EXPORT localFileName(const QString &pUrl);
+
 QString CORE_EXPORT openFile(const QString &pFileName,
                              const File::Type &pType = File::Local,
                              const QString &pUrl = QString());

@@ -484,37 +484,15 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
 
 //==============================================================================
 
-QString CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
-                                const QString &pUrl)
+QString openFile(const QString &pFileName, const File::Type &pType,
+                 const QString &pUrl)
 {
-    // Make sure that the file exists
+    // Register the file with our file manager and get its status
 
-    if (!QFile::exists(pFileName)) {
-        return tr("'%1' could not be opened.").arg(pFileName);
-    }
+    FileManager::Status fileStatus = FileManager::instance()->manage(pFileName, pType, pUrl);
 
-    // Check whether the file is already opened and, if so, select it and leave
-
-    QString fileName = canonicalFileName(pFileName);
-
-### TODO File manager...
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
-        if (!mFileNames[i].compare(fileName)) {
-            setTabBarCurrentIndex(mFileTabs, i);
-
-            return QString();
-        }
-    }
-
-    // Register the file with our file manager
-
-    FileManager::instance()->manage(fileName, pType, pUrl);
-
-    // Keep track of the mapping between the remote file and its local version,
-    // if needed
-### TODO
-    if (!pUrl.isEmpty())
-        mRemoteLocalFileNames.insert(pUrl, fileName);
+    if (fileStatus == FileManager::DoesNotExist)
+        return QObject::tr("'%1' could not be opened.").arg(pFileName);
 
     return QString();
 }
@@ -537,13 +515,14 @@ QString openRemoteFile(const QString &pUrl)
         //     /home/me/mymodel.cellml
         // so open the file as a local file and leave
 
-        return openFile(fileNameOrUrl, File::Local, QString());
+        return openFile(fileNameOrUrl);
     }
 
     // Check whether the remote file is already opened and if so select it,
     // otherwise retrieve its contents
-### TODO
-    QString fileName = mRemoteLocalFileNames.value(fileNameOrUrl);
+
+    FileManager *fileManagerInstance = FileManager::instance();
+    QString fileName = fileManagerInstance->fileName(fileNameOrUrl);
 
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents
@@ -555,7 +534,6 @@ QString openRemoteFile(const QString &pUrl)
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
-            FileManager *fileManagerInstance = FileManager::instance();
             FileManager::Status createStatus = fileManagerInstance->create(fileNameOrUrl, fileContents);
 
             // Make sure that the file has indeed been created
@@ -564,7 +542,7 @@ QString openRemoteFile(const QString &pUrl)
 #ifdef QT_DEBUG
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
-                return tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
+                return QObject::tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
             } else {
                 return QString("");
             }
@@ -572,7 +550,7 @@ QString openRemoteFile(const QString &pUrl)
             // We were not able to retrieve the contents of the remote file, so
             // let the user know about it
 
-            return tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
+            return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
         }
     } else {
         return openFile(fileName, File::Remote, fileNameOrUrl);
@@ -581,6 +559,19 @@ QString openRemoteFile(const QString &pUrl)
 
 //==============================================================================
 
+QString localFileName(const QString &pUrl)
+{
+    // Return the local file name, if any
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
+
+    return isLocalFile ? pUrl : FileManager::instance()->fileName(fileNameOrUrl);
+}
+
+//==============================================================================
 
 QString formatXml(const QString &pXml)
 {
