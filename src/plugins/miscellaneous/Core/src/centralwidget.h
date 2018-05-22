@@ -169,8 +169,6 @@ private:
     QLineEdit *mRemoteFileDialogUrlValue;
     QDialogButtonBox *mRemoteFileDialogButtonBox;
 
-    QMap<QString, QString> mRemoteLocalFileNames;
-
     QMap<QString, QWidget *> mViews;
 
     Plugin * viewPlugin(int pIndex) const;

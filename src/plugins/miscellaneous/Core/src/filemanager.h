@@ -105,6 +105,7 @@ public:
 
     int newIndex(const QString &pFileName) const;
     QString url(const QString &pFileName) const;
+    QString fileName(const QString &pUrl) const;
 
     bool isDifferent(const QString &pFileName) const;
     bool isDifferent(const QString &pFileName,

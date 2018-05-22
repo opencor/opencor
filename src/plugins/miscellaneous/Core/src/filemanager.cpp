@@ -243,6 +243,20 @@ QString FileManager::url(const QString &pFileName) const
 
 //==============================================================================
 
+QString FileManager::fileName(const QString &pUrl) const
+{
+    // Return the given file's file name, if it is being managed
+
+    foreach (File *file, mFiles.values()) {
+        if (!pUrl.compare(file->url()))
+            return file->fileName();
+    }
+
+    return QString();
+}
+
+//==============================================================================
+
 bool FileManager::isDifferent(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is different from
