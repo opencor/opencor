@@ -101,7 +101,7 @@ public:
                                       const QString &pFileName) const;
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
-    void setMode(const Mode &pMode);
+    void setMode(Mode pMode);
 
     void setGraphPanelColumnWidth(int pIndex, int pColumnWidth);
     void setGraphsColumnWidth(int pIndex, int pColumnWidth);
@@ -167,7 +167,7 @@ private:
     bool rootProperty(Core::Property *pProperty) const;
 
 signals:
-    void graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+    void graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode);
 
     void graphPanelHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
     void graphsHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);

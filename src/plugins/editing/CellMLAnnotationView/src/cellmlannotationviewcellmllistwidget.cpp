@@ -87,7 +87,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 //==============================================================================
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(bool pCategory,
-                                                                             const Type &pType,
+                                                                             Type pType,
                                                                              const QString &pText,
                                                                              iface::cellml_api::CellMLElement *pElement,
                                                                              int pNumber) :
@@ -119,7 +119,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(boo
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Type pType,
                                                                              const QString &pText) :
     CellmlAnnotationViewCellmlElementItem(true, pType, pText, 0, -1)
 {
@@ -135,9 +135,9 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Type pType,
                                                                              iface::cellml_api::CellMLElement *pElement,
-                                                                             const int pNumber) :
+                                                                             int pNumber) :
     CellmlAnnotationViewCellmlElementItem(false, pType, QString(), pElement, pNumber)
 {
     // Set the text for some types
@@ -214,7 +214,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
+void CellmlAnnotationViewCellmlElementItem::setIcon(Type pType)
 {
     // Set our icon based on our type
 

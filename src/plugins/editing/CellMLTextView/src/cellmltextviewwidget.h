@@ -69,7 +69,7 @@ class CellmlTextViewWidgetData
 public:
     explicit CellmlTextViewWidgetData(CellmlTextViewWidgetEditingWidget *pEditingWidget,
                                       const QString &pSha1, bool pValid,
-                                      const CellMLSupport::CellmlFile::Version &pCellmlVersion,
+                                      CellMLSupport::CellmlFile::Version pCellmlVersion,
                                       const QDomNode &pDocumentationNode,
                                       const QDomDocument &pRdfNodes);
     ~CellmlTextViewWidgetData();
@@ -84,7 +84,7 @@ public:
     bool isValid() const;
 
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
-    void setCellmlVersion(const CellMLSupport::CellmlFile::Version &pCellmlVersion);
+    void setCellmlVersion(CellMLSupport::CellmlFile::Version pCellmlVersion);
 
     QDomNode documentationNode() const;
     QDomDocument rdfNodes() const;

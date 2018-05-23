@@ -85,7 +85,7 @@ public:
         Widget
     };
 
-    explicit PluginInfo(const Category &pCategory, bool pSelectable,
+    explicit PluginInfo(Category pCategory, bool pSelectable,
                         bool pCliSupport, const QStringList &pDependencies,
                         const Descriptions &pDescriptions,
                         const QStringList &pLoadBefore = QStringList());

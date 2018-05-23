@@ -62,7 +62,7 @@ public:
     };
 
     explicit CombineArchiveFile(const QString &pFileName,
-                                const QString &pLocation, const Format &pFormat,
+                                const QString &pLocation, Format pFormat,
                                 bool pMaster);
 
     QString fileName() const;
@@ -110,8 +110,7 @@ public:
     CombineArchiveFiles masterFiles();
 
     bool addFile(const QString &pFileName, const QString &pLocation,
-                 const CombineArchiveFile::Format &pFormat,
-                 bool pMaster = false);
+                 CombineArchiveFile::Format pFormat, bool pMaster = false);
 
     SEDMLSupport::SedmlFile * sedmlFile();
 

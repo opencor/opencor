@@ -40,7 +40,7 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorListItem::EditorListItem(const Type &pType, int pLine, int pColumn,
+EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
                                const QString &pMessage) :
     QStandardItem(),
     mType(pType),
@@ -202,7 +202,7 @@ void EditorListWidget::clear()
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
+void EditorListWidget::addItem(EditorListItem::Type pType,
                                int pLine, int pColumn, const QString &pMessage)
 {
     // Add the given item to our list
@@ -215,8 +215,8 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               int pLine, const QString &pMessage)
+void EditorListWidget::addItem(EditorListItem::Type pType, int pLine,
+                               const QString &pMessage)
 {
     // Add the given item to our list
 
@@ -225,7 +225,7 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
+void EditorListWidget::addItem(EditorListItem::Type pType,
                                const QString &pMessage)
 {
     // Add the given item to our list

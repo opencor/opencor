@@ -175,7 +175,7 @@ void unsetNlaSolver(const QString &pRuntimeAddress)
 
 //==============================================================================
 
-Property::Property(const Property::Type &pType, const QString &pId,
+Property::Property(Type pType, const QString &pId,
                    const Descriptions &pDescriptions,
                    const QStringList &pListValues,
                    const QVariant &pDefaultValue, bool pHasVoiUnit) :

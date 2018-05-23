@@ -65,7 +65,7 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(Type pType,
                                                  Core::TreeViewWidget *pTreeViewWidget,
                                                  PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
@@ -90,7 +90,7 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 
 //==============================================================================
 
-PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(Type pType,
                                                  Core::TreeViewWidget *pTreeViewWidget,
                                                  PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
@@ -104,7 +104,7 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 
 //==============================================================================
 
-PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(Type pType,
                                                  Core::TreeViewWidget *pTreeViewWidget,
                                                  PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
@@ -119,7 +119,7 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
 
 //==============================================================================
 
-PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(const Type &pType,
+PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(Type pType,
                                                  Core::TreeViewWidget *pTreeViewWidget,
                                                  PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                                  PMRSupport::PmrWorkspace *pWorkspace,
@@ -735,7 +735,7 @@ void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
-                                           const MessageType &pMessageType,
+                                           MessageType pMessageType,
                                            const QString &pMessage,
                                            bool pAuthenticated)
 {
@@ -846,7 +846,7 @@ void PmrWorkspacesWindowWidget::initialize()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(const MessageType &pMessageType,
+void PmrWorkspacesWindowWidget::initialize(MessageType pMessageType,
                                            const QString &pMessage)
 {
     // Initialise ourselves using the given message

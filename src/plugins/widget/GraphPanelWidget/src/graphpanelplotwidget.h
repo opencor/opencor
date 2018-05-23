@@ -238,8 +238,7 @@ private:
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
                          const QColor &pForegroundColor, int pLineWidth,
-                         const Position &pPosition,
-                         bool pCanMovePosition = true);
+                         Position pPosition, bool pCanMovePosition = true);
 };
 
 //==============================================================================
@@ -580,11 +579,10 @@ private:
 
     bool resetAxes();
 
-    bool scaleAxis(const Scaling &pScaling, bool pCanZoomIn, bool pCanZoomOut,
+    bool scaleAxis(Scaling pScaling, bool pCanZoomIn, bool pCanZoomOut,
                    const QwtScaleMap &pCanvasMap, double pPoint,
                    double &pMin, double &pMax);
-    void scaleAxes(const QPoint &pPoint, const Scaling &pScalingX,
-                   const Scaling &pScalingY);
+    void scaleAxes(const QPoint &pPoint, Scaling pScalingX, Scaling pScalingY);
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 

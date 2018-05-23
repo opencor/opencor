@@ -879,7 +879,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
                                                   int pLineWidth,
-                                                  const Position &pPosition,
+                                                  Position pPosition,
                                                   bool pCanMovePosition)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
@@ -2661,7 +2661,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
+bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
                                      bool pCanZoomOut,
                                      const QwtScaleMap &pCanvasMap,
                                      double pPoint, double &pMin, double &pMax)
@@ -2719,9 +2719,8 @@ bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
-                                     const Scaling &pScalingX,
-                                     const Scaling &pScalingY)
+void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
+                                     Scaling pScalingY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 

@@ -826,7 +826,7 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode SimulationExp
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const Mode &pMode)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(Mode pMode)
 {
     // Set our mode
 

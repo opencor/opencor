@@ -271,7 +271,7 @@ void CellMLToolsPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVersion)
+void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
 {
     // Ask for the name of the file that will contain the export
 

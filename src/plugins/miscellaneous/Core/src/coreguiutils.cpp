@@ -608,7 +608,7 @@ QFrame * newLineWidget(QWidget *pParent)
 //==============================================================================
 
 QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
-                    const QIcon::Mode &pMode)
+                    QIcon::Mode pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
     // having resized it, if requested
@@ -629,7 +629,7 @@ QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 //==============================================================================
 
 QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
-                    const QIcon::Mode &pMode)
+                    QIcon::Mode pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
     // having resized it, if requested

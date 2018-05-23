@@ -119,7 +119,7 @@ private:
 
     QStringList mPluginNames;
 
-    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
+    QStandardItem * pluginCategoryItem(PluginInfo::Category pCategory);
 
 private slots:
     void treeViewCollapsed(const QModelIndex &pIndex);

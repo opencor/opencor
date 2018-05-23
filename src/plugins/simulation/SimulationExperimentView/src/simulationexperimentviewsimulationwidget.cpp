@@ -3231,7 +3231,7 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
-                                                               const ErrorType &pErrorType)
+                                                               ErrorType pErrorType)
 {
     // Output the simulation error
 
@@ -3739,7 +3739,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
                                                                        int pSimulationRun,
-                                                                       const Task &pTask)
+                                                                       Task pTask)
 {
     // Update our simulation results
 
@@ -3922,7 +3922,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
-                                                                       const Task &pTask)
+                                                                       Task pTask)
 {
     // Update our simulation results
 

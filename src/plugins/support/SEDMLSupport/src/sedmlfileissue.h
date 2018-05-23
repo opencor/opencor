@@ -52,9 +52,9 @@ public:
         Fatal
     };
 
-    explicit SedmlFileIssue(const Type &pType, int pLine, int pColumn,
+    explicit SedmlFileIssue(Type pType, int pLine, int pColumn,
                             const QString &pMessage);
-    explicit SedmlFileIssue(const Type &pType, const QString &pMessage);
+    explicit SedmlFileIssue(Type pType, const QString &pMessage);
 
     Type type() const;
     int line() const;

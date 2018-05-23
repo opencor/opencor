@@ -54,8 +54,8 @@ public:
         View
     };
 
-    explicit Menu(const Type &pType, QMenu *pMenu);
-    explicit Menu(const Type &pType, QAction *pAction, QMenu *pMenu);
+    explicit Menu(Type pType, QMenu *pMenu);
+    explicit Menu(Type pType, QAction *pAction, QMenu *pMenu);
 
     Type type() const;
     QAction * action() const;
@@ -82,7 +82,7 @@ public:
         Tools
     };
 
-    explicit MenuAction(const Type &pType, QAction *pAction);
+    explicit MenuAction(Type pType, QAction *pAction);
 
     Type type() const;
     QAction * action() const;

@@ -86,8 +86,8 @@ public:
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
-                   const InformationType &pInformationType = None,
-                   const Information &pLookUpRdfTripleInformation = First);
+                   InformationType pInformationType = None,
+                   Information pLookUpRdfTripleInformation = First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
                       bool pNeedAdditionalGuiUpdates = true);
@@ -129,13 +129,13 @@ private:
     QAction *mCopyAction;
 
     void additionalGuiUpdates(const QString &pRdfTripleInformation,
-                              const InformationType &pInformationType,
-                              const Information &pLookUpRdfTripleInformation);
+                              InformationType pInformationType,
+                              Information pLookUpRdfTripleInformation);
 
     void updateOutputHeaders();
 
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
-                       const InformationType &pInformationType = None);
+                       InformationType pInformationType = None);
 
 signals:
     void qualifierLookUpRequested(const QString &pQualifier);

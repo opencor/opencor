@@ -62,7 +62,7 @@ namespace CellMLTextView {
 CellmlTextViewWidgetData::CellmlTextViewWidgetData(CellmlTextViewWidgetEditingWidget *pEditingWidget,
                                                    const QString &pSha1,
                                                    bool pValid,
-                                                   const CellMLSupport::CellmlFile::Version &pCellmlVersion,
+                                                   CellMLSupport::CellmlFile::Version pCellmlVersion,
                                                    const QDomNode &pDocumentationNode,
                                                    const QDomDocument &pRdfNodes) :
     mEditingWidget(pEditingWidget),
@@ -141,7 +141,7 @@ CellMLSupport::CellmlFile::Version CellmlTextViewWidgetData::cellmlVersion() con
 
 //==============================================================================
 
-void CellmlTextViewWidgetData::setCellmlVersion(const CellMLSupport::CellmlFile::Version &pCellmlVersion)
+void CellmlTextViewWidgetData::setCellmlVersion(CellMLSupport::CellmlFile::Version pCellmlVersion)
 {
     // Set our CellML version value
 
