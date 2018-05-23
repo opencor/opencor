@@ -114,15 +114,15 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         // Update our highlighting all if our find/replace widget is visible and
         // has some find text and we didn't press one of the navigation keys,
-        // otherwise send the event to our main window, in case it needs to
-        // handle some key event (e.g. handle Esc to exit full-screen mode on
-        // macOS)
+        // clear our highlighting if we pressed any key and our find/replace
+        // widget is not visible, forward the pressing of the Esc key but only
+        // on macOS (so we can exit full-screen mode, if needed)
         // Note #1: regarding highlighting all, we need to do that in case we
         //          have some highlighting and then add some text, in which case
         //          the new text might indeed need highlighting and our vertical
         //          scroll bar updating...
         // Note #2: if our find/replace widget is visible and has some find
-        //          test, but that we press one of the navigation keys then we
+        //          text, but that we press one of the navigation keys then we
         //          don't need and shouldn't do highlighting all since it will
         //          lose any selection that we might have...
 
@@ -131,19 +131,28 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             && !(pEvent->modifiers() & Qt::ControlModifier)
             && !(pEvent->modifiers() & Qt::AltModifier)
             && !(pEvent->modifiers() & Qt::MetaModifier)
-            &&  (pEvent->key() != Qt::Key_Up) &&  (pEvent->key() != Qt::Key_Down)
+            &&  (pEvent->key() != Qt::Key_Tab) && (pEvent->key() != Qt::Key_Backtab)
+            &&  (pEvent->key() != Qt::Key_Up) && (pEvent->key() != Qt::Key_Down)
             &&  (pEvent->key() != Qt::Key_Left) && (pEvent->key() != Qt::Key_Right)
             &&  (pEvent->key() != Qt::Key_Home) && (pEvent->key() != Qt::Key_End)
             &&  (pEvent->key() != Qt::Key_PageUp) && (pEvent->key() != Qt::Key_PageDown)) {
             highlightAll();
 
             pEvent->accept();
+#ifdef Q_OS_MAC
+        } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+                   && !(pEvent->modifiers() & Qt::ControlModifier)
+                   && !(pEvent->modifiers() & Qt::AltModifier)
+                   && !(pEvent->modifiers() & Qt::MetaModifier)
+                   &&  (pEvent->key() == Qt::Key_Escape)) {
+            QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
+#endif
         } else if (!mFindReplace->isVisible()) {
             clearHighlighting();
 
             pEvent->accept();
         } else {
-            QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
+            pEvent->accept();
         }
     }
 }
