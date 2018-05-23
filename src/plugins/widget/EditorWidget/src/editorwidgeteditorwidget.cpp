@@ -102,8 +102,11 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // Get any derived class a chance to handle our editor's key press
         // event, if they want
 
-        if (mOwner->handleEditorKeyPressEvent(pEvent))
+        if (mOwner->handleEditorKeyPressEvent(pEvent)) {
+            pEvent->accept();
+
             return;
+        }
 
         // Default handling of the event
 
@@ -133,8 +136,12 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             &&  (pEvent->key() != Qt::Key_Home) && (pEvent->key() != Qt::Key_End)
             &&  (pEvent->key() != Qt::Key_PageUp) && (pEvent->key() != Qt::Key_PageDown)) {
             highlightAll();
+
+            pEvent->accept();
         } else if (!mFindReplace->isVisible()) {
             clearHighlighting();
+
+            pEvent->accept();
         } else {
             QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
         }
