@@ -29,13 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QObject>
-#ifndef CLI_VERSION
-    #include <QIcon>
-#endif
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace DataStore {
 
@@ -145,10 +138,8 @@ public:
     void addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
 
-#ifndef CLI_VERSION
-    QIcon icon() const;
-    void setIcon(const QIcon &pIcon);
-#endif
+    int type() const;
+    void setType(int pType);
 
     void setUri(const QString &pUri);
 
@@ -182,9 +173,7 @@ public slots:
     double valueAt(quint64 pPosition, int pRun = -1) const;
 
 private:
-#ifndef CLI_VERSION
-    QIcon mIcon;
-#endif
+    int mType;
     QString mUri;
     QString mName;
     QString mUnit;
