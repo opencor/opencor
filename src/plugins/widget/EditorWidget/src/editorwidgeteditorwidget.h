@@ -79,7 +79,7 @@ private:
 
     QIntList mHighlightedLines;
 
-    void doHighlightAllOrReplaceAll(bool pHighlightAll);
+    void doHighlightReplaceAll(bool pHighlightAll);
 
     bool findText(const QString &pText, bool pForward);
 

@@ -202,7 +202,7 @@ void EditorWidgetEditorWidget::addHighlighting(int pFromLine, int pFromColumn,
 
 //==============================================================================
 
-void EditorWidgetEditorWidget::doHighlightAllOrReplaceAll(bool pHighlightAll)
+void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 {
     // Highlight/replace all the occurences of the text
     // Note: the original plan was to call findFirst() the first time round and
@@ -297,7 +297,7 @@ void EditorWidgetEditorWidget::replaceAll()
 {
     // Replace all the occurences of the text
 
-    doHighlightAllOrReplaceAll(false);
+    doHighlightReplaceAll(false);
 }
 
 //==============================================================================
@@ -306,7 +306,7 @@ void EditorWidgetEditorWidget::highlightAll()
 {
     // Highlight all the occurences of the text
 
-    doHighlightAllOrReplaceAll(true);
+    doHighlightReplaceAll(true);
 }
 
 //==============================================================================
