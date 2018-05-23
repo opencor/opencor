@@ -590,7 +590,7 @@ void SimulationResults::createDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setIcon(parameter->icon());
+            mPoints->setType(parameter->type());
             mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
                                 runtime->voi()->name()));
             mPoints->setLabel(runtime->voi()->name());
@@ -621,7 +621,7 @@ void SimulationResults::createDataStore()
         }
 
         if (variable) {
-            variable->setIcon(parameter->icon());
+            variable->setType(parameter->type());
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));

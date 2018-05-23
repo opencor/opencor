@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 2;
+    return 3;
 }
 
 //==============================================================================
@@ -128,9 +128,7 @@ double * DataStoreVariableRun::values() const
 //==============================================================================
 
 DataStoreVariable::DataStoreVariable(double *pValue) :
-#ifndef CLI_VERSION
-    mIcon(QIcon()),
-#endif
+    mType(-1),
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
@@ -208,25 +206,21 @@ void DataStoreVariable::keepRuns(int pRunsCount)
 
 //==============================================================================
 
-#ifndef CLI_VERSION
-QIcon DataStoreVariable::icon() const
+int DataStoreVariable::type() const
 {
-    // Return our icon
+    // Return our type
 
-    return mIcon;
+    return mType;
 }
-#endif
 
 //==============================================================================
 
-#ifndef CLI_VERSION
-void DataStoreVariable::setIcon(const QIcon &pIcon)
+void DataStoreVariable::setType(int pType)
 {
-    // Set our icon
+    // Set our type
 
-    mIcon = pIcon;
+    mType = pType;
 }
-#endif
 
 //==============================================================================
 
