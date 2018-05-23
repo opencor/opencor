@@ -65,6 +65,8 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
     EditorWidget *mOwner;
@@ -79,7 +81,9 @@ private:
 
     QIntList mHighlightedLines;
 
-    void doHighlightAllOrReplaceAll(bool pHighlightAll);
+    QStringList mTexts;
+
+    void doHighlightReplaceAll(bool pHighlightAll);
 
     bool findText(const QString &pText, bool pForward);
 
@@ -100,6 +104,9 @@ public slots:
 
     void undo() override;
     void redo() override;
+
+private slots:
+    void highlightAllAndFind();
 };
 
 //==============================================================================
