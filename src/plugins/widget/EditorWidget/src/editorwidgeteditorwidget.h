@@ -81,6 +81,8 @@ private:
 
     QIntList mHighlightedLines;
 
+    QStringList mTexts;
+
     void doHighlightReplaceAll(bool pHighlightAll);
 
     bool findText(const QString &pText, bool pForward);
@@ -102,6 +104,9 @@ public slots:
 
     void undo() override;
     void redo() override;
+
+private slots:
+    void highlightAllAndFind();
 };
 
 //==============================================================================

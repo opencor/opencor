@@ -46,7 +46,8 @@ EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
     mOwner(pParent),
     mFindReplace(pFindReplace),
     mReadOnlyStyles(QIntList()),
-    mHighlightedLines(QIntList())
+    mHighlightedLines(QIntList()),
+    mTexts(QStringList())
 {
     // Use our own vertical scroll bar for our editor, so that we can show the
     // position of our highlighting
@@ -392,12 +393,38 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
 
         setSelection(0, 0, 0, 0);
     } else {
-        // Look for the first occurrence of the given text in our editor, but
-        // first highlight all the occurrences of the given text
+        // Add the given text to our list of texts to highlight and find
 
+        mTexts << pText;
+
+        // Highlight all the occurrences of the text and find its first
+        // occurrence, but after a short delay
+        // Note: see the note in highlightAllAndFind()...
+
+        QTimer::singleShot(500, this, &EditorWidgetEditorWidget::highlightAllAndFind);
+    }
+}
+
+//==============================================================================
+
+void EditorWidgetEditorWidget::highlightAllAndFind()
+{
+    // If there is only one text left in mHighlightAllAndFindTexts, then
+    // highlight of its occurrences select its first occurrence
+    // Note: this works with findTextChanged() and addresses the case where a
+    //       user types something to search, in which case we don't want to
+    //       highlight all the occurrences of the text at every key stroke since
+    //       it could make things really slow in some cases (e.g. looking for a
+    //       frequent text in a long file)...
+
+    QString text = mTexts.first();
+
+    mTexts.removeFirst();
+
+    if (mTexts.isEmpty()) {
         highlightAll();
 
-        findText(pText, true);
+        findText(text, true);
     }
 }
 
