@@ -283,38 +283,41 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 
     // Hihghlight/replace all the occurences of the text
 
-    int firstLine = -1;
-    int firstColumn = -1;
-    int crtLine;
-    int crtColumn;
+    int origPosition = -1;
+    int crtPosition;
 
     while (findNext()) {
         // Retrieve our new position
 
-        getCursorPosition(&crtLine, &crtColumn);
+        crtPosition = currentPosition();
 
-        // Check whether we are back to our first line/column, in case we are
+        // Check whether we are back to our original position, in case we are
         // trying to highlight all the occurrences of the text
 
-        if (    pHighlightAll
-            && (crtLine == firstLine) && (crtColumn == firstColumn)) {
+        if (pHighlightAll && (crtPosition == origPosition))
             break;
-        }
 
         // Our new position is fine, so highlight/replace the occurrence of the
         // text
 
-        if (pHighlightAll)
-            addHighlighting(crtLine, crtColumn-mFindReplace->findText().length(), crtLine, crtColumn);
-        else
+        if (pHighlightAll) {
+            int fromLine;
+            int fromColumn;
+            int toLine;
+            int toColumn;
+
+            lineIndexFromPosition(crtPosition-mFindReplace->findText().length(), &fromLine, &fromColumn);
+            lineIndexFromPosition(crtPosition, &toLine, &toColumn);
+
+            addHighlighting(fromLine, fromColumn, toLine, toColumn);
+        } else {
             QScintillaSupport::QScintillaWidget::replace(mFindReplace->replaceText());
+        }
 
         // Initialise our first line/column, if needed
 
-        if ((firstLine == -1) && (firstColumn == -1)) {
-            firstLine = crtLine;
-            firstColumn = crtColumn;
-        }
+        if (origPosition == -1)
+            origPosition = crtPosition;
     }
 
     // Go back to our original first visible line, position (after having
