@@ -102,6 +102,9 @@ public:
 
     QString formattedUnit(const QString &pVoiUnit) const;
 
+    static QIcon icon(ParameterType pParameterType);
+    static QMap<int, QIcon> icons();
+
 private:
     QString mName;
     int mDegree;
@@ -114,10 +117,6 @@ private:
 //==============================================================================
 
 typedef QList<CellmlFileRuntimeParameter *> CellmlFileRuntimeParameters;
-
-//==============================================================================
-
-extern QMap<int, QIcon> CellmlFileRuntimeParameterIcons;
 
 //==============================================================================
 
