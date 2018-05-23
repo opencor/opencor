@@ -25,18 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "corecliutils.h"
+//#include "corecliutils.h"
 #include "editorwidgetglobal.h"
 #include "widget.h"
 
 //==============================================================================
 
-#include <QColor>
-#include <QString>
-
-//==============================================================================
-
-class QAction;
 class QFrame;
 class QLabel;
 class QMenu;
@@ -48,19 +42,11 @@ class QsciLexer;
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace QScintillaSupport {
-    class QScintillaWidget;
-}   // namespace QScintillaSupport
-
-//==============================================================================
-
 namespace EditorWidget {
 
 //==============================================================================
 
+class EditorWidgetEditorWidget;
 class EditorWidgetFindReplaceWidget;
 
 //==============================================================================
@@ -80,7 +66,9 @@ public:
 
     void updateSettings(EditorWidget *pEditorWidget);
 
-    QScintillaSupport::QScintillaWidget * editor() const;
+    EditorWidgetEditorWidget * editor() const;
+
+    virtual bool handleEditorKeyPressEvent(QKeyEvent *pEvent);
 
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
@@ -136,26 +124,20 @@ public:
     int zoomLevel() const;
     void setZoomLevel(int pZoomLevel);
 
-    bool findReplaceIsVisible() const;
+    bool isFindReplaceVisible() const;
     void setFindReplaceVisible(bool pVisible);
 
     int styleAt(int pPosition) const;
 
+    bool findNext();
+    bool findPrevious();
+
 private:
-    QScintillaSupport::QScintillaWidget *mEditor;
+    EditorWidgetEditorWidget *mEditor;
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
 
-    int mCurrentLine;
-    int mCurrentColumn;
-
-    bool mFindReplaceVisible;
-
-    QIntList mReadOnlyStyles;
-
     EditorWidgetFindReplaceWidget * findReplace();
-
-    bool findText(const QString &pText, bool pForward);
 
 signals:
     void cursorPositionChanged(int pRow, int pColumn);
@@ -167,22 +149,6 @@ signals:
     void canFindReplace(bool pCanFindReplace);
 
     void canSelectAll(bool pCanSelectAll);
-
-public slots:
-    bool findPrevious();
-    bool findNext();
-
-    void replace();
-    void replaceAndFind();
-    void replaceAll();
-
-private slots:
-    void keepTrackOfCursorPosition(int pLine, int pColumn);
-
-    void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
-    void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);
-
-    void findTextChanged(const QString &pText);
 };
 
 //==============================================================================

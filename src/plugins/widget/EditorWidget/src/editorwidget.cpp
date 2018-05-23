@@ -23,16 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "coreguiutils.h"
 #include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
 #include "editorwidgetfindreplacewidget.h"
-#include "qscintillawidget.h"
+#include "editorwidgetscrollbar.h"
 
 //==============================================================================
 
-#include <QFrame>
 #include <QKeyEvent>
-#include <QLabel>
-#include <QMainWindow>
-#include <QRegularExpression>
 #include <QSettings>
 #include <QVBoxLayout>
 
@@ -45,11 +42,7 @@ namespace EditorWidget {
 
 EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
-    Core::Widget(pParent),
-    mCurrentLine(0),
-    mCurrentColumn(0),
-    mFindReplaceVisible(false),
-    mReadOnlyStyles(QIntList())
+    Core::Widget(pParent)
 {
     // Create and set our vertical layout
 
@@ -62,19 +55,10 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     // Create our editor and find/replace widget
 
-    mEditor = new QScintillaSupport::QScintillaWidget(pLexer, this);
     mSeparator = Core::newLineWidget(this);
     mFindReplace = new EditorWidgetFindReplaceWidget(this);
 
-    // Check which styles can have their background changed when making them
-    // read-only or writable
-
-    QColor baseColor = Core::baseColor();
-
-    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i) {
-        if (mEditor->backgroundColor(i) == baseColor)
-            mReadOnlyStyles << i;
-    }
+    mEditor = new EditorWidgetEditorWidget(pLexer, mFindReplace, this);
 
     // Set our contents and our read-only state
 
@@ -103,39 +87,29 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     connect(mEditor, SIGNAL(canSelectAll(bool)),
             this, SIGNAL(canSelectAll(bool)));
 
-    // Keep track of our position within our editor
-
-    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(keepTrackOfCursorPosition(int, int)));
-
-    // Keep track of whenever a key is being pressed in our editor or
-    // find/replace widget
-
-    connect(mEditor, SIGNAL(keyPressed(QKeyEvent *, bool &)),
-            this, SLOT(editorKeyPressed(QKeyEvent *, bool &)));
-    connect(mFindReplace, &EditorWidgetFindReplaceWidget::keyPressed,
-            this, &EditorWidget::findReplaceKeyPressed);
-
     // Keep track of whenever the find text changes
 
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::findTextChanged,
-            this, &EditorWidget::findTextChanged);
+            mEditor, &EditorWidgetEditorWidget::findTextChanged);
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::canFindReplace,
             this, &EditorWidget::canFindReplace);
 
     // Keep track of the triggering of some actions in our find/replace widget
 
-    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findPreviousRequested,
-            this, &EditorWidget::findPrevious);
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::findNextRequested,
-            this, &EditorWidget::findNext);
+            mEditor, &EditorWidgetEditorWidget::findNext);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::findPreviousRequested,
+            mEditor, &EditorWidgetEditorWidget::findPrevious);
 
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceRequested,
-            this, &EditorWidget::replace);
+            mEditor, QOverload<>::of(&EditorWidgetEditorWidget::replace));
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceAndFindRequested,
-            this, &EditorWidget::replaceAndFind);
+            mEditor, &EditorWidgetEditorWidget::replaceAndFind);
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::replaceAllRequested,
-            this, &EditorWidget::replaceAll);
+            mEditor, &EditorWidgetEditorWidget::replaceAll);
+
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::searchOptionsChanged,
+            mEditor, &EditorWidgetEditorWidget::highlightAll);
 
     // Add our editor and find/replace widgets to our layout
 
@@ -202,7 +176,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
     // Show/hide our find/replace widget
 
-    setFindReplaceVisible(pEditorWidget->findReplaceIsVisible());
+    setFindReplaceVisible(pEditorWidget->isFindReplaceVisible());
 
     // Update the find/replace widget itself
     // Note: we must inactivate (and then reactivate) our find/replace widget
@@ -217,11 +191,22 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * EditorWidget::editor() const
+EditorWidgetEditorWidget * EditorWidget::editor() const
 {
     // Return our editor
 
     return mEditor;
+}
+
+//==============================================================================
+
+bool EditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // By default, we don't handle our editor's key press event
+
+    return false;
 }
 
 //==============================================================================
@@ -313,15 +298,6 @@ void EditorWidget::setReadOnly(bool pReadOnly)
 
     mEditor->setReadOnly(pReadOnly);
     mFindReplace->setReadOnly(pReadOnly);
-
-    // Update our background colour
-
-    QColor baseColor = Core::baseColor();
-    QColor lockedColor = Core::lockedColor(baseColor);
-    QColor newBackgroundColor = pReadOnly?lockedColor:baseColor;
-
-    foreach (int readOnlyStyle, mReadOnlyStyles)
-        mEditor->setBackgroundColor(readOnlyStyle, newBackgroundColor);
 }
 
 //==============================================================================
@@ -548,40 +524,47 @@ EditorWidgetFindReplaceWidget * EditorWidget::findReplace()
 
 //==============================================================================
 
-bool EditorWidget::findReplaceIsVisible() const
+bool EditorWidget::isFindReplaceVisible() const
 {
     // Return whether our find/replace widget is visible
 
-    return mFindReplaceVisible;
+    return mFindReplace->isVisible();
 }
 
 //==============================================================================
 
 void EditorWidget::setFindReplaceVisible(bool pVisible)
 {
-    // Set our find text, if we are to show our find/replace widget
+    // Set our find text and highlight all its occurrences, if we are to show
+    // our find/replace widget
     // Note: if we are over a word, then we want it to become our find text, but
     //       if we make it so then a call to findText() will be triggered if the
     //       find text is different. Clearly, we don't want this to happen,
     //       hence we inactivate and then reactivate our find/replace widget...
 
     if (pVisible) {
-        QString crtWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
+        int line;
+        int column;
 
-        if (!crtWord.isEmpty()) {
+        mEditor->getCursorPosition(&line, &column);
+
+        QString word = mEditor->wordAt(line, column);
+
+        if (!word.isEmpty()) {
             mFindReplace->setActive(false);
-                mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
-
-                mFindReplace->setFindText(crtWord);
+                mFindReplace->setFindText(word);
             mFindReplace->setActive(true);
+
+            mEditor->highlightAll();
+            mEditor->selectWordAt(line, column);
         } else {
             mFindReplace->selectFindText();
         }
+    } else {
+        mEditor->clearHighlighting();
     }
 
     // Show/hide our find/replace widget
-
-    mFindReplaceVisible = pVisible;
 
     mSeparator->setVisible(pVisible);
     mFindReplace->setVisible(pVisible);
@@ -607,253 +590,20 @@ int EditorWidget::styleAt(int pPosition) const
 
 //==============================================================================
 
-bool EditorWidget::findPrevious()
-{
-    // Find the previous occurrence of the text in our editor
-
-    int oldPosition = mEditor->currentPosition();
-
-    mEditor->setCurrentPosition(oldPosition-mEditor->selectedText().length());
-    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
-
-    bool res = findText(mFindReplace->findText(), false);
-
-    if (!res)
-        mEditor->setCurrentPosition(oldPosition);
-
-    return res;
-}
-
-//==============================================================================
-
 bool EditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
-    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
-
-    return findText(mFindReplace->findText(), true);
+    return mEditor->findNext();
 }
 
 //==============================================================================
 
-void EditorWidget::replace()
+bool EditorWidget::findPrevious()
 {
-    // Replace the current text
+    // Find the previous occurrence of the text in our editor
 
-    if (mFindReplace->useRegularExpression()) {
-        // The find/replace is done using a regular expression, so only replace
-        // the currently selected text if it matches the regular expression
-
-        if (QRegularExpression(mFindReplace->findText(),
-                               mFindReplace->isCaseSensitive()?
-                                   QRegularExpression::NoPatternOption:
-                                   QRegularExpression::CaseInsensitiveOption).match(mEditor->selectedText()).hasMatch()) {
-            mEditor->replace(mFindReplace->replaceText());
-        }
-    } else {
-        // The find/replace is done using a simple match, which may be case
-        // sensitive and/or may require whole words
-
-        // Make sure that the currently selected text is a whole word, should
-        // this be requested
-
-        QString crtSelectedText = mEditor->selectedText();
-        int crtLine;
-        int crtColumn;
-
-        mEditor->getCursorPosition(&crtLine, &crtColumn);
-
-        if (   mFindReplace->searchWholeWordsOnly()
-            && crtSelectedText.compare(mEditor->wordAt(crtLine, crtColumn))) {
-            return;
-        }
-
-        // Replace the currently selected text if we have a match
-
-        if (!crtSelectedText.compare(mFindReplace->findText(),
-                                         mFindReplace->isCaseSensitive()?
-                                             Qt::CaseSensitive:
-                                             Qt::CaseInsensitive)) {
-            mEditor->replace(mFindReplace->replaceText());
-        }
-    }
-}
-
-//==============================================================================
-
-void EditorWidget::replaceAndFind()
-{
-    // Replace the current text and the find the next occurence of the text
-
-    replace();
-    findNext();
-}
-
-//==============================================================================
-
-void EditorWidget::replaceAll()
-{
-    // Replace all the occurences of the text
-    // Note: the original plan was to call mEditor->findFirst() the first time
-    //       round and with wrapping disabled, and then mEditor->findNext()
-    //       until we have found all occurrences, but for some reasons this can
-    //       result in some occurrences being missed, hence the way we do it
-    //       below...
-
-    // Keep track of the first visible line and of our position
-
-    int origFirstVisibleLine = mEditor->firstVisibleLine();
-    int origLine;
-    int origColumn;
-
-    mEditor->getCursorPosition(&origLine, &origColumn);
-
-    // Go to the beginning of the of the editor
-
-    mEditor->QsciScintilla::setCursorPosition(0, 0);
-
-    // Replace all occurrences
-
-    int oldLine = 0;
-    int oldColumn = 0;
-    int newLine;
-    int newColumn;
-
-    while (findNext()) {
-        // Retrieve our new position
-
-        mEditor->getCursorPosition(&newLine, &newColumn);
-
-        // Make sure that our new position is not 'before' our old one
-
-        if (   (newLine < oldLine)
-            || ((newLine == oldLine) && (newColumn < oldColumn))) {
-            break;
-        }
-
-        // Our new position is fine, so replace the occurrence
-
-        mEditor->replace(mFindReplace->replaceText());
-
-        // Get ready for the next occurrence
-
-        oldLine = newLine;
-        oldColumn = newColumn;
-    }
-
-    // Reset the first visible line and go to our original position, after
-    // having corrected it, if needed
-
-    mEditor->setFirstVisibleLine(origFirstVisibleLine);
-
-    origLine = qMin(origLine, mEditor->lines()-1);
-    origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
-
-    mEditor->QsciScintilla::setCursorPosition(origLine, origColumn);
-}
-
-//==============================================================================
-
-void EditorWidget::keepTrackOfCursorPosition(int pLine, int pColumn)
-{
-    // Keep track of our new position within our editor
-
-    if (mEditor->hasFocus()) {
-        mCurrentLine = pLine;
-        mCurrentColumn = pColumn;
-    }
-}
-
-//==============================================================================
-
-void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
-{
-    // Some key combinations from our editor
-
-    if (    mFindReplaceVisible
-        && !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Escape)) {
-        setFindReplaceVisible(false);
-
-        pHandled = true;
-    } else {
-        pHandled = false;
-
-        // Propagate the key event to our main window, in case it needs to
-        // handle some key event (e.g. handle Esc to exit full-screen mode on
-        // macOS)
-
-        QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
-    }
-}
-
-//==============================================================================
-
-void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
-{
-    // Some key combinations from our find/replace widget
-
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Escape)) {
-        setFindReplaceVisible(false);
-
-        pHandled = true;
-    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-               && !(pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
-               &&  (   (pEvent->key() == Qt::Key_Return)
-                    || (pEvent->key() == Qt::Key_Enter))) {
-        if (mFindReplace->findEditHasFocus()) {
-            findNext();
-
-            pHandled = true;
-        } else if (mFindReplace->replaceEditHasFocus()) {
-            replaceAndFind();
-
-            pHandled = true;
-        } else {
-            pHandled = false;
-        }
-    } else {
-        pHandled = false;
-    }
-}
-
-//==============================================================================
-
-bool EditorWidget::findText(const QString &pText, bool pForward)
-{
-    // Find the previous/next occurrence of the given text
-
-    return mEditor->findFirst(pText,
-                              mFindReplace->useRegularExpression(),
-                              mFindReplace->isCaseSensitive(),
-                              mFindReplace->searchWholeWordsOnly(),
-                              true, pForward, mCurrentLine, mCurrentColumn);
-}
-
-//==============================================================================
-
-void EditorWidget::findTextChanged(const QString &pText)
-{
-    // The find text has changed, so look for its first occurrence in our
-    // editor, should there be some text to search otherwise go back to our
-    // original position
-
-    if (pText.isEmpty()) {
-        mEditor->setSelection(mCurrentLine, mCurrentColumn,
-                              mCurrentLine, mCurrentColumn);
-    } else {
-        findText(pText, true);
-    }
+    return mEditor->findPrevious();
 }
 
 //==============================================================================

@@ -17,13 +17,17 @@ add_plugin(EditorWidget
 
         src/editorlistwidget.cpp
         src/editorwidget.cpp
+        src/editorwidgeteditorwidget.cpp
         src/editorwidgetfindreplacewidget.cpp
         src/editorwidgetplugin.cpp
+        src/editorwidgetscrollbar.cpp
     HEADERS_MOC
         src/editorlistwidget.h
         src/editorwidget.h
+        src/editorwidgeteditorwidget.h
         src/editorwidgetfindreplacewidget.h
         src/editorwidgetplugin.h
+        src/editorwidgetscrollbar.h
     UIS
         src/editorwidgetfindreplacewidget.ui
     PLUGINS

@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmleditingviewglobal.h"
 #include "corecliutils.h"
+#include "editorwidget.h"
 #include "splitterwidget.h"
 
 //==============================================================================
@@ -46,7 +47,6 @@ namespace OpenCOR {
 namespace EditorWidget {
     class EditorListItem;
     class EditorListWidget;
-    class EditorWidget;
 }   // namespace EditorWidget
 
 //==============================================================================
@@ -58,6 +58,28 @@ namespace MathMLViewerWidget {
 //==============================================================================
 
 namespace CellMLEditingView {
+
+//==============================================================================
+
+class CellmlEditingViewWidget;
+
+//==============================================================================
+
+class CellmlEditingViewWidgetEditorWidget : public EditorWidget::EditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit CellmlEditingViewWidgetEditorWidget(const QString &pContents,
+                                                 bool pReadOnly,
+                                                 QsciLexer *pLexer,
+                                                 CellmlEditingViewWidget *pParent);
+
+    bool handleEditorKeyPressEvent(QKeyEvent *pEvent) override;
+
+private:
+    CellmlEditingViewWidget *mOwner;
+};
 
 //==============================================================================
 
@@ -75,6 +97,8 @@ public:
     void retranslateUi() override;
 
     void updateSettings(CellmlEditingViewWidget *pEditingWidget);
+
+    virtual bool handleEditorKeyPressEvent(QKeyEvent *pEvent);
 
     MathMLViewerWidget::MathmlViewerWidget * mathmlViewer() const;
     EditorWidget::EditorWidget * editorWidget() const;
