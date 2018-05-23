@@ -132,10 +132,53 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             &&  (pEvent->key() != Qt::Key_Home) && (pEvent->key() != Qt::Key_End)
             &&  (pEvent->key() != Qt::Key_PageUp) && (pEvent->key() != Qt::Key_PageDown)) {
             highlightAll();
+        } else if (!mFindReplace->isVisible()) {
+            clearHighlighting();
         } else {
             QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
         }
     }
+}
+
+//==============================================================================
+
+void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    QScintillaSupport::QScintillaWidget::mouseDoubleClickEvent(pEvent);
+
+    // Check whether something has been selected and, if so, highlight all of
+    // its occurrences
+    // Note: we need to (re)select text since highlighting all of its
+    //       occurrences will clear the selection...
+
+    if (hasSelectedText()) {
+        int line;
+        int column;
+
+        getCursorPosition(&line, &column);
+
+        mFindReplace->setFindText(selectedText());
+
+        highlightAll();
+        selectWordAt(line, column);
+    }
+}
+
+//==============================================================================
+
+void EditorWidgetEditorWidget::mousePressEvent(QMouseEvent *pEvent)
+{
+    // Default handling of the event
+
+    QScintillaSupport::QScintillaWidget::mousePressEvent(pEvent);
+
+    // Clear any highlighting that we might have, if our find/replace widget is
+    // not visible
+
+    if (!mFindReplace->isVisible())
+        clearHighlighting();
 }
 
 //==============================================================================

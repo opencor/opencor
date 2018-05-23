@@ -65,6 +65,8 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
     EditorWidget *mOwner;
