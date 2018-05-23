@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QEventLoop>
+#include <QFileInfo>
 #include <QMap>
 #include <QWidget>
 
@@ -91,8 +92,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     QString fileName = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Local,
-                                                      QString(), false);
+    QString ioError = Core::openFile(fileName);
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
         return NULL;
@@ -117,14 +117,22 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     QString url = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    QString ioError = Core::centralWidget()->openRemoteFile(url, false); // No warning...
+    QString ioError = Core::openRemoteFile(url);
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
         return NULL;
     }
 
-    return initializeSimulation(Core::centralWidget()->localFileName(url));
+    return initializeSimulation(Core::localFileName(url));
 }
+
+//==============================================================================
+
+static PyMethodDef pythonSimulationSupportMethods[] = {
+    {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
+    {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
+    {NULL, NULL, 0, NULL}
+};
 
 //==============================================================================
 
@@ -139,6 +147,8 @@ SimulationSupportPythonWrapper::SimulationSupportPythonWrapper(PyObject *pModule
     PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationData::staticMetaObject);
     PythonQtSupport::registerClass(&OpenCOR::SimulationSupport::SimulationResults::staticMetaObject);
     PythonQtSupport::addInstanceDecorators(this);
+
+    PyModule_AddFunctions(pModule, pythonSimulationSupportMethods);
 }
 
 //==============================================================================
