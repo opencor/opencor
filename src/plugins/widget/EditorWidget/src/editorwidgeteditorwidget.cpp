@@ -151,8 +151,11 @@ void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
     // Check whether something has been selected and, if so, highlight all of
     // its occurrences
-    // Note: we need to (re)select text since highlighting all of its
-    //       occurrences will clear the selection...
+    // Note #1: we must inactivate (and then reactivate) our find/replace widget
+    //          before setting its find text otherwise we will be highlighting
+    //          things twice...
+    // Note #2: we need to (re)select text since highlighting all of its
+    //          occurrences will clear the selection...
 
     if (hasSelectedText()) {
         int line;
@@ -160,7 +163,9 @@ void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
         getCursorPosition(&line, &column);
 
-        mFindReplace->setFindText(selectedText());
+        mFindReplace->setActive(false);
+            mFindReplace->setFindText(selectedText());
+        mFindReplace->setActive(true);
 
         highlightAll();
         selectWordAt(line, column);
