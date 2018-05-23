@@ -281,6 +281,12 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
     if (pHighlightAll)
         clearHighlighting();
 
+    // Carry on, but only if there is really something to highlight, in case we
+    // want to highlight all the occurences of the text
+
+    if (pHighlightAll && mFindReplace->findText().trimmed().isEmpty())
+        return;
+
     // Keep track of the first visible line, of our current line/column, and of
     // the position of our scrollbars
 
