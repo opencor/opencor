@@ -199,20 +199,11 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
 //==============================================================================
 
-QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
-{
-    // Return an icon representating ourselves
-
-    return icons().value(pParameterType);
-}
-
-//==============================================================================
-
 QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
 {
     // Return the mapping between a parameter type and its corresponding icon
 
-    static QMap<int, QIcon> CellmlFileRuntimeParameterIcons = QMap<int, QIcon>();
+    static QMap<int, QIcon> Icons = QMap<int, QIcon>();
 
     static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
     static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
@@ -221,18 +212,27 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
     static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
     static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
 
-    // Initialise the mapping the first time we are called
+    // Initialise the mapping, if needed
 
-    if (CellmlFileRuntimeParameterIcons.isEmpty()) {
-        CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
-        CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
-        CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
-        CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
-        CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::State, StateIcon);
-        CellmlFileRuntimeParameterIcons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
+    if (Icons.isEmpty()) {
+        Icons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
+        Icons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
+        Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
     }
 
-    return CellmlFileRuntimeParameterIcons;
+    return Icons;
+}
+
+//==============================================================================
+
+QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
+{
+    // Return our corresponding icon
+
+    return icons().value(pParameterType);
 }
 
 //==============================================================================

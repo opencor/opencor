@@ -102,8 +102,8 @@ public:
 
     QString formattedUnit(const QString &pVoiUnit) const;
 
-    static QIcon icon(ParameterType pParameterType);
     static QMap<int, QIcon> icons();
+    static QIcon icon(ParameterType pParameterType);
 
 private:
     QString mName;
