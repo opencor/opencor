@@ -1767,22 +1767,18 @@ void CentralWidget::updateGui()
 
     // Show/hide the editing, simulation and analysis modes' corresponding views
     // tab, as needed, and retrieve the corresponding view plugin
-    // Note: we temporarily disable updates otherwise, on Windows and Linux, we
-    //       will quickly see two view tabs when changing modes...
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-    setUpdatesEnabled(false);
 #ifdef ENABLE_SAMPLE_PLUGINS
-        mModes.value(ViewInterface::SampleMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode));
+    mModes.value(ViewInterface::SampleMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode));
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-        mModes.value(ViewInterface::TestMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode));
+    mModes.value(ViewInterface::TestMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode));
 #endif
-        mModes.value(ViewInterface::EditingMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode));
-        mModes.value(ViewInterface::SimulationMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode));
-        mModes.value(ViewInterface::AnalysisMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode));
-    setUpdatesEnabled(true);
+    mModes.value(ViewInterface::EditingMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode));
+    mModes.value(ViewInterface::SimulationMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode));
+    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode));
 
     // Ask the GUI interface for the widget to use the current file (should
     // there be one)
