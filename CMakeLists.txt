@@ -1346,6 +1346,11 @@ elseif(APPLE)
             DESTINATION .
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+    # Python utility to configure scripts
+
+    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
+            DESTINATION Python)
 else()
     # Select TGZ as the packager on Linux
 
@@ -1373,11 +1378,14 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
-    # Python runtime libraries
+    # Python runtime libraries and utilities
 
     INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .
             USE_SOURCE_PERMISSIONS)
+
+    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
+            DESTINATION Python/Scripts)
 
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
