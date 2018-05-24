@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmleditingviewinterface.h"
 #include "cellmleditingviewplugin.h"
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editingviewinterface.h"
 #include "filemanager.h"
