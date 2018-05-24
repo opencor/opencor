@@ -307,6 +307,8 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
 
+    QString furtherInitialize() const;
+
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
     SimulationWorker * worker() const;

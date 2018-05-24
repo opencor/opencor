@@ -28,11 +28,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlfilemanager.h"
 #include "simulation.h"
 #include "simulationworker.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
 #include <QSet>
 #include <QtMath>
+
+//==============================================================================
+
+#include "sbmlapibegin.h"
+    #include "sbml/math/FormulaParser.h"
+#include "sbmlapiend.h"
+
+//==============================================================================
+
+#include "sedmlapibegin.h"
+    #include "sedml/SedAlgorithm.h"
+    #include "sedml/SedDocument.h"
+    #include "sedml/SedOneStep.h"
+    #include "sedml/SedPlot2D.h"
+    #include "sedml/SedRepeatedTask.h"
+    #include "sedml/SedSimulation.h"
+    #include "sedml/SedUniformTimeCourse.h"
+    #include "sedml/SedVectorRange.h"
+#include "sedmlapiend.h"
 
 //==============================================================================
 
@@ -1112,6 +1132,132 @@ Simulation::~Simulation()
 
     delete mResults;
     delete mData;
+}
+
+//==============================================================================
+
+QString Simulation::furtherInitialize() const
+{
+    libsedml::SedDocument *sedmlDocument = sedmlFile()->sedmlDocument();
+    libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
+    libsedml::SedOneStep *sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));
+
+    double startingPoint = sedmlUniformTimeCourse->getOutputStartTime();
+    double endingPoint = sedmlUniformTimeCourse->getOutputEndTime();
+    double pointInterval = (endingPoint-startingPoint)/sedmlUniformTimeCourse->getNumberOfPoints();
+
+    if (sedmlOneStep)
+        endingPoint += sedmlOneStep->getStep();
+
+    mData->setStartingPoint(startingPoint);
+    mData->setEndingPoint(endingPoint);
+    mData->setPointInterval(pointInterval);
+
+    const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
+
+    SolverInterface *odeSolverInterface = 0;
+    SolverInterfaces solverInterfaces = Core::solverInterfaces();
+
+    QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
+
+    foreach (SolverInterface *solverInterface, solverInterfaces) {
+        if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+            odeSolverInterface = solverInterface;
+
+            mData->setOdeSolverName(solverInterface->solverName());
+
+            break;
+        }
+    }
+
+    if (!odeSolverInterface) {
+        return tr("the requested solver (%1) could not be found").arg(kisaoId);
+    }
+
+    for (int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+        const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
+        QString kisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
+        QString id = odeSolverInterface->id(kisaoId);
+
+        QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
+
+        mData->addOdeSolverProperty(id, solverPropertyValue);
+    }
+
+    libsbml::XMLNode *annotation = sedmlAlgorithm->getAnnotation();
+
+    if (annotation) {
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
+
+            if (   !QString::fromStdString(solverPropertiesNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                && !QString::fromStdString(solverPropertiesNode.getName()).compare(SEDMLSupport::SolverProperties)) {
+                for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                    const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
+
+                    if (   !QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                        && !QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                        QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
+                        QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
+
+                        mData->addOdeSolverProperty(id, value);
+                    }
+                }
+            }
+        }
+    }
+
+    annotation = sedmlUniformTimeCourse->getAnnotation();
+
+    if (annotation) {
+        bool mustHaveNlaSolver = false;
+        bool hasNlaSolver = false;
+        QString nlaSolverName = QString();
+
+        for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
+
+            if (   !QString::fromStdString(nlaSolverNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                && !QString::fromStdString(nlaSolverNode.getName()).compare(SEDMLSupport::NlaSolver)) {
+
+                mustHaveNlaSolver = true;
+                nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
+
+                foreach (SolverInterface *solverInterface, solverInterfaces) {
+                    if (!nlaSolverName.compare(solverInterface->solverName())) {
+
+                        mData->setNlaSolverName(nlaSolverName);
+
+                        hasNlaSolver = true;
+
+                        break;
+                    }
+                }
+
+                if (hasNlaSolver) {
+                    for (uint j = 0, jMax = nlaSolverNode.getNumChildren(); j < jMax; ++j) {
+                        const libsbml::XMLNode &solverPropertyNode = nlaSolverNode.getChild(j);
+
+                        if (   !QString::fromStdString(solverPropertyNode.getURI()).compare(SEDMLSupport::OpencorNamespace)
+                            && !QString::fromStdString(solverPropertyNode.getName()).compare(SEDMLSupport::SolverProperty)) {
+                            QString id = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Id.toStdString())));
+                            QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
+
+                            mData->addNlaSolverProperty(id, value);
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (mustHaveNlaSolver && !hasNlaSolver) {
+            return tr("the requested NLA solver (%1) could not be set").arg(nlaSolverName);
+        }
+    }
+
+    return QString();
 }
 
 //==============================================================================
