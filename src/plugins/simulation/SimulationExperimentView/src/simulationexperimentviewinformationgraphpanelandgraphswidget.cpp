@@ -1127,7 +1127,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
         // Add the current parameter to the 'current' component menu
 
-        QAction *parameterAction = componentMenu->addAction(parameter->icon(),
+        QAction *parameterAction = componentMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
                                                             parameter->formattedName());
 
         // Create a connection to handle the parameter value update
