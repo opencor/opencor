@@ -126,11 +126,6 @@ class OpenCORKernel(IPythonKernel):
     implementation_version = '0.2'
     banner = "Jupyter kernel for OpenCOR"
 
-    def __init__(self, *args, **kwds):
-        super().__init__(*args, **kwds)
-        # Use the Jupyter notebook backend for matplotlib
-        matplotlib.use('nbagg')
-
 if __name__ == '__main__':
     import sys                  ### TEMP
     sys.argv.append('--debug')  ### TEMP
