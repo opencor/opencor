@@ -1375,8 +1375,9 @@ else()
 
     # Python runtime libraries
 
-    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/${PYTHON_RELATIVE_RUNTIME_DIR}
-            DESTINATION lib)
+    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
+            DESTINATION .
+            USE_SOURCE_PERMISSIONS)
 
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
