@@ -3373,7 +3373,8 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 
     graphPanel->plot()->legend()->setUpdatesEnabled(false);
 
-    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
+    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY),
+                         GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName()));
 }
 
 //==============================================================================
