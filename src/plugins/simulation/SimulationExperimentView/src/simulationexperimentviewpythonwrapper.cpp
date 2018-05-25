@@ -74,6 +74,79 @@ static SimulationSupport::Simulation *getSimulation(const QString &pFileName,
 
 //==============================================================================
 
+static PyObject *initializeSimulation(const QString &pFileName)
+{
+    SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
+
+    if (simulationExperimentViewWidget) {
+        simulationExperimentViewWidget->initialize(pFileName);
+
+        auto simulation = getSimulation(pFileName, simulationExperimentViewWidget);
+
+        if (simulation)
+            return PythonQt::priv()->wrapQObject(simulation);
+    }
+
+    Py_RETURN_NONE;
+}
+
+//==============================================================================
+
+static PyObject *openSimulation(PyObject *self, PyObject *args)
+{
+    Q_UNUSED(self);
+
+    PyObject *bytes;
+    char *name;
+    Py_ssize_t len;
+    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+        Py_RETURN_NONE;
+    }
+    PyBytes_AsStringAndSize(bytes, &name, &len);
+    QString fileName = QString::fromUtf8(name, len);
+    Py_DECREF(bytes);
+
+    QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Local,
+                                                      QString(), false);
+
+    if (!ioError.isEmpty()) {
+        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+
+        return NULL;
+    }
+
+    return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
+}
+
+//==============================================================================
+
+static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
+{
+    Q_UNUSED(self);
+
+    PyObject *bytes;
+    char *name;
+    Py_ssize_t len;
+    if (!PyArg_ParseTuple(args, "O&", PyUnicode_FSConverter, &bytes)) {
+        Py_RETURN_NONE;
+    }
+    PyBytes_AsStringAndSize(bytes, &name, &len);
+    QString url = QString::fromUtf8(name, len);
+    Py_DECREF(bytes);
+
+    QString ioError = Core::centralWidget()->openRemoteFile(url, false);
+
+    if (!ioError.isEmpty()) {
+        PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+
+        return NULL;
+    }
+
+    return initializeSimulation(Core::localFileName(url));
+}
+
+//==============================================================================
+
 static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 {
     Q_UNUSED(self);
@@ -87,7 +160,6 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 
         if (simulation)
             return PythonQt::priv()->wrapQObject(simulation);
-
     }
 
     Py_RETURN_NONE;
@@ -97,6 +169,8 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 
 static PyMethodDef pythonSimulationExperimentViewMethods[] = {
     {"simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation."},
+    {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
+    {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
     {NULL, NULL, 0, NULL}
 };
 

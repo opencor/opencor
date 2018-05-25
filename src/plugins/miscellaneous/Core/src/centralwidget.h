@@ -110,12 +110,13 @@ public:
 
     QString currentFileName() const;
 
-    void openFile(const QString &pFileName,
-                  const File::Type &pType = File::Local,
-                  const QString &pUrl = QString());
+    QString openFile(const QString &pFileName,
+                     const File::Type &pType = File::Local,
+                     const QString &pUrl = QString(),
+                     bool pShowWarning = true);
     void openFiles(const QStringList &pFileNames);
 
-    void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
+    QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
 
