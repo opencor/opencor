@@ -67,6 +67,12 @@ static PyObject *initializeSimulation(const QString &pFileName)
         // Do we have a valid runtime?
 
         if (!simulation->runtime()) {
+            // The simulation is missing a runtime so no longer manage it
+
+            simulationManager->unmanage(pFileName);
+
+            // And raise a Python exception
+
             PyErr_SetString(PyExc_ValueError, QObject::tr("unable to get simulations's runtime").toStdString().c_str());
 
             return NULL;
@@ -109,6 +115,12 @@ static PyObject *initializeSimulation(const QString &pFileName)
         const QString initialisationError = simulation->furtherInitialize();
 
         if (!initialisationError.isEmpty()) {
+            // We couldn't complete initialisation so no longer manage the simulation
+
+            simulationManager->unmanage(pFileName);
+
+            // And raise a Python exception
+
             PyErr_SetString(PyExc_ValueError, initialisationError.toStdString().c_str());
 
             return NULL;
