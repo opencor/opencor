@@ -1138,6 +1138,8 @@ Simulation::~Simulation()
 
 QString Simulation::furtherInitialize() const
 {
+    // Initialize ourself from a SED-ML document
+
     libsedml::SedDocument *sedmlDocument = sedmlFile()->sedmlDocument();
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(sedmlDocument->getSimulation(0));
     libsedml::SedOneStep *sedmlOneStep = static_cast<libsedml::SedOneStep *>(sedmlDocument->getSimulation(1));

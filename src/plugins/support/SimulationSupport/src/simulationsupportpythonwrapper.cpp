@@ -156,13 +156,14 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     Py_DECREF(bytes);
 
     QString ioError = Core::openFile(fileName);
+
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
 
         return NULL;
-    } else {
-        return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
     }
+
+    return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
 }
 
 //==============================================================================
@@ -182,8 +183,10 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     Py_DECREF(bytes);
 
     QString ioError = Core::openRemoteFile(url);
+
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+
         return NULL;
     }
 

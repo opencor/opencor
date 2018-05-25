@@ -492,7 +492,9 @@ QString openFile(const QString &pFileName, const File::Type &pType,
     FileManager::Status fileStatus = FileManager::instance()->manage(pFileName, pType, pUrl);
 
     if (fileStatus == FileManager::DoesNotExist)
-        return QObject::tr("'%1' could not be opened.").arg(pFileName);
+        return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
+                                                                QDir::toNativeSeparators(pFileName):
+                                                                pFileName);
 
     return QString();
 }
