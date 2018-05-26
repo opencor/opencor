@@ -812,7 +812,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 #ifdef QT_DEBUG
                 // We should never come here...
 
-                qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot of unknown type.", __FILE__, __LINE__);
+                qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
 #endif
 
                 break;
