@@ -724,7 +724,7 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 
 //==============================================================================
 
-void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
+void CentralWidget::openFile(const QString &pFileName, File::Type pType,
                              const QString &pUrl)
 {
     // Make sure that modes are available and that the file exists
@@ -1903,7 +1903,7 @@ void CentralWidget::updateGui()
 
 //==============================================================================
 
-TabBarWidget *CentralWidget::newTabBarWidget(const QTabBar::Shape &pShape,
+TabBarWidget *CentralWidget::newTabBarWidget(QTabBar::Shape pShape,
                                              bool pFileTabs)
 {
     // Create and return a tab bar

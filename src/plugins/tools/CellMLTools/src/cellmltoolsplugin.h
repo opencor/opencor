@@ -74,7 +74,7 @@ private:
 
     QAction *mExportToUserDefinedFormatAction;
 
-    void exportTo(const CellMLSupport::CellmlFile::Version &pVersion);
+    void exportTo(CellMLSupport::CellmlFile::Version pVersion);
 
     void runHelpCommand();
     int runExportCommand(const QStringList &pArguments);

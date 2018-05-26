@@ -86,7 +86,7 @@ private:
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
 
-    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
+    QStandardItem * pluginCategoryItem(PluginInfo::Category pCategory);
 
     QString statusDescription(Plugin *pPlugin) const;
 

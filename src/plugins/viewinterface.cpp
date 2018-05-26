@@ -51,7 +51,7 @@ static const auto ViewModeAnalysis   = QStringLiteral("AnalysisMode");
 
 //==============================================================================
 
-QString ViewInterface::modeAsString(const Mode &pMode)
+QString ViewInterface::modeAsString(Mode pMode)
 {
     // Return the mode corresponding to the given mode string
 

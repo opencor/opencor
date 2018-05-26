@@ -61,7 +61,7 @@ public:
         ExposureFile = QStandardItem::UserType+1
     };
 
-    explicit PmrWindowItem(const Type &pType, const QString &pText,
+    explicit PmrWindowItem(Type pType, const QString &pText,
                            const QString &pUrl);
 
     int type() const override;

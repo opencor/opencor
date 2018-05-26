@@ -30,7 +30,7 @@ namespace COMBINESupport {
 
 //==============================================================================
 
-CombineArchiveIssue::CombineArchiveIssue(const Type &pType,
+CombineArchiveIssue::CombineArchiveIssue(Type pType,
                                          const QString &pMessage) :
     mType(pType),
     mMessage(pMessage)

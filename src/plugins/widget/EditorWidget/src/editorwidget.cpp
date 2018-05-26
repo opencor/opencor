@@ -472,7 +472,7 @@ void EditorWidget::resetUndoHistory()
 
 QLabel * EditorWidget::cursorPositionWidget() const
 {
-    // Return the cursort position widget of our editor
+    // Return the cursor position widget of our editor
 
     return mEditor->cursorPositionWidget();
 }

@@ -295,7 +295,7 @@ void CellMLTextViewConverter::unindent()
 
 //==============================================================================
 
-void CellMLTextViewConverter::outputString(const OutputType &pOutputType,
+void CellMLTextViewConverter::outputString(OutputType pOutputType,
                                            const QString &pString)
 {
     // Output the given string

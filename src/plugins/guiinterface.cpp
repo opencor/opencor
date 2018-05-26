@@ -42,7 +42,7 @@ namespace Gui {
 
 //==============================================================================
 
-Menu::Menu(const Menu::Type &pType, QMenu *pMenu) :
+Menu::Menu(Type pType, QMenu *pMenu) :
     mType(pType),
     mAction(0),
     mMenu(pMenu)
@@ -51,7 +51,7 @@ Menu::Menu(const Menu::Type &pType, QMenu *pMenu) :
 
 //==============================================================================
 
-Menu::Menu(const Menu::Type &pType, QAction *pAction, QMenu *pMenu) :
+Menu::Menu(Type pType, QAction *pAction, QMenu *pMenu) :
     mType(pType),
     mAction(pAction),
     mMenu(pMenu)
@@ -87,7 +87,7 @@ QMenu * Menu::menu() const
 
 //==============================================================================
 
-MenuAction::MenuAction(const MenuAction::Type &pType, QAction *pAction) :
+MenuAction::MenuAction(Type pType, QAction *pAction) :
     mType(pType),
     mAction(pAction)
 {

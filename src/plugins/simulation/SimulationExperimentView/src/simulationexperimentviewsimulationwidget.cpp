@@ -1047,11 +1047,14 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     setUpdatesEnabled(true);
 
     // Keep track of the initial size of our different graph panels
-    // Note: we do this through a single shot to give time to be certain that
-    //       the GUI is ready and that the size of our different graph panels is
-    //       therefore final...
+    // Note: we do this through a single shot (and after short delay) to be
+    //       certain that the GUI is ready and that the size of our different
+    //       graph panels is therefore final. Not to do this might, on Windows
+    //       at least, result in a file being considered modified (e.g. when
+    //       you use the N62 SED-ML file, then switch to another file and
+    //       back)...
 
-    QTimer::singleShot(0, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
+    QTimer::singleShot(500, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
 }
 
 //==============================================================================
@@ -3218,20 +3221,16 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
     //          our simulation being used while it has already been deleted due
     //          to threading issues...
 
-    enum {
-        ResetDelay = 169
-    };
-
-    if (isVisible())
-        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
-    else
-        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
+    QTimer::singleShot(169, this,
+                       isVisible()?
+                           &SimulationExperimentViewSimulationWidget::resetProgressBar:
+                           &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
 }
 
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
-                                                               const ErrorType &pErrorType)
+                                                               ErrorType pErrorType)
 {
     // Output the simulation error
 
@@ -3740,7 +3739,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
                                                                        int pSimulationRun,
-                                                                       const Task &pTask)
+                                                                       Task pTask)
 {
     // Update our simulation results
 
@@ -3923,7 +3922,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
-                                                                       const Task &pTask)
+                                                                       Task pTask)
 {
     // Update our simulation results
 

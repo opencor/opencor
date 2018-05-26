@@ -512,7 +512,7 @@ quint64 SimulationExperimentViewWidget::simulationResultsSize(const QString &pFi
 //==============================================================================
 
 void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFileName,
-                                                            const SimulationExperimentViewSimulationWidget::Task &pTask)
+                                                            SimulationExperimentViewSimulationWidget::Task pTask)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -633,7 +633,7 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+void SimulationExperimentViewWidget::graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode)
 {
     // Keep track of the new graph panel / graphs mode
 

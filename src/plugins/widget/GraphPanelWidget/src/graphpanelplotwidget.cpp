@@ -879,7 +879,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
                                                   int pLineWidth,
-                                                  const Position &pPosition,
+                                                  Position pPosition,
                                                   bool pCanMovePosition)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
@@ -2661,7 +2661,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
+bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
                                      bool pCanZoomOut,
                                      const QwtScaleMap &pCanvasMap,
                                      double pPoint, double &pMin, double &pMax)
@@ -2719,9 +2719,8 @@ bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
-                                     const Scaling &pScalingX,
-                                     const Scaling &pScalingY)
+void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
+                                     Scaling pScalingY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
@@ -3252,6 +3251,26 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(false);
+        // Note #1: this is needed on Windows and Linux otherwise to switch
+        //          files that use different modes (e.g. the N62 SED-ML file
+        //          uses the Simulation Experiment view, i.e. Simulation mode,
+        //          and the N62 CellML file uses the CellML Text view, i.e. the
+        //          Editing mode) may result in the view tab of both modes being
+        //          temporarily visible. Not only that, but using the above
+        //          example, to switch from the N62 CellML file to the N62
+        //          SED-ML file results in the Simulation Experiment view
+        //          quickly flashing and, on Windows, potentially resulting in
+        //          the N62 SED-ML file being considered modified (probably as a
+        //          result of the different graph panels being thought to have
+        //          changed heights...?). Not quite sure why to temporarily
+        //          disable updates fixes things, but it does...
+        // Note #2: to have this on macOS may result in a graph panel becoming
+        //          black, so we definitely don't want to do it on that
+        //          platform...
+#endif
+
         // Determine how much space we should have directly to the left and
         // right of the X axis
         // Note: normally, we would initialise minBorderDistStartX and
@@ -3332,6 +3351,10 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                 replot();
             }
         }
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(true);
+#endif
     }
 }
 

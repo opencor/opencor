@@ -65,7 +65,7 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
-                                                       const ParameterType &pType,
+                                                       ParameterType pType,
                                                        int pIndex) :
     mName(pName),
     mDegree(pDegree),

@@ -252,7 +252,7 @@ void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode)
+void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode)
 {
     // Our graph panel / graphs mode has changed, so update our corresponding
     // actions and update the title of our collapsible widget's third header's

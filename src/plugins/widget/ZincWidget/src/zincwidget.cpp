@@ -118,7 +118,7 @@ ZincWidget::ProjectionMode ZincWidget::projectionMode()
 
 //==============================================================================
 
-void ZincWidget::setProjectionMode(const ProjectionMode &pProjectionMode)
+void ZincWidget::setProjectionMode(ProjectionMode pProjectionMode)
 {
     // Set our projection mode
 

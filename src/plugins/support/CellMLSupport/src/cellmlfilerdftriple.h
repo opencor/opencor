@@ -97,11 +97,11 @@ public:
                                  iface::rdf_api::Triple *pRdfTriple);
     explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                  const QString pSubject,
-                                 const ModelQualifier &pModelQualifier,
+                                 ModelQualifier pModelQualifier,
                                  const QString &pResource, const QString &pId);
     explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                  const QString pSubject,
-                                 const BioQualifier &pBioQualifier,
+                                 BioQualifier pBioQualifier,
                                  const QString &pResource, const QString &pId);
     ~CellmlFileRdfTriple();
 
@@ -120,11 +120,11 @@ public:
 
     ModelQualifier modelQualifier() const;
     QString modelQualifierAsString() const;
-    static QString modelQualifierAsString(const ModelQualifier &pModelQualifier);
+    static QString modelQualifierAsString(ModelQualifier pModelQualifier);
 
     BioQualifier bioQualifier() const;
     QString bioQualifierAsString() const;
-    static QString bioQualifierAsString(const BioQualifier &pBioQualifier);
+    static QString bioQualifierAsString(BioQualifier pBioQualifier);
 
     static QStringList qualifiersAsStringList();
 
@@ -152,9 +152,8 @@ private:
 
     explicit CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                  iface::rdf_api::Triple *pRdfTriple,
-                                 const Type &pType,
-                                 const ModelQualifier &pModelQualifier,
-                                 const BioQualifier &pBioQualifier,
+                                 Type pType, ModelQualifier pModelQualifier,
+                                 BioQualifier pBioQualifier,
                                  const QString &pResource, const QString &pId);
 };
 

@@ -633,7 +633,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString &pItemInformation,
-                                                                  const InformationType &pInformationType)
+                                                                  InformationType pInformationType)
 {
     // Retrieve the information
 

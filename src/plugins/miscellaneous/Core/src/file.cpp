@@ -41,7 +41,7 @@ static int gNewIndex = 0;
 
 //==============================================================================
 
-File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
+File::File(const QString &pFileName, Type pType, const QString &pUrl) :
     mFileName(canonicalFileName(pFileName)),
     mUrl(pUrl)
 {

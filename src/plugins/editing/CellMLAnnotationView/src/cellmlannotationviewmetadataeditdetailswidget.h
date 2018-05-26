@@ -180,7 +180,7 @@ private:
                         bool pInternetConnectionAvailable = true);
 
     void genericLookUp(const QString &pItemInformation = QString(),
-                       const InformationType &pInformationType = None);
+                       InformationType pInformationType = None);
 
     bool isDirectTerm(const QString &pTerm) const;
 
