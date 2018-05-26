@@ -590,7 +590,7 @@ void SimulationExperimentViewInformationParametersWidget::gradientToggled(
         if (mGradientIndices.contains(index)) {
             if (!pCalculate) {
                 mGradientIndices.remove(index);
-                property->setIcon(pParameter->icon());
+                property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(pParameter->type()));
             }
         } else if (pCalculate) {
             mGradientIndices << index;

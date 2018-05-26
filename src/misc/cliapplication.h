@@ -58,6 +58,7 @@ private:
     PluginManager *mPluginManager;
 
     Plugins mLoadedPluginPlugins;
+    Plugins mLoadedSolverPlugins;
     Plugins mLoadedCliPlugins;
 
     void loadPlugins();

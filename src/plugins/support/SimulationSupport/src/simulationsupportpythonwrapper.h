@@ -66,11 +66,11 @@ private:
     QString mErrorMessage;
 
 public slots:
-    void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
+    void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
-    void resetParameters(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
+    void resetParameters(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
-    bool run(OpenCOR::SimulationSupport::Simulation *pSimulationSupportSimulation);
+    bool run(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
     // Set a simulation's point data
 

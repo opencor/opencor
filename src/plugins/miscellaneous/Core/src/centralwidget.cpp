@@ -671,20 +671,6 @@ QString CentralWidget::currentFileName() const
 
 //==============================================================================
 
-QString CentralWidget::localFileName(const QString &pUrl) const
-{
-    // Return the local file name, if any
-
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
-
-    return isLocalFile ? pUrl : mRemoteLocalFileNames.value(fileNameOrUrl);
-}
-
-//==============================================================================
-
 void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 {
     // Update the text, tool tip and icon to be used for the given file tab
@@ -757,7 +743,9 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
                                                                                      pFileName));
         }
 
-        return tr("'%1' could not be opened.").arg(pFileName);
+        return tr("%1 could not be opened.").arg(pUrl.isEmpty()?
+                                                     QDir::toNativeSeparators(pFileName):
+                                                     pFileName);
     }
 
     // Check whether the file is already opened and, if so, select it and leave
@@ -889,8 +877,10 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 #ifdef QT_DEBUG
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
+
                 return tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
             } else {
+
                 return QString("");
             }
         } else {
@@ -907,9 +897,9 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
             return tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
         }
-    } else {
-        return openFile(fileName, File::Remote, fileNameOrUrl, pShowWarning);
     }
+
+    return openFile(fileName, File::Remote, fileNameOrUrl);
 }
 
 //==============================================================================
@@ -1377,6 +1367,23 @@ bool CentralWidget::closeFile(int pIndex)
     // Close the file which index is given
 
     return closeFile(pIndex, false);
+}
+
+//==============================================================================
+
+bool CentralWidget::closeFile(const QString &pFileName)
+{
+    // Close the file whose filename is given
+
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
+        if (!mFileNames[i].compare(pFileName)) {
+            // We have found the file to close
+
+            return closeFile(i, true);
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================

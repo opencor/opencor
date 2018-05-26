@@ -48,6 +48,7 @@ import marshal
 import argparse
 import subprocess
 from types import CodeType
+from collections import OrderedDict
 
 windows = (os.name == 'nt')
 
@@ -57,7 +58,7 @@ bin_python = path_slash + 'bin' + path_slash + python_exe
 
 _pybin_match = re.compile(r'^python\d+\.\d+$')
 
-def update_script(script_filename, new_path):
+def update_script(script_filename, new_path, clear_args, extra_args):
     """Updates shebang lines for actual scripts."""
     try:
         with open(script_filename, 'r') as f:
@@ -89,15 +90,21 @@ def update_script(script_filename, new_path):
     or '/usr/bin/env python' in args[0]:
         return
 
+    if clear_args: del args[1:]
+    arg_set = OrderedDict([(a, None) for a in args[1:]])
+    arg_set.update(OrderedDict([(a, None) for a in extra_args]))
+    new_args = list(arg_set.keys())
+
     add_quote = (' ' in new_path)
     new_bin = os.path.join(new_path, 'bin', python_exe)
-    if new_bin == args[0] and has_quote == add_quote:
+    if new_bin == args[0] and has_quote == add_quote and new_args == args[1:]:
         return
 
     if add_quote:
         args[0] = '%s%s%s' % (quote, new_bin, quote)
     else:
         args[0] = new_bin
+    args[1:] = new_args
 
     logging.info('S: %s', script_filename)
     lines[0] = '#!%s\n' % ' '.join(args)
@@ -105,10 +112,10 @@ def update_script(script_filename, new_path):
         f.writelines(lines)
 
 
-def update_scripts(bin_dir, new_path):
+def update_scripts(bin_dir, new_path, clear_args, extra_args):
     """Updates all scripts in the bin folder."""
     for fn in os.listdir(bin_dir):
-        update_script(os.path.join(bin_dir, fn), new_path)
+        update_script(os.path.join(bin_dir, fn), new_path, clear_args, extra_args)
 
 
 def update_pyc(filename, new_path):
@@ -164,7 +171,7 @@ def update_pycs(lib_dir, new_path, lib_name):
                     update_pyc(filename, local_path)
 
 
-def update_paths(base, new_path):
+def update_paths(base, new_path, clear_args, extra_args):
     """Updates all paths in a virtualenv to a new one."""
     if new_path == 'auto':
         new_path = os.path.abspath(base)
@@ -199,7 +206,7 @@ def update_paths(base, new_path):
         print('error: %s does not refer to a Python installation' % base)
         return False
 
-    update_scripts(scripts_dir, new_path)
+    update_scripts(scripts_dir, new_path, clear_args, extra_args)
     update_pycs(lib_dir, new_path, lib_name)
 
     return True
@@ -208,13 +215,22 @@ def update_paths(base, new_path):
 def main():
     parser = argparse.ArgumentParser(description='Update the path of scripts '
                                                  'to a new Python prefix')
-    parser.add_argument('--update-path', dest='update_path',
-                                         help='Path to scripts. Set to "auto" '
-                                              'for autodetection')
-    parser.add_argument('--verbose', dest='verbose',
-                                     help='Show names of updated scripts')
 
-    parser.add_argument('path', help='Path to new Python installation.')
+    parser.add_argument('-c', '--clear-args', dest='clear_args',
+                        default=False, action='store_true',
+                        help='Clear all existing arguments to Python')
+
+    parser.add_argument('-u', '--update-path', dest='update_path',
+                        help='Path to scripts. Set to "auto" for autodetection')
+
+    parser.add_argument('-v', '--verbose', dest='verbose',
+                        default=False, action='store_true',
+                        help='Show names of updated scripts')
+
+    parser.add_argument('path', metavar='PATH', help='Path to new Python installation.')
+
+    parser.add_argument('extra_args', metavar='ARGS', nargs=argparse.REMAINDER,
+                        help='Additional arguments to append to Python')
 
     args = parser.parse_args()
     if not args.update_path:
@@ -223,10 +239,7 @@ def main():
     if not args.verbose:
         logging.disable(logging.INFO)
 
-    rv = 0
-    if not update_paths(args.path, args.update_path):
-        rv = 1
-    sys.exit(rv)
+    sys.exit(0 if update_paths(args.path, args.update_path, args.clear_args, args.extra_args) else 1)
 
 
 if __name__ == '__main__':
