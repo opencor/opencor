@@ -410,9 +410,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         //              QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
         //
         //              outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
-        //          but this doesnt' get us exactly to the bottom of the page...
+        //          but this doesn't get us exactly to the bottom of the page...
 
-        QTimer::singleShot(1, this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple);
+        QTimer::singleShot(0, this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple);
     } else if (mLookUpRdfTripleInformation == No) {
         return;
     }
