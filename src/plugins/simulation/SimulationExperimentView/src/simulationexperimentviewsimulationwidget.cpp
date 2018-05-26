@@ -1047,11 +1047,14 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     setUpdatesEnabled(true);
 
     // Keep track of the initial size of our different graph panels
-    // Note: we do this through a single shot to give time to be certain that
-    //       the GUI is ready and that the size of our different graph panels is
-    //       therefore final...
+    // Note: we do this through a single shot (and after short delay) to be
+    //       certain that the GUI is ready and that the size of our different
+    //       graph panels is therefore final. Not to do this might, on Windows
+    //       at least, result in a file being considered modified (e.g. when
+    //       you use the N62 SED-ML file, then switch to another file and
+    //       back)...
 
-    QTimer::singleShot(0, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
+    QTimer::singleShot(500, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
 }
 
 //==============================================================================
