@@ -539,11 +539,7 @@ void WebViewerWidget::loadFinished()
     // The loading is finished, so reset our progress bar, but with a slight
     // delay (it looks better that way)
 
-    enum {
-        ResetDelay = 169
-    };
-
-    QTimer::singleShot(ResetDelay, this, &WebViewerWidget::resetProgressBar);
+    QTimer::singleShot(169, this, &WebViewerWidget::resetProgressBar);
 }
 
 //==============================================================================

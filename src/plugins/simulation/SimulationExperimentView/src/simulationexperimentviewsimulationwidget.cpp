@@ -3218,14 +3218,10 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
     //          our simulation being used while it has already been deleted due
     //          to threading issues...
 
-    enum {
-        ResetDelay = 169
-    };
-
-    if (isVisible())
-        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
-    else
-        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
+    QTimer::singleShot(169, this,
+                       isVisible()?
+                           &SimulationExperimentViewSimulationWidget::resetProgressBar:
+                           &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
 }
 
 //==============================================================================
