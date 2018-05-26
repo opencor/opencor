@@ -119,6 +119,7 @@ public:
     QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
+    bool closeFile(const QString &pFileName);
 
     bool selectMode(const QString &pModeName);
     bool selectView(const QString &pViewName);

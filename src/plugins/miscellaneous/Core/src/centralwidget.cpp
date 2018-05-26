@@ -1371,6 +1371,23 @@ bool CentralWidget::closeFile(int pIndex)
 
 //==============================================================================
 
+bool CentralWidget::closeFile(const QString &pFileName)
+{
+    // Close the file whose filename is given
+
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
+        if (!mFileNames[i].compare(pFileName)) {
+            // We have found the file to close
+
+            return closeFile(i, true);
+        }
+    }
+
+    return false;
+}
+
+//==============================================================================
+
 bool CentralWidget::closeFile()
 {
     // Close the current file

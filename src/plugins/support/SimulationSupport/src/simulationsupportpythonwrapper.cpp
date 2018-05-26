@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfileruntime.h"
 #include "datastoreinterface.h"
 #include "datastorepythonwrapper.h"
+#include "filemanager.h"
 #include "interfaces.h"
 #include "pythonqtsupport.h"
 #include "simulation.h"
@@ -195,9 +196,42 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
 
 //==============================================================================
 
+static PyObject *closeSimulation(PyObject *self, PyObject *args)
+{
+    Q_UNUSED(self);
+
+    Py_ssize_t argc = PyTuple_Size(args);
+    if (argc >  0) {
+        PyObject *self = PyTuple_GET_ITEM(args, 0);
+
+        if (PyObject_TypeCheck(self, &PythonQtInstanceWrapper_Type)) {
+            PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper *)self;
+
+            // Get the wrapped simulation
+
+            SimulationSupport::Simulation *simulation = (SimulationSupport::Simulation *)wrap->_objPointerCopy;
+
+            QString fileName = simulation->fileName();
+
+            // Close the simulation  by asking our manager to no longer manage it
+
+            SimulationManager::instance()->unmanage(simulation->fileName());
+
+            // And tell the file manager that we no longer are using the file
+
+            Core::FileManager::instance()->unmanage(fileName);
+        }
+    }
+
+    Py_RETURN_NONE;
+}
+
+//==============================================================================
+
 static PyMethodDef pythonSimulationSupportMethods[] = {
     {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
     {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
+    {"closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation."},
     {NULL, NULL, 0, NULL}
 };
 

@@ -147,6 +147,37 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
 
 //==============================================================================
 
+static PyObject *closeSimulation(PyObject *self, PyObject *args)
+{
+    Q_UNUSED(self);
+
+    Py_ssize_t argc = PyTuple_Size(args);
+    if (argc >  0) {
+        PyObject *self = PyTuple_GET_ITEM(args, 0);
+
+        if (PyObject_TypeCheck(self, &PythonQtInstanceWrapper_Type)) {
+            PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper *)self;
+
+            // Get the wrapped simulation
+
+            SimulationSupport::Simulation *simulation = (SimulationSupport::Simulation *)wrap->_objPointerCopy;
+
+            // Close it by closing its file, raising an exception if we
+            // are unable to do so
+
+            if (!Core::centralWidget()->closeFile(simulation->fileName())) {
+                PyErr_SetString(PyExc_IOError, "unable to close file");
+
+                return NULL;
+            }
+        }
+    }
+
+    Py_RETURN_NONE;
+}
+
+//==============================================================================
+
 static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 {
     Q_UNUSED(self);
@@ -171,6 +202,7 @@ static PyMethodDef pythonSimulationExperimentViewMethods[] = {
     {"simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation."},
     {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
     {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
+    {"closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation."},
     {NULL, NULL, 0, NULL}
 };
 
