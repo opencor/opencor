@@ -328,7 +328,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
         foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
             if (   !pOnlyErrors
                 || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
-                EditorWidget::EditorListItem::Type issueType;
+                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Unknown;
 
                 switch (sedmlFileIssue.type()) {
                 case SEDMLSupport::SedmlFileIssue::Unknown:

@@ -70,6 +70,14 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
     setToolTip(text());
 
     switch (pType) {
+    case Unknown:
+#ifdef QT_DEBUG
+        // We should never come here...
+
+        qFatal("FATAL ERROR | %s:%d: a list item cannot be of unknown type.", __FILE__, __LINE__);
+#endif
+
+        break;
     case Error:
         setIcon(ErrorIcon);
 
