@@ -808,6 +808,14 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             QString issueType;
 
             switch (sedmlFileIssue.type()) {
+            case SEDMLSupport::SedmlFileIssue::Unknown:
+#ifdef QT_DEBUG
+                // We should never come here...
+
+                qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot of unknown type.", __FILE__, __LINE__);
+#endif
+
+                break;
             case SEDMLSupport::SedmlFileIssue::Information:
                 issueType = tr("Information:");
 

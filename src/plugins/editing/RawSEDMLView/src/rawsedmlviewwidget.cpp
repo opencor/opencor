@@ -331,19 +331,27 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
                 EditorWidget::EditorListItem::Type issueType;
 
                 switch (sedmlFileIssue.type()) {
+                case SEDMLSupport::SedmlFileIssue::Unknown:
+#ifdef QT_DEBUG
+                    // We should never come here...
+
+                    qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot of unknown type.", __FILE__, __LINE__);
+#endif
+
+                    break;
                 case SEDMLSupport::SedmlFileIssue::Information:
                     issueType = EditorWidget::EditorListItem::Information;
 
                     break;
-                    case SEDMLSupport::SedmlFileIssue::Error:
+                case SEDMLSupport::SedmlFileIssue::Error:
                     issueType = EditorWidget::EditorListItem::Error;
 
                     break;
-                    case SEDMLSupport::SedmlFileIssue::Warning:
+                case SEDMLSupport::SedmlFileIssue::Warning:
                     issueType = EditorWidget::EditorListItem::Warning;
 
                     break;
-                    case SEDMLSupport::SedmlFileIssue::Fatal:
+                case SEDMLSupport::SedmlFileIssue::Fatal:
                     issueType = EditorWidget::EditorListItem::Fatal;
 
                     break;

@@ -264,7 +264,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     for (uint i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
         const libsedml::SedError *error = errorLog->getError(i);
-        SedmlFileIssue::Type issueType;
+        SedmlFileIssue::Type issueType = SedmlFileIssue::Unknown;
 
         switch (error->getSeverity()) {
         case LIBSBML_SEV_INFO:
