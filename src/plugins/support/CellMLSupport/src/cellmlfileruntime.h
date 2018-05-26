@@ -71,6 +71,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameter
 {
 public:
     enum ParameterType {
+        Unknown,
         Voi,
         Constant,
         ComputedConstant,

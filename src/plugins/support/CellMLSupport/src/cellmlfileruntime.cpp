@@ -339,7 +339,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
         // Determine the type of our computation target
 
-        CellmlFileRuntimeParameter::ParameterType parameterType;
+        CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::Unknown;
 
         switch (computationTarget->type()) {
         case iface::cellml_services::VARIABLE_OF_INTEGRATION:
