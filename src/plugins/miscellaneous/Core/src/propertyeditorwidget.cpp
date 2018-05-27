@@ -1064,7 +1064,7 @@ void Property::setColorValue(const QColor &pColorValue)
 {
     // Set our value, should it be of color type
 
-    if (mType == Color) {
+    if (mType == Color && pColorValue.isValid()) {
         QString colorValueName = pColorValue.name(QColor::HexArgb);
 
         if (colorValueName.startsWith("#ff"))

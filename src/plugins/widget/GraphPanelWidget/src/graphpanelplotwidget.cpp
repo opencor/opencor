@@ -176,7 +176,7 @@ GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
 
     setLegendAttribute(LegendShowLine);
     setLegendAttribute(LegendShowSymbol);
-    setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(QColor(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(RenderAntialiased);
 }
 
@@ -192,6 +192,18 @@ GraphPanelPlotGraph * GraphPanelPlotGraphRun::owner() const
 //==============================================================================
 
 static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
+
+//==============================================================================
+
+QList<QColor> GraphPanelPlotGraph::RunColours =  {
+    QColor::fromRgb(0xe41a1c),
+    QColor::fromRgb(0x377eb8),
+    QColor::fromRgb(0x4daf4a),
+    QColor::fromRgb(0x984ea3),
+    QColor::fromRgb(0xff7f00),
+    QColor::fromRgb(0xffff33),
+    QColor::fromRgb(0xa65628),
+    QColor::fromRgb(0xf781bf)};
 
 //==============================================================================
 
@@ -289,7 +301,13 @@ void GraphPanelPlotGraph::addRun()
         const QwtSymbol *symbol = mDummyRun->symbol();
         int symbolSize = symbol->size().width();
 
-        run->setPen(mDummyRun->pen());
+        auto runPen = QPen(mDummyRun->pen());
+        if (!runPen.color().isValid()) {
+            auto runColour = RunColours[mRuns.size() % RunColours.size()];
+            runPen.setColor(runColour);
+        }
+        run->setPen(runPen);
+
         run->setSymbol(new QwtSymbol(symbol->style(), symbol->brush(),
                                      symbol->pen(), QSize(symbolSize, symbolSize)));
         run->setTitle(mDummyRun->title());
@@ -425,8 +443,19 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
-        run->setPen(pPen);
+    if (pPen.color().isValid()) {
+        foreach (GraphPanelPlotGraphRun *run, mRuns)
+            run->setPen(pPen);
+    } else {
+        int runNumber = 0;
+        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+            auto runPen = QPen(pPen);
+            auto runColour = RunColours[runNumber % RunColours.size()];
+            runPen.setColor(runColour);
+            run->setPen(runPen);
+            runNumber += 1;
+        }
+    }
 }
 
 //==============================================================================
