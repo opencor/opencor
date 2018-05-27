@@ -46,6 +46,7 @@ class SEDMLSUPPORT_EXPORT SedmlFileIssue
 {
 public:
     enum Type {
+        Unknown,
         Information,
         Error,
         Warning,
