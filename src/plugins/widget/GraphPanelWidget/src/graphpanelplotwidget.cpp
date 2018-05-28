@@ -1565,6 +1565,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis, false, false, false);
 
+    // We want our legend to be active by default
+
+    setLegendActive(true);
+
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
