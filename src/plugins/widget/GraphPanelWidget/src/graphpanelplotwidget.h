@@ -63,18 +63,41 @@ static const double DefaultMaxAxis    = 1000.0;
 
 //==============================================================================
 
+static const QColor DarkBlue  = QColor::fromRgb(0, 114, 189);
+static const QColor Orange    = QColor::fromRgb(217, 83, 25);
+static const QColor Yellow    = QColor::fromRgb(237, 177, 32);
+static const QColor Purple    = QColor::fromRgb(126, 47, 142);
+static const QColor Green     = QColor::fromRgb(119, 172, 48);
+static const QColor LightBlue = QColor::fromRgb(77, 190, 238);
+static const QColor Red       = QColor::fromRgb(162, 20, 47);
+
+//==============================================================================
+
+static const Qt::PenStyle DefaultLineStyle       = Qt::SolidLine;
+static const int DefaultLineWidth                = 2;
+static const QColor DefaultLineColor             = DarkBlue;
+static const QwtSymbol::Style DefaultSymbolStyle = QwtSymbol::NoSymbol;
+static const int DefaultSymbolSize               = 8;
+static const QColor DefaultSymbolColor           = DarkBlue;
+static const bool DefaultSymbolFilled            = true;
+static const QColor DefaultSymbolFillColor       = Qt::white;
+
+//==============================================================================
+
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
     explicit GraphPanelPlotGraphProperties(const QString &pTitle = QString(),
-                                           const Qt::PenStyle &pLineStyle = Qt::SolidLine,
-                                           int pLineWidth = 1,
-                                           const QColor &pLineColor = Qt::darkBlue,
-                                           const QwtSymbol::Style &pSymbolStyle = QwtSymbol::NoSymbol,
-                                           int pSymbolSize = 8,
-                                           const QColor &pSymbolColor = Qt::darkBlue,
-                                           bool pSymbolFilled = true,
-                                           const QColor &pSymbolFillColor = Qt::white);
+                                           const Qt::PenStyle &pLineStyle = DefaultLineStyle,
+                                           int pLineWidth = DefaultLineWidth,
+                                           const QColor &pLineColor = DefaultLineColor,
+                                           const QwtSymbol::Style &pSymbolStyle = DefaultSymbolStyle,
+                                           int pSymbolSize = DefaultSymbolSize,
+                                           const QColor &pSymbolColor = DefaultSymbolColor,
+                                           bool pSymbolFilled = DefaultSymbolFilled,
+                                           const QColor &pSymbolFillColor = DefaultSymbolFillColor);
+    explicit GraphPanelPlotGraphProperties(const QString &pTitle,
+                                           const QColor &pColor);
 
     QString title() const;
 
@@ -126,13 +149,16 @@ typedef QList<GraphPanelPlotGraphRun *> GraphPanelPlotGraphRuns;
 //==============================================================================
 
 class GraphPanelPlotWidget;
+class GraphPanelWidget;
 
 //==============================================================================
 
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph
 {
 public:
-    explicit GraphPanelPlotGraph(void *pParameterX = 0, void *pParameterY = 0);
+    explicit GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
+                                 GraphPanelWidget *pOwner);
+    explicit GraphPanelPlotGraph(GraphPanelWidget *pOwner);
 
     bool isValid() const;
 
@@ -158,6 +184,8 @@ public:
 
     void * parameterY() const;
     void setParameterY(void *pParameterY);
+
+    QColor color() const;
 
     const QPen & pen() const;
     void setPen(const QPen &pPen);
@@ -188,6 +216,8 @@ private:
 
     void *mParameterX;
     void *mParameterY;
+
+    QColor mColor;
 
     QRectF mBoundingRect;
     QMap<GraphPanelPlotGraphRun *, QRectF> mBoundingRects;

@@ -609,7 +609,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph()
     // Ask the graph panel associated with our current graphs property editor to
     // add an 'empty' graph
 
-    mGraphPanels.value(mGraphsPropertyEditor)->addGraph(new GraphPanelWidget::GraphPanelPlotGraph());
+    GraphPanelWidget::GraphPanelWidget * graphPanel = mGraphPanels.value(mGraphsPropertyEditor);
+
+    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(graphPanel));
 }
 
 //==============================================================================

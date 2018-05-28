@@ -2925,14 +2925,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             }
 
             QString title = QString();
-            Qt::PenStyle lineStyle = Qt::SolidLine;
-            double lineWidth = 1.0;
-            QColor lineColor = Qt::darkBlue;
-            QwtSymbol::Style symbolStyle = QwtSymbol::NoSymbol;
-            int symbolSize = 8;
-            QColor symbolColor = Qt::darkBlue;
-            bool symbolFilled = true;
-            QColor symbolFillColor = Qt::white;
+            Qt::PenStyle lineStyle = GraphPanelWidget::DefaultLineStyle;
+            int lineWidth = GraphPanelWidget::DefaultLineWidth;
+            QColor lineColor = GraphPanelWidget::DefaultLineColor;
+            QwtSymbol::Style symbolStyle = GraphPanelWidget::DefaultSymbolStyle;
+            int symbolSize = GraphPanelWidget::DefaultSymbolSize;
+            QColor symbolColor = GraphPanelWidget::DefaultSymbolColor;
+            bool symbolFilled = GraphPanelWidget::DefaultSymbolFilled;
+            QColor symbolFillColor = GraphPanelWidget::DefaultSymbolFillColor;
 
             annotation = sedmlCurve->getAnnotation();
 
@@ -2958,7 +2958,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
                                         lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
-                                        lineWidth = linePropertyNodeValue.toDouble();
+                                        lineWidth = linePropertyNodeValue.toInt();
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
                                         lineColor.setNamedColor(linePropertyNodeValue);
                                     }
@@ -2989,7 +2989,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 }
             }
 
-            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
+            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter, graphPanel),
                                  GraphPanelWidget::GraphPanelPlotGraphProperties(title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
@@ -3380,8 +3380,10 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 
     graphPanel->plot()->legend()->setUpdatesEnabled(false);
 
-    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY),
-                         GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName()));
+    GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY, graphPanel);
+
+    graphPanel->addGraph(graph,
+                         GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
 }
 
 //==============================================================================
