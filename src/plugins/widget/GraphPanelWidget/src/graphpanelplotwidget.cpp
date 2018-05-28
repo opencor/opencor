@@ -87,6 +87,17 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
 
 //==============================================================================
 
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
+                                                             const QColor &pColor) :
+    GraphPanelPlotGraphProperties(pTitle, DefaultLineStyle, DefaultLineWidth,
+                                  pColor, DefaultSymbolStyle, DefaultSymbolSize,
+                                  pColor, DefaultSymbolFilled,
+                                  DefaultSymbolFillColor)
+{
+}
+
+//==============================================================================
+
 QString GraphPanelPlotGraphProperties::title() const
 {
     // Return our title
@@ -176,7 +187,7 @@ GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
 
     setLegendAttribute(LegendShowLine);
     setLegendAttribute(LegendShowSymbol);
-    setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(pOwner->color(), DefaultLineWidth, DefaultLineStyle, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(RenderAntialiased);
 }
 
@@ -195,7 +206,8 @@ static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 //==============================================================================
 
-GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
+GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
+                                         GraphPanelWidget *pOwner) :
     mSelected(true),
     mFileName(QString()),
     mParameterX(pParameterX),
@@ -208,12 +220,34 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mDummyRun(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
+    // Determine our default colour
+
+    static QList<QColor> GraphColors = { DarkBlue, Orange, Yellow, Purple, Green, LightBlue, Red };
+    static QMap<GraphPanelWidget *, int> GraphColorIndexes;
+
+    int graphColorIndex = pOwner->graphs().isEmpty()?
+                              -1:
+                              GraphColorIndexes.value(pOwner, -1);
+
+    graphColorIndex = (graphColorIndex+1)%GraphColors.count();
+
+    mColor = GraphColors[graphColorIndex];
+
+    GraphColorIndexes.insert(pOwner, graphColorIndex);
+
     // Create our dummy run
     // Note: a dummy run (i.e. a run that is never used, shown, etc.) is needed
     //       to ensure that our legend labels don't disappear (see
     //       https://github.com/opencor/opencor/issues/1537)...
 
     addRun();
+}
+
+//==============================================================================
+
+GraphPanelPlotGraph::GraphPanelPlotGraph(GraphPanelWidget *pOwner) :
+    GraphPanelPlotGraph(0, 0, pOwner)
+{
 }
 
 //==============================================================================
@@ -402,6 +436,15 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
     // Set our parameter Y
 
     mParameterY = pParameterY;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraph::color() const
+{
+    // Return our colour
+
+    return mColor;
 }
 
 //==============================================================================
@@ -1525,6 +1568,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     //       replot ourselves...
 
     setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis, false, false, false);
+
+    // We want our legend to be active by default
+
+    setLegendActive(true);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)

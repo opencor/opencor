@@ -85,6 +85,7 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
+                               { "type": "improved", "description": "Colour for a new graph." },
                                { "type": "improved", "description": "Running of long simulations." },
                                { "type": "improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
                                { "type": "fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
