@@ -1047,6 +1047,7 @@ if(APPLE)
     # Qt plugins required by OpenCOR
 
     macos_deploy_qt_plugin(imageformats qjpeg)
+    macos_deploy_qt_plugin(mediaservice qavfmediaplayer)
     macos_deploy_qt_plugin(platforms qcocoa)
     macos_deploy_qt_plugin(printsupport cocoaprintersupport)
     macos_deploy_qt_plugin(sqldrivers qsqlite)
