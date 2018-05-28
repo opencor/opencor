@@ -225,7 +225,11 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
     static QList<QColor> GraphColors = { DarkBlue, Orange, Yellow, Purple, Green, LightBlue, Red };
     static QMap<GraphPanelWidget *, int> GraphColorIndexes;
 
-    int graphColorIndex = (GraphColorIndexes.value(pOwner, -1)+1)%GraphColors.count();
+    int graphColorIndex = pOwner->graphs().isEmpty()?
+                              -1:
+                              GraphColorIndexes.value(pOwner, -1);
+
+    graphColorIndex = (graphColorIndex+1)%GraphColors.count();
 
     mColor = GraphColors[graphColorIndex];
 
