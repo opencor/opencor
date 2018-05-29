@@ -163,6 +163,8 @@ class GraphPanelWidget;
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph
 {
 public:
+    explicit GraphPanelPlotGraph(bool pSelected, void *pParameterX,
+                                 void *pParameterY, GraphPanelWidget *pOwner);
     explicit GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
                                  GraphPanelWidget *pOwner);
     explicit GraphPanelPlotGraph(GraphPanelWidget *pOwner);
