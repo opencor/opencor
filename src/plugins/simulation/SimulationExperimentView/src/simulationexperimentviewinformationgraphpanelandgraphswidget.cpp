@@ -511,13 +511,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     connect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
             this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
-    // Make sure that the selected state of our new graph is taken into account
-
-    graphsPropertyChanged(graphProperty);
-
     // Update the information about our new graph
 
     updateGraphsInfo(graphProperty);
+
+    // Make sure that the selected state of our new graph is taken into account
+    // Note: this must be done after the call to updateGraphsInfo() above
+    //       otherwise our new graph's visible state won't be properly set...
+
+    graphsPropertyChanged(graphProperty);
 }
 
 //==============================================================================
