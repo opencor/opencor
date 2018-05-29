@@ -506,8 +506,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     graphsPropertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
+    // Keep track of changes to our new graph
+
     connect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
             this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
+
+    // Make sure that the selected state of our new graph is taken into account
+
+    graphsPropertyChanged(graphProperty);
 
     // Update the information about our new graph
 

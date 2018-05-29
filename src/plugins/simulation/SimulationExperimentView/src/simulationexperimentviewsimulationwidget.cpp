@@ -2999,7 +2999,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 }
             }
 
-            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(selected, xParameter, yParameter, graphPanel),
+            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter, graphPanel),
                                  GraphPanelWidget::GraphPanelPlotGraphProperties(selected, title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }

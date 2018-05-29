@@ -217,10 +217,9 @@ static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 //==============================================================================
 
-GraphPanelPlotGraph::GraphPanelPlotGraph(bool pSelected, void *pParameterX,
-                                         void *pParameterY,
+GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
                                          GraphPanelWidget *pOwner) :
-    mSelected(pSelected),
+    mSelected(true),
     mFileName(QString()),
     mParameterX(pParameterX),
     mParameterY(pParameterY),
@@ -257,16 +256,8 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(bool pSelected, void *pParameterX,
 
 //==============================================================================
 
-GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
-                                         GraphPanelWidget *pOwner) :
-    GraphPanelPlotGraph(DefaultSelected, pParameterX, pParameterY, pOwner)
-{
-}
-
-//==============================================================================
-
 GraphPanelPlotGraph::GraphPanelPlotGraph(GraphPanelWidget *pOwner) :
-    GraphPanelPlotGraph(DefaultSelected, 0, 0, pOwner)
+    GraphPanelPlotGraph(0, 0, pOwner)
 {
 }
 
