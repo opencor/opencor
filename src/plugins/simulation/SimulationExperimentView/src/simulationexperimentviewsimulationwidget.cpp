@@ -1663,6 +1663,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
 
 //==============================================================================
 
+static const auto TrueValue  = QStringLiteral("true");
+static const auto FalseValue = QStringLiteral("false");
+
+//==============================================================================
+
 bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
                                                                const QString &pFileName,
                                                                const QString &pModelSource)
@@ -1974,7 +1979,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                  "    %3"
                                                  "</%1>").arg(SEDMLSupport::Properties)
                                                          .arg(SEDMLSupport::OpencorNamespace)
-                                                         .arg( SedmlProperty.arg(SEDMLSupport::Title)
+                                                         .arg( SedmlProperty.arg(SEDMLSupport::Selected)
+                                                                            .arg(property->isChecked()?
+                                                                                     TrueValue:
+                                                                                     FalseValue)
+                                                              +SedmlProperty.arg(SEDMLSupport::Title)
                                                                             .arg(properties[1]->valueAsString())
                                                               +SedmlProperty.arg(SEDMLSupport::Line)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
@@ -2713,8 +2722,6 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
-        static const QString TrueValue = "true";
-
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
@@ -2924,7 +2931,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 return false;
             }
 
-            QString title = QString();
+            bool selected = GraphPanelWidget::DefaultSelected;
+            QString title = GraphPanelWidget::DefaultTitle;
             Qt::PenStyle lineStyle = GraphPanelWidget::DefaultLineStyle;
             int lineWidth = GraphPanelWidget::DefaultLineWidth;
             QColor lineColor = GraphPanelWidget::DefaultLineColor;
@@ -2947,7 +2955,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
                             QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                            if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
+                            if (!curvePropertyNodeName.compare(SEDMLSupport::Selected)) {
+                                selected = !curvePropertyNodeValue.compare(TrueValue);
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
                                 title = curvePropertyNodeValue;
                             } else if (!curvePropertyNodeName.compare(SEDMLSupport::Line)) {
                                 for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -2990,7 +3000,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             }
 
             graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter, graphPanel),
-                                 GraphPanelWidget::GraphPanelPlotGraphProperties(title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties(selected, title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
@@ -4014,7 +4024,7 @@ void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
 
 void SimulationExperimentViewSimulationWidget::checkSolversProperties()
 {
-    // Check whether any of our simulation properties has changed
+    // Check whether any of our solver properties has changed
 
     mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
 
@@ -4042,7 +4052,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 
     mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
 
-    // Check whether any of our simulation properties has changed
+    // Check whether any of our graph panel / graphs properties has changed
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
@@ -4078,8 +4088,16 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 
     QStringList res = QStringList();
 
-    foreach (Core::Property *property, pPropertyEditor->allProperties())
+    foreach (Core::Property *property, pPropertyEditor->allProperties()) {
+        if (property->isCheckable()) {
+            if (property->isChecked())
+                res << TrueValue;
+            else
+                res << FalseValue;
+        }
+
         res << property->value();
+    }
 
     return res;
 }
