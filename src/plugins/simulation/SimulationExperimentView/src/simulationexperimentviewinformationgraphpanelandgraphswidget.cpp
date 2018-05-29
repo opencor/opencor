@@ -442,7 +442,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *graphProperty = graphsPropertyEditor->addSectionProperty();
 
     graphProperty->setCheckable(true);
-    graphProperty->setChecked(pGraphProperties.selected());
+    graphProperty->setChecked(pGraphProperties.isSelected());
 
     // Keep track of the link between our given graph and our graph property
 

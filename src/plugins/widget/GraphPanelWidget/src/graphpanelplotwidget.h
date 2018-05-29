@@ -102,7 +102,7 @@ public:
     explicit GraphPanelPlotGraphProperties(const QString &pTitle,
                                            const QColor &pColor);
 
-    bool selected() const;
+    bool isSelected() const;
 
     QString title() const;
 
