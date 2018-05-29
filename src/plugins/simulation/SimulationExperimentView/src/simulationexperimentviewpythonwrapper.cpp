@@ -108,12 +108,14 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
 
     QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Local,
                                                       QString(), false);
+
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+
         return NULL;
-    } else {
-        return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
     }
+
+    return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
 }
 
 //==============================================================================
@@ -132,37 +134,46 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     QString url = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    QString ioError = Core::centralWidget()->openRemoteFile(url, false); // No warning...
+    QString ioError = Core::centralWidget()->openRemoteFile(url, false);
+
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
+
         return NULL;
     }
 
-    return initializeSimulation(Core::centralWidget()->localFileName(url));
+    return initializeSimulation(Core::localFileName(url));
 }
 
 //==============================================================================
 
-static PyObject *OpenCOR_simulations(PyObject *self,  PyObject *args)
+static PyObject *closeSimulation(PyObject *self, PyObject *args)
 {
     Q_UNUSED(self);
-    Q_UNUSED(args);
 
-    PyObject *simulationDict = PyDict_New();
-    SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
+    Py_ssize_t argc = PyTuple_Size(args);
+    if (argc >  0) {
+        PyObject *self = PyTuple_GET_ITEM(args, 0);
 
-    if (simulationExperimentViewWidget) {
-        foreach (const QString &fileName, simulationExperimentViewWidget->fileNames()) {
-            auto simulation = getSimulation(fileName, simulationExperimentViewWidget);
+        if (PyObject_TypeCheck(self, &PythonQtInstanceWrapper_Type)) {
+            PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper *)self;
 
-            // Add the simulation to the dictionary
+            // Get the wrapped simulation
 
-            if (simulation)
-                PythonQtSupport::addObject(simulationDict, fileName, simulation);
+            SimulationSupport::Simulation *simulation = (SimulationSupport::Simulation *)wrap->_objPointerCopy;
+
+            // Close it by closing its file, raising an exception if we
+            // are unable to do so
+
+            if (!Core::centralWidget()->closeFile(simulation->fileName())) {
+                PyErr_SetString(PyExc_IOError, "unable to close file");
+
+                return NULL;
+            }
         }
     }
 
-    return simulationDict;
+    Py_RETURN_NONE;
 }
 
 //==============================================================================
@@ -180,7 +191,6 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 
         if (simulation)
             return PythonQt::priv()->wrapQObject(simulation);
-
     }
 
     Py_RETURN_NONE;
@@ -189,10 +199,10 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 //==============================================================================
 
 static PyMethodDef pythonSimulationExperimentViewMethods[] = {
-    {"openSimulation",  openSimulation, METH_VARARGS, "Open a simulation."},
-    {"openRemoteSimulation",  openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
     {"simulation",  OpenCOR_simulation, METH_VARARGS, "Current simulation."},
-    {"simulations",  OpenCOR_simulations, METH_VARARGS, "Dictionary of simulations."},
+    {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
+    {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
+    {"closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation."},
     {NULL, NULL, 0, NULL}
 };
 

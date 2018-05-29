@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cliutils.h"
 #include "plugininterface.h"
 #include "pluginmanager.h"
+#include "solverinterface.h"
 
 //==============================================================================
 
@@ -46,6 +47,7 @@ namespace OpenCOR {
 CliApplication::CliApplication(int &pArgC, char **pArgV) :
     mPluginManager(0),
     mLoadedPluginPlugins(Plugins()),
+    mLoadedSolverPlugins(Plugins()),
     mLoadedCliPlugins(Plugins())
 {
     // Create our CLI application
@@ -93,6 +95,9 @@ void CliApplication::loadPlugins()
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         if (qobject_cast<PluginInterface *>(plugin->instance()))
             mLoadedPluginPlugins << plugin;
+
+        if (qobject_cast<SolverInterface *>(plugin->instance()))
+            mLoadedSolverPlugins << plugin;
 
         if (qobject_cast<CliInterface *>(plugin->instance()))
             mLoadedCliPlugins << plugin;

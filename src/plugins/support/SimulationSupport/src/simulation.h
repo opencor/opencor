@@ -31,7 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class QEventLoop;
+#include <QEventLoop>
+#include <QVector>
 
 //==============================================================================
 
@@ -305,6 +306,8 @@ public:
 
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
+
+    QString furtherInitialize() const;
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 

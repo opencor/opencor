@@ -44,9 +44,39 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
     descriptions.insert("en", QString::fromUtf8("the Jupyter kernel plugin."));
     descriptions.insert("fr", QString::fromUtf8("the Jupyter kernel plugin."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, true, false,
-                          QStringList() << "Core" << "PythonQtSupport",
+    return new PluginInfo(PluginInfo::Miscellaneous, true, true,
+                          QStringList() << "Core" << "DataStore"
+                                        << "SimulationSupport"
+                                        << "PythonQtSupport",
                           descriptions);
+}
+
+//==============================================================================
+// CLI interface
+//==============================================================================
+
+int JupyterKernelPlugin::executeCommand(const QString &pCommand,
+                                        const QStringList &pArguments)
+{
+    // Run the given CLI command
+
+    if (!pCommand.compare("help")) {
+        // Display the commands that we support
+
+        runHelpCommand();
+
+        return 0;
+    } else if (!pCommand.compare("kernel")) {
+        // Run the Jupyter kernel with the specified connection file
+
+        return runKernel(pArguments);
+    } else {
+        // Not a CLI command that we support
+
+        runHelpCommand();
+
+        return -1;
+    }
 }
 
 //==============================================================================
@@ -55,128 +85,50 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
 
 bool JupyterKernelPlugin::useExec()
 {
-    return !mConnectionFile.isEmpty();
+    return false; // !mConnectionFile.isEmpty();
 }
 
 //==============================================================================
 
 int JupyterKernelPlugin::exec()
 {
-    if (!mConnectionFile.isEmpty())
-        return runKernel();
+    //if (!mConnectionFile.isEmpty())
+    //    return runKernel();
 
     return 0;
-}
-
-//==============================================================================
-// Plugin interface
-//==============================================================================
-
-bool JupyterKernelPlugin::definesPluginInterfaces()
-{
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
-bool JupyterKernelPlugin::pluginInterfacesOk(const QString &pFileName,
-                                                   QObject *pInstance)
-{
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::initializePlugin()
-{
-    mConnectionFile = QString();
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::finalizePlugin()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void JupyterKernelPlugin::handleUrl(const QUrl &pUrl)
-{
-    // Save the path of the connection file
-
-    mConnectionFile = pUrl.path().mid(1);
 }
 
 //==============================================================================
 // Plugin specific
 //==============================================================================
 
+void JupyterKernelPlugin::runHelpCommand()
+{
+    // Output the commands we support
+
+    std::cout << "Commands supported by the Jupyter kernel plugin:" << std::endl;
+    std::cout << " * Display the commands supported by the Jupyter kernel plugin:" << std::endl;
+    std::cout << "      help" << std::endl;
+    std::cout << " * Start the OpenCOR Jupyter kernel:" << std::endl;
+    std::cout << "      kernel <connection_file>" << std::endl;
+}
+
+//==============================================================================
+
 // The OpenCOR Jupyter kernel
 
 static QString jupyterKernel = R"PYTHON(
-import os
-
-from ipykernel.eventloops import register_integration, enable_gui
 from ipykernel.ipkernel import IPythonKernel
-
 import matplotlib
-
 
 class OpenCORKernel(IPythonKernel):
     implementation = 'OpenCOR'
-    implementation_version = '0.1'
+    implementation_version = '0.2'
     banner = "Jupyter kernel for OpenCOR"
 
-    def __init__(self, *args, **kwds):
-        super().__init__(*args, **kwds)
-        # Use the Jupyter notebook backend for matplotlib
-        matplotlib.use('nbagg')
-        # Work nicely with OpenCOR's Qt exec() loop
-        enable_gui('pythonqt', self)
-
-    def do_shutdown(self, restart):
-        from PythonQt import QtGui
-        QtGui.QApplication.instance().exit(0)
-        return super().do_shutdown(restart)
-
 if __name__ == '__main__':
-    import sys
-    sys.argv.append('--debug')
+    import sys                  ### TEMP
+    sys.argv.append('--debug')  ### TEMP
 
     from ipykernel.kernelapp import IPKernelApp
     IPKernelApp.connection_file = '%1'
@@ -185,13 +137,20 @@ if __name__ == '__main__':
 
 //==============================================================================
 
-int JupyterKernelPlugin::runKernel()
+int JupyterKernelPlugin::runKernel(const QStringList &pArguments)
 {
+    // Make sure that we have the correct number of arguments
+
+    if (pArguments.count() != 1) {
+        runHelpCommand();
+
+        return -1;
+    }
+
     // Run the the kernel using our connection file
 
-    PythonQtSupport::evalScript(jupyterKernel.arg(mConnectionFile));
+    PythonQtSupport::evalScript(jupyterKernel.arg(pArguments[0]));
 
-    // TODO: return gui->exec()
     return 0;
 }
 

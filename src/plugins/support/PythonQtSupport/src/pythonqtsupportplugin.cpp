@@ -83,10 +83,6 @@ bool PythonQtSupportPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonQtSupportPlugin::initializePlugin()
 {
-    // Use our (patched) matplotlib backend for PythonQt
-
-    qputenv("MPLBACKEND", "module://matplotlib.backends.backend_qt5agg");
-
     // Create and initialise a new CTK Python manager
 
     mPythonManager = new ctkAbstractPythonManager(this);

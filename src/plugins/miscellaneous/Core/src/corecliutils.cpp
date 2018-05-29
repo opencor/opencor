@@ -484,6 +484,97 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
 
 //==============================================================================
 
+QString openFile(const QString &pFileName, const File::Type &pType,
+                 const QString &pUrl)
+{
+    // Register the file with our file manager and get its status
+
+    FileManager::Status fileStatus = FileManager::instance()->manage(pFileName, pType, pUrl);
+
+    if (fileStatus == FileManager::DoesNotExist)
+        return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
+                                                                QDir::toNativeSeparators(pFileName):
+                                                                pFileName);
+
+    return QString();
+}
+
+//==============================================================================
+
+QString openRemoteFile(const QString &pUrl)
+{
+    // Make sure that pUrl really refers to a remote file
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
+
+    if (isLocalFile) {
+        // It looks like the user tried to open a local file using a URL, e.g.
+        //     file:///home/me/mymodel.cellml
+        // rather than a local file name, e.g.
+        //     /home/me/mymodel.cellml
+        // so open the file as a local file and leave
+
+        return openFile(fileNameOrUrl);
+    }
+
+    // Check whether the remote file is already opened and if so select it,
+    // otherwise retrieve its contents
+
+    FileManager *fileManagerInstance = FileManager::instance();
+    QString fileName = fileManagerInstance->fileName(fileNameOrUrl);
+
+    if (fileName.isEmpty()) {
+        // The remote file isn't already opened, so download its contents
+
+        QByteArray fileContents;
+        QString errorMessage;
+
+        if (readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
+            // We were able to retrieve the contents of the remote file, so ask
+            // our file manager to create a new remote file
+
+            FileManager::Status createStatus = fileManagerInstance->create(fileNameOrUrl, fileContents);
+
+            // Make sure that the file has indeed been created
+
+            if (createStatus != FileManager::Created) {
+#ifdef QT_DEBUG
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
+#endif
+                return QObject::tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
+            } else {
+                return QString("");
+            }
+        } else {
+            // We were not able to retrieve the contents of the remote file, so
+            // let the user know about it
+
+            return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
+        }
+    } else {
+        return openFile(fileName, File::Remote, fileNameOrUrl);
+    }
+}
+
+//==============================================================================
+
+QString localFileName(const QString &pUrl)
+{
+    // Return the local file name, if any
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
+
+    return isLocalFile ? pUrl : FileManager::instance()->fileName(fileNameOrUrl);
+}
+
+//==============================================================================
+
 QString formatXml(const QString &pXml)
 {
     // Format the given XML

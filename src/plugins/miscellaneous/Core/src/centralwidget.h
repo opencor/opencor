@@ -88,7 +88,7 @@ private:
 
 //==============================================================================
 
-class CORE_EXPORT CentralWidget : public Widget
+class CentralWidget : public Widget
 {
     Q_OBJECT
 
@@ -109,7 +109,6 @@ public:
                                    bool pFileTabs = false);
 
     QString currentFileName() const;
-    QString localFileName(const QString &pUrl) const;
 
     QString openFile(const QString &pFileName,
                      const File::Type &pType = File::Local,
@@ -120,6 +119,7 @@ public:
     QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
+    bool closeFile(const QString &pFileName);
 
     bool selectMode(const QString &pModeName);
     bool selectView(const QString &pViewName);
