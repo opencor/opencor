@@ -799,18 +799,15 @@ Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::g
     Core::Properties res = Core::Properties();
 
     foreach (Core::Property *property, mGraphsPropertyEditors.value(pGraphPanel)->properties()) {
-        // The property should be returned if it is checked (i.e. a selected
-        // graph) and have its first sub-property (i.e. to which model the graph
-        // applies) has either a value of "Current" or that of the given file
-        // name
+        // The property should be returned if its first sub-property (i.e. to
+        // which model the graph applies) has either a value of "Current" or
+        // that of the given file name
 
-        if (property->isChecked()) {
-            QString modelPropertyValue = property->properties().first()->value();
+        QString modelPropertyValue = property->properties().first()->value();
 
-            if (   !modelPropertyValue.compare(tr("Current"))
-                || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
-                res << property;
-            }
+        if (   !modelPropertyValue.compare(tr("Current"))
+            || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
+            res << property;
         }
     }
 
