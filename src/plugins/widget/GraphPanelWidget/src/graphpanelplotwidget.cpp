@@ -64,7 +64,8 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(bool pSelected,
+                                                             const QString &pTitle,
                                                              const Qt::PenStyle &pLineStyle,
                                                              int pLineWidth,
                                                              const QColor &pLineColor,
@@ -73,6 +74,7 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
                                                              const QColor &pSymbolColor,
                                                              bool pSymbolFilled,
                                                              const QColor &pSymbolFillColor) :
+    mSelected(pSelected),
     mTitle(pTitle),
     mLineStyle(pLineStyle),
     mLineWidth(pLineWidth),
@@ -89,11 +91,20 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
 
 GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
                                                              const QColor &pColor) :
-    GraphPanelPlotGraphProperties(pTitle, DefaultLineStyle, DefaultLineWidth,
-                                  pColor, DefaultSymbolStyle, DefaultSymbolSize,
-                                  pColor, DefaultSymbolFilled,
-                                  DefaultSymbolFillColor)
+    GraphPanelPlotGraphProperties(DefaultSelected, pTitle, DefaultLineStyle,
+                                  DefaultLineWidth, pColor, DefaultSymbolStyle,
+                                  DefaultSymbolSize, pColor,
+                                  DefaultSymbolFilled, DefaultSymbolFillColor)
 {
+}
+
+//==============================================================================
+
+bool GraphPanelPlotGraphProperties::selected() const
+{
+    // Return our selected state
+
+    return mSelected;
 }
 
 //==============================================================================

@@ -2931,7 +2931,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 return false;
             }
 
-            QString title = QString();
+            bool selected = GraphPanelWidget::DefaultSelected;
+            QString title = GraphPanelWidget::DefaultTitle;
             Qt::PenStyle lineStyle = GraphPanelWidget::DefaultLineStyle;
             int lineWidth = GraphPanelWidget::DefaultLineWidth;
             QColor lineColor = GraphPanelWidget::DefaultLineColor;
@@ -2954,7 +2955,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
                             QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                            if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
+                            if (!curvePropertyNodeName.compare(SEDMLSupport::Selected)) {
+                                selected = !curvePropertyNodeValue.compare(TrueValue);
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
                                 title = curvePropertyNodeValue;
                             } else if (!curvePropertyNodeName.compare(SEDMLSupport::Line)) {
                                 for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -2997,7 +3000,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
             }
 
             graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter, graphPanel),
-                                 GraphPanelWidget::GraphPanelPlotGraphProperties(title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties(selected, title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
