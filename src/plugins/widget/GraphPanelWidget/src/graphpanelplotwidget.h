@@ -74,7 +74,7 @@ static const QColor Red       = QColor::fromRgb(162, 20, 47);
 //==============================================================================
 
 static const bool DefaultSelected                = true;
-static const auto DefaultTitle                   = QStringLiteral();
+static const auto DefaultTitle                   = QStringLiteral("");
 static const Qt::PenStyle DefaultLineStyle       = Qt::SolidLine;
 static const int DefaultLineWidth                = 2;
 static const QColor DefaultLineColor             = DarkBlue;
@@ -102,7 +102,7 @@ public:
     explicit GraphPanelPlotGraphProperties(const QString &pTitle,
                                            const QColor &pColor);
 
-    bool selected() const;
+    bool isSelected() const;
 
     QString title() const;
 

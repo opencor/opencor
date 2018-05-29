@@ -100,7 +100,7 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
 
 //==============================================================================
 
-bool GraphPanelPlotGraphProperties::selected() const
+bool GraphPanelPlotGraphProperties::isSelected() const
 {
     // Return our selected state
 

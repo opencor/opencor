@@ -3575,7 +3575,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     bool needInitialisationY = true;
 
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
-        if (graph->isValid() && graph->isSelected()) {
+        if (graph->isVisible()) {
             SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();

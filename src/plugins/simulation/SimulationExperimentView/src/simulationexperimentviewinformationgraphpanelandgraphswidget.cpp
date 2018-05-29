@@ -442,7 +442,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *graphProperty = graphsPropertyEditor->addSectionProperty();
 
     graphProperty->setCheckable(true);
-    graphProperty->setChecked(pGraphProperties.selected());
+    graphProperty->setChecked(pGraphProperties.isSelected());
 
     // Keep track of the link between our given graph and our graph property
 
@@ -506,12 +506,20 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     graphsPropertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
+    // Keep track of changes to our new graph
+
     connect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
             this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
     // Update the information about our new graph
 
     updateGraphsInfo(graphProperty);
+
+    // Make sure that the selected state of our new graph is taken into account
+    // Note: this must be done after the call to updateGraphsInfo() above
+    //       otherwise our new graph's visible state won't be properly set...
+
+    graphsPropertyChanged(graphProperty);
 }
 
 //==============================================================================
