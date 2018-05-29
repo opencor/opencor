@@ -857,7 +857,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
 //==============================================================================
 
 CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                            const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                            CellmlFileRdfTriple::ModelQualifier pModelQualifier,
                                             const QString &pResource,
                                             const QString &pId) const
 {
@@ -871,7 +871,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
 //==============================================================================
 
 CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                            const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                            CellmlFileRdfTriple::BioQualifier pBioQualifier,
                                             const QString &pResource,
                                             const QString &pId) const
 {
@@ -924,7 +924,7 @@ QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement)
 //==============================================================================
 
 CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                               const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                               CellmlFileRdfTriple::ModelQualifier pModelQualifier,
                                                const QString &pResource,
                                                const QString &pId)
 {
@@ -937,7 +937,7 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
 //==============================================================================
 
 CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                               const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                               CellmlFileRdfTriple::BioQualifier pBioQualifier,
                                                const QString &pResource,
                                                const QString &pId)
 {
@@ -950,7 +950,7 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
 //==============================================================================
 
 bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                 const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                 CellmlFileRdfTriple::ModelQualifier pModelQualifier,
                                  const QString &pResource, const QString &pId)
 {
     // Remove an RDF triple from ourselves
@@ -961,7 +961,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
 //==============================================================================
 
 bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                 const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                 CellmlFileRdfTriple::BioQualifier pBioQualifier,
                                  const QString &pResource, const QString &pId)
 {
     // Remove an RDF triple from ourselves
@@ -1016,7 +1016,7 @@ QString CellmlFile::xmlBase()
 
 //==============================================================================
 
-bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion,
+bool CellmlFile::exportTo(const QString &pFileName, Version pVersion,
                           bool pWithBusyWidget)
 {
     // Export the model to the required format, after loading it if necessary
@@ -1210,7 +1210,7 @@ CellmlFile::Version CellmlFile::version(const QString &pFileName)
 
 //==============================================================================
 
-QString CellmlFile::versionAsString(const Version &pVersion)
+QString CellmlFile::versionAsString(Version pVersion)
 {
     // Return the string corresponding to the given version
 

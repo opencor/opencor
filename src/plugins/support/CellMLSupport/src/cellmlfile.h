@@ -51,6 +51,7 @@ static const auto Cellml_Latest = Cellml_1_1;
 
 static const auto Cellml_1_0_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.0#");
 static const auto Cellml_1_1_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.1#");
+static const auto TmpDocumentation     = QStringLiteral("http://cellml.org/tmp-documentation");
 static const auto CmetaIdNamespace     = QStringLiteral("http://www.cellml.org/metadata/1.0#");
 static const auto MathmlNamespace      = QStringLiteral("http://www.w3.org/1998/Math/MathML");
 static const auto RdfNamespace         = QStringLiteral("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
@@ -108,28 +109,28 @@ public:
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
 
     CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                    const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                    CellmlFileRdfTriple::ModelQualifier pModelQualifier,
                                     const QString &pResource,
                                     const QString &pId) const;
     CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                    const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                    CellmlFileRdfTriple::BioQualifier pBioQualifier,
                                     const QString &pResource,
                                     const QString &pId) const;
 
     CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                       const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                       CellmlFileRdfTriple::ModelQualifier pModelQualifier,
                                        const QString &pResource,
                                        const QString &pId);
     CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                       const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                       CellmlFileRdfTriple::BioQualifier pBioQualifier,
                                        const QString &pResource,
                                        const QString &pId);
 
     bool removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                         const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                         CellmlFileRdfTriple::ModelQualifier pModelQualifier,
                          const QString &pResource, const QString &pId);
     bool removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                         const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                         CellmlFileRdfTriple::BioQualifier pBioQualifier,
                          const QString &pResource, const QString &pId);
 
     QStringList importedFileNames() const;
@@ -139,7 +140,7 @@ public:
     QString cmetaId();
     QString xmlBase();
 
-    bool exportTo(const QString &pFileName, const Version &pVersion,
+    bool exportTo(const QString &pFileName, Version pVersion,
                   bool pWithBusyWidget = false);
     bool exportTo(const QString &pFileName,
                   const QString &pUserDefinedFormatFileName,
@@ -150,7 +151,7 @@ public:
     static Version version(iface::cellml_api::Model *pModel);
     static Version version(const QString &pFileName);
 
-    static QString versionAsString(const Version &pVersion);
+    static QString versionAsString(Version pVersion);
 
 private:
     ObjRef<iface::cellml_api::Model> mModel;

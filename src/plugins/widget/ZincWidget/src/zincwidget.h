@@ -89,7 +89,7 @@ public:
     OpenCMISS::Zinc::Sceneviewer sceneViewer() const;
 
     ProjectionMode projectionMode();
-    void setProjectionMode(const ProjectionMode &pProjectionMode);
+    void setProjectionMode(ProjectionMode pProjectionMode);
 
     int viewParameters(double *pEye, double *pLookAt, double *pUp,
                        double &pAngle);

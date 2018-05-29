@@ -76,6 +76,7 @@ public:
     bool hasWarnings() const;
     CellMLTextViewConverterWarnings warnings() const;
 
+    QDomNode documentationNode() const;
     QDomDocument rdfNodes() const;
 
 private:
@@ -121,10 +122,12 @@ private:
 
     CellMLTextViewConverterWarnings mWarnings;
 
+    QDomNode mModelNode;
+    QDomNode mDocumentationNode;
+    QDomNode mTopMathmlNode;
+
     QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;
-
-    QDomNode mTopMathmlNode;
 
     bool mAssignmentDone;
 
@@ -139,7 +142,7 @@ private:
     void indent(bool pForceTracking = true);
     void unindent();
 
-    void outputString(const OutputType &pOutputType = EmptyLine,
+    void outputString(OutputType pOutputType = EmptyLine,
                       const QString &pString = QString());
 
     bool rdfNode(const QDomNode &pDomNode) const;

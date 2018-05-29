@@ -58,7 +58,7 @@ public:
     #include "viewinterface.inl"
 #undef INTERFACE_DEFINITION
 
-    static QString modeAsString(const Mode &pMode);
+    static QString modeAsString(Mode pMode);
     static Mode modeFromString(const QString &pMode);
 };
 

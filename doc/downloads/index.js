@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 4, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 5, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,10 +37,14 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> added support for exiting full-screen mode when pressing the Esc key on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1637\">#1637</a>)." },
+                       { "change": "<strong>General:</strong> fixed an issue with version 55 of ICU being wrongly needed on some Linux systems (see issue <a href=\"https://github.com/opencor/opencor/issues/1627\">#1627</a>). Added support for exiting full-screen mode when pressing the Esc key on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1637\">#1637</a>). Stopped using <a href=\"https://travis-ci.org/\">Travis CI</a> (since we now have everything set up and working nicely on <a href=\"http://autotest.bioeng.auckland.ac.nz/jenkins/view/OpenCOR/\">Jenkins</a>)." },
                        { "change": "<strong>SBML API:</strong> don't build libSBML with bzip2 or zip compression anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1628\">#1628</a>)." },
+                       { "change": "<strong>QScintilla support:</strong> now highlight the searched text, both in the editor and its vertical scroll bar (see issue <a href=\"https://github.com/opencor/opencor/issues/1414\">#1414</a>)." },
                        { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
-                       { "change": "<strong>Simualtion Experiment view:</strong> fixed a problem with a SED-ML file being considered as modified under certain conditions (see issue <a href=\"https://github.com/opencor/opencor/issues/1626\">#1626</a>)." }
+                       { "change": "<strong>Text-based editors:</strong> can now word-wrap an editor's contents <a href=\"https://github.com/opencor/opencor/issues/1652\">#1652</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> keep track of a CellML file’s documentation (see issue <a href=\"https://github.com/opencor/opencor/issues/1642\">#1642</a>)." },
+                       { "change": "<strong>Simualtion Experiment view:</strong> fixed a problem with a SED-ML file being considered modified under certain conditions (see issue <a href=\"https://github.com/opencor/opencor/issues/1626\">#1626</a>). Now keep track of unselected graphs in a SED-ML file / COMBINE archive (see issue <a href=\"https://github.com/opencor/opencor/issues/1631\">#1631</a>). Now provide a default value for the legend title of a valid graph (see issue <a href=\"https://github.com/opencor/opencor/issues/1662\">#1662</a>). Now automatically assign a colour to a new graph (see issue <a href=\"https://github.com/opencor/opencor/issues/1665\">#1665</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 6.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1552\">#1552</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1643\">#1643</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

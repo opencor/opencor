@@ -105,13 +105,12 @@ public:
 
     void addView(Plugin *pPlugin);
 
-    TabBarWidget * newTabBarWidget(const QTabBar::Shape &pShape,
+    TabBarWidget * newTabBarWidget(QTabBar::Shape pShape,
                                    bool pFileTabs = false);
 
     QString currentFileName() const;
 
-    void openFile(const QString &pFileName,
-                  const File::Type &pType = File::Local,
+    void openFile(const QString &pFileName, File::Type pType = File::Local,
                   const QString &pUrl = QString());
     void openFiles(const QStringList &pFileNames);
 
@@ -167,8 +166,6 @@ private:
     QLabel *mRemoteFileDialogUrlLabel;
     QLineEdit *mRemoteFileDialogUrlValue;
     QDialogButtonBox *mRemoteFileDialogButtonBox;
-
-    QMap<QString, QString> mRemoteLocalFileNames;
 
     QMap<QString, QWidget *> mViews;
 

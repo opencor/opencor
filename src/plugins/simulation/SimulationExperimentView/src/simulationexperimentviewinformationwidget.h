@@ -93,7 +93,7 @@ private slots:
     void grapPanelPropertyEditor();
     void graphsPropertyEditor();
 
-    void graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+    void graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode);
 };
 
 //==============================================================================

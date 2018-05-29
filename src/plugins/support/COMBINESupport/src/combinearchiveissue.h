@@ -49,7 +49,7 @@ public:
         Fatal
     };
 
-    explicit CombineArchiveIssue(const Type &pType, const QString &pMessage);
+    explicit CombineArchiveIssue(Type pType, const QString &pMessage);
 
     Type type() const;
     QString message() const;

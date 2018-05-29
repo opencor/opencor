@@ -273,7 +273,7 @@ QStringList PreferencesDialog::pluginNames() const
 
 //==============================================================================
 
-QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
+QStandardItem * PreferencesDialog::pluginCategoryItem(PluginInfo::Category pCategory)
 {
     // Return the given category item, after having created it, if it didn't
     // already exist

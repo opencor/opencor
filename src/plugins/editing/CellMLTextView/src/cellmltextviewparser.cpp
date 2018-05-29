@@ -36,8 +36,7 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewParserMessage::CellmlTextViewParserMessage(const Type &pType,
-                                                         int pLine,
+CellmlTextViewParserMessage::CellmlTextViewParserMessage(Type pType, int pLine,
                                                          int pColumn,
                                                          const QString &pMessage) :
     mType(pType),
@@ -88,6 +87,7 @@ QString CellmlTextViewParserMessage::message() const
 CellmlTextViewParser::CellmlTextViewParser() :
     mCellmlVersion(CellMLSupport::CellmlFile::Cellml_1_0),
     mDomDocument(QDomDocument()),
+    mModelElement(QDomElement()),
     mMessages(CellmlTextViewParserMessages()),
     mNamespaces(QMap<QString, QString>())
 {
@@ -96,7 +96,7 @@ CellmlTextViewParser::CellmlTextViewParser() :
 //==============================================================================
 
 bool CellmlTextViewParser::execute(const QString &pCellmlText,
-                                   const CellMLSupport::CellmlFile::Version &pCellmlVersion)
+                                   CellMLSupport::CellmlFile::Version pCellmlVersion)
 {
     // Get ready for the parsing of a model definition
 
@@ -116,13 +116,13 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     // Create our model element
 
-    QDomElement modelElement = newDomElement(mDomDocument, "model");
+    mModelElement = newDomElement(mDomDocument, "model");
 
     // Try to parse for a cmeta:id
 
     mScanner.getNextToken();
 
-    if (!parseCmetaId(modelElement))
+    if (!parseCmetaId(mModelElement))
         return false;
 
     // Expect an identifier
@@ -132,7 +132,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     // Set our model name
 
-    modelElement.setAttribute("name", mScanner.tokenString());
+    mModelElement.setAttribute("name", mScanner.tokenString());
 
     // Expect "as"
 
@@ -145,26 +145,26 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     mScanner.getNextToken();
 
-    if (!parseModelDefinition(modelElement))
+    if (!parseModelDefinition(mModelElement))
         return false;
 
     // Expect "enddef"
 
-    if (!enddefToken(modelElement))
+    if (!enddefToken(mModelElement))
         return false;
 
     // Expect ";"
 
     mScanner.getNextToken();
 
-    if (!semiColonToken(modelElement))
+    if (!semiColonToken(mModelElement))
         return false;
 
     // Expect the end of the file
 
     mScanner.getNextToken();
 
-    if (!tokenType(modelElement, tr("the end of the file"),
+    if (!tokenType(mModelElement, tr("the end of the file"),
                    CellmlTextViewScanner::EofToken)) {
         return false;
     }
@@ -284,6 +284,15 @@ QDomDocument CellmlTextViewParser::domDocument() const
     // Return our DOM document
 
     return mDomDocument;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::modelElement() const
+{
+    // Return our model element
+
+    return mModelElement;
 }
 
 //==============================================================================
@@ -439,7 +448,7 @@ QDomElement CellmlTextViewParser::newNumberElement(const QString &pNumber,
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::newMathematicalConstantElement(const CellmlTextViewScanner::TokenType &pTokenType)
+QDomElement CellmlTextViewParser::newMathematicalConstantElement(CellmlTextViewScanner::TokenType pTokenType)
 {
     // Create and return a new mathematical constant element for the given token
     // typewith the given value
@@ -449,7 +458,7 @@ QDomElement CellmlTextViewParser::newMathematicalConstantElement(const CellmlTex
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTextViewScanner::TokenType &pTokenType,
+QDomElement CellmlTextViewParser::newMathematicalFunctionElement(CellmlTextViewScanner::TokenType pTokenType,
                                                                  const QList<QDomElement> &pArgumentElements)
 {
     // Create and return a new mathematical function element for the given token
@@ -492,8 +501,8 @@ QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTex
 
 //==============================================================================
 
-CellmlTextViewScanner::TokenTypes CellmlTextViewParser::rangeOfTokenTypes(const CellmlTextViewScanner::TokenType &pFromTokenType,
-                                                                          const CellmlTextViewScanner::TokenType &pToTokenType)
+CellmlTextViewScanner::TokenTypes CellmlTextViewParser::rangeOfTokenTypes(CellmlTextViewScanner::TokenType pFromTokenType,
+                                                                          CellmlTextViewScanner::TokenType pToTokenType)
 {
     // Return a range of token types
 
@@ -560,7 +569,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
 
 bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                      const QString &pExpectedString,
-                                     const CellmlTextViewScanner::TokenType &pTokenType)
+                                     CellmlTextViewScanner::TokenType pTokenType)
 {
     // Expect the given token
 
@@ -571,7 +580,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
 //==============================================================================
 
 bool CellmlTextViewParser::isTokenType(QDomNode &pDomNode,
-                                       const CellmlTextViewScanner::TokenType &pTokenType)
+                                       CellmlTextViewScanner::TokenType pTokenType)
 {
     // Try to parse comments, if any
 
@@ -2316,7 +2325,7 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
-QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType &pTokenType) const
+QString CellmlTextViewParser::mathmlName(CellmlTextViewScanner::TokenType pTokenType) const
 {
     // Return the MathML name of the given token type
 

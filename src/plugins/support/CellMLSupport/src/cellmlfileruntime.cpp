@@ -65,7 +65,7 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
-                                                       const ParameterType &pType,
+                                                       ParameterType pType,
                                                        int pIndex) :
     mName(pName),
     mDegree(pDegree),
@@ -199,9 +199,11 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
 //==============================================================================
 
-QIcon CellmlFileRuntimeParameter::icon() const
+QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
 {
-    // Return an icon that illustrates the type of a parameter
+    // Return the mapping between a parameter type and its corresponding icon
+
+    static QMap<int, QIcon> Icons = QMap<int, QIcon>();
 
     static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
     static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
@@ -209,27 +211,28 @@ QIcon CellmlFileRuntimeParameter::icon() const
     static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
     static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
     static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
-    static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
 
-    switch (mType) {
-    case Voi:
-        return VoiIcon;
-    case Constant:
-        return ConstantIcon;
-    case ComputedConstant:
-        return ComputedConstantIcon;
-    case Rate:
-        return RateIcon;
-    case State:
-        return StateIcon;
-    case Algebraic:
-        return AlgebraicIcon;
-    default:
-        // Not a relevant type, so return an error node icon
-        // Note: we should never reach this point...
+    // Initialise the mapping, if needed
 
-        return ErrorNodeIcon;
+    if (Icons.isEmpty()) {
+        Icons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
+        Icons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
+        Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
     }
+
+    return Icons;
+}
+
+//==============================================================================
+
+QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
+{
+    // Return our corresponding icon
+
+    return icons().value(pParameterType);
 }
 
 //==============================================================================
@@ -336,7 +339,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
         // Determine the type of our computation target
 
-        CellmlFileRuntimeParameter::ParameterType parameterType;
+        CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::Unknown;
 
         switch (computationTarget->type()) {
         case iface::cellml_services::VARIABLE_OF_INTEGRATION:

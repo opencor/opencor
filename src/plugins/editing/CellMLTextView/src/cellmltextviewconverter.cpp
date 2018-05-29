@@ -223,6 +223,15 @@ CellMLTextViewConverterWarnings CellMLTextViewConverter::warnings() const
 
 //==============================================================================
 
+QDomNode CellMLTextViewConverter::documentationNode() const
+{
+    // Return our documentation ndoe
+
+    return mDocumentationNode;
+}
+
+//==============================================================================
+
 QDomDocument CellMLTextViewConverter::rdfNodes() const
 {
     // Return our RDF nodes
@@ -248,9 +257,11 @@ void CellMLTextViewConverter::reset()
 
     mWarnings = CellMLTextViewConverterWarnings();
 
-    mRdfNodes = QDomDocument(QString());
-
+    mModelNode = QDomNode();
+    mDocumentationNode = QDomNode();
     mTopMathmlNode = QDomNode();
+
+    mRdfNodes = QDomDocument(QString());
 
     mAssignmentDone = false;
     mOldPiecewiseStatementUsed = false;
@@ -284,7 +295,7 @@ void CellMLTextViewConverter::unindent()
 
 //==============================================================================
 
-void CellMLTextViewConverter::outputString(const OutputType &pOutputType,
+void CellMLTextViewConverter::outputString(OutputType pOutputType,
                                            const QString &pString)
 {
     // Output the given string
@@ -433,8 +444,9 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 
     indent();
 
-    // Keep track of the model's attributes
+    // Keep track of the given model node and of its attributes
 
+    mModelNode = pDomNode;
     mAttributes = pDomNode.attributes();
 
     // Process the given model node's children
@@ -2482,6 +2494,14 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
         mErrorMessage = message;
     } else {
         mWarnings << CellMLTextViewConverterWarning(lineNumber, message);
+    }
+
+    // Keep track of the give node, if it is a child of the model element and if
+    // it is in the tmp-documentation namespace
+
+    if (    (pDomNode.parentNode() == mModelNode)
+        && !pDomNode.namespaceURI().compare(CellMLSupport::TmpDocumentation)) {
+        mDocumentationNode = pDomNode.cloneNode();
     }
 }
 

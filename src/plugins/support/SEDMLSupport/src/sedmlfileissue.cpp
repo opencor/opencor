@@ -30,7 +30,7 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-SedmlFileIssue::SedmlFileIssue(const Type &pType, int pLine, int pColumn,
+SedmlFileIssue::SedmlFileIssue(Type pType, int pLine, int pColumn,
                                const QString &pMessage) :
     mType(pType),
     mLine(pLine),
@@ -41,7 +41,7 @@ SedmlFileIssue::SedmlFileIssue(const Type &pType, int pLine, int pColumn,
 
 //==============================================================================
 
-SedmlFileIssue::SedmlFileIssue(const Type &pType, const QString &pMessage) :
+SedmlFileIssue::SedmlFileIssue(Type pType, const QString &pMessage) :
     SedmlFileIssue(pType, 0, 0, pMessage)
 {
 }

@@ -40,7 +40,7 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorListItem::EditorListItem(const Type &pType, int pLine, int pColumn,
+EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
                                const QString &pMessage) :
     QStandardItem(),
     mType(pType),
@@ -70,6 +70,14 @@ EditorListItem::EditorListItem(const Type &pType, int pLine, int pColumn,
     setToolTip(text());
 
     switch (pType) {
+    case Unknown:
+#ifdef QT_DEBUG
+        // We should never come here...
+
+        qFatal("FATAL ERROR | %s:%d: a list item cannot be of unknown type.", __FILE__, __LINE__);
+#endif
+
+        break;
     case Error:
         setIcon(ErrorIcon);
 
@@ -202,7 +210,7 @@ void EditorListWidget::clear()
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
+void EditorListWidget::addItem(EditorListItem::Type pType,
                                int pLine, int pColumn, const QString &pMessage)
 {
     // Add the given item to our list
@@ -215,8 +223,8 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               int pLine, const QString &pMessage)
+void EditorListWidget::addItem(EditorListItem::Type pType, int pLine,
+                               const QString &pMessage)
 {
     // Add the given item to our list
 
@@ -225,7 +233,7 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
+void EditorListWidget::addItem(EditorListItem::Type pType,
                                const QString &pMessage)
 {
     // Add the given item to our list

@@ -169,9 +169,9 @@ QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
 QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
-                                const QIcon::Mode &pMode = QIcon::Normal);
+                                QIcon::Mode pMode = QIcon::Normal);
 QString CORE_EXPORT iconDataUri(const QString &pIcon, int pWidth, int pHeight,
-                                const QIcon::Mode &pMode = QIcon::Normal);
+                                QIcon::Mode pMode = QIcon::Normal);
 
 QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                              const QColor &pColor);

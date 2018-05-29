@@ -125,7 +125,7 @@ FileManager * FileManager::instance()
 //==============================================================================
 
 FileManager::Status FileManager::manage(const QString &pFileName,
-                                        const File::Type &pType,
+                                        File::Type pType,
                                         const QString &pUrl)
 {
     // Manage the given file, should it not be already managed
@@ -239,6 +239,20 @@ QString FileManager::url(const QString &pFileName) const
         return file->url();
     else
         return QString();
+}
+
+//==============================================================================
+
+QString FileManager::fileName(const QString &pUrl) const
+{
+    // Return the given file's file name, if it is being managed
+
+    foreach (File *file, mFiles.values()) {
+        if (!pUrl.compare(file->url()))
+            return file->fileName();
+    }
+
+    return QString();
 }
 
 //==============================================================================

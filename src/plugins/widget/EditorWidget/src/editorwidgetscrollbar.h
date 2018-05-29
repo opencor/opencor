@@ -18,102 +18,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// GUI interface
+// Editor scroll bar
 //==============================================================================
 
-#include "guiinterface.h"
+#pragma once
+
+//==============================================================================
+
+#include "editorwidgetglobal.h"
+
+//==============================================================================
+
+#include <QScrollBar>
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace EditorWidget {
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int guiInterfaceVersion()
+class EditorWidgetEditorWidget;
+
+//==============================================================================
+
+class EDITORWIDGET_EXPORT EditorWidgetScrollBar : public QScrollBar
 {
-    // Version of the GUI interface
+    Q_OBJECT
 
-    return 1;
-}
+public:
+    explicit EditorWidgetScrollBar(EditorWidgetEditorWidget *pParent);
 
-//==============================================================================
+protected:
+    void paintEvent(QPaintEvent *pEvent) override;
 
-namespace Gui {
-
-//==============================================================================
-
-Menu::Menu(Type pType, QMenu *pMenu) :
-    mType(pType),
-    mAction(0),
-    mMenu(pMenu)
-{
-}
+private:
+    EditorWidgetEditorWidget *mOwner;
+};
 
 //==============================================================================
 
-Menu::Menu(Type pType, QAction *pAction, QMenu *pMenu) :
-    mType(pType),
-    mAction(pAction),
-    mMenu(pMenu)
-{
-}
-
-//==============================================================================
-
-Menu::Type Menu::type() const
-{
-    // Return the menu's type
-
-    return mType;
-}
-
-//==============================================================================
-
-QAction * Menu::action() const
-{
-    // Return the menu's action
-
-    return mAction;
-}
-
-//==============================================================================
-
-QMenu * Menu::menu() const
-{
-    // Return the menu itsef
-
-    return mMenu;
-}
-
-//==============================================================================
-
-MenuAction::MenuAction(Type pType, QAction *pAction) :
-    mType(pType),
-    mAction(pAction)
-{
-}
-
-//==============================================================================
-
-MenuAction::Type MenuAction::type() const
-{
-    // Return the action's type
-
-    return mType;
-}
-
-//==============================================================================
-
-QAction * MenuAction::action() const
-{
-    // Return the action itself
-
-    return mAction;
-}
-
-//==============================================================================
-
-}   // namespace Gui
+}   // namespace EditorWidget
 }   // namespace OpenCOR
 
 //==============================================================================

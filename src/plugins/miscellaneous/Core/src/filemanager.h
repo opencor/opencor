@@ -92,8 +92,7 @@ public:
 
     static FileManager * instance();
 
-    Status manage(const QString &pFileName,
-                  const File::Type &pType = File::Local,
+    Status manage(const QString &pFileName, File::Type pType = File::Local,
                   const QString &pUrl = QString());
     Status unmanage(const QString &pFileName);
 
@@ -105,6 +104,7 @@ public:
 
     int newIndex(const QString &pFileName) const;
     QString url(const QString &pFileName) const;
+    QString fileName(const QString &pUrl) const;
 
     bool isDifferent(const QString &pFileName) const;
     bool isDifferent(const QString &pFileName,

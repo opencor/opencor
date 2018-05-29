@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QIcon>
 #include <QList>
+#include <QMap>
 #ifdef Q_OS_WIN
     #include <QSet>
     #include <QVector>
@@ -70,6 +71,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameter
 {
 public:
     enum ParameterType {
+        Unknown,
         Voi,
         Constant,
         ComputedConstant,
@@ -83,7 +85,7 @@ public:
     explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        const ParameterType &pType, int pIndex);
+                                        ParameterType pType, int pIndex);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);
@@ -101,7 +103,8 @@ public:
 
     QString formattedUnit(const QString &pVoiUnit) const;
 
-    QIcon icon() const;
+    static QMap<int, QIcon> icons();
+    static QIcon icon(ParameterType pParameterType);
 
 private:
     QString mName;

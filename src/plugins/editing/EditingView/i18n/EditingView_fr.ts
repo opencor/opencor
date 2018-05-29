@@ -87,5 +87,13 @@
         <source>Select all the text</source>
         <translation>Sélectionner tout le texte</translation>
     </message>
+    <message>
+        <source>Word Wrap</source>
+        <translation>Retour Ligne</translation>
+    </message>
+    <message>
+        <source>Word wrap the text</source>
+        <translation>Retour à la ligne du texte</translation>
+    </message>
 </context>
 </TS>

@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
 #include "editorwidgetfindreplacewidget.h"
 #include "i18ninterface.h"
 
@@ -50,9 +52,10 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(QWidget *pParent) :
+EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(EditorWidget *pParent) :
     Core::Widget(pParent),
     mGui(new Ui::EditorWidgetFindReplaceWidget),
+    mOwner(pParent),
     mActive(false)
 {
     // Set up the GUI
@@ -273,24 +276,6 @@ QString EditorWidgetFindReplaceWidget::replaceText() const
 
 //==============================================================================
 
-bool EditorWidgetFindReplaceWidget::findEditHasFocus() const
-{
-    // Return whether our find edit has the focus
-
-    return mGui->findEdit->hasFocus();
-}
-
-//==============================================================================
-
-bool EditorWidgetFindReplaceWidget::replaceEditHasFocus() const
-{
-    // Return whether our replace edit has the focus
-
-    return mGui->replaceEdit->hasFocus();
-}
-
-//==============================================================================
-
 bool EditorWidgetFindReplaceWidget::isActive() const
 {
     // Return whether we are active
@@ -391,18 +376,40 @@ void EditorWidgetFindReplaceWidget::changeEvent(QEvent *pEvent)
 
 void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 {
-    // Let people know that a key has been pressed
+    // Some key combinations from our find/replace widget
 
-    bool handled = false;
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  (pEvent->key() == Qt::Key_Escape)) {
+        mOwner->setFindReplaceVisible(false);
 
-    emit keyPressed(pEvent, handled);
-
-    // Accept the event or carry on as normal, if the event wasn't handled
-
-    if (handled)
         pEvent->accept();
-    else
+    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+               && !(pEvent->modifiers() & Qt::ControlModifier)
+               && !(pEvent->modifiers() & Qt::AltModifier)
+               && !(pEvent->modifiers() & Qt::MetaModifier)
+               &&  (   (pEvent->key() == Qt::Key_Return)
+                    || (pEvent->key() == Qt::Key_Enter))) {
+        if (mGui->findEdit->hasFocus()) {
+            mOwner->editor()->findNext();
+
+            pEvent->accept();
+        } else if (mGui->replaceEdit->hasFocus()) {
+            mOwner->editor()->replaceAndFind();
+
+            pEvent->accept();
+        } else {
+            // Default handling of the event
+
+            Core::Widget::keyPressEvent(pEvent);
+        }
+    } else {
+        // Default handling of the event
+
         Core::Widget::keyPressEvent(pEvent);
+    }
 }
 
 //==============================================================================
@@ -535,6 +542,10 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
     }
 
     mDropDownAction->setIcon(dropDownPixmap);
+
+    // Let people know that our search options have changed
+
+    emit searchOptionsChanged();
 }
 
 //==============================================================================

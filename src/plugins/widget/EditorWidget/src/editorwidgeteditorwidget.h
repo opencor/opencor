@@ -18,20 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Editor list widget
+// Editor widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "commonwidget.h"
+#include "corecliutils.h"
 #include "editorwidgetglobal.h"
-
-//==============================================================================
-
-#include <QListView>
-#include <QStandardItem>
+#include "qscintillawidget.h"
 
 //==============================================================================
 
@@ -40,77 +36,77 @@ namespace EditorWidget {
 
 //==============================================================================
 
-class EDITORWIDGET_EXPORT EditorListItem : public QStandardItem
-{
-public:
-    enum Type {
-        Unknown     = QStandardItem::UserType,
-        Error       = QStandardItem::UserType+1,
-        Warning     = QStandardItem::UserType+2,
-        Hint        = QStandardItem::UserType+3,
-        Information = QStandardItem::UserType+4,
-        Fatal       = QStandardItem::UserType+5
-    };
-
-    explicit EditorListItem(Type pType, int pLine, int pColumn,
-                            const QString &pMessage);
-
-    int type() const override;
-    int line() const;
-    int column() const;
-    QString message() const;
-
-private:
-    Type mType;
-    int mLine;
-    int mColumn;
-    QString mMessage;
-};
+class EditorWidget;
+class EditorWidgetFindReplaceWidget;
+class EditorWidgetScrollBar;
 
 //==============================================================================
 
-class EDITORWIDGET_EXPORT EditorListWidget : public QListView,
-                                             public Core::CommonWidget
+class EDITORWIDGET_EXPORT EditorWidgetEditorWidget : public QScintillaSupport::QScintillaWidget
 {
     Q_OBJECT
 
 public:
-    explicit EditorListWidget(QWidget *pParent);
+    explicit EditorWidgetEditorWidget(QsciLexer *pLexer,
+                                      EditorWidgetFindReplaceWidget *pFindReplace,
+                                      EditorWidget *pParent);
 
-    void retranslateUi() override;
+    void setReadOnly(bool pReadOnly) override;
 
-    void addItem(EditorListItem::Type pType, int pLine, int pColumn,
-                 const QString &pMessage);
-    void addItem(EditorListItem::Type pType, int pLine,
-                 const QString &pMessage);
-    void addItem(EditorListItem::Type pType, const QString &pMessage);
+    QIntList highlightedLines() const;
 
-    int count() const;
+    void clearHighlighting();
+    void addHighlighting(int pFromLine, int pFromColumn,
+                         int pToLine, int pToColumn);
 
-    void selectFirstItem();
+    void del() override;
+
+    using QsciScintilla::replace;
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *pEvent) override;
     void keyPressEvent(QKeyEvent *pEvent) override;
+    void mouseDoubleClickEvent(QMouseEvent *pEvent) override;
+    void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
-    QStandardItemModel *mModel;
+    EditorWidget *mOwner;
 
-    QMenu *mContextMenu;
+    EditorWidgetFindReplaceWidget *mFindReplace;
 
-    QAction *mClearAction;
-    QAction *mCopyToClipboardAction;
+    EditorWidgetScrollBar *mVerticalScrollBar;
 
-signals:
-    void itemRequested(EditorListItem *pItem);
+    QIntList mReadOnlyStyles;
+
+    int mHighlightIndicatorNumber;
+
+    QIntList mHighlightedLines;
+
+    QStringList mTexts;
+
+    void doHighlightReplaceAll(bool pHighlightAll);
+
+    bool findText(const QString &pText, bool pForward);
 
 public slots:
-    void clear();
+    void highlightAll();
+    void replaceAll();
+
+    bool findNext() override;
+    bool findPrevious();
+
+    void findTextChanged(const QString &pText);
+
+    void replace();
+    void replaceAndFind();
+
+    void cut() override;
+    void paste() override;
+
+    void undo() override;
+    void redo() override;
 
 private slots:
-    void copyToClipboard();
-
-    void requestItem(const QModelIndex &pItemIndex);
+    void highlightAllAndFind();
 };
 
 //==============================================================================

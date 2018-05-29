@@ -141,7 +141,7 @@ public:
         List
     };
 
-    explicit Property(const Type &pType, const QString &pId,
+    explicit Property(Type pType, const QString &pId,
                       const Descriptions &pDescriptions,
                       const QStringList &pListValues,
                       const QVariant &pDefaultValue, bool pHasVoiUnit);

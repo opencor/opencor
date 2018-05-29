@@ -146,10 +146,9 @@ public:
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
-                                 int pSimulationRun, const Task &pTask);
+                                 int pSimulationRun, Task pTask);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 quint64 pSimulationResultsSize,
-                                 const Task &pTask);
+                                 quint64 pSimulationResultsSize, Task pTask);
 
     void resetSimulationProgress();
 
@@ -274,7 +273,7 @@ private:
     void initializeGui(bool pValidSimulationEnvironment);
     void initializeSimulation();
 
-    void initialiseTrackers();
+    void initializeTrackers(bool pInitialzeGraphPanelsWidgetSizes = false);
 
     QString fileName(const QString &pFileName, const QString &pBaseFileName,
                      const QString &pFileExtension, const QString &pCaption,
@@ -295,7 +294,7 @@ private:
 
     void updateFileModifiedStatus();
 
-    void simulationError(const QString &pMessage, const ErrorType &pErrorType);
+    void simulationError(const QString &pMessage, ErrorType pErrorType);
 
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
