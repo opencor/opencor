@@ -567,8 +567,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     if (   simulation->isRunning()
         || (simulationResultsSize != simulation->results()->size())) {
         QTimer::singleShot(0, this, std::bind(&SimulationExperimentViewWidget::checkSimulationResults,
-                                              this,
-                                              pFileName,
+                                              this, pFileName,
                                               SimulationExperimentViewSimulationWidget::None));
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
