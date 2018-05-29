@@ -815,6 +815,14 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             QString issueType;
 
             switch (sedmlFileIssue.type()) {
+            case SEDMLSupport::SedmlFileIssue::Unknown:
+#ifdef QT_DEBUG
+                // We should never come here...
+
+                qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
+#endif
+
+                break;
             case SEDMLSupport::SedmlFileIssue::Information:
                 issueType = tr("Information:");
 
@@ -1054,11 +1062,14 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     setUpdatesEnabled(true);
 
     // Keep track of the initial size of our different graph panels
-    // Note: we do this through a single shot to give time to be certain that
-    //       the GUI is ready and that the size of our different graph panels is
-    //       therefore final...
+    // Note: we do this through a single shot (and after short delay) to be
+    //       certain that the GUI is ready and that the size of our different
+    //       graph panels is therefore final. Not to do this might, on Windows
+    //       at least, result in a file being considered modified (e.g. when
+    //       you use the N62 SED-ML file, then switch to another file and
+    //       back)...
 
-    QTimer::singleShot(0, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
+    QTimer::singleShot(500, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
 }
 
 //==============================================================================
@@ -1659,6 +1670,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
 
 //==============================================================================
 
+static const auto TrueValue  = QStringLiteral("true");
+static const auto FalseValue = QStringLiteral("false");
+
+//==============================================================================
+
 bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
                                                                const QString &pFileName,
                                                                const QString &pModelSource)
@@ -1973,7 +1989,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                  "    %3"
                                                  "</%1>").arg(SEDMLSupport::Properties)
                                                          .arg(SEDMLSupport::OpencorNamespace)
-                                                         .arg( SedmlProperty.arg(SEDMLSupport::Title)
+                                                         .arg( SedmlProperty.arg(SEDMLSupport::Selected)
+                                                                            .arg(property->isChecked()?
+                                                                                     TrueValue:
+                                                                                     FalseValue)
+                                                              +SedmlProperty.arg(SEDMLSupport::Title)
                                                                             .arg(properties[1]->valueAsString())
                                                               +SedmlProperty.arg(SEDMLSupport::Line)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
@@ -2711,8 +2731,6 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
-        static const QString TrueValue = "true";
-
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
@@ -2922,15 +2940,16 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 return false;
             }
 
-            QString title = QString();
-            Qt::PenStyle lineStyle = Qt::SolidLine;
-            double lineWidth = 1.0;
-            QColor lineColor = QColor();
-            QwtSymbol::Style symbolStyle = QwtSymbol::NoSymbol;
-            int symbolSize = 8;
-            QColor symbolColor = Qt::darkBlue;
-            bool symbolFilled = true;
-            QColor symbolFillColor = Qt::white;
+            bool selected = GraphPanelWidget::DefaultSelected;
+            QString title = GraphPanelWidget::DefaultTitle;
+            Qt::PenStyle lineStyle = GraphPanelWidget::DefaultLineStyle;
+            int lineWidth = GraphPanelWidget::DefaultLineWidth;
+            QColor lineColor = GraphPanelWidget::DefaultLineColor;
+            QwtSymbol::Style symbolStyle = GraphPanelWidget::DefaultSymbolStyle;
+            int symbolSize = GraphPanelWidget::DefaultSymbolSize;
+            QColor symbolColor = GraphPanelWidget::DefaultSymbolColor;
+            bool symbolFilled = GraphPanelWidget::DefaultSymbolFilled;
+            QColor symbolFillColor = GraphPanelWidget::DefaultSymbolFillColor;
 
             annotation = sedmlCurve->getAnnotation();
 
@@ -2945,7 +2964,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
                             QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                            if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
+                            if (!curvePropertyNodeName.compare(SEDMLSupport::Selected)) {
+                                selected = !curvePropertyNodeValue.compare(TrueValue);
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
                                 title = curvePropertyNodeValue;
                             } else if (!curvePropertyNodeName.compare(SEDMLSupport::Line)) {
                                 for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -2956,7 +2977,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
                                         lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
-                                        lineWidth = linePropertyNodeValue.toDouble();
+                                        lineWidth = linePropertyNodeValue.toInt();
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
                                         lineColor.setNamedColor(linePropertyNodeValue);
                                     }
@@ -2987,8 +3008,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 }
             }
 
-            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
-                                 GraphPanelWidget::GraphPanelPlotGraphProperties(title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
+            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter, graphPanel),
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties(selected, title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
@@ -3227,20 +3248,16 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
     //          our simulation being used while it has already been deleted due
     //          to threading issues...
 
-    enum {
-        ResetDelay = 169
-    };
-
-    if (isVisible())
-        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetProgressBar);
-    else
-        QTimer::singleShot(ResetDelay, this, &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
+    QTimer::singleShot(169, this,
+                       isVisible()?
+                           &SimulationExperimentViewSimulationWidget::resetProgressBar:
+                           &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
 }
 
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
-                                                               const ErrorType &pErrorType)
+                                                               ErrorType pErrorType)
 {
     // Output the simulation error
 
@@ -3382,7 +3399,10 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 
     graphPanel->plot()->legend()->setUpdatesEnabled(false);
 
-    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
+    GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY, graphPanel);
+
+    graphPanel->addGraph(graph,
+                         GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
 }
 
 //==============================================================================
@@ -3564,7 +3584,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     bool needInitialisationY = true;
 
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
-        if (graph->isValid() && graph->isSelected()) {
+        if (graph->isVisible()) {
             SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
@@ -3748,7 +3768,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
                                                                        int pSimulationRun,
-                                                                       const Task &pTask)
+                                                                       Task pTask)
 {
     // Update our simulation results
 
@@ -3931,7 +3951,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                        quint64 pSimulationResultsSize,
-                                                                       const Task &pTask)
+                                                                       Task pTask)
 {
     // Update our simulation results
 
@@ -4013,7 +4033,7 @@ void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
 
 void SimulationExperimentViewSimulationWidget::checkSolversProperties()
 {
-    // Check whether any of our simulation properties has changed
+    // Check whether any of our solver properties has changed
 
     mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
 
@@ -4041,7 +4061,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 
     mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
 
-    // Check whether any of our simulation properties has changed
+    // Check whether any of our graph panel / graphs properties has changed
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
@@ -4077,8 +4097,16 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 
     QStringList res = QStringList();
 
-    foreach (Core::Property *property, pPropertyEditor->allProperties())
+    foreach (Core::Property *property, pPropertyEditor->allProperties()) {
+        if (property->isCheckable()) {
+            if (property->isChecked())
+                res << TrueValue;
+            else
+                res << FalseValue;
+        }
+
         res << property->value();
+    }
 
     return res;
 }

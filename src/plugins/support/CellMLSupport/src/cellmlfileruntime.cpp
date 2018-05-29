@@ -65,7 +65,7 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
-                                                       const ParameterType &pType,
+                                                       ParameterType pType,
                                                        int pIndex) :
     mName(pName),
     mDegree(pDegree),
@@ -339,7 +339,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
         // Determine the type of our computation target
 
-        CellmlFileRuntimeParameter::ParameterType parameterType;
+        CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::Unknown;
 
         switch (computationTarget->type()) {
         case iface::cellml_services::VARIABLE_OF_INTEGRATION:

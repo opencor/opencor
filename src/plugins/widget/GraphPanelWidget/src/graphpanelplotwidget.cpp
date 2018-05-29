@@ -64,7 +64,8 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(bool pSelected,
+                                                             const QString &pTitle,
                                                              const Qt::PenStyle &pLineStyle,
                                                              int pLineWidth,
                                                              const QColor &pLineColor,
@@ -73,6 +74,7 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
                                                              const QColor &pSymbolColor,
                                                              bool pSymbolFilled,
                                                              const QColor &pSymbolFillColor) :
+    mSelected(pSelected),
     mTitle(pTitle),
     mLineStyle(pLineStyle),
     mLineWidth(pLineWidth),
@@ -83,6 +85,26 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
     mSymbolFilled(pSymbolFilled),
     mSymbolFillColor(pSymbolFillColor)
 {
+}
+
+//==============================================================================
+
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
+                                                             const QColor &pColor) :
+    GraphPanelPlotGraphProperties(DefaultSelected, pTitle, DefaultLineStyle,
+                                  DefaultLineWidth, pColor, DefaultSymbolStyle,
+                                  DefaultSymbolSize, pColor,
+                                  DefaultSymbolFilled, DefaultSymbolFillColor)
+{
+}
+
+//==============================================================================
+
+bool GraphPanelPlotGraphProperties::isSelected() const
+{
+    // Return our selected state
+
+    return mSelected;
 }
 
 //==============================================================================
@@ -176,7 +198,7 @@ GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
 
     setLegendAttribute(LegendShowLine);
     setLegendAttribute(LegendShowSymbol);
-    setPen(QPen(QColor(), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(pOwner->color(), DefaultLineWidth, DefaultLineStyle, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(RenderAntialiased);
 }
 
@@ -195,19 +217,8 @@ static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 //==============================================================================
 
-QList<QColor> GraphPanelPlotGraph::RunColours =  {
-    QColor::fromRgb(0xe41a1c),
-    QColor::fromRgb(0x377eb8),
-    QColor::fromRgb(0x4daf4a),
-    QColor::fromRgb(0x984ea3),
-    QColor::fromRgb(0xff7f00),
-    QColor::fromRgb(0xffff33),
-    QColor::fromRgb(0xa65628),
-    QColor::fromRgb(0xf781bf)};
-
-//==============================================================================
-
-GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
+GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
+                                         GraphPanelWidget *pOwner) :
     mSelected(true),
     mFileName(QString()),
     mParameterX(pParameterX),
@@ -220,12 +231,34 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mDummyRun(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
+    // Determine our default colour
+
+    static QList<QColor> GraphColors = { DarkBlue, Orange, Yellow, Purple, Green, LightBlue, Red };
+    static QMap<GraphPanelWidget *, int> GraphColorIndexes;
+
+    int graphColorIndex = pOwner->graphs().isEmpty()?
+                              -1:
+                              GraphColorIndexes.value(pOwner, -1);
+
+    graphColorIndex = (graphColorIndex+1)%GraphColors.count();
+
+    mColor = GraphColors[graphColorIndex];
+
+    GraphColorIndexes.insert(pOwner, graphColorIndex);
+
     // Create our dummy run
     // Note: a dummy run (i.e. a run that is never used, shown, etc.) is needed
     //       to ensure that our legend labels don't disappear (see
     //       https://github.com/opencor/opencor/issues/1537)...
 
     addRun();
+}
+
+//==============================================================================
+
+GraphPanelPlotGraph::GraphPanelPlotGraph(GraphPanelWidget *pOwner) :
+    GraphPanelPlotGraph(0, 0, pOwner)
+{
 }
 
 //==============================================================================
@@ -420,6 +453,15 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
     // Set our parameter Y
 
     mParameterY = pParameterY;
+}
+
+//==============================================================================
+
+QColor GraphPanelPlotGraph::color() const
+{
+    // Return our colour
+
+    return mColor;
 }
 
 //==============================================================================
@@ -908,7 +950,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
                                                   int pLineWidth,
-                                                  const Position &pPosition,
+                                                  Position pPosition,
                                                   bool pCanMovePosition)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
@@ -1554,6 +1596,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     //       replot ourselves...
 
     setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis, false, false, false);
+
+    // We want our legend to be active by default
+
+    setLegendActive(true);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -2690,7 +2736,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
+bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
                                      bool pCanZoomOut,
                                      const QwtScaleMap &pCanvasMap,
                                      double pPoint, double &pMin, double &pMax)
@@ -2748,9 +2794,8 @@ bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling, bool pCanZoomIn,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
-                                     const Scaling &pScalingX,
-                                     const Scaling &pScalingY)
+void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
+                                     Scaling pScalingY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
@@ -3281,6 +3326,20 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(false);
+        // Note #1: this is needed on Windows and Linux otherwise to switch
+        //          files that use different modes (e.g. the N62 SED-ML file
+        //          uses the Simulation Experiment view, i.e. Simulation mode,
+        //          and the N62 CellML file uses the CellML Text view, i.e. the
+        //          Editing mode) may result in the view tab of both modes being
+        //          temporarily visible. No idea why to temporarily disable
+        //          updates fixes things, but it does...
+        // Note #2: to have this on macOS may result in a graph panel becoming
+        //          black, so we definitely don't want to do it on that
+        //          platform...
+#endif
+
         // Determine how much space we should have directly to the left and
         // right of the X axis
         // Note: normally, we would initialise minBorderDistStartX and
@@ -3361,6 +3420,10 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                 replot();
             }
         }
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(true);
+#endif
     }
 }
 

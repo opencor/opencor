@@ -36,8 +36,7 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewParserMessage::CellmlTextViewParserMessage(const Type &pType,
-                                                         int pLine,
+CellmlTextViewParserMessage::CellmlTextViewParserMessage(Type pType, int pLine,
                                                          int pColumn,
                                                          const QString &pMessage) :
     mType(pType),
@@ -97,7 +96,7 @@ CellmlTextViewParser::CellmlTextViewParser() :
 //==============================================================================
 
 bool CellmlTextViewParser::execute(const QString &pCellmlText,
-                                   const CellMLSupport::CellmlFile::Version &pCellmlVersion)
+                                   CellMLSupport::CellmlFile::Version pCellmlVersion)
 {
     // Get ready for the parsing of a model definition
 
@@ -449,7 +448,7 @@ QDomElement CellmlTextViewParser::newNumberElement(const QString &pNumber,
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::newMathematicalConstantElement(const CellmlTextViewScanner::TokenType &pTokenType)
+QDomElement CellmlTextViewParser::newMathematicalConstantElement(CellmlTextViewScanner::TokenType pTokenType)
 {
     // Create and return a new mathematical constant element for the given token
     // typewith the given value
@@ -459,7 +458,7 @@ QDomElement CellmlTextViewParser::newMathematicalConstantElement(const CellmlTex
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTextViewScanner::TokenType &pTokenType,
+QDomElement CellmlTextViewParser::newMathematicalFunctionElement(CellmlTextViewScanner::TokenType pTokenType,
                                                                  const QList<QDomElement> &pArgumentElements)
 {
     // Create and return a new mathematical function element for the given token
@@ -502,8 +501,8 @@ QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTex
 
 //==============================================================================
 
-CellmlTextViewScanner::TokenTypes CellmlTextViewParser::rangeOfTokenTypes(const CellmlTextViewScanner::TokenType &pFromTokenType,
-                                                                          const CellmlTextViewScanner::TokenType &pToTokenType)
+CellmlTextViewScanner::TokenTypes CellmlTextViewParser::rangeOfTokenTypes(CellmlTextViewScanner::TokenType pFromTokenType,
+                                                                          CellmlTextViewScanner::TokenType pToTokenType)
 {
     // Return a range of token types
 
@@ -570,7 +569,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
 
 bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                      const QString &pExpectedString,
-                                     const CellmlTextViewScanner::TokenType &pTokenType)
+                                     CellmlTextViewScanner::TokenType pTokenType)
 {
     // Expect the given token
 
@@ -581,7 +580,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
 //==============================================================================
 
 bool CellmlTextViewParser::isTokenType(QDomNode &pDomNode,
-                                       const CellmlTextViewScanner::TokenType &pTokenType)
+                                       CellmlTextViewScanner::TokenType pTokenType)
 {
     // Try to parse comments, if any
 
@@ -2326,7 +2325,7 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
-QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType &pTokenType) const
+QString CellmlTextViewParser::mathmlName(CellmlTextViewScanner::TokenType pTokenType) const
 {
     // Return the MathML name of the given token type
 

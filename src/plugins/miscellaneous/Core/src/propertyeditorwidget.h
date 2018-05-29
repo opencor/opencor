@@ -242,7 +242,7 @@ public:
         Color
     };
 
-    explicit Property(const Type &pType, PropertyEditorWidget *pParent);
+    explicit Property(Type pType, PropertyEditorWidget *pParent);
 
     PropertyEditorWidget * owner() const;
 
@@ -452,7 +452,7 @@ private:
 
     void retranslateEmptyListProperties(QStandardItem *pItem);
 
-    Property * addProperty(const Property::Type &pType, Property *pParent);
+    Property * addProperty(Property::Type pType, Property *pParent);
 
     void selectProperty(Property *pProperty);
     void editProperty(Property *pProperty, bool pCommitData = true);

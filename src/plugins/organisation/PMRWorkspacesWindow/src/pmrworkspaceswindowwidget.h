@@ -74,20 +74,20 @@ public:
         File           = QStandardItem::UserType+3
     };
 
-    explicit PmrWorkspacesWindowItem(const Type &pType,
+    explicit PmrWorkspacesWindowItem(Type pType,
                                      Core::TreeViewWidget *pTreeViewWidget,
                                      PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
                                      const QIcon &pCollapsedIcon,
                                      const QIcon &pExpandedIcon);
-    explicit PmrWorkspacesWindowItem(const Type &pType,
+    explicit PmrWorkspacesWindowItem(Type pType,
                                      Core::TreeViewWidget *pTreeViewWidget,
                                      PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
                                      PMRSupport::PmrWorkspaceFileNode *pFileNode,
                                      const QIcon &pCollapsedIcon,
                                      const QIcon &pExpandedIcon);
-    explicit PmrWorkspacesWindowItem(const Type &pType,
+    explicit PmrWorkspacesWindowItem(Type pType,
                                      Core::TreeViewWidget *pTreeViewWidget,
                                      PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
@@ -117,7 +117,7 @@ private:
     QIcon mCollapsedIcon;
     QIcon mExpandedIcon;
 
-    explicit PmrWorkspacesWindowItem(const Type &pType,
+    explicit PmrWorkspacesWindowItem(Type pType,
                                      Core::TreeViewWidget *pTreeViewWidget,
                                      PmrWorkspacesWindowProxyModel *pTreeViewProxyModel,
                                      PMRSupport::PmrWorkspace *pWorkspace,
@@ -178,7 +178,7 @@ public:
     void update(const QString &pPmrUrl);
 
     void initialize();
-    void initialize(const MessageType &pMessageType, const QString &pMessage);
+    void initialize(MessageType pMessageType, const QString &pMessage);
 
     using QTreeView::reset;
 
@@ -265,7 +265,7 @@ private:
     QIcon mWtFileIcon;
 
     void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
-                    const MessageType &pMessageType, const QString &pMessage,
+                    MessageType pMessageType, const QString &pMessage,
                     bool pAuthenticated);
 
     void reset(const QString &pPmrUrl);

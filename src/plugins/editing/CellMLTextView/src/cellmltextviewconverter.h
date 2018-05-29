@@ -142,7 +142,7 @@ private:
     void indent(bool pForceTracking = true);
     void unindent();
 
-    void outputString(const OutputType &pOutputType = EmptyLine,
+    void outputString(OutputType pOutputType = EmptyLine,
                       const QString &pString = QString());
 
     bool rdfNode(const QDomNode &pDomNode) const;

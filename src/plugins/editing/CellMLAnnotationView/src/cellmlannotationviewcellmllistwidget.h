@@ -91,10 +91,10 @@ public:
     };
 
     explicit CellmlAnnotationViewCellmlElementItem(bool pError, const QString &pText);
-    explicit CellmlAnnotationViewCellmlElementItem(const Type &pType, const QString &pText);
-    explicit CellmlAnnotationViewCellmlElementItem(const Type &pType,
+    explicit CellmlAnnotationViewCellmlElementItem(Type pType, const QString &pText);
+    explicit CellmlAnnotationViewCellmlElementItem(Type pType,
                                                    iface::cellml_api::CellMLElement *pElement,
-                                                   const int pNumber = -1);
+                                                   int pNumber = -1);
 
     bool isCategory() const;
     int type() const override;
@@ -110,10 +110,10 @@ private:
 
     int mNumber;
 
-    void setIcon(const Type &pType);
+    void setIcon(Type pType);
 
     explicit CellmlAnnotationViewCellmlElementItem(bool pCategory,
-                                                   const Type &pType,
+                                                   Type pType,
                                                    const QString &pText,
                                                    iface::cellml_api::CellMLElement *pElement,
                                                    int pNumber);

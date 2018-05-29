@@ -53,7 +53,7 @@ Widget::Widget(QWidget *pParent) :
 
 //==============================================================================
 
-QLayout * Widget::createLayout(const LayoutType &pLayoutType)
+QLayout * Widget::createLayout(LayoutType pLayoutType)
 {
     // Create and set a layout
 

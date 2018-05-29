@@ -590,7 +590,7 @@ void PluginsDialog::apply()
 
 //==============================================================================
 
-QStandardItem * PluginsDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
+QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory)
 {
     // Return the given category item, after having created it, if it didn't
     // already exist

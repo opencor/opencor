@@ -45,7 +45,7 @@ namespace PMRWindow {
 
 //==============================================================================
 
-PmrWindowItem::PmrWindowItem(const Type &pType, const QString &pText,
+PmrWindowItem::PmrWindowItem(Type pType, const QString &pText,
                              const QString &pUrl) :
     QStandardItem(pText),
     mType(pType),

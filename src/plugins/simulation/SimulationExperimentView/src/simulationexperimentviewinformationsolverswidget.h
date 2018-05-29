@@ -98,7 +98,7 @@ private:
 
     void updateSolverGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 
-    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const Solver::Type &pSolverType);
+    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(Solver::Type pSolverType);
 
     void solverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
                        const QString &pSolverName);

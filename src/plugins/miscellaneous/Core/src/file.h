@@ -66,8 +66,7 @@ public:
         LockedNotSet
     };
 
-    explicit File(const QString &pFileName, const Type &pType,
-                  const QString &pUrl);
+    explicit File(const QString &pFileName, Type pType, const QString &pUrl);
     ~File();
 
     QString fileName() const;

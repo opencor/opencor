@@ -442,7 +442,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *graphProperty = graphsPropertyEditor->addSectionProperty();
 
     graphProperty->setCheckable(true);
-    graphProperty->setChecked(true);
+    graphProperty->setChecked(pGraphProperties.isSelected());
 
     // Keep track of the link between our given graph and our graph property
 
@@ -506,12 +506,20 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     graphsPropertyEditor->addBooleanProperty(pGraphProperties.symbolFilled(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolFillColor(), symbolProperty);
 
+    // Keep track of changes to our new graph
+
     connect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
             this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
 
     // Update the information about our new graph
 
     updateGraphsInfo(graphProperty);
+
+    // Make sure that the selected state of our new graph is taken into account
+    // Note: this must be done after the call to updateGraphsInfo() above
+    //       otherwise our new graph's visible state won't be properly set...
+
+    graphsPropertyChanged(graphProperty);
 }
 
 //==============================================================================
@@ -609,7 +617,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph()
     // Ask the graph panel associated with our current graphs property editor to
     // add an 'empty' graph
 
-    mGraphPanels.value(mGraphsPropertyEditor)->addGraph(new GraphPanelWidget::GraphPanelPlotGraph());
+    GraphPanelWidget::GraphPanelWidget * graphPanel = mGraphPanels.value(mGraphsPropertyEditor);
+
+    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(graphPanel));
 }
 
 //==============================================================================
@@ -797,18 +807,15 @@ Core::Properties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::g
     Core::Properties res = Core::Properties();
 
     foreach (Core::Property *property, mGraphsPropertyEditors.value(pGraphPanel)->properties()) {
-        // The property should be returned if it is checked (i.e. a selected
-        // graph) and have its first sub-property (i.e. to which model the graph
-        // applies) has either a value of "Current" or that of the given file
-        // name
+        // The property should be returned if its first sub-property (i.e. to
+        // which model the graph applies) has either a value of "Current" or
+        // that of the given file name
 
-        if (property->isChecked()) {
-            QString modelPropertyValue = property->properties().first()->value();
+        QString modelPropertyValue = property->properties().first()->value();
 
-            if (   !modelPropertyValue.compare(tr("Current"))
-                || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
-                res << property;
-            }
+        if (   !modelPropertyValue.compare(tr("Current"))
+            || !modelPropertyValue.split(PropertySeparator).last().compare(pFileName)) {
+            res << property;
         }
     }
 
@@ -826,7 +833,7 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode SimulationExp
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(const Mode &pMode)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(Mode pMode)
 {
     // Set our mode
 

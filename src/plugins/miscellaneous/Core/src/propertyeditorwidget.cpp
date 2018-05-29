@@ -511,7 +511,7 @@ Property * PropertyItem::owner() const
 
 //==============================================================================
 
-Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
+Property::Property(Type pType, PropertyEditorWidget *pParent) :
     mOwner(pParent),
     mType(pType),
     mId(QString()),
@@ -1474,7 +1474,7 @@ void PropertyEditorWidget::selectFirstProperty()
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
+Property * PropertyEditorWidget::addProperty(Property::Type pType,
                                              Property *pParent)
 {
     // Create our property

@@ -99,7 +99,7 @@ public:
     quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                const SimulationExperimentViewSimulationWidget::Task &pTask = SimulationExperimentViewSimulationWidget::None);
+                                SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::None);
 
 public slots:
     void clearResults(const QString &pFileName);
@@ -144,7 +144,7 @@ private slots:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void graphPanelGraphsModeChanged(const SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+    void graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode);
 
     void simulationHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
     void solversHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);

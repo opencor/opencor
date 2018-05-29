@@ -44,14 +44,15 @@ class EDITORWIDGET_EXPORT EditorListItem : public QStandardItem
 {
 public:
     enum Type {
-        Error       = QStandardItem::UserType,
-        Warning     = QStandardItem::UserType+1,
-        Hint        = QStandardItem::UserType+2,
-        Information = QStandardItem::UserType+3,
-        Fatal       = QStandardItem::UserType+4
+        Unknown     = QStandardItem::UserType,
+        Error       = QStandardItem::UserType+1,
+        Warning     = QStandardItem::UserType+2,
+        Hint        = QStandardItem::UserType+3,
+        Information = QStandardItem::UserType+4,
+        Fatal       = QStandardItem::UserType+5
     };
 
-    explicit EditorListItem(const Type &pType, int pLine, int pColumn,
+    explicit EditorListItem(Type pType, int pLine, int pColumn,
                             const QString &pMessage);
 
     int type() const override;
@@ -78,11 +79,11 @@ public:
 
     void retranslateUi() override;
 
-    void addItem(const EditorListItem::Type &pType, int pLine, int pColumn,
+    void addItem(EditorListItem::Type pType, int pLine, int pColumn,
                  const QString &pMessage);
-    void addItem(const EditorListItem::Type &pType, int pLine,
+    void addItem(EditorListItem::Type pType, int pLine,
                  const QString &pMessage);
-    void addItem(const EditorListItem::Type &pType, const QString &pMessage);
+    void addItem(EditorListItem::Type pType, const QString &pMessage);
 
     int count() const;
 

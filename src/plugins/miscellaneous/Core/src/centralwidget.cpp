@@ -1920,7 +1920,7 @@ void CentralWidget::updateGui()
 
 //==============================================================================
 
-TabBarWidget *CentralWidget::newTabBarWidget(const QTabBar::Shape &pShape,
+TabBarWidget *CentralWidget::newTabBarWidget(QTabBar::Shape pShape,
                                              bool pFileTabs)
 {
     // Create and return a tab bar

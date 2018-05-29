@@ -166,8 +166,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputHeaders()
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(const QString &pRdfTripleInformation,
-                                                                               const InformationType &pInformationType,
-                                                                               const Information &pLookUpRdfTripleInformation)
+                                                                               InformationType pInformationType,
+                                                                               Information pLookUpRdfTripleInformation)
 {
     // Update our output headers
 
@@ -213,8 +213,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(c
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                                     const QString &pRdfTripleInformation,
-                                                                    const InformationType &pInformationType,
-                                                                    const Information &pLookUpRdfTripleInformation)
+                                                                    InformationType pInformationType,
+                                                                    Information pLookUpRdfTripleInformation)
 {
     if (!pElement)
         return;
@@ -334,7 +334,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QString &pRdfTripleInformation,
-                                                                        const InformationType &pInformationType)
+                                                                        InformationType pInformationType)
 {
     // Retrieve the RDF triple information
 
@@ -410,9 +410,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         //              QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
         //
         //              outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
-        //          but this doesnt' get us exactly to the bottom of the page...
+        //          but this doesn't get us exactly to the bottom of the page...
 
-        QTimer::singleShot(1, this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple);
+        QTimer::singleShot(0, this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple);
     } else if (mLookUpRdfTripleInformation == No) {
         return;
     }

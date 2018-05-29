@@ -176,7 +176,7 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
 
 //==============================================================================
 
-SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::addSolverProperties(const Solver::Type &pSolverType)
+SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::addSolverProperties(Solver::Type pSolverType)
 {
     // Retrieve the name of the solvers which type is the one in which we are
     // interested
