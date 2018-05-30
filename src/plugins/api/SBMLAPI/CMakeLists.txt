@@ -3,16 +3,16 @@ project(SBMLAPIPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libSBML)
-set(PACKAGE_VERSION 5.16.0)
+set(PACKAGE_VERSION 5.17.0)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 5)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.16.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.17.0)
 
 # Git tag for our library
 
-set(GIT_TAG v5.16.0)
+set(GIT_TAG v5.17.0)
 
 # Package repository
 
