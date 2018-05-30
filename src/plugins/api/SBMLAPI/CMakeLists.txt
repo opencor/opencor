@@ -3,16 +3,16 @@ project(SBMLAPIPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libSBML)
-set(PACKAGE_VERSION 5.16.0)
+set(PACKAGE_VERSION 5.17.0)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 5)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.16.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.17.0)
 
 # Git tag for our library
 
-set(GIT_TAG v5.16.0)
+set(GIT_TAG v5.17.0)
 
 # Package repository
 
@@ -63,31 +63,31 @@ if(USE_PREBUILT_SBMLAPI_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} ca2eef818a6a1ea5c717a0b6c1f09bee3509b667
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 529681a0289bc9402cb8e79ff405ab51e6df7ac8
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6b46f6ee6d0af8480e21f365f9b332f804a8c5d1
-                                              71de6d57060841d7a109b1e8137df836ed7f5fab)
+                                  SHA1_VALUES 604b364f1b4d7ec294e408e3b2790ae059902a01
+                                              94c7394be6610b8831557bc390b0542c052ad3ab)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} cf2c0431a83ac1d9f5778229fe516e311155aedd
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c8e180f8f97899b447a808fcfd402b82f357be33
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES dbfe9bc7c1b8c48aa1a616bbe80df6bdd88f0412
-                                              f7f60e508009a01b1db08e6a5c51eea52b09afdd)
+                                  SHA1_VALUES df6657338b75904e27be01ba8194c7d9b7cca7da
+                                              316e086388254eb24c2a61d4e0321219136dcae0)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 057474b665d11fb2cbb33289f75f7648f4321aa7
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7a92ce68e3e285b12854b04c59932f44df2f479b
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 032edbbf75dde4457afcf36d62fc96ca4aff7e11)
+                              SHA1_VALUES 561ba2196854e6993e537a83776014ef4b4ab4f0)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1426f433d5c8ec57e35b5015e0318e59b24fc8dd
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e1efd4245977c34b525ce34ba87dccd9f4891ccd
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3fce349986f1abaff0710b205f431f97c37d3f51)
+                              SHA1_VALUES 76aadab74b4470aa0f1c612fe02c71714724d329)
     endif()
 else()
     # Download some dependencies for Windows, if needed
