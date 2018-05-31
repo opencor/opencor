@@ -161,10 +161,8 @@ int main(int pArgC, char *pArgV[])
 
     appArguments.removeFirst();
 
-    QString arguments = appArguments.join('|');
-
     if (guiApp->isRunning()) {
-        guiApp->sendMessage(arguments);
+        guiApp->sendMessage(appArguments.join('|'));
 
         delete guiApp;
 
