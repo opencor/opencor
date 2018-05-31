@@ -62,7 +62,7 @@ else()
     endif()
 endif()
 
-# Make sure that we are building OpenCOR in 64-bit mode
+# Make sure that we are building OpenCOR on a supported architecture
 # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in some
 #       cases it may not be set (e.g. when generating an Xcode project file), so
 #       we determine and retrieve that value ourselves...
