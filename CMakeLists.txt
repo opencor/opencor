@@ -37,7 +37,8 @@ option(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package"
 
 if(ENABLE_TEST_PLUGINS)
     option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
-    #---OPENCOR--- Zinc IS CURRENTLY ONLY USED BY OUR TEST PLUGINS...
+    #---OPENCOR--- Zinc IS CURRENTLY ONLY USED BY OUR TEST PLUGINS, SO NO POINT
+    #              IN ENABLING IT IF WE ARE NOT BUILDING OUR TEST PLUGINS...
 endif()
 
 # Make sure that we are using the compiler we support
