@@ -1,0 +1,6 @@
+[submodule "doc/user"]
+	path = doc/user
+	url = https://github.com/opencor/user-documentation.git
+[submodule "doc/developer"]
+	path = doc/developer
+	url = https://github.com/opencor/developer-documentation.git
