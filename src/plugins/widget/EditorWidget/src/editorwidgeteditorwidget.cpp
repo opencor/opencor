@@ -312,9 +312,11 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 
     int origPosition = -1;
     int crtPosition;
+    int findTextLength = mFindReplace->findText().length();
+    QString replaceText = mFindReplace->replaceText();
 
     while (findNext()) {
-        // Retrieve our new position
+        // Retrieve our current position
 
         crtPosition = currentPosition();
 
@@ -335,12 +337,12 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
             int toLine;
             int toColumn;
 
-            lineIndexFromPosition(crtPosition-mFindReplace->findText().length(), &fromLine, &fromColumn);
+            lineIndexFromPosition(crtPosition-findTextLength, &fromLine, &fromColumn);
             lineIndexFromPosition(crtPosition, &toLine, &toColumn);
 
             addHighlighting(fromLine, fromColumn, toLine, toColumn);
         } else {
-            QScintillaSupport::QScintillaWidget::replace(mFindReplace->replaceText());
+            QScintillaSupport::QScintillaWidget::replace(replaceText);
         }
 
         // Initialise our first line/column, if needed
