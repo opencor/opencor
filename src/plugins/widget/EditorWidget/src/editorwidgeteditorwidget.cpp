@@ -299,6 +299,11 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
     int horizontalScrollBarPosition = horizontalScrollBar()->value();
     int verticalScrollBarPosition = verticalScrollBar()->value();
 
+    // Stop tracking changes if we are replacing all
+
+    if (!pHighlightAll)
+        trackChanges(false);
+
     // Go to the beginning of our editor
 
     QsciScintilla::setCursorPosition(0, 0);
@@ -307,16 +312,20 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 
     int origPosition = -1;
     int crtPosition;
+    int findTextLength = mFindReplace->findText().length();
+    QString replaceText = mFindReplace->replaceText();
 
     while (findNext()) {
-        // Retrieve our new position
+        // Retrieve our current position
 
         crtPosition = currentPosition();
 
-        // Check whether we are back to our original position, in case we are
-        // trying to highlight all the occurrences of the text
+        // Check whether we are back to our original position
+        // Note: we want to do this both when highlighting all (obviously), but
+        //       also when replacing all in case we were to replace, say, "abc"
+        //       with "abcd"...
 
-        if (pHighlightAll && (crtPosition == origPosition))
+        if (crtPosition == origPosition)
             break;
 
         // Our new position is fine, so highlight/replace the occurrence of the
@@ -328,12 +337,12 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
             int toLine;
             int toColumn;
 
-            lineIndexFromPosition(crtPosition-mFindReplace->findText().length(), &fromLine, &fromColumn);
+            lineIndexFromPosition(crtPosition-findTextLength, &fromLine, &fromColumn);
             lineIndexFromPosition(crtPosition, &toLine, &toColumn);
 
             addHighlighting(fromLine, fromColumn, toLine, toColumn);
         } else {
-            QScintillaSupport::QScintillaWidget::replace(mFindReplace->replaceText());
+            QScintillaSupport::QScintillaWidget::replace(replaceText);
         }
 
         // Initialise our first line/column, if needed
@@ -341,6 +350,11 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
         if (origPosition == -1)
             origPosition = crtPosition;
     }
+
+    // Re-enable the tracking of changes if we are replacing all
+
+    if (!pHighlightAll)
+        trackChanges(true);
 
     // Go back to our original first visible line, position (after having
     // corrected it, but only if we replaced all the occurrences of the text)
