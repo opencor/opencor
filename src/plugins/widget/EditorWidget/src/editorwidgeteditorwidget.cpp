@@ -299,6 +299,11 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
     int horizontalScrollBarPosition = horizontalScrollBar()->value();
     int verticalScrollBarPosition = verticalScrollBar()->value();
 
+    // Stop tracking changes if we are replacing all
+
+    if (!pHighlightAll)
+        trackChanges(false);
+
     // Go to the beginning of our editor
 
     QsciScintilla::setCursorPosition(0, 0);
@@ -341,6 +346,11 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
         if (origPosition == -1)
             origPosition = crtPosition;
     }
+
+    // Re-enable the tracking of changes if we are replacing all
+
+    if (!pHighlightAll)
+        trackChanges(true);
 
     // Go back to our original first visible line, position (after having
     // corrected it, but only if we replaced all the occurrences of the text)
