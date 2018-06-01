@@ -318,10 +318,12 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 
         crtPosition = currentPosition();
 
-        // Check whether we are back to our original position, in case we are
-        // trying to highlight all the occurrences of the text
+        // Check whether we are back to our original position
+        // Note: we want to do this both when highlighting all (obviously), but
+        //       also when replacing all in case we were to replace, say, "abc"
+        //       with "abcd"...
 
-        if (pHighlightAll && (crtPosition == origPosition))
+        if (crtPosition == origPosition)
             break;
 
         // Our new position is fine, so highlight/replace the occurrence of the
