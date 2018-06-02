@@ -56,8 +56,6 @@ public:
     QIntList highlightedLines() const;
 
     void clearHighlighting();
-    void addHighlighting(int pFromLine, int pFromColumn,
-                         int pToLine, int pToColumn);
 
     void del() override;
 

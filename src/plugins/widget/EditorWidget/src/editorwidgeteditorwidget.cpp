@@ -237,29 +237,10 @@ void EditorWidgetEditorWidget::clearHighlighting()
     // Clear the current highlighting
 
     if (!mHighlightedLines.isEmpty()) {
-        int lastLine, lastIndex;
-
-        lineIndexFromPosition(text().length(), &lastLine, &lastIndex);
-        clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
+        SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
+        SendScintilla(SCI_INDICATORCLEARRANGE, 0, text().length());
 
         mHighlightedLines = QIntList();
-
-        mVerticalScrollBar->update();
-    }
-}
-
-//==============================================================================
-
-void EditorWidgetEditorWidget::addHighlighting(int pFromLine, int pFromColumn,
-                                               int pToLine, int pToColumn)
-{
-    // Clear the current highlighting
-
-    fillIndicatorRange(pFromLine, pFromColumn, pToLine, pToColumn,
-                       mHighlightIndicatorNumber);
-
-    if (!mHighlightedLines.contains(pFromLine)) {
-        mHighlightedLines << pFromLine;
 
         mVerticalScrollBar->update();
     }
@@ -334,13 +315,17 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
         if (pHighlightAll) {
             int fromLine;
             int fromColumn;
-            int toLine;
-            int toColumn;
 
             lineIndexFromPosition(crtPosition-findTextLength, &fromLine, &fromColumn);
-            lineIndexFromPosition(crtPosition, &toLine, &toColumn);
 
-            addHighlighting(fromLine, fromColumn, toLine, toColumn);
+            SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
+            SendScintilla(SCI_INDICATORFILLRANGE, crtPosition-findTextLength, findTextLength);
+
+            if (!mHighlightedLines.contains(fromLine)) {
+                mHighlightedLines << fromLine;
+
+                mVerticalScrollBar->update();
+            }
         } else {
             QScintillaSupport::QScintillaWidget::replace(replaceText);
         }
