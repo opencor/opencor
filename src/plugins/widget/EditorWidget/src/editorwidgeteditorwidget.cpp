@@ -296,8 +296,14 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
     QString findText = mFindReplace->findText();
     int findTextLength = findText.length();
     QString replaceText = mFindReplace->replaceText();
+    bool regularExpression = mFindReplace->useRegularExpression();
+    bool caseSensitive = mFindReplace->isCaseSensitive();
+    bool wholeWordsOnly = mFindReplace->searchWholeWordsOnly();
 
-    while (findText(findText, true)) {
+    line = column = 0;
+
+    while (findFirst(findText, regularExpression, caseSensitive, wholeWordsOnly,
+                     true, true, line, column)) {
         // Retrieve our current position
 
         crtPosition = currentPosition();
@@ -335,6 +341,10 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 
         if (origPosition == -1)
             origPosition = crtPosition;
+
+        // Retrieve our new line/column
+
+        getCursorPosition(&line, &column);
     }
 
     // Re-enable the tracking of changes if we are replacing all
