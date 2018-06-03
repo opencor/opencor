@@ -328,11 +328,8 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
             SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
             SendScintilla(SCI_INDICATORFILLRANGE, crtPosition-findTextLength, findTextLength);
 
-            if (!mHighlightedLines.contains(fromLine)) {
+            if (!mHighlightedLines.contains(fromLine))
                 mHighlightedLines << fromLine;
-
-                mVerticalScrollBar->update();
-            }
         } else {
             QScintillaSupport::QScintillaWidget::replace(replaceText);
         }
@@ -346,6 +343,12 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 
         getCursorPosition(&line, &column);
     }
+
+    // Get our vertical scroll-bar to update itself if we are highlighting all
+    // and we have some lines to highlight
+
+    if (pHighlightAll && !mHighlightedLines.isEmpty())
+        mVerticalScrollBar->update();
 
     // Re-enable the tracking of changes if we are replacing all
 
