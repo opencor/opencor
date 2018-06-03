@@ -293,10 +293,11 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
 
     int origPosition = -1;
     int crtPosition;
-    int findTextLength = mFindReplace->findText().length();
+    QString findText = mFindReplace->findText();
+    int findTextLength = findText.length();
     QString replaceText = mFindReplace->replaceText();
 
-    while (findNext()) {
+    while (findText(findText, true)) {
         // Retrieve our current position
 
         crtPosition = currentPosition();
