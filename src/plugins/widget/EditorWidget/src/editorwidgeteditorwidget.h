@@ -83,7 +83,7 @@ private:
 
     void doHighlightReplaceAll(bool pHighlightAll);
 
-    bool findText(const QString &pText, bool pForward);
+    bool findText(const QString &pText, bool pForward = true);
 
 public slots:
     void highlightAll();

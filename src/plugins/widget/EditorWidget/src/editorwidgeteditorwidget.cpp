@@ -403,7 +403,7 @@ bool EditorWidgetEditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
-    return findText(mFindReplace->findText(), true);
+    return findText(mFindReplace->findText());
 }
 
 //==============================================================================
@@ -468,7 +468,7 @@ void EditorWidgetEditorWidget::highlightAllAndFind()
     if (mTexts.isEmpty()) {
         highlightAll();
 
-        findText(text, true);
+        findText(text);
     }
 }
 
