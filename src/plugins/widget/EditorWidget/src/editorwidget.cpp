@@ -559,15 +559,11 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
             mEditor->selectWordAt(line, column);
         }
 
-        if (selText.isEmpty()) {
-            mFindReplace->selectFindText();
-        } else {
-            mFindReplace->setActive(false);
-                mFindReplace->setFindText(selText);
-            mFindReplace->setActive(true);
+        mFindReplace->setActive(false);
+            mFindReplace->setFindText(selText);
+        mFindReplace->setActive(true);
 
-            mEditor->highlightAll();
-        }
+        mEditor->highlightAll();
     } else {
         mEditor->clearHighlighting();
     }
