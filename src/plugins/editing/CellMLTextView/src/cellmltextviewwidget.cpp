@@ -395,15 +395,11 @@ bool CellmlTextViewWidgetEditingWidget::commentOrUncommentLine(QScintillaSupport
         // Uncomment the line, should it be commented
 
         if (line.startsWith(SingleLineCommentString)) {
-            int commentLineNumber, commentColumnNumber;
+            int linePosition = pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
+                                                              pEditorWidget->contentsSize(), SingleLineCommentString,
+                                                              false, false, false);
 
-            pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
-                                                                                pEditorWidget->contentsSize(), SingleLineCommentString,
-                                                                                false, false, false),
-                                                 &commentLineNumber, &commentColumnNumber);
-
-            pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
-                                        commentLineNumber, commentColumnNumber+SingleLineCommentLength);
+            pEditorWidget->SendScintilla(QsciScintilla::SCI_SETSEL, linePosition, linePosition+SingleLineCommentLength);
             pEditorWidget->removeSelectedText();
         }
     }
