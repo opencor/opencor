@@ -442,10 +442,10 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
         mTexts << pText;
 
         // Highlight all the occurrences of the text and find its first
-        // occurrence, but after a short delay
-        // Note: see the note in highlightAllAndFind()...
+        // occurrence, but through a single shot (see the note in
+        // highlightAllAndFind())
 
-        QTimer::singleShot(500, this, &EditorWidgetEditorWidget::highlightAllAndFind);
+        QTimer::singleShot(0, this, &EditorWidgetEditorWidget::highlightAllAndFind);
     }
 }
 
