@@ -445,8 +445,8 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
 
 void EditorWidgetEditorWidget::highlightAllAndFind()
 {
-    // If there is only one text left in mHighlightAllAndFindTexts, then
-    // highlight of its occurrences select its first occurrence
+    // If there is only one text left in mTexts, then highlight of its
+    // occurrences select its first occurrence
     // Note: this works with findTextChanged() and addresses the case where a
     //       user types something to search, in which case we don't want to
     //       highlight all the occurrences of the text at every key stroke since
