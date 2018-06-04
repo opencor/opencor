@@ -537,10 +537,11 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
 {
     // Set our find text and highlight all its occurrences, if we are to show
     // our find/replace widget
-    // Note: if we are over a word, then we want it to become our find text, but
-    //       if we make it so then a call to findText() will be triggered if the
-    //       find text is different. Clearly, we don't want this to happen,
-    //       hence we inactivate and then reactivate our find/replace widget...
+    // Note: if we are over a word, then we want it to become our find text
+    //       (unless some text is already selected), but if we make it so then a
+    //       call to findText() will be triggered if the find text is different.
+    //       Clearly, we don't want this to happen, hence we inactivate and then
+    //       reactivate our find/replace widget...
 
     if (pVisible) {
         int line;
@@ -548,17 +549,25 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
 
         mEditor->getCursorPosition(&line, &column);
 
-        QString word = mEditor->wordAt(line, column);
+        QString selText;
 
-        if (!word.isEmpty()) {
+        if (hasSelectedText()) {
+            selText = selectedText();
+        } else {
+            selText = mEditor->wordAt(line, column);
+
+            mEditor->selectWordAt(line, column);
+        }
+
+        if (selText.isEmpty()) {
+            mFindReplace->selectFindText();
+        } else {
             mFindReplace->setActive(false);
-                mFindReplace->setFindText(word);
+                mFindReplace->setFindText(selText);
             mFindReplace->setActive(true);
 
             mEditor->highlightAll();
             mEditor->selectWordAt(line, column);
-        } else {
-            mFindReplace->selectFindText();
         }
     } else {
         mEditor->clearHighlighting();
