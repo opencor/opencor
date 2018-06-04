@@ -544,16 +544,16 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
     //       reactivate our find/replace widget...
 
     if (pVisible) {
-        int line;
-        int column;
-
-        mEditor->getCursorPosition(&line, &column);
-
         QString selText;
 
         if (hasSelectedText()) {
             selText = selectedText();
         } else {
+            int line;
+            int column;
+
+            mEditor->getCursorPosition(&line, &column);
+
             selText = mEditor->wordAt(line, column);
 
             mEditor->selectWordAt(line, column);
@@ -567,7 +567,6 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
             mFindReplace->setActive(true);
 
             mEditor->highlightAll();
-            mEditor->selectWordAt(line, column);
         }
     } else {
         mEditor->clearHighlighting();
