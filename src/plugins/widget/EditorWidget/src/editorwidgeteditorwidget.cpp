@@ -149,6 +149,23 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                    &&  (pEvent->key() == Qt::Key_Escape)) {
             QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
 #endif
+        } else if (   (    (pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier))
+                   || (   !(pEvent->modifiers() & Qt::ShiftModifier)
+                       &&  (pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier))
+                   || (   !(pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       &&  (pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier))
+                   || (   !(pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       &&  (pEvent->modifiers() & Qt::MetaModifier))) {
+            pEvent->accept();
         } else if (!mFindReplace->isVisible()) {
             clearHighlighting();
 
