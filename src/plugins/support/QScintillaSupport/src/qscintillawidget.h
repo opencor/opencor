@@ -116,6 +116,8 @@ protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
     void wheelEvent(QWheelEvent *pEvent) override;
 
+    void trackChanges(bool pTrackChanges);
+
 private:
     QFont mFont;
 
