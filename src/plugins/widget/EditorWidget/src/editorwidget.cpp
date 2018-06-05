@@ -70,6 +70,11 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
     mEditor->setFocusPolicy(Qt::NoFocus);
 
+    // Customise our word wrap feature
+
+    mEditor->setWrapIndentMode(QsciScintilla::WrapIndentSame);
+    mEditor->setWrapVisualFlags(QsciScintilla::WrapFlagInMargin);
+
     // Forward some signals that are emitted by our editor
     // Note: we cannot use the new connect() syntax since the signal is located
     //       in our QScintilla plugin and that we don't know anything about
