@@ -559,6 +559,8 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
             mEditor->selectWordAt(line, column);
         }
 
+        mEditor->updateLineColumn();
+
         mFindReplace->setActive(false);
             mFindReplace->setFindText(selText);
         mFindReplace->setActive(true);

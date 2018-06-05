@@ -57,6 +57,8 @@ public:
 
     void clearHighlighting();
 
+    void updateLineColumn();
+
     void del() override;
 
     using QsciScintilla::replace;
@@ -81,9 +83,13 @@ private:
 
     QStringList mTexts;
 
+    int mLine;
+    int mColumn;
+
     void doHighlightReplaceAll(bool pHighlightAll);
 
-    bool findText(const QString &pText, bool pForward = true);
+    bool findText(const QString &pText, bool pForward = true,
+                  bool pFirstTime = true);
 
 public slots:
     void highlightAll();

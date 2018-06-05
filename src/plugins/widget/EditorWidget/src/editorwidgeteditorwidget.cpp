@@ -47,7 +47,9 @@ EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
     mFindReplace(pFindReplace),
     mReadOnlyStyles(QIntList()),
     mHighlightedLines(QIntList()),
-    mTexts(QStringList())
+    mTexts(QStringList()),
+    mLine(0),
+    mColumn(0)
 {
     // Use our own vertical scroll bar for our editor, so that we can show the
     // position of our highlighting
@@ -391,11 +393,21 @@ void EditorWidgetEditorWidget::highlightAll()
 
 //==============================================================================
 
+void EditorWidgetEditorWidget::updateLineColumn()
+{
+    // Update our line/column
+
+    lineIndexFromPosition(currentPosition()-selectedText().length(),
+                          &mLine, &mColumn);
+}
+
+//==============================================================================
+
 bool EditorWidgetEditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
-    return findText(mFindReplace->findText());
+    return findText(mFindReplace->findText(), true, false);
 }
 
 //==============================================================================
@@ -408,7 +420,7 @@ bool EditorWidgetEditorWidget::findPrevious()
 
     setCurrentPosition(oldPosition-selectedText().length());
 
-    bool res = findText(mFindReplace->findText(), false);
+    bool res = findText(mFindReplace->findText(), false, false);
 
     if (!res)
         setCurrentPosition(oldPosition);
@@ -427,7 +439,7 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
     if (pText.isEmpty()) {
         clearHighlighting();
 
-        setSelection(0, 0, 0, 0);
+        QsciScintilla::setCursorPosition(mLine, mColumn);
     } else {
         // Add the given text to our list of texts to highlight and find
 
@@ -521,14 +533,20 @@ void EditorWidgetEditorWidget::replaceAndFind()
 
 //==============================================================================
 
-bool EditorWidgetEditorWidget::findText(const QString &pText, bool pForward)
+bool EditorWidgetEditorWidget::findText(const QString &pText, bool pForward,
+                                        bool pFirstTime)
 {
     // Find the previous/next occurrence of the given text
 
     int line;
     int column;
 
-    getCursorPosition(&line, &column);
+    if (pFirstTime) {
+        line = mLine;
+        column = mColumn;
+    } else {
+        cursorPosition(line, column);
+    }
 
     return findFirst(pText,
                      mFindReplace->useRegularExpression(),
