@@ -552,7 +552,7 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
             int line;
             int column;
 
-            mEditor->getCursorPosition(&line, &column);
+            mEditor->cursorPosition(line, column);
 
             selText = mEditor->wordAt(line, column);
 

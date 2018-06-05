@@ -242,7 +242,7 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
         EditorWidget::EditorWidgetEditorWidget *editor = editorWidget()->editor();
         int line, column;
 
-        editor->getCursorPosition(&line, &column);
+        editor->cursorPosition(line, column);
 
         // Check whether some text is selected
 

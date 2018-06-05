@@ -491,7 +491,7 @@ void EditorWidgetEditorWidget::replace()
         int line;
         int column;
 
-        getCursorPosition(&line, &column);
+        cursorPosition(line, column);
 
         if (   mFindReplace->searchWholeWordsOnly()
             && crtSelectedText.compare(wordAt(line, column))) {
