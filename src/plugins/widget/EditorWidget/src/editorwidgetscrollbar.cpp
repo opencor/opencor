@@ -72,7 +72,7 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
 
     // Draw our highlights
 
-    static int PenAlpha = 192;
+    static int PenAlpha = 96;
     static const QPen HighlightPen = QColor(0, 192, 0, PenAlpha);
 
     QPainter painter(this);
