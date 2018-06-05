@@ -1257,9 +1257,6 @@ if(WIN32)
     INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
-    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
-            DESTINATION Python/Scripts)
-
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick QuickWidgets Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
@@ -1315,7 +1312,7 @@ if(WIN32)
         # Update Python scripts to refer to our installed Python
 
         set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS
-           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\"'
+           "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} Exec '\\\"\\\$INSTDIR\\\\Python\\\\bin\\\\python.exe\\\" \\\"\\\$INSTDIR\\\\Python\\\\Scripts\\\\set_python_path.py\\\" \\\"\\\$INSTDIR\\\\Python\\\" -s'
         ")
     endif()
 elseif(APPLE)
@@ -1348,10 +1345,6 @@ elseif(APPLE)
             RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-    # Python utility to configure scripts
-
-    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
-            DESTINATION Python)
 else()
     # Select TGZ as the packager on Linux
 
@@ -1384,9 +1377,6 @@ else()
     INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .
             USE_SOURCE_PERMISSIONS)
-
-    INSTALL(FILES ${PROJECT_SOURCE_DIR}/distrib/bin/set_python_path.py
-            DESTINATION Python/Scripts)
 
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
