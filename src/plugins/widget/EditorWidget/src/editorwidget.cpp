@@ -456,7 +456,9 @@ void EditorWidget::setWordWrap(bool pWordWrap)
 {
     // Word wrap (or not) the text
 
-    mEditor->setWrapMode(pWordWrap?QsciScintilla::WrapWord:QsciScintilla::WrapNone);
+    mEditor->setWrapMode(pWordWrap?
+                             QsciScintilla::WrapWord:
+                             QsciScintilla::WrapNone);
 }
 
 //==============================================================================
