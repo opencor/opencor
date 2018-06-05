@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Property Editor widget:</strong> prevent infinite \"Replace all\" actions (see issue <a href=\"https://github.com/opencor/opencor/issues/1677\">#1677</a>)." },
+                       { "change": "<strong>Text-based editors:</strong> prevent infinite \"Replace all\" actions (see issue <a href=\"https://github.com/opencor/opencor/issues/1677\">#1677</a>). Now have word-wrap alignment <a href=\"https://github.com/opencor/opencor/issues/1680\">#1680</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1672\">#1672</a>)." }
                      ]
                    },
