@@ -1982,9 +1982,6 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
             Core::Properties lineProperties = properties[4]->properties();
             Core::Properties symbolProperties = properties[5]->properties();
 
-            QString lineColor = lineProperties[2]->valueAsString().isEmpty() ? ""
-                              : SedmlProperty.arg(SEDMLSupport::Color).arg(lineProperties[2]->valueAsString());
-
             sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
                                                  "</%1>").arg(SEDMLSupport::Properties)
@@ -2000,7 +1997,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                                                .arg(SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Width)
                                                                                                .arg(lineProperties[1]->valueAsString())
-                                                                                 +lineColor)
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Color)
+                                                                                               .arg(lineProperties[2]->valueAsString()))
                                                               +SedmlProperty.arg(SEDMLSupport::Symbol)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
                                                                                                .arg(SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))

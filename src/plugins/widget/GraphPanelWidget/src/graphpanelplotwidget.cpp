@@ -334,13 +334,7 @@ void GraphPanelPlotGraph::addRun()
         const QwtSymbol *symbol = mDummyRun->symbol();
         int symbolSize = symbol->size().width();
 
-        auto runPen = QPen(mDummyRun->pen());
-        if (!runPen.color().isValid()) {
-            auto runColour = RunColours[mRuns.size() % RunColours.size()];
-            runPen.setColor(runColour);
-        }
-        run->setPen(runPen);
-
+        run->setPen(mDummyRun->pen());
         run->setSymbol(new QwtSymbol(symbol->style(), symbol->brush(),
                                      symbol->pen(), QSize(symbolSize, symbolSize)));
         run->setTitle(mDummyRun->title());
@@ -485,19 +479,8 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    if (pPen.color().isValid()) {
-        foreach (GraphPanelPlotGraphRun *run, mRuns)
-            run->setPen(pPen);
-    } else {
-        int runNumber = 0;
-        foreach (GraphPanelPlotGraphRun *run, mRuns) {
-            auto runPen = QPen(pPen);
-            auto runColour = RunColours[runNumber % RunColours.size()];
-            runPen.setColor(runColour);
-            run->setPen(runPen);
-            runNumber += 1;
-        }
-    }
+    foreach (GraphPanelPlotGraphRun *run, mRuns)
+        run->setPen(pPen);
 }
 
 //==============================================================================

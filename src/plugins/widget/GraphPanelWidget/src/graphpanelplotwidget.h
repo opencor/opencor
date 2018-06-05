@@ -162,8 +162,6 @@ class GraphPanelWidget;
 
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraph
 {
-    static QList<QColor> RunColours;
-
 public:
     explicit GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
                                  GraphPanelWidget *pOwner);
