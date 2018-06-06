@@ -69,6 +69,11 @@ protected:
     void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
+    enum Action {
+        HighlightAll,
+        ReplaceAll
+    };
+
     EditorWidget *mOwner;
 
     EditorWidgetFindReplaceWidget *mFindReplace;
@@ -86,7 +91,7 @@ private:
     int mLine;
     int mColumn;
 
-    void doHighlightReplaceAll(bool pHighlightAll);
+    void processAll(Action pAction);
 
     bool findText(const QString &pText, bool pForward = true,
                   bool pFirstTime = true);
