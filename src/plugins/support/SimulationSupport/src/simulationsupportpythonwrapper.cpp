@@ -261,17 +261,6 @@ void SimulationSupportPythonWrapper::error(const QString &pErrorMessage)
 
 //==============================================================================
 
-void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTime)
-{
-    // Save the elapsed time of the simulation
-
-    mElapsedTime = pElapsedTime;
-
-    emit gotElapsedTime();
-}
-
-//==============================================================================
-
 void SimulationSupportPythonWrapper::clearResults(Simulation *pSimulation)
 {
     // Ask our widget to clear our results
@@ -289,6 +278,17 @@ void SimulationSupportPythonWrapper::resetParameters(Simulation *pSimulation)
     // Reset our model parameters
 
     pSimulation->reset();
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTime)
+{
+    // Save the elapsed time of the simulation
+
+    mElapsedTime = pElapsedTime;
+
+    emit gotElapsedTime();
 }
 
 //==============================================================================
