@@ -281,7 +281,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
         setHandleConnections(false);
 
-        SendScintilla(SCI_BEGINUNDOACTION);
+        beginUndoAction();
     }
 
     // Keep track of the current selection
@@ -363,7 +363,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         SendScintilla(SCI_SETSELECTIONSTART, selectionStart+selectionShift);
         SendScintilla(SCI_SETSELECTIONEND, selectionEnd+selectionShift+textLenDiff);
 
-        SendScintilla(SCI_ENDUNDOACTION);
+        endUndoAction();
 
         setHandleConnections(true);
     }
