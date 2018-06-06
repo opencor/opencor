@@ -611,48 +611,34 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 
 void QScintillaWidget::trackChanges(bool pTrackChanges)
 {
-    // Keep track of changes to the UI
+    // Keep track or stop tracking various changes
 
     if (pTrackChanges) {
         connect(this, &QScintillaWidget::SCN_UPDATEUI,
                 this, &QScintillaWidget::updateUi);
-    } else {
-        disconnect(this, &QScintillaWidget::SCN_UPDATEUI,
-                   this, &QScintillaWidget::updateUi);
-    }
 
-    // Keep track of changes to our editor and resize the margin line numbers
-    // accordingly
-
-    if (pTrackChanges) {
         connect(this, &QScintillaWidget::textChanged,
                 this, &QScintillaWidget::updateMarginLineNumbersWidth);
-    } else {
-        disconnect(this, &QScintillaWidget::textChanged,
-                   this, &QScintillaWidget::updateMarginLineNumbersWidth);
-    }
 
-    // Keep track of changes to our editor that may affect our ability to select
-    // all of its text
-
-    if (pTrackChanges) {
         connect(this, &QScintillaWidget::selectionChanged,
                 this, &QScintillaWidget::checkCanSelectAll);
         connect(this, &QScintillaWidget::textChanged,
                 this, &QScintillaWidget::checkCanSelectAll);
+
+        connect(this, &QScintillaWidget::cursorPositionChanged,
+                this, &QScintillaWidget::updateCursorPosition);
     } else {
+        disconnect(this, &QScintillaWidget::SCN_UPDATEUI,
+                   this, &QScintillaWidget::updateUi);
+
+        disconnect(this, &QScintillaWidget::textChanged,
+                   this, &QScintillaWidget::updateMarginLineNumbersWidth);
+
         disconnect(this, &QScintillaWidget::selectionChanged,
                    this, &QScintillaWidget::checkCanSelectAll);
         disconnect(this, &QScintillaWidget::textChanged,
                    this, &QScintillaWidget::checkCanSelectAll);
-    }
 
-    // Keep track of changes to the cursor position
-
-    if (pTrackChanges) {
-        connect(this, &QScintillaWidget::cursorPositionChanged,
-                this, &QScintillaWidget::updateCursorPosition);
-    } else {
         disconnect(this, &QScintillaWidget::cursorPositionChanged,
                    this, &QScintillaWidget::updateCursorPosition);
     }
