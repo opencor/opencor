@@ -325,7 +325,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
         // Get the elapsed time when the simulation has finished
 
         connect(pSimulation, &Simulation::stopped,
-                this, &SimulationSupportPythonWrapper::simulationFinished, Qt::QueuedConnection);
+                this, &SimulationSupportPythonWrapper::simulationFinished);
 
         // Get error messages from the simulation
 
@@ -336,8 +336,10 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         QEventLoop waitForCompletion;
 
+        // We use a queued connection because the event is in our thread
+
         connect(this, &SimulationSupportPythonWrapper::gotElapsedTime,
-                &waitForCompletion, &QEventLoop::quit);
+                &waitForCompletion, &QEventLoop::quit, Qt::QueuedConnection);
 
         // Start the simulation and wait for it to complete
 
