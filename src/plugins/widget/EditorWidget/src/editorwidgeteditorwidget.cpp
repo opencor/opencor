@@ -360,10 +360,10 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         // changes, as well as let Scintilla know that we are done with our big
         // action
 
+        endUndoAction();
+
         SendScintilla(SCI_SETSELECTIONSTART, selectionStart+selectionShift);
         SendScintilla(SCI_SETSELECTIONEND, selectionEnd+selectionShift+textLenDiff);
-
-        endUndoAction();
 
         setHandleConnections(true);
     }
