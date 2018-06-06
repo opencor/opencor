@@ -144,6 +144,8 @@ public slots:
     void zoomOut() override;
     void zoomTo(int pSize) override;
 
+//    void undo() override;
+
 private slots:
     void updateUi();
 
