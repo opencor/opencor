@@ -279,7 +279,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         // Stop tracking our changes and consider our action as being one big
         // action
 
-        trackChanges(false);
+        setHandleConnections(false);
 
         SendScintilla(SCI_BEGINUNDOACTION);
     }
@@ -365,7 +365,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
         SendScintilla(SCI_ENDUNDOACTION);
 
-        trackChanges(true);
+        setHandleConnections(true);
     }
 }
 

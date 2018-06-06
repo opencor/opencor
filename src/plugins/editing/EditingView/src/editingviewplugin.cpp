@@ -471,6 +471,11 @@ void EditingViewPlugin::clipboardDataChanged()
 
 void EditingViewPlugin::updateUndoAndRedoActions()
 {
+    // Make sure that our editor allows us to handle connections
+
+    if (!mEditor->editor()->handleConnections())
+        return;
+
     // Update our undo/redo actions, and update the modified state of the
     // current file
 
@@ -489,6 +494,11 @@ void EditingViewPlugin::updateUndoAndRedoActions()
 
 void EditingViewPlugin::updateEditingActions()
 {
+    // Make sure that our editor allows us to handle connections
+
+    if (!mEditor->editor()->handleConnections())
+        return;
+
     // Update our editing actions
 
     if (mEditingViewInterface) {
@@ -520,6 +530,11 @@ void EditingViewPlugin::updateFindPreviousNextActions()
 
 void EditingViewPlugin::updateSelectAllAction()
 {
+    // Make sure that our editor allows us to handle connections
+
+    if (!mEditor->editor()->handleConnections())
+        return;
+
     // Update our select all action
 
     if (mEditingViewInterface)

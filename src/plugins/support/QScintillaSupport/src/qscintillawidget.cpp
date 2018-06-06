@@ -45,6 +45,7 @@ namespace QScintillaSupport {
 
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
+    mHandleConnections(true),
     mCanSelectAll(false),
     mInsertMode(true)
 {
@@ -131,7 +132,19 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Keep track of various changes
 
-    trackChanges(true);
+    connect(this, &QScintillaWidget::SCN_UPDATEUI,
+            this, &QScintillaWidget::updateUi);
+
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::updateMarginLineNumbersWidth);
+
+    connect(this, &QScintillaWidget::selectionChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
+
+    connect(this, &QScintillaWidget::cursorPositionChanged,
+            this, &QScintillaWidget::updateCursorPosition);
 }
 
 //==============================================================================
@@ -454,6 +467,38 @@ int QScintillaWidget::zoomLevel() const
 
 //==============================================================================
 
+bool QScintillaWidget::handleConnections() const
+{
+    // Return whether connections should be handled
+
+    return mHandleConnections;
+}
+
+//==============================================================================
+
+void QScintillaWidget::setHandleConnections(bool pHandleConnections)
+{
+    // Set whether we should handle connections
+
+    mHandleConnections = pHandleConnections;
+
+    // Emit a few signals, if we should handle connections
+    // Note: this is to ensure that our owner is up-to-date with whatever we
+    //       have done when connections weren't handled...
+
+    if (pHandleConnections) {
+        int line;
+        int column;
+
+        cursorPosition(line, column);
+
+        emit textChanged();
+        emit cursorPositionChanged(line, column);
+    }
+}
+
+//==============================================================================
+
 QString QScintillaWidget::specials(const QString &pString)
 {
     // Check whether the given string is one of the Specials (Unicode block)
@@ -609,43 +654,6 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-void QScintillaWidget::trackChanges(bool pTrackChanges)
-{
-    // Keep track or stop tracking various changes
-
-    if (pTrackChanges) {
-        connect(this, &QScintillaWidget::SCN_UPDATEUI,
-                this, &QScintillaWidget::updateUi);
-
-        connect(this, &QScintillaWidget::textChanged,
-                this, &QScintillaWidget::updateMarginLineNumbersWidth);
-
-        connect(this, &QScintillaWidget::selectionChanged,
-                this, &QScintillaWidget::checkCanSelectAll);
-        connect(this, &QScintillaWidget::textChanged,
-                this, &QScintillaWidget::checkCanSelectAll);
-
-        connect(this, &QScintillaWidget::cursorPositionChanged,
-                this, &QScintillaWidget::updateCursorPosition);
-    } else {
-        disconnect(this, &QScintillaWidget::SCN_UPDATEUI,
-                   this, &QScintillaWidget::updateUi);
-
-        disconnect(this, &QScintillaWidget::textChanged,
-                   this, &QScintillaWidget::updateMarginLineNumbersWidth);
-
-        disconnect(this, &QScintillaWidget::selectionChanged,
-                   this, &QScintillaWidget::checkCanSelectAll);
-        disconnect(this, &QScintillaWidget::textChanged,
-                   this, &QScintillaWidget::checkCanSelectAll);
-
-        disconnect(this, &QScintillaWidget::cursorPositionChanged,
-                   this, &QScintillaWidget::updateCursorPosition);
-    }
-}
-
-//==============================================================================
-
 void QScintillaWidget::zoomIn()
 {
     // Zoom in the default way and then update our margin line numbers width
@@ -681,6 +689,11 @@ void QScintillaWidget::zoomTo(int pSize)
 
 void QScintillaWidget::updateUi()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleConnections)
+        return;
+
     // Update our editing mode, if needed
 
     bool newInsertMode = !overwriteMode();
@@ -697,6 +710,11 @@ void QScintillaWidget::updateUi()
 
 void QScintillaWidget::updateMarginLineNumbersWidth()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleConnections)
+        return;
+
     // Resize the margin line numbers width
     // Note: the +6 is to ensure that the margin line numbers width is indeed
     //       wide enough (there is clearly a 'problem' with the width computed
@@ -711,6 +729,11 @@ void QScintillaWidget::updateMarginLineNumbersWidth()
 
 void QScintillaWidget::checkCanSelectAll()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleConnections)
+        return;
+
     // Check whether we can select all the text
 
     bool newCanSelectAll = !text().isEmpty() && selectedText().compare(text());
@@ -749,6 +772,11 @@ void QScintillaWidget::updateColors()
 
 void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleConnections)
+        return;
+
     // Update our cursor position
 
     mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(pLine+1)

@@ -104,6 +104,8 @@ public:
 
     int zoomLevel() const;
 
+    bool handleConnections() const;
+
     static QString specials(const QString &pString);
 
 protected:
@@ -116,9 +118,11 @@ protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
     void wheelEvent(QWheelEvent *pEvent) override;
 
-    void trackChanges(bool pTrackChanges);
+    void setHandleConnections(bool pHandleConnections);
 
 private:
+    bool mHandleConnections;
+
     QFont mFont;
 
     QMenu *mContextMenu;

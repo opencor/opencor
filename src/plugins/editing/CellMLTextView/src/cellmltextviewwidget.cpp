@@ -1158,10 +1158,13 @@ QString CellmlTextViewWidget::statement(int pPosition) const
 void CellmlTextViewWidget::updateViewer()
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
+    // closed since the signal was emitted) and that its editor allows us to
+    // handle connections
 
-    if (!mEditingWidget)
+    if (   !mEditingWidget
+        || !mEditingWidget->editorWidget()->editor()->handleConnections()) {
         return;
+    }
 
     // Retrieve the statement, if any, around our current position
 

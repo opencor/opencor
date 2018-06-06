@@ -489,10 +489,13 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 void RawCellmlViewWidget::updateViewer()
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
+    // closed since the signal was emitted) and that its editor allows us to
+    // handle connections
 
-    if (!mEditingWidget)
+    if (   !mEditingWidget
+        || !mEditingWidget->editorWidget()->editor()->handleConnections()) {
         return;
+    }
 
     // Retrieve the Content MathML block around our current position, if any
 
