@@ -516,9 +516,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
             // Update our viewer whenever necessary
 
-            connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
+            connect(editingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::textChanged,
                     this, &CellmlTextViewWidget::updateViewer);
-            connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
+            connect(editingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::cursorPositionChanged,
                     this, &CellmlTextViewWidget::updateViewer);
         } else {
             // The conversion wasn't successful, so make the editor read-only

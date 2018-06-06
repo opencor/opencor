@@ -67,6 +67,7 @@ public:
     void updateSettings(EditorWidget *pEditorWidget);
 
     EditorWidgetEditorWidget * editor() const;
+    EditorWidgetFindReplaceWidget * findReplace();
 
     virtual bool handleEditorKeyPressEvent(QKeyEvent *pEvent);
 
@@ -136,19 +137,6 @@ private:
     EditorWidgetEditorWidget *mEditor;
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
-
-    EditorWidgetFindReplaceWidget * findReplace();
-
-signals:
-    void cursorPositionChanged(int pRow, int pColumn);
-
-    void textChanged();
-
-    void copyAvailable(bool pCopyAvailable);
-
-    void canFindReplace(bool pCanFindReplace);
-
-    void canSelectAll(bool pCanSelectAll);
 };
 
 //==============================================================================

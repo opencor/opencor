@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmleditingviewwidget.h"
 #include "corecliutils.h"
 #include "editorlistwidget.h"
-#include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
 #include "rawcellmlviewwidget.h"
@@ -131,9 +131,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         // Update our viewer whenever necessary
 
-        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
+        connect(newEditingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::textChanged,
                 this, &RawCellmlViewWidget::updateViewer);
-        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
+        connect(newEditingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::cursorPositionChanged,
                 this, &RawCellmlViewWidget::updateViewer);
 
         // Keep track of our editing widget

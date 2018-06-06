@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "editingviewinterface.h"
 #include "editingviewplugin.h"
-#include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
+#include "editorwidgetfindreplacewidget.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -169,16 +170,16 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         if (mEditor) {
             mEditor->setContextMenu(mEditMenu->actions());
 
-            connect(mEditor, &EditorWidget::EditorWidget::textChanged,
+            connect(mEditor->editor(), &EditorWidget::EditorWidgetEditorWidget::textChanged,
                     this, &EditingViewPlugin::updateUndoAndRedoActions,
                     Qt::UniqueConnection);
-            connect(mEditor, &EditorWidget::EditorWidget::copyAvailable,
+            connect(mEditor->editor(), &EditorWidget::EditorWidgetEditorWidget::copyAvailable,
                     this, &EditingViewPlugin::updateEditingActions,
                     Qt::UniqueConnection);
-            connect(mEditor, &EditorWidget::EditorWidget::canFindReplace,
+            connect(mEditor->findReplace(), &EditorWidget::EditorWidgetFindReplaceWidget::canFindReplace,
                     this, &EditingViewPlugin::updateFindPreviousNextActions,
                     Qt::UniqueConnection);
-            connect(mEditor, &EditorWidget::EditorWidget::canSelectAll,
+            connect(mEditor->editor(), &EditorWidget::EditorWidgetEditorWidget::canSelectAll,
                     this, &EditingViewPlugin::updateSelectAllAction,
                     Qt::UniqueConnection);
 
