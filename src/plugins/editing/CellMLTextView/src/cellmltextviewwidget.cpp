@@ -240,9 +240,9 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
         // editor
 
         EditorWidget::EditorWidgetEditorWidget *editor = editorWidget()->editor();
-        int lineNumber, columnNumber;
+        int line, column;
 
-        editor->getCursorPosition(&lineNumber, &columnNumber);
+        editor->getCursorPosition(&line, &column);
 
         // Check whether some text is selected
 
@@ -339,29 +339,29 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
 
             // Reselect the text/lines
 
-            if ((lineNumber == lineFrom) && (columnNumber == columnFrom))
+            if ((line == lineFrom) && (column == columnFrom))
                 editor->setSelection(lineTo, columnTo, lineFrom, columnFrom);
             else
                 editor->setSelection(lineFrom, columnFrom, lineTo, columnTo);
         } else {
             // No text is selected, so simply (un)comment the current line
 
-            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(SingleLineCommentString);
+            bool commentLine = !editor->text(line).trimmed().startsWith(SingleLineCommentString);
 
-            if (commentOrUncommentLine(editor, lineNumber, commentLine)) {
+            if (commentOrUncommentLine(editor, line, commentLine)) {
                 if (commentLine) {
                     // We commented the line, so our position will be fine
                     // unless we were at the beginning of the line, in which
                     // case we need to update it
 
-                    if (!columnNumber)
-                        editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+SingleLineCommentLength);
+                    if (!column)
+                        editor->QsciScintilla::setCursorPosition(line, column+SingleLineCommentLength);
                 } else {
                     // We uncommented the line, so go back to our original
                     // position (since uncommenting the line will have shifted
                     // it a bit)
 
-                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-SingleLineCommentLength);
+                    editor->QsciScintilla::setCursorPosition(line, column-SingleLineCommentLength);
                 }
             }
         }
