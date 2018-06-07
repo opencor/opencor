@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Get the script's directory, which should be OpenCOR's base directory
+
+DIR=$(dirname "$0")
+
+# Make sure the path to Python is correct before starting Jupyter
+
+${DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/python                \
+  ${DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/set_python_path.py  \
+  ${DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python                         \
+  -s
+
+${DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/jupyter $*
