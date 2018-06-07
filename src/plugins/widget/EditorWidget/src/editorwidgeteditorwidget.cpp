@@ -177,7 +177,7 @@ void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
         int line;
         int column;
 
-        getCursorPosition(&line, &column);
+        cursorPosition(line, column);
 
         mFindReplace->setActive(false);
             mFindReplace->setFindText(selectedText());
@@ -294,7 +294,7 @@ void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
     int line;
     int column;
 
-    getCursorPosition(&line, &column);
+    cursorPosition(line, column);
 
     int horizontalScrollBarPosition = horizontalScrollBar()->value();
     int verticalScrollBarPosition = verticalScrollBar()->value();
@@ -499,7 +499,7 @@ void EditorWidgetEditorWidget::replace()
         int line;
         int column;
 
-        getCursorPosition(&line, &column);
+        cursorPosition(line, column);
 
         if (   mFindReplace->searchWholeWordsOnly()
             && crtSelectedText.compare(wordAt(line, column))) {
@@ -536,7 +536,7 @@ bool EditorWidgetEditorWidget::findText(const QString &pText, bool pForward)
     int line;
     int column;
 
-    getCursorPosition(&line, &column);
+    cursorPosition(line, column);
 
     return findFirst(pText,
                      mFindReplace->useRegularExpression(),
