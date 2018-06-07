@@ -37,29 +37,31 @@ else()
     set(PYTHON_ABI_VERSION ${NUMERIC_LIBRARY_VERSION}${PYTHON_ABIFLAGS})
 endif()
 
-if(APPLE)
-    set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/Python)
-else()
-    set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/../Python)
-endif()
-
-# Name of our package's shared libraries (and of their import libraries, if any)
+# Name of our Python executable and shared library (and import library, if any)
 
 if(WIN32)
+    set(PYTHON_EXECUTABLE bin/python.exe)
     set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
+    set(PYTHON_EXECUTABLE bin/python)
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
 
-# Include, library and script directories
+# The base Python directory and library and script directories
 
 if(WIN32)
+    set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/../Python)
     set(LIBRARY_DIR Libs)
     set(RUNTIME_DIR lib)
     set(SCRIPT_DIR Scripts)
 else()
+    if (APPLE)
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/Python)
+    else()
+        set(ROOT_DIR ${FULL_DEST_EXTERNAL_BINARIES_DIR}/../python)
+    endif()
     set(LIBRARY_DIR lib)
     set(RUNTIME_DIR lib/python${MAJOR_MINOR_LIBRARY_VERSION})
     set(SCRIPT_DIR bin)
@@ -76,6 +78,7 @@ set(EXTERNAL_BINARIES
 # Specify the files that need to have their SHA-1 value checked
 
 set(SHA1_FILES
+    ${PYTHON_EXECUTABLE}
     ${LIBRARY_DIR}/${SHARED_LIBRARY}
 )
 
@@ -117,9 +120,9 @@ endif()
 # Add headers, scripts and libraries to the package archive
 
 set(PACKAGED_FILES
-    bin
     include
     ${RUNTIME_DIR}
+    ${SCRIPT_DIR}
     ${SHA1_FILES}
 )
 
@@ -157,9 +160,10 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a9780980aea194ea5a0c50b571a6bd9a3c81ecd6
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e3452e617fa525ee46c42ba3fcbb5bff88b6ba97
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES b6eb87411dd4397064294cbc38b0cd15a2e62ca7)
+                              SHA1_VALUES c5dbf4f4ff5355481cec920ab09bcab2257408e0
+                                          c1faf41d91676096de6e3d5ac9f2f6cd0177eed0)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 8ac72b1f77188cd73b5ac70ff04aaaa714b800d6
@@ -554,13 +558,7 @@ set(PYTHON_ROOT_DIR ${ROOT_DIR} PARENT_SCOPE)
 set(PYTHON_INCLUDE_DIR ${ROOT_DIR}/include PARENT_SCOPE)
 set(PYTHON_LIBRARY ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
-if(WIN32)
-    set(PYTHON_EXECUTABLE ${ROOT_DIR}/bin/python.exe)
-else()
-    set(PYTHON_EXECUTABLE ${ROOT_DIR}/bin/python)
-endif()
-
-set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} PARENT_SCOPE)
+set(PYTHON_EXECUTABLE ${ROOT_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
 set(PYTHON_SCRIPT_DIR  ${ROOT_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
@@ -602,7 +600,7 @@ add_plugin(Python
 add_custom_command(TARGET PythonPlugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
                                      ${ROOT_DIR}/${SCRIPT_DIR}
-    COMMAND ${PYTHON_EXECUTABLE} ${ROOT_DIR}/${SCRIPT_DIR}/set_python_path.py ${ROOT_DIR} -s
+    COMMAND ${ROOT_DIR}/${PYTHON_EXECUTABLE} ${ROOT_DIR}/${SCRIPT_DIR}/set_python_path.py ${ROOT_DIR} -s
     )
 
 # Update our list of Python dependencies for other plugins

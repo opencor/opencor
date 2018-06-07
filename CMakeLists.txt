@@ -1374,7 +1374,7 @@ else()
 
     # Python runtime libraries and utilities
 
-    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
+    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/python
             DESTINATION .
             USE_SOURCE_PERMISSIONS)
 
