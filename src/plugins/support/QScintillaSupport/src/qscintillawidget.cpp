@@ -687,6 +687,30 @@ void QScintillaWidget::zoomTo(int pSize)
 
 //==============================================================================
 
+void QScintillaWidget::undo()
+{
+    // Undo the last action, but without handling connections since this may
+    // slow things done (e.g. when the last action was a replacing all action)
+
+    setHandleConnections(false);
+        QsciScintilla::undo();
+    setHandleConnections(true);
+}
+
+//==============================================================================
+
+void QScintillaWidget::redo()
+{
+    // Redo the last action, but without handling connections since this may
+    // slow things done (e.g. when the last action was a replacing all action)
+
+    setHandleConnections(false);
+        QsciScintilla::redo();
+    setHandleConnections(true);
+}
+
+//==============================================================================
+
 void QScintillaWidget::updateUi()
 {
     // Make sure that we are allowed to handle connections
