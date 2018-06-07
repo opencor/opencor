@@ -53,7 +53,7 @@ public:
 
     void setReadOnly(bool pReadOnly) override;
 
-    QIntList highlightedLines() const;
+    QIntSet highlightedLines() const;
 
     void clearHighlighting();
 
@@ -84,7 +84,7 @@ private:
 
     int mHighlightIndicatorNumber;
 
-    QIntList mHighlightedLines;
+    QIntSet mHighlightedLines;
 
     QStringList mTexts;
 

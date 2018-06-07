@@ -78,7 +78,7 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
     QPainter painter(this);
     double positionScaling = double(height()-2*arrowButtonHeight-1)/mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->text().length());
     int cursorPosition;
-    QIntList cursorPositions = QIntList();
+    QIntSet cursorPositions = QIntSet();
 
     painter.setPen(HighlightPen);
 
