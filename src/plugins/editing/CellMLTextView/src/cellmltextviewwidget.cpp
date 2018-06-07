@@ -895,15 +895,15 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
 
     if (data && parse(pFileName, true)) {
         EditorWidget::EditorWidget *editor = data->editingWidget()->editorWidget();
-        int cursorLine;
-        int cursorColumn;
+        int line;
+        int column;
 
-        editor->cursorPosition(cursorLine, cursorColumn);
+        editor->cursorPosition(line, column);
 
         mConverter.execute(Core::serialiseDomDocument(mParser.domDocument()));
 
         editor->setContents(mConverter.output(), true);
-        editor->setCursorPosition(cursorLine, cursorColumn);
+        editor->setCursorPosition(line, column);
     }
 }
 
