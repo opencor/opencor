@@ -333,8 +333,13 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
                 int line = SendScintilla(SCI_LINEFROMPOSITION, findTextPos);
 
-                if (!mHighlightedLines.contains(line))
-                    mHighlightedLines << line;
+                mHighlightedLines << line;
+                // Note: ideally, we would only add line to mHighlightedLines if
+                //       it's not already there, but to call QList::contains()
+                //       when we have a lot of lines is very expensive and we
+                //       want things to be as fast as possible, hence we just
+                //       add the line and remove duplicates once we are done
+                //       with the highlighting...
             } else {
                 if (findTextPos < selectionStart)
                     selectionShift += textLenDiff;
@@ -350,6 +355,10 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
     // Some post-processing, based on the given action
 
     if (pAction == HighlightAll) {
+        // Remove duplicate highlighted lines
+
+        mHighlightedLines = mHighlightedLines.toSet().toList();
+
         // Get our vertical scroll-bar to update itself, if we have some lines
         // to highlight
 
