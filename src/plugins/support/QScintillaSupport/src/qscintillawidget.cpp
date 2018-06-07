@@ -336,12 +336,8 @@ void QScintillaWidget::selectWordAt(int pLine, int pColumn)
     int startPosition = SendScintilla(SCI_WORDSTARTPOSITION, position, true);
     int endPosition = SendScintilla(SCI_WORDENDPOSITION, position, true);
 
-    if (endPosition-startPosition > 0) {
-        setSelection(SendScintilla(SCI_LINEFROMPOSITION, startPosition),
-                     SendScintilla(SCI_GETCOLUMN, startPosition),
-                     SendScintilla(SCI_LINEFROMPOSITION, endPosition),
-                     SendScintilla(SCI_GETCOLUMN, endPosition));
-    }
+    if (endPosition-startPosition > 0)
+        SendScintilla(SCI_SETSEL, startPosition, endPosition);
 }
 
 //==============================================================================
