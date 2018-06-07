@@ -17,12 +17,17 @@ set(SCIPY_VERSION 1.0.1)
 
 set(IPYKERNEL_VERSION 4.8.2)
 set(IPYKERNEL_PYTHONQT 4.8.2.1)
+
 set(IPYTHON_VERSION 6.3.1)
 set(IPYTHON_PYTHONQT 6.3.1)
+
 set(QTCONSOLE_VERSION 4.3.1)
 set(QTCONSOLE_PYTHONQT 4.3.1)
+
 set(TRAITLETS_VERSION 4.3.2)
 set(TRAITLETS_PYTHONQT 4.3.2)
+
+set(JUPYTER_VERSION 1.0.0)
 
 set(LXML_VERSION 4.2.1)
 
@@ -44,6 +49,9 @@ set(FULL_LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LOCAL_SITE
 # Directories we package
 
 set(PACKAGED_FILES
+    etc
+    include
+    share
     ${LOCAL_SITE_PACKAGES_DIR}
     ${PYTHON_RELATIVE_SCRIPT_DIR}
 )
@@ -84,7 +92,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 0937a08ffe061a0c2532d2903c14b7dcea41d9e8
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1eeddbe6456f2aecbba2669299e5a4d7756ab2a7
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 13f1ca249d663cd76ea70873b659fa2a0c90e6bc)
@@ -164,7 +172,9 @@ else()
     add_dependencies(patchMatplotlib sciencePackages)
     add_dependencies(patchMatplotlib ${BUILD_DEPENDENCIES})
 
-    # Install IPython and its dependencies
+    # Install Jupyter, IPython and their dependencies
+    # Note: order of installation matters as we want specific
+    #       versions of each package
 
     add_custom_target(ipythonPackages
         COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
@@ -172,6 +182,7 @@ else()
             ipython==${IPYTHON_VERSION}
             ipykernel==${IPYKERNEL_VERSION}
             qtconsole==${QTCONSOLE_VERSION}
+            jupyter==${JUPYTER_VERSION}
         WORKING_DIRECTORY
             ${FULL_DEST_EXTERNAL_BINARIES_DIR}
         VERBATIM
@@ -279,9 +290,15 @@ add_plugin(PythonPackages
     PLUGINS
         Python
     EXTERNAL_DESTINATION_DIR
-        ${PYTHON_SITE_PACKAGES_DIR}
+        ${PYTHON_ROOT_DIR}
     EXTERNAL_SOURCE_DIR
-        ${FULL_LOCAL_SITE_PACKAGES_DIR}
+        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
     DEPENDS_ON
         ${DEPENDS_ON}
 )
+
+# Update the Python path in newly copied scripts
+
+add_custom_command(TARGET PythonPackagesPlugin POST_BUILD
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py ${PYTHON_ROOT_DIR} -s
+    )

@@ -1276,6 +1276,21 @@ if(WIN32)
     windows_deploy_qt_plugin(printsupport windowsprintersupport)
     windows_deploy_qt_plugin(sqldrivers qsqlite)
 
+    # Batch and VBScript files to run Jupyter
+
+    set(JUPYTER_BAT_FILE ${PROJECT_BUILD_DIR}/Jupyter.bat)
+    set(JUPYTER_VBS_FILE ${PROJECT_BUILD_DIR}/Jupyter.vbs)
+
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.bat.in
+                   ${JUPYTER_BAT_FILE})
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.vbs.in
+                   ${JUPYTER_VBS_FILE})
+
+    install(FILES ${JUPYTER_BAT_FILE}
+            DESTINATION .)
+    install(FILES ${JUPYTER_VBS_FILE}
+            DESTINATION .)
+
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
@@ -1331,6 +1346,18 @@ elseif(APPLE)
 
     install(TARGETS ${CMAKE_PROJECT_NAME} BUNDLE
             DESTINATION .)
+
+    # Shell script to run Jupyter
+
+    set(JUPYTER_SCRIPT ${PROJECT_BUILD_DIR}/jupyter.sh)
+
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/jupyter.sh.in
+                   ${JUPYTER_SCRIPT} @ONLY)
+
+    install(FILES ${JUPYTER_SCRIPT}
+            DESTINATION .
+            RENAME ${CMAKE_PROJECT_NAME}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
@@ -1403,6 +1430,15 @@ else()
     linux_deploy_qt_plugin(printsupport cupsprintersupport)
     linux_deploy_qt_plugin(sqldrivers qsqlite)
     linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+
+    # Shell script to run Jupyter
+
+    set(JUPYTER_SCRIPT ${CMAKE_SOURCE_DIR}/distrib/linux/jupyter.sh)
+
+    install(FILES ${JUPYTER_SCRIPT}
+            DESTINATION .
+            RENAME ${CMAKE_PROJECT_NAME}
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Shell script to run OpenCOR
 
