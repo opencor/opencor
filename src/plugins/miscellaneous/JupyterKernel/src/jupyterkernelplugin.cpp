@@ -123,13 +123,10 @@ import matplotlib
 
 class OpenCORKernel(IPythonKernel):
     implementation = 'OpenCOR'
-    implementation_version = '0.2'
+    implementation_version = '0.6'
     banner = "Jupyter kernel for OpenCOR"
 
 if __name__ == '__main__':
-    import sys                  ### TEMP
-    sys.argv.append('--debug')  ### TEMP
-
     from ipykernel.kernelapp import IPKernelApp
     IPKernelApp.connection_file = '%1'
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
