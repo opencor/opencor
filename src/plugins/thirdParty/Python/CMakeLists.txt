@@ -66,13 +66,13 @@ endif()
 set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
 
 set(EXTERNAL_BINARIES
-    ${PYTHON_EXECUTABLE}
     ${SHARED_LIBRARY}
 )
 
 # Specify the files that need to have their SHA-1 value checked
 
 set(SHA1_FILES
+    ${PYTHON_EXECUTABLE}
     ${LIBRARY_DIR}/${SHARED_LIBRARY}
 )
 
@@ -114,9 +114,9 @@ endif()
 # Add headers, scripts and libraries to the package archive
 
 set(PACKAGED_FILES
-    bin
     include
     ${RUNTIME_DIR}
+    ${SCRIPT_DIR}
     ${SHA1_FILES}
 )
 
@@ -137,20 +137,22 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 80db75c6e1d5352dd161f9ca45d0b035f50492c7
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c99e62188b191a6fc8bed55e6ec6303cf112223c
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 113534a88c69e5f2e42610780241cc4c360e8a9e
-                                              d77a93a60a9836b4b8bed7e78351c5cdfae560be
+                                  SHA1_VALUES 7cc5560a76bf97f9bf5d415f36f46fdc53b21957
+                                              d157939f61d9ed5506fc5cf876fcec39c41924a3
+                                              a7c7246f8ee95c8039ae4220ba61bbda2308fad3
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              d8977d62ed146e8772e130b4e2cfd89ae39038a2)
+                                              c73d9f185b186d00a34c84345b3b3541c156a421)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b8e73e7881b5638b18c292eb3b264b13ae9f3418
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1d8c126dc5cc4c17b0a487f1b5bc899340fbd954
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 85067a1029b2b4bc7b2c07feccffe764ba75c237
-                                              bce763074ed196f584130b6f0f673ba765e1155e
+                                  SHA1_VALUES 71cba1a8dedb5533daa303b2f796d840f7fbc764
+                                              2763cb98d5b09e623d1c3dfa060eec8720883ecf
+                                              8ad14e1441b92c84b27d6b3f469e284653fe0b91
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              af95b843f3bfd71c0db3d0ed4965d07e27191e5b)
+                                              164b0decaac36ba4fba601023b0669f2443f9e7b)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -160,9 +162,10 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                                           c1faf41d91676096de6e3d5ac9f2f6cd0177eed0)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 8ac72b1f77188cd73b5ac70ff04aaaa714b800d6
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f6c20cf56a3adbe2cc2d4003e90ddf17f3068c83
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES da682e29567161cccbc3a9b457835be9ecbfb431
+                              SHA1_VALUES 15c502637e33f86db2ad9f8bc7b14b24a5c76844
+                                          67b894553bdf5156219d52a9f1656bc1168d23a3
                                           81aa5a7f1370dab5bd5c5f4e7d94c71c9c57f834)
     endif()
 else()
@@ -549,7 +552,7 @@ endif()
 
 set(PYTHON_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
 
-set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} PARENT_SCOPE)
+set(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
 set(PYTHON_RELATIVE_SCRIPT_DIR ${SCRIPT_DIR} PARENT_SCOPE)
 set(PYTHON_SCRIPT_DIR  ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR} PARENT_SCOPE)
