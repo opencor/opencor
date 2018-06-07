@@ -196,15 +196,6 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
 //==============================================================================
 
-EditorWidgetEditorWidget * EditorWidget::editor() const
-{
-    // Return our editor
-
-    return mEditor;
-}
-
-//==============================================================================
-
 bool EditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
 {
     Q_UNUSED(pEvent);
@@ -518,6 +509,15 @@ void EditorWidget::setZoomLevel(int pZoomLevel)
     // Set the zoom level of our editor
 
     return mEditor->zoomTo(pZoomLevel);
+}
+
+//==============================================================================
+
+EditorWidgetEditorWidget * EditorWidget::editor() const
+{
+    // Return our editor
+
+    return mEditor;
 }
 
 //==============================================================================
