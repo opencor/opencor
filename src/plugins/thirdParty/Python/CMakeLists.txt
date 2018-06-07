@@ -40,9 +40,11 @@ endif()
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 if(WIN32)
+    set(PYTHON_EXECUTABLE bin/python.exe)
     set(SHARED_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY python${PYTHON_BUILT_VERSION}${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
+    set(PYTHON_EXECUTABLE bin/python)
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}python${PYTHON_BUILT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 endif()
@@ -64,6 +66,7 @@ endif()
 set(EXTERNAL_BINARIES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LIBRARY_DIR})
 
 set(EXTERNAL_BINARIES
+    ${PYTHON_EXECUTABLE}
     ${SHARED_LIBRARY}
 )
 
@@ -545,12 +548,6 @@ endif()
 # Allow other external projects to find our copy of Python
 
 set(PYTHON_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-
-if(WIN32)
-    set(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python.exe)
-else()
-    set(PYTHON_EXECUTABLE ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
-endif()
 
 set(PYTHON_EXECUTABLE ${PYTHON_EXECUTABLE} PARENT_SCOPE)
 
