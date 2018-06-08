@@ -131,9 +131,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         // Update our viewer whenever necessary
 
-        connect(editingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::textChanged,
+        connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
                 this, &RawCellmlViewWidget::updateViewer);
-        connect(editingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::cursorPositionChanged,
+        connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
                 this, &RawCellmlViewWidget::updateViewer);
 
         // Keep track of our editing widget

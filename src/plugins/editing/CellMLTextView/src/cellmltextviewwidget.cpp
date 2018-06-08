@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
-#include "editorwidget.h"
 #include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
@@ -516,9 +515,9 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
             // Update our viewer whenever necessary
 
-            connect(editingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::textChanged,
+            connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
                     this, &CellmlTextViewWidget::updateViewer);
-            connect(editingWidget->editorWidget()->editor(), &EditorWidget::EditorWidgetEditorWidget::cursorPositionChanged,
+            connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
                     this, &CellmlTextViewWidget::updateViewer);
         } else {
             // The conversion wasn't successful, so make the editor read-only

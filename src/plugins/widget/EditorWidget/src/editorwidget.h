@@ -136,6 +136,17 @@ private:
     EditorWidgetEditorWidget *mEditor;
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
+
+signals:
+    void cursorPositionChanged(int pRow, int pColumn);
+
+    void textChanged();
+
+    void copyAvailable(bool pCopyAvailable);
+
+    void canFindReplace(bool pCanFindReplace);
+
+    void canSelectAll(bool pCanSelectAll);
 };
 
 //==============================================================================

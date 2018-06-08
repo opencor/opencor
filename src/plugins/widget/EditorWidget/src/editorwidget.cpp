@@ -75,10 +75,29 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
     mEditor->setWrapIndentMode(QsciScintilla::WrapIndentSame);
     mEditor->setWrapVisualFlags(QsciScintilla::WrapFlagInMargin);
 
+    // Forward some signals that are emitted by our editor
+    // Note: we cannot use the new connect() syntax since the signal is located
+    //       in our QScintilla plugin and that we don't know anything about
+    //       it...
+
+    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
+            this, SIGNAL(cursorPositionChanged(int, int)));
+
+    connect(mEditor, SIGNAL(textChanged()),
+            this, SIGNAL(textChanged()));
+
+    connect(mEditor, SIGNAL(copyAvailable(bool)),
+            this, SIGNAL(copyAvailable(bool)));
+
+    connect(mEditor, SIGNAL(canSelectAll(bool)),
+            this, SIGNAL(canSelectAll(bool)));
+
     // Keep track of whenever the find text changes
 
     connect(mFindReplace, &EditorWidgetFindReplaceWidget::findTextChanged,
             mEditor, &EditorWidgetEditorWidget::findTextChanged);
+    connect(mFindReplace, &EditorWidgetFindReplaceWidget::canFindReplace,
+            this, &EditorWidget::canFindReplace);
 
     // Keep track of the triggering of some actions in our find/replace widget
 
