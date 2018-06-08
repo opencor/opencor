@@ -65,12 +65,23 @@ public:
 
     void updateSettings(EditorWidget *pEditorWidget);
 
-    EditorWidgetEditorWidget * editor() const;
-
     virtual bool handleEditorKeyPressEvent(QKeyEvent *pEvent);
+
+    void setLexer(QsciLexer *pLexer);
 
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
+
+    int length() const;
+
+    QString text(int pLine) const;
+
+    void selection(int &pLineFrom, int &pColumnFrom, int &pLineTo,
+                   int &pColumnTo);
+    void setSelection(int pLineFrom, int pColumnFrom, int pLineTo,
+                      int pColumnTo);
+
+    int position(int pLine, int pColumn);
 
     void cursorPosition(int &pLine, int &pColumn);
     void setCursorPosition(int pLine, int pColumn);
@@ -131,12 +142,21 @@ public:
     bool findNext();
     bool findPrevious();
 
+    void insertText(const QString &pText, int pLine, int pColumn);
+    void removeText(int pPosition, int pLength);
+
+    void replaceSelectedText(const QString &pText);
+    void replaceAndFind();
+
+    void beginUndoAction();
+    void endUndoAction();
+
+    bool handleEditorChanges() const;
+
 private:
     EditorWidgetEditorWidget *mEditor;
     QFrame *mSeparator;
     EditorWidgetFindReplaceWidget *mFindReplace;
-
-    EditorWidgetFindReplaceWidget * findReplace();
 
 signals:
     void cursorPositionChanged(int pRow, int pColumn);

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "editingviewinterface.h"
 #include "editingviewplugin.h"
-#include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -470,6 +470,11 @@ void EditingViewPlugin::clipboardDataChanged()
 
 void EditingViewPlugin::updateUndoAndRedoActions()
 {
+    // Make sure that our editor allows us to handle connections
+
+    if (!mEditor->handleEditorChanges())
+        return;
+
     // Update our undo/redo actions, and update the modified state of the
     // current file
 
@@ -488,6 +493,11 @@ void EditingViewPlugin::updateUndoAndRedoActions()
 
 void EditingViewPlugin::updateEditingActions()
 {
+    // Make sure that our editor allows us to handle connections
+
+    if (!mEditor->handleEditorChanges())
+        return;
+
     // Update our editing actions
 
     if (mEditingViewInterface) {
@@ -519,6 +529,11 @@ void EditingViewPlugin::updateFindPreviousNextActions()
 
 void EditingViewPlugin::updateSelectAllAction()
 {
+    // Make sure that our editor allows us to handle connections
+
+    if (!mEditor->handleEditorChanges())
+        return;
+
     // Update our select all action
 
     if (mEditingViewInterface)
