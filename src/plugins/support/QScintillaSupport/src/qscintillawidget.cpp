@@ -174,7 +174,7 @@ void QScintillaWidget::cursorPosition(int &pLine, int &pColumn)
 {
     // Retrieve our cursor position
 
-    QsciScintilla::getCursorPosition(&pLine, &pColumn);
+    getCursorPosition(&pLine, &pColumn);
 }
 
 //==============================================================================
