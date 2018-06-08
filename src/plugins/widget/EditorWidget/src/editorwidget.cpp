@@ -207,6 +207,15 @@ bool EditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
+void EditorWidget::setLexer(QsciLexer *pLexer)
+{
+    // Set our editor's lexer
+
+    mEditor->setLexer(pLexer);
+}
+
+//==============================================================================
+
 QMenu * EditorWidget::contextMenu() const
 {
     // Return the context menu of our editor
@@ -230,6 +239,53 @@ void EditorWidget::cursorPosition(int &pLine, int &pColumn)
     // Retrieve our cursor position
 
     mEditor->cursorPosition(pLine, pColumn);
+}
+
+//==============================================================================
+
+int EditorWidget::length() const
+{
+    // Retrieve our length
+
+    return mEditor->length();
+}
+
+//==============================================================================
+
+QString EditorWidget::text(int pLine) const
+{
+    // Retrieve the given line of text
+
+    return mEditor->text(pLine);
+}
+
+//==============================================================================
+
+void EditorWidget::selection(int &pLineFrom, int &pColumnFrom, int &pLineTo,
+                             int &pColumnTo)
+{
+    // Retrieve our current selection
+
+    mEditor->getSelection(&pLineFrom, &pColumnFrom, &pLineTo, &pColumnTo);
+}
+
+//==============================================================================
+
+void EditorWidget::setSelection(int pLineFrom, int pColumnFrom, int pLineTo,
+                                int pColumnTo)
+{
+    // Set the current selection
+
+    mEditor->setSelection(pLineFrom, pColumnFrom, pLineTo, pColumnTo);
+}
+
+//==============================================================================
+
+int EditorWidget::position(int pLine, int pColumn)
+{
+    // Retrieve our position from the given line/column
+
+    return mEditor->positionFromLineIndex(pLine, pColumn);
 }
 
 //==============================================================================
@@ -513,15 +569,6 @@ void EditorWidget::setZoomLevel(int pZoomLevel)
 
 //==============================================================================
 
-EditorWidgetEditorWidget * EditorWidget::editor() const
-{
-    // Return our editor
-
-    return mEditor;
-}
-
-//==============================================================================
-
 bool EditorWidget::isFindReplaceVisible() const
 {
     // Return whether our find/replace widget is visible
@@ -612,11 +659,58 @@ bool EditorWidget::findPrevious()
 
 //==============================================================================
 
+void EditorWidget::insertText(const QString &pText, int pLine, int pColumn)
+{
+    // Insert the given given text at the given line/column
+
+    mEditor->insertAt(pText, pLine, pColumn);
+}
+
+//==============================================================================
+
+void EditorWidget::removeText(int pPosition, int pLength)
+{
+    // Select the text at the given position, and for the given length, and
+    // remove it
+
+    mEditor->SendScintilla(QsciScintilla::SCI_SETSEL, pPosition, pPosition+pLength);
+    mEditor->removeSelectedText();
+}
+
+//==============================================================================
+
+void EditorWidget::replaceSelectedText(const QString &pText)
+{
+    // Replace the current text with the given one
+
+    mEditor->replaceSelectedText(pText);
+}
+
+//==============================================================================
+
 void EditorWidget::replaceAndFind()
 {
     // Replace the current text and then find its next occurence
 
     mEditor->replaceAndFind();
+}
+
+//==============================================================================
+
+void EditorWidget::beginUndoAction()
+{
+    // Begin an undo action
+
+    mEditor->beginUndoAction();
+}
+
+//==============================================================================
+
+void EditorWidget::endUndoAction()
+{
+    // End an undo action
+
+    mEditor->endUndoAction();
 }
 
 //==============================================================================
