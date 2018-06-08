@@ -96,8 +96,10 @@ void PythonSupportPlugin::initializePlugin()
 
     QString pythonHome = QString();
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     pythonHome = (applicationDirectories << "Python").join("/");
+#elif defined(Q_OS_LINUX)
+    pythonHome = (applicationDirectories << "python").join("/");
 #elif defined(Q_OS_MAC)
     pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
 #else
