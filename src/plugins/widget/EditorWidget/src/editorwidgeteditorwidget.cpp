@@ -279,7 +279,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         // Stop tracking our changes and consider our action as being one big
         // action
 
-        setHandleConnections(false);
+        setHandleChanges(false);
 
         beginUndoAction();
     }
@@ -364,7 +364,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         SendScintilla(SCI_SETSELECTIONSTART, selectionStart+selectionShift);
         SendScintilla(SCI_SETSELECTIONEND, selectionEnd+selectionShift+textLenDiff);
 
-        setHandleConnections(true);
+        setHandleChanges(true);
     }
 }
 
@@ -520,7 +520,7 @@ void EditorWidgetEditorWidget::replace()
 
 void EditorWidgetEditorWidget::replaceAndFind()
 {
-    // Replace the current text and the find the next occurence of the text
+    // Replace the current text and then find its next occurence
 
     replace();
     findNext();

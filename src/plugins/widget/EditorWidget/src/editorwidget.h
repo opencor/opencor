@@ -132,6 +132,8 @@ public:
     bool findNext();
     bool findPrevious();
 
+    bool handleEditorChanges() const;
+
 private:
     EditorWidgetEditorWidget *mEditor;
     QFrame *mSeparator;

@@ -621,6 +621,15 @@ bool EditorWidget::findPrevious()
 
 //==============================================================================
 
+bool EditorWidget::handleEditorChanges() const
+{
+    // Return whether we should handle our editor's changes
+
+    return mEditor->handleChanges();
+}
+
+//==============================================================================
+
 }   // namespace EditorWidget
 }   // namespace OpenCOR
 

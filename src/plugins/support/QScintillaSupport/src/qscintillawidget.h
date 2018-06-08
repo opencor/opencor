@@ -104,7 +104,7 @@ public:
 
     int zoomLevel() const;
 
-    bool handleConnections() const;
+    bool handleChanges() const;
 
     static QString specials(const QString &pString);
 
@@ -118,10 +118,10 @@ protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
     void wheelEvent(QWheelEvent *pEvent) override;
 
-    void setHandleConnections(bool pHandleConnections);
+    void setHandleChanges(bool pHandleChanges);
 
 private:
-    bool mHandleConnections;
+    bool mHandleChanges;
 
     QFont mFont;
 

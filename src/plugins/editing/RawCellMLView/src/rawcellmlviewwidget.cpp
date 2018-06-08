@@ -493,7 +493,7 @@ void RawCellmlViewWidget::updateViewer()
     // handle connections
 
     if (   !mEditingWidget
-        || !mEditingWidget->editorWidget()->editor()->handleConnections()) {
+        || !mEditingWidget->editorWidget()->handleEditorChanges()) {
         return;
     }
 

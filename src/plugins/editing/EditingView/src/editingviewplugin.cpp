@@ -472,7 +472,7 @@ void EditingViewPlugin::updateUndoAndRedoActions()
 {
     // Make sure that our editor allows us to handle connections
 
-    if (!mEditor->editor()->handleConnections())
+    if (!mEditor->handleEditorChanges())
         return;
 
     // Update our undo/redo actions, and update the modified state of the
@@ -495,7 +495,7 @@ void EditingViewPlugin::updateEditingActions()
 {
     // Make sure that our editor allows us to handle connections
 
-    if (!mEditor->editor()->handleConnections())
+    if (!mEditor->handleEditorChanges())
         return;
 
     // Update our editing actions
@@ -531,7 +531,7 @@ void EditingViewPlugin::updateSelectAllAction()
 {
     // Make sure that our editor allows us to handle connections
 
-    if (!mEditor->editor()->handleConnections())
+    if (!mEditor->handleEditorChanges())
         return;
 
     // Update our select all action

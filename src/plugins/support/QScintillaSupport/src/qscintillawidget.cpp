@@ -45,7 +45,7 @@ namespace QScintillaSupport {
 
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
-    mHandleConnections(true),
+    mHandleChanges(true),
     mCanSelectAll(false),
     mInsertMode(true)
 {
@@ -467,26 +467,26 @@ int QScintillaWidget::zoomLevel() const
 
 //==============================================================================
 
-bool QScintillaWidget::handleConnections() const
+bool QScintillaWidget::handleChanges() const
 {
-    // Return whether connections should be handled
+    // Return our changes should be handled
 
-    return mHandleConnections;
+    return mHandleChanges;
 }
 
 //==============================================================================
 
-void QScintillaWidget::setHandleConnections(bool pHandleConnections)
+void QScintillaWidget::setHandleChanges(bool pHandleChanges)
 {
-    // Set whether we should handle connections
+    // Set whether we should handle changes
 
-    mHandleConnections = pHandleConnections;
+    mHandleChanges = pHandleChanges;
 
-    // Emit a few signals, if we should handle connections
+    // Emit a few signals, if we should handle changes
     // Note: this is to ensure that our owner is up-to-date with whatever we
-    //       have done when connections weren't handled...
+    //       have done when changes weren't handled...
 
-    if (pHandleConnections) {
+    if (pHandleChanges) {
         int line;
         int column;
 
@@ -689,24 +689,24 @@ void QScintillaWidget::zoomTo(int pSize)
 
 void QScintillaWidget::undo()
 {
-    // Undo the last action, but without handling connections since this may
-    // slow things done (e.g. when the last action was a replacing all action)
+    // Undo the last action, but without handling changes since this may slow
+    // things done (e.g. when the last action was a replacing all action)
 
-    setHandleConnections(false);
+    setHandleChanges(false);
         QsciScintilla::undo();
-    setHandleConnections(true);
+    setHandleChanges(true);
 }
 
 //==============================================================================
 
 void QScintillaWidget::redo()
 {
-    // Redo the last action, but without handling connections since this may
-    // slow things done (e.g. when the last action was a replacing all action)
+    // Redo the last action, but without handling changes since this may slow
+    // things done (e.g. when the last action was a replacing all action)
 
-    setHandleConnections(false);
+    setHandleChanges(false);
         QsciScintilla::redo();
-    setHandleConnections(true);
+    setHandleChanges(true);
 }
 
 //==============================================================================
@@ -715,7 +715,7 @@ void QScintillaWidget::updateUi()
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleConnections)
+    if (!mHandleChanges)
         return;
 
     // Update our editing mode, if needed
@@ -736,7 +736,7 @@ void QScintillaWidget::updateMarginLineNumbersWidth()
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleConnections)
+    if (!mHandleChanges)
         return;
 
     // Resize the margin line numbers width
@@ -755,7 +755,7 @@ void QScintillaWidget::checkCanSelectAll()
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleConnections)
+    if (!mHandleChanges)
         return;
 
     // Check whether we can select all the text
@@ -798,7 +798,7 @@ void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleConnections)
+    if (!mHandleChanges)
         return;
 
     // Update our cursor position
