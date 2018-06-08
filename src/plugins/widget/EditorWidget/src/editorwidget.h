@@ -131,6 +131,8 @@ public:
     bool findNext();
     bool findPrevious();
 
+    void replaceAndFind();
+
     bool handleEditorChanges() const;
 
 private:

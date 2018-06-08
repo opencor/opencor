@@ -612,6 +612,15 @@ bool EditorWidget::findPrevious()
 
 //==============================================================================
 
+void EditorWidget::replaceAndFind()
+{
+    // Replace the current text and then find its next occurence
+
+    mEditor->replaceAndFind();
+}
+
+//==============================================================================
+
 bool EditorWidget::handleEditorChanges() const
 {
     // Return whether we should handle our editor's changes
