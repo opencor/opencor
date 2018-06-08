@@ -190,7 +190,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
     //       findTextChanged() slot)...
 
     mFindReplace->setActive(false);
-        mFindReplace->updateFrom(pEditorWidget->findReplace());
+        mFindReplace->updateFrom(pEditorWidget->mFindReplace);
     mFindReplace->setActive(true);
 }
 
@@ -518,15 +518,6 @@ EditorWidgetEditorWidget * EditorWidget::editor() const
     // Return our editor
 
     return mEditor;
-}
-
-//==============================================================================
-
-EditorWidgetFindReplaceWidget * EditorWidget::findReplace()
-{
-    // Return our find/replace widget
-
-    return mFindReplace;
 }
 
 //==============================================================================

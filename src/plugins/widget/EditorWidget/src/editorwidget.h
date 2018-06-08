@@ -66,7 +66,6 @@ public:
     void updateSettings(EditorWidget *pEditorWidget);
 
     EditorWidgetEditorWidget * editor() const;
-    EditorWidgetFindReplaceWidget * findReplace();
 
     virtual bool handleEditorKeyPressEvent(QKeyEvent *pEvent);
 
