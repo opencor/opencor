@@ -553,7 +553,7 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
         int line;
         int column;
 
-        mEditor->getCursorPosition(&line, &column);
+        mEditor->cursorPosition(line, column);
 
         QString word = mEditor->wordAt(line, column);
 

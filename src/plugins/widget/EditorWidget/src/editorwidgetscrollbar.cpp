@@ -78,7 +78,7 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
     int lastLine;
     int dummy;
 
-    mOwner->getCursorPosition(&line, &dummy);
+    mOwner->cursorPosition(line, dummy);
     mOwner->lineIndexFromPosition(mOwner->text().length(), &lastLine, &dummy);
 
     double positionScaling = double(height()-2*arrowButtonHeight-1)/lastLine;
