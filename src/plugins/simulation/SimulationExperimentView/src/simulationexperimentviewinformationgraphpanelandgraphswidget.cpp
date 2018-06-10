@@ -1377,70 +1377,70 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
     //       updates...
 
     graphPanelPlot->setUpdatesEnabled(false);
+        // Graph panel
 
-    graphPanelPlot->setBackgroundColor(properties[0]->colorValue());
-    graphPanelPlot->setFontSize(properties[1]->integerValue());
-    graphPanelPlot->setForegroundColor(properties[2]->colorValue());
+        graphPanelPlot->setBackgroundColor(properties[0]->colorValue());
+        graphPanelPlot->setFontSize(properties[1]->integerValue());
+        graphPanelPlot->setForegroundColor(properties[2]->colorValue());
 
-    // Grid lines
+        // Grid lines
 
-    Core::Properties gridLinesProperties = properties[3]->properties();
+        Core::Properties gridLinesProperties = properties[3]->properties();
 
-    graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesProperties[0]->listValues().indexOf(gridLinesProperties[0]->listValue())));
-    graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
-    graphPanelPlot->setGridLinesColor(gridLinesProperties[2]->colorValue());
+        graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesProperties[0]->listValues().indexOf(gridLinesProperties[0]->listValue())));
+        graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
+        graphPanelPlot->setGridLinesColor(gridLinesProperties[2]->colorValue());
 
-    // Legend
+        // Legend
 
-    graphPanelPlot->setLegendActive(properties[4]->booleanValue());
+        graphPanelPlot->setLegendActive(properties[4]->booleanValue());
 
-    // Point coordinates
+        // Point coordinates
 
-    Core::Properties pointCoordinatesProperties = properties[5]->properties();
+        Core::Properties pointCoordinatesProperties = properties[5]->properties();
 
-    graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesProperties[0]->listValues().indexOf(pointCoordinatesProperties[0]->listValue())));
-    graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
-    graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
-    graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
+        graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesProperties[0]->listValues().indexOf(pointCoordinatesProperties[0]->listValue())));
+        graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
+        graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
+        graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
 
-    // Surrounding area
+        // Surrounding area
 
-    Core::Properties surroundingAreaProperties = properties[6]->properties();
+        Core::Properties surroundingAreaProperties = properties[6]->properties();
 
-    graphPanelPlot->setSurroundingAreaBackgroundColor(surroundingAreaProperties[0]->colorValue());
-    graphPanelPlot->setSurroundingAreaForegroundColor(surroundingAreaProperties[1]->colorValue());
+        graphPanelPlot->setSurroundingAreaBackgroundColor(surroundingAreaProperties[0]->colorValue());
+        graphPanelPlot->setSurroundingAreaForegroundColor(surroundingAreaProperties[1]->colorValue());
 
-    // Title
+        // Title
 
-    graphPanelPlot->setTitle(properties[7]->value());
+        graphPanelPlot->setTitle(properties[7]->value());
 
-    // X axis
+        // X axis
 
-    Core::Properties xAxisProperties = properties[8]->properties();
+        Core::Properties xAxisProperties = properties[8]->properties();
 
-    graphPanelPlot->setLogAxisX(xAxisProperties[0]->booleanValue());
-    graphPanelPlot->setTitleAxisX(xAxisProperties[1]->value());
+        graphPanelPlot->setLogAxisX(xAxisProperties[0]->booleanValue());
+        graphPanelPlot->setTitleAxisX(xAxisProperties[1]->value());
 
-    // Y axis
+        // Y axis
 
-    Core::Properties yAxisProperties = properties[9]->properties();
+        Core::Properties yAxisProperties = properties[9]->properties();
 
-    graphPanelPlot->setLogAxisY(yAxisProperties[0]->booleanValue());
-    graphPanelPlot->setTitleAxisY(yAxisProperties[1]->value());
+        graphPanelPlot->setLogAxisY(yAxisProperties[0]->booleanValue());
+        graphPanelPlot->setTitleAxisY(yAxisProperties[1]->value());
 
-    // Zoom region
+        // Zoom region
 
-    Core::Properties zoomRegionProperties = properties[10]->properties();
+        Core::Properties zoomRegionProperties = properties[10]->properties();
 
-    graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionProperties[0]->listValues().indexOf(zoomRegionProperties[0]->listValue())));
-    graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());
-    graphPanelPlot->setZoomRegionColor(zoomRegionProperties[2]->colorValue());
-    graphPanelPlot->setZoomRegionFontColor(zoomRegionProperties[3]->colorValue());
-    graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
-    graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
+        graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionProperties[0]->listValues().indexOf(zoomRegionProperties[0]->listValue())));
+        graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());
+        graphPanelPlot->setZoomRegionColor(zoomRegionProperties[2]->colorValue());
+        graphPanelPlot->setZoomRegionFontColor(zoomRegionProperties[3]->colorValue());
+        graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
+        graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
 
-    graphPanelPlot->updateGui();
-
+        graphPanelPlot->updateGui();
     graphPanelPlot->setUpdatesEnabled(true);
 }
 
