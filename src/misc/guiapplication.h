@@ -38,7 +38,7 @@ class GuiApplication : public QtSingleApplication
     Q_OBJECT
 
 public:
-    GuiApplication(const QString &pId, int &pArgC, char **pArgV);
+    GuiApplication(int &pArgC, char **pArgV);
 
     bool hasFileNamesOrOpencorUrls() const;
     QString firstFileNameOrOpencorUrl();

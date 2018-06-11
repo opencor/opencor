@@ -144,8 +144,7 @@ int main(int pArgC, char *pArgV[])
 
     // Create the GUI version of OpenCOR and make sure that it supports high DPI
 
-    OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(QFileInfo(pArgV[0]).baseName(),
-                                                                  pArgC, pArgV);
+    OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
 
     guiApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     guiApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
