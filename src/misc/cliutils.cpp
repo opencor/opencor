@@ -86,11 +86,19 @@ void initQtMessagePattern()
 
 //==============================================================================
 
-void initPluginsPath(const QString &pAppFileName)
+void initPluginsPath(int pArgC, char *pArgV[])
 {
     // Initialise the plugins path
+    // Note: a user might have set the OpenCOR path in his/her PATH environment
+    //       variable, so that s/he could then start OpenCOR from the command
+    //       line by simply typing OpenCOR (see issue #1688). However, in that
+    //       case, pArgV[0] won't contain the full path to OpenCOR, just its
+    //       basename. So, we need to use a temporary QCoreApplication object to
+    //       determine the full path to OpenCOR and, as a result, to its plugins
+    //       directory, thus making it possible to run OpenCOR (and load its
+    //       various plugins)...
 
-    QFileInfo appFileInfo = pAppFileName;
+    QFileInfo appFileInfo = QCoreApplication(pArgC, pArgV).applicationFilePath();
     QString appDir;
 
 #ifdef Q_OS_WIN
