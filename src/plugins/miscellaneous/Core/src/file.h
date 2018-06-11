@@ -66,8 +66,7 @@ public:
         LockedNotSet
     };
 
-    explicit File(const QString &pFileName, const Type &pType,
-                  const QString &pUrl);
+    explicit File(const QString &pFileName, Type pType, const QString &pUrl);
     ~File();
 
     QString fileName() const;
@@ -79,7 +78,7 @@ public:
 
     QString sha1() const;
 
-    void reset(const bool &pResetDependencies = true);
+    void reset(bool pResetDependencies = true);
 
     bool isDifferent() const;
     bool isDifferent(const QString &pFileContents) const;
@@ -95,19 +94,19 @@ public:
     QString url() const;
 
     bool isModified() const;
-    bool setModified(const bool &pModified);
+    bool setModified(bool pModified);
 
     bool isReadable() const;
     bool isWritable() const;
     bool isReadableAndWritable() const;
 
     bool isLocked() const;
-    Status setLocked(const bool &pLocked);
+    Status setLocked(bool pLocked);
 
     QStringList dependencies() const;
     bool setDependencies(const QStringList &pDependencies);
 
-    bool setDependenciesModified(const bool &pDependenciesModified);
+    bool setDependenciesModified(bool pDependenciesModified);
 
 private:
     QString mFileName;

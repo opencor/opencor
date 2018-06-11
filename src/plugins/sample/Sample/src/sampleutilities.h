@@ -34,7 +34,7 @@ namespace Sample {
 
 //==============================================================================
 
-double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
+double SAMPLE_EXPORT add(double pNb1, double pNb2);
 
 //==============================================================================
 

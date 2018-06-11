@@ -67,10 +67,10 @@ public:
 protected:
     QSettings *mSettings;
 
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 public slots:
-    virtual int exec();
+    int exec() override;
 };
 
 //==============================================================================
@@ -85,8 +85,8 @@ class CORE_EXPORT StyledItemDelegate : public QStyledItemDelegate
 public:
     explicit StyledItemDelegate(QObject *pParent);
 
-    virtual QSize sizeHint(const QStyleOptionViewItem &pOption,
-                           const QModelIndex &pIndex) const;
+    QSize sizeHint(const QStyleOptionViewItem &pOption,
+                   const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================

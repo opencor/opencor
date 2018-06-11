@@ -299,36 +299,36 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     // Connect some signals
 
-    connect(pTimer, SIGNAL(timeout()),
-            this, SLOT(refreshChanges()));
+    connect(pTimer, &QTimer::timeout,
+            this, &PmrWorkspacesWindowSynchronizeDialog::refreshChanges);
 
-    connect(mMessageValue, SIGNAL(textChanged()),
-            this, SLOT(updateOkButton()));
+    connect(mMessageValue, &QTextEdit::textChanged,
+            this, &PmrWorkspacesWindowSynchronizeDialog::updateOkButton);
 
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, &PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox);
 
-    connect(mSelectAllChangesCheckBox, SIGNAL(toggled(bool)),
-            this, SLOT(updateOkButton()));
-    connect(mSelectAllChangesCheckBox, SIGNAL(clicked(bool)),
-            this, SLOT(selectAllChangesCheckBoxClicked()));
+    connect(mSelectAllChangesCheckBox, &QCheckBox::toggled,
+            this, &PmrWorkspacesWindowSynchronizeDialog::updateOkButton);
+    connect(mSelectAllChangesCheckBox, &QCheckBox::clicked,
+            this, &PmrWorkspacesWindowSynchronizeDialog::selectAllChangesCheckBoxClicked);
 
-    connect(mButtonBox, SIGNAL(accepted()),
-            this, SLOT(acceptSynchronization()));
-    connect(mButtonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mButtonBox, &QDialogButtonBox::accepted,
+            this, &PmrWorkspacesWindowSynchronizeDialog::acceptSynchronization);
+    connect(mButtonBox, &QDialogButtonBox::rejected,
+            this, &PmrWorkspacesWindowSynchronizeDialog::reject);
 
-    connect(mChangesValue->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(updateDiffInformation()));
+    connect(mChangesValue->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation);
 
-    connect(mWebViewerCellmlTextFormatAction, SIGNAL(toggled(bool)),
-            this, SLOT(updateDiffInformation()));
-    connect(webViewerNormalSizeAction, SIGNAL(triggered(bool)),
-            mWebViewer, SLOT(resetZoom()));
-    connect(webViewerZoomInAction, SIGNAL(triggered(bool)),
-            mWebViewer, SLOT(zoomIn()));
-    connect(webViewerZoomOutAction, SIGNAL(triggered(bool)),
-            mWebViewer, SLOT(zoomOut()));
+    connect(mWebViewerCellmlTextFormatAction, &QAction::toggled,
+            this, &PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation);
+    connect(webViewerNormalSizeAction, &QAction::triggered,
+            mWebViewer, &WebViewerWidget::WebViewerWidget::resetZoom);
+    connect(webViewerZoomInAction, &QAction::triggered,
+            mWebViewer, &WebViewerWidget::WebViewerWidget::zoomIn);
+    connect(webViewerZoomOutAction, &QAction::triggered,
+            mWebViewer, &WebViewerWidget::WebViewerWidget::zoomOut);
 
     // Retrieve our diff template
 
@@ -516,6 +516,11 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
 
 void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 {
+    // Refresh our changes, but only if we are visible
+
+    if (!isVisible())
+        return;
+
     // Keep track of our existing items
 
     PmrWorkspacesWindowSynchronizeDialogItems oldItems = PmrWorkspacesWindowSynchronizeDialogItems();
@@ -564,16 +569,16 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
     //       since we 'manually' set everything ourselves...
 
     if (pItem) {
-        disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-                   this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
+        disconnect(mModel, &QStandardItemModel::itemChanged,
+                   this, &PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox);
 
         if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(pItem->index()))) {
             foreach (const QModelIndex &fileIndex, mChangesValue->selectionModel()->selectedIndexes())
                 mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
         }
 
-        connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-                this, SLOT(updateSelectAllChangesCheckBox(QStandardItem *)));
+        connect(mModel, &QStandardItemModel::itemChanged,
+                this, &PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox);
     }
 
     // Update the checked state of our Select All check box
@@ -790,11 +795,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         int removeLineNumber = -1;
 
         foreach (const DifferenceData &differenceData, pDifferencesData) {
-            html += Row.arg(differenceData.operation,
-                            differenceData.removeLineNumber,
-                            differenceData.addLineNumber,
-                            differenceData.tag,
-                            (differenceData.tag == '+')?
+            html += Row.arg(differenceData.operation)
+                       .arg(differenceData.removeLineNumber)
+                       .arg(differenceData.addLineNumber)
+                       .arg(differenceData.tag)
+                       .arg((differenceData.tag == '+')?
                                 newDiffStrings[++addLineNumber]:
                                 oldDiffStrings[++removeLineNumber]);
         }
@@ -868,7 +873,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
             removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
 
-            html += Row.arg("header", "...", "...", QString(), difference);
+            html += Row.arg("header")
+                       .arg("...")
+                       .arg("...")
+                       .arg(QString())
+                       .arg(difference);
         } else {
             QString diff = difference;
             QChar tag = diff[0];
@@ -897,9 +906,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                 ++addLineNumber;
                 ++removeLineNumber;
 
-                html += Row.arg((differenceNumber == differenceMaxNumber)?"last default":"default",
-                                QString::number(removeLineNumber), QString::number(addLineNumber),
-                                QString(), diff.toHtmlEscaped()
+                html += Row.arg((differenceNumber == differenceMaxNumber)?
+                                    "last default":
+                                    "default")
+                           .arg(removeLineNumber)
+                           .arg(addLineNumber)
+                           .arg(QString())
+                           .arg(diff.toHtmlEscaped()
                                                .replace(' ', "&nbsp;"));
             }
         }

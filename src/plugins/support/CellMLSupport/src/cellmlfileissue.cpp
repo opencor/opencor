@@ -30,8 +30,8 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileIssue::CellmlFileIssue(const Type &pType, const int &pLine,
-                                 const int &pColumn, const QString &pMessage,
+CellmlFileIssue::CellmlFileIssue(Type pType, int pLine, int pColumn,
+                                 const QString &pMessage,
                                  const QString &pImportedFile) :
     mType(pType),
     mLine(pLine),
@@ -43,7 +43,7 @@ CellmlFileIssue::CellmlFileIssue(const Type &pType, const int &pLine,
 
 //==============================================================================
 
-CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage) :
+CellmlFileIssue::CellmlFileIssue(Type pType, const QString &pMessage) :
     CellmlFileIssue(pType, 0, 0, pMessage, QString())
 {
 }

@@ -83,7 +83,7 @@ public:
                                                                           SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                                           QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation);
     void finalize();
@@ -101,12 +101,12 @@ public:
                                       const QString &pFileName) const;
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode mode() const;
-    void setMode(const Mode &pMode);
+    void setMode(Mode pMode);
 
-    void setGraphPanelColumnWidth(const int &pIndex, const int &pColumnWidth);
-    void setGraphsColumnWidth(const int &pIndex, const int &pColumnWidth);
+    void setGraphPanelColumnWidth(int pIndex, int pColumnWidth);
+    void setGraphsColumnWidth(int pIndex, int pColumnWidth);
 
-    void setGraphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+    void setGraphPanelSectionExpanded(int pSection, bool pExpanded);
 
     void reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
@@ -154,7 +154,7 @@ private:
     bool checkParameter(CellMLSupport::CellmlFileRuntime *pRuntime,
                         GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                         Core::Property *pParameterProperty,
-                        const bool &pParameterX) const;
+                        bool pParameterX) const;
 
     QString modelListValue(const QString &pFileName) const;
 
@@ -162,35 +162,36 @@ private:
     void updateGraphsInfo(Core::Property *pSectionProperty = 0);
     void updateAllGraphsInfo();
 
-    void selectAllGraphs(const bool &pSelect);
+    void selectAllGraphs(bool pSelect);
 
     bool rootProperty(Core::Property *pProperty) const;
 
 signals:
-    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+    void graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode);
 
-    void graphPanelHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                        const int &pNewSize);
-    void graphsHeaderSectionResized(const int &pIndex, const int &pOldSize,
-                                    const int &pNewSize);
+    void graphPanelHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
+    void graphsHeaderSectionResized(int pIndex, int pOldSize, int pNewSize);
 
-    void graphPanelSectionExpanded(const int &pSection, const bool &pExpanded);
+    void graphPanelSectionExpanded(int pSection, bool pExpanded);
 
-    void graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
-    void graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
 
 public slots:
-    void initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                    const bool &pActive = true);
-    void finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    bool pActive);
+    void initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
+    void finalize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    void addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                  OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                  const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
-    void removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                      const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+    void addGraph(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                  GraphPanelWidget::GraphPanelPlotGraph *pGraph,
+                  const GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties);
+    void addGraph();
 
-    void toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph);
+    void removeGraphs(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                      const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs);
+
+    void toggleGraph(GraphPanelWidget::GraphPanelPlotGraph *pGraph);
 
     void toggleLegend();
 
@@ -200,7 +201,6 @@ public slots:
 private slots:
     void selectGraphPanelColor();
 
-    void addGraph();
     void removeCurrentGraph();
     void removeAllGraphs();
     void selectAllGraphs();
@@ -213,8 +213,8 @@ private slots:
     void graphPanelSectionExpanded(const QModelIndex &pIndex);
     void graphPanelSectionCollapsed(const QModelIndex &pIndex);
 
-    void graphPanelPropertyChanged(OpenCOR::Core::Property *pProperty);
-    void graphsPropertyChanged(OpenCOR::Core::Property *pProperty);
+    void graphPanelPropertyChanged(Core::Property *pProperty);
+    void graphsPropertyChanged(Core::Property *pProperty);
 
     void updateParameterValue();
 };

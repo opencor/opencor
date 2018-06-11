@@ -44,8 +44,8 @@ SimulationExperimentViewContentsWidget::SimulationExperimentViewContentsWidget(S
 {
     // Keep track of our movement
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(emitSplitterMoved()));
+    connect(this, &SimulationExperimentViewContentsWidget::splitterMoved,
+            this, &SimulationExperimentViewContentsWidget::emitSplitterMoved);
 
     // Create our information widget
 

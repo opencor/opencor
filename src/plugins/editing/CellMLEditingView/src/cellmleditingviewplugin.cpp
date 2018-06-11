@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmleditingviewinterface.h"
 #include "cellmleditingviewplugin.h"
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editingviewinterface.h"
 #include "filemanager.h"
@@ -176,13 +177,13 @@ void CellMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
     if (editingViewInterface) {
-        EditorWidget::EditorWidget *editorWidget = editingViewInterface->editorWidget(pFileName);
+        EditorWidget::EditorWidget *editor = editingViewInterface->editorWidget(pFileName);
 
-        if (editorWidget) {
-            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << mEditReformatSeparator
-                                                                                << mEditReformatAction
-                                                                                << mToolsCellmlValidationSeparator
-                                                                                << mToolsCellmlValidationAction);
+        if (editor) {
+            editor->setContextMenu(editor->contextMenu()->actions() << mEditReformatSeparator
+                                                                    << mEditReformatAction
+                                                                    << mToolsCellmlValidationSeparator
+                                                                    << mToolsCellmlValidationAction);
         }
     }
 
@@ -262,21 +263,21 @@ void CellMLEditingViewPlugin::initializePlugin()
 
     // Create our different actions
 
-    mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
+    mEditReformatAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_R),
                                           Core::mainWindow());
     mEditReformatSeparator = Core::newSeparator(Core::mainWindow());
 
-    mToolsCellmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
+    mToolsCellmlValidationAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_T),
                                                    Core::mainWindow());
     mToolsCellmlValidationSeparator = Core::newSeparator(Core::mainWindow());
 
     // Some connections to handle our different actions
 
-    connect(mEditReformatAction, SIGNAL(triggered(bool)),
-            this, SLOT(reformat()));
+    connect(mEditReformatAction, &QAction::triggered,
+            this, &CellMLEditingViewPlugin::reformat);
 
-    connect(mToolsCellmlValidationAction, SIGNAL(triggered(bool)),
-            this, SLOT(cellmlValidation()));
+    connect(mToolsCellmlValidationAction, &QAction::triggered,
+            this, &CellMLEditingViewPlugin::cellmlValidation);
 }
 
 //==============================================================================

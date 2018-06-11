@@ -47,10 +47,10 @@ public:
         Warning
     };
 
-    explicit CellmlFileIssue(const Type &pType, const int &pLine,
-                             const int &pColumn, const QString &pMessage,
+    explicit CellmlFileIssue(Type pType, int pLine, int pColumn,
+                             const QString &pMessage,
                              const QString &pImportedFile);
-    explicit CellmlFileIssue(const Type &pType, const QString &pMessage);
+    explicit CellmlFileIssue(Type pType, const QString &pMessage);
 
     static bool compare(const CellmlFileIssue &pIssue1,
                         const CellmlFileIssue &pIssue2);

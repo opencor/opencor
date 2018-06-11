@@ -109,18 +109,22 @@ private:
 
     QStringList mRecentFileNamesOrUrls;
 
+    QList<QAction *> mRecentFileActions;
+
     void updateNewModifiedSensitiveActions();
 
     void reopenFile(const QString &pFileName);
 
+    void updateFileReopenMenu();
+
 private slots:
     void newFile();
-
-    void updateFileReopenMenu(const bool &pEnabled = true);
 
     void reopenRecentFile();
     void reopenMostRecentFile();
     void clearReopenSubMenu();
+
+    void doUpdateFileReopenMenu();
 };
 
 //==============================================================================

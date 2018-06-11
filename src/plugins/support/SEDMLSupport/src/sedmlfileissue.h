@@ -46,15 +46,16 @@ class SEDMLSUPPORT_EXPORT SedmlFileIssue
 {
 public:
     enum Type {
+        Unknown,
         Information,
         Error,
         Warning,
         Fatal
     };
 
-    explicit SedmlFileIssue(const Type &pType, const int &pLine,
-                            const int &pColumn, const QString &pMessage);
-    explicit SedmlFileIssue(const Type &pType, const QString &pMessage);
+    explicit SedmlFileIssue(Type pType, int pLine, int pColumn,
+                            const QString &pMessage);
+    explicit SedmlFileIssue(Type pType, const QString &pMessage);
 
     Type type() const;
     int line() const;

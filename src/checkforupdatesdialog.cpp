@@ -31,8 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QCoreApplication>
 #include <QCheckBox>
+#include <QCoreApplication>
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -95,10 +95,12 @@ void CheckForUpdatesEngine::check()
                 if (!versionMajor && !versionMinor && !versionPatch) {
                     versionVersion = versionDate;
                 } else {
-                    versionVersion = QString("%1.%2").arg(QString::number(versionMajor), QString::number(versionMinor));
+                    versionVersion = QString("%1.%2").arg(versionMajor)
+                                                     .arg(versionMinor);
 
                     if (versionPatch)
-                        versionVersion = QString("%1.%2").arg(versionVersion, QString::number(versionPatch));
+                        versionVersion = QString("%1.%2").arg(versionVersion)
+                                                         .arg(versionPatch);
                 }
 
                 // Check whether the version is newer and, if so, add it to our
@@ -177,6 +179,17 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
     mGui = new Ui::CheckForUpdatesDialog;
 
     mGui->setupUi(this);
+
+    connect(mGui->statusLabel, &QLabel::linkActivated,
+            this, &CheckForUpdatesDialog::statusLabelLinkActivated);
+    connect(mGui->recheckButton, &QPushButton::clicked,
+            this, &CheckForUpdatesDialog::recheckButtonClicked);
+    connect(mGui->checkForUpdatesAtStartupCheckBox, &QCheckBox::toggled,
+            this, &CheckForUpdatesDialog::checkForUpdatesAtStartupCheckBoxToggled);
+    connect(mGui->includeSnapshotsCheckBox, &QCheckBox::toggled,
+            this, &CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled);
+    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
+            this, &CheckForUpdatesDialog::accept);
 
     // Create/set our engine and check for updates in the former case
 
@@ -261,10 +274,14 @@ void CheckForUpdatesDialog::updateGui()
                 if (version.isEmpty())
                     version = mEngine->newerVersions().first();
 
-                if (version.contains('-'))
-                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest", version));
-                else
-                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
+                if (version.contains('-')) {
+                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest")
+                                                                  .arg(version));
+                } else {
+                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version)
+                                                                 .arg(qAppName())
+                                                                 .arg(version));
+                }
             } else {
                 mGui->statusLabel->setText(tr("No newer version or snapshot of %1 is available.").arg(qAppName()));
             }
@@ -282,7 +299,9 @@ void CheckForUpdatesDialog::updateGui()
                 }
             }
 
-            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
+            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version)
+                                                         .arg(qAppName())
+                                                         .arg(version));
         } else {
             mGui->statusLabel->setText(tr("No newer version of %1 is available.").arg(qAppName()));
         }
@@ -293,16 +312,7 @@ void CheckForUpdatesDialog::updateGui()
 
 //==============================================================================
 
-void CheckForUpdatesDialog::on_buttonBox_accepted()
-{
-    // Simply close ourselves
-
-    close();
-}
-
-//==============================================================================
-
-void CheckForUpdatesDialog::on_statusLabel_linkActivated(const QString &pLink)
+void CheckForUpdatesDialog::statusLabelLinkActivated(const QString &pLink)
 {
     // Open the link in the user's browser
 
@@ -311,7 +321,7 @@ void CheckForUpdatesDialog::on_statusLabel_linkActivated(const QString &pLink)
 
 //==============================================================================
 
-void CheckForUpdatesDialog::on_recheckButton_clicked()
+void CheckForUpdatesDialog::recheckButtonClicked()
 {
     // Recheck for updates and then update our GUI accordingly
 
@@ -322,7 +332,7 @@ void CheckForUpdatesDialog::on_recheckButton_clicked()
 
 //==============================================================================
 
-void CheckForUpdatesDialog::on_checkForUpdatesAtStartupCheckBox_toggled(bool pChecked)
+void CheckForUpdatesDialog::checkForUpdatesAtStartupCheckBoxToggled(bool pChecked)
 {
     Q_UNUSED(pChecked);
 
@@ -334,7 +344,7 @@ void CheckForUpdatesDialog::on_checkForUpdatesAtStartupCheckBox_toggled(bool pCh
 
 //==============================================================================
 
-void CheckForUpdatesDialog::on_includeSnapshotsCheckBox_toggled(bool pChecked)
+void CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled(bool pChecked)
 {
     Q_UNUSED(pChecked);
 

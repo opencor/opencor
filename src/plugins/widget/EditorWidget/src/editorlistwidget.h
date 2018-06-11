@@ -44,17 +44,18 @@ class EDITORWIDGET_EXPORT EditorListItem : public QStandardItem
 {
 public:
     enum Type {
-        Error       = QStandardItem::UserType,
-        Warning     = QStandardItem::UserType+1,
-        Hint        = QStandardItem::UserType+2,
-        Information = QStandardItem::UserType+3,
-        Fatal       = QStandardItem::UserType+4
+        Unknown     = QStandardItem::UserType,
+        Error       = QStandardItem::UserType+1,
+        Warning     = QStandardItem::UserType+2,
+        Hint        = QStandardItem::UserType+3,
+        Information = QStandardItem::UserType+4,
+        Fatal       = QStandardItem::UserType+5
     };
 
-    explicit EditorListItem(const Type &pType, const int &pLine,
-                            const int &pColumn, const QString &pMessage);
+    explicit EditorListItem(Type pType, int pLine, int pColumn,
+                            const QString &pMessage);
 
-    virtual int type() const;
+    int type() const override;
     int line() const;
     int column() const;
     QString message() const;
@@ -76,21 +77,21 @@ class EDITORWIDGET_EXPORT EditorListWidget : public QListView,
 public:
     explicit EditorListWidget(QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
-    void addItem(const EditorListItem::Type &pType, const int &pLine,
-                 const int &pColumn, const QString &pMessage);
-    void addItem(const EditorListItem::Type &pType, const int &pLine,
+    void addItem(EditorListItem::Type pType, int pLine, int pColumn,
                  const QString &pMessage);
-    void addItem(const EditorListItem::Type &pType, const QString &pMessage);
+    void addItem(EditorListItem::Type pType, int pLine,
+                 const QString &pMessage);
+    void addItem(EditorListItem::Type pType, const QString &pMessage);
 
     int count() const;
 
     void selectFirstItem();
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void contextMenuEvent(QContextMenuEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
     QStandardItemModel *mModel;
@@ -101,7 +102,7 @@ private:
     QAction *mCopyToClipboardAction;
 
 signals:
-    void itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem);
+    void itemRequested(EditorListItem *pItem);
 
 public slots:
     void clear();

@@ -3,16 +3,16 @@ project(SBMLAPIPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libSBML)
-set(PACKAGE_VERSION 5.16.0)
+set(PACKAGE_VERSION 5.17.0)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 5)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.16.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.17.0)
 
 # Git tag for our library
 
-set(GIT_TAG v5.16.0)
+set(GIT_TAG v5.17.0)
 
 # Package repository
 
@@ -63,31 +63,31 @@ if(USE_PREBUILT_SBMLAPI_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} e45f13c13f47f6b672e5d95b0bde6a7fe8eefbbb
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 529681a0289bc9402cb8e79ff405ab51e6df7ac8
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 04079417caa3c4542acc4d04131be02d91bc42ce
-                                              efab157439ecb681c7bdec310d991af75f2437bf)
+                                  SHA1_VALUES 604b364f1b4d7ec294e408e3b2790ae059902a01
+                                              94c7394be6610b8831557bc390b0542c052ad3ab)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c61704db02f2316fc2a64d436197cce91e798dd7
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c8e180f8f97899b447a808fcfd402b82f357be33
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 319c46e94103012416adc2af82cdd24d46dbeab9
-                                              562d624ac501f8f439c7be458b27534dce2f713d)
+                                  SHA1_VALUES df6657338b75904e27be01ba8194c7d9b7cca7da
+                                              316e086388254eb24c2a61d4e0321219136dcae0)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} adc952722dbd8c5a6535d700b8e5179bf3d57b99
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7a92ce68e3e285b12854b04c59932f44df2f479b
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 1b6a911d1b8320fb57db48c78f06432bc5b4f975)
+                              SHA1_VALUES 561ba2196854e6993e537a83776014ef4b4ab4f0)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} ba10ad4f50b7a4f111a9e8bec7db7559645cc1fd
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e1efd4245977c34b525ce34ba87dccd9f4891ccd
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7b6ae4e1a6c715b01607c9a3308fc65e0d345507)
+                              SHA1_VALUES 76aadab74b4470aa0f1c612fe02c71714724d329)
     endif()
 else()
     # Download some dependencies for Windows, if needed
@@ -114,7 +114,7 @@ else()
             list(GET STATUS 0 STATUS_CODE)
 
             if(${STATUS_CODE} EQUAL 0)
-                execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_DEPENDENCIES_FILENAME}
+                execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${REAL_DEPENDENCIES_FILENAME}
                                 WORKING_DIRECTORY ${DEPENDENCIES_DIR}
                                 OUTPUT_QUIET)
                 execute_process(COMMAND ${CMAKE_COMMAND} -E rename "libSBML Dependencies-1.0.0-b1-win64" ${MODE}
@@ -160,8 +160,10 @@ else()
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLIBSBML_DEPENDENCY_DIR=${DEPENDENCIES_MODE_DIR}
+            -DWITH_BZIP2=OFF
             -DWITH_CPP_NAMESPACE=ON
             -DWITH_SWIG=OFF
+            -DWITH_ZLIB=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
@@ -171,7 +173,7 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDll
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
@@ -179,7 +181,7 @@ else()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SHARED_LIBRARY}

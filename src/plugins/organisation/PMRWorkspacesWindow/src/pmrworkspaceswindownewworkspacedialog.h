@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrWorkspacesWindowNewWorkspaceDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -47,7 +47,7 @@ class PmrWorkspacesWindowNewWorkspaceDialog : public Core::Dialog
 public:
     explicit PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings,
                                                    QWidget *pParent);
-    ~PmrWorkspacesWindowNewWorkspaceDialog();
+    ~PmrWorkspacesWindowNewWorkspaceDialog() override;
 
     virtual void retranslateUi();
 

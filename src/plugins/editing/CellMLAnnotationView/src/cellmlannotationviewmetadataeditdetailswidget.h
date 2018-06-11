@@ -104,7 +104,7 @@ public:
                                                            CellMLSupport::CellmlFile *pCellmlFile,
                                                            QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void filePermissionsChanged();
 
@@ -168,19 +168,19 @@ private:
 
     QNetworkReply *mNetworkReply;
 
-    void upudateOutputMessage(const bool &pLookUpTerm,
+    void upudateOutputMessage(bool pLookUpTerm,
                               const QString &pErrorMessage,
-                              const bool &pInternetConnectionAvailable,
+                              bool pInternetConnectionAvailable,
                               bool *pShowBusyWidget = 0);
     void updateOutputHeaders();
 
     void updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
-                        const bool &pLookUpTerm,
+                        bool pLookUpTerm,
                         const QString &pErrorMessage = QString(),
-                        const bool &pInternetConnectionAvailable = true);
+                        bool pInternetConnectionAvailable = true);
 
     void genericLookUp(const QString &pItemInformation = QString(),
-                       const InformationType &pInformationType = None);
+                       InformationType pInformationType = None);
 
     bool isDirectTerm(const QString &pTerm) const;
 
@@ -192,13 +192,13 @@ signals:
 
 public slots:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
-                   const bool &pResetItemsGui = false,
-                   const bool &pFilePermissionsChanged = false);
+                   bool pResetItemsGui = false,
+                   bool pFilePermissionsChanged = false);
+
+    void disableLookUpInformation();
 
 private slots:
     void copy();
-
-    void disableLookUpInformation();
 
     void qualifierChanged(const QString &pQualifier);
 

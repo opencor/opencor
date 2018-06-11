@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QFile>
 #include <QTimer>
+#include <QWindow>
 
 //==============================================================================
 
@@ -50,8 +51,8 @@ FileManager::FileManager() :
 
     // A connection to handle the timing out of our timer
 
-    connect(mTimer, SIGNAL(timeout()),
-            this, SLOT(checkFiles()));
+    connect(mTimer, &QTimer::timeout,
+            this, &FileManager::checkFiles);
 
     // Keep track of when OpenCOR gets/loses the focus
     // Note: the focusWindowChanged() signal comes from QGuiApplication, so we
@@ -59,8 +60,8 @@ FileManager::FileManager() :
     //       or its GUI version...
 
     if (dynamic_cast<QGuiApplication *>(QCoreApplication::instance())) {
-        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                this, SLOT(focusWindowChanged()));
+        connect(qApp, &QApplication::focusWindowChanged,
+                this, &FileManager::focusWindowChanged);
     }
 }
 
@@ -94,13 +95,13 @@ void FileManager::startStopTimer()
 
     if (   !mTimer->isActive()
         &&  opencorActive() && !mFiles.isEmpty()) {
-        disconnect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                   this, SLOT(focusWindowChanged()));
+        disconnect(qApp, &QApplication::focusWindowChanged,
+                   this, &FileManager::focusWindowChanged);
 
         checkFiles();
 
-        connect(qApp, SIGNAL(focusWindowChanged(QWindow *)),
-                this, SLOT(focusWindowChanged()));
+        connect(qApp, &QApplication::focusWindowChanged,
+                this, &FileManager::focusWindowChanged);
 
         mTimer->start(1000);
     } else if (   mTimer->isActive()
@@ -124,7 +125,7 @@ FileManager * FileManager::instance()
 //==============================================================================
 
 FileManager::Status FileManager::manage(const QString &pFileName,
-                                        const File::Type &pType,
+                                        File::Type pType,
                                         const QString &pUrl)
 {
     // Manage the given file, should it not be already managed
@@ -242,6 +243,20 @@ QString FileManager::url(const QString &pFileName) const
 
 //==============================================================================
 
+QString FileManager::fileName(const QString &pUrl) const
+{
+    // Return the given file's file name, if it is being managed
+
+    foreach (File *file, mFiles.values()) {
+        if (!pUrl.compare(file->url()))
+            return file->fileName();
+    }
+
+    return QString();
+}
+
+//==============================================================================
+
 bool FileManager::isDifferent(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is different from
@@ -350,7 +365,7 @@ void FileManager::makeNew(const QString &pFileName)
 
 //==============================================================================
 
-void FileManager::setModified(const QString &pFileName, const bool &pModified)
+void FileManager::setModified(const QString &pFileName, bool pModified)
 {
     // Set the modified state of the given file, should it be managed
 
@@ -364,7 +379,7 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 //==============================================================================
 
 void FileManager::setDependenciesModified(const QString &pFileName,
-                                          const bool &pModified)
+                                          bool pModified)
 {
     // Set the dependencies modified state of the given file, should it be
     // managed
@@ -431,7 +446,7 @@ bool FileManager::isLocked(const QString &pFileName) const
 //==============================================================================
 
 FileManager::Status FileManager::setLocked(const QString &pFileName,
-                                           const bool &pLocked)
+                                           bool pLocked)
 {
     // Set the locked status of the given file, should it be managed
 
@@ -498,6 +513,11 @@ void FileManager::reload(const QString &pFileName)
         file->reset();
 
         emit fileReloaded(fileName);
+
+        // Reset our modified state and let people know about it, if needed
+
+        if (file->setModified(false))
+            emit fileModified(fileName);
     }
 }
 
@@ -662,7 +682,7 @@ void FileManager::emitFilePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void FileManager::setCheckFilesEnabled(const bool &pCheckFilesEnabled)
+void FileManager::setCheckFilesEnabled(bool pCheckFilesEnabled)
 {
     // Specify whether we can check files
 

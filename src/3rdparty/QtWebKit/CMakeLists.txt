@@ -11,13 +11,16 @@ set(MAJOR_LIBRARY_VERSION 5)
 set(MINOR_LIBRARY_VERSION 212)
 set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.0)
 
-# Git tag for our library
+# Git tags for our libraries
 
-set(GIT_TAG v5.212.0-alpha2)
+set(GIT_TAG v5.212.0-alpha2-72cfbd7-extra)
+set(GIT_TAG_LIBJPEG 1.5.90)
+set(GIT_TAG_LIBPNG v1.6.34)
+set(GIT_TAG_ZLIB v1.2.11)
 
 # Release tag
 
-set(RELEASE_TAG v5.212.0-alpha2)
+set(RELEASE_TAG v5.212.0-alpha2-72cfbd7-extra)
 
 # Specify where our local package will be installed
 
@@ -42,11 +45,7 @@ if(WIN32)
     set(ICUIN_SHARED_LIBRARY icuin${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(ICUUC_SHARED_LIBRARY icuuc${DEBUG_TAG}${ICU_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
 elseif(APPLE)
-    set(JPEG_FILENAME libjpeg.9.dylib)
-    set(PNG_FILENAME libpng16.16.dylib)
-
-    set(QTWEBKIT_SHARED_LIBRARY_DIR QtWebKit.framework/Versions/${QT_VERSION_MAJOR})
-    set(QTWEBKIT_SHARED_LIBRARY ${QTWEBKIT_SHARED_LIBRARY_DIR}/QtWebKit)
+    set(QTWEBKIT_SHARED_LIBRARY QtWebKit.framework/Versions/${QT_VERSION_MAJOR}/QtWebKit)
     set(QTWEBKIT_IMPORT_LIBRARY ${QTWEBKIT_SHARED_LIBRARY})
 
     set(QTWEBKITWIDGETS_SHARED_LIBRARY QtWebKitWidgets.framework/Versions/${QT_VERSION_MAJOR}/QtWebKitWidgets)
@@ -88,11 +87,6 @@ if(WIN32)
         ${IMPORT_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
         ${IMPORT_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     )
-elseif(APPLE)
-    list(APPEND SHA1_FILES
-        ${SHARED_LIBRARIES_DIR}/${JPEG_FILENAME}
-        ${SHARED_LIBRARIES_DIR}/${PNG_FILENAME}
-    )
 endif()
 
 # Use the pre-built version of our package unless instructed otherwise
@@ -106,50 +100,156 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 4e12a551320fbc9ab6b967cb96f7e4451fd8efc2
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 6b0c986ad56f9cf3ac70963363cf540d8a0d5574
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 28d1cdb58863f084355864e7ce99646bc59db6fc
-                                              84f7a27c2dfa03c239b07533262387f2473b2bd1
+                                  SHA1_VALUES 010bb916e3a7f249722b0938d26d0ed656542582
+                                              85cd25ab94c275bf588432ccd75fdd01794f3f3b
                                               874175a6db51afe0902882f0b00f7855ab498c79
                                               47cb72ba7c899ca218be75dd89a0c0f900b968b8
                                               a386658900a742f31f1f08d55c0915d577af2d7e
-                                              76bf04efaa836ef76eed2b6ed22c9b2e29bb31ad
-                                              44f6e6f1106ebb1ebb3029ae0636d377ff254b8f)
+                                              8e3ce5f7def8eaf5e47ee7ae66441c4d02beaf04
+                                              cdb7055f969699db92e7d2ea9c61256c1bf5ce61)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 7270bbc47a668e383def1513a23cde7bc341b1e9
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d028b2a6aed6db705b553aac3b1069659536ad29
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES aa46f4c753aab3b514802a1404ca1d98c0260795
-                                              1c4779d99c6379a1361d22718a65b6f74e0f5ca2
+                                  SHA1_VALUES e940b8734e9e24fc691177d0c889319cd2c2867f
+                                              07d4256e33ff38686f2400ac35373095f86bce4a
                                               43497bf1a89173badccc0b945b43473cf5d5f12a
                                               2ef114df767c6fe4184ef458545ff8d71f4f4917
                                               5eeaf7c066cca05413a35bba5efc71526c46f478
-                                              13e16b8509579a170eab540d93050adde0d2f760
-                                              995567217f17abd65322dd4dcb108dedc89c1bfa)
+                                              dfedab7aa19ff1ac525b40f467679ee021969ab3
+                                              5b2832be2417c293f750babb57093e8e171f371a)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 6e1c99acef94f66adcff77f6f68d51c3c37b38e0
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 93287a9b6324dc2857b8775cfef7f332e3b29ae4
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 869f0640969325793ee1620d4c941f20050b27bd
-                                          fb40bf07a6cde27fc57122b5c47a02a8023ffd60
-                                          b45f5b149930f86ee6009e06569e4b339d45808a
-                                          3d2fd6309859eb5ba306b9c6a5be578784562a48)
+                              SHA1_VALUES 5add97d2f47b3d0b231989458abc7ba1a5b41ef7
+                                          17b3339432e9f99f9b702d4d85c04225c4d3c9d1)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} d37d37c8d537add58870b967795968bae57ddea4
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5611b118ebcadf16e9cc6a2a562d1535a54e04f5
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES a045297a97db11c3940d29b04dbc6db29931d82b
-                                          1ca7ba8178d833a09f78ef0df2e452ab43b0b9d7)
+                              SHA1_VALUES 3d81e88afd4fbc712abd4c83327605539156ed89
+                                          beb2849ef45c1b451578bebf47a93f9f94267a52)
     endif()
 else()
+    # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS
+
+    if(NOT WIN32)
+        set(DEPENDS libjpegBuild libpngBuild zlibBuild)
+
+        # JPEG
+
+        set(LIBJPEG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libturbojpeg${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        ExternalProject_Add(libjpegBuild
+            SOURCE_DIR
+                ${CMAKE_SOURCE_DIR}/ext/libjpeg-turbo
+            INSTALL_DIR
+                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/libjpeg-turbo
+            GIT_TAG
+                ${GIT_TAG_LIBJPEG}
+            CMAKE_GENERATOR
+                ${CMAKE_GENERATOR}
+            CMAKE_ARGS
+                ${CMAKE_ARGS}
+                -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+                -DENABLE_SHARED=OFF
+            BUILD_BYPRODUCTS
+                ${LIBJPEG_STATIC_LIBRARY}
+        )
+
+        # PNG
+
+        set(LIBPNG_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libpng16${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        ExternalProject_Add(libpngBuild
+            SOURCE_DIR
+                ${CMAKE_SOURCE_DIR}/ext/libpng
+            INSTALL_DIR
+                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/libpng
+            GIT_TAG
+                ${GIT_TAG_LIBPNG}
+            CMAKE_GENERATOR
+                ${CMAKE_GENERATOR}
+            CMAKE_ARGS
+                ${CMAKE_ARGS}
+                -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+                -DPNG_SHARED=OFF
+                -DPNG_TESTS=OFF
+            BUILD_BYPRODUCTS
+                ${LIBPNG_STATIC_LIBRARY}
+        )
+
+        # ZLIB
+
+        set(ZLIB_STATIC_LIBRARY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/libz${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+        ExternalProject_Add(zlibBuild
+            SOURCE_DIR
+                ${CMAKE_SOURCE_DIR}/ext/zlib
+            INSTALL_DIR
+                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            GIT_REPOSITORY
+                https://github.com/opencor/zlib
+            GIT_TAG
+                ${GIT_TAG_ZLIB}
+            CMAKE_GENERATOR
+                ${CMAKE_GENERATOR}
+            CMAKE_ARGS
+                ${CMAKE_ARGS}
+                -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+                -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            BUILD_BYPRODUCTS
+                ${ZLIB_STATIC_LIBRARY}
+        )
+    endif()
+
     # Build QtWebKit as an external project
 
     set(PACKAGE_BUILD ${PACKAGE_NAME}Build)
+
+    if(WIN32)
+        set(CMAKE_EXTRA_ARGS
+            -DFULL_LOCAL_EXTERNAL_PACKAGE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
+            -DGIT_TAG=${GIT_TAG}
+            -DICUDT_SHARED_LIBRARY=${ICUDT_SHARED_LIBRARY}
+            -DICUIN_SHARED_LIBRARY=${ICUIN_SHARED_LIBRARY}
+            -DICUUC_SHARED_LIBRARY=${ICUUC_SHARED_LIBRARY}
+        )
+    else()
+        set(CMAKE_EXTRA_ARGS
+            -DQT_BUNDLED_JPEG=ON
+            -DJPEG_INCLUDE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+            -DJPEG_LIBRARIES=${LIBJPEG_STATIC_LIBRARY}
+            -DQT_BUNDLED_PNG=ON
+            -DPNG_INCLUDE_DIRS=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+            -DPNG_LIBRARIES=${LIBPNG_STATIC_LIBRARY}
+            -DQT_BUNDLED_ZLIB=ON
+            -DZLIB_INCLUDE_DIRS=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include
+            -DZLIB_LIBRARIES=${ZLIB_STATIC_LIBRARY}
+        )
+
+        if(NOT APPLE)
+            list(APPEND CMAKE_EXTRA_ARGS
+                -DICU_ROOT_DIR=${ICU_ROOT_DIR}
+                -DICU_ICUI18N_LIBRARY=${ICU_ICUI18N_LIBRARY}
+                -DICU_ICUUC_LIBRARY=${ICU_ICUUC_LIBRARY}
+            )
+        endif()
+    endif()
 
     ExternalProject_Add(${PACKAGE_BUILD}
         SOURCE_DIR
@@ -164,6 +264,7 @@ else()
             ${CMAKE_GENERATOR}
         CMAKE_ARGS
             ${CMAKE_ARGS}
+            ${CMAKE_EXTRA_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DENABLE_ACCELERATED_2D_CANVAS=ON
@@ -197,11 +298,6 @@ else()
             -DENABLE_WEB_AUDIO=OFF
             -DENABLE_X11_TARGET=OFF
             -DENABLE_XSLT=ON
-            -DFULL_LOCAL_EXTERNAL_PACKAGE_DIR=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
-            -DGIT_TAG=${GIT_TAG}
-            -DICUDT_SHARED_LIBRARY=${ICUDT_SHARED_LIBRARY}
-            -DICUIN_SHARED_LIBRARY=${ICUIN_SHARED_LIBRARY}
-            -DICUUC_SHARED_LIBRARY=${ICUUC_SHARED_LIBRARY}
             -DPORT=Qt
             -DUSE_GSTREAMER=OFF
             -DUSE_LIBHYPHEN=OFF
@@ -212,38 +308,9 @@ else()
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/${IMPORT_LIBRARIES_DIR}/${QTWEBKIT_IMPORT_LIBRARY}
             <INSTALL_DIR>/${IMPORT_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
+        DEPENDS
+            ${DEPENDS}
     )
-
-    # Do some post-processing that is specific to each platform
-
-    if(APPLE)
-        # Copy over some libraries needed by QtWebKit package
-
-        find_package(JPEG REQUIRED)
-        find_package(PNG REQUIRED)
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibraries
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${JPEG_LIBRARY} ${JPEG_FILENAME}
-                                 COMMAND chmod 755 ${JPEG_FILENAME}
-                                 COMMAND strip -x ${JPEG_FILENAME}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${PNG_LIBRARY} ${PNG_FILENAME}
-                                 COMMAND chmod 755 ${PNG_FILENAME}
-                                 COMMAND strip -x ${PNG_FILENAME}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
-                                 DEPENDEES install)
-
-        # Fix the RPATH information
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} FixRPath
-                                 COMMAND install_name_tool -change /usr/local/opt/jpeg/lib/${JPEG_FILENAME}
-                                                                   @rpath/${JPEG_FILENAME}
-                                                                   ${QTWEBKIT_SHARED_LIBRARY}
-                                 COMMAND install_name_tool -change /usr/local/opt/libpng/lib/${PNG_FILENAME}
-                                                                   @rpath/${PNG_FILENAME}
-                                                                   ${QTWEBKIT_SHARED_LIBRARY}
-                                 WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}
-                                 DEPENDEES install)
-    endif()
 
     # Package our external project
 
@@ -296,8 +363,3 @@ set(QTWEBKIT_LIBRARIES
     ${REAL_FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SHARED_LIBRARIES_DIR}/${QTWEBKITWIDGETS_IMPORT_LIBRARY}
     PARENT_SCOPE
 )
-
-if(APPLE)
-    set(QTWEBKIT_JPEG_LIBRARY ${JPEG_FILENAME} PARENT_SCOPE)
-    set(QTWEBKIT_PNG_LIBRARY ${PNG_FILENAME} PARENT_SCOPE)
-endif()

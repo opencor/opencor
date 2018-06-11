@@ -62,11 +62,11 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
-                                                       const int &pDegree,
+                                                       int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
-                                                       const ParameterType &pType,
-                                                       const int &pIndex) :
+                                                       ParameterType pType,
+                                                       int pIndex) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),
@@ -199,9 +199,11 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
 //==============================================================================
 
-QIcon CellmlFileRuntimeParameter::icon() const
+QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
 {
-    // Return an icon that illustrates the type of a parameter
+    // Return the mapping between a parameter type and its corresponding icon
+
+    static QMap<int, QIcon> Icons = QMap<int, QIcon>();
 
     static const QIcon VoiIcon              = QIcon(":/CellMLSupport/voi.png");
     static const QIcon ConstantIcon         = QIcon(":/CellMLSupport/constant.png");
@@ -209,27 +211,28 @@ QIcon CellmlFileRuntimeParameter::icon() const
     static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
     static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
     static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
-    static const QIcon ErrorNodeIcon        = QIcon(":/oxygen/emblems/emblem-important.png");
 
-    switch (mType) {
-    case Voi:
-        return VoiIcon;
-    case Constant:
-        return ConstantIcon;
-    case ComputedConstant:
-        return ComputedConstantIcon;
-    case Rate:
-        return RateIcon;
-    case State:
-        return StateIcon;
-    case Algebraic:
-        return AlgebraicIcon;
-    default:
-        // Not a relevant type, so return an error node icon
-        // Note: we should never reach this point...
+    // Initialise the mapping, if needed
 
-        return ErrorNodeIcon;
+    if (Icons.isEmpty()) {
+        Icons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
+        Icons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
+        Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
     }
+
+    return Icons;
+}
+
+//==============================================================================
+
+QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
+{
+    // Return our corresponding icon
+
+    return icons().value(pParameterType);
 }
 
 //==============================================================================
@@ -244,389 +247,11 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     mVoi(0),
     mParameters(CellmlFileRuntimeParameters())
 {
-    // Reset (initialise, here) our properties
-
-    reset(true, false);
-}
-
-//==============================================================================
-
-CellmlFileRuntime::~CellmlFileRuntime()
-{
-    // Reset our properties
-
-    reset(false, true);
-}
-
-//==============================================================================
-
-CellmlFile * CellmlFileRuntime::cellmlFile()
-{
-    // Return our CellML file
-
-    return mCellmlFile;
-}
-
-//==============================================================================
-
-QString CellmlFileRuntime::address() const
-{
-    // Return our address as a string
-
-    return QString::number(quint64(this));
-}
-
-//==============================================================================
-
-bool CellmlFileRuntime::isValid() const
-{
-    // The runtime is valid if no issues were found
-
-    return mIssues.isEmpty();
-}
-
-//==============================================================================
-
-bool CellmlFileRuntime::needNlaSolver() const
-{
-    // Return whether the model needs an NLA solver
-
-    return mAtLeastOneNlaSystem;
-}
-
-//==============================================================================
-
-int CellmlFileRuntime::constantsCount() const
-{
-    // Return the number of constants in the model
-
-    return mConstantsCount;
-}
-
-//==============================================================================
-
-int CellmlFileRuntime::statesCount() const
-{
-    // Return the number of states in the model
-
-    return mStatesRatesCount;
-}
-
-//==============================================================================
-
-int CellmlFileRuntime::ratesCount() const
-{
-    // Return the number of rates in the model
-
-    return mStatesRatesCount;
-}
-
-//==============================================================================
-
-int CellmlFileRuntime::algebraicCount() const
-{
-    // Return the number of algebraic equations in the model
-
-    return mAlgebraicCount;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::InitializeConstantsFunction CellmlFileRuntime::initializeConstants() const
-{
-    // Return the initializeConstants function
-
-    return mInitializeConstants;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::ComputeComputedConstantsFunction CellmlFileRuntime::computeComputedConstants() const
-{
-    // Return the computeComputedConstants function
-
-    return mComputeComputedConstants;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::ComputeVariablesFunction CellmlFileRuntime::computeVariables() const
-{
-    // Return the computeVariables function
-
-    return mComputeVariables;
-}
-
-//==============================================================================
-
-CellmlFileRuntime::ComputeRatesFunction CellmlFileRuntime::computeRates() const
-{
-    // Return the computeRates function
-
-    return mComputeRates;
-}
-
-//==============================================================================
-
-CellmlFileIssues CellmlFileRuntime::issues() const
-{
-    // Return the issue(s)
-
-    return mIssues;
-}
-
-//==============================================================================
-
-CellmlFileRuntimeParameters CellmlFileRuntime::parameters() const
-{
-    // Return the parameter(s)
-
-    return mParameters;
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::resetCodeInformation()
-{
-    // Reset the code information
-    // Note: setting it to zero will automatically delete the current instance,
-    //       if any
-
-    mCodeInformation = 0;
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::resetFunctions()
-{
-    // Reset the functions
-
-    mInitializeConstants = 0;
-    mComputeComputedConstants = 0;
-    mComputeVariables = 0;
-    mComputeRates = 0;
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
-                              const bool &pResetIssues)
-{
-    // Reset all of the runtime's properties
-
-    mAtLeastOneNlaSystem = false;
-
-    resetCodeInformation();
-
-    delete mCompilerEngine;
-
-    if (pRecreateCompilerEngine)
-        mCompilerEngine = new Compiler::CompilerEngine();
-    else
-        mCompilerEngine = 0;
-
-    resetFunctions();
-
-    if (pResetIssues)
-        mIssues.clear();
-
-    if (!mParameters.contains(mVoi))
-        delete mVoi;
-
-    foreach (CellmlFileRuntimeParameter *parameter, mParameters)
-        delete parameter;
-
-    mVoi = 0;
-
-    mParameters.clear();
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo)
-{
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               tr("the model code could not be generated (%1)").arg(pExtraInfo));
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
-{
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               tr("an unknown problem occurred while trying to generate the model code"));
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
-{
-    Q_ASSERT(pCodeInformation);
-
-    // Retrieve the code information's latest error message
-
-    QString codeGenerationErrorMessage = QString::fromStdWString(pCodeInformation->errorMessage());
-
-    if (codeGenerationErrorMessage.isEmpty()) {
-        // The code generation went fine, so check the model's constraint level
-
-        iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
-
-        if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
-        } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
-        } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
-        }
-    } else {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("a problem occurred during the generation of the model code"));
-    }
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel)
-{
-    // Get a code generator bootstrap and create a code generator
-
-    ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
-    ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
-
-    // Generate some code for the model
-
-    try {
-        mCodeInformation = codeGenerator->generateCode(pModel);
-
-        // Check that the code generation went fine
-
-        checkCodeInformation(mCodeInformation);
-    } catch (iface::cellml_api::CellMLException &exception) {
-        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation)));
-    } catch (...) {
-        unknownProblemDuringModelCodeGenerationIssue();
-    }
-
-    // Check the outcome of the code generation
-
-    if (mIssues.count())
-        resetCodeInformation();
-}
-
-//==============================================================================
-
-QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
-                                      const QString &pCodeBody)
-{
-    // Generate and return the code for the given method
-
-    QString res = "void "+pCodeSignature+"\n"
-                  "{\n";
-
-    if (!pCodeBody.isEmpty()) {
-        res += pCodeBody;
-
-        if (!pCodeBody.endsWith('\n'))
-            res += '\n';
-    }
-
-    res += "}\n\n";
-
-    return res;
-}
-
-//==============================================================================
-
-QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
-                                      const std::wstring &pCodeBody)
-{
-    // Generate and return the code for the given method
-
-    return methodCode(pCodeSignature, cleanCode(pCodeBody));
-}
-
-//==============================================================================
-
-QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLElement *pElement)
-{
-    // Make sure that we have a given element
-
-    if (!pElement)
-        return QStringList();
-
-    // Try to retrieve the component that owns the given element, unless the
-    // given element is a component itself (which will be the case when we come
-    // here through recursion)
-
-    ObjRef<iface::cellml_api::CellMLComponent> component = QueryInterface(pElement);
-    ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
-    ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
-
-    if (!component && !parentComponent) {
-        // The element isn't a component and neither is its parent, so it
-        // doesn't have a hierarchy
-
-        return QStringList();
-    }
-
-    // Recursively retrieve the component hierarchy of the given element's
-    // encapsulation parent, if any
-
-    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
-
-    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString(component?component->name():parentComponent->name());
-}
-
-//==============================================================================
-
-QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
-{
-    // Remove all the comments from the given code and return the resulting
-    // cleaned up code
-
-    static const QRegularExpression CommentRegEx = QRegularExpression("^/\\*.*\\*/$");
-
-    QString res = QString();
-
-    foreach (const QString &code, QString::fromStdWString(pCode).split("\r\n")) {
-        if (!CommentRegEx.match(code.trimmed()).hasMatch())
-            res += (res.isEmpty()?QString():"\n")+code;
-    }
-
-    // Further clean up the given code by removing any reference to a 'return'
-    // value)
-
-    res.remove(", int* pret");
-    res.remove(", pret");
-
-    res.remove("#define pret rfi->aPRET\n");
-    res.remove("#undef pret\n");
-    res.remove("  rfi.aPRET = pret;\n");
-
-    // Also rename do_nonlinearsolve() to doNonLinearSolve() since CellML's CIS
-    // service already defines do_nonlinearsolve() and, yet, we want to use our
-    // own non-linear solve routine defined in our Solver interface, and add a
-    // new parameter to all our calls to doNonLinearSolve() so that
-    // doNonLinearSolve() can retrieve the correct instance of our NLA solver
-
-    res.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
-
-    return res;
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::update()
-{
     // Reset the runtime's properties
 
     reset(true, true);
 
-    // Retrieve the ML model associated with the CellML file
+    // Retrieve the CellML model associated with the CellML file
 
     iface::cellml_api::Model *model = mCellmlFile->model();
 
@@ -714,7 +339,7 @@ void CellmlFileRuntime::update()
 
         // Determine the type of our computation target
 
-        CellmlFileRuntimeParameter::ParameterType parameterType;
+        CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::Unknown;
 
         switch (computationTarget->type()) {
         case iface::cellml_services::VARIABLE_OF_INTEGRATION:
@@ -917,6 +542,374 @@ void CellmlFileRuntime::update()
             reset(true, false);
         }
     }
+}
+
+//==============================================================================
+
+CellmlFileRuntime::~CellmlFileRuntime()
+{
+    // Reset our properties
+
+    reset(false, true);
+}
+
+//==============================================================================
+
+CellmlFile * CellmlFileRuntime::cellmlFile()
+{
+    // Return our CellML file
+
+    return mCellmlFile;
+}
+
+//==============================================================================
+
+QString CellmlFileRuntime::address() const
+{
+    // Return our address as a string
+
+    return QString::number(quint64(this));
+}
+
+//==============================================================================
+
+bool CellmlFileRuntime::isValid() const
+{
+    // The runtime is valid if no issues were found
+
+    return mIssues.isEmpty();
+}
+
+//==============================================================================
+
+bool CellmlFileRuntime::needNlaSolver() const
+{
+    // Return whether the model needs an NLA solver
+
+    return mAtLeastOneNlaSystem;
+}
+
+//==============================================================================
+
+int CellmlFileRuntime::constantsCount() const
+{
+    // Return the number of constants in the model
+
+    return mConstantsCount;
+}
+
+//==============================================================================
+
+int CellmlFileRuntime::statesCount() const
+{
+    // Return the number of states in the model
+
+    return mStatesRatesCount;
+}
+
+//==============================================================================
+
+int CellmlFileRuntime::ratesCount() const
+{
+    // Return the number of rates in the model
+
+    return mStatesRatesCount;
+}
+
+//==============================================================================
+
+int CellmlFileRuntime::algebraicCount() const
+{
+    // Return the number of algebraic equations in the model
+
+    return mAlgebraicCount;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::InitializeConstantsFunction CellmlFileRuntime::initializeConstants() const
+{
+    // Return the initializeConstants function
+
+    return mInitializeConstants;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeComputedConstantsFunction CellmlFileRuntime::computeComputedConstants() const
+{
+    // Return the computeComputedConstants function
+
+    return mComputeComputedConstants;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeVariablesFunction CellmlFileRuntime::computeVariables() const
+{
+    // Return the computeVariables function
+
+    return mComputeVariables;
+}
+
+//==============================================================================
+
+CellmlFileRuntime::ComputeRatesFunction CellmlFileRuntime::computeRates() const
+{
+    // Return the computeRates function
+
+    return mComputeRates;
+}
+
+//==============================================================================
+
+CellmlFileIssues CellmlFileRuntime::issues() const
+{
+    // Return the issue(s)
+
+    return mIssues;
+}
+
+//==============================================================================
+
+CellmlFileRuntimeParameters CellmlFileRuntime::parameters() const
+{
+    // Return the parameter(s)
+
+    return mParameters;
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::resetCodeInformation()
+{
+    // Reset the code information
+    // Note: setting it to zero will automatically delete the current instance,
+    //       if any
+
+    mCodeInformation = 0;
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::resetFunctions()
+{
+    // Reset the functions
+
+    mInitializeConstants = 0;
+    mComputeComputedConstants = 0;
+    mComputeVariables = 0;
+    mComputeRates = 0;
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
+{
+    // Reset all of the runtime's properties
+
+    mAtLeastOneNlaSystem = false;
+
+    resetCodeInformation();
+
+    delete mCompilerEngine;
+
+    if (pRecreateCompilerEngine)
+        mCompilerEngine = new Compiler::CompilerEngine();
+    else
+        mCompilerEngine = 0;
+
+    resetFunctions();
+
+    if (pResetIssues)
+        mIssues.clear();
+
+    if (!mParameters.contains(mVoi))
+        delete mVoi;
+
+    foreach (CellmlFileRuntimeParameter *parameter, mParameters)
+        delete parameter;
+
+    mVoi = 0;
+
+    mParameters.clear();
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo)
+{
+    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                               tr("the model code could not be generated (%1)").arg(pExtraInfo));
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
+{
+    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                               tr("an unknown problem occurred while trying to generate the model code"));
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
+{
+    Q_ASSERT(pCodeInformation);
+
+    // Retrieve the code information's latest error message
+
+    QString errorMessage = QString::fromStdWString(pCodeInformation->errorMessage());
+
+    if (errorMessage.isEmpty()) {
+        // The code generation went fine, so check the model's constraint level
+
+        iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
+
+        if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
+        } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
+        } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
+        }
+    } else {
+        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage, false)));
+    }
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel)
+{
+    // Get a code generator bootstrap and create a code generator
+
+    ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
+    ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
+
+    // Generate some code for the model
+
+    try {
+        mCodeInformation = codeGenerator->generateCode(pModel);
+
+        // Check that the code generation went fine
+
+        checkCodeInformation(mCodeInformation);
+    } catch (iface::cellml_api::CellMLException &exception) {
+        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation), false));
+    } catch (...) {
+        unknownProblemDuringModelCodeGenerationIssue();
+    }
+
+    // Check the outcome of the code generation
+
+    if (mIssues.count())
+        resetCodeInformation();
+}
+
+//==============================================================================
+
+QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
+                                      const QString &pCodeBody)
+{
+    // Generate and return the code for the given method
+
+    QString res = "void "+pCodeSignature+"\n"
+                  "{\n";
+
+    if (!pCodeBody.isEmpty()) {
+        res += pCodeBody;
+
+        if (!pCodeBody.endsWith('\n'))
+            res += '\n';
+    }
+
+    res += "}\n\n";
+
+    return res;
+}
+
+//==============================================================================
+
+QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
+                                      const std::wstring &pCodeBody)
+{
+    // Generate and return the code for the given method
+
+    return methodCode(pCodeSignature, cleanCode(pCodeBody));
+}
+
+//==============================================================================
+
+QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLElement *pElement)
+{
+    // Make sure that we have a given element
+
+    if (!pElement)
+        return QStringList();
+
+    // Try to retrieve the component that owns the given element, unless the
+    // given element is a component itself (which will be the case when we come
+    // here through recursion)
+
+    ObjRef<iface::cellml_api::CellMLComponent> component = QueryInterface(pElement);
+    ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
+    ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
+
+    if (!component && !parentComponent) {
+        // The element isn't a component and neither is its parent, so it
+        // doesn't have a hierarchy
+
+        return QStringList();
+    }
+
+    // Recursively retrieve the component hierarchy of the given element's
+    // encapsulation parent, if any
+
+    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
+
+    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString(component?component->name():parentComponent->name());
+}
+
+//==============================================================================
+
+QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
+{
+    // Remove all the comments from the given code and return the resulting
+    // cleaned up code
+
+    static const QRegularExpression CommentRegEx = QRegularExpression("^/\\*.*\\*/$");
+
+    QString res = QString();
+
+    foreach (const QString &code, QString::fromStdWString(pCode).split("\r\n")) {
+        if (!CommentRegEx.match(code.trimmed()).hasMatch())
+            res += (res.isEmpty()?QString():"\n")+code;
+    }
+
+    // Further clean up the given code by removing any reference to a 'return'
+    // value)
+
+    res.remove(", int* pret");
+    res.remove(", pret");
+
+    res.remove("#define pret rfi->aPRET\n");
+    res.remove("#undef pret\n");
+    res.remove("  rfi.aPRET = pret;\n");
+
+    // Also rename do_nonlinearsolve() to doNonLinearSolve() since CellML's CIS
+    // service already defines do_nonlinearsolve() and, yet, we want to use our
+    // own non-linear solve routine defined in our Solver interface, and add a
+    // new parameter to all our calls to doNonLinearSolve() so that
+    // doNonLinearSolve() can retrieve the correct instance of our NLA solver
+
+    res.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
+
+    return res;
 }
 
 //==============================================================================

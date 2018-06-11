@@ -41,7 +41,7 @@ class QTextEdit;
 
 namespace Ui {
     class EditorWidgetFindReplaceWidget;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -50,21 +50,25 @@ namespace EditorWidget {
 
 //==============================================================================
 
+class EditorWidget;
+
+//==============================================================================
+
 class EditorWidgetFindReplaceWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
-    explicit EditorWidgetFindReplaceWidget(QWidget *pParent);
-    ~EditorWidgetFindReplaceWidget();
+    explicit EditorWidgetFindReplaceWidget(EditorWidget *pParent);
+    ~EditorWidgetFindReplaceWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     bool isCaseSensitive() const;
     bool searchWholeWordsOnly() const;
     bool useRegularExpression() const;
 
-    void setReadOnly(const bool &pReadOnly);
+    void setReadOnly(bool pReadOnly);
 
     void updateFrom(EditorWidgetFindReplaceWidget *pFindReplace);
 
@@ -77,19 +81,18 @@ public:
 
     QString replaceText() const;
 
-    bool findEditHasFocus() const;
-    bool replaceEditHasFocus() const;
-
     bool isActive() const;
-    void setActive(const bool &pActive);
+    void setActive(bool pActive);
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void keyPressEvent(QKeyEvent *pEvent);
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void keyPressEvent(QKeyEvent *pEvent) override;
+    void resizeEvent(QResizeEvent *pEvent) override;
 
 private:
     Ui::EditorWidgetFindReplaceWidget *mGui;
+
+    EditorWidget *mOwner;
 
     QAction *mDropDownAction;
 
@@ -106,26 +109,26 @@ private:
     void updateStyleSheet();
 
 signals:
-    void keyPressed(QKeyEvent *pEvent, bool &pHandled);
-
     void findTextChanged(const QString &pText);
 
-    void canFindReplace(const bool &pCanFindReplace);
+    void canFindReplace(bool pCanFindReplace);
 
-    void findPreviousRequested();
     void findNextRequested();
+    void findPreviousRequested();
 
     void replaceRequested();
     void replaceAndFindRequested();
     void replaceAllRequested();
 
-private slots:
-    void on_findPreviousButton_clicked();
-    void on_findNextButton_clicked();
+    void searchOptionsChanged();
 
-    void on_replaceButton_clicked();
-    void on_replaceAndFindButton_clicked();
-    void on_replaceAllButton_clicked();
+private slots:
+    void findPreviousButtonClicked();
+    void findNextButtonClicked();
+
+    void replaceButtonClicked();
+    void replaceAndFindButtonClicked();
+    void replaceAllButtonClicked();
 
     void searchOptionChanged();
 

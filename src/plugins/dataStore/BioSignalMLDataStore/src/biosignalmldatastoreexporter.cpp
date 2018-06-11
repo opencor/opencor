@@ -129,7 +129,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
             foreach (DataStore::DataStoreVariable *variable, variables)
                 (*signalArray)[++j]->set_label(variable->label().toStdString());
 
-            double *data = new double[variables.count()*BufferRows];
+            double *data = new double[variables.count()*BufferRows] {};
             double *dataPointer = data;
             int rowCount = 0;
 

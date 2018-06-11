@@ -51,7 +51,7 @@ macro(add_plugin PLUGIN_NAME)
     set(OPTIONS)
     set(ONE_VALUE_KEYWORDS
         EXTERNAL_BINARIES_DIR
-        EXTERNAL_DEST_DIR
+        EXTERNAL_DESTINATION_DIR
         EXTERNAL_SOURCE_DIR
     )
     set(MULTI_VALUE_KEYWORDS
@@ -269,13 +269,14 @@ macro(add_plugin PLUGIN_NAME)
 
     # Check whether an external package has files to install
 
-    if(    NOT "${ARG_EXTERNAL_DEST_DIR}" STREQUAL ""
+    if(    NOT "${ARG_EXTERNAL_DESTINATION_DIR}" STREQUAL ""
        AND NOT "${ARG_EXTERNAL_SOURCE_DIR}" STREQUAL "")
+
         # Copy the entire source directory to the destination
 
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_EXTERNAL_SOURCE_DIR}
-                                                                      ${FULL_DEST_EXTERNAL_BASE_DIR}/${ARG_EXTERNAL_DEST_DIR})
+                                                                      ${ARG_EXTERNAL_DESTINATION_DIR})
     endif()
 
     # System binaries
@@ -322,10 +323,13 @@ macro(add_plugin PLUGIN_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
-    # Clean up our plugin, if we are on macOS
+    # Clean up our plugin, if we are on macOS, our make sure that it uses RPATH
+    # rather than RUNPATH on Linux
 
     if(APPLE)
         macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
+    elseif(NOT WIN32)
+        runpath2rpath(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
     endif()
 
     # Package the plugin, but only if we are not on macOS since it will have
@@ -585,35 +589,45 @@ endmacro()
 
 #===============================================================================
 
-macro(runpath2rpath FILENAME)
+macro(runpath2rpath PROJECT_TARGET FILENAME)
     # Convert the RUNPATH value, if any, of the given ELF file to an RPATH value
 
-    execute_process(COMMAND ${RUNPATH2RPATH} ${FILENAME}
-                    RESULT_VARIABLE RESULT)
+    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+        execute_process(COMMAND ${RUNPATH2RPATH} ${FILENAME}
+                        RESULT_VARIABLE RESULT)
 
-    if(NOT RESULT EQUAL 0)
-        message(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to an RPATH value...")
+        if(NOT RESULT EQUAL 0)
+            message(FATAL_ERROR "The RUNPATH value of '${FILENAME}' could not be converted to an RPATH value...")
+        endif()
+    else()
+        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND ${RUNPATH2RPATH} ${FILENAME})
     endif()
 endmacro()
 
 #===============================================================================
 
-macro(linux_deploy_qt_library DIRNAME FILENAME)
+macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
     # Copy the Qt library to the build/lib folder, so we can test things without
     # first having to deploy OpenCOR
     # Note: this is particularly useful when the Linux machine has different
     #       versions of Qt...
 
-    copy_file_to_build_dir(DIRECT ${DIRNAME} lib ${FILENAME})
+    copy_file_to_build_dir(${PROJECT_TARGET} ${DIRNAME} lib ${FILENAME})
 
     # Make sure that the RUNPATH value is converted to an RPATH value
 
-    runpath2rpath(lib/${FILENAME})
+    runpath2rpath(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
 
     # Strip the Qt library of all its local symbols
 
     if(RELEASE_MODE)
-        execute_process(COMMAND strip -x lib/${FILENAME})
+        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
+        else()
+            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
+        endif()
     endif()
 
     # Deploy the Qt library
@@ -636,12 +650,12 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
 
         # Make sure that the RUNPATH value is converted to an RPATH value
 
-        runpath2rpath(${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+        runpath2rpath(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all its local symbols
 
         if(RELEASE_MODE)
-            execute_process(COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         endif()
 
         # Deploy the Qt plugin
@@ -649,6 +663,25 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
         install(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME}
                 DESTINATION ${PLUGIN_DEST_DIRNAME})
     endforeach()
+endmacro()
+
+#===============================================================================
+
+macro(linux_deploy_system_library FILENAME NEW_FILENAME)
+    # Copy the system library to the build/lib folder, so we can test things
+    # without first having to deploy OpenCOR
+
+    get_filename_component(REAL_FULL_FILENAME ${FILENAME} REALPATH)
+    get_filename_component(REAL_DIRNAME ${REAL_FULL_FILENAME} DIRECTORY)
+    get_filename_component(REAL_FILENAME ${REAL_FULL_FILENAME} NAME)
+
+    copy_file_to_build_dir(DIRECT ${REAL_DIRNAME} lib ${REAL_FILENAME} ${NEW_FILENAME})
+
+    # Deploy the system library
+
+    install(FILES ${REAL_FULL_FILENAME}
+            DESTINATION lib
+            RENAME ${NEW_FILENAME})
 endmacro()
 
 #===============================================================================
@@ -684,20 +717,13 @@ macro(macos_clean_up_file_with_qt_dependencies PROJECT_TARGET DIRNAME FILENAME)
 
     macos_clean_up_file(${PROJECT_TARGET} ${DIRNAME} ${FILENAME})
 
-    # Make sure that the file refers to our embedded copy of the Qt libraries,
-    # but only if we are not on Travis CI (since we don't embed the Qt libraries
-    # in that case; see the main CMakeLists.txt file)
+    # Make sure that the file refers to our embedded copy of the Qt libraries
 
     foreach(MACOS_QT_LIBRARY ${MACOS_QT_LIBRARIES})
         set(MACOS_QT_LIBRARY_FILENAME ${MACOS_QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${MACOS_QT_LIBRARY})
 
-        if(ENABLE_TRAVIS_CI)
-            set(OLD_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
-            set(NEW_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
-        else()
-            set(OLD_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
-            set(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
-        endif()
+        set(OLD_REFERENCE ${QT_LIBRARY_DIR}/${MACOS_QT_LIBRARY_FILENAME})
+        set(NEW_REFERENCE @rpath/${MACOS_QT_LIBRARY_FILENAME})
 
         if("${PROJECT_TARGET}" STREQUAL "DIRECT")
             execute_process(COMMAND install_name_tool -change ${OLD_REFERENCE} ${NEW_REFERENCE} ${FULL_FILENAME})
@@ -738,16 +764,6 @@ macro(macos_deploy_qt_library LIBRARY_NAME)
     macos_deploy_qt_file(${REAL_QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
                          ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                          ${LIBRARY_NAME})
-
-    # Special case for the QtWebKit library, which also needs its JPEG and PNG
-    # libraries to be deployed
-
-    if("${LIBRARY_NAME}" STREQUAL "${QTWEBKIT}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${REAL_QT_LIBRARY_DIR}/${QTWEBKIT_JPEG_LIBRARY}
-                                                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QTWEBKIT_JPEG_LIBRARY})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${REAL_QT_LIBRARY_DIR}/${QTWEBKIT_PNG_LIBRARY}
-                                                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QTWEBKIT_PNG_LIBRARY})
-    endif()
 endmacro()
 
 #===============================================================================
@@ -994,8 +1010,12 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
 
     # Create our destination folder, if needed
 
-    string(REPLACE "${PLATFORM_DIR}" "ext"
-           REAL_DIRNAME "${CMAKE_SOURCE_DIR}/${DIRNAME}")
+    set(REAL_DIRNAME ${CMAKE_SOURCE_DIR}/${DIRNAME}/ext)
+
+    string(REGEX REPLACE "${REMOTE_EXTERNAL_PACKAGE_DIR}/ext$" "${LOCAL_EXTERNAL_PACKAGE_DIR}"
+           REAL_DIRNAME "${REAL_DIRNAME}")
+    string(REGEX REPLACE "${PLATFORM_DIR}/ext$" "ext"
+           REAL_DIRNAME "${REAL_DIRNAME}")
 
     if(NOT EXISTS ${REAL_DIRNAME})
         file(MAKE_DIRECTORY ${REAL_DIRNAME})
@@ -1046,7 +1066,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
                 message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
             endif()
 
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${FULL_COMPRESSED_FILENAME}
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${FULL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME}
                             OUTPUT_QUIET)
 

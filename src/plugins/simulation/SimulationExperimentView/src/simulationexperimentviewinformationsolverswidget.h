@@ -76,9 +76,9 @@ class SimulationExperimentViewInformationSolversWidget : public Core::PropertyEd
 
 public:
     explicit SimulationExperimentViewInformationSolversWidget(QWidget *pParent);
-    ~SimulationExperimentViewInformationSolversWidget();
+    ~SimulationExperimentViewInformationSolversWidget() override;
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(SimulationSupport::Simulation *pSimulation);
 
@@ -98,16 +98,16 @@ private:
 
     void updateSolverGui(SimulationExperimentViewInformationSolversWidgetData *pSolverData);
 
-    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(const Solver::Type &pSolverType);
+    SimulationExperimentViewInformationSolversWidgetData * addSolverProperties(Solver::Type pSolverType);
 
-    void doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
-                         const QString &pSolverName);
+    void solverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
+                       const QString &pSolverName);
 
     void setPropertiesUnit(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
                            const QString &pVoiUnit);
 
 private slots:
-    void solverChanged(OpenCOR::Core::Property *pProperty);
+    void solverChanged(Core::Property *pProperty);
 };
 
 //==============================================================================

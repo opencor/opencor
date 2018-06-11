@@ -44,10 +44,10 @@ class BusyWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BusyWidget(QWidget *pParent, const double &pProgress);
+    explicit BusyWidget(QWidget *pParent, double pProgress);
 
     int fps() const;
-    void setFps(const int &pFps);
+    void setFps(int pFps);
 
     QColor foregroundColor() const;
     void setForegroundColor(const QColor &pForegroundColor);
@@ -56,36 +56,36 @@ public:
     void setBackgroundColor(const QColor &pBackgroundColor);
 
     double backgroundRoundness() const;
-    void setBackgroundRoundness(const double &pBackgroundRoundness);
+    void setBackgroundRoundness(double pBackgroundRoundness);
 
     int count() const;
-    void setCount(const int &pCount);
+    void setCount(int pCount);
 
     int length() const;
-    void setLength(const int &pLength);
+    void setLength(int pLength);
 
     int thickness() const;
-    void setThickness(const int &pThickness);
+    void setThickness(int pThickness);
 
     double roundness() const;
-    void setRoundness(const double &pRoundness);
+    void setRoundness(double pRoundness);
 
     int trail() const;
-    void setTrail(const int &pTrail);
+    void setTrail(int pTrail);
 
     double opacity() const;
-    void setOpacity(const double &pOpacity);
+    void setOpacity(double pOpacity);
 
     int radius() const;
-    void setRadius(const int &pRadius);
+    void setRadius(int pRadius);
 
     double progress() const;
-    void setProgress(const double &pProgress);
+    void setProgress(double pProgress);
 
     void resize();
 
 protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void paintEvent(QPaintEvent *pEvent) override;
 
 private:
     QWidget *mParent;

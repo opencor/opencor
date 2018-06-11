@@ -98,10 +98,10 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Show/hide the relevant properties
 
-    doSolverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
+    solverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
 
     if (mNlaSolverData)
-        doSolverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
+        solverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
 
     // Expand all our properties
 
@@ -109,8 +109,8 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Keep track of changes to list properties
 
-    connect(this, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(solverChanged(OpenCOR::Core::Property *)));
+    connect(this, &SimulationExperimentViewInformationSolversWidget::propertyChanged,
+            this, QOverload<Core::Property *>::of(&SimulationExperimentViewInformationSolversWidget::solverChanged));
 }
 
 //==============================================================================
@@ -176,7 +176,7 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
 
 //==============================================================================
 
-SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::addSolverProperties(const Solver::Type &pSolverType)
+SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewInformationSolversWidget::addSolverProperties(Solver::Type pSolverType)
 {
     // Retrieve the name of the solvers which type is the one in which we are
     // interested
@@ -453,8 +453,8 @@ void SimulationExperimentViewInformationSolversWidget::updateGui(SimulationExper
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSolversWidget::doSolverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
-                                                                       const QString &pSolverName)
+void SimulationExperimentViewInformationSolversWidget::solverChanged(SimulationExperimentViewInformationSolversWidgetData *pSolverData,
+                                                                     const QString &pSolverName)
 {
     // Make sure that we have some solver data
 
@@ -476,7 +476,7 @@ void SimulationExperimentViewInformationSolversWidget::doSolverChanged(Simulatio
 
 //==============================================================================
 
-void SimulationExperimentViewInformationSolversWidget::solverChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Property *pProperty)
 {
     // Try, for the ODE/NLA solvers list property, to handle the change in the
     // list property
@@ -486,10 +486,10 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(OpenCOR::Co
     //       solver)...
 
     if (!pProperty->row()) {
-        doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
-                            mOdeSolverData:
-                            mNlaSolverData,
-                        pProperty->value());
+        solverChanged((pProperty == mOdeSolverData->solversListProperty())?
+                          mOdeSolverData:
+                          mNlaSolverData,
+                      pProperty->value());
     }
 }
 

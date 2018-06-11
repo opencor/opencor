@@ -117,7 +117,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mGraphPanelsWidgetSizes(QIntList()),
     mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
-    mNeedReloadView(false),
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
 {
@@ -130,18 +129,18 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mSimulation = simulationManager->simulation(pFileName);
 
-    connect(mSimulation, SIGNAL(running(const bool &)),
-            this, SLOT(simulationRunning(const bool &)));
-    connect(mSimulation, SIGNAL(paused()),
-            this, SLOT(simulationPaused()));
-    connect(mSimulation, SIGNAL(stopped(const qint64 &)),
-            this, SLOT(simulationStopped(const qint64 &)));
+    connect(mSimulation, &SimulationSupport::Simulation::running,
+            this, &SimulationExperimentViewSimulationWidget::simulationRunning);
+    connect(mSimulation, &SimulationSupport::Simulation::paused,
+            this, &SimulationExperimentViewSimulationWidget::simulationPaused);
+    connect(mSimulation, &SimulationSupport::Simulation::stopped,
+            this, &SimulationExperimentViewSimulationWidget::simulationStopped);
 
-    connect(mSimulation, SIGNAL(error(const QString &)),
-            this, SLOT(simulationError(const QString &)));
+    connect(mSimulation, &SimulationSupport::Simulation::error,
+            this, QOverload<const QString &>::of(&SimulationExperimentViewSimulationWidget::simulationError));
 
-    connect(mSimulation->data(), SIGNAL(modified(const bool &)),
-            this, SLOT(simulationDataModified(const bool &)));
+    connect(mSimulation->data(), &SimulationSupport::SimulationData::modified,
+            this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
 
     // Create a tool bar
 
@@ -152,11 +151,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
-                                            QKeySequence(Qt::CTRL|Qt::Key_F2), mToolBarWidget);
+                                            QKeySequence(Qt::ControlModifier|Qt::Key_F2), mToolBarWidget);
     mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
                                                   mToolBarWidget);
-    mClearSimulationDataAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
-                                                 mToolBarWidget);
+    mClearSimulationResultsAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
+                                                    mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
                                              mToolBarWidget);
     mAddGraphPanelAction = Core::newAction(QIcon(":/oxygen/actions/list-add.png"),
@@ -175,45 +174,45 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSedmlExportCombineArchiveAction = (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)?
                                            Core::newAction(mToolBarWidget):
                                            0;
-    mSimulationDataExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
+    mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
 
     mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
     mSedmlExportAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive);
 
-    connect(mRunPauseResumeSimulationAction, SIGNAL(triggered(bool)),
-            this, SLOT(runPauseResumeSimulation()));
-    connect(mStopSimulationAction, SIGNAL(triggered(bool)),
-            this, SLOT(stopSimulation()));
-    connect(mResetModelParametersAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetModelParameters()));
-    connect(mClearSimulationDataAction, SIGNAL(triggered(bool)),
-            this, SLOT(clearSimulationData()));
-    connect(mDevelopmentModeAction, SIGNAL(triggered(bool)),
-            this, SLOT(developmentMode()));
-    connect(mAddGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(addGraphPanel()));
-    connect(mRemoveGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeGraphPanel()));
-    connect(mRemoveCurrentGraphPanelAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeCurrentGraphPanel()));
-    connect(mRemoveAllGraphPanelsAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeAllGraphPanels()));
-    connect(mCellmlOpenAction, SIGNAL(triggered(bool)),
-            this, SLOT(openCellmlFile()));
-    connect(mSedmlExportAction, SIGNAL(triggered(bool)),
+    connect(mRunPauseResumeSimulationAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::runPauseResumeSimulation);
+    connect(mStopSimulationAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::stopSimulation);
+    connect(mResetModelParametersAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
+    connect(mClearSimulationResultsAction, &QAction::triggered,
+            this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::clearSimulationResults));
+    connect(mDevelopmentModeAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::developmentMode);
+    connect(mAddGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::addGraphPanel);
+    connect(mRemoveGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::removeGraphPanel);
+    connect(mRemoveCurrentGraphPanelAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel);
+    connect(mRemoveAllGraphPanelsAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::removeAllGraphPanels);
+    connect(mCellmlOpenAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
+    connect(mSedmlExportAction, &QAction::triggered,
             this, mSedmlExportSedmlFileAction?
-                      SLOT(sedmlExportSedmlFile()):
-                      SLOT(sedmlExportCombineArchive()));
+                      QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile):
+                      QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive));
 
     if (mSedmlExportSedmlFileAction) {
-        connect(mSedmlExportSedmlFileAction, SIGNAL(triggered(bool)),
-                this, SLOT(sedmlExportSedmlFile()));
+        connect(mSedmlExportSedmlFileAction, &QAction::triggered,
+                this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile));
     }
 
     if (mSedmlExportCombineArchiveAction) {
-        connect(mSedmlExportCombineArchiveAction, SIGNAL(triggered(bool)),
-                this, SLOT(sedmlExportCombineArchive()));
+        connect(mSedmlExportCombineArchiveAction, &QAction::triggered,
+                this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive));
     }
 
     // Enable/disable our development mode action depending on whether our file
@@ -242,8 +241,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     delaySpaceWidget->setFixedWidth(4);
 #endif
 
-    connect(mDelayWidget, SIGNAL(valueChanged(double)),
-            this, SLOT(updateDelayValue(const double &)));
+    connect(mDelayWidget, &QwtWheel::valueChanged,
+            this, &SimulationExperimentViewSimulationWidget::updateDelayValue);
 
     mDelayWidget->setValue(0.0);
 
@@ -273,8 +272,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
         mCellmlBasedViewPlugins.insert(action, cellmlEditingViewPlugin);
 
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(openCellmlFile()));
+        connect(action, &QAction::triggered,
+                this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
     cellmlOpenDropDownMenu->addSeparator();
@@ -286,8 +285,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
         mCellmlBasedViewPlugins.insert(action, cellmlSimulationViewPlugin);
 
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(openCellmlFile()));
+        connect(action, &QAction::triggered,
+                this, &SimulationExperimentViewSimulationWidget::openCellmlFile);
     }
 
     QToolButton *sedmlExportToolButton = new QToolButton(mToolBarWidget);
@@ -303,22 +302,22 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     if (mSedmlExportCombineArchiveAction)
         sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
 
-    QToolButton *simulationDataExportToolButton = new QToolButton(mToolBarWidget);
+    QToolButton *simulationResultsExportToolButton = new QToolButton(mToolBarWidget);
 
-    mSimulationDataExportDropDownMenu = new QMenu(simulationDataExportToolButton);
+    mSimulationResultsExportDropDownMenu = new QMenu(simulationResultsExportToolButton);
 
-    simulationDataExportToolButton->setDefaultAction(mSimulationDataExportAction);
-    simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
-    simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
+    simulationResultsExportToolButton->setDefaultAction(mSimulationResultsExportAction);
+    simulationResultsExportToolButton->setMenu(mSimulationResultsExportDropDownMenu);
+    simulationResultsExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
     foreach (DataStoreInterface *dataStoreInterface, Core::dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
-        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreName+"...");
+        QAction *action = mSimulationResultsExportDropDownMenu->addAction(dataStoreName+"...");
 
         mDataStoreInterfaces.insert(action, dataStoreInterface);
 
-        connect(action, SIGNAL(triggered()),
-                this, SLOT(simulationDataExport()));
+        connect(action, &QAction::triggered,
+                this, &SimulationExperimentViewSimulationWidget::simulationResultsExport);
     }
 
     updateDataStoreActions();
@@ -329,7 +328,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addAction(mStopSimulationAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mResetModelParametersAction);
-    mToolBarWidget->addAction(mClearSimulationDataAction);
+    mToolBarWidget->addAction(mClearSimulationResultsAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -346,7 +345,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(simulationDataExportToolButton);
+    mToolBarWidget->addWidget(simulationResultsExportToolButton);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -368,8 +367,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mSplitterWidget = new Core::SplitterWidget(Qt::Vertical, this);
 
-    connect(mSplitterWidget, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(emitSplitterMoved()));
+    connect(mSplitterWidget, &Core::SplitterWidget::splitterMoved,
+            this, &SimulationExperimentViewSimulationWidget::emitSplitterMoved);
 
     // Create our contents widget
 
@@ -381,52 +380,52 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
-    connect(informationWidget->solversWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(solversPropertyChanged(OpenCOR::Core::Property *)));
+    connect(informationWidget->simulationWidget(), &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
+    connect(informationWidget->solversWidget(), &SimulationExperimentViewInformationSolversWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::solversPropertyChanged);
 
     // Keep track of the addition and removal of a graph panel
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
-            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
-    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphPanelAndGraphsWidget, SLOT(finalize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *, bool>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelRemoved,
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize));
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)),
-            this, SLOT(graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const bool &)));
-    connect(graphPanelsWidget, SIGNAL(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            this, SLOT(graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
+            this, &SimulationExperimentViewSimulationWidget::graphPanelAdded);
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelRemoved,
+            this, &SimulationExperimentViewSimulationWidget::graphPanelRemoved);
 
     // Keep track of whether a graph panel has been activated
 
-    connect(graphPanelsWidget, SIGNAL(graphPanelActivated(OpenCOR::GraphPanelWidget::GraphPanelWidget *)),
-            graphPanelAndGraphsWidget, SLOT(initialize(OpenCOR::GraphPanelWidget::GraphPanelWidget *)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelActivated,
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
 
     // Keep track of whether a graph panel has been resized
 
-    connect(graphPanelsWidget, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(checkGraphPanelsAndGraphs()));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::splitterMoved,
+            this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs);
 
     // Keep track of a graph being required
 
-    connect(informationWidget->parametersWidget(), SIGNAL(graphRequired(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)),
-            this, SLOT(addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *, OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *)));
+    connect(informationWidget->parametersWidget(), &SimulationExperimentViewInformationParametersWidget::graphRequired,
+            this, &SimulationExperimentViewSimulationWidget::addGraph);
 
     // Keep track of the addition and removal of a graph
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
-            graphPanelAndGraphsWidget, SLOT(addGraph(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            graphPanelAndGraphsWidget, SLOT(removeGraphs(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphAdded,
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *, GraphPanelWidget::GraphPanelPlotGraph *, const GraphPanelWidget::GraphPanelPlotGraphProperties &>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphsRemoved,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::removeGraphs);
 
-    connect(graphPanelsWidget, SIGNAL(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)),
-            this, SLOT(graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *, OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &)));
-    connect(graphPanelsWidget, SIGNAL(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            this, SLOT(graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *, const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphAdded,
+            this, &SimulationExperimentViewSimulationWidget::graphAdded);
+    connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphsRemoved,
+            this, &SimulationExperimentViewSimulationWidget::graphsRemoved);
 
     // Keep track of the updating of a graph
     // Note: ideally, this would, as for the addition and removal of a graph
@@ -445,10 +444,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     //       plotting viewpoint. So, instead, the updating is done through our
     //       graphs property editor...
 
-    connect(graphPanelAndGraphsWidget, SIGNAL(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SLOT(graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
-    connect(graphPanelAndGraphsWidget, SIGNAL(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)),
-            this, SLOT(graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &)));
+    connect(graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphUpdated,
+            this, &SimulationExperimentViewSimulationWidget::graphUpdated);
+    connect(graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsUpdated,
+            this, &SimulationExperimentViewSimulationWidget::graphsUpdated);
 
     // Create our simulation output widget with a layout on which we put a
     // separating line and our simulation output list view
@@ -525,8 +524,8 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                      tr("Stop the simulation"));
     I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
                                      tr("Reset all the model parameters"));
-    I18nInterface::retranslateAction(mClearSimulationDataAction, tr("Clear Simulation Data"),
-                                     tr("Clear the simulation data"));
+    I18nInterface::retranslateAction(mClearSimulationResultsAction, tr("Clear Simulation Results"),
+                                     tr("Clear the simulation results"));
     I18nInterface::retranslateAction(mDevelopmentModeAction, tr("Development Mode"),
                                      tr("Enable/disable the development mode"));
     I18nInterface::retranslateAction(mAddGraphPanelAction, tr("Add Graph Panel"),
@@ -552,8 +551,8 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                          tr("Export the simulation to SED-ML using a COMBINE archive"));
     }
 
-    I18nInterface::retranslateAction(mSimulationDataExportAction, tr("Simulation Data Export"),
-                                     tr("Export the simulation data"));
+    I18nInterface::retranslateAction(mSimulationResultsExportAction, tr("Simulation Results Export"),
+                                     tr("Export the simulation results"));
 
     // Retranslate our delay and delay value widgets
 
@@ -604,7 +603,7 @@ void SimulationExperimentViewSimulationWidget::updateDataStoreActions()
     foreach (QAction *action, mDataStoreInterfaces.keys()) {
         I18nInterface::retranslateAction(action,
                                          action->text(),
-                                         tr("Export the simulation data to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
+                                         tr("Export the simulation results to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
     }
 }
 
@@ -645,9 +644,9 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 
     // Enable/disable some actions
 
-    mClearSimulationDataAction->setEnabled(    mSimulation->results()->size()
-                                           && !simulationModeEnabled);
-    mSimulationDataExportAction->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
+    mClearSimulationResultsAction->setEnabled(    mSimulation->results()->size()
+                                              && !simulationModeEnabled);
+    mSimulationResultsExportAction->setEnabled(    mSimulationResultsExportDropDownMenu->actions().count()
                                             &&  mSimulation->results()->size()
                                             && !simulationModeEnabled);
 
@@ -660,7 +659,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateRunPauseAction(const bool &pRunActionEnabled)
+void SimulationExperimentViewSimulationWidget::updateRunPauseAction(bool pRunActionEnabled)
 {
     // Update our various actions
 
@@ -708,7 +707,7 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloadingView)
+void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 {
     // In the case of a SED-ML file and of a COMBINE archive, we will need
     // to further initialise ourselves, to customise graph panels, etc. (see
@@ -736,8 +735,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
-    disconnect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-               this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
+    disconnect(simulationWidget, &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+               this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
 
     // Reset our progress
 
@@ -797,7 +796,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
                 break;
             }
 
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(combineArchiveIssue.message()));
+            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
+                                                                                                            .arg(Core::formatMessage(combineArchiveIssue.message()));
         }
     }
 
@@ -808,6 +808,14 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             QString issueType;
 
             switch (sedmlFileIssue.type()) {
+            case SEDMLSupport::SedmlFileIssue::Unknown:
+#ifdef QT_DEBUG
+                // We should never come here...
+
+                qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
+#endif
+
+                break;
             case SEDMLSupport::SedmlFileIssue::Information:
                 issueType = tr("Information:");
 
@@ -831,11 +839,13 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
             }
 
             if (sedmlFileIssue.line() && sedmlFileIssue.column()) {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(QString::number(sedmlFileIssue.line()),
-                                                                                                                             QString::number(sedmlFileIssue.column()),
-                                                                                                                             issueType, Core::formatMessage(sedmlFileIssue.message()));
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(sedmlFileIssue.line())
+                                                                                                                        .arg(sedmlFileIssue.column())
+                                                                                                                        .arg(issueType)
+                                                                                                                        .arg(Core::formatMessage(sedmlFileIssue.message()));
             } else {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType, Core::formatMessage(sedmlFileIssue.message()));
+                information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
+                                                                                                                .arg(Core::formatMessage(sedmlFileIssue.message()));
             }
         }
     }
@@ -884,9 +894,13 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
                 if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
                     foreach (const CellMLSupport::CellmlFileIssue &issue,
-                             runtime?runtime->issues():mSimulation->cellmlFile()->issues()) {
-                        information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
-                                                                                                                             issue.message());
+                             runtime?
+                                 runtime->issues():
+                                 mSimulation->cellmlFile()?
+                                     mSimulation->cellmlFile()->issues():
+                                     CellMLSupport::CellmlFileIssues()) {
+                        information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"))
+                                                                                                                        .arg(issue.message());
                     }
                 }
             }
@@ -908,13 +922,13 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
 
         mRunPauseResumeSimulationAction->setEnabled(voi);
 
-        // Update our simulation mode or clear our simulation data (should there
-        // be some) in case we are reloading ourselves
+        // Update our simulation mode or clear our simulation results (should
+        // there be some) in case we are reloading ourselves
         // Note: to clear our simualtion data will also update our simulation
         //       mode, so we are fine...
 
         if (pReloadingView)
-            clearSimulationData();
+            clearSimulationResults(false);
         else
             updateSimulationMode();
 
@@ -1019,8 +1033,8 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     // Resume the tracking of certain things
     // Note: see the corresponding code at the beginning of this method...
 
-    connect(mContentsWidget->informationWidget()->simulationWidget(), SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(simulationPropertyChanged(OpenCOR::Core::Property *)));
+    connect(mContentsWidget->informationWidget()->simulationWidget(), &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
 
     // Further initialise ourselves, if we have a valid environment and we are
     // not dealing with a CellML file
@@ -1039,6 +1053,16 @@ void SimulationExperimentViewSimulationWidget::initialize(const bool &pReloading
     }
 
     setUpdatesEnabled(true);
+
+    // Keep track of the initial size of our different graph panels
+    // Note: we do this through a single shot (and after short delay) to be
+    //       certain that the GUI is ready and that the size of our different
+    //       graph panels is therefore final. Not to do this might, on Windows
+    //       at least, result in a file being considered modified (e.g. when
+    //       you use the N62 SED-ML file, then switch to another file and
+    //       back)...
+
+    QTimer::singleShot(500, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
 }
 
 //==============================================================================
@@ -1050,7 +1074,7 @@ void SimulationExperimentViewSimulationWidget::finalize()
     // reloading ourselves
 
     if (mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile)
-        initialiseTrackers();
+        initializeTrackers();
 
     // Finalize/backup a few things in our GUI's solvers, graphs, parameters and
     // graph panels widgets
@@ -1174,10 +1198,10 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         // Only export our simulation to a SED-ML file if we are not dealing
         // with a new SED-ML file
         // Note: indeed, if we were to do that, we would end up with an
-        //       unloadable SED-ML file (since since it doesn’t contain
-        //       everything it should). So, instead, we should just save our
-        //       default SED-ML template, i.e. as if we were to save the SED-ML
-        //       file using the Raw SED-ML or Raw Text view...
+        //       unloadable SED-ML file (since it doesn’t contain everything it
+        //       should). So, instead, we should just save our default SED-ML
+        //       template, i.e. as if we were to save the SED-ML file using the
+        //       Raw SED-ML or Raw Text view...
 
         if (Core::FileManager::instance()->isNew(mSimulation->fileName()))
             QFile::copy(mSimulation->fileName(), pFileName);
@@ -1226,40 +1250,14 @@ void SimulationExperimentViewSimulationWidget::fileModified()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::reloadView()
+void SimulationExperimentViewSimulationWidget::fileReloaded()
 {
-    // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
-    // that we have effectively been closed and (re)opened
+    // The given file has been reloaded, so reload ourselves, i.e. finalise and
+    // (re)initialise ourselves, meaning that we have effectively been closed
+    // and (re)opened
 
     finalize();
     initialize(true);
-
-    mNeedReloadView = false;
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::fileReloaded()
-{
-    // The given file has been reloaded, so stop its current simulation
-
-    bool needReloadView = true;
-
-    mNeedReloadView = true;
-
-    if (mSimulation->stop()) {
-        needReloadView = false;
-        // Note: we don't need to reload ourselves since stopping the simulation
-        //       will result in the stopped() signal being received and,
-        //       therefore, the simulationStopped() slot being called, which is
-        //       where we should reload ourselves since we cannot tell how long
-        //       the signal/slot mechanism is going to take...
-    }
-
-    // Reload ourselves, if needed
-
-    if (needReloadView)
-        reloadView();
 }
 
 //==============================================================================
@@ -1364,9 +1362,9 @@ void SimulationExperimentViewSimulationWidget::resetModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationData()
+void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pCheckSimulationResults)
 {
-    // Clear our simulation data
+    // Clear our simulation results
     // Note: we temporarily disable updates to prevent the GUI from taking too
     //       long to update itself (something that might happen when we have
     //       several graph panels since they will try to realign themselves)...
@@ -1375,13 +1373,23 @@ void SimulationExperimentViewSimulationWidget::clearSimulationData()
 
     mSimulation->results()->reset();
 
-    // Update our simulation mode and check for results
+    // Update our simulation mode and check for results, if requested
 
     updateSimulationMode();
 
-    mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+    if (pCheckSimulationResults)
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
 
     setUpdatesEnabled(true);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::clearSimulationResults()
+{
+    // Clear our simulation results
+
+    clearSimulationResults(true);
 }
 
 //==============================================================================
@@ -1443,7 +1451,7 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initialiseTrackers()
+void SimulationExperimentViewSimulationWidget::initializeTrackers(bool pInitialzeGraphPanelsWidgetSizes)
 {
     // Keep track of our simulation, solver, graph panel and graph properties,
     // and check for changes whenever a property gets changed
@@ -1462,11 +1470,11 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
     mSimulationPropertiesModified = false;
     mSolversPropertiesModified = false;
 
-    connect(simulationWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(checkSimulationProperties()),
+    connect(simulationWidget, &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::checkSimulationProperties,
             Qt::UniqueConnection);
-    connect(solversWidget, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-            this, SLOT(checkSolversProperties()),
+    connect(solversWidget, &SimulationExperimentViewInformationSolversWidget::propertyChanged,
+            this, &SimulationExperimentViewSimulationWidget::checkSolversProperties,
             Qt::UniqueConnection);
 
     mGraphPanelProperties.clear();
@@ -1486,15 +1494,15 @@ void SimulationExperimentViewSimulationWidget::initialiseTrackers()
         mGraphPanelProperties.insert(graphPanelPropertyEditor, allPropertyValues(graphPanelPropertyEditor));
         mGraphsProperties.insert(graphsPropertyEditor, allPropertyValues(graphsPropertyEditor));
 
-        connect(graphPanelPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-                this, SLOT(checkGraphPanelsAndGraphs()),
+        connect(graphPanelPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs,
                 Qt::UniqueConnection);
-        connect(graphsPropertyEditor, SIGNAL(propertyChanged(OpenCOR::Core::Property *)),
-                this, SLOT(checkGraphPanelsAndGraphs()),
+        connect(graphsPropertyEditor, &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs,
                 Qt::UniqueConnection);
     }
 
-    mGraphPanelsWidgetSizes = QIntList();
+    mGraphPanelsWidgetSizes = pInitialzeGraphPanelsWidgetSizes?mContentsWidget->graphPanelsWidget()->sizes():QIntList();
     mGraphPanelsWidgetSizesModified = false;
 }
 
@@ -1531,7 +1539,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                   libsedml::SedModel *pSedmlModel,
                                                                   libsedml::SedRepeatedTask *pSedmlRepeatedTask,
                                                                   libsedml::SedSimulation *pSedmlSimulation,
-                                                                  const int &pOrder)
+                                                                  int pOrder)
 {
     // Create, customise and add an algorithm (i.e. an ODE solver) to our given
     // SED-ML simulation
@@ -1555,11 +1563,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                             odeSolverPropertyValue.toString();
 
         if (kisaoId.isEmpty()) {
-            annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                   SEDMLSupport::Id,
-                                                                   odeSolverProperty,
-                                                                   SEDMLSupport::Value,
-                                                                   value);
+            annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty)
+                                                              .arg(SEDMLSupport::Id)
+                                                              .arg(odeSolverProperty)
+                                                              .arg(SEDMLSupport::Value)
+                                                              .arg(value);
         } else {
             libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
@@ -1571,9 +1579,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     if (!annotation.isEmpty()) {
         sedmlAlgorithm->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
-                                                 "</%1>").arg(SEDMLSupport::SolverProperties,
-                                                              SEDMLSupport::OpencorNamespace,
-                                                              annotation).toStdString());
+                                                 "</%1>").arg(SEDMLSupport::SolverProperties)
+                                                         .arg(SEDMLSupport::OpencorNamespace)
+                                                         .arg(annotation).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1587,20 +1595,20 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
         Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
 
         foreach (const QString &nlaSolverProperty, nlaSolverProperties.keys()) {
-            annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty,
-                                                                   SEDMLSupport::Id,
-                                                                   nlaSolverProperty,
-                                                                   SEDMLSupport::Value,
-                                                                   nlaSolverProperties.value(nlaSolverProperty).toString());
+            annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty)
+                                                              .arg(SEDMLSupport::Id)
+                                                              .arg(nlaSolverProperty)
+                                                              .arg(SEDMLSupport::Value)
+                                                              .arg(nlaSolverProperties.value(nlaSolverProperty).toString());
         }
 
         pSedmlSimulation->appendAnnotation(QString("<%1 xmlns=\"%2\" %3=\"%4\">"
                                                    "    %5"
-                                                   "</%1>").arg(SEDMLSupport::NlaSolver,
-                                                                SEDMLSupport::OpencorNamespace,
-                                                                SEDMLSupport::Name,
-                                                                mSimulation->data()->nlaSolverName(),
-                                                                annotation).toStdString());
+                                                   "</%1>").arg(SEDMLSupport::NlaSolver)
+                                                           .arg(SEDMLSupport::OpencorNamespace)
+                                                           .arg(SEDMLSupport::Name)
+                                                           .arg(mSimulation->data()->nlaSolverName())
+                                                           .arg(annotation).toStdString());
     }
 
     // Create and customise a task for our given SED-ML simulation
@@ -1641,16 +1649,22 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
 
     // Set the target itself, as well as its degree, if any
 
-    pSedmlVariable->setTarget(Target.arg(pComponent, variable).toStdString());
+    pSedmlVariable->setTarget(Target.arg(pComponent)
+                                    .arg(variable).toStdString());
 
     if (variableDegree) {
         pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
-                                                 "</%1>").arg(SEDMLSupport::VariableDegree,
-                                                              SEDMLSupport::OpencorNamespace,
-                                                              QString::number(variableDegree)).toStdString());
+                                                 "</%1>").arg(SEDMLSupport::VariableDegree)
+                                                         .arg(SEDMLSupport::OpencorNamespace)
+                                                         .arg(variableDegree).toStdString());
     }
 }
+
+//==============================================================================
+
+static const auto TrueValue  = QStringLiteral("true");
+static const auto FalseValue = QStringLiteral("false");
 
 //==============================================================================
 
@@ -1780,106 +1794,106 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
-        QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor,
-                                                graphPanelProperties[0]->valueAsString())
-                             +SedmlProperty.arg(SEDMLSupport::FontSize,
-                                                graphPanelProperties[1]->valueAsString())
-                             +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
-                                                graphPanelProperties[2]->valueAsString())
-                             +SedmlProperty.arg(SEDMLSupport::Height,
-                                                QString::number(graphPanelsWidgetSizes[graphPlotCounter-1]));
+        QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor)
+                                           .arg(graphPanelProperties[0]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::FontSize)
+                                           .arg(graphPanelProperties[1]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::ForegroundColor)
+                                           .arg(graphPanelProperties[2]->valueAsString())
+                             +SedmlProperty.arg(SEDMLSupport::Height)
+                                           .arg(graphPanelsWidgetSizes[graphPlotCounter-1]);
 
         // Grid lines
 
         Core::Properties gridLinesProperties = graphPanelProperties[3]->properties();
 
-        annotation += SedmlProperty.arg( SEDMLSupport::GridLines,
-                                         SedmlProperty.arg(SEDMLSupport::Style,
-                                                           SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
-                                        +SedmlProperty.arg(SEDMLSupport::Width,
-                                                           gridLinesProperties[1]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::Color,
-                                                           gridLinesProperties[2]->valueAsString()));
+        annotation += SedmlProperty.arg(SEDMLSupport::GridLines)
+                                   .arg( SedmlProperty.arg(SEDMLSupport::Style)
+                                                      .arg(SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width)
+                                                      .arg(gridLinesProperties[1]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Color)
+                                                      .arg(gridLinesProperties[2]->valueAsString()));
 
         // Legend
 
-        annotation += SedmlProperty.arg(SEDMLSupport::Legend,
-                                        graphPanelProperties[4]->valueAsString());
+        annotation += SedmlProperty.arg(SEDMLSupport::Legend)
+                                   .arg(graphPanelProperties[4]->valueAsString());
 
         // Point coordinates
 
         Core::Properties pointCoordinatesProperties = graphPanelProperties[5]->properties();
 
-        annotation += SedmlProperty.arg( SEDMLSupport::PointCoordinates,
-                                         SedmlProperty.arg(SEDMLSupport::Style,
-                                                           SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
-                                        +SedmlProperty.arg(SEDMLSupport::Width,
-                                                           pointCoordinatesProperties[1]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::Color,
-                                                           pointCoordinatesProperties[2]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                           pointCoordinatesProperties[3]->valueAsString()));
+        annotation += SedmlProperty.arg(SEDMLSupport::PointCoordinates)
+                                   .arg( SedmlProperty.arg(SEDMLSupport::Style)
+                                                      .arg(SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width)
+                                                      .arg(pointCoordinatesProperties[1]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Color)
+                                                      .arg(pointCoordinatesProperties[2]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::FontColor)
+                                                      .arg(pointCoordinatesProperties[3]->valueAsString()));
 
         // Surrounding area
 
         Core::Properties surroundingAreaProperties = graphPanelProperties[6]->properties();
 
-        annotation += SedmlProperty.arg( SEDMLSupport::SurroundingArea,
-                                         SedmlProperty.arg(SEDMLSupport::BackgroundColor,
-                                                           surroundingAreaProperties[0]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::ForegroundColor,
-                                                           surroundingAreaProperties[1]->valueAsString()));
+        annotation += SedmlProperty.arg(SEDMLSupport::SurroundingArea)
+                                   .arg( SedmlProperty.arg(SEDMLSupport::BackgroundColor)
+                                                      .arg(surroundingAreaProperties[0]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::ForegroundColor)
+                                                      .arg(surroundingAreaProperties[1]->valueAsString()));
 
         // Title
 
-        annotation += SedmlProperty.arg(SEDMLSupport::Title,
-                                        graphPanelProperties[7]->valueAsString());
+        annotation += SedmlProperty.arg(SEDMLSupport::Title)
+                                   .arg(graphPanelProperties[7]->valueAsString());
 
         // X axis
 
         Core::Properties xAxisProperties = graphPanelProperties[8]->properties();
 
-        annotation += SedmlProperty.arg( SEDMLSupport::XAxis,
-                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                           xAxisProperties[0]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::Title,
-                                                           xAxisProperties[1]->valueAsString()));
+        annotation += SedmlProperty.arg(SEDMLSupport::XAxis)
+                                   .arg( SedmlProperty.arg(SEDMLSupport::LogarithmicScale)
+                                                      .arg(xAxisProperties[0]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Title)
+                                                      .arg(xAxisProperties[1]->valueAsString()));
 
         // Y axis
 
         Core::Properties yAxisProperties = graphPanelProperties[9]->properties();
 
-        annotation += SedmlProperty.arg( SEDMLSupport::YAxis,
-                                         SedmlProperty.arg(SEDMLSupport::LogarithmicScale,
-                                                           yAxisProperties[0]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::Title,
-                                                           yAxisProperties[1]->valueAsString()));
+        annotation += SedmlProperty.arg(SEDMLSupport::YAxis)
+                                   .arg( SedmlProperty.arg(SEDMLSupport::LogarithmicScale)
+                                                      .arg(yAxisProperties[0]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Title)
+                                                      .arg(yAxisProperties[1]->valueAsString()));
 
         // Zoom region
 
         Core::Properties zoomRegionProperties = graphPanelProperties[10]->properties();
 
-        annotation += SedmlProperty.arg( SEDMLSupport::ZoomRegion,
-                                         SedmlProperty.arg(SEDMLSupport::Style,
-                                                           SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
-                                        +SedmlProperty.arg(SEDMLSupport::Width,
-                                                           zoomRegionProperties[1]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::Color,
-                                                           zoomRegionProperties[2]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::FontColor,
-                                                           zoomRegionProperties[3]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::Filled,
-                                                           zoomRegionProperties[4]->valueAsString())
-                                        +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                           zoomRegionProperties[5]->valueAsString()));;
+        annotation += SedmlProperty.arg(SEDMLSupport::ZoomRegion)
+                                   .arg( SedmlProperty.arg(SEDMLSupport::Style)
+                                                      .arg(SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
+                                        +SedmlProperty.arg(SEDMLSupport::Width)
+                                                      .arg(zoomRegionProperties[1]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Color)
+                                                      .arg(zoomRegionProperties[2]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::FontColor)
+                                                      .arg(zoomRegionProperties[3]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::Filled)
+                                                      .arg(zoomRegionProperties[4]->valueAsString())
+                                        +SedmlProperty.arg(SEDMLSupport::FillColor)
+                                                      .arg(zoomRegionProperties[5]->valueAsString()));;
 
         // Add our properties as an annotation
 
         sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                               "    %3"
-                                              "</%1>").arg(SEDMLSupport::Properties,
-                                                           SEDMLSupport::OpencorNamespace,
-                                                           annotation).toStdString());
+                                              "</%1>").arg(SEDMLSupport::Properties)
+                                                      .arg(SEDMLSupport::OpencorNamespace)
+                                                      .arg(annotation).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
@@ -1916,10 +1930,10 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
             libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
-            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                                   QString::number(graphCounter)).toStdString();
-            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                                   QString::number(graphCounter)).toStdString();
+            std::string sedmlDataGeneratorIdX = QString("xDataGenerator%1_%2").arg(data.graphPlotCounter)
+                                                                              .arg(graphCounter).toStdString();
+            std::string sedmlDataGeneratorIdY = QString("yDataGenerator%1_%2").arg(data.graphPlotCounter)
+                                                                              .arg(graphCounter).toStdString();
 
             sedmlDataGeneratorX->setId(sedmlDataGeneratorIdX);
             sedmlDataGeneratorY->setId(sedmlDataGeneratorIdY);
@@ -1930,13 +1944,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
             QStringList propertyX = properties[2]->value().split('.');
             QStringList propertyY = properties[3]->value().split('.');
 
-            sedmlVariableX->setId(QString("xVariable%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableX->setId(QString("xVariable%1_%2").arg(data.graphPlotCounter)
+                                                           .arg(graphCounter).toStdString());
             sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
             addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
 
-            sedmlVariableY->setId(QString("yVariable%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                                QString::number(graphCounter)).toStdString());
+            sedmlVariableY->setId(QString("yVariable%1_%2").arg(data.graphPlotCounter)
+                                                           .arg(graphCounter).toStdString());
             sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
             addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
 
@@ -1947,8 +1961,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             libsedml::SedCurve *sedmlCurve = data.sedmlPlot2d->createCurve();
 
-            sedmlCurve->setId(QString("curve%1_%2").arg(QString::number(data.graphPlotCounter),
-                                                        QString::number(graphCounter)).toStdString());
+            sedmlCurve->setId(QString("curve%1_%2").arg(data.graphPlotCounter)
+                                                   .arg(graphCounter).toStdString());
 
             sedmlCurve->setXDataReference(sedmlDataGeneratorIdX);
             sedmlCurve->setLogX(data.logAxisX);
@@ -1963,28 +1977,32 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             sedmlCurve->appendAnnotation(QString("<%1 xmlns=\"%2\">"
                                                  "    %3"
-                                                 "</%1>").arg( SEDMLSupport::Properties,
-                                                               SEDMLSupport::OpencorNamespace,
-                                                               SedmlProperty.arg(SEDMLSupport::Title,
-                                                                                 properties[1]->valueAsString())
-                                                              +SedmlProperty.arg( SEDMLSupport::Line,
-                                                                                  SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                    SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::Width,
-                                                                                                    lineProperties[1]->valueAsString())
-                                                                                 +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                    lineProperties[2]->valueAsString()))
-                                                              +SedmlProperty.arg( SEDMLSupport::Symbol,
-                                                                                  SedmlProperty.arg(SEDMLSupport::Style,
-                                                                                                    SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
-                                                                                 +SedmlProperty.arg(SEDMLSupport::Size,
-                                                                                                    symbolProperties[1]->valueAsString())
-                                                                                 +SedmlProperty.arg(SEDMLSupport::Color,
-                                                                                                    symbolProperties[2]->valueAsString())
-                                                                                 +SedmlProperty.arg(SEDMLSupport::Filled,
-                                                                                                    symbolProperties[3]->valueAsString())
-                                                                                 +SedmlProperty.arg(SEDMLSupport::FillColor,
-                                                                                                    symbolProperties[4]->valueAsString()))).toStdString());
+                                                 "</%1>").arg(SEDMLSupport::Properties)
+                                                         .arg(SEDMLSupport::OpencorNamespace)
+                                                         .arg( SedmlProperty.arg(SEDMLSupport::Selected)
+                                                                            .arg(property->isChecked()?
+                                                                                     TrueValue:
+                                                                                     FalseValue)
+                                                              +SedmlProperty.arg(SEDMLSupport::Title)
+                                                                            .arg(properties[1]->valueAsString())
+                                                              +SedmlProperty.arg(SEDMLSupport::Line)
+                                                                            .arg( SedmlProperty.arg(SEDMLSupport::Style)
+                                                                                               .arg(SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Width)
+                                                                                               .arg(lineProperties[1]->valueAsString())
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Color)
+                                                                                               .arg(lineProperties[2]->valueAsString()))
+                                                              +SedmlProperty.arg(SEDMLSupport::Symbol)
+                                                                            .arg( SedmlProperty.arg(SEDMLSupport::Style)
+                                                                                               .arg(SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Size)
+                                                                                               .arg(symbolProperties[1]->valueAsString())
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Color)
+                                                                                               .arg(symbolProperties[2]->valueAsString())
+                                                                                 +SedmlProperty.arg(SEDMLSupport::Filled)
+                                                                                               .arg(symbolProperties[3]->valueAsString())
+                                                                                 +SedmlProperty.arg(SEDMLSupport::FillColor)
+                                                                                               .arg(symbolProperties[4]->valueAsString()))).toStdString());
         }
     }
 
@@ -2066,8 +2084,17 @@ void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile(const QStrin
         // Reinitialise our trackers, if we are not dealing with a CellML file
 
         if (!isCellmlFile)
-            initialiseTrackers();
+            initializeTrackers(true);
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::sedmlExportSedmlFile()
+{
+    // Export the simulation to a SED-ML file
+
+    sedmlExportSedmlFile(QString());
 }
 
 //==============================================================================
@@ -2191,7 +2218,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                     if (!combineArchive->addFile(realImportedFileName,
                                                  relativeImportedFileName,
                                                  COMBINESupport::CombineArchiveFile::Cellml)) {
-                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
+                        errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName)
+                                                                                                           .arg(" ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
 
                         break;
                     }
@@ -2204,10 +2232,12 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                         errorMessage = tr("The simulation could not be exported to <strong>%1</strong>.").arg(combineArchiveName);
                 }
             } else {
-                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+").");
+                errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName)
+                                                                                                   .arg(" ("+tr("<strong>%1</strong> could not be added").arg(modelSource)+").");
             }
         } else {
-            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName, " ("+tr("the master SED-ML file could not be added")+").");
+            errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName)
+                                                                                               .arg(" ("+tr("the master SED-ML file could not be added")+").");
         }
 
         if (isCellmlOrSedmlFile)
@@ -2229,8 +2259,17 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         // file nor a SED-ML file
 
         if (!isCellmlOrSedmlFile)
-            initialiseTrackers();
+            initializeTrackers(true);
     }
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
+{
+    // Export the simulation to a COMBINE archive
+
+    sedmlExportCombineArchive(QString());
 }
 
 //==============================================================================
@@ -2267,7 +2306,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationProperties(Core::
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Property *pProperty,
-                                                                       const bool &pResetNlaSolver)
+                                                                       bool pResetNlaSolver)
 {
     // Update all of our solver(s) properties (and solvers widget) or a
     // particular solver property (and the corresponding GUI for that solver)
@@ -2351,7 +2390,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateSolversProperties(const bool &pResetNlaSolver)
+void SimulationExperimentViewSimulationWidget::updateSolversProperties(bool pResetNlaSolver)
 {
     // Update all of our solver(s) properties (and solvers widget)
 
@@ -2409,8 +2448,8 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
         }
     }
 
-    // Go through the runtime parameters to see one of them correspond to our
-    // given SED-ML variable
+    // Go through the runtime parameters to see if one of them corresponds to
+    // our given SED-ML variable
 
     pCellmlComponent = componentName;
     pCellmlVariable = variableName+QString(variableDegree, '\'');
@@ -2683,8 +2722,6 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
-        static const QString TrueValue = "true";
-
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
         GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
@@ -2869,32 +2906,41 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
             if (!xParameter) {
                 if (!yParameter) {
-                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), xCellmlVariable, xCellmlComponent, yCellmlVariable, yCellmlComponent),
+                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 and the variable %4 in component %5 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
+                                                                                                                                                                            .arg(xCellmlVariable)
+                                                                                                                                                                            .arg(xCellmlComponent)
+                                                                                                                                                                            .arg(yCellmlVariable)
+                                                                                                                                                                            .arg(yCellmlComponent),
                                     InvalidSimulationEnvironment);
 
                     return false;
                 } else {
-                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), xCellmlVariable, xCellmlComponent),
+                    simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
+                                                                                                                                        .arg(xCellmlVariable)
+                                                                                                                                        .arg(xCellmlComponent),
                                     InvalidSimulationEnvironment);
 
                     return false;
                 }
             } else if (!yParameter) {
-                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()), yCellmlVariable, yCellmlComponent),
+                simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
+                                                                                                                                    .arg(yCellmlVariable)
+                                                                                                                                    .arg(yCellmlComponent),
                                 InvalidSimulationEnvironment);
 
                 return false;
             }
 
-            QString title = QString();
-            Qt::PenStyle lineStyle = Qt::SolidLine;
-            double lineWidth = 1.0;
-            QColor lineColor = Qt::darkBlue;
-            QwtSymbol::Style symbolStyle = QwtSymbol::NoSymbol;
-            int symbolSize = 8;
-            QColor symbolColor = Qt::darkBlue;
-            bool symbolFilled = true;
-            QColor symbolFillColor = Qt::white;
+            bool selected = GraphPanelWidget::DefaultSelected;
+            QString title = GraphPanelWidget::DefaultTitle;
+            Qt::PenStyle lineStyle = GraphPanelWidget::DefaultLineStyle;
+            int lineWidth = GraphPanelWidget::DefaultLineWidth;
+            QColor lineColor = GraphPanelWidget::DefaultLineColor;
+            QwtSymbol::Style symbolStyle = GraphPanelWidget::DefaultSymbolStyle;
+            int symbolSize = GraphPanelWidget::DefaultSymbolSize;
+            QColor symbolColor = GraphPanelWidget::DefaultSymbolColor;
+            bool symbolFilled = GraphPanelWidget::DefaultSymbolFilled;
+            QColor symbolFillColor = GraphPanelWidget::DefaultSymbolFillColor;
 
             annotation = sedmlCurve->getAnnotation();
 
@@ -2909,7 +2955,9 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
                             QString curvePropertyNodeValue = QString::fromStdString(curvePropertyNode.getChild(0).getCharacters());
 
-                            if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
+                            if (!curvePropertyNodeName.compare(SEDMLSupport::Selected)) {
+                                selected = !curvePropertyNodeValue.compare(TrueValue);
+                            } else if (!curvePropertyNodeName.compare(SEDMLSupport::Title)) {
                                 title = curvePropertyNodeValue;
                             } else if (!curvePropertyNodeName.compare(SEDMLSupport::Line)) {
                                 for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
@@ -2920,7 +2968,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
                                         lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleValueIndex(linePropertyNodeValue));
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
-                                        lineWidth = linePropertyNodeValue.toDouble();
+                                        lineWidth = linePropertyNodeValue.toInt();
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
                                         lineColor.setNamedColor(linePropertyNodeValue);
                                     }
@@ -2951,8 +2999,8 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 }
             }
 
-            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter),
-                                 GraphPanelWidget::GraphPanelPlotGraphProperties(title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
+            graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(xParameter, yParameter, graphPanel),
+                                 GraphPanelWidget::GraphPanelPlotGraphProperties(selected, title, lineStyle, lineWidth, lineColor, symbolStyle, symbolSize, symbolColor, symbolFilled, symbolFillColor));
         }
     }
 
@@ -2973,14 +3021,27 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Initialise our trackers, so we know if a SED-ML file or COMBINE archive
     // has been modified
 
-    initialiseTrackers();
+    initializeTrackers();
 
     return true;
 }
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::initializeGui(const bool &pValidSimulationEnvironment)
+void SimulationExperimentViewSimulationWidget::finalFurtherInitialize()
+{
+    // The GUI is all ready, so we can initialise mGraphPanelsWidgetSizes, as
+    // well as mGraphPanelPropertiesModified and mGraphsPropertiesModified by
+    // calling checkGraphPanelsAndGraphs()
+
+    mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
+
+    checkGraphPanelsAndGraphs();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::initializeGui(bool pValidSimulationEnvironment)
 {
     // Show/hide some widgets based on whether we have a valid simulation
     // environment
@@ -3024,14 +3085,15 @@ void SimulationExperimentViewSimulationWidget::emitSplitterMoved()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationDataExport()
+void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 {
-    // Retrieve some data so that we can effectively export our simulation data
+    // Retrieve some data so that we can effectively export our simulation
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
     DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(),
-                                                                          mSimulation->results()->dataStore());
+                                                                          mSimulation->results()->dataStore(),
+                                                                          CellMLSupport::CellmlFileRuntimeParameter::icons());
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
@@ -3040,10 +3102,10 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
 
-        connect(dataStoreExporter, SIGNAL(done(const QString &)),
-                this, SLOT(dataStoreExportDone(const QString &)));
-        connect(dataStoreExporter, SIGNAL(progress(const double &)),
-                this, SLOT(dataStoreExportProgress(const double &)));
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
 
         dataStoreExporter->start();
     }
@@ -3051,7 +3113,7 @@ void SimulationExperimentViewSimulationWidget::simulationDataExport()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateDelayValue(const double &pDelayValue)
+void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayValue)
 {
     // Update our delay value widget
 
@@ -3077,7 +3139,7 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(const double &pD
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationRunning(const bool &pIsResuming)
+void SimulationExperimentViewSimulationWidget::simulationRunning(bool pIsResuming)
 {
     Q_UNUSED(pIsResuming);
 
@@ -3105,7 +3167,7 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationStopped(const qint64 &pElapsedTime)
+void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsedTime)
 {
     // Output the given elapsed time, if valid
 
@@ -3115,7 +3177,8 @@ void SimulationExperimentViewSimulationWidget::simulationStopped(const qint64 &p
         if (!mSimulation->data()->nlaSolverName().isEmpty())
             solversInformation += "+"+mSimulation->data()->nlaSolverName();
 
-        output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
+        output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3))
+                                                                                                                       .arg(solversInformation)+"</span>."+OutputBrLn));
     }
 
     // Update our parameters and simulation mode
@@ -3127,11 +3190,6 @@ void SimulationExperimentViewSimulationWidget::simulationStopped(const qint64 &p
     // Stop keeping track of our simulation progress
 
     mProgress = -1;
-
-    // Reload ourselves, if needed (see fileReloaded())
-
-    if (mNeedReloadView)
-        reloadView();
 
     // Note: our simulation progress gets reset in resetSimulationProgress(),
     //       which is called by
@@ -3181,27 +3239,16 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
     //          our simulation being used while it has already been deleted due
     //          to threading issues...
 
-    enum {
-        ResetDelay = 169
-    };
-
-    if (isVisible()) {
-        if (mNeedReloadView)
-            resetProgressBar();
-        else
-            QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
-    } else {
-        if (mNeedReloadView)
-            resetFileTabIcon();
-        else
-            QTimer::singleShot(ResetDelay, this, SLOT(resetFileTabIcon()));
-    }
+    QTimer::singleShot(169, this,
+                       isVisible()?
+                           &SimulationExperimentViewSimulationWidget::resetProgressBar:
+                           &SimulationExperimentViewSimulationWidget::resetFileTabIcon);
 }
 
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
-                                                               const ErrorType &pErrorType)
+                                                               ErrorType pErrorType)
 {
     // Output the simulation error
 
@@ -3214,7 +3261,16 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool &pIsModified)
+void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage)
+{
+    // Output the simulation error
+
+    simulationError(pMessage, General);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsModified)
 {
     // Update our modified state
 
@@ -3226,7 +3282,7 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(const bool
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::Property *pProperty)
 {
     // Update our simulation properties, as well as our plots
 
@@ -3247,7 +3303,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(OpenCOR
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::solversPropertyChanged(OpenCOR::Core::Property *pProperty)
+void SimulationExperimentViewSimulationWidget::solversPropertyChanged(Core::Property *pProperty)
 {
     // Update our solvers properties
 
@@ -3256,11 +3312,8 @@ void SimulationExperimentViewSimulationWidget::solversPropertyChanged(OpenCOR::C
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                               const bool &pActive)
+void SimulationExperimentViewSimulationWidget::graphPanelAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
-    Q_UNUSED(pActive);
-
     // Keep track of the fact that we want to know if a graph panel's plot's
     // axes have been changed
     // Note: we don't need to keep track of the graph panel's plot (in mPlots)
@@ -3271,35 +3324,35 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
     mUpdatablePlotViewports.insert(plot, true);
 
-    connect(plot, SIGNAL(axesChanged(const double &, const double &, const double &, const double &)),
-            this, SLOT(plotAxesChanged()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::axesChanged,
+            this, &SimulationExperimentViewSimulationWidget::plotAxesChanged);
 
     // Let people know when some graph panel settings or graphs settings have
     // been requested
 
-    connect(plot, SIGNAL(graphPanelSettingsRequested()),
-            this, SIGNAL(graphPanelSettingsRequested()));
-    connect(plot, SIGNAL(graphsSettingsRequested()),
-            this, SIGNAL(graphsSettingsRequested()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::graphPanelSettingsRequested,
+            this, &SimulationExperimentViewSimulationWidget::graphPanelSettingsRequested);
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::graphsSettingsRequested,
+            this, &SimulationExperimentViewSimulationWidget::graphsSettingsRequested);
 
     // Let people know when we a graph has been toggled
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = contentsWidget()->informationWidget()->graphPanelAndGraphsWidget();
 
-    connect(plot, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            graphPanelAndGraphsWidget, SLOT(toggleGraph(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::graphToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleGraph);
 
     // Let people know when we the legend has been toggled
 
-    connect(plot, SIGNAL(legendToggled()),
-            graphPanelAndGraphsWidget, SLOT(toggleLegend()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::legendToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLegend);
 
     // Let people know when we the X/Y logarithmic axis has been toggled
 
-    connect(plot, SIGNAL(logarithmicXAxisToggled()),
-            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicXAxis()));
-    connect(plot, SIGNAL(logarithmicYAxisToggled()),
-            graphPanelAndGraphsWidget, SLOT(toggleLogarithmicYAxis()));
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::logarithmicXAxisToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicXAxis);
+    connect(plot, &GraphPanelWidget::GraphPanelPlotWidget::logarithmicYAxisToggled,
+            graphPanelAndGraphsWidget, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::toggleLogarithmicYAxis);
 
     // Check our graph panels and their graphs
 
@@ -3308,14 +3361,13 @@ void SimulationExperimentViewSimulationWidget::graphPanelAdded(OpenCOR::GraphPan
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel)
+void SimulationExperimentViewSimulationWidget::graphPanelRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // A graph panel has been removed, so stop tracking it
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    mPlots.removeOne(plot);
-    mUpdatablePlotViewports.remove(plot);
+    removePlot(plot);
 
     // Check our graph panels and their graphs
 
@@ -3324,26 +3376,41 @@ void SimulationExperimentViewSimulationWidget::graphPanelRemoved(OpenCOR::GraphP
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::addGraph(OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
-                                                        OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
+void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFileRuntimeParameter *pParameterX,
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameterY)
 {
     // Ask the current graph panel to add a new graph for the given parameters
+    // Note: due to the way legend labels are handled by Qwt, we temporarily
+    //       disable their update (and reenable it once the graph has been
+    //       added; see graphAdded()) since otherwise we may see the label flash
+    //       due to its properties (e.g. font size) not being the same as those
+    //       of QwtLegendLabel...
 
-    mContentsWidget->graphPanelsWidget()->activeGraphPanel()->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY));
+    GraphPanelWidget::GraphPanelWidget *graphPanel = mContentsWidget->graphPanelsWidget()->activeGraphPanel();
+
+    graphPanel->plot()->legend()->setUpdatesEnabled(false);
+
+    GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY, graphPanel);
+
+    graphPanel->addGraph(graph,
+                         GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
 }
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                          OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                          const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphProperties &pGraphProperties)
+void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                          GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
-    Q_UNUSED(pGraphProperties);
-
     // A new graph has been added, so add runs to it, if our simulation has some
 
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
         pGraph->addRun();
+
+    // Allow our plot's legend to get updated
+
+    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
+
+    plot->legend()->setUpdatesEnabled(true);
 
     // Now, keep track of the graph and update its plot
     // Note: updating the plot will, if needed, update the plot's axes and, as a
@@ -3351,10 +3418,8 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
     //       if the plot's axes don't get updated, we need to draw our new
     //       graph...
 
-    GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
-
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
-        updateGraphData(pGraph, i, mSimulation->results()->size(i));
+        updateGraphData(pGraph, mSimulation->results()->size(i), i);
 
     if (updatePlot(plot) || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
@@ -3373,8 +3438,8 @@ void SimulationExperimentViewSimulationWidget::graphAdded(OpenCOR::GraphPanelWid
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                             const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                             const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     Q_UNUSED(pGraphs);
 
@@ -3392,7 +3457,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
     // Note: this ensures that our plot is updated at once...
 
     if (plot->graphs().isEmpty())
-        mPlots.removeOne(plot);
+        removePlot(plot);
 
     // Check our graph panels and their graphs
 
@@ -3401,7 +3466,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(OpenCOR::GraphPanel
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
+void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWidget::GraphPanelPlotGraphs &pGraphs)
 {
     // One or several graphs have been updated, so make sure that their
     // corresponding plots are up to date
@@ -3444,7 +3509,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const OpenCOR::Grap
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *pGraph)
+void SimulationExperimentViewSimulationWidget::graphUpdated(GraphPanelWidget::GraphPanelPlotGraph *pGraph)
 {
     // The given graph has been updated, so make sure that its corresponding
     // plots are up to date
@@ -3454,9 +3519,19 @@ void SimulationExperimentViewSimulationWidget::graphUpdated(OpenCOR::GraphPanelW
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot)
+{
+    // Stop tracking the given plot
+
+    mPlots.removeOne(pPlot);
+    mUpdatablePlotViewports.remove(pPlot);
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                                                          const bool &pCanSetAxes,
-                                                          const bool &pForceReplot)
+                                                          bool pCanSetAxes,
+                                                          bool pForceReplot)
 {
     // Retrieve the current axes' linear and log values or use some default
     // ones, if none are available
@@ -3500,7 +3575,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     bool needInitialisationY = true;
 
     foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
-        if (graph->isValid() && graph->isSelected()) {
+        if (graph->isVisible()) {
             SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
             double endingPoint = simulation->data()->endingPoint();
@@ -3601,8 +3676,8 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
 //==============================================================================
 
 double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simulation *pSimulation,
-                                                        const int &pRun,
-                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+                                                        CellMLSupport::CellmlFileRuntimeParameter *pParameter,
+                                                        int pRun) const
 {
     // Return the array of data points associated with the given parameter
 
@@ -3629,33 +3704,23 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               const int &pRun,
-                                                               const quint64 &pSize)
+                                                               quint64 pSize,
+                                                               int pRun)
 {
     // Update our graph's data from the given run
 
     if (pGraph->isValid()) {
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(pGraph->fileName());
 
-        pGraph->setData(data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX())),
-                        data(simulation, pRun, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY())),
+        pGraph->setData(data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterX()), pRun),
+                        data(simulation, static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(pGraph->parameterY()), pRun),
                         pSize, pRun);
     }
 }
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               const quint64 &pSize)
-{
-    // Update our graph's data from the last run
-
-    updateGraphData(pGraph, -1, pSize);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisibility)
+void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 {
     // Make sure that we are visible, if requested
 
@@ -3692,18 +3757,11 @@ void SimulationExperimentViewSimulationWidget::updateGui(const bool &pCheckVisib
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       const quint64 &pSimulationResultsSize,
-                                                                       const Task &pTask)
+                                                                       quint64 pSimulationResultsSize,
+                                                                       int pSimulationRun,
+                                                                       Task pTask)
 {
-    // Update the modified state of our simulation's corresponding file, if
-    // needed
-    // Note: normally, our simulation worker would, for each point interval,
-    //       call
-    //       SimulationExperimentViewSimulationData::checkForModifications(),
-    //       but this would result in a signal being emitted (and then handled
-    //       by
-    //       SimulationExperimentViewSimulationWidget::simulationDataModified()),
-    //       resulting in some time overhead, so we check things here instead...
+    // Update our simulation results
 
     SimulationSupport::Simulation *simulation = pSimulationWidget->simulation();
 
@@ -3758,7 +3816,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 if (visible)
                     mOldDataSizes.insert(graph, oldDataSize);
 
-                updateGraphData(graph, pSimulationResultsSize);
+                updateGraphData(graph, pSimulationResultsSize, pSimulationRun);
 
                 // We need to update our plot, if we are drawing this graph's
                 // first segment or if we were invisible at some point during
@@ -3788,8 +3846,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                         for (quint64 i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data()->sample(i).x();
-                            double valY = graph->data()->sample(i).y();
+                            double valX = graph->data(pSimulationRun)->sample(i).x();
+                            double valY = graph->data(pSimulationRun)->sample(i).y();
 
                             minX = qMin(minX, valX);
                             maxX = qMax(maxX, valX);
@@ -3882,6 +3940,17 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
+                                                                       quint64 pSimulationResultsSize,
+                                                                       Task pTask)
+{
+    // Update our simulation results
+
+    updateSimulationResults(pSimulationWidget, pSimulationResultsSize, -1, pTask);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::openCellmlFile()
 {
     // Ask OpenCOR to open our referenced CellML file
@@ -3924,40 +3993,18 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString
     // Display the given error message, if any
 
     if (!pErrorMessage.isEmpty()) {
-        Core::warningMessageBox(tr("Simulation Data Export"),
+        Core::warningMessageBox(tr("Simulation Results Export"),
                                 pErrorMessage);
     }
 }
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(const double &pProgress)
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
 {
     // There has been some progress with our export, so update our busy widget
 
     Core::centralWidget()->setBusyWidgetProgress(pProgress);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWidget::paintEvent(pEvent);
-
-    // We have been rendered, so we can initialise mGraphPanelsWidgetSizes, if
-    // needed, as well as mGraphPanelPropertiesModified and
-    // mGraphsPropertiesModified by calling checkGraphPanelsAndGraphs()
-    // Note: we initialise mGraphPanelsWidgetSizes here since when we set our
-    //       graph panels widget's sizes in furtherInitialize(), we don't end up
-    //       with the final sizes since nothing is visible yet...
-
-    if (mGraphPanelsWidgetSizes.isEmpty()) {
-        mGraphPanelsWidgetSizes = mContentsWidget->graphPanelsWidget()->sizes();
-
-        checkGraphPanelsAndGraphs();
-    }
 }
 
 //==============================================================================
@@ -3977,7 +4024,7 @@ void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
 
 void SimulationExperimentViewSimulationWidget::checkSolversProperties()
 {
-    // Check whether any of our simulation properties has changed
+    // Check whether any of our solver properties has changed
 
     mSolversPropertiesModified = allPropertyValues(mContentsWidget->informationWidget()->solversWidget()) != mSolversProperties;
 
@@ -4005,7 +4052,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 
     mGraphPanelsWidgetSizesModified = graphPanelsWidget->sizes() != mGraphPanelsWidgetSizes;
 
-    // Check whether any of our simulation properties has changed
+    // Check whether any of our graph panel / graphs properties has changed
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
 
@@ -4041,8 +4088,16 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 
     QStringList res = QStringList();
 
-    foreach (Core::Property *property, pPropertyEditor->allProperties())
+    foreach (Core::Property *property, pPropertyEditor->allProperties()) {
+        if (property->isCheckable()) {
+            if (property->isChecked())
+                res << TrueValue;
+            else
+                res << FalseValue;
+        }
+
         res << property->value();
+    }
 
     return res;
 }
@@ -4066,12 +4121,12 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
     bool graphsPropertiesModified = mGraphsProperties.keys() != mGraphsPropertiesModified.keys();
 
     if (!graphPanelPropertiesModified) {
-        foreach (const bool &someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
+        foreach (bool someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
             graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
     }
 
     if (!graphsPropertiesModified) {
-        foreach (const bool &someGraphsPropertiesModified, mGraphsPropertiesModified.values())
+        foreach (bool someGraphsPropertiesModified, mGraphsPropertiesModified.values())
             graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
     }
 

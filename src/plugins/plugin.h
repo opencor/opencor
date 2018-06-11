@@ -83,9 +83,9 @@ public:
     };
 
     explicit Plugin(const QString &pFileName, PluginInfo *pInfo,
-                    const QString &pErrorMessage, const bool &pLoad,
+                    const QString &pErrorMessage, bool pLoad,
                     PluginManager *pPluginManager);
-    ~Plugin();
+    ~Plugin() override;
 
     static bool compare(Plugin *pPlugin1, Plugin *pPlugin2);
 
@@ -107,11 +107,10 @@ public:
                              QString *pErrorMessage = 0);
 
     static bool load(const QString &pName);
-    static void setLoad(const QString &pName, const bool &pToBeLoaded);
+    static void setLoad(const QString &pName, bool pToBeLoaded);
 
     static QStringList fullDependencies(const QString &pPluginsDir,
-                                        const QString &pName,
-                                        const int &pLevel = 0);
+                                        const QString &pName, int pLevel = 0);
 
 private:
     QString mName;

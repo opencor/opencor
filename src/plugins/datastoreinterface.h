@@ -29,12 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifndef CLI_VERSION
-    #include <QIcon>
-#endif
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace DataStore {
 
@@ -43,15 +37,15 @@ namespace DataStore {
 class DataStoreVariableRun
 {
 public:
-    explicit DataStoreVariableRun(const quint64 &pCapacity, double *pValue);
+    explicit DataStoreVariableRun(quint64 pCapacity, double *pValue);
     ~DataStoreVariableRun();
 
     quint64 size() const;
 
     void addValue();
-    void addValue(const double &pValue);
+    void addValue(double pValue);
 
-    double value(const quint64 &pPosition) const;
+    double value(quint64 pPosition) const;
     double * values() const;
 
 private:
@@ -81,13 +75,11 @@ public:
 
     int runsCount() const;
 
-    void addRun(const quint64 &pCapacity);
-    void keepRuns(const int &pRunsCount);
+    void addRun(quint64 pCapacity);
+    void keepRuns(int pRunsCount);
 
-#ifndef CLI_VERSION
-    QIcon icon() const;
-    void setIcon(const QIcon &pIcon);
-#endif
+    int type() const;
+    void setType(int pType);
 
     QString uri() const;
     void setUri(const QString &pUri);
@@ -98,18 +90,16 @@ public:
     QString unit() const;
     void setUnit(const QString &pUnit);
 
-    quint64 size(const int &pRun = -1) const;
+    quint64 size(int pRun = -1) const;
 
     void addValue();
-    void addValue(const double &pValue);
+    void addValue(double pValue);
 
-    double value(const quint64 &pPosition, const int &pRun = -1) const;
-    double * values(const int &pRun = -1) const;
+    double value(quint64 pPosition, int pRun = -1) const;
+    double * values(int pRun = -1) const;
 
 private:
-#ifndef CLI_VERSION
-    QIcon mIcon;
-#endif
+    int mType;
     QString mUri;
     QString mName;
     QString mUnit;
@@ -157,18 +147,18 @@ public:
 
     int runsCount() const;
 
-    bool addRun(const quint64 &pCapacity);
+    bool addRun(quint64 pCapacity);
 
-    quint64 size(const int &pRun = -1) const;
+    quint64 size(int pRun = -1) const;
 
     DataStoreVariable * voi() const;
     DataStoreVariables variables();
     DataStoreVariables voiAndVariables();
 
     DataStoreVariable * addVariable(double *pValue = 0);
-    DataStoreVariables addVariables(double *pValues, const int &pCount);
+    DataStoreVariables addVariables(double *pValues, int pCount);
 
-    void addValues(const double &pVoiValue);
+    void addValues(double pVoiValue);
 
 private:
     QString mUri;
@@ -185,7 +175,7 @@ class DataStoreExporter : public QObject
 
 public:
     explicit DataStoreExporter(DataStoreData *pDataStoreData);
-    ~DataStoreExporter();
+    ~DataStoreExporter() override;
 
     void start();
 
@@ -199,7 +189,7 @@ protected:
 
 signals:
     void done(const QString &pErrorMessage);
-    void progress(const double &pProgress) const;
+    void progress(double pProgress) const;
 
 private slots:
     void started();

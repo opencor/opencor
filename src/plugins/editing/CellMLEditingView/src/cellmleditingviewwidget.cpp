@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
-#include "editorwidget.h"
 #include "mathmlviewerwidget.h"
 
 //==============================================================================
@@ -42,8 +41,29 @@ namespace CellMLEditingView {
 
 //==============================================================================
 
+CellmlEditingViewWidgetEditorWidget::CellmlEditingViewWidgetEditorWidget(const QString &pContents,
+                                                                         bool pReadOnly,
+                                                                         QsciLexer *pLexer,
+                                                                         CellmlEditingViewWidget *pParent) :
+    EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, pParent),
+    mOwner(pParent)
+{
+}
+
+//==============================================================================
+
+bool CellmlEditingViewWidgetEditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
+{
+    // Give our owner a chance to handle our editor's key press event, if it
+    // wants
+
+    return mOwner->handleEditorKeyPressEvent(pEvent);
+}
+
+//==============================================================================
+
 CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
-                                                 const bool &pReadOnly,
+                                                 bool pReadOnly,
                                                  QsciLexer *pLexer,
                                                  QWidget *pParent) :
     Core::SplitterWidget(pParent),
@@ -55,20 +75,20 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterMoved()));
+    connect(this, &QSplitter::splitterMoved,
+            this, &CellmlEditingViewWidget::splitterMoved);
 
     // Create our MathML viewer, editor and editor list widgets
 
     mMathmlViewerWidget = new MathMLViewerWidget::MathmlViewerWidget(this);
-    mEditorWidget = new EditorWidget::EditorWidget(pContents, pReadOnly, pLexer, this);
+    mEditorWidget = new CellmlEditingViewWidgetEditorWidget(pContents, pReadOnly, pLexer, this);
     mEditorListWidget = new EditorWidget::EditorListWidget(this);
 
     mMathmlViewerWidget->setObjectName("MathmlViewerWidget");
     mEditorWidget->setObjectName("EditorWidget");
 
-    connect(mEditorListWidget, SIGNAL(itemRequested(OpenCOR::EditorWidget::EditorListItem *)),
-            this, SLOT(itemRequested(OpenCOR::EditorWidget::EditorListItem *)));
+    connect(mEditorListWidget, &EditorWidget::EditorListWidget::itemRequested,
+            this, &CellmlEditingViewWidget::itemRequested);
 
     // Add the bordered MathML viewer, editor and editor list widgets to
     // ourselves
@@ -170,6 +190,17 @@ void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pEditingWi
 
 //==============================================================================
 
+bool CellmlEditingViewWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
+{
+    Q_UNUSED(pEvent);
+
+    // By default, we don't handle our editor's key press event
+
+    return false;
+}
+
+//==============================================================================
+
 MathMLViewerWidget::MathmlViewerWidget *CellmlEditingViewWidget::mathmlViewer() const
 {
     // Return our MathML viewer widget
@@ -215,7 +246,7 @@ void CellmlEditingViewWidget::splitterMoved()
 
 //==============================================================================
 
-void CellmlEditingViewWidget::itemRequested(OpenCOR::EditorWidget::EditorListItem *pItem)
+void CellmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 {
     // Set our editor widget's cursor position to the line/column of the given
     // item and give our editor widget the focus so that we can see the exact

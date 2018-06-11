@@ -49,8 +49,7 @@ public:
         Warning
     };
 
-    explicit CellmlTextViewParserMessage(const Type &pType,
-                                         const int &pLine, const int &pColumn,
+    explicit CellmlTextViewParserMessage(Type pType, int pLine, int pColumn,
                                          const QString &pMessage);
 
     Type type() const;
@@ -100,12 +99,13 @@ public:
     explicit CellmlTextViewParser();
 
     bool execute(const QString &pCellmlText,
-                 const CellMLSupport::CellmlFile::Version &pCellmlVersion);
-    bool execute(const QString &pCellmlText, const bool &pFullParsing = true);
+                 CellMLSupport::CellmlFile::Version pCellmlVersion);
+    bool execute(const QString &pCellmlText, bool pFullParsing = true);
 
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
 
     QDomDocument domDocument() const;
+    QDomElement modelElement() const;
 
     CellmlTextViewParserMessages messages() const;
 
@@ -117,6 +117,7 @@ private:
     CellMLSupport::CellmlFile::Version mCellmlVersion;
 
     QDomDocument mDomDocument;
+    QDomElement mModelElement;
 
     CellmlTextViewParserMessages mMessages;
 
@@ -136,19 +137,19 @@ private:
     QDomElement newDerivativeElement(const QString &pF, const QString &pX,
                                      const QString &pOrder);
     QDomElement newNumberElement(const QString &pNumber, const QString &pUnit);
-    QDomElement newMathematicalConstantElement(const CellmlTextViewScanner::TokenType &pTokenType);
-    QDomElement newMathematicalFunctionElement(const CellmlTextViewScanner::TokenType &pTokenType,
+    QDomElement newMathematicalConstantElement(CellmlTextViewScanner::TokenType pTokenType);
+    QDomElement newMathematicalFunctionElement(CellmlTextViewScanner::TokenType pTokenType,
                                                const QList<QDomElement> &pArgumentElements);
 
-    CellmlTextViewScanner::TokenTypes rangeOfTokenTypes(const CellmlTextViewScanner::TokenType &pFromTokenType,
-                                                        const CellmlTextViewScanner::TokenType &pToTokenType);
+    CellmlTextViewScanner::TokenTypes rangeOfTokenTypes(CellmlTextViewScanner::TokenType pFromTokenType,
+                                                        CellmlTextViewScanner::TokenType pToTokenType);
 
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenTypes &pTokenTypes);
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
-                   const CellmlTextViewScanner::TokenType &pTokenType);
+                   CellmlTextViewScanner::TokenType pTokenType);
     bool isTokenType(QDomNode &pDomNode,
-                     const CellmlTextViewScanner::TokenType &pTokenType);
+                     CellmlTextViewScanner::TokenType pTokenType);
 
     bool andToken(QDomNode &pDomNode);
     bool asToken(QDomNode &pDomNode);
@@ -189,19 +190,18 @@ private:
     bool parseComponentDefinition(QDomNode &pDomNode);
     bool parseVariableDeclaration(QDomNode &pDomNode);
     bool parseMathematicalExpression(QDomNode &pDomNode,
-                                     const bool &pFullParsing = true);
+                                     bool pFullParsing = true);
     bool parseGroupDefinition(QDomNode &pDomNode);
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
 
-    QString mathmlName(const CellmlTextViewScanner::TokenType &pTokenType) const;
+    QString mathmlName(CellmlTextViewScanner::TokenType pTokenType) const;
 
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
     QDomElement parseNumber(QDomNode &pDomNode);
-    QDomElement parseMathematicalFunction(QDomNode &pDomNode,
-                                          const bool &pOneArgument,
-                                          const bool &pTwoArguments,
-                                          const bool &pMoreArguments);
+    QDomElement parseMathematicalFunction(QDomNode &pDomNode, bool pOneArgument,
+                                          bool pTwoArguments,
+                                          bool pMoreArguments);
     QDomElement parseParenthesizedMathematicalExpression(QDomNode &pDomNode);
 
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,

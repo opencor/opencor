@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QIcon>
 #include <QList>
+#include <QMap>
 #ifdef Q_OS_WIN
     #include <QSet>
     #include <QVector>
@@ -70,6 +71,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameter
 {
 public:
     enum ParameterType {
+        Unknown,
         Voi,
         Constant,
         ComputedConstant,
@@ -80,12 +82,10 @@ public:
         LocallyBound
     };
 
-    explicit CellmlFileRuntimeParameter(const QString &pName,
-                                        const int &pDegree,
+    explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        const ParameterType &pType,
-                                        const int &pIndex);
+                                        ParameterType pType, int pIndex);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);
@@ -103,7 +103,8 @@ public:
 
     QString formattedUnit(const QString &pVoiUnit) const;
 
-    QIcon icon() const;
+    static QMap<int, QIcon> icons();
+    static QIcon icon(ParameterType pParameterType);
 
 private:
     QString mName;
@@ -131,7 +132,7 @@ public:
     typedef void (*ComputeRatesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC);
 
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
-    ~CellmlFileRuntime();
+    ~CellmlFileRuntime() override;
 
     CellmlFile * cellmlFile();
 
@@ -154,8 +155,6 @@ public:
     CellmlFileIssues issues() const;
 
     CellmlFileRuntimeParameters parameters() const;
-
-    void update();
 
     CellmlFileRuntimeParameter * voi() const;
 
@@ -186,7 +185,7 @@ private:
 
     void resetFunctions();
 
-    void reset(const bool &pRecreateCompilerEngine, const bool &pResetIssues);
+    void reset(bool pRecreateCompilerEngine, bool pResetIssues);
 
     void couldNotGenerateModelCodeIssue(const QString &pExtraInfo);
     void unknownProblemDuringModelCodeGenerationIssue();

@@ -102,8 +102,7 @@ bool RawSedmlViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawSedmlViewWidget::initialize(const QString &pFileName,
-                                    const bool &pUpdate)
+void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
@@ -287,24 +286,23 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget && validate(pFileName, true)) {
-        int cursorLine;
-        int cursorColumn;
+        int line;
+        int column;
 
-        editingWidget->editorWidget()->cursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->cursorPosition(line, column);
 
         QDomDocument domDocument;
 
         domDocument.setContent(editingWidget->editorWidget()->contents());
 
         editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), true);
-        editingWidget->editorWidget()->setCursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->setCursorPosition(line, column);
     }
 }
 
 //==============================================================================
 
-bool RawSedmlViewWidget::validate(const QString &pFileName,
-                                  const bool &pOnlyErrors) const
+bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) const
 {
     // Validate the given file
 
@@ -330,22 +328,30 @@ bool RawSedmlViewWidget::validate(const QString &pFileName,
         foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
             if (   !pOnlyErrors
                 || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
-                EditorWidget::EditorListItem::Type issueType;
+                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Unknown;
 
                 switch (sedmlFileIssue.type()) {
+                case SEDMLSupport::SedmlFileIssue::Unknown:
+#ifdef QT_DEBUG
+                    // We should never come here...
+
+                    qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
+#endif
+
+                    break;
                 case SEDMLSupport::SedmlFileIssue::Information:
                     issueType = EditorWidget::EditorListItem::Information;
 
                     break;
-                    case SEDMLSupport::SedmlFileIssue::Error:
+                case SEDMLSupport::SedmlFileIssue::Error:
                     issueType = EditorWidget::EditorListItem::Error;
 
                     break;
-                    case SEDMLSupport::SedmlFileIssue::Warning:
+                case SEDMLSupport::SedmlFileIssue::Warning:
                     issueType = EditorWidget::EditorListItem::Warning;
 
                     break;
-                    case SEDMLSupport::SedmlFileIssue::Fatal:
+                case SEDMLSupport::SedmlFileIssue::Fatal:
                     issueType = EditorWidget::EditorListItem::Fatal;
 
                     break;

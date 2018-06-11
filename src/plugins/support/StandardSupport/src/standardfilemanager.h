@@ -53,20 +53,23 @@ protected:
     QMap<QString, StandardFile *> mFiles;
 
     explicit StandardFileManager();
-    ~StandardFileManager();
+    ~StandardFileManager() override;
 
     virtual bool canLoad(const QString &pFileName) const = 0;
 
     virtual StandardFile * create(const QString &pFileName) const = 0;
 
-    bool doIsFile(const QString &pFileName, const bool &pForceChecking = false);
+private:
+    bool isFile(const QString &pFileName, bool pForceChecking);
+
+    void reload(const QString &pFileName, bool pForceChecking);
 
 private slots:
     void manage(const QString &pFileName);
     void unmanage(const QString &pFileName);
 
     void save(const QString &pFileName);
-    void reload(const QString &pFileName, const bool &pForceChecking = true);
+    void reload(const QString &pFileName);
     void rename(const QString &pOldFileName, const QString &pNewFileName);
 };
 

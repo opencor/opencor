@@ -130,8 +130,9 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         QString header = QString();
 
         if (voi) {
-            header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "),
-                                 voi->unit(), QString());
+            header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "))
+                            .arg(voi->unit())
+                            .arg(QString());
         }
 
         foreach (DataStore::DataStoreVariable *variable, variables) {
@@ -139,9 +140,9 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                 if (!header.isEmpty())
                     header += ',';
 
-                header += Header.arg(variable->uri().replace("/prime", "'").replace('/', " | "),
-                                     variable->unit(),
-                                     (nbOfRuns == 1)?
+                header += Header.arg(variable->uri().replace("/prime", "'").replace('/', " | "))
+                                .arg(variable->unit())
+                                .arg((nbOfRuns == 1)?
                                          QString():
                                          RunNb.arg(i+1));
             }
@@ -179,7 +180,8 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                         else
                             rowData += ',';
 
-                        if (dataStore->voi()->value(runsIndex[j], j) == voiValue) {
+                        if (   (runsIndex[j] < dataStore->size(j))
+                            && (dataStore->voi()->value(runsIndex[j], j) == voiValue)) {
                             rowData += QString::number(variableRun->value(runsIndex[j], j));
 
                             updateRunsIndex[j] = true;

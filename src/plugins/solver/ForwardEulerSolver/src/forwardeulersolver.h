@@ -49,12 +49,11 @@ class ForwardEulerSolver : public OpenCOR::Solver::OdeSolver
 public:
     explicit ForwardEulerSolver();
 
-    virtual void initialize(const double &pVoi, const int &pRatesStatesCount,
-                            double *pConstants, double *pRates, double *pStates,
-                            double *pAlgebraic,
-                            ComputeRatesFunction pComputeRates);
+    void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
+                    double *pRates, double *pStates, double *pAlgebraic,
+                    ComputeRatesFunction pComputeRates) override;
 
-    virtual void solve(double &pVoi, const double &pVoiEnd) const;
+    void solve(double &pVoi, double pVoiEnd) const override;
 
 private:
     double mStep;

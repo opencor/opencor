@@ -100,8 +100,16 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mGui->treeView, &QTreeView::collapsed,
+            this, &PluginsDialog::treeViewCollapsed);
+
+    connect(mGui->selectablePluginsCheckBox, &QCheckBox::toggled,
+            this, &PluginsDialog::selectablePluginsCheckBoxToggled);
+
+    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
+            this, &PluginsDialog::buttonBoxAccepted);
+    connect(mGui->buttonBox, &QDialogButtonBox::rejected,
+            this, &PluginsDialog::reject);
 
     // Make sure that all the widgets in our form layout can be resized, if
     // necessary and if possible
@@ -224,18 +232,18 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     // Connection to handle a plugin's information
 
-    connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateInformation(const QModelIndex &, const QModelIndex &)));
+    connect(mGui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &PluginsDialog::updateInformation);
 
     // Connection to handle the activation of a link in the description
 
-    connect(mGui->fieldThreeValue, SIGNAL(linkActivated(const QString &)),
-            this, SLOT(openLink(const QString &)));
+    connect(mGui->fieldThreeValue, &QLabel::linkActivated,
+            this, &PluginsDialog::openLink);
 
     // Connection to handle the dialog's buttons
 
-    connect(mGui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
-            this, SLOT(apply()));
+    connect(mGui->buttonBox->button(QDialogButtonBox::Apply), &QPushButton::clicked,
+            this, &PluginsDialog::apply);
 
     // Retrieve whether to show selectable plugins
 
@@ -243,7 +251,7 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     // Show/hide our unselectable plugins
 
-    on_selectablePluginsCheckBox_toggled(mGui->selectablePluginsCheckBox->isChecked());
+    selectablePluginsCheckBoxToggled(mGui->selectablePluginsCheckBox->isChecked());
 }
 
 //==============================================================================
@@ -420,13 +428,13 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 //==============================================================================
 
 void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
-                                               const bool &pInitializing)
+                                               bool pInitializing)
 {
     // Disable the connection that handles a change in a plugin's loading state
     // (otherwise what we are doing here is going to be completely uneffective)
 
-    disconnect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-               this, SLOT(updatePluginsSelectedState(QStandardItem *)));
+    disconnect(mModel, &QStandardItemModel::itemChanged,
+               this, QOverload<QStandardItem *>::of(&PluginsDialog::updatePluginsSelectedState));
 
     // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
@@ -525,8 +533,17 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // Re-enable the connection that handles a change in a plugin's loading
     // state
 
-    connect(mModel, SIGNAL(itemChanged(QStandardItem *)),
-            this, SLOT(updatePluginsSelectedState(QStandardItem *)));
+    connect(mModel, &QStandardItemModel::itemChanged,
+            this, QOverload<QStandardItem *>::of(&PluginsDialog::updatePluginsSelectedState));
+}
+
+//==============================================================================
+
+void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem)
+{
+    // Update our plugins selected state
+
+    updatePluginsSelectedState(pItem, false);
 }
 
 //==============================================================================
@@ -540,7 +557,7 @@ void PluginsDialog::openLink(const QString &pLink) const
 
 //==============================================================================
 
-void PluginsDialog::on_buttonBox_accepted()
+void PluginsDialog::buttonBoxAccepted()
 {
     // Keep track of the loading state of the various selectable plugins
 
@@ -562,7 +579,7 @@ void PluginsDialog::apply()
                            tr("<strong>%1</strong> must be restarted for your changes to take effect. Do you want to proceed?").arg(qAppName())) == QMessageBox::Yes ) {
         // Do what is done when clicking on the OK button
 
-        on_buttonBox_accepted();
+        buttonBoxAccepted();
 
         // Let people know that we are done and that we want the settings to be
         // applied
@@ -573,7 +590,7 @@ void PluginsDialog::apply()
 
 //==============================================================================
 
-QStandardItem * PluginsDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
+QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory)
 {
     // Return the given category item, after having created it, if it didn't
     // already exist
@@ -618,7 +635,7 @@ QStandardItem * PluginsDialog::pluginCategoryItem(const PluginInfo::Category &pC
 
 //==============================================================================
 
-void PluginsDialog::on_treeView_collapsed(const QModelIndex &pIndex)
+void PluginsDialog::treeViewCollapsed(const QModelIndex &pIndex)
 {
     // We don't want plugin categories to be collapse, so cancel all collapsings
 
@@ -627,7 +644,7 @@ void PluginsDialog::on_treeView_collapsed(const QModelIndex &pIndex)
 
 //==============================================================================
 
-void PluginsDialog::on_selectablePluginsCheckBox_toggled(bool pChecked)
+void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
 {
     // Keep track of whether to show selectable plugins
 

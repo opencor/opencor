@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QPalette>
 #include <QSettings>
+#include <QTimer>
 
 //==============================================================================
 
@@ -66,7 +67,8 @@ PLUGININFO_FUNC CorePluginInfo()
 //==============================================================================
 
 CorePlugin::CorePlugin() :
-    mRecentFileNamesOrUrls(QStringList())
+    mRecentFileNamesOrUrls(QStringList()),
+    mRecentFileActions(QList<QAction *>())
 {
 }
 
@@ -384,15 +386,15 @@ void CorePlugin::initializePlugin()
     mFileOpenAction = newAction(QIcon(":/oxygen/actions/document-open.png"),
                                 QKeySequence::Open, mainWindow());
     mFileOpenRemoteAction = newAction(QIcon(":/oxygen/actions/document-open-remote.png"),
-                                      QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_O),
+                                      QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_O),
                                       mainWindow());
 
     mFileReloadAction = newAction(mainWindow());
 
-    mFileDuplicateAction = newAction(QKeySequence(Qt::CTRL|Qt::Key_D),
+    mFileDuplicateAction = newAction(QKeySequence(Qt::ControlModifier|Qt::Key_D),
                                      mainWindow());
 
-    mFileLockedAction = newAction(true, QKeySequence(Qt::CTRL|Qt::Key_L),
+    mFileLockedAction = newAction(true, QKeySequence(Qt::ControlModifier|Qt::Key_L),
                                   mainWindow());
 
     mFileSaveAction = newAction(QIcon(":/oxygen/actions/document-save.png"),
@@ -418,18 +420,18 @@ void CorePlugin::initializePlugin()
 
     mFilePreviousAction = newAction(QIcon(":/oxygen/actions/go-previous.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-                                    QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_Tab),
+                                    QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_Tab),
 #elif defined(Q_OS_MAC)
-                                    QKeySequence(Qt::META|Qt::SHIFT|Qt::Key_Tab),
+                                    QKeySequence(Qt::MetaModifier|Qt::ShiftModifier|Qt::Key_Tab),
 #else
     #error Unsupported platform
 #endif
                                     mainWindow());
     mFileNextAction = newAction(QIcon(":/oxygen/actions/go-next.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-                                QKeySequence(Qt::CTRL|Qt::Key_Tab),
+                                QKeySequence(Qt::ControlModifier|Qt::Key_Tab),
 #elif defined(Q_OS_MAC)
-                                QKeySequence(Qt::META|Qt::Key_Tab),
+                                QKeySequence(Qt::MetaModifier|Qt::Key_Tab),
 #else
     #error Unsupported platform
 #endif
@@ -437,7 +439,7 @@ void CorePlugin::initializePlugin()
 
     mFileCloseAction = newAction(QIcon(":/oxygen/actions/document-close.png"),
 #if defined(Q_OS_WIN)
-                                 QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::CTRL|Qt::Key_W),
+                                 QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::ControlModifier|Qt::Key_W),
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
                                  QKeySequence::Close,
 #else
@@ -455,7 +457,7 @@ void CorePlugin::initializePlugin()
     mFileReopenSubMenu = newMenu(QIcon(":/oxygen/actions/document-open-recent.png"),
                                  mainWindow());
 
-    mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
+    mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_T),
                                                 mainWindow());
     mFileReopenSubMenuSeparator1 = newSeparator(mainWindow());
     mFileReopenSubMenuSeparator2 = newSeparator(mainWindow());
@@ -468,72 +470,70 @@ void CorePlugin::initializePlugin()
 
     // Some connections to handle our different File actions
 
-    connect(mFileNewFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(newFile()));
+    connect(mFileNewFileAction, &QAction::triggered,
+            this, &CorePlugin::newFile);
 
-    connect(mFileOpenAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(openFile()));
-    connect(mFileOpenRemoteAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(openRemoteFile()));
+    connect(mFileOpenAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::openFile));
+    connect(mFileOpenRemoteAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::openRemoteFile));
 
-    connect(mFileReloadAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(reloadFile()));
+    connect(mFileReloadAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::reloadFile));
 
-    connect(mFileDuplicateAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(duplicateFile()));
+    connect(mFileDuplicateAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::duplicateFile);
 
-    connect(mFileLockedAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(toggleLockedFile()));
+    connect(mFileLockedAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::toggleLockedFile);
 
-    connect(mFileSaveAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(saveFile()));
-    connect(mFileSaveAsAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(saveFileAs()));
-    connect(mFileSaveAllAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(saveAllFiles()));
+    connect(mFileSaveAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::saveFile));
+    connect(mFileSaveAsAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::saveFileAs);
+    connect(mFileSaveAllAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::saveAllFiles);
 
-    connect(mFilePreviousAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(previousFile()));
-    connect(mFileNextAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(nextFile()));
+    connect(mFilePreviousAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::previousFile);
+    connect(mFileNextAction, &QAction::triggered,
+            mCentralWidget, &CentralWidget::nextFile);
 
-    connect(mFileCloseAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(closeFile()));
-    connect(mFileCloseAllAction, SIGNAL(triggered(bool)),
-            mCentralWidget, SLOT(closeAllFiles()));
+    connect(mFileCloseAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::closeFile));
+    connect(mFileCloseAllAction, &QAction::triggered,
+            mCentralWidget, QOverload<>::of(&CentralWidget::closeAllFiles));
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
-            mFileOpenAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
-            mFileOpenRemoteAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
-            this, SLOT(updateFileReopenMenu(const bool &)));
+    connect(mCentralWidget, &CentralWidget::atLeastOneView,
+            mFileOpenAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::atLeastOneView,
+            mFileOpenRemoteAction, &QAction::setEnabled);
 
-    connect(mCentralWidget, SIGNAL(canSave(const bool &)),
-            mFileSaveAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(canSaveAs(const bool &)),
-            mFileSaveAsAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(canSaveAll(const bool &)),
-            mFileSaveAllAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, &CentralWidget::canSave,
+            mFileSaveAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::canSaveAs,
+            mFileSaveAsAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::canSaveAll,
+            mFileSaveAllAction, &QAction::setEnabled);
 
-    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(const bool &)),
-            mFilePreviousAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastTwoFiles(const bool &)),
-            mFileNextAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, &CentralWidget::atLeastTwoFiles,
+            mFilePreviousAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::atLeastTwoFiles,
+            mFileNextAction, &QAction::setEnabled);
 
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
-            mFileCloseAction, SLOT(setEnabled(bool)));
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
-            mFileCloseAllAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, &CentralWidget::atLeastOneFile,
+            mFileCloseAction, &QAction::setEnabled);
+    connect(mCentralWidget, &CentralWidget::atLeastOneFile,
+            mFileCloseAllAction, &QAction::setEnabled);
 
     // A connection related to our Reopen sub-menu
 
-    connect(mFileReopenMostRecentFileAction, SIGNAL(triggered(bool)),
-            this, SLOT(reopenMostRecentFile()));
-    connect(mFileClearReopenSubMenuAction, SIGNAL(triggered(bool)),
-            this, SLOT(clearReopenSubMenu()));
+    connect(mFileReopenMostRecentFileAction, &QAction::triggered,
+            this, &CorePlugin::reopenMostRecentFile);
+    connect(mFileClearReopenSubMenuAction, &QAction::triggered,
+            this, &CorePlugin::clearReopenSubMenu);
 }
 
 //==============================================================================
@@ -701,45 +701,58 @@ void CorePlugin::newFile()
 
 //==============================================================================
 
-void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
+void CorePlugin::doUpdateFileReopenMenu()
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
-    foreach (QAction *action, mFileReopenSubMenu->actions()) {
-        if (   (action != mFileReopenMostRecentFileAction)
-            && (action != mFileReopenSubMenuSeparator1)
-            && (action != mFileReopenSubMenuSeparator2)) {
-            mFileReopenSubMenu->removeAction(action);
+    foreach (QAction *action, mRecentFileActions) {
+        mFileReopenSubMenu->removeAction(action);
 
-            delete action;
-        } else if (action == mFileReopenSubMenuSeparator2) {
-            break;
-        }
+        delete action;
     }
 
+    mRecentFileActions.clear();
+
     // Add the recent files to our Reopen sub-menu
+
+    bool enabled = mFileOpenAction->isEnabled();
 
     foreach (const QString &recentFile, mRecentFileNamesOrUrls) {
         QAction *action = newAction(mainWindow());
 
-        action->setEnabled(pEnabled);
+        action->setEnabled(enabled);
         action->setText(recentFile);
 
-        connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(reopenRecentFile()));
+        connect(action, &QAction::triggered,
+                this, &CorePlugin::reopenRecentFile);
 
         mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator2, action);
+
+        mRecentFileActions << action;
     }
 
-    // Enable/disable our reopen sub-menu actions depending on whether we have
-    // recent file names
+    // Enable/disable our reopen sub-menu actions
 
-    bool hasRecentFileNamesOrUrls = !mRecentFileNamesOrUrls.isEmpty();
+    enabled = enabled && !mRecentFileNamesOrUrls.isEmpty();
 
-    mFileReopenMostRecentFileAction->setEnabled(hasRecentFileNamesOrUrls);
-    mFileClearReopenSubMenuAction->setEnabled(hasRecentFileNamesOrUrls);
+    mFileReopenMostRecentFileAction->setEnabled(enabled);
+    mFileClearReopenSubMenuAction->setEnabled(enabled);
 
-    showEnableAction(mFileReopenSubMenuSeparator2, hasRecentFileNamesOrUrls);
+    showEnableAction(mFileReopenSubMenuSeparator2, enabled);
+}
+
+//==============================================================================
+
+void CorePlugin::updateFileReopenMenu()
+{
+    // Update the contents of our Reopen sub-menu
+    // Note #1: we need to do this through a single shot otherwise, on macOS,
+    //          our menu items will look disabled (before looking enabled; see
+    //          issue #1633)...
+    // Note #2: it all used to work fine before, so could it be an issue with
+    //          Qt?...
+
+    QTimer::singleShot(0, this, &CorePlugin::doUpdateFileReopenMenu);
 }
 
 //==============================================================================
@@ -827,7 +840,7 @@ void CorePlugin::reopenMostRecentFile()
     // Note: we don't want to get a reference to mRecentFileNamesOrUrls' first
     //       item, hence we construct a new string from it. Indeed, reopenFile()
     //       is going to remove that item from mRecentFileNamesOrUrls, so if we
-    //       were to use the reference, it would eventually become an empty
+    //       were to use a reference, it would eventually become an empty
     //       string...
 
     reopenFile(QString(mRecentFileNamesOrUrls.first()));

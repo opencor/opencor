@@ -37,7 +37,7 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellMLTextViewConverterWarning::CellMLTextViewConverterWarning(const int &pLine,
+CellMLTextViewConverterWarning::CellMLTextViewConverterWarning(int pLine,
                                                                const QString &pMessage) :
     mLine(pLine),
     mMessage(pMessage)
@@ -223,6 +223,15 @@ CellMLTextViewConverterWarnings CellMLTextViewConverter::warnings() const
 
 //==============================================================================
 
+QDomNode CellMLTextViewConverter::documentationNode() const
+{
+    // Return our documentation ndoe
+
+    return mDocumentationNode;
+}
+
+//==============================================================================
+
 QDomDocument CellMLTextViewConverter::rdfNodes() const
 {
     // Return our RDF nodes
@@ -248,9 +257,11 @@ void CellMLTextViewConverter::reset()
 
     mWarnings = CellMLTextViewConverterWarnings();
 
-    mRdfNodes = QDomDocument(QString());
-
+    mModelNode = QDomNode();
+    mDocumentationNode = QDomNode();
     mTopMathmlNode = QDomNode();
+
+    mRdfNodes = QDomDocument(QString());
 
     mAssignmentDone = false;
     mOldPiecewiseStatementUsed = false;
@@ -263,7 +274,7 @@ static const auto Indent = QStringLiteral("    ");
 
 //==============================================================================
 
-void CellMLTextViewConverter::indent(const bool &pForceTracking)
+void CellMLTextViewConverter::indent(bool pForceTracking)
 {
     // Indent our output and keep track of it, if required
 
@@ -284,7 +295,7 @@ void CellMLTextViewConverter::unindent()
 
 //==============================================================================
 
-void CellMLTextViewConverter::outputString(const OutputType &pOutputType,
+void CellMLTextViewConverter::outputString(OutputType pOutputType,
                                            const QString &pString)
 {
     // Output the given string
@@ -361,7 +372,7 @@ QString CellMLTextViewConverter::cmetaId(const QDomNode &pDomNode) const
 QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
                                                     const QString &pNamespace,
                                                     const QString &pName,
-                                                    const bool &pMustBePresent) const
+                                                    bool pMustBePresent) const
 {
     // Return the trimmed value of the requested attribute using the given
     // namespace
@@ -388,7 +399,7 @@ QString CellMLTextViewConverter::attributeNodeValue(const QDomNode &pDomNode,
 
 QString CellMLTextViewConverter::cellmlAttributeNodeValue(const QDomNode &pDomNode,
                                                           const QString &pName,
-                                                          const bool &pMustBePresent) const
+                                                          bool pMustBePresent) const
 {
     // Return the requested CellML attribute using the CellML 1.0 namespace or,
     // if needed, the CellML 1.1 namespace
@@ -433,8 +444,9 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 
     indent();
 
-    // Keep track of the model's attributes
+    // Keep track of the given model node and of its attributes
 
+    mModelNode = pDomNode;
     mAttributes = pDomNode.attributes();
 
     // Process the given model node's children
@@ -588,7 +600,7 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 //==============================================================================
 
 bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
-                                               const bool &pInImportNode)
+                                               bool pInImportNode)
 {
     // Start processing the given units node
 
@@ -720,7 +732,7 @@ bool CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
 //==============================================================================
 
 bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
-                                                   const bool &pInImportNode)
+                                                   bool pInImportNode)
 {
     // Start processing the given component node
 
@@ -901,7 +913,7 @@ int CellMLTextViewConverter::childNodesCount(const QDomNode &pDomNode) const
 //==============================================================================
 
 QDomNode CellMLTextViewConverter::childNode(const QDomNode &pDomNode,
-                                            const int &pChildNodeIndex) const
+                                            int pChildNodeIndex) const
 {
     // Return the nth child element of the given node
 
@@ -2380,7 +2392,7 @@ bool CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
 //==============================================================================
 
 bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode,
-                                                 const bool &pError)
+                                                 bool pError)
 {
     // The given node is unknown, so warn the user about it
 
@@ -2465,7 +2477,7 @@ bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode,
 //==============================================================================
 
 void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
-                                                     const bool &pError,
+                                                     bool pError,
                                                      const QString &pExtra)
 {
     // The given node is known, but we don't support it, so consider it as an
@@ -2482,6 +2494,14 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
         mErrorMessage = message;
     } else {
         mWarnings << CellMLTextViewConverterWarning(lineNumber, message);
+    }
+
+    // Keep track of the give node, if it is a child of the model element and if
+    // it is in the tmp-documentation namespace
+
+    if (    (pDomNode.parentNode() == mModelNode)
+        && !pDomNode.namespaceURI().compare(CellMLSupport::TmpDocumentation)) {
+        mDocumentationNode = pDomNode.cloneNode();
     }
 }
 

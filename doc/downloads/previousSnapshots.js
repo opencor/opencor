@@ -1,4 +1,63 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 5, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> fixed an issue with version 55 of ICU being wrongly needed on some Linux systems (see issue <a href=\"https://github.com/opencor/opencor/issues/1627\">#1627</a>). Added support for exiting full-screen mode when pressing the Esc key on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1637\">#1637</a>). Stopped using <a href=\"https://travis-ci.org/\">Travis CI</a> (since we now have everything set up and working nicely on <a href=\"http://autotest.bioeng.auckland.ac.nz/jenkins/view/OpenCOR/\">Jenkins</a>)." },
+                       { "change": "<strong>SBML API:</strong> don't build libSBML with bzip2 or zip compression anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1628\">#1628</a>)." },
+                       { "change": "<strong>QScintilla support:</strong> now highlight the searched text, both in the editor and its vertical scroll bar (see issue <a href=\"https://github.com/opencor/opencor/issues/1414\">#1414</a>)." },
+                       { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
+                       { "change": "<strong>Text-based editors:</strong> can now word-wrap an editor's contents <a href=\"https://github.com/opencor/opencor/issues/1652\">#1652</a>)." },
+                       { "change": "<strong>CellML Text view:</strong> keep track of a CellML file’s documentation (see issue <a href=\"https://github.com/opencor/opencor/issues/1642\">#1642</a>)." },
+                       { "change": "<strong>Simualtion Experiment view:</strong> fixed a problem with a SED-ML file being considered modified under certain conditions (see issue <a href=\"https://github.com/opencor/opencor/issues/1626\">#1626</a>). Now keep track of unselected graphs in a SED-ML file / COMBINE archive (see issue <a href=\"https://github.com/opencor/opencor/issues/1631\">#1631</a>). Now provide a default value for the legend title of a valid graph (see issue <a href=\"https://github.com/opencor/opencor/issues/1662\">#1662</a>). Now automatically assign a colour to a new graph (see issue <a href=\"https://github.com/opencor/opencor/issues/1665\">#1665</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 6.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1552\">#1552</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1643\">#1643</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 4, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.9.5 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1615\">#1615</a>). Fixed some seemingly random crashes (especially on Windows; see issue <a href=\"https://github.com/opencor/opencor/issues/1574\">#1574</a>)." },
+                       { "change": "<strong>Data store interface:</strong> fixed a problem with the returned size of a data store being wrong in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1579\">#1579</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> fixed a problem with graph panels not always being properly aligned (see issue <a href=\"https://github.com/opencor/opencor/issues/1619\">#1619</a>)." },
+                       { "change": "<strong>PMR support:</strong> fixed a problem with the PMR Workspaces window potentially not reflecting the Git status of a folder (see issue <a href=\"https://github.com/opencor/opencor/issues/1582\">#1582</a>). Updated the description of our different PMR instances (see issue <a href=\"https://github.com/opencor/opencor/issues/1583\">#1583</a>)." },
+                       { "change": "<strong>CellML support:</strong> now provide more information when imports cannot be fully instantiated (see issue <a href=\"https://github.com/opencor/opencor/issues/1595\">#1595</a>)." },
+                       { "change": "<strong>SED-ML support:</strong> fixed a problem with OpenCOR crashing when saving an empty SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/1572\">#1572</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> fixed a problem that resulted in the the window being empty until reauthentication (see issue <a href=\"https://github.com/opencor/opencor/issues/1581\">#1581</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> prevent a model with no ODEs/DAEs from crashing OpenCOR (see issue <a href=\"https://github.com/opencor/opencor/issues/1576\">#1576</a>). Fixed an issue with some results being potentially not plotted at all (see issue <a href=\"https://github.com/opencor/opencor/issues/1613\">#1613</a>). Fixed a problem with legend labels not always being right (see issue <a href=\"https://github.com/opencor/opencor/issues/1620\">#1620</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> have libgit2 use our copy of zlib rather than the one provided by the system (see issue <a href=\"https://github.com/opencor/opencor/issues/1577\">#1577</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1588\">#1588</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2o (see issue <a href=\"https://github.com/opencor/opencor/issues/1589\">#1589</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1608\">#1608</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 3, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",

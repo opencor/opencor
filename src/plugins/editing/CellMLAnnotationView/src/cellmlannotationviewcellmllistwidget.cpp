@@ -86,11 +86,11 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pCategory,
-                                                                             const Type &pType,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(bool pCategory,
+                                                                             Type pType,
                                                                              const QString &pText,
                                                                              iface::cellml_api::CellMLElement *pElement,
-                                                                             const int &pNumber) :
+                                                                             int pNumber) :
     QStandardItem(pText),
     mCategory(pCategory),
     mType(pType),
@@ -101,7 +101,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(bool pError,
                                                                              const QString &pText) :
     CellmlAnnotationViewCellmlElementItem(false, pError?Error:Warning, pText, 0, -1)
 {
@@ -119,7 +119,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Type pType,
                                                                              const QString &pText) :
     CellmlAnnotationViewCellmlElementItem(true, pType, pText, 0, -1)
 {
@@ -135,9 +135,9 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const Type &pType,
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Type pType,
                                                                              iface::cellml_api::CellMLElement *pElement,
-                                                                             const int pNumber) :
+                                                                             int pNumber) :
     CellmlAnnotationViewCellmlElementItem(false, pType, QString(), pElement, pNumber)
 {
     // Set the text for some types
@@ -181,18 +181,18 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
     case ComponentMapping: {
         ObjRef<iface::cellml_api::MapComponents> mapComponents = dynamic_cast<iface::cellml_api::MapComponents *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()),
-                                        QChar(RightArrow),
-                                        QString::fromStdWString(mapComponents->secondComponentName())));
+        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapComponents->firstComponentName()))
+                                   .arg(QChar(RightArrow))
+                                   .arg(QString::fromStdWString(mapComponents->secondComponentName())));
 
         break;
     }
     case VariableMapping: {
         ObjRef<iface::cellml_api::MapVariables> mapVariables = dynamic_cast<iface::cellml_api::MapVariables *>(pElement);
 
-        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()),
-                                        QChar(RightArrow),
-                                        QString::fromStdWString(mapVariables->secondVariableName())));
+        setText(QString("%1 %2 %3").arg(QString::fromStdWString(mapVariables->firstVariableName()))
+                                   .arg(QChar(RightArrow))
+                                   .arg(QString::fromStdWString(mapVariables->secondVariableName())));
 
         break;
     }
@@ -214,7 +214,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
+void CellmlAnnotationViewCellmlElementItem::setIcon(Type pType)
 {
     // Set our icon based on our type
 
@@ -353,8 +353,8 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
 
     mTreeViewWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mTreeViewWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+    connect(mTreeViewWidget, &Core::TreeViewWidget::customContextMenuRequested,
+            this, &CellmlAnnotationViewCellmlListWidget::showCustomContextMenu);
 
     // Create our actions
 
@@ -366,28 +366,28 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     mRemoveAllMetadataAction = Core::newAction(this);
     mOpenImportAction = Core::newAction(this);
 
-    connect(mExpandAllAction, SIGNAL(triggered(bool)),
-            this, SLOT(expandAll()));
-    connect(mCollapseAllAction, SIGNAL(triggered(bool)),
-            this, SLOT(collapseAll()));
-    connect(mRemoveCurrentMetadataAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeCurrentMetadata()));
-    connect(mRemoveAllMetadataAction, SIGNAL(triggered(bool)),
-            this, SLOT(removeAllMetadata()));
-    connect(mOpenImportAction, SIGNAL(triggered(bool)),
-            this, SLOT(openImport()));
+    connect(mExpandAllAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::expandAll);
+    connect(mCollapseAllAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::collapseAll);
+    connect(mRemoveCurrentMetadataAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::removeCurrentMetadata);
+    connect(mRemoveAllMetadataAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::removeAllMetadata);
+    connect(mOpenImportAction, &QAction::triggered,
+            this, &CellmlAnnotationViewCellmlListWidget::openImport);
 
     // Some connections to handle the expansion/collapse of a CellML element
 
-    connect(mTreeViewWidget, SIGNAL(expanded(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
-    connect(mTreeViewWidget, SIGNAL(collapsed(const QModelIndex &)),
-            this, SLOT(resizeTreeViewToContents()));
+    connect(mTreeViewWidget, &Core::TreeViewWidget::expanded,
+            this, &CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents);
+    connect(mTreeViewWidget, &Core::TreeViewWidget::collapsed,
+            this, &CellmlAnnotationViewCellmlListWidget::resizeTreeViewToContents);
 
     // Some connections to handle the change of CellML element
 
-    connect(mTreeViewWidget->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updateMetadataDetails(const QModelIndex &, const QModelIndex &)));
+    connect(mTreeViewWidget->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &CellmlAnnotationViewCellmlListWidget::updateMetadataDetails);
 
     // Initialise our tree view widget
     // Note: we don't want to select first item of our tree view widget just yet
@@ -507,7 +507,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(const bool &pSelectFirstItem)
+void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(bool pSelectFirstItem)
 {
     // Populate our tree view widget
 
@@ -540,9 +540,9 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
         foreach (const CellMLSupport::CellmlFileIssue &issue, mCellmlFile->issues()) {
             mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issue.type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                                     QString("[%1:%2] %3").arg(QString::number(issue.line()),
-                                                                                                                               QString::number(issue.column()),
-                                                                                                                               issue.formattedMessage())));
+                                                                                                     QString("[%1:%2] %3").arg(issue.line())
+                                                                                                                          .arg(issue.column())
+                                                                                                                          .arg(issue.formattedMessage())));
         }
 
         return;

@@ -76,7 +76,7 @@ double ProgressBarWidget::value() const
 
 //==============================================================================
 
-void ProgressBarWidget::setValue(const double &pValue)
+void ProgressBarWidget::setValue(double pValue)
 {
     // Update both our value and ourselves, if needed
 

@@ -90,8 +90,7 @@ bool RawTextViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawTextViewWidget::initialize(const QString &pFileName,
-                                   const bool &pUpdate)
+void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editor associated with the given file, if any
 

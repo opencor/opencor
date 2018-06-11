@@ -41,7 +41,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager(const bool &pGuiMode) :
+PluginManager::PluginManager(bool pGuiMode) :
     mGuiMode(pGuiMode),
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),

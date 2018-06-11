@@ -87,23 +87,23 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     // Keep track of our splitter being moved
 
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(emitSplitterMoved()));
+    connect(this, &CellmlAnnotationViewEditingWidget::splitterMoved,
+            this, &CellmlAnnotationViewEditingWidget::emitSplitterMoved);
 
     // A connection to let our details widget know that we want to see the
     // metadata details of some CellML element
 
-    connect(mCellmlList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
-            mMetadataDetails, SLOT(updateGui(iface::cellml_api::CellMLElement *)));
+    connect(mCellmlList, &CellmlAnnotationViewCellmlListWidget::metadataDetailsRequested,
+            mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::updateGui);
 
     // Some connections to keep track of what our details widget wants
 
-    connect(mMetadataDetails, SIGNAL(qualifierDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(resourceDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)),
-            this, SLOT(updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &)));
-    connect(mMetadataDetails, SIGNAL(idDetailsRequested(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &, const QString &)),
-            this, SLOT(updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *, const QString &, const QString &)));
+    connect(mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::qualifierDetailsRequested,
+            this, &CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails);
+    connect(mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::resourceDetailsRequested,
+            this, &CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails);
+    connect(mMetadataDetails, &CellmlAnnotationViewMetadataDetailsWidget::idDetailsRequested,
+            this, &CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails);
 
     // Make our CellML list widget our focus proxy
 
@@ -165,7 +165,7 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewEditingWidget::m
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                             const QString &pQualifier)
 {
     // The user requested a qualifier to be looked up, so generate a web page
@@ -181,9 +181,9 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(Open
 
     // Generate the web page containing some information about the qualifier
 
-    QByteArray qualifierSvg = pQualifier.startsWith("model:")?
-                                  mModelQualifierSvg:
-                                  mBiologyQualifierSvg;
+    QString qualifierSvg = pQualifier.startsWith("model:")?
+                               mModelQualifierSvg:
+                               mBiologyQualifierSvg;
     QString shortDescription;
     QString longDescription;
 
@@ -242,7 +242,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(Open
         shortDescription = tr("Taxon");
         longDescription = tr("The biological entity represented by the model element is taxonomically restricted, where the restriction is the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to ascribe a species restriction to a biochemical reaction.");
     } else {
-        qualifierSvg = QByteArray();
+        qualifierSvg = QString();
 
         shortDescription = tr("Unknown");
         longDescription = tr("Unknown");
@@ -250,12 +250,15 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(Open
 
     // Show the information
 
-    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier, qualifierSvg, shortDescription, longDescription));
+    pWebViewer->webView()->setHtml(mQualifierInformationTemplate.arg(pQualifier)
+                                                                .arg(qualifierSvg)
+                                                                .arg(shortDescription)
+                                                                .arg(longDescription));
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                            const QString &pResource)
 {
     // The user requested a resource to be looked up, so retrieve it using
@@ -266,7 +269,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(OpenC
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(OpenCOR::WebViewerWidget::WebViewerWidget *pWebViewer,
+void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(WebViewerWidget::WebViewerWidget *pWebViewer,
                                                                      const QString &pResource,
                                                                      const QString &pId)
 {

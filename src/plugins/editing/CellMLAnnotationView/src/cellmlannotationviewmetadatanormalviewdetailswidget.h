@@ -82,15 +82,15 @@ public:
     explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellMLSupport::CellmlFile *pCellmlFile,
                                                                  QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
-                   const InformationType &pInformationType = None,
-                   const Information &pLookUpRdfTripleInformation = First);
+                   InformationType pInformationType = None,
+                   Information pLookUpRdfTripleInformation = First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
-                      const bool &pNeedAdditionalGuiUpdates = true);
+                      bool pNeedAdditionalGuiUpdates = true);
 
     void filePermissionsChanged();
 
@@ -129,13 +129,13 @@ private:
     QAction *mCopyAction;
 
     void additionalGuiUpdates(const QString &pRdfTripleInformation,
-                              const InformationType &pInformationType,
-                              const Information &pLookUpRdfTripleInformation);
+                              InformationType pInformationType,
+                              Information pLookUpRdfTripleInformation);
 
     void updateOutputHeaders();
 
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
-                       const InformationType &pInformationType = None);
+                       InformationType pInformationType = None);
 
 signals:
     void qualifierLookUpRequested(const QString &pQualifier);
@@ -143,12 +143,13 @@ signals:
     void idLookUpRequested(const QString &pResource, const QString &pId);
     void noLookUpRequested();
 
-    void rdfTripleRemoved(OpenCOR::CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+
+public slots:
+    void disableLookUpInformation();
 
 private slots:
     void copy();
-
-    void disableLookUpInformation();
 
     void showLastRdfTriple();
 

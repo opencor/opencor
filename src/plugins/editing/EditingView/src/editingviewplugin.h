@@ -95,6 +95,8 @@ private:
 
     QAction *mEditSelectAllAction;
 
+    QAction *mEditWordWrapAction;
+
     EditorWidget::EditorWidget *mEditor;
 
     QString mFileName;
@@ -122,6 +124,8 @@ private slots:
     void doFindPrevious();
 
     void doSelectAll();
+
+    void doWordWrap();
 };
 
 //==============================================================================

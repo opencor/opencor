@@ -89,6 +89,7 @@ static const auto ForegroundColor  = QStringLiteral("foregroundColor");
 static const auto Height           = QStringLiteral("height");
 static const auto Legend           = QStringLiteral("legend");
 static const auto LogarithmicScale = QStringLiteral("logarithmicScale");
+static const auto Selected         = QStringLiteral("selected");
 static const auto Size             = QStringLiteral("size");
 static const auto Style            = QStringLiteral("style");
 static const auto Title            = QStringLiteral("title");
@@ -110,14 +111,14 @@ class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
 
 public:
     explicit SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
-                       const bool &pNew = false);
-    explicit SedmlFile(const QString &pFileName, const bool &pNew = false);
-    ~SedmlFile();
+                       bool pNew = false);
+    explicit SedmlFile(const QString &pFileName, bool pNew = false);
+    ~SedmlFile() override;
 
     libsedml::SedDocument * sedmlDocument();
 
-    virtual bool load();
-    virtual bool save(const QString &pFileName = QString());
+    bool load() override;
+    bool save(const QString &pFileName = QString()) override;
 
     bool update(const QString &pFileName = QString());
 
@@ -145,7 +146,7 @@ private:
 
     bool mUpdated;
 
-    virtual void reset();
+    void reset() override;
 
     bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                 const QString &pPropertyNodeValue,

@@ -58,14 +58,14 @@ public:
 
     explicit CellmlTextViewLexer(QObject *pParent);
 
-    virtual const char * language() const;
+    const char * language() const override;
 
-    virtual QString description(int pStyle) const;
+    QString description(int pStyle) const override;
 
-    virtual QColor color(int pStyle) const;
-    virtual QFont font(int pStyle) const;
+    QColor color(int pStyle) const override;
+    QFont font(int pStyle) const override;
 
-    virtual void styleText(int pBytesStart, int pBytesEnd);
+    void styleText(int pBytesStart, int pBytesEnd) override;
 
 private:
     QString mFullText;
@@ -73,38 +73,32 @@ private:
 
     QString mEolString;
 
-    void doStyleText(const int &pBytesStart, const int &pBytesEnd,
-                     const QString &pText, const bool &pParameterBlock);
-    void doStyleTextCurrent(const int &pBytesStart, const int &pBytesEnd,
-                            const QString &pText, const bool &pParameterBlock);
-    void doStyleTextPreviousMultilineComment(const int &pPosition,
-                                             const int &pBytesStart,
-                                             const int &pBytesEnd,
-                                             const QString &pText,
-                                             const bool &pParameterBlock);
-    void doStyleTextPreviousParameterBlock(const int &pPosition,
-                                           const int &pBytesStart,
-                                           const int &pBytesEnd,
-                                           const QString &pText,
-                                           const bool &pParameterBlock);
-    void doStyleTextString(const int &pPosition, const int &pBytesStart,
-                           const int &pBytesEnd, const QString &pText,
-                           const bool &pParameterBlock);
-    void doStyleTextRegEx(const int &pBytesStart, const QString &pText,
-                          const QRegularExpression &pRegEx,
-                          const int &pRegExStyle);
-    void doStyleTextNumberRegEx(const int &pBytesStart, const QString &pText,
-                                const int &pRegExStyle);
+    void styleText(int pBytesStart, int pBytesEnd, const QString &pText,
+                   bool pParameterBlock);
+    void styleTextCurrent(int pBytesStart, int pBytesEnd, const QString &pText,
+                          bool pParameterBlock);
+    void styleTextPreviousMultilineComment(int pPosition, int pBytesStart,
+                                           int pBytesEnd, const QString &pText,
+                                           bool pParameterBlock);
+    void styleTextPreviousParameterBlock(int pPosition, int pBytesStart,
+                                         int pBytesEnd, const QString &pText,
+                                         bool pParameterBlock);
+    void styleTextString(int pPosition, int pBytesStart, int pBytesEnd,
+                         const QString &pText, bool pParameterBlock);
+    void styleTextRegEx(int pBytesStart, const QString &pText,
+                        const QRegularExpression &pRegEx, int pRegExStyle);
+    void styleTextNumberRegEx(int pBytesStart, const QString &pText,
+                              int pRegExStyle);
 
-    bool validString(const int &pFrom, const int &pTo, const int &pStyle) const;
-    int findString(const QString &pString, int pFrom, const int &pStyle,
-                   const bool &pForward = true);
+    bool validString(int pFrom, int pTo, int pStyle) const;
+    int findString(const QString &pString, int pFrom, int pStyle,
+                   bool pForward = true);
 
-    int fullTextPosition(const int &pBytesPosition) const;
-    int fullTextLength(const int &pBytesStart, const int &pBytesEnd) const;
+    int fullTextPosition(int pBytesPosition) const;
+    int fullTextLength(int pBytesStart, int pBytesEnd) const;
 
-    int fullTextBytesPosition(const int &pPosition) const;
-    int textBytesPosition(const QString &pText, const int &pPosition) const;
+    int fullTextBytesPosition(int pPosition) const;
+    int textBytesPosition(const QString &pText, int pPosition) const;
 };
 
 //==============================================================================

@@ -39,9 +39,9 @@ namespace CellMLSupport {
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          iface::rdf_api::Triple *pRdfTriple,
-                                         const Type &pType,
-                                         const ModelQualifier &pModelQualifier,
-                                         const BioQualifier &pBioQualifier,
+                                         Type pType,
+                                         ModelQualifier pModelQualifier,
+                                         BioQualifier pBioQualifier,
                                          const QString &pResource,
                                          const QString &pId)
 {
@@ -154,7 +154,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString pSubject,
-                                         const ModelQualifier &pModelQualifier,
+                                         ModelQualifier pModelQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
     CellmlFileRdfTriple(pCellmlFile, 0, BioModelsDotNetQualifier,
@@ -166,14 +166,15 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     mSubject = new CellmlFileRdfTripleElement(pSubject);
     mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(ModelRegEx)));
-    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
+    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource)
+                                                                                    .arg(pId));
 }
 
 //==============================================================================
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString pSubject,
-                                         const BioQualifier &pBioQualifier,
+                                         BioQualifier pBioQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
     CellmlFileRdfTriple(pCellmlFile, 0, BioModelsDotNetQualifier, ModelUnknown,
@@ -185,7 +186,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     mSubject = new CellmlFileRdfTripleElement(pSubject);
     mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(BioRegEx)));
-    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
+    mObject = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource)
+                                                                                    .arg(pId));
 }
 
 //==============================================================================
@@ -306,7 +308,7 @@ QString CellmlFileRdfTriple::modelQualifierAsString() const
 
 //==============================================================================
 
-QString CellmlFileRdfTriple::modelQualifierAsString(const ModelQualifier &pModelQualifier)
+QString CellmlFileRdfTriple::modelQualifierAsString(ModelQualifier pModelQualifier)
 {
     // Return the given RDF triple's model qualifier as a string
 
@@ -350,7 +352,7 @@ QString CellmlFileRdfTriple::bioQualifierAsString() const
 
 //==============================================================================
 
-QString CellmlFileRdfTriple::bioQualifierAsString(const BioQualifier &pBioQualifier)
+QString CellmlFileRdfTriple::bioQualifierAsString(BioQualifier pBioQualifier)
 {
     // Return the given RDF triple's bio(logy) qualifier as a string
 

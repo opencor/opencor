@@ -39,7 +39,7 @@ class QStandardItemModel;
 
 namespace Ui {
     class PluginsDialog;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -52,8 +52,8 @@ class PluginItemDelegate : public StyledItemDelegate
 public:
     explicit PluginItemDelegate(QObject *pParent);
 
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
+    void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+               const QModelIndex &pIndex) const override;
 };
 
 //==============================================================================
@@ -69,7 +69,7 @@ class PluginsDialog : public Dialog
 public:
     explicit PluginsDialog(QSettings *pSettings, PluginManager *pPluginManager,
                            QWidget *pParent);
-    ~PluginsDialog();
+    ~PluginsDialog() override;
 
 private:
     Ui::PluginsDialog *mGui;
@@ -86,21 +86,22 @@ private:
     QMap<PluginInfo::Category, QStandardItem *> mCategoryItems;
     QMap<QStandardItem *, PluginInfo::Category> mItemCategories;
 
-    QStandardItem * pluginCategoryItem(const PluginInfo::Category &pCategory);
+    QStandardItem * pluginCategoryItem(PluginInfo::Category pCategory);
 
     QString statusDescription(Plugin *pPlugin) const;
 
+    void updatePluginsSelectedState(QStandardItem *pItem, bool pInitializing);
+
 private slots:
-    void on_treeView_collapsed(const QModelIndex &pIndex);
+    void treeViewCollapsed(const QModelIndex &pIndex);
 
-    void on_selectablePluginsCheckBox_toggled(bool pChecked);
+    void selectablePluginsCheckBoxToggled(bool pChecked);
 
-    void on_buttonBox_accepted();
+    void buttonBoxAccepted();
 
     void updateInformation(const QModelIndex &pNewIndex,
                            const QModelIndex &pOldIndex);
-    void updatePluginsSelectedState(QStandardItem *pItem,
-                                    const bool &pInitializing = false);
+    void updatePluginsSelectedState(QStandardItem *pItem);
 
     void openLink(const QString &pLink) const;
 

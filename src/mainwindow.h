@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "guiinterface.h"
 #include "plugin.h"
 
 //==============================================================================
@@ -39,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class MainWindow;
-}
+}   // namespace Ui
 
 //==============================================================================
 
@@ -51,7 +50,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class GuiInterface;
+class CoreInterface;
 class PluginManager;
 
 //==============================================================================
@@ -69,15 +68,18 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(const QString &pApplicationDate);
-    ~MainWindow();
+    ~MainWindow() override;
 
     void handleArguments(const QStringList &pArguments);
 
     void showSelf();
 
 protected:
-    virtual void changeEvent(QEvent *pEvent);
-    virtual void closeEvent(QCloseEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
+    void closeEvent(QCloseEvent *pEvent) override;
+#ifdef Q_OS_MAC
+    void keyPressEvent(QKeyEvent *pEvent) override;
+#endif
 
 private:
     Ui::MainWindow *mGui;
@@ -93,6 +95,8 @@ private:
     Plugins mLoadedGuiPlugins;
     Plugins mLoadedPreferencesPlugins;
     Plugins mLoadedWindowPlugins;
+
+    CoreInterface *mCoreInterface;
 
     QString mRawLocale;
 
@@ -122,36 +126,37 @@ private:
     void saveSettings() const;
 
     void setLocale(const QString &pRawLocale = QString(),
-                   const bool &pForceSetting = false);
+                   bool pForceSetting = false);
 
     void reorderViewWindowsMenu();
 
     void updateViewWindowsMenu(QAction *pAction);
 
-    void restart(const bool &pSaveSettings) const;
+    void restart(bool pSaveSettings) const;
 
     void showEnableActions(const QList<QAction *> &pActions);
 
     void showPreferencesDialog(const QString &pPluginName = QString());
 
+    void showDockedWindows(bool pShow, bool pInitialisation);
+
 private slots:
     void openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl);
     void handleMessage(const QString &pMessage);
 
-    void on_actionFullScreen_triggered();
-    void on_actionSystem_triggered();
-    void on_actionEnglish_triggered();
-    void on_actionFrench_triggered();
-    void on_actionPlugins_triggered();
-    void on_actionPreferences_triggered();
-    void on_actionHomePage_triggered();
-    void on_actionCheckForUpdates_triggered();
-    void on_actionAbout_triggered();
+    void actionFullScreenTriggered();
+    void actionSystemTriggered();
+    void actionEnglishTriggered();
+    void actionFrenchTriggered();
+    void actionPluginsTriggered();
+    void actionPreferencesTriggered();
+    void actionHomePageTriggered();
+    void actionCheckForUpdatesTriggered();
+    void actionAboutTriggered();
 
     void updateGui(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
-    void showDockedWindows(const bool &pShow,
-                           const bool &pInitialisation = false);
+    void showDockedWindows(bool pShow);
     void toggleDockedWindows();
 
     void updateDockWidgetsVisibility();

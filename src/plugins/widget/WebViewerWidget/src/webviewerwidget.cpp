@@ -161,21 +161,21 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     // Some connections
 
-    connect(mWebView, SIGNAL(urlChanged(const QUrl &)),
-            this, SLOT(urlChanged(const QUrl &)));
+    connect(mWebView, &QWebView::urlChanged,
+            this, &WebViewerWidget::urlChanged);
 
-    connect(mWebView->pageAction(QWebPage::Back), SIGNAL(changed()),
-            this, SLOT(pageChanged()));
-    connect(mWebView->pageAction(QWebPage::Forward), SIGNAL(changed()),
-            this, SLOT(pageChanged()));
+    connect(mWebView->pageAction(QWebPage::Back), &QAction::changed,
+            this, &WebViewerWidget::pageChanged);
+    connect(mWebView->pageAction(QWebPage::Forward), &QAction::changed,
+            this, &WebViewerWidget::pageChanged);
 
-    connect(mWebView->page(), SIGNAL(selectionChanged()),
-            this, SLOT(selectionChanged()));
+    connect(mWebView->page(), &QWebPage::selectionChanged,
+            this, &WebViewerWidget::selectionChanged);
 
-    connect(mWebView, SIGNAL(loadProgress(int)),
-            this, SLOT(loadProgress(const int &)));
-    connect(mWebView, SIGNAL(loadFinished(bool)),
-            this, SLOT(loadFinished()));
+    connect(mWebView, &QWebView::loadProgress,
+            this, &WebViewerWidget::loadProgress);
+    connect(mWebView, &QWebView::loadFinished,
+            this, &WebViewerWidget::loadFinished);
 
     // Initially hide our progress bar
 
@@ -417,7 +417,7 @@ void WebViewerWidget::zoomOut()
 
 //==============================================================================
 
-void WebViewerWidget::setZoomingEnabled(const bool &pZoomingEnabled)
+void WebViewerWidget::setZoomingEnabled(bool pZoomingEnabled)
 {
     // Set whether zooming in/out is enabled
 
@@ -426,7 +426,7 @@ void WebViewerWidget::setZoomingEnabled(const bool &pZoomingEnabled)
 
 //==============================================================================
 
-void WebViewerWidget::setOverrideCursor(const bool &pOverrideCursor)
+void WebViewerWidget::setOverrideCursor(bool pOverrideCursor)
 {
     // Set whether we should override our cursor
 
@@ -464,7 +464,7 @@ void WebViewerWidget::emitZoomRelatedSignals()
 
 //==============================================================================
 
-void WebViewerWidget::setZoomLevel(const int &pZoomLevel)
+void WebViewerWidget::setZoomLevel(int pZoomLevel)
 {
     if (!mZoomingEnabled || (pZoomLevel == mZoomLevel))
         return;
@@ -525,7 +525,7 @@ void WebViewerWidget::pageChanged()
 
 //==============================================================================
 
-void WebViewerWidget::loadProgress(const int &pProgress)
+void WebViewerWidget::loadProgress(int pProgress)
 {
     // Update the value of our progress bar
 
@@ -539,11 +539,7 @@ void WebViewerWidget::loadFinished()
     // The loading is finished, so reset our progress bar, but with a slight
     // delay (it looks better that way)
 
-    enum {
-        ResetDelay = 169
-    };
-
-    QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+    QTimer::singleShot(169, this, &WebViewerWidget::resetProgressBar);
 }
 
 //==============================================================================

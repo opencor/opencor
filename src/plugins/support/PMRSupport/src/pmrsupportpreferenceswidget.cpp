@@ -51,6 +51,9 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
 
     mGui->setupUi(this);
 
+    connect(mGui->pmrUrlValue, &QComboBox::currentTextChanged,
+            this, &PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged);
+
     mGui->pmrUrlValue->addItems(QStringList() << SettingsPreferencesPmrUrlDefault
                                               << StagingInstance
                                               << TeachingInstance);
@@ -123,7 +126,7 @@ void PmrSupportPreferencesWidget::savePreferences()
 
 //==============================================================================
 
-void PmrSupportPreferencesWidget::on_pmrUrlValue_currentTextChanged(const QString &pCurrentText)
+void PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged(const QString &pCurrentText)
 {
     // Update our PMR URL note based on the PMR URL that is currently selected
 

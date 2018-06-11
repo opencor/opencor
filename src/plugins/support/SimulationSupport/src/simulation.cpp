@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
 #include "interfaces.h"
 #include "sedmlfilemanager.h"
@@ -31,6 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QtMath>
+
+//==============================================================================
+
+#include <QEventLoop>
 
 //==============================================================================
 
@@ -132,7 +137,7 @@ int SimulationData::delay() const
 
 //==============================================================================
 
-void SimulationData::setDelay(const int &pDelay)
+void SimulationData::setDelay(int pDelay)
 {
     // Set our delay
 
@@ -150,8 +155,7 @@ double SimulationData::startingPoint() const
 
 //==============================================================================
 
-void SimulationData::setStartingPoint(const double &pStartingPoint,
-                                      const bool &pRecompute)
+void SimulationData::setStartingPoint(double pStartingPoint, bool pRecompute)
 {
     // Set our starting point
 
@@ -175,7 +179,7 @@ double SimulationData::endingPoint() const
 
 //==============================================================================
 
-void SimulationData::setEndingPoint(const double &pEndingPoint)
+void SimulationData::setEndingPoint(double pEndingPoint)
 {
     // Set our ending point
 
@@ -193,7 +197,7 @@ double SimulationData::pointInterval() const
 
 //==============================================================================
 
-void SimulationData::setPointInterval(const double &pPointInterval)
+void SimulationData::setPointInterval(double pPointInterval)
 {
     // Set our point interval
 
@@ -287,7 +291,7 @@ QString SimulationData::nlaSolverName() const
 //==============================================================================
 
 void SimulationData::setNlaSolverName(const QString &pNlaSolverName,
-                                      const bool &pReset)
+                                      bool pReset)
 {
     // Set our NLA solver name and reset its properties
 
@@ -320,8 +324,7 @@ Solver::Solver::Properties SimulationData::nlaSolverProperties() const
 //==============================================================================
 
 void SimulationData::addNlaSolverProperty(const QString &pName,
-                                          const QVariant &pValue,
-                                          const bool &pReset)
+                                          const QVariant &pValue, bool pReset)
 {
     // Add an NLA solver property
 
@@ -340,7 +343,7 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
 
 //==============================================================================
 
-void SimulationData::reset(const bool &pInitialize)
+void SimulationData::reset(bool pInitialize)
 {
     // Reset our parameter values which means both initialising our 'constants'
     // and computing our 'computed constants' and 'variables'
@@ -363,8 +366,8 @@ void SimulationData::reset(const bool &pInitialize)
 
         // Keep track of any error that might be reported by our NLA solver
 
-        connect(nlaSolver, SIGNAL(error(const QString &)),
-                this, SIGNAL(error(const QString &)));
+        connect(nlaSolver, &Solver::NlaSolver::error,
+                this, &SimulationData::error);
 
         // Initialise our NLA solver
 
@@ -413,8 +416,8 @@ void SimulationData::reset(const bool &pInitialize)
 
 //==============================================================================
 
-void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
-                                                            const bool &pInitialize)
+void SimulationData::recomputeComputedConstantsAndVariables(double pCurrentPoint,
+                                                            bool pInitialize)
 {
     // Recompute our 'computed constants', some 'constant' algebraic variables
     // and our 'variables'
@@ -432,7 +435,7 @@ void SimulationData::recomputeComputedConstantsAndVariables(const double &pCurre
 
 //==============================================================================
 
-void SimulationData::recomputeVariables(const double &pCurrentPoint)
+void SimulationData::recomputeVariables(double pCurrentPoint)
 {
     // Recompute our 'variables'
 
@@ -485,16 +488,16 @@ void SimulationData::createArrays()
     if (runtime) {
         // Create our various arrays to compute our model
 
-        mConstants = new double[runtime->constantsCount()];
-        mRates = new double[runtime->ratesCount()];
-        mStates = new double[runtime->statesCount()];
-        mDummyStates = new double[runtime->statesCount()];
-        mAlgebraic = new double[runtime->algebraicCount()];
+        mConstants = new double[runtime->constantsCount()] {};
+        mRates = new double[runtime->ratesCount()] {};
+        mStates = new double[runtime->statesCount()] {};
+        mDummyStates = new double[runtime->statesCount()] {};
+        mAlgebraic = new double[runtime->algebraicCount()] {};
 
         // Create our various arrays to keep track of our various initial values
 
-        mInitialConstants = new double[runtime->constantsCount()];
-        mInitialStates = new double[runtime->statesCount()];
+        mInitialConstants = new double[runtime->constantsCount()] {};
+        mInitialStates = new double[runtime->statesCount()] {};
     } else {
         mConstants = mRates = mStates = mDummyStates = mAlgebraic = 0;
         mInitialConstants = mInitialStates = 0;
@@ -587,7 +590,7 @@ void SimulationResults::createDataStore()
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setIcon(parameter->icon());
+            mPoints->setType(parameter->type());
             mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
                                 runtime->voi()->name()));
             mPoints->setLabel(runtime->voi()->name());
@@ -618,7 +621,7 @@ void SimulationResults::createDataStore()
         }
 
         if (variable) {
-            variable->setIcon(parameter->icon());
+            variable->setType(parameter->type());
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
@@ -634,7 +637,17 @@ void SimulationResults::deleteDataStore()
 
     delete mDataStore;
 
+    // Reset our data store and our different data store variable/s
+    // Note: this is in case we are not able to recreate a data store...
+
     mDataStore = 0;
+
+    mPoints = 0;
+
+    mConstants = DataStore::DataStoreVariables();
+    mRates = DataStore::DataStoreVariables();
+    mStates = DataStore::DataStoreVariables();
+    mAlgebraic = DataStore::DataStoreVariables();
 }
 
 //==============================================================================
@@ -662,7 +675,7 @@ int SimulationResults::runsCount() const
 {
     // Return the number of runs held by our data store
 
-    return mDataStore->runsCount();
+    return mDataStore?mDataStore->runsCount():0;
 }
 
 //==============================================================================
@@ -683,7 +696,7 @@ bool SimulationResults::addRun()
 
 //==============================================================================
 
-void SimulationResults::addPoint(const double &pPoint)
+void SimulationResults::addPoint(double pPoint)
 {
     // Add the data to our data store
 
@@ -692,7 +705,7 @@ void SimulationResults::addPoint(const double &pPoint)
 
 //==============================================================================
 
-quint64 SimulationResults::size(const int &pRun) const
+quint64 SimulationResults::size(int pRun) const
 {
     // Return the size of our data store for the given run
 
@@ -710,7 +723,7 @@ DataStore::DataStore * SimulationResults::dataStore() const
 
 //==============================================================================
 
-double * SimulationResults::points(const int &pRun) const
+double * SimulationResults::points(int pRun) const
 {
     // Return our points for the given run
 
@@ -719,7 +732,7 @@ double * SimulationResults::points(const int &pRun) const
 
 //==============================================================================
 
-double * SimulationResults::constants(const int &pIndex, const int &pRun) const
+double * SimulationResults::constants(int pIndex, int pRun) const
 {
     // Return our constants data at the given index and for the given run
 
@@ -728,7 +741,7 @@ double * SimulationResults::constants(const int &pIndex, const int &pRun) const
 
 //==============================================================================
 
-double * SimulationResults::rates(const int &pIndex, const int &pRun) const
+double * SimulationResults::rates(int pIndex, int pRun) const
 {
     // Return our rates data at the given index and for the given run
 
@@ -737,7 +750,7 @@ double * SimulationResults::rates(const int &pIndex, const int &pRun) const
 
 //==============================================================================
 
-double * SimulationResults::states(const int &pIndex, const int &pRun) const
+double * SimulationResults::states(int pIndex, int pRun) const
 {
     // Return our states data at the given index and for the given run
 
@@ -746,7 +759,7 @@ double * SimulationResults::states(const int &pIndex, const int &pRun) const
 
 //==============================================================================
 
-double * SimulationResults::algebraic(const int &pIndex, const int &pRun) const
+double * SimulationResults::algebraic(int pIndex, int pRun) const
 {
     // Return our algebraic data at the given index and for the given run
 
@@ -757,7 +770,9 @@ double * SimulationResults::algebraic(const int &pIndex, const int &pRun) const
 
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
-    mWorker(0)
+    mRuntime(0),
+    mWorker(0),
+    mWorkerFinishedEventLoop(new QEventLoop())
 {
     // Retrieve our file details
 
@@ -770,8 +785,8 @@ Simulation::Simulation(const QString &pFileName) :
 
     // Keep track of any error occurring in our data
 
-    connect(mData, SIGNAL(error(const QString &)),
-            this, SIGNAL(error(const QString &)));
+    connect(mData, &SimulationData::error,
+            this, &Simulation::error);
 }
 
 //==============================================================================
@@ -784,13 +799,15 @@ Simulation::~Simulation()
 
     // Delete some internal objects
 
+    delete mRuntime;
+
     delete mResults;
     delete mData;
 }
 
 //==============================================================================
 
-void Simulation::retrieveFileDetails()
+void Simulation::retrieveFileDetails(bool pRecreateRuntime)
 {
     // Retrieve our CellML and SED-ML files, as well as COMBINE archive
 
@@ -814,9 +831,13 @@ void Simulation::retrieveFileDetails()
     if (mSedmlFile)
         mCellmlFile = mSedmlFile->cellmlFile();
 
-    // Keep track of our runtime, if any
+    // Get a (new) runtime, if possible
 
-    mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+    if (pRecreateRuntime) {
+        delete mRuntime;
+
+        mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+    }
 }
 
 //==============================================================================
@@ -836,7 +857,7 @@ void Simulation::save()
 
     bool needReloading = !mRuntime;
 
-    retrieveFileDetails();
+    retrieveFileDetails(false);
 
     // Ask our data and results to update themselves, if needed
     // Note: this is, for example, needed when we open an invalid file (in which
@@ -1006,7 +1027,7 @@ int Simulation::delay() const
 
 //==============================================================================
 
-void Simulation::setDelay(const int &pDelay)
+void Simulation::setDelay(int pDelay)
 {
     // Set our delay
 
@@ -1015,7 +1036,7 @@ void Simulation::setDelay(const int &pDelay)
 
 //==============================================================================
 
-bool Simulation::simulationSettingsOk(const bool &pEmitSignal)
+bool Simulation::simulationSettingsOk(bool pEmitSignal)
 {
     // Check and return whether our simulation settings are sound
 
@@ -1078,16 +1099,21 @@ bool Simulation::run()
 
         // Create a few connections
 
-        connect(mWorker, SIGNAL(running(const bool &)),
-                this, SIGNAL(running(const bool &)));
-        connect(mWorker, SIGNAL(paused()),
-                this, SIGNAL(paused()));
+        connect(mWorker, &SimulationWorker::running,
+                this, &Simulation::running);
+        connect(mWorker, &SimulationWorker::paused,
+                this, &Simulation::paused);
 
-        connect(mWorker, SIGNAL(finished(const qint64 &)),
-                this, SIGNAL(stopped(const qint64 &)));
+        connect(mWorker, &SimulationWorker::finished,
+                this, &Simulation::stopped);
 
-        connect(mWorker, SIGNAL(error(const QString &)),
-                this, SIGNAL(error(const QString &)));
+        connect(mWorker, &SimulationWorker::error,
+                this, &Simulation::error);
+
+        // Track of when our worker is finished
+
+        connect(mWorker, &SimulationWorker::finished,
+                mWorkerFinishedEventLoop, &QEventLoop::quit);
 
         // Start our worker
 
@@ -1117,9 +1143,15 @@ bool Simulation::resume()
 
 bool Simulation::stop()
 {
-    // Stop our worker
+    // Stop our worker, if any, and wait for it to be done
 
-    return mWorker?mWorker->stop():false;
+    if (mWorker && mWorker->stop()) {
+        mWorkerFinishedEventLoop->exec();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

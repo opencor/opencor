@@ -59,7 +59,7 @@ HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
 
     // Let ourselves know immediately that data is available for reading
 
-    QTimer::singleShot(0, this, SIGNAL(readyRead()));
+    QTimer::singleShot(0, this, &HelpWindowNetworkReply::readyRead);
 }
 
 //==============================================================================
@@ -98,7 +98,7 @@ qint64 HelpWindowNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
     // that we are done
 
     if (!mData.length())
-        QTimer::singleShot(0, this, SIGNAL(finished()));
+        QTimer::singleShot(0, this, &HelpWindowNetworkReply::finished);
 
     // Return the size of the data which was read
 
@@ -131,10 +131,10 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
     QUrl url = pRequest.url();
     QByteArray data = mHelpEngine->findFile(url).isValid()?
                           mHelpEngine->fileData(url):
-                          mErrorMessageTemplate.arg(tr("Error"),
-                                                    tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.",
-                                                    tr("Please <a href=\"contactUs.html\">contact us</a> about this error."),
-                                                    Core::copyright()).toUtf8();
+                          mErrorMessageTemplate.arg(tr("Error"))
+                                               .arg(tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.")
+                                               .arg(tr("Please <a href=\"contactUs.html\">contact us</a> about this error."))
+                                               .arg(Core::copyright()).toUtf8();
 
     // Return the requested document or an error message
 

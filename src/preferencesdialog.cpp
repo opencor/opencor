@@ -148,8 +148,13 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
 
     mGui->setupUi(this);
 
-    connect(mGui->buttonBox, SIGNAL(rejected()),
-            this, SLOT(reject()));
+    connect(mGui->treeView, &QTreeView::collapsed,
+            this, &PreferencesDialog::treeViewCollapsed);
+
+    connect(mGui->buttonBox, &QDialogButtonBox::accepted,
+            this, &PreferencesDialog::buttonBoxAccepted);
+    connect(mGui->buttonBox, &QDialogButtonBox::rejected,
+            this, &PreferencesDialog::reject);
 
     // Customise our GUI's button box by having both a reset plugin settings and
     // reset all settings buttons
@@ -157,10 +162,10 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     mResetAllButton = mGui->buttonBox->addButton(tr("Reset All"), QDialogButtonBox::ActionRole);
     mResetPluginButton = mGui->buttonBox->addButton(tr("Reset Plugin"), QDialogButtonBox::ActionRole);
 
-    connect(mResetAllButton, SIGNAL(clicked(bool)),
-            this, SLOT(resetAll()));
-    connect(mResetPluginButton, SIGNAL(clicked(bool)),
-            this, SLOT(resetPlugin()));
+    connect(mResetAllButton, &QPushButton::clicked,
+            this, &PreferencesDialog::resetAll);
+    connect(mResetPluginButton, &QPushButton::clicked,
+            this, &PreferencesDialog::resetPlugin);
 
     // Create and add our plugin category widget
 
@@ -234,8 +239,8 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
 
     // Connection to handle the change of preferences widget
 
-    connect(mGui->treeView->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(updatePreferencesWidget(const QModelIndex &, const QModelIndex &)));
+    connect(mGui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &PreferencesDialog::updatePreferencesWidget);
 
     // Select our first item or that of the given plugin, if any
 
@@ -268,7 +273,7 @@ QStringList PreferencesDialog::pluginNames() const
 
 //==============================================================================
 
-QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category &pCategory)
+QStandardItem * PreferencesDialog::pluginCategoryItem(PluginInfo::Category pCategory)
 {
     // Return the given category item, after having created it, if it didn't
     // already exist
@@ -310,16 +315,17 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(const PluginInfo::Category
 
 //==============================================================================
 
-void PreferencesDialog::on_treeView_collapsed(const QModelIndex &pIndex)
+void PreferencesDialog::treeViewCollapsed(const QModelIndex &pIndex)
 {
-    // We don't want plugin categories to be collapse, so cancel all collapsings
+    // We don't want plugin categories to be collapsed, so cancel all
+    // collapsings
 
     mGui->treeView->expand(pIndex);
 }
 
 //==============================================================================
 
-void PreferencesDialog::on_buttonBox_accepted()
+void PreferencesDialog::buttonBoxAccepted()
 {
     // Save all of our plugins' preferences, if they have changed, and keep
     // track of their name

@@ -47,7 +47,7 @@ public:
     explicit WindowWidget(QWidget *pParent);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 };
 
 //==============================================================================

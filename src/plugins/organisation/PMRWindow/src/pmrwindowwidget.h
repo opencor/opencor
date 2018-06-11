@@ -61,10 +61,10 @@ public:
         ExposureFile = QStandardItem::UserType+1
     };
 
-    explicit PmrWindowItem(const Type &pType, const QString &pText,
+    explicit PmrWindowItem(Type pType, const QString &pText,
                            const QString &pUrl);
 
-    virtual int type() const;
+    int type() const override;
 
     QString url() const;
 
@@ -83,7 +83,7 @@ class PmrWindowWidget : public Core::TreeViewWidget
 public:
     explicit PmrWindowWidget(QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     void initialize(const PMRSupport::PmrExposures &pExposures,
                     const QString &pFilter,
@@ -94,7 +94,7 @@ public:
     bool hasExposures() const;
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *pEvent);
+    void keyPressEvent(QKeyEvent *pEvent) override;
 
 private:
     QMenu *mContextMenu;
@@ -117,7 +117,7 @@ private:
 
     QStringList mDontExpandExposures;
 
-    void updateGui(const bool &pForceUserMessageVisibility = false);
+    void updateGui(bool pForceUserMessageVisibility = false);
 
     PmrWindowItem * currentItem() const;
 

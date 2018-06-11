@@ -39,8 +39,8 @@ MathmlConverter::MathmlConverter()
 
     mXslTransformer = new XslTransformer();
 
-    connect(mXslTransformer, SIGNAL(done(const QString &, const QString &)),
-            this, SLOT(xslTransformationDone(const QString &, const QString &)));
+    connect(mXslTransformer, &XslTransformer::done,
+            this, &MathmlConverter::xslTransformationDone);
 }
 
 //==============================================================================

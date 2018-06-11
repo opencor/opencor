@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // SED-ML Editing view plugin
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "sedmleditingviewplugin.h"
 #include "editingviewinterface.h"
@@ -176,13 +177,13 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
     if (editingViewInterface) {
-        EditorWidget::EditorWidget *editorWidget = editingViewInterface->editorWidget(pFileName);
+        EditorWidget::EditorWidget *editor = editingViewInterface->editorWidget(pFileName);
 
-        if (editorWidget) {
-            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << mEditReformatSeparator
-                                                                                << mEditReformatAction
-                                                                                << mToolsSedmlValidationSeparator
-                                                                                << mToolsSedmlValidationAction);
+        if (editor) {
+            editor->setContextMenu(editor->contextMenu()->actions() << mEditReformatSeparator
+                                                                    << mEditReformatAction
+                                                                    << mToolsSedmlValidationSeparator
+                                                                    << mToolsSedmlValidationAction);
         }
     }
 
@@ -256,21 +257,21 @@ void SEDMLEditingViewPlugin::initializePlugin()
 {
     // Create our different actions
 
-    mEditReformatAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_R),
+    mEditReformatAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_R),
                                           Core::mainWindow());
     mEditReformatSeparator = Core::newSeparator(Core::mainWindow());
 
-    mToolsSedmlValidationAction = Core::newAction(QKeySequence(Qt::CTRL|Qt::Key_T),
+    mToolsSedmlValidationAction = Core::newAction(QKeySequence(Qt::ControlModifier|Qt::Key_T),
                                                   Core::mainWindow());
     mToolsSedmlValidationSeparator = Core::newSeparator(Core::mainWindow());
 
     // Some connections to handle our different actions
 
-    connect(mEditReformatAction, SIGNAL(triggered(bool)),
-            this, SLOT(reformat()));
+    connect(mEditReformatAction, &QAction::triggered,
+            this, &SEDMLEditingViewPlugin::reformat);
 
-    connect(mToolsSedmlValidationAction, SIGNAL(triggered(bool)),
-            this, SLOT(sedmlValidation()));
+    connect(mToolsSedmlValidationAction, &QAction::triggered,
+            this, &SEDMLEditingViewPlugin::sedmlValidation);
 }
 
 //==============================================================================

@@ -38,9 +38,8 @@ extern "C" Q_DECL_EXPORT int pluginInfoVersion()
 
 //==============================================================================
 
-PluginInfo::PluginInfo(const Category &pCategory, const bool &pSelectable,
-                       const bool &pCliSupport,
-                       const QStringList &pDependencies,
+PluginInfo::PluginInfo(Category pCategory, bool pSelectable,
+                       bool pCliSupport, const QStringList &pDependencies,
                        const Descriptions &pDescriptions,
                        const QStringList &pLoadBefore) :
     mCategory(pCategory),

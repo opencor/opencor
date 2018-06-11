@@ -3,34 +3,34 @@ project(SUNDIALSPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME SUNDIALS)
-set(PACKAGE_VERSION 3.1.0)
+set(PACKAGE_VERSION 3.1.1)
 
 # Version of our package's libraries
 
 set(MAJOR_ARKODE_LIBRARY_VERSION 2)
-set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.1.0)
+set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.1.1)
 
 set(MAJOR_CVODES_LIBRARY_VERSION 3)
-set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.1.0)
+set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.1.1)
 
 set(MAJOR_IDAS_LIBRARY_VERSION 2)
 set(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.1.0)
 
 set(MAJOR_KINSOL_LIBRARY_VERSION 3)
-set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.1.0)
+set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.1.1)
 
 set(MAJOR_NVEC_LIBRARY_VERSION 3)
-set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.1.0)
+set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.1.1)
 
 set(MAJOR_SUNLINSOL_LIBRARY_VERSION 1)
-set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.1.0)
+set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.1.1)
 
 set(MAJOR_SUNMATRIX_LIBRARY_VERSION 1)
-set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.1.0)
+set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.1.1)
 
 # Git tag for our library
 
-set(GIT_TAG v3.1.0)
+set(GIT_TAG v3.1.1)
 
 # Specify where our local package will be installed
 
@@ -203,111 +203,111 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8f9caff8c990fc763f91fd34bdddf35b70bdf9cf
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} e5ca1f103c101008f97500bc292597337359ed86
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 048fe548f131b145e3a74e5b41b4ec49ca05e931
-                                              ddfe71d6a61ab75cbe95c443f540aa988bff713b
-                                              0a61ce3d4d2cc95e04bf0f1dce52253574ad669f
-                                              91aa28cf8e4f506e4e88c80abe320c62dd988b7f
-                                              79822b547ae3ab4e6fbbd709df7ebb9d89e5d16e
-                                              a11ecddee0eba9a18bbd9347297daec97ad317f7
-                                              b73746482b235511109a29d7b7f03bc2b698d172
-                                              88b72c172bcae568f666c990a4b757c3e5bed814
-                                              52fa76f3ed74d4cf17911fbeb13cd3be842fd413
-                                              939d8e342e090c42dd5851be7c116a4b36a870a9
-                                              9a9697d442eb40b710a465531a59e04ab1a43161
-                                              33a72daae041a4ae9a1b5fdb150130b6116c2a61
-                                              0e915b6f27921e0e8c64deeae62eb7f428c52a56
-                                              b72dc4ca01b426a1e720f259352483b21400332e
-                                              aa94a75974f00bd23da61d1becebcbe82a2f181c
-                                              8beb661030d24a5e675cb649c73f8fb4a4f6325c
-                                              56af7b5276d4a159228c7baec0307866b09a8ff5
-                                              314d107f7afef6283be6d92a94475a7d9d555443
-                                              ee79fd1345366624a5a696b181bb8479528d319e
-                                              7c4ca54139e1f0d53e41ae505bece0336ca30a0c
-                                              8cf3983893bcd2a569ac54a471dca79f2bdbb816
-                                              bd3c67b0dc2270fcb40f1351ea1841dbfdb9daf0
-                                              bf6930867826e4f745087e4e722ae69ce5638a6a
-                                              281358b68191e3acbe139102d595de9177a8510c
-                                              fd4ad0c6767ae8f43aa5d3f0ad575f1c0db6179c
-                                              9e3ceb2704095721efa9cf503155de86cd46d8a2
-                                              94fa607df2ecf76d3325eb1bb19d81efdea38e3e
-                                              8937a2c45f8c387b3938d4e3bd6ac09c5d25e5ae
-                                              3e13e5a9d8074914169885364ff1a068fd9b66a5
-                                              b32b73cf25f38ce5452468203b7815e57bc1a543)
+                                  SHA1_VALUES 7d9fa79de8ed8de55e463af73392264c436a5cc0
+                                              10af8f887c44ce784fb3b705d4c076eac895c8e7
+                                              dd9aefde171e5d6efc3a787fd58ff88f55e53e72
+                                              aeed828491b1b3fb175d90ad78ba4776b0cb87bd
+                                              87690d1683d130bc0990e3a41e4853a2bab7fe86
+                                              0d1f72cd060101a143f21a6d6b3585a6fb7bed34
+                                              1efbe9b4bd4317b9482480c3a2f66915427c65b7
+                                              a510faf99e021d14a0de2afd9dbd6f83a1e3a39e
+                                              43808c24247459fe8aaad4a98f85ebb43920d40c
+                                              e6c6f5de698ac10b063219178ca5f8b5a3354014
+                                              ae5bfb36e76981bfc8e54cbbe7d8e73ecaf8263c
+                                              dca2b591de7213120fd662d139295c38c48f1637
+                                              79c3ae5c93ccb691050e3778d63690e8aa2d1d10
+                                              40e977e7817a572978f44eb8b9969e101332912f
+                                              bc10ef90e14c25bc5c6ead9b21a5ce7c7bad1006
+                                              edeb1b4cee01b34b5e2c64c8ea0ca13c450723e1
+                                              9d48582289631b5a6a2e3bbe368a0f6dc9ff5061
+                                              5823fba66f0419155c904db494e2f456ad5fab9f
+                                              1045dd05c200e3594031fed0b4725d21391692d6
+                                              a7a99890f3b06547b1bf9f8be7b7de6f3485ce0b
+                                              6d90c820efaca177c05cea70014d25b31f3cb50c
+                                              374ecad034d9e388e23112e0c282931315753278
+                                              cf6fac2aada56babbcae39b2a6a2385e75123717
+                                              b55814354776b3feed4b13da7210e73fabd1de41
+                                              32d9a62cd1c1017d6b4bc33f5c7f60c586f5746a
+                                              c3999d244db9d03d2ce15cfac9355986b99dc68b
+                                              e92d4440e3a3be9a595d2b150af748e21f360365
+                                              12a624aa831f12fabb9e56ee03c3c2e85d426a3a
+                                              1f82bad5d788b451685fea6257b4f2a72b9f6d93
+                                              8283d0cf3dcb3c0457da137041eab6f9071cae5e)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} d4ea843e8f52c78d1ab4855234749718f97920ef
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 7ec36bc2f165b67433a442497eede799d4dbf868
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 9faa146d7e890a1c026835ff45c8e4fecd0ebe91
-                                              1175fbd417bd8e645fe8b411e9adb7cfa56f0ac2
-                                              01b057be12b3d5117daa62ae770d9d4de30afecd
-                                              1beaee93944a85f3500cd3aae46bd94522368c3f
-                                              4a936bbdd94621f7080cb778de780ab0f041c1cf
-                                              c6a6d15c53be271786ff3fe44039dea8dcc86dcd
-                                              4ec7fe9ef505ec24a62a49ad226d201a0d00e7e1
-                                              7e1597b8db3d5609bb26d7c340c50a4b3a64b048
-                                              fcd2ccc78b5bd52ecc3ae87187ff936a13397dc6
-                                              067abc153236aa2221b3e8f55f73e1f519c62e00
-                                              d6727d81219a15ad72ec52c66bffb264f21bf503
-                                              951839db2903292a2fa2e033494799301e3e3212
-                                              fde19d634fa8d7844bc15dcc6516b7810895e28d
-                                              6612209f31872f3ada022217f213febbe7448ed5
-                                              841779c3cf3bef7eccb29ec59da20e475ff04d2f
-                                              e01803aee275650f3844c73e541c471c086c95be
-                                              3f35a475b8bace013b49242b8b802a284727c417
-                                              f09ca06600b352ccdc0a3f48a4e0e1a2f91a900b
-                                              6e3e4948f30669baae440264359042ec69397aae
-                                              169d9d071e0db05975c50f6b59cd2e3fbde5a402
-                                              3b580209ad74c6f0be7838669fad1505faec4536
-                                              82ed7bed528ad7ce6c231d0ff27d0d09b72f0185
-                                              a5e704489e82089d9d6fec7e4af9e1735418712e
-                                              352908847fbb20e55d9cac3434e0a184d50e0adb
-                                              89fe85e459b31245f45442f1dd52c28b96ffd6c3
-                                              2d138240606f50762da18751976a036c41538fcf
-                                              4b1732cd01832db16ef100b7f14e5a767d76c337
-                                              03a6e804bbf45d19deb4d81afa8146b1ee071977
-                                              c8924b2c5ecc67435ae6cafd2c70b3be96d6a6fc
-                                              9bc26a3235512e5e58e6090d34d62f730728a5a6)
+                                  SHA1_VALUES b20b9ebcfadb11a2c7c1321b95d41a13baaa0def
+                                              8ea3e33249577431e100e26f29f34b0f2d4ce0d6
+                                              5fc220456739878f8b25e8729db20a4df93abbdd
+                                              2e367ff700daef2dcd2f94a99643a64a9af4df15
+                                              0346df08355a436f2660567323a2e80e407b5e6f
+                                              ff1eda46e699f43e3c6abe7e17f4b2260595125a
+                                              7da3a829390cbbb910df4afba4da5a5a9859f048
+                                              4596b9bbd41ac7683a3134ebce6c7d4146ede282
+                                              652a6c7fa06cca49242c900b03b9133af93b89e2
+                                              7a6f17caa3dcb1107cc5948b2199c2d82148a4df
+                                              a07bba48f34e36af75bbd6e567d5304673d10d6e
+                                              310abf0d56000ab462da0b175e16425a797225b5
+                                              0325020fa1fd86b1e60ba91f9ba5faf67e391708
+                                              23325e18899f7e385f012d0638695602a101b01d
+                                              5fa827960e34de5d5682944bab31d7ccf80800c1
+                                              f107234a9ee55cec8184941182f1d893189af26d
+                                              26dda36fd0c6b42dee88b71c310cf0b10220e7a2
+                                              af01fd473f239643658ec846d88155d7f316db24
+                                              ac2d02af985d4a828c5a839c7ff4cd38d7d621eb
+                                              7600b200afd09f8f53af2de6a9fc8983d836412f
+                                              95d8a2c5853f8e93b52ad675e48cda7cf7b391c3
+                                              66416ec04be2d43a9e9103d65ee582d754b71f49
+                                              13ddc2761703ab38cf15e7a5e8c16b5e6d633905
+                                              614b95907a319512e1a0960a000ba5337e207179
+                                              f35750c4141919d4c01af17379ff9589a4ce896c
+                                              72bd644ae838b476a6f4fd0dd90cabd5cee549f8
+                                              3c7bbdfc19d1c05bb5bcc942921259053e477ccc
+                                              e29da29a186fb2a460e627313eaaab7012290b03
+                                              a5f8ef1a54af526db25e850bc19b5cadcf864e4e
+                                              7428627dd7b439c33621deef6bdfa955ee380d68)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c2ba5abe03c5fab7082bcd435154692a0d8d970c
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f386cf9379c1160af2d027d2607e424fa530aa98
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES d676c801951a67b09c461ab15871f22207e8d7d0
-                                          d840a4fee4ec51c9ecb9d4399c246936c1996f84
-                                          846dfc8faea43b40cf5c553eb7da5e1ef35b39c9
-                                          78632e36664f4d6c6f32087e874dc513034d5d67
-                                          b41010934919debe1d30430b268ceca42d5fbf30
-                                          c080de1a9c8a808e708c8899595d14fae67438ac
-                                          21f11fe6246a0a90965a45a259f2acfb40b68090
-                                          54e2ca25623f19ba8a0a5556af70792d244b6e99
-                                          ef67af16dcf6826c102a5a4328038a1c6a2db93b
-                                          69e765532e6c4992716bd9caaba6aa36c550470a
-                                          0d5079776894f3f76072a19b593d711278767ac2
-                                          11636ae08ac37077754bec33e5064e8b781f9d1c
-                                          eb51a13f09fc07ff7274948c395ed2114fc7773f
-                                          e7a89a68efde3019927eea418ccfe34a1de9272b
-                                          65ceee05175b8bd5e92b1d3d19fcc2f24d15c8aa)
+                              SHA1_VALUES 089cc3b9ad84ba84220ae25c9c8aa2bf9d9c53f6
+                                          709f47f72533b9eec4aa71717f1e752c6e17d325
+                                          83394c61b2e87250374b80513a5006473136f112
+                                          ae3460612f578f17aed56ec2f62eff7f63f4ca01
+                                          f9cdd69facb85117bfd4dda720c8691e4b802d06
+                                          e984f56733a0a7ee4cc69eb55c8cc5472936baf2
+                                          6cf13d2f9bdc3208bac38070f3ac453f288ca797
+                                          acca06a545838d8093ec7285347e80c5e5fded7c
+                                          64471159ee6c3862213575279aca0ae62c72c2ad
+                                          fc2c59353d7391adf80fe3b3860ce57db2e795c9
+                                          20e1cb300f98a9cf0a4a4284a0fa85c043e82303
+                                          edda988b2c8ae0fdc617684b63c835c9bb580275
+                                          29994771e648e8f843c5b77c6682b7b8f613925b
+                                          b54f39649c9c56507ffc68a3e851bc6e9d337d28
+                                          3aebde969e670099e0b190cebfae01fc76771e2c)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} cecc2b5af4badea17a2cfc1c842270d0f7c487e6
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 0c1b67b9feb2c8f7393ff7d87c85d5d329b9a259
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 73b854cb7a3e89886ba6e47385adca78be0d3b7a
-                                          d0f812410d83fd568bea63afda83ac168f8afd91
-                                          5673ca86fc8b6285e12f60289ccac6cc2b78bf63
-                                          d3992dcc5d89e82495898f38bdceecfc446db50a
-                                          4066693cf0e3bafe16cea00a10f1f84ca99bd6e4
-                                          64b540ec2e1a2da4040d08a88bb12d7b77033630
-                                          4ab9e3861b449b8eccc61d45ca6e6279399e98c9
-                                          f77cf33187bf0e1ec40ae01401d66752f8f052c9
-                                          9f1fded25d840a095a8bf287ecb168d5bb9bad2f
-                                          6a29c9670c065ae14c06ec962d67e0e75ec055a4
-                                          3ba2e15819196103ef57faa73ca701f8106e551d
-                                          88792b4d789aa5c9b7923a9bfa00b3af02c0e307
-                                          0fff38db8619cde80490d48621be1268c7a95c93
-                                          4ed6cbcc50d9283d268ca6813539bea70332726a
-                                          56c1f6ab185466d04f1c72323e59e30e0c73feb1)
+                              SHA1_VALUES 27b317a340acccdc26bd7d1aec8e0dbace32bdca
+                                          ff91bac1bcbf30aef6b738e92c2048425c827b0a
+                                          6b09523d0c84007296c065061ab6d551cadc63a9
+                                          3598a9430cfd53f102b3042f3b835c2498dde092
+                                          3ff722b06be7aa5d89d17258699cbb0b50f281b3
+                                          54d2780e4e6eb540b84282b026be7b4a9bd7932d
+                                          814caa42eb4fb3e36e54cd385f630bfd5ec00d2d
+                                          517b40cc1b7ec6a44462e172cb9f163409be9e60
+                                          053196032dc236b85abd38d703a0b99d77443899
+                                          8233defaf1859bc69a371a226534d3ad368faec1
+                                          4e5f2eeb61b6a01ea77118e01cc30e76e0659dcd
+                                          ff3478b0c4f7e8c758a7cac36e2675f182de344a
+                                          2441e178156237e0692ef9b691bb8d33afdaf6a3
+                                          b046cadd6ae0bda09132f1ef544646d41cfb0aab
+                                          72e1640bc5b474907264c45ca02538e3b41d3919)
     endif()
 else()
     # Ignore some warnings
@@ -343,7 +343,7 @@ else()
             ${CMAKE_ARGS}
             -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-            -DEXAMPLES_ENABLE=OFF
+            -DEXAMPLES_ENABLE_C=OFF
             -DNO_FPRINTF_OUTPUT=ON
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${ARKODE_IMPORT_LIBRARY}
@@ -369,105 +369,105 @@ else()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyArkodeLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyArkodeLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${ARKODE_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_arkode${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${ARKODE_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${ARKODE_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyCvodesLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyCvodesLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${CVODES_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_cvodes${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${CVODES_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${CVODES_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyIdasLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyIdasLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${IDAS_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_idas${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${IDAS_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${IDAS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyKinsolLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyKinsolLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${KINSOL_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_kinsol${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${KINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${KINSOL_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyNvecserialLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyNvecserialLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${NVECSERIAL_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_nvecserial${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${NVEC_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${NVECSERIAL_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunlinsolbandLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolbandLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLBAND_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolband${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLBAND_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunlinsoldenseLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsoldenseLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLDENSE_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsoldense${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLDENSE_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunlinsolpcgLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolpcgLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLPCG_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolpcg${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLPCG_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunlinsolspbcgsLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolspbcgsLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLSPBCGS_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolspbcgs${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLSPBCGS_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunlinsolspfgmrLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolspfgmrLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLSPFGMR_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolspfgmr${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLSPFGMR_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunlinsolspgmrLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolspgmrLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLSPGMR_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolspgmr${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLSPGMR_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunlinsolsptfqmrLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunlinsolsptfqmrLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNLINSOLSPTFQMR_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolsptfqmr${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNLINSOLSPTFQMR_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunmatrixbandLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunmatrixbandLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNMATRIXBAND_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunmatrixband${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNMATRIX_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNMATRIXBAND_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunmatrixdenseLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunmatrixdenseLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNMATRIXDENSE_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunmatrixdense${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNMATRIX_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNMATRIXDENSE_SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopySunmatrixsparseLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunmatrixsparseLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNMATRIXSPARSE_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunmatrixsparse${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNMATRIX_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SUNMATRIXSPARSE_SHARED_LIBRARY}

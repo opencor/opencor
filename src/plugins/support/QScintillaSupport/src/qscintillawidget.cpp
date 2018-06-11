@@ -45,6 +45,7 @@ namespace QScintillaSupport {
 
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
+    mHandleChanges(true),
     mCanSelectAll(false),
     mInsertMode(true)
 {
@@ -129,29 +130,21 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mCursorPositionWidget = new QLabel(this);
     mEditingModeWidget = new QLabel(this);
 
-    // Keep track of the change to the UI
+    // Keep track of various changes
 
-    connect(this, SIGNAL(SCN_UPDATEUI(int)),
-            this, SLOT(updateUi()));
+    connect(this, &QScintillaWidget::SCN_UPDATEUI,
+            this, &QScintillaWidget::updateUi);
 
-    // Keep track of changes to our editor and resize the margin line numbers
-    // accordingly
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::updateMarginLineNumbersWidth);
 
-    connect(this, SIGNAL(textChanged()),
-            this, SLOT(updateMarginLineNumbersWidth()));
+    connect(this, &QScintillaWidget::selectionChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
+    connect(this, &QScintillaWidget::textChanged,
+            this, &QScintillaWidget::checkCanSelectAll);
 
-    // Keep track of changes to our editor that may affect our ability to select
-    // all of its text
-
-    connect(this, SIGNAL(selectionChanged()),
-            this, SLOT(checkCanSelectAll()));
-    connect(this, SIGNAL(textChanged()),
-            this, SLOT(checkCanSelectAll()));
-
-    // Keep track of the change in the cursor position
-
-    connect(this, SIGNAL(cursorPositionChanged(int, int)),
-            this, SLOT(cursorPositionChanged(const int &, const int &)));
+    connect(this, &QScintillaWidget::cursorPositionChanged,
+            this, &QScintillaWidget::updateCursorPosition);
 }
 
 //==============================================================================
@@ -181,7 +174,7 @@ void QScintillaWidget::cursorPosition(int &pLine, int &pColumn)
 {
     // Retrieve our cursor position
 
-    QsciScintilla::getCursorPosition(&pLine, &pColumn);
+    getCursorPosition(&pLine, &pColumn);
 }
 
 //==============================================================================
@@ -229,7 +222,7 @@ int QScintillaWidget::currentPosition() const
 
 //==============================================================================
 
-void QScintillaWidget::setCurrentPosition(const int &pCurrentPosition)
+void QScintillaWidget::setCurrentPosition(int pCurrentPosition)
 {
     // Set our current position
 
@@ -247,8 +240,7 @@ QString QScintillaWidget::contents() const
 
 //==============================================================================
 
-void QScintillaWidget::setContents(const QString &pContents,
-                                   const bool &pKeepHistory)
+void QScintillaWidget::setContents(const QString &pContents, bool pKeepHistory)
 {
     // Set our contents and keep our history, if required
 
@@ -277,8 +269,7 @@ int QScintillaWidget::contentsSize() const
 
 //==============================================================================
 
-QString QScintillaWidget::textInRange(const int &pStartRange,
-                                      const int &pEndRange) const
+QString QScintillaWidget::textInRange(int pStartRange, int pEndRange) const
 {
     // Retrieve and return the text in the given range, after making sure that
     // the given range makes sense
@@ -291,7 +282,7 @@ QString QScintillaWidget::textInRange(const int &pStartRange,
         return QString();
     }
 
-    char *text = new char[pEndRange-pStartRange+1];
+    char *text = new char[pEndRange-pStartRange+1] {};
 
     SendScintilla(SCI_GETTEXTRANGE, pStartRange, pEndRange, text);
 
@@ -304,12 +295,11 @@ QString QScintillaWidget::textInRange(const int &pStartRange,
 
 //==============================================================================
 
-int QScintillaWidget::findTextInRange(const int &pStartRange,
-                                      const int &pEndRange,
+int QScintillaWidget::findTextInRange(int pStartRange, int pEndRange,
                                       const QString &pText,
-                                      const bool &pRegularExpression,
-                                      const bool &pCaseSensitive,
-                                      const bool &pWholeWordsOnly) const
+                                      bool pRegularExpression,
+                                      bool pCaseSensitive,
+                                      bool pWholeWordsOnly) const
 {
     // Keep track of the start and end of the current target
 
@@ -341,30 +331,26 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
 
 //==============================================================================
 
-QString QScintillaWidget::wordAt(const int &pLine, const int &pColumn) const
+QString QScintillaWidget::wordAt(int pLine, int pColumn) const
 {
-    // Return the current word, if any
+    // Return the word, if any, at the given line/column
 
     return wordAtLineIndex(pLine, pColumn);
 }
 
 //==============================================================================
 
-void QScintillaWidget::selectWordAt(const int &pLine, const int &pColumn)
+void QScintillaWidget::selectWordAt(int pLine, int pColumn)
 {
-    // Return the current word, if any
+    // Select the word, if any, at the given line/column
 
     int position = positionFromLineIndex(pLine, pColumn);
 
     int startPosition = SendScintilla(SCI_WORDSTARTPOSITION, position, true);
     int endPosition = SendScintilla(SCI_WORDENDPOSITION, position, true);
 
-    if (endPosition-startPosition > 0) {
-        setSelection(SendScintilla(SCI_LINEFROMPOSITION, startPosition),
-                     SendScintilla(SCI_GETCOLUMN, startPosition),
-                     SendScintilla(SCI_LINEFROMPOSITION, endPosition),
-                     SendScintilla(SCI_GETCOLUMN, endPosition));
-    }
+    if (endPosition-startPosition > 0)
+        SendScintilla(SCI_SETSEL, startPosition, endPosition);
 }
 
 //==============================================================================
@@ -434,7 +420,7 @@ QString QScintillaWidget::eolString() const
 
 //==============================================================================
 
-QColor QScintillaWidget::backgroundColor(const int &pStyle)
+QColor QScintillaWidget::backgroundColor(int pStyle)
 {
     // Return the background color for the given style
 
@@ -443,7 +429,7 @@ QColor QScintillaWidget::backgroundColor(const int &pStyle)
 
 //==============================================================================
 
-void QScintillaWidget::setBackgroundColor(const int &pStyle,
+void QScintillaWidget::setBackgroundColor(int pStyle,
                                           const QColor &pBackgroundColor)
 {
     // Set the background color for the given style
@@ -453,7 +439,7 @@ void QScintillaWidget::setBackgroundColor(const int &pStyle,
 
 //==============================================================================
 
-QColor QScintillaWidget::foregroundColor(const int &pStyle)
+QColor QScintillaWidget::foregroundColor(int pStyle)
 {
     // Return the foreground color for the given style
 
@@ -462,7 +448,7 @@ QColor QScintillaWidget::foregroundColor(const int &pStyle)
 
 //==============================================================================
 
-void QScintillaWidget::setForegroundColor(const int &pStyle,
+void QScintillaWidget::setForegroundColor(int pStyle,
                                           const QColor &pForegroundColor)
 {
     // Set the foreground color for the given style
@@ -477,6 +463,38 @@ int QScintillaWidget::zoomLevel() const
     // Return our zoom level
 
     return SendScintilla(SCI_GETZOOM);
+}
+
+//==============================================================================
+
+bool QScintillaWidget::handleChanges() const
+{
+    // Return our changes should be handled
+
+    return mHandleChanges;
+}
+
+//==============================================================================
+
+void QScintillaWidget::setHandleChanges(bool pHandleChanges)
+{
+    // Set whether we should handle changes
+
+    mHandleChanges = pHandleChanges;
+
+    // Emit a few signals, if we should handle changes
+    // Note: this is to ensure that our owner is up-to-date with whatever we
+    //       have done when changes weren't handled...
+
+    if (pHandleChanges) {
+        int line;
+        int column;
+
+        cursorPosition(line, column);
+
+        emit textChanged();
+        emit cursorPositionChanged(line, column);
+    }
 }
 
 //==============================================================================
@@ -583,46 +601,34 @@ void QScintillaWidget::focusOutEvent(QFocusEvent *pEvent)
 
 void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
 {
-    // Let people know that a key has been pressed
+    // Increase/decrease/reset the font size, if needed
 
-    bool handled = false;
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        if (pEvent->key() == Qt::Key_0) {
+            zoomTo(0);
 
-    emit keyPressed(pEvent, handled);
+            pEvent->accept();
+        } else if (   (pEvent->key() == Qt::Key_Plus)
+                   || (pEvent->key() == Qt::Key_Equal)) {
+            zoomIn();
 
-    // Carry on as normal, if the event wasn't handled
+            pEvent->accept();
+        } else if (pEvent->key() == Qt::Key_Minus) {
+            zoomOut();
 
-    if (handled) {
-        pEvent->accept();
-    } else {
-        // Reset the font size, if needed
-
-        if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-            &&  (pEvent->modifiers() & Qt::ControlModifier)
-            && !(pEvent->modifiers() & Qt::AltModifier)
-            && !(pEvent->modifiers() & Qt::MetaModifier)) {
-            if (pEvent->key() == Qt::Key_0) {
-                zoomTo(0);
-
-                pEvent->accept();
-            } else if (   (pEvent->key() == Qt::Key_Plus)
-                       || (pEvent->key() == Qt::Key_Equal)) {
-                zoomIn();
-
-                pEvent->accept();
-            } else if (pEvent->key() == Qt::Key_Minus) {
-                zoomOut();
-
-                pEvent->accept();
-            } else {
-                // Default handling of the event
-
-                QsciScintilla::keyPressEvent(pEvent);
-            }
+            pEvent->accept();
         } else {
             // Default handling of the event
 
             QsciScintilla::keyPressEvent(pEvent);
         }
+    } else {
+        // Default handling of the event
+
+        QsciScintilla::keyPressEvent(pEvent);
     }
 }
 
@@ -681,8 +687,37 @@ void QScintillaWidget::zoomTo(int pSize)
 
 //==============================================================================
 
+void QScintillaWidget::undo()
+{
+    // Undo the last action, but without handling changes since this may slow
+    // things done (e.g. when the last action was a replacing all action)
+
+    setHandleChanges(false);
+        QsciScintilla::undo();
+    setHandleChanges(true);
+}
+
+//==============================================================================
+
+void QScintillaWidget::redo()
+{
+    // Redo the last action, but without handling changes since this may slow
+    // things done (e.g. when the last action was a replacing all action)
+
+    setHandleChanges(false);
+        QsciScintilla::redo();
+    setHandleChanges(true);
+}
+
+//==============================================================================
+
 void QScintillaWidget::updateUi()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Update our editing mode, if needed
 
     bool newInsertMode = !overwriteMode();
@@ -699,6 +734,11 @@ void QScintillaWidget::updateUi()
 
 void QScintillaWidget::updateMarginLineNumbersWidth()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Resize the margin line numbers width
     // Note: the +6 is to ensure that the margin line numbers width is indeed
     //       wide enough (there is clearly a 'problem' with the width computed
@@ -713,6 +753,11 @@ void QScintillaWidget::updateMarginLineNumbersWidth()
 
 void QScintillaWidget::checkCanSelectAll()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Check whether we can select all the text
 
     bool newCanSelectAll = !text().isEmpty() && selectedText().compare(text());
@@ -749,13 +794,17 @@ void QScintillaWidget::updateColors()
 
 //==============================================================================
 
-void QScintillaWidget::cursorPositionChanged(const int &pLine,
-                                             const int &pColumn)
+void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Update our cursor position
 
-    mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(QString::number(pLine+1),
-                                                                    QString::number(pColumn+1)));
+    mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(pLine+1)
+                                                               .arg(pColumn+1));
 }
 
 //==============================================================================

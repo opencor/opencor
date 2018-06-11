@@ -67,7 +67,7 @@ public:
                                                        SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                                        QWidget *pParent);
 
-    virtual void retranslateUi();
+    void retranslateUi() override;
 
     Core::CollapsibleWidget * collapsibleWidget() const;
 
@@ -76,7 +76,7 @@ public:
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget * graphPanelAndGraphsWidget() const;
     SimulationExperimentViewInformationParametersWidget * parametersWidget() const;
 
-    void finishEditing(const bool &pPausedSimulation);
+    void finishEditing(bool pPausedSimulation);
 
 private:
     Core::CollapsibleWidget *mCollapsibleWidget;
@@ -93,7 +93,7 @@ private slots:
     void grapPanelPropertyEditor();
     void graphsPropertyEditor();
 
-    void graphPanelGraphsModeChanged(const OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode &pMode);
+    void graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode);
 };
 
 //==============================================================================

@@ -101,7 +101,7 @@ QVariantList qBoolListToVariantList(const QBoolList &pBoolList)
 
     QVariantList res = QVariantList();
 
-    foreach (const int &nb, pBoolList)
+    foreach (int nb, pBoolList)
         res << nb;
 
     return res;
@@ -129,7 +129,7 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 
     QVariantList res = QVariantList();
 
-    foreach (const int &nb, pIntList)
+    foreach (int nb, pIntList)
         res << nb;
 
     return res;
@@ -242,7 +242,7 @@ QString digitGroupNumber(const QString &pNumber)
 
 //==============================================================================
 
-QString sizeAsString(const double &pSize, const int &pPrecision)
+QString sizeAsString(double pSize, int pPrecision)
 {
     // Note: pSize is a double rather than a quint64, in case we need to convert
     //       an insane size...
@@ -282,7 +282,7 @@ QString sha1(const QString &pString)
 //==============================================================================
 
 void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
-                                const int &pPosition, int &pLine, int &pColumn)
+                                int pPosition, int &pLine, int &pColumn)
 {
     // Determine the line and column values of the given position within the
     // given string using the given end of line
@@ -301,8 +301,7 @@ void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
 //==============================================================================
 
 void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
-                                const int &pLine, const int &pColumn,
-                                int &pPosition)
+                                int pLine, int pColumn, int &pPosition)
 {
     // Determine the position value of the given line and column within the
     // given string using the given end of line
@@ -426,7 +425,7 @@ bool isEmptyDirectory(const QString &pDirName)
     #pragma optimize("", off)
 #endif
 
-void doNothing(const int &pMax)
+void doNothing(int pMax)
 {
     // A silly function, which aim is simply to do nothing
     // Note: this function came about because there is no way, on Windows, to
@@ -643,7 +642,7 @@ QString cleanPresentationMathml(const QString &pPresentationMathml)
 //==============================================================================
 
 QString newFileName(const QString &pFileName, const QString &pExtra,
-                    const bool &pBefore, const QString &pFileExtension)
+                    bool pBefore, const QString &pFileExtension)
 {
     // Return the name of a 'new' file
     // Note: see Tests::newFileNameTests() for what we want to be able to get...
@@ -702,7 +701,7 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
 //==============================================================================
 
 QString newFileName(const QString &pFileName, const QString &pExtra,
-                    const bool &pBefore)
+                    bool pBefore)
 {
     // Return the name of a 'new' file
 
@@ -771,8 +770,9 @@ void cleanDomElement(QDomElement &pDomElement,
     // before removing them from the element and adding a new attribute that
     // will later on be used for string replacement
 
+    static const int AttributeNumberWidth = ceil(log(ULLONG_MAX));
+
     static quint64 attributeNumber = 0;
-    static const int ULLONG_WIDTH = ceil(log(ULLONG_MAX));
 
     if (pDomElement.hasAttributes()) {
         QStringList serialisedAttributes = QStringList();
@@ -826,7 +826,7 @@ void cleanDomElement(QDomElement &pDomElement,
 
         // Keep track of the serialisation of the element's attribute
 
-        QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
+        QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, AttributeNumberWidth, 10, QChar('0'));
 
         pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(' ').toUtf8());
 

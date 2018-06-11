@@ -63,31 +63,31 @@ if(USE_PREBUILT_SEDMLAPI_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 48929203f6cf3d58c02110f82a61200d03d37f66
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} ff370cd60079d0cbb1d70151ba1a53980c12ef39
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a285b5e6532ff2ae8b68c6a47b94d911d5496b8f
-                                              6fae4b4587fd0769b4d7885fdf1f59dcd753bd6a)
+                                  SHA1_VALUES 26468ec5c1fd9d7016360454b5859329dabbc193
+                                              0941d5b8c439045de3e52065fcec355737286358)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} db406bb2105c73742c759612dc663496d3868838
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 9af70876cda63372a50b5f50ad92573e1db7ba3c
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 0e01aa3d70dc38389cf1497759bfa65d4e5d7358
-                                              329e30cfc5e8e2f493e6aadf2dbd89c347867ff0)
+                                  SHA1_VALUES baf4cf556f5bc84a2a192040966a0f411d9b8ff1
+                                              fa8d33829360b5139f4c882950722111691eb0cb)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e94f678c588380730103eba4067e880340ddf24f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 37e2dd9b120818ff7376fde824115318cc149a66
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 308705d24ebece8decf05bd014c8fe2247dc8206)
+                              SHA1_VALUES d6690e7ac4fd4defd3ad32774e611cdb1b5bd09a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 89509c8698588a23d52c0963a181d68aeae3218f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} da409f582fc3c3390c796ec6e54483f8c018fd41
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e20078453dd48df4be117c4efca7e6b1627a29d4)
+                              SHA1_VALUES 62397d3f1b0fdc1beaa45ef18a07a8bd1bfcfdba)
     endif()
 else()
     # Build libSEDML as an external project
@@ -145,7 +145,7 @@ else()
             ${DEFINE_LIBZ_LIBRARY}
             -DWITH_CPP_NAMESPACE=ON
             -DWITH_SWIG=OFF
-            -DWITH_ZLIB=ON
+            -DWITH_ZLIB=OFF
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
         DEPENDS
@@ -158,7 +158,7 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyDLL
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDll
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SHARED_LIBRARY} lib
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
@@ -166,7 +166,7 @@ else()
         # Dereference the symbolic link to the libraries since CMake's tar can't
         # do this
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} CopyLibrary
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sedml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SHARED_LIBRARY}

@@ -58,7 +58,7 @@ namespace SEDMLSupport {
 //==============================================================================
 
 SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
-                     const bool &pNew) :
+                     bool pNew) :
     StandardSupport::StandardFile(pFileName),
     mOwnerFileName(pOwnerFileName),
     mSedmlDocument(0),
@@ -73,7 +73,7 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
 
 //==============================================================================
 
-SedmlFile::SedmlFile(const QString &pFileName, const bool &pNew) :
+SedmlFile::SedmlFile(const QString &pFileName, bool pNew) :
     SedmlFile(pFileName, QString(), pNew)
 {
 }
@@ -264,7 +264,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     for (uint i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
         const libsedml::SedError *error = errorLog->getError(i);
-        SedmlFileIssue::Type issueType;
+        SedmlFileIssue::Type issueType = SedmlFileIssue::Unknown;
 
         switch (error->getSeverity()) {
         case LIBSBML_SEV_INFO:
@@ -336,7 +336,8 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
         mIssues << SedmlFileIssue(SedmlFileIssue::Error,
                                   pPropertyNode.getLine(),
                                   pPropertyNode.getColumn(),
-                                  tr("the '%1' property must have a value of %2").arg(pPropertyName, values));
+                                  tr("the '%1' property must have a value of %2").arg(pPropertyName)
+                                                                                 .arg(values));
 
         return false;
     } else {
@@ -1273,7 +1274,8 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                 }
             } else {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Error,
-                                          tr("%1 could not be retrieved (%2)").arg(modelSource, Core::formatMessage(errorMessage)));
+                                          tr("%1 could not be retrieved (%2)").arg(modelSource)
+                                                                              .arg(Core::formatMessage(errorMessage)));
             }
         }
     }

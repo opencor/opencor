@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 2;
+    return 3;
 }
 
 //==============================================================================
@@ -51,15 +51,14 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariableRun::DataStoreVariableRun(const quint64 &pCapacity,
-                                           double *pValue) :
+DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
     mCapacity(pCapacity),
     mSize(0),
     mValue(pValue)
 {
     // Create our array of values
 
-    mValues = new double[pCapacity];
+    mValues = new double[pCapacity] {};
 }
 
 //==============================================================================
@@ -95,7 +94,7 @@ void DataStoreVariableRun::addValue()
 
 //==============================================================================
 
-void DataStoreVariableRun::addValue(const double &pValue)
+void DataStoreVariableRun::addValue(double pValue)
 {
     // Set the value of the variable at the given position using the given value
 
@@ -108,7 +107,7 @@ void DataStoreVariableRun::addValue(const double &pValue)
 
 //==============================================================================
 
-double DataStoreVariableRun::value(const quint64 &pPosition) const
+double DataStoreVariableRun::value(quint64 pPosition) const
 {
     // Return the value at the given position
 
@@ -129,9 +128,7 @@ double * DataStoreVariableRun::values() const
 //==============================================================================
 
 DataStoreVariable::DataStoreVariable(double *pValue) :
-#ifndef CLI_VERSION
-    mIcon(QIcon()),
-#endif
+    mType(-1),
     mUri(QString()),
     mName(QString()),
     mUnit(QString()),
@@ -187,7 +184,7 @@ int DataStoreVariable::runsCount() const
 
 //==============================================================================
 
-void DataStoreVariable::addRun(const quint64 &pCapacity)
+void DataStoreVariable::addRun(quint64 pCapacity)
 {
     // Add a run of the given capacity
 
@@ -196,7 +193,7 @@ void DataStoreVariable::addRun(const quint64 &pCapacity)
 
 //==============================================================================
 
-void DataStoreVariable::keepRuns(const int &pRunsCount)
+void DataStoreVariable::keepRuns(int pRunsCount)
 {
     // Keep the given number of runs
 
@@ -209,25 +206,21 @@ void DataStoreVariable::keepRuns(const int &pRunsCount)
 
 //==============================================================================
 
-#ifndef CLI_VERSION
-QIcon DataStoreVariable::icon() const
+int DataStoreVariable::type() const
 {
-    // Return our icon
+    // Return our type
 
-    return mIcon;
+    return mType;
 }
-#endif
 
 //==============================================================================
 
-#ifndef CLI_VERSION
-void DataStoreVariable::setIcon(const QIcon &pIcon)
+void DataStoreVariable::setType(int pType)
 {
-    // Set our icon
+    // Set our type
 
-    mIcon = pIcon;
+    mType = pType;
 }
-#endif
 
 //==============================================================================
 
@@ -285,7 +278,7 @@ void DataStoreVariable::setUnit(const QString &pUnit)
 
 //==============================================================================
 
-quint64 DataStoreVariable::size(const int &pRun) const
+quint64 DataStoreVariable::size(int pRun) const
 {
     // Return our size for the given run
 
@@ -308,7 +301,7 @@ void DataStoreVariable::addValue()
 
 //==============================================================================
 
-void DataStoreVariable::addValue(const double &pValue)
+void DataStoreVariable::addValue(double pValue)
 {
     // Add the given value to our current (i.e. last) run
 
@@ -319,7 +312,7 @@ void DataStoreVariable::addValue(const double &pValue)
 
 //==============================================================================
 
-double DataStoreVariable::value(const quint64 &pPosition, const int &pRun) const
+double DataStoreVariable::value(quint64 pPosition, int pRun) const
 {
     // Return the value at the given position and this for the given run
 
@@ -336,7 +329,7 @@ double DataStoreVariable::value(const quint64 &pPosition, const int &pRun) const
 
 //==============================================================================
 
-double * DataStoreVariable::values(const int &pRun) const
+double * DataStoreVariable::values(int pRun) const
 {
     // Return the values for the given run, if any
 
@@ -429,7 +422,7 @@ int DataStore::runsCount() const
 
 //==============================================================================
 
-bool DataStore::addRun(const quint64 &pCapacity)
+bool DataStore::addRun(quint64 pCapacity)
 {
     // Try to add a run to our VOI and all our variables
 
@@ -457,7 +450,7 @@ bool DataStore::addRun(const quint64 &pCapacity)
 
 //==============================================================================
 
-quint64 DataStore::size(const int &pRun) const
+quint64 DataStore::size(int pRun) const
 {
     // Return our size, i.e. the size of our VOI, for example
 
@@ -519,7 +512,7 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
 
 //==============================================================================
 
-DataStoreVariables DataStore::addVariables(double *pValues, const int &pCount)
+DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 {
     // Add some variables to our data store, but only if we haven't already
     // added some runs
@@ -539,7 +532,7 @@ DataStoreVariables DataStore::addVariables(double *pValues, const int &pCount)
 
 //==============================================================================
 
-void DataStore::addValues(const double &pVoiValue)
+void DataStore::addValues(double pVoiValue)
 {
     // Set the value at the mSize position of all our variables including our
     // VOI, which value is directly given to us
@@ -571,13 +564,13 @@ DataStoreExporter::DataStoreExporter(DataStoreData *pDataStoreData) :
 
     // Create a few connections
 
-    connect(mThread, SIGNAL(started()),
-            this, SLOT(started()));
+    connect(mThread, &QThread::started,
+            this, &DataStoreExporter::started);
 
-    connect(mThread, SIGNAL(finished()),
-            mThread, SLOT(deleteLater()));
-    connect(mThread, SIGNAL(finished()),
-            this, SLOT(deleteLater()));
+    connect(mThread, &QThread::finished,
+            mThread, &QThread::deleteLater);
+    connect(mThread, &QThread::finished,
+            this, &DataStoreExporter::deleteLater);
 }
 
 //==============================================================================

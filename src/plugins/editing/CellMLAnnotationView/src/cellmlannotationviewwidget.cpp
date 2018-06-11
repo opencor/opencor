@@ -124,11 +124,11 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
         // Keep track of the sizes of our editing widget and those of its
         // metadata details
 
-        connect(mEditingWidget, SIGNAL(splitterMoved(const QIntList &)),
-                this, SLOT(editingWidgetSplitterMoved(const QIntList &)));
+        connect(mEditingWidget, &CellmlAnnotationViewEditingWidget::splitterMoved,
+                this, &CellmlAnnotationViewWidget::editingWidgetSplitterMoved);
 
-        connect(mEditingWidget->metadataDetails(), SIGNAL(splitterMoved(const QIntList &)),
-                this, SLOT(metadataDetailsWidgetSplitterMoved(const QIntList &)));
+        connect(mEditingWidget->metadataDetails(), &CellmlAnnotationViewMetadataDetailsWidget::splitterMoved,
+                this, &CellmlAnnotationViewWidget::metadataDetailsWidgetSplitterMoved);
 
         // Keep track of our editing widget
 

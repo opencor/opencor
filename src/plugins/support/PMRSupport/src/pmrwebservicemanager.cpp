@@ -72,8 +72,8 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
 
-    connect(this, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
+    connect(this, &PmrWebServiceManager::sslErrors,
+            this, &PmrWebServiceManager::ignoreSslErrors);
 
     // Create, by updating ourselves, our PMR authentication object
 
@@ -100,7 +100,7 @@ bool PmrWebServiceManager::isAuthenticated() const
 
 //==============================================================================
 
-void PmrWebServiceManager::authenticate(const bool &pAuthenticate)
+void PmrWebServiceManager::authenticate(bool pAuthenticate)
 {
     // Authenticate ourselves to PMR
 
@@ -150,8 +150,8 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
     if (!mWebViewerDialog) {
         mWebViewerDialog = new Core::Dialog(mSettings, Core::mainWindow());
 
-        connect(mWebViewerDialog, SIGNAL(rejected()),
-                this, SIGNAL(authenticationCancelled()));
+        connect(mWebViewerDialog, &Core::Dialog::rejected,
+                this, &PmrWebServiceManager::authenticationCancelled);
 
         mWebViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
 
@@ -189,15 +189,15 @@ void PmrWebServiceManager::closeBrowser()
     // finished loading otherwise try again in a bit
 
     if (mWebViewer->progressBarWidget()->value())
-        QTimer::singleShot(1, this, SLOT(closeBrowser()));
+        QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);
     else
         mWebViewerDialog->close();
 }
 
 //==============================================================================
 
-void PmrWebServiceManager::sslErrors(QNetworkReply *pNetworkReply,
-                                     const QList<QSslError> &pSslErrors)
+void PmrWebServiceManager::ignoreSslErrors(QNetworkReply *pNetworkReply,
+                                           const QList<QSslError> &pSslErrors)
 {
     // Ignore SSL errors since we trust the website and therefore its
     // certificate (even if it is invalid, e.g. it has expired)
@@ -208,8 +208,8 @@ void PmrWebServiceManager::sslErrors(QNetworkReply *pNetworkReply,
 //==============================================================================
 
 PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
-                                                      const bool &pSecureRequest,
-                                                      const bool &pUsePost,
+                                                      bool pSecureRequest,
+                                                      bool pUsePost,
                                                       const QJsonDocument &pJsonDocument)
 {
     // Check that we are connected to the Internet
@@ -265,12 +265,12 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
 
     PmrWebServiceResponse *pmrWebServiceResponse = new PmrWebServiceResponse(networkReply);
 
-    connect(pmrWebServiceResponse, SIGNAL(busy(const bool &)),
-            mPmrWebService, SIGNAL(busy(const bool &)));
-    connect(pmrWebServiceResponse, SIGNAL(error(const QString &)),
-            mPmrWebService, SIGNAL(error(const QString &)));
-    connect(pmrWebServiceResponse, SIGNAL(forbidden(const QString &)),
-            mPmrWebService, SLOT(forbidden(const QString &)));
+    connect(pmrWebServiceResponse, &PmrWebServiceResponse::busy,
+            mPmrWebService, &PmrWebService::busy);
+    connect(pmrWebServiceResponse, &PmrWebServiceResponse::error,
+            mPmrWebService, &PmrWebService::error);
+    connect(pmrWebServiceResponse, &PmrWebServiceResponse::forbidden,
+            mPmrWebService, &PmrWebService::forbidden);
 
     return pmrWebServiceResponse;
 }
@@ -290,15 +290,15 @@ void PmrWebServiceManager::update(const QString &pPmrUrl)
 
     // Connect some signals
 
-    connect(mPmrAuthentication, SIGNAL(linkingSucceeded()),
-            this, SLOT(authenticationSucceeded()));
-    connect(mPmrAuthentication, SIGNAL(linkingFailed()),
-            this, SLOT(authenticationFailed()));
+    connect(mPmrAuthentication, &PmrAuthentication::linkingSucceeded,
+            this, &PmrWebServiceManager::authenticationSucceeded);
+    connect(mPmrAuthentication, &PmrAuthentication::linkingFailed,
+            this, &PmrWebServiceManager::authenticationFailed);
 
-    connect(mPmrAuthentication, SIGNAL(openBrowser(const QUrl &)),
-            this, SLOT(openBrowser(const QUrl &)));
-    connect(mPmrAuthentication, SIGNAL(closeBrowser()),
-            this, SLOT(closeBrowser()));
+    connect(mPmrAuthentication, &PmrAuthentication::openBrowser,
+            this, &PmrWebServiceManager::openBrowser);
+    connect(mPmrAuthentication, &PmrAuthentication::closeBrowser,
+            this, &PmrWebServiceManager::closeBrowser);
 }
 
 //==============================================================================

@@ -40,8 +40,8 @@ namespace EditorWidget {
 
 //==============================================================================
 
-EditorListItem::EditorListItem(const Type &pType, const int &pLine,
-                               const int &pColumn, const QString &pMessage) :
+EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
+                               const QString &pMessage) :
     QStandardItem(),
     mType(pType),
     mLine(pLine),
@@ -56,16 +56,28 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
     static const QIcon InformationIcon = QIcon(":/oxygen/actions/help-about.png");
     static const QIcon FatalIcon       = QIcon(":/oxygen/status/edit-bomb.png");
 
-    if ((pLine == -1) && (pColumn == -1))
+    if ((pLine == -1) && (pColumn == -1)) {
         setText(pMessage);
-    else if (pColumn == -1)
-        setText(QString("[%1] %2").arg(QString::number(pLine), pMessage));
-    else
-        setText(QString("[%1:%2] %3").arg(QString::number(pLine), QString::number(pColumn), pMessage));
+    } else if (pColumn == -1) {
+        setText(QString("[%1] %2").arg(pLine)
+                                  .arg(pMessage));
+    } else {
+        setText(QString("[%1:%2] %3").arg(pLine)
+                                     .arg(pColumn)
+                                     .arg(pMessage));
+    }
 
     setToolTip(text());
 
     switch (pType) {
+    case Unknown:
+#ifdef QT_DEBUG
+        // We should never come here...
+
+        qFatal("FATAL ERROR | %s:%d: a list item cannot be of unknown type.", __FILE__, __LINE__);
+#endif
+
+        break;
     case Error:
         setIcon(ErrorIcon);
 
@@ -149,10 +161,10 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     mClearAction = Core::newAction(this);
     mCopyToClipboardAction = Core::newAction(this);
 
-    connect(mClearAction, SIGNAL(triggered(bool)),
-            this, SLOT(clear()));
-    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyToClipboard()));
+    connect(mClearAction, &QAction::triggered,
+            this, &EditorListWidget::clear);
+    connect(mCopyToClipboardAction, &QAction::triggered,
+            this, &EditorListWidget::copyToClipboard);
 
     mContextMenu->addAction(mClearAction);
     mContextMenu->addSeparator();
@@ -164,8 +176,8 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
 
     // A connection to handle a double click on a given item
 
-    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(requestItem(const QModelIndex &)));
+    connect(this, &EditorListWidget::doubleClicked,
+            this, &EditorListWidget::requestItem);
 
     // Retranslate ourselves, so that our actions are properly initialised
 
@@ -198,9 +210,8 @@ void EditorListWidget::clear()
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               const int &pLine, const int &pColumn,
-                               const QString &pMessage)
+void EditorListWidget::addItem(EditorListItem::Type pType,
+                               int pLine, int pColumn, const QString &pMessage)
 {
     // Add the given item to our list
 
@@ -212,8 +223,8 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               const int &pLine, const QString &pMessage)
+void EditorListWidget::addItem(EditorListItem::Type pType, int pLine,
+                               const QString &pMessage)
 {
     // Add the given item to our list
 
@@ -222,7 +233,7 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
+void EditorListWidget::addItem(EditorListItem::Type pType,
                                const QString &pMessage)
 {
     // Add the given item to our list

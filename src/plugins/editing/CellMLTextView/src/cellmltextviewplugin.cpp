@@ -427,7 +427,7 @@ QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 //==============================================================================
 
 int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
-                                       const bool &pImport)
+                                       bool pImport)
 {
     // Make sure that we have the correct number of arguments
 
@@ -466,9 +466,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
             CellMLTextViewConverter converter;
 
             if (!converter.execute(fileContents)) {
-                errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(QString::number(converter.errorLine()),
-                                                                                            QString::number(converter.errorColumn()),
-                                                                                            Core::formatMessage(converter.errorMessage(), false));
+                errorMessage = QString("The file could not be imported:\n [%1:%2] %3.").arg(converter.errorLine())
+                                                                                       .arg(converter.errorColumn())
+                                                                                       .arg(Core::formatMessage(converter.errorMessage(), false));
             } else {
                 std::cout << converter.output().toUtf8().constData();
             }
@@ -480,9 +480,9 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
                 foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
                     if (message.type() == CellmlTextViewParserMessage::Error) {
-                        errorMessage += QString("\n [%1:%2] %3").arg(QString::number(message.line()),
-                                                                     QString::number(message.column()),
-                                                                     message.message());
+                        errorMessage += QString("\n [%1:%2] %3").arg(message.line())
+                                                                .arg(message.column())
+                                                                .arg(message.message());
                     }
                 }
             } else {

@@ -215,13 +215,13 @@ void CellMLToolsPlugin::initializePlugin()
 
     // Some connections to handle our different Tools | Export To actions
 
-    connect(mExportToCellml10Action, SIGNAL(triggered(bool)),
-            this, SLOT(exportToCellml10()));
-    connect(mExportToCellml11Action, SIGNAL(triggered(bool)),
-            this, SLOT(exportToCellml11()));
+    connect(mExportToCellml10Action, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToCellml10);
+    connect(mExportToCellml11Action, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToCellml11);
 
-    connect(mExportToUserDefinedFormatAction, SIGNAL(triggered(bool)),
-            this, SLOT(exportToUserDefinedFormat()));
+    connect(mExportToUserDefinedFormatAction, &QAction::triggered,
+            this, &CellMLToolsPlugin::exportToUserDefinedFormat);
 }
 
 //==============================================================================
@@ -271,7 +271,7 @@ void CellMLToolsPlugin::handleUrl(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVersion)
+void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
 {
     // Ask for the name of the file that will contain the export
 
@@ -301,8 +301,9 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
         }
 
         Core::warningMessageBox(tr("Export CellML File To %1").arg(format),
-                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
-                                                                                                              format, errorMessage));
+                                tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName))
+                                                                                                         .arg(format)
+                                                                                                         .arg(errorMessage));
     }
 }
 
@@ -510,9 +511,9 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
         }
 
         Core::warningMessageBox(tr("Export CellML File To User-Defined Format"),
-                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName),
-                                                                                                                                                   QDir::toNativeSeparators(userDefinedFormatFileName),
-                                                                                                                                                   errorMessage));
+                                tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(QDir::toNativeSeparators(fileName))
+                                                                                                                                              .arg(QDir::toNativeSeparators(userDefinedFormatFileName))
+                                                                                                                                              .arg(errorMessage));
     }
 }
 

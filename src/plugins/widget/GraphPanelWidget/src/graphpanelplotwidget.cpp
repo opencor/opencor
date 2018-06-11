@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
+#include <QTimer>
 
 //==============================================================================
 
@@ -63,15 +64,17 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(bool pSelected,
+                                                             const QString &pTitle,
                                                              const Qt::PenStyle &pLineStyle,
-                                                             const int &pLineWidth,
+                                                             int pLineWidth,
                                                              const QColor &pLineColor,
                                                              const QwtSymbol::Style &pSymbolStyle,
-                                                             const int &pSymbolSize,
+                                                             int pSymbolSize,
                                                              const QColor &pSymbolColor,
-                                                             const bool &pSymbolFilled,
+                                                             bool pSymbolFilled,
                                                              const QColor &pSymbolFillColor) :
+    mSelected(pSelected),
     mTitle(pTitle),
     mLineStyle(pLineStyle),
     mLineWidth(pLineWidth),
@@ -82,6 +85,26 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
     mSymbolFilled(pSymbolFilled),
     mSymbolFillColor(pSymbolFillColor)
 {
+}
+
+//==============================================================================
+
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
+                                                             const QColor &pColor) :
+    GraphPanelPlotGraphProperties(DefaultSelected, pTitle, DefaultLineStyle,
+                                  DefaultLineWidth, pColor, DefaultSymbolStyle,
+                                  DefaultSymbolSize, pColor,
+                                  DefaultSymbolFilled, DefaultSymbolFillColor)
+{
+}
+
+//==============================================================================
+
+bool GraphPanelPlotGraphProperties::isSelected() const
+{
+    // Return our selected state
+
+    return mSelected;
 }
 
 //==============================================================================
@@ -175,7 +198,7 @@ GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
 
     setLegendAttribute(LegendShowLine);
     setLegendAttribute(LegendShowSymbol);
-    setPen(QPen(Qt::darkBlue, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(pOwner->color(), DefaultLineWidth, DefaultLineStyle, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(RenderAntialiased);
 }
 
@@ -194,7 +217,8 @@ static const QRectF InvalidRect = QRectF(0.0, 0.0, -1.0, -1.0);
 
 //==============================================================================
 
-GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
+GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
+                                         GraphPanelWidget *pOwner) :
     mSelected(true),
     mFileName(QString()),
     mParameterX(pParameterX),
@@ -207,12 +231,34 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY) :
     mDummyRun(0),
     mRuns(GraphPanelPlotGraphRuns())
 {
+    // Determine our default colour
+
+    static QList<QColor> GraphColors = { DarkBlue, Orange, Yellow, Purple, Green, LightBlue, Red };
+    static QMap<GraphPanelWidget *, int> GraphColorIndexes;
+
+    int graphColorIndex = pOwner->graphs().isEmpty()?
+                              -1:
+                              GraphColorIndexes.value(pOwner, -1);
+
+    graphColorIndex = (graphColorIndex+1)%GraphColors.count();
+
+    mColor = GraphColors[graphColorIndex];
+
+    GraphColorIndexes.insert(pOwner, graphColorIndex);
+
     // Create our dummy run
     // Note: a dummy run (i.e. a run that is never used, shown, etc.) is needed
     //       to ensure that our legend labels don't disappear (see
     //       https://github.com/opencor/opencor/issues/1537)...
 
     addRun();
+}
+
+//==============================================================================
+
+GraphPanelPlotGraph::GraphPanelPlotGraph(GraphPanelWidget *pOwner) :
+    GraphPanelPlotGraph(0, 0, pOwner)
+{
 }
 
 //==============================================================================
@@ -338,7 +384,7 @@ bool GraphPanelPlotGraph::isSelected() const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setSelected(const bool &pSelected)
+void GraphPanelPlotGraph::setSelected(bool pSelected)
 {
     // Set our selected state
 
@@ -346,7 +392,7 @@ void GraphPanelPlotGraph::setSelected(const bool &pSelected)
 
     // Un/check our corresponding legend item
 
-    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(mPlot->graphIndex(this), pSelected);
+    static_cast<GraphPanelPlotLegendWidget *>(mPlot->legend())->setChecked(this, pSelected);
 }
 
 //==============================================================================
@@ -405,9 +451,18 @@ void GraphPanelPlotGraph::setParameterY(void *pParameterY)
 
 //==============================================================================
 
+QColor GraphPanelPlotGraph::color() const
+{
+    // Return our colour
+
+    return mColor;
+}
+
+//==============================================================================
+
 const QPen & GraphPanelPlotGraph::pen() const
 {
-    // Return the pen of our current (i.e. last) run
+    // Return the pen of our dummy run
 
     Q_ASSERT(mDummyRun);
 
@@ -432,7 +487,7 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
 const QwtSymbol * GraphPanelPlotGraph::symbol() const
 {
-    // Return the symbol of our current (i.e. last) run
+    // Return the symbol of our dummy run
 
     Q_ASSERT(mDummyRun);
 
@@ -443,7 +498,7 @@ const QwtSymbol * GraphPanelPlotGraph::symbol() const
 
 void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
                                     const QBrush &pBrush, const QPen &pPen,
-                                    const int &pSize)
+                                    int pSize)
 {
     // Set the symbol of our different runs
 
@@ -453,6 +508,17 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
+}
+
+//==============================================================================
+
+QString GraphPanelPlotGraph::title() const
+{
+    // Return our title
+
+    Q_ASSERT(mDummyRun);
+
+    return mDummyRun->title().text();
 }
 
 //==============================================================================
@@ -473,7 +539,7 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 
 bool GraphPanelPlotGraph::isVisible() const
 {
-    // Return whether our current (i.e. last) run is visible
+    // Return whether our dummy run is visible
 
     Q_ASSERT(mDummyRun);
 
@@ -482,7 +548,7 @@ bool GraphPanelPlotGraph::isVisible() const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setVisible(const bool &pVisible)
+void GraphPanelPlotGraph::setVisible(bool pVisible)
 {
     // Set the visibility of our different runs
 
@@ -520,7 +586,7 @@ quint64 GraphPanelPlotGraph::dataSize() const
 
 //==============================================================================
 
-QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
+QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(int pRun) const
 {
     // Return the data, i.e. raw samples, of the given run, if it exists
 
@@ -536,8 +602,8 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(const int &pRun) const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY,
-                                  const int &pSize, const int &pRun)
+void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, int pSize,
+                                  int pRun)
 {
     // Set our data, i.e. raw samples, to the given run, if it exists
 
@@ -866,9 +932,9 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
                                                   const QPoint &pPoint,
                                                   const QColor &pBackgroundColor,
                                                   const QColor &pForegroundColor,
-                                                  const int &pLineWidth,
-                                                  const Position &pPosition,
-                                                  const bool &pCanMovePosition)
+                                                  int pLineWidth,
+                                                  Position pPosition,
+                                                  bool pCanMovePosition)
 {
     // Retrieve the size of coordinates as they will appear on the screen,
     // which means using the same font as the one used for the axes
@@ -889,8 +955,8 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
     QPointF point = mOwner->canvasPoint(pPoint);
-    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15),
-                                                      QLocale().toString(point.y(), 'g', 15));
+    QString coordinates = QString("X: %1\nY: %2").arg(QLocale().toString(point.x(), 'g', 15))
+                                                 .arg(QLocale().toString(point.y(), 'g', 15));
     QPen pen = pPainter->pen();
 
     pen.setStyle(Qt::SolidLine);
@@ -1003,7 +1069,9 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
     mActive(false),
     mFontSize(pParent->fontSize()),
     mBackgroundColor(pParent->backgroundColor()),
-    mForegroundColor(pParent->surroundingAreaForegroundColor())
+    mForegroundColor(pParent->surroundingAreaForegroundColor()),
+    mLegendLabels(QMap<GraphPanelPlotGraph *, QwtLegendLabel *>()),
+    mSizeHintWidth(0)
 {
     // Have our legend items use as much horizontal space as possible
 
@@ -1018,8 +1086,8 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
 
     // Check when someone clicks on a legend item
 
-    connect(this, SIGNAL(checked(const QVariant &, bool, int)),
-            this, SLOT(checked(const QVariant &)));
+    connect(this, &GraphPanelPlotLegendWidget::checked,
+            this, &GraphPanelPlotLegendWidget::legendChecked);
 }
 
 //==============================================================================
@@ -1033,7 +1101,7 @@ bool GraphPanelPlotLegendWidget::isActive() const
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setActive(const bool &pActive)
+void GraphPanelPlotLegendWidget::setActive(bool pActive)
 {
     // Set our active state
 
@@ -1048,26 +1116,24 @@ void GraphPanelPlotLegendWidget::setActive(const bool &pActive)
 
 bool GraphPanelPlotLegendWidget::isEmpty() const
 {
-    // Return whether we are empty, based on whether we are active
+    // Return whether we are empty, based on whether we have a zero size hint
 
-    return sizeHint() == QSize(0, 0);
+    return sizeHint().isNull();
 }
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setChecked(const int &pIndex,
-                                            const bool &pChecked)
+void GraphPanelPlotLegendWidget::setChecked(GraphPanelPlotGraph *pGraph,
+                                            bool pChecked)
 {
-    // Un/check the graph which index is given
-    // Note: the +1 is because the first child of our contents widget is our
-    //       layout...
+    // Un/check the legend label associated with the given graph
 
-    static_cast<QwtLegendLabel *>(contentsWidget()->children()[pIndex+1])->setChecked(pChecked);
+    mLegendLabels.value(pGraph)->setChecked(pChecked);
 }
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::setFontSize(const int &pFontSize)
+void GraphPanelPlotLegendWidget::setFontSize(int pFontSize)
 {
     // Set our font size
 
@@ -1166,25 +1232,21 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
 
 //==============================================================================
 
+void GraphPanelPlotLegendWidget::setSizeHintWidth(int pSizeHintWidth)
+{
+    // Set our internal size hint width
+
+    mSizeHintWidth = pSizeHintWidth;
+}
+
+//==============================================================================
+
 QSize GraphPanelPlotLegendWidget::sizeHint() const
 {
-    // Determine and return our size hint, based on our active state and on the
-    // 'raw' size hint of our owner's neigbours' legend, if any
+    // Return our size hint, based on our internal size hint width and the
+    // height of our default size hint
 
-    QSize res = mActive?
-                    QwtLegend::isEmpty()?
-                        QSize(0, 0):
-                        QwtLegend::sizeHint():
-                    QSize(0, 0);
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors()) {
-        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(ownerNeighbor->legend());
-
-        if (legend->isActive())
-            res.setWidth(qMax(res.width(), legend->QwtLegend::sizeHint().width()));
-    }
-
-    return res;
+    return QSize(mSizeHintWidth, QwtLegend::sizeHint().height());
 }
 
 //==============================================================================
@@ -1192,76 +1254,93 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
 void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
                                               const QwtLegendData &pLegendData)
 {
-    // Ignore (i.e. minimise and hide) the given widget if it doesn't correspond
-    // to the legend of our dummy run
-    // Note: we start at 1 because the first child of our contents widget is our
-    //       layout...
+    // Check whether we are dealing with one of our main legend labels
 
     QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
-    bool mainLegendLabel = false;
+    bool mainLegendLabel = mLegendLabels.values().contains(legendLabel);
 
-    for (int i = 1, iMax = 1+mOwner->graphs().count(); i < iMax; ++i) {
-        if (legendLabel == static_cast<QwtLegendLabel *>(contentsWidget()->children()[i])) {
-            mainLegendLabel = true;
+    if (mainLegendLabel) {
+        // We are dealing with a main legend label, i.e. a legend label
+        // associated with our dummy run, so start with the default handling of
+        // our method
 
-            break;
-        }
-    }
+        QwtLegend::updateWidget(pWidget, pLegendData);
 
-    if (!mainLegendLabel) {
+        // Update our visible state
+
+        legendLabel->setAutoFillBackground(true);
+        legendLabel->setVisible(mActive);
+
+        // Update our font size, as well as background and foreground colours
+
+        QFont newFont = legendLabel->font();
+
+        newFont.setPointSize(mFontSize);
+
+        legendLabel->setFont(newFont);
+
+        QPalette newPalette = legendLabel->palette();
+
+        newPalette.setColor(QPalette::Window, mBackgroundColor);
+        newPalette.setColor(QPalette::Text, mForegroundColor);
+
+        legendLabel->setPalette(newPalette);
+
+        // Make sure that updates are enabled
+        // Note: indeed, when setting its data, QwtLegendLabel (which is used by
+        //       QwtLegend) prevents itself from updating, and then reallows
+        //       itself to be updated, if it was originally allowed. Now, the
+        //       problem is that if one of our ancestors decides to temporarily
+        //       disable updates (e.g. our simulation experiment view) then
+        //       QwtLegendLabel won't reenable itself, which means that the
+        //       legend may not actually be visible in some cases (e.g. when
+        //       opening a SED-ML file)...
+
+        pWidget->setUpdatesEnabled(true);
+    } else {
+        // This is not one of our main legend label, so ignore it (i.e. minimise
+        // and hide it)
+
         legendLabel->resize(0, 0);
         legendLabel->hide();
-
-        return;
     }
-
-    // Default handling
-
-    QwtLegend::updateWidget(pWidget, pLegendData);
-
-    // Update our visible state
-
-    legendLabel->setAutoFillBackground(true);
-    legendLabel->setVisible(mActive);
-
-    // Update our font size, as well as background and foreground colours
-
-    QFont newFont = legendLabel->font();
-
-    newFont.setPointSize(mFontSize);
-
-    legendLabel->setFont(newFont);
-
-    QPalette newPalette = legendLabel->palette();
-
-    newPalette.setColor(QPalette::Window, mBackgroundColor);
-    newPalette.setColor(QPalette::Text, mForegroundColor);
-
-    legendLabel->setPalette(newPalette);
-
-    // Make sure that the width of our owner's neighbours' legend is the same as
-    // ours
-
-    int legendWidth = sizeHint().width();
-
-    foreach (GraphPanelPlotWidget *ownerNeighbor, mOwner->neighbors())
-        ownerNeighbor->setLegendWidth(legendWidth);
-
-    // Make sure that updates are enabled
-    // Note: indeed, when setting its data, QwtLegendLabel (which is used by
-    //       QwtLegend) prevents itself from updating, and then reallows itself
-    //       to be updated, if it was originally allowed. Now, the problem is
-    //       that if one of our ancestors decides to temporarily disable updates
-    //       (e.g. our simulation experiment view) then QwtLegendLabel won't
-    //       reenable itself, which means that the legend may not actually be
-    //       visible in some cases (e.g. when opening a SED-ML file)...
-
-    pWidget->setUpdatesEnabled(true);
 }
 
 //==============================================================================
 
-void GraphPanelPlotLegendWidget::checked(const QVariant &pItemInfo)
+void GraphPanelPlotLegendWidget::addGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Associate the given graph with our last contents widget's child
+
+    mLegendLabels.insert(pGraph, static_cast<QwtLegendLabel *>(contentsWidget()->children().last()));
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::removeGraph(GraphPanelPlotGraph *pGraph)
+{
+    // Stop associating our last contents widget's child with the given graph
+
+    mLegendLabels.remove(pGraph);
+}
+
+//==============================================================================
+
+bool GraphPanelPlotLegendWidget::needScrollBar() const
+{
+    // Determine and return whether we need a (vertical) scroll bar
+
+    int legendLabelsHeight = 0;
+
+    foreach (QwtLegendLabel *legendLabel, mLegendLabels)
+        legendLabelsHeight += legendLabel->height();
+
+    return !pos().y() && (legendLabelsHeight > height());
+}
+
+//==============================================================================
+
+void GraphPanelPlotLegendWidget::legendChecked(const QVariant &pItemInfo)
 {
     // Make sure that the corresponding graph panel is selected
     // Note: this makes it much easier to handle the graphToggled() signal
@@ -1353,8 +1432,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     //       involve updating our actions (see updateActions()), something that
     //       we cannot do when our grand parent gets destroyed...
 
-    connect(pParent->parent(), SIGNAL(destroyed(QObject *)),
-            this, SLOT(cannotUpdateActions()));
+    connect(pParent->parent(), &QObject::destroyed,
+            this, &GraphPanelPlotWidget::cannotUpdateActions);
 
     // Get ourselves a direct painter
 
@@ -1427,8 +1506,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
 
     insertLegend(mLegend);
 
-    connect(mLegend, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)),
-            this, SIGNAL(graphToggled(OpenCOR::GraphPanelWidget::GraphPanelPlotGraph *)));
+    connect(mLegend, &GraphPanelPlotLegendWidget::graphToggled,
+            this, &GraphPanelPlotWidget::graphToggled);
 
     // Create our context menu
 
@@ -1446,28 +1525,28 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomOutAction = Core::newAction(this);
     mResetZoomAction = Core::newAction(this);
 
-    connect(mExportToAction, SIGNAL(triggered(bool)),
-            this, SLOT(exportTo()));
-    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
-            this, SLOT(copyToClipboard()));
-    connect(mGraphPanelSettingsAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(graphPanelSettingsRequested()));
-    connect(mGraphsSettingsAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(graphsSettingsRequested()));
-    connect(mLegendAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(legendToggled()));
-    connect(mLogarithmicXAxisAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(logarithmicXAxisToggled()));
-    connect(mLogarithmicYAxisAction, SIGNAL(triggered(bool)),
-            this, SIGNAL(logarithmicYAxisToggled()));
-    connect(mCustomAxesAction, SIGNAL(triggered(bool)),
-            this, SLOT(customAxes()));
-    connect(mZoomInAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomIn()));
-    connect(mZoomOutAction, SIGNAL(triggered(bool)),
-            this, SLOT(zoomOut()));
-    connect(mResetZoomAction, SIGNAL(triggered(bool)),
-            this, SLOT(resetZoom()));
+    connect(mExportToAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::exportTo);
+    connect(mCopyToClipboardAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::copyToClipboard);
+    connect(mGraphPanelSettingsAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::graphPanelSettingsRequested);
+    connect(mGraphsSettingsAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::graphsSettingsRequested);
+    connect(mLegendAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::legendToggled);
+    connect(mLogarithmicXAxisAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::logarithmicXAxisToggled);
+    connect(mLogarithmicYAxisAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::logarithmicYAxisToggled);
+    connect(mCustomAxesAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::customAxes);
+    connect(mZoomInAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::zoomIn);
+    connect(mZoomOutAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::zoomOut);
+    connect(mResetZoomAction, &QAction::triggered,
+            this, &GraphPanelPlotWidget::resetZoom);
 
     mContextMenu->addAction(mExportToAction);
     mContextMenu->addSeparator();
@@ -1500,6 +1579,10 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     //       replot ourselves...
 
     setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis, false, false, false);
+
+    // We want our legend to be active by default
+
+    setLegendActive(true);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -1628,7 +1711,7 @@ void GraphPanelPlotWidget::updateActions()
 
 //==============================================================================
 
-void GraphPanelPlotWidget::checkAxisValues(const bool &pLogAxis, double &pMin,
+void GraphPanelPlotWidget::checkAxisValues(bool pLogAxis, double &pMin,
                                            double &pMax)
 {
     // Make sure that our axis' values have finite values
@@ -1748,8 +1831,7 @@ int GraphPanelPlotWidget::fontSize() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setFontSize(const int &pFontSize,
-                                       const bool &pForceSetting)
+void GraphPanelPlotWidget::setFontSize(int pFontSize, bool pForceSetting)
 {
     // Set our font size
 
@@ -1851,7 +1933,7 @@ int GraphPanelPlotWidget::gridLinesWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setGridLinesWidth(const int &pGridLinesWidth)
+void GraphPanelPlotWidget::setGridLinesWidth(int pGridLinesWidth)
 {
     // Set our grid lines width
 
@@ -1903,7 +1985,7 @@ bool GraphPanelPlotWidget::isLegendActive() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendActive(const bool &pLegendActive)
+void GraphPanelPlotWidget::setLegendActive(bool pLegendActive)
 {
     // Show/hide our legend
 
@@ -1915,7 +1997,7 @@ void GraphPanelPlotWidget::setLegendActive(const bool &pLegendActive)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLegendWidth(const int &pLegendWidth)
+void GraphPanelPlotWidget::setLegendWidth(int pLegendWidth)
 {
     // Set our legend's width
 
@@ -1952,7 +2034,7 @@ int GraphPanelPlotWidget::pointCoordinatesWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setPointCoordinatesWidth(const int &pPointCoordinatesWidth)
+void GraphPanelPlotWidget::setPointCoordinatesWidth(int pPointCoordinatesWidth)
 {
     // Set our point coordinates width
 
@@ -2108,7 +2190,7 @@ bool GraphPanelPlotWidget::logAxisX() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogAxisX(const bool &pLogAxisX)
+void GraphPanelPlotWidget::setLogAxisX(bool pLogAxisX)
 {
     // Specify whether our X axis should use a logarithmic scale
 
@@ -2156,7 +2238,7 @@ bool GraphPanelPlotWidget::logAxisY() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setLogAxisY(const bool &pLogAxisY)
+void GraphPanelPlotWidget::setLogAxisY(bool pLogAxisY)
 {
     // Specify whether our Y axis should use a logarithmic scale
 
@@ -2223,7 +2305,7 @@ int GraphPanelPlotWidget::zoomRegionWidth() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setZoomRegionWidth(const int &pZoomRegionWidth)
+void GraphPanelPlotWidget::setZoomRegionWidth(int pZoomRegionWidth)
 {
     // Set our zoom region width
 
@@ -2280,7 +2362,7 @@ bool GraphPanelPlotWidget::zoomRegionFilled() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setZoomRegionFilled(const bool &pZoomRegionFilled)
+void GraphPanelPlotWidget::setZoomRegionFilled(bool pZoomRegionFilled)
 {
     // Set our zoom region filled status
 
@@ -2382,7 +2464,7 @@ bool GraphPanelPlotWidget::canZoomOutY() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setActive(const bool &pActive)
+void GraphPanelPlotWidget::setActive(bool pActive)
 {
     // In/activate ourselves by asking our owner to in/activate itself
 
@@ -2508,7 +2590,7 @@ QRectF GraphPanelPlotWidget::realDataRect() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
+void GraphPanelPlotWidget::setAxis(int pAxisId, double pMin, double pMax)
 {
     // Set our axis
     // Note: to use setAxisScale() on its own is not sufficient unless we were
@@ -2526,14 +2608,14 @@ void GraphPanelPlotWidget::setAxis(const int &pAxisId, double pMin, double pMax)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setDefaultAxesValues(const double &pDefaultMinX,
-                                                const double &pDefaultMaxX,
-                                                const double &pDefaultMinLogX,
-                                                const double &pDefaultMaxLogX,
-                                                const double &pDefaultMinY,
-                                                const double &pDefaultMaxY,
-                                                const double &pDefaultMinLogY,
-                                                const double &pDefaultMaxLogY)
+void GraphPanelPlotWidget::setDefaultAxesValues(double pDefaultMinX,
+                                                double pDefaultMaxX,
+                                                double pDefaultMinLogX,
+                                                double pDefaultMaxLogX,
+                                                double pDefaultMinY,
+                                                double pDefaultMaxY,
+                                                double pDefaultMinLogY,
+                                                double pDefaultMaxLogY)
 {
     // Set the default axes values
 
@@ -2551,11 +2633,10 @@ void GraphPanelPlotWidget::setDefaultAxesValues(const double &pDefaultMinX,
 //==============================================================================
 
 bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
-                                   double pMaxY, const bool &pSynchronizeAxes,
-                                   const bool &pCanReplot,
-                                   const bool &pEmitSignal,
-                                   const bool &pForceXAxisSetting,
-                                   const bool &pForceYAxisSetting)
+                                   double pMaxY, bool pSynchronizeAxes,
+                                   bool pCanReplot, bool pEmitSignal,
+                                   bool pForceXAxisSetting,
+                                   bool pForceYAxisSetting)
 {
     // Keep track of our axes' old values
 
@@ -2599,14 +2680,14 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
                 && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(pMinX, pMaxX, pMinY, pMaxY, false, false, false);
             } else if (xAxisValuesChanged && mSynchronizeXAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(pMinX, pMaxX, neighbor->minY(), neighbor->maxY(), false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(), false, false, false);
             } else if (yAxisValuesChanged && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *neighbor, mNeighbors)
-                    neighbor->setAxes(neighbor->minX(), neighbor->maxX(), pMinY, pMaxY, false, false, false);
+                foreach (GraphPanelPlotWidget *plot, mNeighbors)
+                    plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY, false, false, false);
             }
 
             alignWithNeighbors(pCanReplot,
@@ -2638,12 +2719,10 @@ bool GraphPanelPlotWidget::resetAxes()
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling,
-                                     const bool &pCanZoomIn,
-                                     const bool &pCanZoomOut,
+bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
+                                     bool pCanZoomOut,
                                      const QwtScaleMap &pCanvasMap,
-                                     const double &pPoint, double &pMin,
-                                     double &pMax)
+                                     double pPoint, double &pMin, double &pMax)
 {
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
@@ -2698,9 +2777,8 @@ bool GraphPanelPlotWidget::scaleAxis(const Scaling &pScaling,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
-                                     const Scaling &pScalingX,
-                                     const Scaling &pScalingY)
+void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
+                                     Scaling pScalingY)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
@@ -2726,8 +2804,7 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
-                                        const QString &pTitleAxis)
+void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 {
     // Set the title for our axis
 
@@ -2744,8 +2821,56 @@ void GraphPanelPlotWidget::setTitleAxis(const int &pAxisId,
 
         setAxisTitle(pAxisId, axisTitle);
     }
+}
 
-    forceAlignWithNeighbors();
+//==============================================================================
+
+void GraphPanelPlotWidget::doUpdateGui()
+{
+    // Resize our legend and that of our neighbours
+
+    GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+    int legendWidth = 0;
+
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+
+        legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
+
+        if (legend->needScrollBar()) {
+            legendWidth = qMax(legendWidth,
+                               legend->QwtLegend::sizeHint().width()+legend->scrollExtent(Qt::Vertical));
+        }
+    }
+
+    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+
+        legend->setSizeHintWidth(legend->needScrollBar()?
+                                     legendWidth-legend->scrollExtent(Qt::Vertical):
+                                     legendWidth);
+    }
+
+    // Reenable updates for our legend
+    // Note: see addGraph() for the reasoning behind it...
+
+    legend()->setUpdatesEnabled(true);
+
+    // Make sure that we are still properly aligned with our neighbours
+
+    alignWithNeighbors(true, true);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::updateGui(bool pSingleShot)
+{
+    // Update our GUI, either through a single shot or directly
+
+    if (pSingleShot)
+        QTimer::singleShot(0, this, &GraphPanelPlotWidget::doUpdateGui);
+    else
+        doUpdateGui();
 }
 
 //==============================================================================
@@ -2985,6 +3110,10 @@ void GraphPanelPlotWidget::resizeEvent(QResizeEvent *pEvent)
     // Update the size of our overlay widget
 
     mOverlayWidget->resize(pEvent->size());
+
+    // Update our GUI (and that of our neighbours)
+
+    updateGui();
 }
 
 //==============================================================================
@@ -2996,7 +3125,8 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
     if (   !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
         // Make sure that we are not already carrying out a action
 
         if (mAction == None) {
@@ -3030,20 +3160,33 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     if (mGraphs.contains(pGraph))
         return false;
 
-    // Attach the given graph to ourselves and keep track of it
+    // Attach the given graph to ourselves and keep track of it, as well as ask
+    // our legend to keep track of it too
+    // Note: we temporarily disable updates for our legend, this to avoid some
+    //       black areas from quickly appearing on macOS (when adding a graph
+    //       that results in the vertical scroll bar being shown). It gets
+    //       reenabled in updateGUI()...
+
+    legend()->setUpdatesEnabled(false);
 
     pGraph->attach(this);
 
     mGraphs << pGraph;
 
+    mLegend->addGraph(pGraph);
+
     // Initialise the checked state of the corresponding legend item
 
-    mLegend->setChecked(mGraphs.count()-1, true);
+    mLegend->setChecked(pGraph, true);
 
-    // To add a graph may result in the legend getting shown, so we need to make
-    // sure that our neighbours are aware of it
+    // To add a graph may affect our GUI (and that of our neighbours), so update
+    // it
+    // Note: we do it through a single shot since otherwise the new legend label
+    //       won't have been added yet and our legend may not be of the right
+    //       width (e.g. after having added a graph that would result in the
+    //       legend's vertical scroll bar to appear)...
 
-    forceAlignWithNeighbors();
+    updateGui(true);
 
     return true;
 }
@@ -3057,18 +3200,25 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     if (!mGraphs.contains(pGraph))
         return false;
 
-    // Detach the given graph from ourselves, stop tracking it and delete it
+    // Detach the given graph from ourselves, stop tracking it (and ask our
+    // legend to do the same) and delete it
+    // Note: see addGraph() when it comes to temporarily disabling updates for
+    //       our legend...
+
+    legend()->setUpdatesEnabled(false);
 
     pGraph->detach();
 
     mGraphs.removeOne(pGraph);
 
+    mLegend->removeGraph(pGraph);
+
     delete pGraph;
 
-    // To remove a graph may result in the legend getting hidden, so we need to
-    // make sure that our neighbours are aware of it
+    // To remove a graph may affect our GUI (and that of our neighbours), so
+    // update it
 
-    forceAlignWithNeighbors();
+    updateGui();
 
     return true;
 }
@@ -3085,7 +3235,7 @@ int GraphPanelPlotWidget::graphIndex(GraphPanelPlotGraph *pGraph) const
 //==============================================================================
 
 bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
-                                         const quint64 &pFrom)
+                                         quint64 pFrom)
 {
     // Direct paint our graph from the given point unless we can't direct paint
     // (due to the axes having been changed), in which case we replot ourselves
@@ -3141,8 +3291,8 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
-                                              const bool &pForceAlignment)
+void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
+                                              bool pForceAlignment)
 {
     // Align ourselves with our neighbours by taking into account the size it
     // takes to draw the Y axis and, if any, its corresponding title (including
@@ -3159,9 +3309,51 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(false);
+        // Note #1: this is needed on Windows and Linux otherwise to switch
+        //          files that use different modes (e.g. the N62 SED-ML file
+        //          uses the Simulation Experiment view, i.e. Simulation mode,
+        //          and the N62 CellML file uses the CellML Text view, i.e. the
+        //          Editing mode) may result in the view tab of both modes being
+        //          temporarily visible. No idea why to temporarily disable
+        //          updates fixes things, but it does...
+        // Note #2: to have this on macOS may result in a graph panel becoming
+        //          black, so we definitely don't want to do it on that
+        //          platform...
+#endif
 
-        xScaleWidget->setMinBorderDist(0, 0);
+        // Determine how much space we should have directly to the left and
+        // right of the X axis
+        // Note: normally, we would initialise minBorderDistStartX and
+        //       minBorderDistEndX with a call to
+        //       xScaleWidget->getBorderDistHint(), but for that call to work as
+        //       expected it would have to preceded by a call to
+        //       xScaleWidget->setMinBorderDist(0, 0). Yet, that call may result
+        //       in one or several graph panels to be refreshed, yielding the X
+        //       axis to be temporarily rendered too far to the left. So, to
+        //       avoid this problem, we initialise minBorderDistStartX and
+        //       minBorderDistEndX with a call to
+        //       xScaleWidget->scaleDraw()->getBorderDistHint() and then
+        //       "manually" check the values of minBorderDistStartX and
+        //       minBorderDistEndX against zero...
+
+        QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
+        int minBorderDistStartX;
+        int minBorderDistEndX;
+
+        xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), minBorderDistStartX, minBorderDistEndX);
+
+        if (minBorderDistStartX < 0)
+            minBorderDistStartX = 0;
+
+        if (minBorderDistEndX < 0)
+            minBorderDistEndX = 0;
+
+        newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
+        newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
+
+        // Determine how much space we should have to the left of the Y axis
 
         QwtScaleWidget *yScaleWidget = plot->axisWidget(QwtPlot::yLeft);
         QwtScaleDraw *yScaleDraw = yScaleWidget->scaleDraw();
@@ -3171,14 +3363,6 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
         plot->updateAxes();
         // Note: this ensures that our major ticks (which are used to compute
         //       the extent) are up to date...
-
-        int minBorderDistStartX;
-        int minBorderDistEndX;
-
-        xScaleWidget->getBorderDistHint(minBorderDistStartX, minBorderDistEndX);
-
-        newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
-        newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
 
         double minExtentY =  yScaleDraw->extent(yScaleWidget->font())
                             +(plot->titleAxisY().isEmpty()?
@@ -3219,16 +3403,11 @@ void GraphPanelPlotWidget::alignWithNeighbors(const bool &pCanReplot,
                 replot();
             }
         }
+
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        plot->setUpdatesEnabled(true);
+#endif
     }
-}
-
-//==============================================================================
-
-void GraphPanelPlotWidget::forceAlignWithNeighbors()
-{
-    // Force the re-alignment with our neighbours
-
-    alignWithNeighbors(true, true);
 }
 
 //==============================================================================
