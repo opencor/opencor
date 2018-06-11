@@ -572,11 +572,12 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
-        foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets)
+        foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
             currentSimulationWidget->updateSimulationResults(simulationWidget,
                                                              simulationResultsSize,
                                                              simulationRunsCount-1,
                                                              pTask);
+        }
 
         if (   q1Parameter && thetaParameter && r0Parameter
             && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
