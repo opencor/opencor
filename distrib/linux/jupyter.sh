@@ -8,4 +8,10 @@ DIR=$(dirname "$0")
 
 ${DIR}/python/bin/python ${DIR}/python/bin/set_python_path.py ${DIR}/python -s
 
+# Make sure we can find the OpenCOR application to run as a Jupyter kernel
+
+export PATH=${DIR}:$PATH
+
+# Start Jupyter
+
 ${DIR}/python/bin/jupyter $*
