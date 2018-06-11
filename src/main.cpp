@@ -138,9 +138,10 @@ int main(int pArgC, char *pArgV[])
         //       the GUI version of OpenCOR this time...
     }
 
-    // Initialise the plugins path
+    // Initialise the plugins path, if needed
 
-    OpenCOR::initPluginsPath(pArgV[0]);
+    if (!tryCliVersion)
+        OpenCOR::initPluginsPath(pArgV[0]);
 
     // Create the GUI version of OpenCOR and make sure that it supports high DPI
 
