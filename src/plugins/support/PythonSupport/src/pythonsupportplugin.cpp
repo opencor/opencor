@@ -108,7 +108,7 @@ void PythonSupportPlugin::initializePlugin()
 
     qputenv("PYTHONHOME", pythonHome.toUtf8());
 
-    // Put our Python script directories at the head of the system PATH
+    // Put our Python script directories at the front of the system PATH
 
 #ifdef Q_OS_WIN
     static const char PathSeparator = ';';
@@ -121,6 +121,17 @@ void PythonSupportPlugin::initializePlugin()
 #ifdef Q_OS_WIN
     systemPath.prepend((pythonHome+"/Scripts").toUtf8());
 #endif
+
+    // Put our base install directory at the very head of the system PATH
+
+    QStringList rootDirectories = applicationDirectories;
+#if defined(Q_OS_MAC)
+    rootDirectories.removeLast();
+    rootDirectories.removeLast();
+#endif
+    systemPath.prepend(rootDirectories.join("/").toUtf8());
+
+    // Update the system PATH
 
     qputenv("PATH", systemPath.join(PathSeparator));
 
