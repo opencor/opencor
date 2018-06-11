@@ -360,7 +360,14 @@ void PendulumWindowWindow::initData(const int &pDataSize,
             pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
             pointAttributes.setBaseSize(3, pointAttributesData);
 
-            axes.setMaterial(materialModule.findMaterialByName("blue"));
+            OpenCMISS::Zinc::Material material = materialModule.createMaterial();
+
+            double rgbValues[] = { 0.0, 0.0, 0.0 };
+
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues);
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues);
+
+            axes.setMaterial(material);
 
             // Make a thin cylinder glyph representing the string of the
             // pendulum, which starts from rcOrigin extending in the direction
@@ -422,7 +429,16 @@ void PendulumWindowWindow::initData(const int &pDataSize,
 
             path.setCoordinateField(xi1TimeNodeCoordinates);
             path.setTessellation(tessellation);
-            path.setMaterial(materialModule.findMaterialByName("grey50"));
+
+            material = materialModule.createMaterial();
+
+            rgbValues[1] = 0.445;
+            rgbValues[2] = 0.738;
+
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues);
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues);
+
+            path.setMaterial(material);
         scene.endChange();
     } else {
         // 'Reset' our different fields
