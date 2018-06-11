@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmleditingviewwidget.h"
 #include "corecliutils.h"
 #include "editorlistwidget.h"
-#include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
 #include "rawcellmlviewwidget.h"
@@ -489,10 +489,13 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 void RawCellmlViewWidget::updateViewer()
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
+    // closed since the signal was emitted) and that its editor allows us to
+    // handle connections
 
-    if (!mEditingWidget)
+    if (   !mEditingWidget
+        || !mEditingWidget->editorWidget()->handleEditorChanges()) {
         return;
+    }
 
     // Retrieve the Content MathML block around our current position, if any
 

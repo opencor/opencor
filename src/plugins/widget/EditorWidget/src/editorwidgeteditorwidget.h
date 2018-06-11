@@ -53,11 +53,11 @@ public:
 
     void setReadOnly(bool pReadOnly) override;
 
-    QIntList highlightedLines() const;
+    QIntSet highlightedLines() const;
 
     void clearHighlighting();
-    void addHighlighting(int pFromLine, int pFromColumn,
-                         int pToLine, int pToColumn);
+
+    void updateLineColumn();
 
     void del() override;
 
@@ -69,6 +69,11 @@ protected:
     void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
+    enum Action {
+        HighlightAll,
+        ReplaceAll
+    };
+
     EditorWidget *mOwner;
 
     EditorWidgetFindReplaceWidget *mFindReplace;
@@ -79,13 +84,17 @@ private:
 
     int mHighlightIndicatorNumber;
 
-    QIntList mHighlightedLines;
+    QIntSet mHighlightedLines;
 
     QStringList mTexts;
 
-    void doHighlightReplaceAll(bool pHighlightAll);
+    int mLine;
+    int mColumn;
 
-    bool findText(const QString &pText, bool pForward);
+    void processAll(Action pAction);
+
+    bool findText(const QString &pText, bool pForward = true,
+                  bool pFirstTime = true);
 
 public slots:
     void highlightAll();
