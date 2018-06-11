@@ -1356,7 +1356,6 @@ elseif(APPLE)
 
     install(FILES ${JUPYTER_SCRIPT}
             DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
@@ -1437,7 +1436,6 @@ else()
 
     install(FILES ${JUPYTER_SCRIPT}
             DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Shell script to run OpenCOR
