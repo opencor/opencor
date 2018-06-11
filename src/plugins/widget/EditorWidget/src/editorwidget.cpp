@@ -190,7 +190,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
     //       findTextChanged() slot)...
 
     mFindReplace->setActive(false);
-        mFindReplace->updateFrom(pEditorWidget->findReplace());
+        mFindReplace->updateFrom(pEditorWidget->mFindReplace);
     mFindReplace->setActive(true);
 }
 
@@ -203,6 +203,15 @@ bool EditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
     // By default, we don't handle our editor's key press event
 
     return false;
+}
+
+//==============================================================================
+
+void EditorWidget::setLexer(QsciLexer *pLexer)
+{
+    // Set our editor's lexer
+
+    mEditor->setLexer(pLexer);
 }
 
 //==============================================================================
@@ -230,6 +239,53 @@ void EditorWidget::cursorPosition(int &pLine, int &pColumn)
     // Retrieve our cursor position
 
     mEditor->cursorPosition(pLine, pColumn);
+}
+
+//==============================================================================
+
+int EditorWidget::length() const
+{
+    // Retrieve our length
+
+    return mEditor->length();
+}
+
+//==============================================================================
+
+QString EditorWidget::text(int pLine) const
+{
+    // Retrieve the given line of text
+
+    return mEditor->text(pLine);
+}
+
+//==============================================================================
+
+void EditorWidget::selection(int &pLineFrom, int &pColumnFrom, int &pLineTo,
+                             int &pColumnTo)
+{
+    // Retrieve our current selection
+
+    mEditor->getSelection(&pLineFrom, &pColumnFrom, &pLineTo, &pColumnTo);
+}
+
+//==============================================================================
+
+void EditorWidget::setSelection(int pLineFrom, int pColumnFrom, int pLineTo,
+                                int pColumnTo)
+{
+    // Set the current selection
+
+    mEditor->setSelection(pLineFrom, pColumnFrom, pLineTo, pColumnTo);
+}
+
+//==============================================================================
+
+int EditorWidget::position(int pLine, int pColumn)
+{
+    // Retrieve our position from the given line/column
+
+    return mEditor->positionFromLineIndex(pLine, pColumn);
 }
 
 //==============================================================================
@@ -513,24 +569,6 @@ void EditorWidget::setZoomLevel(int pZoomLevel)
 
 //==============================================================================
 
-EditorWidgetEditorWidget * EditorWidget::editor() const
-{
-    // Return our editor
-
-    return mEditor;
-}
-
-//==============================================================================
-
-EditorWidgetFindReplaceWidget * EditorWidget::findReplace()
-{
-    // Return our find/replace widget
-
-    return mFindReplace;
-}
-
-//==============================================================================
-
 bool EditorWidget::isFindReplaceVisible() const
 {
     // Return whether our find/replace widget is visible
@@ -544,29 +582,35 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
 {
     // Set our find text and highlight all its occurrences, if we are to show
     // our find/replace widget
-    // Note: if we are over a word, then we want it to become our find text, but
-    //       if we make it so then a call to findText() will be triggered if the
-    //       find text is different. Clearly, we don't want this to happen,
-    //       hence we inactivate and then reactivate our find/replace widget...
+    // Note: if we are over a word, then we want it to become our find text
+    //       (unless some text is already selected), but if we make it so then a
+    //       call to findText() will be triggered if the find text is different.
+    //       Clearly, we don't want this to happen, hence we inactivate and then
+    //       reactivate our find/replace widget...
 
     if (pVisible) {
-        int line;
-        int column;
+        QString selText;
 
-        mEditor->getCursorPosition(&line, &column);
-
-        QString word = mEditor->wordAt(line, column);
-
-        if (!word.isEmpty()) {
-            mFindReplace->setActive(false);
-                mFindReplace->setFindText(word);
-            mFindReplace->setActive(true);
-
-            mEditor->highlightAll();
-            mEditor->selectWordAt(line, column);
+        if (hasSelectedText()) {
+            selText = selectedText();
         } else {
-            mFindReplace->selectFindText();
+            int line;
+            int column;
+
+            mEditor->cursorPosition(line, column);
+
+            selText = mEditor->wordAt(line, column);
+
+            mEditor->selectWordAt(line, column);
         }
+
+        mEditor->updateLineColumn();
+
+        mFindReplace->setActive(false);
+            mFindReplace->setFindText(selText);
+        mFindReplace->setActive(true);
+
+        mEditor->highlightAll();
     } else {
         mEditor->clearHighlighting();
     }
@@ -611,6 +655,71 @@ bool EditorWidget::findPrevious()
     // Find the previous occurrence of the text in our editor
 
     return mEditor->findPrevious();
+}
+
+//==============================================================================
+
+void EditorWidget::insertText(const QString &pText, int pLine, int pColumn)
+{
+    // Insert the given given text at the given line/column
+
+    mEditor->insertAt(pText, pLine, pColumn);
+}
+
+//==============================================================================
+
+void EditorWidget::removeText(int pPosition, int pLength)
+{
+    // Select the text at the given position, and for the given length, and
+    // remove it
+
+    mEditor->SendScintilla(QsciScintilla::SCI_SETSEL, pPosition, pPosition+pLength);
+    mEditor->removeSelectedText();
+}
+
+//==============================================================================
+
+void EditorWidget::replaceSelectedText(const QString &pText)
+{
+    // Replace the current text with the given one
+
+    mEditor->replaceSelectedText(pText);
+}
+
+//==============================================================================
+
+void EditorWidget::replaceAndFind()
+{
+    // Replace the current text and then find its next occurence
+
+    mEditor->replaceAndFind();
+}
+
+//==============================================================================
+
+void EditorWidget::beginUndoAction()
+{
+    // Begin an undo action
+
+    mEditor->beginUndoAction();
+}
+
+//==============================================================================
+
+void EditorWidget::endUndoAction()
+{
+    // End an undo action
+
+    mEditor->endUndoAction();
+}
+
+//==============================================================================
+
+bool EditorWidget::handleEditorChanges() const
+{
+    // Return whether we should handle our editor's changes
+
+    return mEditor->handleChanges();
 }
 
 //==============================================================================
