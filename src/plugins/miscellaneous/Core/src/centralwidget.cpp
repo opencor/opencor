@@ -693,9 +693,10 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
                                   QUrl(url).fileName():
                                   QFileInfo(fileName).fileName();
 
-        mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?
-                                                   "*":
-                                                   QString()));
+        if (fileManagerInstance->isNewOrModified(fileName))
+            tabText += "*";
+
+        mFileTabs->setTabText(pIndex, tabText);
         mFileTabs->setTabToolTip(pIndex, fileIsNew?
                                              tabText:
                                              fileIsRemote?
