@@ -112,7 +112,7 @@ int main(int pArgC, char *pArgV[])
     if (tryCliVersion) {
         // Initialise the plugins path
 
-        OpenCOR::initPluginsPath(pArgV[0]);
+        OpenCOR::initPluginsPath(pArgC, pArgV);
 
         // Create and initialise the CLI version of OpenCOR
 
@@ -140,12 +140,11 @@ int main(int pArgC, char *pArgV[])
 
     // Initialise the plugins path
 
-    OpenCOR::initPluginsPath(pArgV[0]);
+    OpenCOR::initPluginsPath(pArgC, pArgV);
 
     // Create the GUI version of OpenCOR and make sure that it supports high DPI
 
-    OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(QFileInfo(pArgV[0]).baseName(),
-                                                                  pArgC, pArgV);
+    OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
 
     guiApp->setAttribute(Qt::AA_EnableHighDpiScaling);
     guiApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
