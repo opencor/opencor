@@ -107,16 +107,16 @@ int main(int pArgC, char *pArgV[])
     #error Unsupported platform
 #endif
 
+    // Retrieve our plugins' path
+
+    QString pluginsDir = OpenCOR::pluginsDir(pArgC, pArgV);
+
     // Run the CLI version of OpenCOR, if possible/needed
 
     if (tryCliVersion) {
-        // Initialise the plugins path
-
-        OpenCOR::initPluginsPath(pArgC, pArgV);
-
         // Create and initialise the CLI version of OpenCOR
 
-        OpenCOR::CliApplication *cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
+        OpenCOR::CliApplication *cliApp = new OpenCOR::CliApplication(pArgC, pArgV, pluginsDir);
 
         OpenCOR::initApplication();
 
@@ -137,11 +137,6 @@ int main(int pArgC, char *pArgV[])
         //       end we need to go for its GUI version, so start over but with
         //       the GUI version of OpenCOR this time...
     }
-
-    // Initialise the plugins path, if needed
-
-    if (!tryCliVersion)
-        OpenCOR::initPluginsPath(pArgC, pArgV);
 
     // Create the GUI version of OpenCOR and make sure that it supports high DPI
 
@@ -240,7 +235,7 @@ int main(int pArgC, char *pArgV[])
 
     // Create our main window
 
-    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(appDate);
+    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(pluginsDir, appDate);
 
     // Keep track of our main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)

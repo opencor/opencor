@@ -87,7 +87,8 @@ static const auto FrenchLocale  = QStringLiteral("fr");
 
 //==============================================================================
 
-MainWindow::MainWindow(const QString &pApplicationDate) :
+MainWindow::MainWindow(const QString &pPluginsDir,
+                       const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
@@ -138,7 +139,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
-    mPluginManager = new PluginManager();
+    mPluginManager = new PluginManager(pPluginsDir);
 
     // Retrieve some categories of plugins
 

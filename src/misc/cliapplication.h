@@ -47,7 +47,8 @@ class PluginManager;
 
 class CliApplication {
 public:
-    explicit CliApplication(int &pArgC, char **pArgV);
+    explicit CliApplication(int &pArgC, char **pArgV,
+                            const QString &pPluginsDir);
     ~CliApplication();
 
     bool run(int *pRes);
@@ -55,6 +56,7 @@ public:
 private:
     QCoreApplication *mCliApplication;
 
+    QString mPluginsDir;
     PluginManager *mPluginManager;
 
     Plugins mLoadedPluginPlugins;

@@ -43,7 +43,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CliApplication::CliApplication(int &pArgC, char **pArgV) :
+CliApplication::CliApplication(int &pArgC, char **pArgV,
+                               const QString &pPluginsDir) :
+    mPluginsDir(pPluginsDir),
     mPluginManager(0),
     mLoadedPluginPlugins(Plugins()),
     mLoadedCliPlugins(Plugins())
@@ -86,7 +88,7 @@ void CliApplication::loadPlugins()
 {
     // Load all the plugins by creating our plugin manager
 
-    mPluginManager = new PluginManager(false);
+    mPluginManager = new PluginManager(mPluginsDir, false);
 
     // Retrieve some categories of plugins
 
