@@ -103,14 +103,14 @@ void initPluginsPath(int pArgC, char *pArgV[])
 
 #ifdef Q_OS_WIN
     if (appFileInfo.completeSuffix().isEmpty()) {
-        // If pAppFileName has no suffix, then it means that we tried to run
+        // If appFileInfo has no suffix, then it means that we tried to run
         // OpenCOR using something like "[OpenCOR]/OpenCOR", in which case
         // QFileInfo() will be lost when trying to retrieve the canonical path
         // for OpenCOR. Now, when we use something like "[OpenCOR]/OpenCOR",
         // it's as if we were to use something like "[OpenCOR]/OpenCOR.com", so
         // update appFileInfo accordingly
 
-        appFileInfo = pAppFileName+".com";
+        appFileInfo = appFileInfo.absoluteFilePath()+".com";
     }
 #endif
 
