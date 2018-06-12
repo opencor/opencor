@@ -80,25 +80,6 @@ int JupyterKernelPlugin::executeCommand(const QString &pCommand,
 }
 
 //==============================================================================
-// Event loop interface
-//==============================================================================
-
-bool JupyterKernelPlugin::useExec()
-{
-    return false; // !mConnectionFile.isEmpty();
-}
-
-//==============================================================================
-
-int JupyterKernelPlugin::exec()
-{
-    //if (!mConnectionFile.isEmpty())
-    //    return runKernel();
-
-    return 0;
-}
-
-//==============================================================================
 // Plugin specific
 //==============================================================================
 

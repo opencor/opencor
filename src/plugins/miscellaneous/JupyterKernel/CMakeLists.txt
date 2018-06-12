@@ -5,7 +5,6 @@ project(JupyterKernelPlugin)
 add_plugin(JupyterKernel
     SOURCES
         ../../cliinterface.cpp
-        ../../eventloopinterface.cpp
         ../../plugininfo.cpp
 
         src/jupyterkernelplugin.cpp
