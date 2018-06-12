@@ -56,7 +56,7 @@ int main(int pArgC, char *pArgV[])
 
     // Initialise the plugins path
 
-    OpenCOR::initPluginsPath(pArgV[0]);
+    OpenCOR::initPluginsPath(pArgC, pArgV);
 
     // Create our application
 
