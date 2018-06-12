@@ -2,7 +2,9 @@
 
 # Get the script's directory, which should be OpenCOR's base directory
 
-DIR=$(dirname "$0")
+# Get the script's directory, which should be OpenCOR's base directory
+
+DIR="$(cd "$(dirname "$0")"; pwd)"
 
 # Make sure the path to Python is correct before starting Jupyter
 
