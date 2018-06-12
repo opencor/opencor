@@ -48,7 +48,7 @@ class PluginManager : public QObject
     Q_OBJECT
 
 public:
-    explicit PluginManager(const QString &pPluginsDir, bool pGuiMode = true);
+    explicit PluginManager(bool pGuiMode = true);
     ~PluginManager() override;
 
     bool guiMode() const;
@@ -63,9 +63,9 @@ public:
     Plugin * corePlugin() const;
 
 private:
-    QString mPluginsDir;
-
     bool mGuiMode;
+
+    QString mPluginsDir;
 
     Plugins mPlugins;
     Plugins mLoadedPlugins;

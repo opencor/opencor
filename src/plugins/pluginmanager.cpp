@@ -40,13 +40,20 @@ namespace OpenCOR {
 
 //==============================================================================
 
-PluginManager::PluginManager(const QString &pPluginsDir, bool pGuiMode) :
-    mPluginsDir(pPluginsDir+"/"+qAppName()),
+PluginManager::PluginManager(bool pGuiMode) :
     mGuiMode(pGuiMode),
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
     mCorePlugin(0)
 {
+    // Retrieve OpenCOR's plugins directory
+    // Note #1: the plugin's directory is retrieved in main()...
+    // Note #2: we use QDir().canonicalPath() to ensure that our plugins
+    //          directory uses "/" (and not a mixture of "/" and "\"), which is
+    //          critical on Windows...
+
+    mPluginsDir = QDir(QCoreApplication::libraryPaths().first()).canonicalPath()+"/"+qAppName();
+
     // Retrieve the list of plugins available for loading
 
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);

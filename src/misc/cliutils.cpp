@@ -86,7 +86,7 @@ void initQtMessagePattern()
 
 //==============================================================================
 
-QString pluginsDir(int pArgC, char *pArgV[])
+void initPluginsPath(int pArgC, char *pArgV[])
 {
     // Initialise the plugins path
     // Note: a user might have set the OpenCOR path in his/her PATH environment
@@ -138,7 +138,7 @@ QString pluginsDir(int pArgC, char *pArgV[])
     #error Unsupported platform
 #endif
 
-    return canonicalDirName(pluginsDir);
+    QCoreApplication::setLibraryPaths(QStringList() << canonicalDirName(pluginsDir));
 }
 
 //==============================================================================

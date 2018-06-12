@@ -67,8 +67,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(const QString &pPluginsDir,
-                        const QString &pApplicationDate);
+    explicit MainWindow(const QString &pApplicationDate);
     ~MainWindow() override;
 
     void handleArguments(const QStringList &pArguments);
