@@ -99,8 +99,21 @@ void JupyterKernelPlugin::runHelpCommand()
 // The OpenCOR Jupyter kernel
 
 static QString jupyterKernel = R"PYTHON(
-from ipykernel.ipkernel import IPythonKernel
 import matplotlib
+from IPython.core.pylabtools import activate_matplotlib
+from ipykernel.ipkernel import IPythonKernel
+
+# Use the Jupyter notebook for matplotlib plots
+
+MATPLOTLIB_BACKEND = 'nbAgg'
+matplotlib.use(MATPLOTLIB_BACKEND)
+
+# Enable interactive plots
+
+activate_matplotlib(MATPLOTLIB_BACKEND)
+
+
+# Minimal customisation of the standard IPython kernel
 
 class OpenCORKernel(IPythonKernel):
     implementation = 'OpenCOR'
@@ -109,6 +122,7 @@ class OpenCORKernel(IPythonKernel):
 
 if __name__ == '__main__':
     from ipykernel.kernelapp import IPKernelApp
+
     IPKernelApp.connection_file = '%1'
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
     )PYTHON";
