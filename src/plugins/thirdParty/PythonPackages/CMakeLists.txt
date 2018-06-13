@@ -129,7 +129,8 @@ else()
         ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
         ${PYTHON_EXECUTABLE} -s -m
         pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-                    --upgrade --upgrade-strategy only-if-needed)
+                    --upgrade --upgrade-strategy only-if-needed
+                    --no-warn-script-location)
 
     # Install numpy, scipy, and matplotlib
 
