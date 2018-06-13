@@ -91,10 +91,6 @@ bool PythonQtConsoleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
 
 void PythonQtConsoleWindowPlugin::initializePlugin()
 {
-    // Use our (patched) matplotlib backend for PythonQt
-
-    qputenv("MPLBACKEND", "module://matplotlib.backends.backend_qt5agg");
-
     // Create an action to show/hide our PythonQt window
 
     mPythonQtConsoleWindowAction = Core::newAction(true, Core::mainWindow());
