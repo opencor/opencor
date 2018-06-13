@@ -692,18 +692,18 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
                               fileIsRemote?
                                   QUrl(url).fileName():
                                   QFileInfo(fileName).fileName();
+        QString tabToolTip = fileIsNew?
+                                 tabText:
+                                 fileIsRemote?
+                                     url:
+                                     QDir::toNativeSeparators(fileName);
+
 
         if (fileManagerInstance->isNewOrModified(fileName))
             tabText += "*";
 
         if (tabText.compare(mFileTabs->tabText(pIndex)))
             mFileTabs->setTabText(pIndex, tabText);
-
-        QString tabToolTip = fileIsNew?
-                                 tabText:
-                                 fileIsRemote?
-                                     url:
-                                     QDir::toNativeSeparators(fileName);
 
         if (tabToolTip.compare(mFileTabs->tabToolTip(pIndex)))
             mFileTabs->setTabToolTip(pIndex, tabToolTip);
