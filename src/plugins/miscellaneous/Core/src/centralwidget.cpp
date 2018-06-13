@@ -698,7 +698,6 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
                                      url:
                                      QDir::toNativeSeparators(fileName);
 
-
         if (fileManagerInstance->isNewOrModified(fileName))
             tabText += "*";
 
