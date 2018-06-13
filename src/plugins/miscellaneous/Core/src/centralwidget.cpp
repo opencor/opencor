@@ -696,12 +696,17 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
         if (fileManagerInstance->isNewOrModified(fileName))
             tabText += "*";
 
-        mFileTabs->setTabText(pIndex, tabText);
-        mFileTabs->setTabToolTip(pIndex, fileIsNew?
-                                             tabText:
-                                             fileIsRemote?
-                                                 url:
-                                                 QDir::toNativeSeparators(fileName));
+        if (tabText.compare(mFileTabs->tabText(pIndex)))
+            mFileTabs->setTabText(pIndex, tabText);
+
+        QString tabToolTip = fileIsNew?
+                                 tabText:
+                                 fileIsRemote?
+                                     url:
+                                     QDir::toNativeSeparators(fileName);
+
+        if (tabToolTip.compare(mFileTabs->tabToolTip(pIndex)))
+            mFileTabs->setTabToolTip(pIndex, tabToolTip);
 
         tabIcon = qobject_cast<ViewInterface *>(viewPlugin(pIndex)->instance())->fileTabIcon(mFileNames[pIndex]);
     }
