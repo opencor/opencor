@@ -604,7 +604,6 @@ set(SOURCES
     src/plugins/cliinterface.cpp
     src/plugins/coreinterface.cpp
     src/plugins/datastoreinterface.cpp
-    src/plugins/eventloopinterface.cpp
     src/plugins/filehandlinginterface.cpp
     src/plugins/filetypeinterface.cpp
     src/plugins/guiinterface.cpp
@@ -663,7 +662,6 @@ if(WIN32)
         src/plugins/cliinterface.cpp
         src/plugins/coreinterface.cpp
         src/plugins/datastoreinterface.cpp
-        src/plugins/eventloopinterface.cpp
         src/plugins/filehandlinginterface.cpp
         src/plugins/filetypeinterface.cpp
         src/plugins/plugin.cpp
@@ -1356,7 +1354,6 @@ elseif(APPLE)
 
     install(FILES ${JUPYTER_SCRIPT}
             DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
@@ -1365,7 +1362,7 @@ elseif(APPLE)
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/application.sh.in
-                   ${SH_FILENAME})
+                   ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
             DESTINATION .
@@ -1437,7 +1434,6 @@ else()
 
     install(FILES ${JUPYTER_SCRIPT}
             DESTINATION .
-            RENAME ${CMAKE_PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
     # Shell script to run OpenCOR
@@ -1445,7 +1441,7 @@ else()
     set(SH_FILENAME ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.sh)
 
     configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in
-                   ${SH_FILENAME})
+                   ${SH_FILENAME} @ONLY)
 
     install(FILES ${SH_FILENAME}
             DESTINATION .

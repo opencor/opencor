@@ -63,7 +63,7 @@ def update_script(script_filename, new_path, clear_args, extra_args):
     try:
         with open(script_filename, 'r') as f:
             lines = list(f)
-    except (IsADirectoryError, UnicodeDecodeError):
+    except (IsADirectoryError, UnicodeDecodeError, PermissionError):
         return
 
     if not lines:

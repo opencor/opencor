@@ -692,34 +692,40 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
                               fileIsRemote?
                                   QUrl(url).fileName():
                                   QFileInfo(fileName).fileName();
+        QString tabToolTip = fileIsNew?
+                                 tabText:
+                                 fileIsRemote?
+                                     url:
+                                     QDir::toNativeSeparators(fileName);
 
-        mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?
-                                                   "*":
-                                                   QString()));
-        mFileTabs->setTabToolTip(pIndex, fileIsNew?
-                                             tabText:
-                                             fileIsRemote?
-                                                 url:
-                                                 QDir::toNativeSeparators(fileName));
+        if (fileManagerInstance->isNewOrModified(fileName))
+            tabText += "*";
+
+        if (tabText.compare(mFileTabs->tabText(pIndex)))
+            mFileTabs->setTabText(pIndex, tabText);
+
+        if (tabToolTip.compare(mFileTabs->tabToolTip(pIndex)))
+            mFileTabs->setTabToolTip(pIndex, tabToolTip);
 
         tabIcon = qobject_cast<ViewInterface *>(viewPlugin(pIndex)->instance())->fileTabIcon(mFileNames[pIndex]);
     }
 
     if (tabIcon.isNull()) {
-        mFileTabs->setTabIcon(pIndex, fileIsRemote?
-                                          InternetIcon:
-                                          QFile::exists(fileName)?
-                                              fileManagerInstance->isReadableAndWritable(fileName)?
-                                                  NoIcon:
-                                                  LockedIcon:
-                                              NoIcon);
+        tabIcon = fileIsRemote?
+                      InternetIcon:
+                      QFile::exists(fileName)?
+                          fileManagerInstance->isReadableAndWritable(fileName)?
+                              NoIcon:
+                              LockedIcon:
+                          NoIcon;
         // Note: we really want to call isReadableAndWritable() rather than
         //       isLocked() since no icon should be shown only if the file can
         //       be both readable and writable (see
         //       CorePlugin::filePermissionsChanged())...
-    } else {
-        mFileTabs->setTabIcon(pIndex, tabIcon);
     }
+
+    if (QVariant(tabIcon) != QVariant(mFileTabs->tabIcon(pIndex)))
+        mFileTabs->setTabIcon(pIndex, tabIcon);
 }
 
 //==============================================================================

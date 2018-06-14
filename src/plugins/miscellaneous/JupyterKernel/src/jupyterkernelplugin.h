@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cliinterface.h"
-#include "eventloopinterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -40,19 +39,16 @@ PLUGININFO_FUNC JupyterKernelPluginInfo();
 
 //==============================================================================
 
-class JupyterKernelPlugin : public QObject, public CliInterface,
-                            public EventLoopInterface
+class JupyterKernelPlugin : public QObject, public CliInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.JupyterKernelPlugin" FILE "jupyterkernelplugin.json")
 
     Q_INTERFACES(OpenCOR::CliInterface)
-    Q_INTERFACES(OpenCOR::EventLoopInterface)
 
 public:
 #include "cliinterface.inl"
-#include "eventloopinterface.inl"
 
 private:
     void runHelpCommand();

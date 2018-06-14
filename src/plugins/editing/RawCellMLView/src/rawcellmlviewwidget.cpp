@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmleditingviewwidget.h"
 #include "corecliutils.h"
 #include "editorlistwidget.h"
-#include "editorwidget.h"
+#include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
 #include "rawcellmlviewwidget.h"
@@ -115,30 +115,30 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
-    CellMLEditingView::CellmlEditingViewWidget *newEditingWidget = mEditingWidgets.value(pFileName);
+    CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (!newEditingWidget) {
+    if (!editingWidget) {
         // No editing widget exists for the given file, so create one
 
         QByteArray fileContents;
 
         Core::readFileContentsFromFile(pFileName, fileContents);
 
-        newEditingWidget = new CellMLEditingView::CellmlEditingViewWidget(fileContents,
-                                                                          !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                                          new QsciLexerXML(this),
-                                                                          parentWidget());
+        editingWidget = new CellMLEditingView::CellmlEditingViewWidget(fileContents,
+                                                                       !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+                                                                       new QsciLexerXML(this),
+                                                                       parentWidget());
 
         // Update our viewer whenever necessary
 
-        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
+        connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
                 this, &RawCellmlViewWidget::updateViewer);
-        connect(newEditingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
+        connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
                 this, &RawCellmlViewWidget::updateViewer);
 
         // Keep track of our editing widget
 
-        mEditingWidgets.insert(pFileName, newEditingWidget);
+        mEditingWidgets.insert(pFileName, editingWidget);
     }
 
     // Update our editing widget, if required
@@ -146,7 +146,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
     if (pUpdate) {
         CellMLEditingView::CellmlEditingViewWidget *oldEditingWidget = mEditingWidget;
 
-        mEditingWidget = newEditingWidget;
+        mEditingWidget = editingWidget;
 
         // Load our settings, if needed, or reset our editing widget using the
         // 'old' one
@@ -155,12 +155,12 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                newEditingWidget->loadSettings(&settings);
+                editingWidget->loadSettings(&settings);
             settings.endGroup();
 
             mNeedLoadingSettings = false;
         } else {
-            newEditingWidget->updateSettings(oldEditingWidget);
+            editingWidget->updateSettings(oldEditingWidget);
         }
 
         // Update our viewer
@@ -174,13 +174,13 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
         //       our 'old' editing widget (see CentralWidget::updateGui()),
         //       which is clearly not what we want...
 
-        setFocusProxy(newEditingWidget->editorWidget());
+        setFocusProxy(editingWidget->editorWidget());
 
-        newEditingWidget->editorWidget()->setFocus();
+        editingWidget->editorWidget()->setFocus();
     } else {
         // Hide our 'new' editing widget
 
-        newEditingWidget->hide();
+        editingWidget->hide();
     }
 }
 
@@ -306,17 +306,17 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget && validate(pFileName, true)) {
-        int cursorLine;
-        int cursorColumn;
+        int line;
+        int column;
 
-        editingWidget->editorWidget()->cursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->cursorPosition(line, column);
 
         QDomDocument domDocument;
 
         domDocument.setContent(editingWidget->editorWidget()->contents());
 
         editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), true);
-        editingWidget->editorWidget()->setCursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->setCursorPosition(line, column);
     }
 }
 
@@ -489,10 +489,13 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 void RawCellmlViewWidget::updateViewer()
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
+    // closed since the signal was emitted) and that its editor allows us to
+    // handle connections
 
-    if (!mEditingWidget)
+    if (   !mEditingWidget
+        || !mEditingWidget->editorWidget()->handleEditorChanges()) {
         return;
+    }
 
     // Retrieve the Content MathML block around our current position, if any
 

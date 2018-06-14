@@ -6,4 +6,10 @@ REM Make sure the path to Python is correct before starting Jupyter
 
 Python\bin\Python.exe Python\Scripts\set_python_path.py Python -s
 
+REM Make sure we can find the OpenCOR application to run as a Jupyter kernel
+
+set PATH=.;%PATH%
+
+REM Start Jupyter
+
 Python\Scripts\jupyter %*

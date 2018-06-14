@@ -734,331 +734,332 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     //       CellML file)...
 
     setUpdatesEnabled(false);
+        // Stop keeping track of certain things (so that updatePlot() doesn't
+        // get called unnecessarily)
+        // Note: see the corresponding code towards the end of this method...
 
-    // Stop keeping track of certain things (so that updatePlot() doesn't get
-    // called unnecessarily)
-    // Note: see the corresponding code towards the end of this method...
+        SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
+        SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
 
-    SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
-    SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
+        disconnect(simulationWidget, &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+                   this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
 
-    disconnect(simulationWidget, &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
-               this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
+        // Reset our progress
 
-    // Reset our progress
+        mProgress = -1;
 
-    mProgress = -1;
+        // Clean up our output, if needed
 
-    // Clean up our output, if needed
+        if (pReloadingView)
+            mOutputWidget->document()->clear();
 
-    if (pReloadingView)
-        mOutputWidget->document()->clear();
+        // Output some information about our CellML file
 
-    // Output some information about our CellML file
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+        QString simulationFileName = mSimulation->fileName();
+        QString fileName = fileManagerInstance->isNew(simulationFileName)?
+                               tr("File")+" #"+QString::number(fileManagerInstance->newIndex(simulationFileName)):
+                               fileManagerInstance->isRemote(simulationFileName)?
+                                   fileManagerInstance->url(simulationFileName):
+                                   simulationFileName;
+        QString information = "<strong>"+QDir::toNativeSeparators(fileName)+"</strong>"+OutputBrLn;
+        SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSimulation->sedmlFile()?
+                                                            mSimulation->sedmlFile()->issues():
+                                                            SEDMLSupport::SedmlFileIssues();
+        COMBINESupport::CombineArchiveIssues combineArchiveIssues = mSimulation->combineArchive()?
+                                                                        mSimulation->combineArchive()->issues():
+                                                                        COMBINESupport::CombineArchiveIssues();
+        bool atLeastOneBlockingSedmlIssue = false;
+        bool atLeastOneBlockingCombineIssue = false;
 
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    QString simulationFileName = mSimulation->fileName();
-    QString fileName = fileManagerInstance->isNew(simulationFileName)?
-                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(simulationFileName)):
-                           fileManagerInstance->isRemote(simulationFileName)?
-                               fileManagerInstance->url(simulationFileName):
-                               simulationFileName;
-    QString information = "<strong>"+QDir::toNativeSeparators(fileName)+"</strong>"+OutputBrLn;
-    SEDMLSupport::SedmlFileIssues sedmlFileIssues = mSimulation->sedmlFile()?
-                                                        mSimulation->sedmlFile()->issues():
-                                                        SEDMLSupport::SedmlFileIssues();
-    COMBINESupport::CombineArchiveIssues combineArchiveIssues = mSimulation->combineArchive()?
-                                                                    mSimulation->combineArchive()->issues():
-                                                                    COMBINESupport::CombineArchiveIssues();
-    bool atLeastOneBlockingSedmlIssue = false;
-    bool atLeastOneBlockingCombineIssue = false;
+        if (!combineArchiveIssues.isEmpty()) {
+            // There is one or several issues with our COMBINE archive, so list
+            // it/them
 
-    if (!combineArchiveIssues.isEmpty()) {
-        // There is one or several issues with our COMBINE archive, so list
-        // it/them
+            foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, combineArchiveIssues) {
+                QString issueType;
 
-        foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, combineArchiveIssues) {
-            QString issueType;
+                switch (combineArchiveIssue.type()) {
+                case COMBINESupport::CombineArchiveIssue::Information:
+                    issueType = tr("Information:");
 
-            switch (combineArchiveIssue.type()) {
-            case COMBINESupport::CombineArchiveIssue::Information:
-                issueType = tr("Information:");
+                    break;
+                case COMBINESupport::CombineArchiveIssue::Error:
+                    issueType = tr("Error:");
 
-                break;
-            case COMBINESupport::CombineArchiveIssue::Error:
-                issueType = tr("Error:");
+                    atLeastOneBlockingCombineIssue = true;
 
-                atLeastOneBlockingCombineIssue = true;
+                    break;
+                case COMBINESupport::CombineArchiveIssue::Warning:
+                    issueType = tr("Warning:");
 
-                break;
-            case COMBINESupport::CombineArchiveIssue::Warning:
-                issueType = tr("Warning:");
+                    break;
+                case COMBINESupport::CombineArchiveIssue::Fatal:
+                    issueType = tr("Fatal:");
 
-                break;
-            case COMBINESupport::CombineArchiveIssue::Fatal:
-                issueType = tr("Fatal:");
+                    atLeastOneBlockingCombineIssue = true;
 
-                atLeastOneBlockingCombineIssue = true;
+                    break;
+                }
 
-                break;
-            }
-
-            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
-                                                                                                            .arg(Core::formatMessage(combineArchiveIssue.message()));
-        }
-    }
-
-    if (!sedmlFileIssues.isEmpty()) {
-        // There is one or several issues with our SED-ML file, so list it/them
-
-        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
-            QString issueType;
-
-            switch (sedmlFileIssue.type()) {
-            case SEDMLSupport::SedmlFileIssue::Unknown:
-#ifdef QT_DEBUG
-                // We should never come here...
-
-                qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
-#endif
-
-                break;
-            case SEDMLSupport::SedmlFileIssue::Information:
-                issueType = tr("Information:");
-
-                break;
-            case SEDMLSupport::SedmlFileIssue::Error:
-                issueType = tr("Error:");
-
-                atLeastOneBlockingSedmlIssue = true;
-
-                break;
-            case SEDMLSupport::SedmlFileIssue::Warning:
-                issueType = tr("Warning:");
-
-                break;
-            case SEDMLSupport::SedmlFileIssue::Fatal:
-                issueType = tr("Fatal:");
-
-                atLeastOneBlockingSedmlIssue = true;
-
-                break;
-            }
-
-            if (sedmlFileIssue.line() && sedmlFileIssue.column()) {
-                information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(sedmlFileIssue.line())
-                                                                                                                        .arg(sedmlFileIssue.column())
-                                                                                                                        .arg(issueType)
-                                                                                                                        .arg(Core::formatMessage(sedmlFileIssue.message()));
-            } else {
                 information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
-                                                                                                                .arg(Core::formatMessage(sedmlFileIssue.message()));
+                                                                                                                .arg(Core::formatMessage(combineArchiveIssue.message()));
             }
         }
-    }
 
-    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    bool validRuntime = runtime && runtime->isValid();
+        if (!sedmlFileIssues.isEmpty()) {
+            // There is one or several issues with our SED-ML file, so list
+            // it/them
 
-    CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():0;
+            foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
+                QString issueType;
 
-    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
-        information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+                switch (sedmlFileIssue.type()) {
+                case SEDMLSupport::SedmlFileIssue::Unknown:
+    #ifdef QT_DEBUG
+                    // We should never come here...
 
-        if (voi) {
-            // A VOI could be retrieved for our CellML file, so we can also
-            // output the model type
+                    qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
+    #endif
 
-            information +=  "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn
-                           +QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1</span>."+OutputBrLn).arg(runtime->needNlaSolver()?tr("DAE"):tr("ODE"));
-        } else {
-            // We couldn't retrieve a VOI, which means that we either don't have
-            // a runtime or we have one, but it's not valid or it's valid but we
-            // really don't have a VOI
-            // Note: in the case of a valid runtime and no VOI, we really
-            //       shouldn't consider the runtime to be valid, hence we handle
-            //       this case here...
+                    break;
+                case SEDMLSupport::SedmlFileIssue::Information:
+                    issueType = tr("Information:");
 
-            mErrorType = InvalidCellmlFile;
+                    break;
+                case SEDMLSupport::SedmlFileIssue::Error:
+                    issueType = tr("Error:");
 
-            updateInvalidModelMessageWidget();
+                    atLeastOneBlockingSedmlIssue = true;
 
-            information += "<span"+OutputBad+">"+(runtime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+                    break;
+                case SEDMLSupport::SedmlFileIssue::Warning:
+                    issueType = tr("Warning:");
 
-            if (validRuntime) {
-                // We have a valid runtime, but no VOI, which means that the
-                // model doesn't contain any ODE or DAE
+                    break;
+                case SEDMLSupport::SedmlFileIssue::Fatal:
+                    issueType = tr("Fatal:");
 
-                information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+                    atLeastOneBlockingSedmlIssue = true;
+
+                    break;
+                }
+
+                if (sedmlFileIssue.line() && sedmlFileIssue.column()) {
+                    information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(sedmlFileIssue.line())
+                                                                                                                            .arg(sedmlFileIssue.column())
+                                                                                                                            .arg(issueType)
+                                                                                                                            .arg(Core::formatMessage(sedmlFileIssue.message()));
+                } else {
+                    information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
+                                                                                                                    .arg(Core::formatMessage(sedmlFileIssue.message()));
+                }
+            }
+        }
+
+        CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+        bool validRuntime = runtime && runtime->isValid();
+
+        CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():0;
+
+        if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
+            information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
+
+            if (voi) {
+                // A VOI could be retrieved for our CellML file, so we can also
+                // output the model type
+
+                information +=  "<span"+OutputGood+">"+tr("valid")+"</span>."+OutputBrLn
+                               +QString(OutputTab+"<strong>"+tr("Model type:")+"</strong> <span"+OutputInfo+">%1</span>."+OutputBrLn).arg(runtime->needNlaSolver()?tr("DAE"):tr("ODE"));
             } else {
-                // We don't have a valid runtime, so either there are some
-                // problems with the CellML file, its runtime, or even the
-                // parent SED-ML file and/or COMBINE archive
-                // Note: in the case of problems with the SED-ML file and/or
-                //       COMBINE archive, we will already have listed the
-                //       problems, so no need to do anything more in those
-                //       cases...
+                // We couldn't retrieve a VOI, which means that we either don't
+                // have a runtime or we have one, but it's not valid or it's
+                // valid but we really don't have a VOI
+                // Note: in the case of a valid runtime and no VOI, we really
+                //       shouldn't consider the runtime to be valid, hence we
+                //       handle this case here...
 
-                if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
-                    foreach (const CellMLSupport::CellmlFileIssue &issue,
-                             runtime?
-                                 runtime->issues():
-                                 mSimulation->cellmlFile()?
-                                     mSimulation->cellmlFile()->issues():
-                                     CellMLSupport::CellmlFileIssues()) {
-                        information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"))
-                                                                                                                        .arg(issue.message());
+                mErrorType = InvalidCellmlFile;
+
+                updateInvalidModelMessageWidget();
+
+                information += "<span"+OutputBad+">"+(runtime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
+
+                if (validRuntime) {
+                    // We have a valid runtime, but no VOI, which means that the
+                    // model doesn't contain any ODE or DAE
+
+                    information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
+                } else {
+                    // We don't have a valid runtime, so either there are some
+                    // problems with the CellML file, its runtime, or even the
+                    // parent SED-ML file and/or COMBINE archive
+                    // Note: in the case of problems with the SED-ML file and/or
+                    //       COMBINE archive, we will already have listed the
+                    //       problems, so no need to do anything more in those
+                    //       cases...
+
+                    if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
+                        foreach (const CellMLSupport::CellmlFileIssue &issue,
+                                 runtime?
+                                     runtime->issues():
+                                     mSimulation->cellmlFile()?
+                                         mSimulation->cellmlFile()->issues():
+                                         CellMLSupport::CellmlFileIssues()) {
+                            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"))
+                                                                                                                            .arg(issue.message());
+                        }
                     }
                 }
             }
         }
-    }
 
-    output(information);
+        output(information);
 
-    // Check whether we have a valid simulation environment, but only if we
-    // don't have any blocking SED-ML or COMBINE issues
+        // Check whether we have a valid simulation environment, but only if we
+        // don't have any blocking SED-ML or COMBINE issues
 
-    SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
+        SimulationExperimentViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
 
-    mValidSimulationEnvironment = false;
+        mValidSimulationEnvironment = false;
 
-    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
-        // Enable/disable our run/pause action depending on whether we have a
-        // VOI
+        if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
+            // Enable/disable our run/pause action depending on whether we have
+            // a VOI
 
-        mRunPauseResumeSimulationAction->setEnabled(voi);
+            mRunPauseResumeSimulationAction->setEnabled(voi);
 
-        // Update our simulation mode or clear our simulation results (should
-        // there be some) in case we are reloading ourselves
-        // Note: to clear our simualtion data will also update our simulation
-        //       mode, so we are fine...
+            // Update our simulation mode or clear our simulation results
+            // (should there be some) in case we are reloading ourselves
+            // Note: to clear our simualtion data will also update our
+            //       simulation mode, so we are fine...
 
-        if (pReloadingView)
-            clearSimulationResults(false);
-        else
-            updateSimulationMode();
+            if (pReloadingView)
+                clearSimulationResults(false);
+            else
+                updateSimulationMode();
 
-        // Initialise our contents widget and make sure that we have the
-        // required type(s) of solvers
+            // Initialise our contents widget and make sure that we have the
+            // required type(s) of solvers
 
-        if (voi) {
-            // Show our contents widget in case it got previously hidden
-            // Note: indeed, if it was to remain hidden then some
-            //       initialisations wouldn't work (e.g. the solvers widget has
-            //       a property editor, which all properties need to be removed
-            //       and if the contents widget is not visible, then upon
-            //       repopulating the property editor, scrollbars will be shown
-            //       even though they are not needed)...
+            if (voi) {
+                // Show our contents widget in case it got previously hidden
+                // Note: indeed, if it was to remain hidden then some
+                //       initialisations wouldn't work (e.g. the solvers widget
+                //       has a property editor, which all properties need to be
+                //       removed and if the contents widget is not visible, then
+                //       upon repopulating the property editor, scrollbars will
+                //       be shown even though they are not needed)...
 
-            mContentsWidget->show();
+                mContentsWidget->show();
 
-            // Check whether we have at least one ODE or DAE solver and, if
-            // needed, at least one NLA solver
+                // Check whether we have at least one ODE or DAE solver and, if
+                // needed, at least one NLA solver
 
-            if (runtime->needNlaSolver()) {
-                if (solversWidget->nlaSolvers().isEmpty()) {
-                    if (solversWidget->odeSolvers().isEmpty()) {
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
+                if (runtime->needNlaSolver()) {
+                    if (solversWidget->nlaSolvers().isEmpty()) {
+                        if (solversWidget->odeSolvers().isEmpty()) {
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
+                                            InvalidSimulationEnvironment);
+                        } else {
+                            simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
+                                            InvalidSimulationEnvironment);
+                        }
+                    } else if (solversWidget->odeSolvers().isEmpty()) {
+                        simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
                                         InvalidSimulationEnvironment);
                     } else {
-                        simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                        InvalidSimulationEnvironment);
+                        mValidSimulationEnvironment = true;
                     }
                 } else if (solversWidget->odeSolvers().isEmpty()) {
-                    simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
+                    simulationError(tr("the model needs an ODE solver, but none is available"),
                                     InvalidSimulationEnvironment);
                 } else {
                     mValidSimulationEnvironment = true;
                 }
-            } else if (solversWidget->odeSolvers().isEmpty()) {
-                simulationError(tr("the model needs an ODE solver, but none is available"),
-                                InvalidSimulationEnvironment);
-            } else {
-                mValidSimulationEnvironment = true;
             }
         }
-    }
 
-    // Initialise our GUI based on whether we have a valid simulation
-    // environment
-
-    initializeGui(mValidSimulationEnvironment);
-
-    // Some additional initialisations in case we have a valid simulation
-    // environment
-
-    if (mValidSimulationEnvironment) {
-        // Initialise our GUI's simulation, solvers, graphs and graph panels
-        // widgets, but not parameters widget
-        // Note #1: this will also initialise some of our simulation data (i.e.
-        //          our simulation's starting point and simulation's NLA
-        //          solver's properties), which is needed since we want to be
-        //          able to reset our simulation below...
-        // Note #2: to initialise our graph panel and graphs widget will result
-        //          in some graphs being shown/hidden and, therefore, in
-        //          graphUpdated() being called. Yet, we don't want
-        //          graphUpdated() to update our plots. Indeed, if it did, then
-        //          all of our plots' axes' values would be reset while we want
-        //          to keep the ones we just retrieved (thus making it possible
-        //          for the user to have different views for different files).
-        //          So, for this to work we use mCanUpdatePlotsForUpdatedGraphs,
-        //          and then 'manually' replot our plots, once we know which
-        //          graphs are to be shown/hidden. We could do the
-        //          initialisation before the setting of the plots' axes'
-        //          values, but then we could see the graphs being plotted
-        //          twice. Once after the plots' axes' values have been reset
-        //          following the call to graphUpdated() and another after we
-        //          update our plots' axes' values. This is clearly not neat,
-        //          hence the current solution...
-        // Note #3: to initialise our parameters widget now would result in some
-        //          default (in the computer science sense, i.e. wrong) values
-        //          being visible for a split second before they get properly
-        //          updated. So, instead, we initialise whatever needs
-        //          initialising (e.g. NLA solver) so that we can safely compute
-        //          our model parameters before showing their values...
-
-        simulationWidget->initialize(mSimulation);
-        solversWidget->initialize(mSimulation);
-
-        mCanUpdatePlotsForUpdatedGraphs = false;
-            informationWidget->graphPanelAndGraphsWidget()->initialize(mSimulation);
-        mCanUpdatePlotsForUpdatedGraphs = true;
-
-        mContentsWidget->graphPanelsWidget()->initialize();
-
-        // Initialise our simulation
-
-        initializeSimulation();
-
-        // Now, we can safely update our parameters widget since our model
-        // parameters have been computed
-
-        mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloadingView);
-    }
-
-    // Resume the tracking of certain things
-    // Note: see the corresponding code at the beginning of this method...
-
-    connect(mContentsWidget->informationWidget()->simulationWidget(), &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
-            this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
-
-    // Further initialise ourselves, if we have a valid environment and we are
-    // not dealing with a CellML file
-
-    if (mValidSimulationEnvironment && (isSedmlFile || isCombineArchive)) {
-        // Further initialise ourselves, update our GUI (by reinitialising it)
-        // and initialise our simulation, if we still have a valid simulation
+        // Initialise our GUI based on whether we have a valid simulation
         // environment
-
-        mValidSimulationEnvironment = furtherInitialize();
 
         initializeGui(mValidSimulationEnvironment);
 
-        if (mValidSimulationEnvironment)
-            initializeSimulation();
-    }
+        // Some additional initialisations in case we have a valid simulation
+        // environment
 
+        if (mValidSimulationEnvironment) {
+            // Initialise our GUI's simulation, solvers, graphs and graph panels
+            // widgets, but not parameters widget
+            // Note #1: this will also initialise some of our simulation data
+            //          (i.e. our simulation's starting point and simulation's
+            //          NLA solver's properties), which is needed since we want
+            //          to be able to reset our simulation below...
+            // Note #2: to initialise our graph panel and graphs widget will
+            //          result in some graphs being shown/hidden and, therefore,
+            //          in graphUpdated() being called. Yet, we don't want
+            //          graphUpdated() to update our plots. Indeed, if it did,
+            //          then all of our plots' axes' values would be reset while
+            //          we want to keep the ones we just retrieved (thus making
+            //          it possible for the user to have different views for
+            //          different files). So, for this to work we use
+            //          mCanUpdatePlotsForUpdatedGraphs, and then 'manually'
+            //          replot our plots, once we know which graphs are to be
+            //          shown/hidden. We could do the initialisation before the
+            //          setting of the plots' axes' values, but then we could
+            //          see the graphs being plotted twice. Once after the
+            //          plots' axes' values have been reset following the call
+            //          to graphUpdated() and another after we update our plots'
+            //          axes' values. This is clearly not neat, hence the
+            //          current solution...
+            // Note #3: to initialise our parameters widget now would result in
+            //          some default (in the computer science sense, i.e. wrong)
+            //          values being visible for a split second before they get
+            //          properly updated. So, instead, we initialise whatever
+            //          needs initialising (e.g. NLA solver) so that we can
+            //          safely compute our model parameters before showing their
+            //          values...
+
+            simulationWidget->initialize(mSimulation);
+            solversWidget->initialize(mSimulation);
+
+            mCanUpdatePlotsForUpdatedGraphs = false;
+                informationWidget->graphPanelAndGraphsWidget()->initialize(mSimulation);
+            mCanUpdatePlotsForUpdatedGraphs = true;
+
+            mContentsWidget->graphPanelsWidget()->initialize();
+
+            // Initialise our simulation
+
+            initializeSimulation();
+
+            // Now, we can safely update our parameters widget since our model
+            // parameters have been computed
+
+            mContentsWidget->informationWidget()->parametersWidget()->initialize(mSimulation, pReloadingView);
+        }
+
+        // Resume the tracking of certain things
+        // Note: see the corresponding code at the beginning of this method...
+
+        connect(mContentsWidget->informationWidget()->simulationWidget(), &SimulationExperimentViewInformationSimulationWidget::propertyChanged,
+                this, &SimulationExperimentViewSimulationWidget::simulationPropertyChanged);
+
+        // Further initialise ourselves, if we have a valid environment and we are
+        // not dealing with a CellML file
+
+        if (mValidSimulationEnvironment && (isSedmlFile || isCombineArchive)) {
+            // Further initialise ourselves, update our GUI (by reinitialising
+            // it) and initialise our simulation, if we still have a valid
+            // simulation environment
+
+            mValidSimulationEnvironment = furtherInitialize();
+
+            initializeGui(mValidSimulationEnvironment);
+
+            if (mValidSimulationEnvironment)
+                initializeSimulation();
+        }
     setUpdatesEnabled(true);
 
     // Keep track of the initial size of our different graph panels
@@ -1371,22 +1372,21 @@ void SimulationExperimentViewSimulationWidget::resetModelParameters()
 
 void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pCheckSimulationResults)
 {
-    // Clear our simulation results
-    // Note: we temporarily disable updates to prevent the GUI from taking too
-    //       long to update itself (something that might happen when we have
-    //       several graph panels since they will try to realign themselves)...
-
     setUpdatesEnabled(false);
+        // Clear our simulation results
+        // Note: we temporarily disable updates to prevent the GUI from taking
+        //       too long to update itself (something that might happen when we
+        //       have several graph panels since they will try to realign
+        //       themselves)...
 
-    mSimulation->results()->reset();
+        mSimulation->results()->reset();
 
-    // Update our simulation mode and check for results, if requested
+        // Update our simulation mode and check for results, if requested
 
-    updateSimulationMode();
+        updateSimulationMode();
 
-    if (pCheckSimulationResults)
-        mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
-
+        if (pCheckSimulationResults)
+            mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
     setUpdatesEnabled(true);
 }
 

@@ -66,6 +66,8 @@ class QtConsole(object):
 
         self._kernel = self._kernel_manager.kernel
         self._kernel.gui = 'pythonqt'
+        self._kernel.shell.enable_gui()
+        self._kernel.shell.enable_matplotlib()
 
         # Start the kernel's client
 

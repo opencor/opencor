@@ -96,8 +96,10 @@ void PythonSupportPlugin::initializePlugin()
 
     QString pythonHome = QString();
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     pythonHome = (applicationDirectories << "Python").join("/");
+#elif defined(Q_OS_LINUX)
+    pythonHome = (applicationDirectories << "python").join("/");
 #elif defined(Q_OS_MAC)
     pythonHome = (applicationDirectories << "Frameworks" << "Python").join("/");
 #else
@@ -106,7 +108,7 @@ void PythonSupportPlugin::initializePlugin()
 
     qputenv("PYTHONHOME", pythonHome.toUtf8());
 
-    // Put our Python script directories at the head of the system PATH
+    // Get our current system PATH
 
 #ifdef Q_OS_WIN
     static const char PathSeparator = ';';
@@ -115,10 +117,14 @@ void PythonSupportPlugin::initializePlugin()
 #endif
     QByteArrayList systemPath = qgetenv("PATH").split(PathSeparator);
 
+    // Put our Python script directories at the head of the system PATH
+
     systemPath.prepend((pythonHome+"/bin").toUtf8());
 #ifdef Q_OS_WIN
     systemPath.prepend((pythonHome+"/Scripts").toUtf8());
 #endif
+
+    // Update the system PATH
 
     qputenv("PATH", systemPath.join(PathSeparator));
 

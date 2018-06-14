@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QByteArray>
 #include <QCoreApplication>
 #include <QDomDocument>
+#include <QSet>
 #include <QSourceLocation>
 #include <QSslError>
 #include <QUrl>
@@ -59,6 +60,12 @@ namespace Core {
 typedef QList<bool> QBoolList;
 typedef QList<int> QIntList;
 typedef QList<double> QDoubleList;
+
+//==============================================================================
+
+typedef QSet<bool> QBoolSet;
+typedef QSet<int> QIntSet;
+typedef QSet<double> QDoubleSet;
 
 //==============================================================================
 

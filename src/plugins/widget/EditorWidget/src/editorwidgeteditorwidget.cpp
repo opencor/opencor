@@ -46,8 +46,10 @@ EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
     mOwner(pParent),
     mFindReplace(pFindReplace),
     mReadOnlyStyles(QIntList()),
-    mHighlightedLines(QIntList()),
-    mTexts(QStringList())
+    mHighlightedLines(QIntSet()),
+    mTexts(QStringList()),
+    mLine(0),
+    mColumn(0)
 {
     // Use our own vertical scroll bar for our editor, so that we can show the
     // position of our highlighting
@@ -147,6 +149,23 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                    &&  (pEvent->key() == Qt::Key_Escape)) {
             QCoreApplication::sendEvent(Core::mainWindow(), pEvent);
 #endif
+        } else if (   (    (pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier))
+                   || (   !(pEvent->modifiers() & Qt::ShiftModifier)
+                       &&  (pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier))
+                   || (   !(pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       &&  (pEvent->modifiers() & Qt::AltModifier)
+                       && !(pEvent->modifiers() & Qt::MetaModifier))
+                   || (   !(pEvent->modifiers() & Qt::ShiftModifier)
+                       && !(pEvent->modifiers() & Qt::ControlModifier)
+                       && !(pEvent->modifiers() & Qt::AltModifier)
+                       &&  (pEvent->modifiers() & Qt::MetaModifier))) {
+            pEvent->accept();
         } else if (!mFindReplace->isVisible()) {
             clearHighlighting();
 
@@ -167,24 +186,16 @@ void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
     // Check whether something has been selected and, if so, highlight all of
     // its occurrences
-    // Note #1: we must inactivate (and then reactivate) our find/replace widget
-    //          before setting its find text otherwise we will be highlighting
-    //          things twice...
-    // Note #2: we need to (re)select text since highlighting all of its
-    //          occurrences will clear the selection...
+    // Note: we must inactivate (and then reactivate) our find/replace widget
+    //       before setting its find text otherwise we will be highlighting
+    //       things twice...
 
     if (hasSelectedText()) {
-        int line;
-        int column;
-
-        getCursorPosition(&line, &column);
-
         mFindReplace->setActive(false);
             mFindReplace->setFindText(selectedText());
         mFindReplace->setActive(true);
 
         highlightAll();
-        selectWordAt(line, column);
     }
 }
 
@@ -223,7 +234,7 @@ void EditorWidgetEditorWidget::setReadOnly(bool pReadOnly)
 
 //==============================================================================
 
-QIntList EditorWidgetEditorWidget::highlightedLines() const
+QIntSet EditorWidgetEditorWidget::highlightedLines() const
 {
     // Return our highlighted lines
 
@@ -237,12 +248,10 @@ void EditorWidgetEditorWidget::clearHighlighting()
     // Clear the current highlighting
 
     if (!mHighlightedLines.isEmpty()) {
-        int lastLine, lastIndex;
+        SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
+        SendScintilla(SCI_INDICATORCLEARRANGE, 0, text().length());
 
-        lineIndexFromPosition(text().length(), &lastLine, &lastIndex);
-        clearIndicatorRange(0, 0, lastLine, lastIndex, mHighlightIndicatorNumber);
-
-        mHighlightedLines = QIntList();
+        mHighlightedLines = QIntSet();
 
         mVerticalScrollBar->update();
     }
@@ -250,142 +259,113 @@ void EditorWidgetEditorWidget::clearHighlighting()
 
 //==============================================================================
 
-void EditorWidgetEditorWidget::addHighlighting(int pFromLine, int pFromColumn,
-                                               int pToLine, int pToColumn)
+void EditorWidgetEditorWidget::processAll(Action pAction)
 {
-    // Clear the current highlighting
+    // Some pre-processing, based on the given action
 
-    fillIndicatorRange(pFromLine, pFromColumn, pToLine, pToColumn,
-                       mHighlightIndicatorNumber);
+    QByteArray findText = mFindReplace->findText().toUtf8();
 
-    if (!mHighlightedLines.contains(pFromLine)) {
-        mHighlightedLines << pFromLine;
+    if (pAction == HighlightAll) {
+        // Clear any previous hihghlighting
 
-        mVerticalScrollBar->update();
-    }
-}
-
-//==============================================================================
-
-void EditorWidgetEditorWidget::doHighlightReplaceAll(bool pHighlightAll)
-{
-    // Highlight/replace all the occurences of the text
-    // Note: the original plan was to call findFirst() the first time round and
-    //       with wrapping disabled, and then findNext() until we had found all
-    //       the occurrences, but for some reasons this can result in some
-    //       occurrences being missed, hence the way we do it below...
-
-    // Clear any previous hihghlighting, in case we want to highlight all the
-    // occurences of the text
-
-    if (pHighlightAll)
         clearHighlighting();
 
-    // Carry on, but only if there is really something to highlight, in case we
-    // want to highlight all the occurences of the text
+        // No point in carrying on, if the find text is empty or only consists
+        // of spaces and the like
 
-    if (pHighlightAll && mFindReplace->findText().trimmed().isEmpty())
-        return;
+        if (findText.trimmed().isEmpty())
+            return;
+    } else {
+        // Stop tracking our changes and consider our action as being one big
+        // action
 
-    // Keep track of the first visible line, of our current line/column, and of
-    // the position of our scrollbars
+        setHandleChanges(false);
 
-    int crtFirstVisibleLine = firstVisibleLine();
-    int line;
-    int column;
+        beginUndoAction();
+    }
 
-    getCursorPosition(&line, &column);
+    // Keep track of the current selection
 
-    int horizontalScrollBarPosition = horizontalScrollBar()->value();
-    int verticalScrollBarPosition = verticalScrollBar()->value();
+    int selectionStart = SendScintilla(SCI_GETSELECTIONSTART);
+    int selectionEnd = SendScintilla(SCI_GETSELECTIONEND);
+    int selectionShift = 0;
 
-    // Stop tracking changes if we are replacing all
+    // Specify our search flags
 
-    if (!pHighlightAll)
-        trackChanges(false);
-
-    // Go to the beginning of our editor
-
-    QsciScintilla::setCursorPosition(0, 0);
+    SendScintilla(SCI_SETSEARCHFLAGS,
+                   (mFindReplace->useRegularExpression()?SCFIND_REGEXP:0)
+                  |(mFindReplace->isCaseSensitive()?SCFIND_MATCHCASE:0)
+                  |(mFindReplace->searchWholeWordsOnly()?SCFIND_WHOLEWORD:0));
 
     // Hihghlight/replace all the occurences of the text
 
-    int origPosition = -1;
-    int crtPosition;
-    int findTextLength = mFindReplace->findText().length();
-    QString replaceText = mFindReplace->replaceText();
+    const char *rawFindText = findText.constData();
+    int findTextLen = findText.length();
+    int findTextPos = text().length();
+    int replaceCommand = mFindReplace->useRegularExpression()?
+                             SCI_REPLACETARGETRE:
+                             SCI_REPLACETARGET;
+    QByteArray replaceText = mFindReplace->replaceText().toUtf8();
+    const char *rawReplaceText = replaceText.constData();
+    int textLenDiff = replaceText.length()-findTextLen;
 
-    while (findNext()) {
-        // Retrieve our current position
+    forever {
+        // Find the first occurrence of the given text, going backward from the
+        // given text position
+        // Note: by going backward, we don't have to worry about the size of the
+        //       text, in case bits of it have been replaced...
 
-        crtPosition = currentPosition();
+        SendScintilla(SCI_SETTARGETSTART, findTextPos);
+        SendScintilla(SCI_SETTARGETEND, 0);
 
-        // Check whether we are back to our original position
-        // Note: we want to do this both when highlighting all (obviously), but
-        //       also when replacing all in case we were to replace, say, "abc"
-        //       with "abcd"...
+        findTextPos = SendScintilla(SCI_SEARCHINTARGET, findTextLen, rawFindText);
 
-        if (crtPosition == origPosition)
+        if (findTextPos == -1) {
+            // No more occurrences, so just leave our loop
+
             break;
-
-        // Our new position is fine, so highlight/replace the occurrence of the
-        // text
-
-        if (pHighlightAll) {
-            int fromLine;
-            int fromColumn;
-            int toLine;
-            int toColumn;
-
-            lineIndexFromPosition(crtPosition-findTextLength, &fromLine, &fromColumn);
-            lineIndexFromPosition(crtPosition, &toLine, &toColumn);
-
-            addHighlighting(fromLine, fromColumn, toLine, toColumn);
         } else {
-            QScintillaSupport::QScintillaWidget::replace(replaceText);
+            // Either highlight or replace the found text
+
+            if (pAction == HighlightAll) {
+                SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
+                SendScintilla(SCI_INDICATORFILLRANGE, findTextPos, findTextLen);
+
+                int line = SendScintilla(SCI_LINEFROMPOSITION, findTextPos);
+
+                mHighlightedLines << line;
+            } else {
+                if (findTextPos < selectionStart)
+                    selectionShift += textLenDiff;
+
+                SendScintilla(SCI_SETTARGETSTART, findTextPos);
+                SendScintilla(SCI_SETTARGETEND, findTextPos+findTextLen);
+
+                SendScintilla(replaceCommand, -1, rawReplaceText);
+            }
         }
-
-        // Initialise our first line/column, if needed
-
-        if (origPosition == -1)
-            origPosition = crtPosition;
     }
 
-    // Re-enable the tracking of changes if we are replacing all
+    // Some post-processing, based on the given action
 
-    if (!pHighlightAll)
-        trackChanges(true);
+    if (pAction == HighlightAll) {
+        // Get our vertical scroll-bar to update itself, if we have some lines
+        // to highlight
 
-    // Go back to our original first visible line, position (after having
-    // corrected it, but only if we replaced all the occurrences of the text)
-    // and scroll bar positions
+        if (!mHighlightedLines.isEmpty())
+            mVerticalScrollBar->update();
+    } else {
+        // Reselect what used to be selected and re-enable the tracking of
+        // changes, as well as let Scintilla know that we are done with our big
+        // action
 
-    setFirstVisibleLine(crtFirstVisibleLine);
+        endUndoAction();
 
-    if (!pHighlightAll) {
-        line = qMin(line, lines()-1);
-        column = qMin(column, lineLength(line)-1);
+        SendScintilla(SCI_SETSELECTIONSTART, selectionStart+selectionShift);
+        SendScintilla(SCI_SETSELECTIONEND, selectionEnd+selectionShift+textLenDiff);
+
+        setHandleChanges(true);
     }
-
-    QsciScintilla::setCursorPosition(line, column);
-
-    horizontalScrollBar()->setValue(horizontalScrollBarPosition);
-    verticalScrollBar()->setValue(verticalScrollBarPosition);
-
-    // Clear any previous hihghlighting, in case we replaced all the occurences
-    // of the text
-
-    if (!pHighlightAll)
-        clearHighlighting();
-}
-
-//==============================================================================
-
-void EditorWidgetEditorWidget::replaceAll()
-{
-    // Replace all the occurences of the text
-
-    doHighlightReplaceAll(false);
 }
 
 //==============================================================================
@@ -394,7 +374,26 @@ void EditorWidgetEditorWidget::highlightAll()
 {
     // Highlight all the occurences of the text
 
-    doHighlightReplaceAll(true);
+    processAll(HighlightAll);
+}
+
+//==============================================================================
+
+void EditorWidgetEditorWidget::replaceAll()
+{
+    // Replace all the occurences of the text
+
+    processAll(ReplaceAll);
+}
+
+//==============================================================================
+
+void EditorWidgetEditorWidget::updateLineColumn()
+{
+    // Update our line/column
+
+    lineIndexFromPosition(currentPosition()-selectedText().length(),
+                          &mLine, &mColumn);
 }
 
 //==============================================================================
@@ -403,7 +402,7 @@ bool EditorWidgetEditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
-    return findText(mFindReplace->findText(), true);
+    return findText(mFindReplace->findText(), true, false);
 }
 
 //==============================================================================
@@ -416,7 +415,7 @@ bool EditorWidgetEditorWidget::findPrevious()
 
     setCurrentPosition(oldPosition-selectedText().length());
 
-    bool res = findText(mFindReplace->findText(), false);
+    bool res = findText(mFindReplace->findText(), false, false);
 
     if (!res)
         setCurrentPosition(oldPosition);
@@ -435,17 +434,17 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
     if (pText.isEmpty()) {
         clearHighlighting();
 
-        setSelection(0, 0, 0, 0);
+        QsciScintilla::setCursorPosition(mLine, mColumn);
     } else {
         // Add the given text to our list of texts to highlight and find
 
         mTexts << pText;
 
         // Highlight all the occurrences of the text and find its first
-        // occurrence, but after a short delay
-        // Note: see the note in highlightAllAndFind()...
+        // occurrence, but through a single shot (see the note in
+        // highlightAllAndFind())
 
-        QTimer::singleShot(500, this, &EditorWidgetEditorWidget::highlightAllAndFind);
+        QTimer::singleShot(0, this, &EditorWidgetEditorWidget::highlightAllAndFind);
     }
 }
 
@@ -453,8 +452,8 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
 
 void EditorWidgetEditorWidget::highlightAllAndFind()
 {
-    // If there is only one text left in mHighlightAllAndFindTexts, then
-    // highlight of its occurrences select its first occurrence
+    // If there is only one text left in mTexts, then highlight of its
+    // occurrences select its first occurrence
     // Note: this works with findTextChanged() and addresses the case where a
     //       user types something to search, in which case we don't want to
     //       highlight all the occurrences of the text at every key stroke since
@@ -468,7 +467,7 @@ void EditorWidgetEditorWidget::highlightAllAndFind()
     if (mTexts.isEmpty()) {
         highlightAll();
 
-        findText(text, true);
+        findText(text);
     }
 }
 
@@ -499,7 +498,7 @@ void EditorWidgetEditorWidget::replace()
         int line;
         int column;
 
-        getCursorPosition(&line, &column);
+        cursorPosition(line, column);
 
         if (   mFindReplace->searchWholeWordsOnly()
             && crtSelectedText.compare(wordAt(line, column))) {
@@ -521,7 +520,7 @@ void EditorWidgetEditorWidget::replace()
 
 void EditorWidgetEditorWidget::replaceAndFind()
 {
-    // Replace the current text and the find the next occurence of the text
+    // Replace the current text and then find its next occurence
 
     replace();
     findNext();
@@ -529,14 +528,20 @@ void EditorWidgetEditorWidget::replaceAndFind()
 
 //==============================================================================
 
-bool EditorWidgetEditorWidget::findText(const QString &pText, bool pForward)
+bool EditorWidgetEditorWidget::findText(const QString &pText, bool pForward,
+                                        bool pFirstTime)
 {
     // Find the previous/next occurrence of the given text
 
     int line;
     int column;
 
-    getCursorPosition(&line, &column);
+    if (pFirstTime) {
+        line = mLine;
+        column = mColumn;
+    } else {
+        cursorPosition(line, column);
+    }
 
     return findFirst(pText,
                      mFindReplace->useRegularExpression(),

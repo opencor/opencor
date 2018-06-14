@@ -121,7 +121,7 @@ public:
     bool handleEditorKeyPressEvent(QKeyEvent *pEvent) override;
 
 private:
-    bool commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
+    bool commentOrUncommentLine(EditorWidget::EditorWidget *pEditor,
                                 int pLineNumber, bool pCommentLine);
 };
 

@@ -1,3 +1,5 @@
 #!/bin/sh
 
-${CMAKE_PROJECT_NAME}.app/Contents/MacOS/${CMAKE_PROJECT_NAME} $*
+OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
+
+${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@ $*

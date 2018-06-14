@@ -12,14 +12,17 @@ set(PACKAGE_REPOSITORY python)
 # The versions of the Python packages we bundle
 
 set(NUMPY_VERSION 1.14.2)
+
 set(MATPLOTLIB_VERSION 2.2.2)
+set(MATPLOTLIB_OPENCOR 2.2.2.1)
+
 set(SCIPY_VERSION 1.0.1)
 
 set(IPYKERNEL_VERSION 4.8.2)
 set(IPYKERNEL_PYTHONQT 4.8.2.1)
 
-set(IPYTHON_VERSION 6.3.1)
-set(IPYTHON_PYTHONQT 6.3.1)
+set(IPYTHON_VERSION 6.4.0)
+set(IPYTHON_PYTHONQT 6.4.0)
 
 set(QTCONSOLE_VERSION 4.3.1)
 set(QTCONSOLE_PYTHONQT 4.3.1)
@@ -92,13 +95,13 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1eeddbe6456f2aecbba2669299e5a4d7756ab2a7
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 5746debc970cb333effb9b002e9045c443222031
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 13f1ca249d663cd76ea70873b659fa2a0c90e6bc)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c5e6ca14e4869bbe76c443437242c1e426d78870
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 406e903965be368081c1bb6e77776ef938ba7564
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 33fb4135c8ec6fcd725bd1478dadab322ff8c012)
@@ -126,7 +129,8 @@ else()
         ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
         ${PYTHON_EXECUTABLE} -s -m
         pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-                    --upgrade --upgrade-strategy only-if-needed)
+                    --upgrade --upgrade-strategy only-if-needed
+                    --no-warn-script-location)
 
     # Install numpy, scipy, and matplotlib
 
@@ -155,23 +159,6 @@ else()
     add_dependencies(copyNumpyHeaders sciencePackages)
     add_dependencies(copyNumpyHeaders ${BUILD_DEPENDENCIES})
 
-    # Patch matplotlib's Qt backend so that it works with PythonQt
-
-    add_custom_target(patchMatplotlib
-        COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
-            --strip=2
-            --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
-            --verbose
-            src/matplotlib_${MATPLOTLIB_VERSION}.diff
-        WORKING_DIRECTORY
-            ${PROJECT_SOURCE_DIR}
-        VERBATIM
-    )
-
-    add_dependencies(${PACKAGE_BUILD} patchMatplotlib)
-    add_dependencies(patchMatplotlib sciencePackages)
-    add_dependencies(patchMatplotlib ${BUILD_DEPENDENCIES})
-
     # Install Jupyter, IPython and their dependencies
     # Note: order of installation matters as we want specific
     #       versions of each package
@@ -189,27 +176,8 @@ else()
     )
 
     add_dependencies(${PACKAGE_BUILD} ipythonPackages)
-    add_dependencies(ipythonPackages patchMatplotlib)
+    add_dependencies(ipythonPackages sciencePackages)
     add_dependencies(ipythonPackages ${BUILD_DEPENDENCIES})
-
-    # Upgrade to our versions of packages which have been patched to work with PythonQt
-
-    set(ARCHIVE_PYTHONQT archive/PythonQt-v)
-
-    add_custom_target(pythonQtUpdate
-        COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
-            ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
-            ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
-            ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
-            ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
-
-    add_dependencies(${PACKAGE_BUILD} pythonQtUpdate)
-    add_dependencies(pythonQtUpdate ipythonPackages)
-    add_dependencies(pythonQtUpdate ${BUILD_DEPENDENCIES})
 
     # Install other packages we use
 
@@ -252,6 +220,45 @@ else()
     add_dependencies(${PACKAGE_BUILD} installSphinx)
     add_dependencies(installSphinx otherPackages)
     add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
+
+    # We only upgrade to our versions of packages and patch matplotlib
+    # *after* all 'standard' packages have been installed
+
+    # Upgrade to our versions that have been patched to work with PythonQt
+
+    set(ARCHIVE_PYTHONQT archive/PythonQt-v)
+
+    add_custom_target(pythonQtUpdate
+        COMMAND ${PIP_INSTALL_COMMAND} --no-deps --force-reinstall
+            ${GITHUB_OPENCOR}/traitlets/${ARCHIVE_PYTHONQT}${TRAITLETS_PYTHONQT}.zip
+            ${GITHUB_OPENCOR}/ipython/${ARCHIVE_PYTHONQT}${IPYTHON_PYTHONQT}.zip
+            ${GITHUB_OPENCOR}/ipykernel/${ARCHIVE_PYTHONQT}${IPYKERNEL_PYTHONQT}.zip
+            ${GITHUB_OPENCOR}/qtconsole/${ARCHIVE_PYTHONQT}${QTCONSOLE_PYTHONQT}.zip
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+        VERBATIM
+    )
+
+    add_dependencies(${PACKAGE_BUILD} pythonQtUpdate)
+    add_dependencies(pythonQtUpdate installSphinx)
+    add_dependencies(pythonQtUpdate ${BUILD_DEPENDENCIES})
+
+    # Patch matplotlib's Qt backend so that it works with PythonQt
+
+    add_custom_target(patchMatplotlib
+        COMMAND ${PYTHON_EXECUTABLE} -s scripts/patch.py
+            --strip=2
+            --directory=${FULL_LOCAL_SITE_PACKAGES_DIR}/matplotlib
+            --verbose
+            src/matplotlib_${MATPLOTLIB_OPENCOR}.diff
+        WORKING_DIRECTORY
+            ${PROJECT_SOURCE_DIR}
+        VERBATIM
+    )
+
+    add_dependencies(${PACKAGE_BUILD} patchMatplotlib)
+    add_dependencies(patchMatplotlib pythonQtUpdate)
+    add_dependencies(patchMatplotlib ${BUILD_DEPENDENCIES})
 
     # Package the newly installed Python packages
 
