@@ -1771,37 +1771,19 @@ void CentralWidget::updateGui()
         }
     }
 
-    // Show/hide the different modes' corresponding views tab, as needed, and
-    // retrieve the corresponding view plugin
-    // Note: to prevent some GUI glitches on Windows and Linux, we must first
-    //       make sure that all the views tabs are hidden before we can actually
-    //       show the one we are after...
+    // Show/hide the editing, simulation and analysis modes' corresponding views
+    // tab, as needed, and retrieve the corresponding view plugin
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-    mModes.value(ViewInterface::EditingMode)->viewTabs()->hide();
-    mModes.value(ViewInterface::SimulationMode)->viewTabs()->hide();
-    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::EditingMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode));
+    mModes.value(ViewInterface::SimulationMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode));
+    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode));
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModes.value(ViewInterface::SampleMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::SampleMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode));
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModes.value(ViewInterface::TestMode)->viewTabs()->hide();
-#endif
-
-    if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode))
-        mModes.value(ViewInterface::EditingMode)->viewTabs()->show();
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode))
-        mModes.value(ViewInterface::SimulationMode)->viewTabs()->show();
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode))
-        mModes.value(ViewInterface::AnalysisMode)->viewTabs()->show();
-#ifdef ENABLE_SAMPLE_PLUGINS
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode))
-        mModes.value(ViewInterface::SampleMode)->viewTabs()->show();
-#endif
-#ifdef ENABLE_TEST_PLUGINS
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode))
-        mModes.value(ViewInterface::TestMode)->viewTabs()->show();
+    mModes.value(ViewInterface::TestMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode));
 #endif
 
     // Ask the GUI interface for the widget to use the current file (should
