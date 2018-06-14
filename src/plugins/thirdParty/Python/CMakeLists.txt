@@ -120,14 +120,14 @@ endif()
 # Add headers, scripts and libraries to the package archive
 
 set(PACKAGED_FILES
+    bin
     include
     ${RUNTIME_DIR}
-    ${SCRIPT_DIR}
     ${SHA1_FILES}
 )
 
 if(WIN32)
-    list(APPEND PACKAGED_FILES Scripts)
+    list(APPEND PACKAGED_FILES ${SCRIPT_DIR})
 elseif()
     list(APPEND PACKAGED_FILES ${RUNTIME_DIR}/config-${PYTHON_BUILT_VERSION})
 endif()
