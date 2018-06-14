@@ -1672,9 +1672,9 @@ void CentralWidget::updateGui()
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
 
     if (mState != Idling) {
-        // We are doing something, so too risky to update the GUI during that
-        // time (e.g. things may not be fully initialised), so revert to our old
-        // tab index, if possible
+        // We are doing something, so it's too risky to update the GUI for now
+        // (e.g. things may not be fully initialised), so revert to our old tab
+        // index, if possible
 
         if (tabBar)
             setTabBarCurrentIndex(tabBar, tabBar->oldIndex());
