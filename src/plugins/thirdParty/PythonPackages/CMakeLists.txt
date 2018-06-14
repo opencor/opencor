@@ -8,6 +8,7 @@ set(PACKAGE_VERSION ${PYTHON_VERSION})
 # Package repository and release tag
 
 set(PACKAGE_REPOSITORY python)
+set(RELEASE_TAG v${PYTHON_VERSION}_devel)
 
 # The versions of the Python packages we bundle
 
@@ -82,14 +83,16 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 9b38228646e20ae7a4972046cfc1e9ea88a964af
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} a800e56a94a304fb7c0d8915ab61dc4191e99c38
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES bd2befaf0efacb2d4ee4957ab58a4315290ec804)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} c5d302fda38d1f94a29a7eb8ca5211e6067c59c8
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 3483da0d92f6b154ff7ce699350e741da0a84104)
         endif()
@@ -97,12 +100,14 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 5746debc970cb333effb9b002e9045c443222031
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 13f1ca249d663cd76ea70873b659fa2a0c90e6bc)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 406e903965be368081c1bb6e77776ef938ba7564
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 33fb4135c8ec6fcd725bd1478dadab322ff8c012)
     endif()
@@ -265,6 +270,7 @@ else()
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES ${PACKAGED_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})

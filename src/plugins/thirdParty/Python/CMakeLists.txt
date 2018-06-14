@@ -5,6 +5,10 @@ project(PythonPlugin)
 set(PACKAGE_NAME Python)
 set(PACKAGE_VERSION 3.5.2)
 
+# Package release tag
+
+set(RELEASE_TAG v3.5.2_devel)
+
 # Version of our library
 
 set(MAJOR_MINOR_LIBRARY_VERSION "3.5")
@@ -143,13 +147,14 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c99e62188b191a6fc8bed55e6ec6303cf112223c
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 300090ab49946305bff0fd288d72c02fbfef7478
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7cc5560a76bf97f9bf5d415f36f46fdc53b21957
-                                              d157939f61d9ed5506fc5cf876fcec39c41924a3
-                                              a7c7246f8ee95c8039ae4220ba61bbda2308fad3
+                                  SHA1_VALUES 6004c301f5f3cb477742ce511331d9695c30ce22
+                                              88ae01bb2cc1448fc46b01e5628248f63a912e3e
+                                              a1667dc362bc820db35bb91220931cefaa6ecf7c
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              c73d9f185b186d00a34c84345b3b3541c156a421)
+                                              f13f17ef0a4879451193e4b0b996ec763d257def)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 1d8c126dc5cc4c17b0a487f1b5bc899340fbd954
@@ -547,6 +552,7 @@ else()
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES ${PACKAGED_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${CREATE_PACKAGE_TARGET})
