@@ -72,7 +72,7 @@ private slots:
 
 void initQtMessagePattern();
 
-void initPluginsPath(const QString &pAppFileName);
+void initPluginsPath(int pArgC, char *pArgV[]);
 
 void initApplication(QString *pAppDate = 0);
 
