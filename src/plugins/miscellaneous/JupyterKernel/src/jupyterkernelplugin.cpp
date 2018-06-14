@@ -112,6 +112,9 @@ matplotlib.use(MATPLOTLIB_BACKEND)
 
 activate_matplotlib(MATPLOTLIB_BACKEND)
 
+# Make sure Jupyter %matplotlib magic won't try to use OS-specific backend
+
+matplotlib.rcParamsOrig['backend'] = matplotlib.rcParams['backend']
 
 # Minimal customisation of the standard IPython kernel
 
