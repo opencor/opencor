@@ -88,7 +88,7 @@ private:
 
 //==============================================================================
 
-class CentralWidget : public Widget
+class CORE_EXPORT CentralWidget : public Widget
 {
     Q_OBJECT
 
