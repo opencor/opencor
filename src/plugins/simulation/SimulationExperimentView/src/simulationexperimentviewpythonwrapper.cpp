@@ -51,12 +51,19 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-static SimulationSupport::Simulation *getSimulation(const QString &pFileName,
+static PyObject *getSimulation(const QString &pFileName,
                                                     SimulationExperimentViewWidget *pSimulationExperimentViewWidget)
 {
     SimulationSupport::Simulation *simulation = pSimulationExperimentViewWidget->simulation(pFileName);
 
     if (simulation) {
+        if (!simulation->runtime()) {
+            // The simulation is missing a runtime so raise a Python exception
+
+            PyErr_SetString(PyExc_ValueError, QObject::tr("unable to get simulations's runtime").toStdString().c_str());
+
+            return NULL;
+        }
         // Let the simulation's widget know when we start running
         // Note: connect is also in the PythonQt namespace
 
@@ -67,9 +74,11 @@ static SimulationSupport::Simulation *getSimulation(const QString &pFileName,
 
         QObject::connect(simulation, &SimulationSupport::Simulation::clearResults,
                          pSimulationExperimentViewWidget, &SimulationExperimentViewWidget::clearResults);
+
+        return PythonQt::priv()->wrapQObject(simulation);
     }
 
-    return simulation;
+    Py_RETURN_NONE;
 }
 
 //==============================================================================
@@ -81,10 +90,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
     if (simulationExperimentViewWidget) {
         simulationExperimentViewWidget->initialize(pFileName);
 
-        auto simulation = getSimulation(pFileName, simulationExperimentViewWidget);
-
-        if (simulation)
-            return PythonQt::priv()->wrapQObject(simulation);
+        return getSimulation(pFileName, simulationExperimentViewWidget);
     }
 
     Py_RETURN_NONE;
@@ -185,12 +191,8 @@ static PyObject *OpenCOR_simulation(PyObject *self,  PyObject *args)
 
     SimulationExperimentViewWidget *simulationExperimentViewWidget = SimulationExperimentViewPlugin::instance()->viewWidget();
     if (simulationExperimentViewWidget) {
-        auto simulation = getSimulation(Core::centralWidget()->currentFileName(), simulationExperimentViewWidget);
 
-        // Return the simulation as a Python object
-
-        if (simulation)
-            return PythonQt::priv()->wrapQObject(simulation);
+        return getSimulation(Core::centralWidget()->currentFileName(), simulationExperimentViewWidget);
     }
 
     Py_RETURN_NONE;
