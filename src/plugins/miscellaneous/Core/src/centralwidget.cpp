@@ -1847,7 +1847,7 @@ void CentralWidget::updateGui()
     //       #1696)...
 
     if (mContents->currentWidget() != newView) {
-#if defined(Q_OS_WIN) || defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
         bool hideShowStatusBar =    mainWindow()->statusBar()->isVisible()
                                  && qobject_cast<QPushButton *>(childAt(mapFromGlobal(QCursor::pos())));
 #elif defined(Q_OS_MAC)
