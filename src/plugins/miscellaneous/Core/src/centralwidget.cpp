@@ -1847,21 +1847,24 @@ void CentralWidget::updateGui()
     //       #1696)...
 
     if (mContents->currentWidget() != newView) {
-#ifdef Q_OS_MAC
-        bool statusBarVisibleAndNotOverTabBar =     mainWindow()->statusBar()->isVisible()
-                                                && !qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos())));
-
-        if (statusBarVisibleAndNotOverTabBar)
-            mainWindow()->statusBar()->hide();
+#if defined(Q_OS_WIN) || defined(Q_OS_WIN)
+        bool hideShowStatusBar =    mainWindow()->statusBar()->isVisible()
+                                 && qobject_cast<QPushButton *>(childAt(mapFromGlobal(QCursor::pos())));
+#elif defined(Q_OS_MAC)
+        bool hideShowStatusBar =     mainWindow()->statusBar()->isVisible()
+                                 && !qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos())));
+#else
+    #error Unsupported platform
 #endif
+
+        if (hideShowStatusBar)
+            mainWindow()->statusBar()->hide();
 
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
 
-#ifdef Q_OS_MAC
-        if (statusBarVisibleAndNotOverTabBar)
+        if (hideShowStatusBar)
             mainWindow()->statusBar()->show();
-#endif
     }
 
     // Update our modified settings
