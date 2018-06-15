@@ -1747,19 +1747,37 @@ void CentralWidget::updateGui()
         }
     }
 
-    // Show/hide the editing, simulation and analysis modes' corresponding views
-    // tab, as needed, and retrieve the corresponding view plugin
+    // Show/hide the different modes' corresponding views tab, as needed, and
+    // retrieve the corresponding view plugin
+    // Note: to prevent some GUI glitches on Windows and Linux, we must first
+    //       make sure that all the views tabs are hidden before we can actually
+    //       show the one we are after...
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-    mModes.value(ViewInterface::EditingMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode));
-    mModes.value(ViewInterface::SimulationMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode));
-    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode));
+    mModes.value(ViewInterface::EditingMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::SimulationMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->hide();
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModes.value(ViewInterface::SampleMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode));
+    mModes.value(ViewInterface::SampleMode)->viewTabs()->hide();
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModes.value(ViewInterface::TestMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode));
+    mModes.value(ViewInterface::TestMode)->viewTabs()->hide();
+#endif
+
+    if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode))
+        mModes.value(ViewInterface::EditingMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode))
+        mModes.value(ViewInterface::SimulationMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode))
+        mModes.value(ViewInterface::AnalysisMode)->viewTabs()->show();
+#ifdef ENABLE_SAMPLE_PLUGINS
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode))
+        mModes.value(ViewInterface::SampleMode)->viewTabs()->show();
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode))
+        mModes.value(ViewInterface::TestMode)->viewTabs()->show();
 #endif
 
     // Ask the GUI interface for the widget to use the current file (should
@@ -1820,23 +1838,35 @@ void CentralWidget::updateGui()
     emit guiUpdated(viewPlugin, fileName);
 
     // Replace the current view with the new one, if needed
-    // Note: to do this as smoothly as possible, we temporarily hide the status
-    //       bar. Indeed, not to do this will result in some awful flickering
-    //       when switching from one file to another with the mouse over a
-    //       button-like widget and the status bar visible (see issues #405 and
-    //       #1027)...
+    // Note: we have to do various things depending on the platform on which we
+    //       are as well as over which widget we are when needing to replace the
+    //       current view with the new one. This, so that we don't get the GUI
+    //       glitches described in issues #405, #1027 and #1696...
 
     if (mContents->currentWidget() != newView) {
-        bool statusBarVisible = mainWindow()->statusBar()->isVisible();
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        mContents->setUpdatesEnabled(false);
+#elif defined(Q_OS_MAC)
+        bool hideShowStatusBar =     mainWindow()->statusBar()->isVisible()
+                                 && !qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos())));
 
-        if (statusBarVisible)
+        if (hideShowStatusBar)
             mainWindow()->statusBar()->hide();
+#else
+    #error Unsupported platform
+#endif
 
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
 
-        if (statusBarVisible)
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        mContents->setUpdatesEnabled(true);
+#elif defined(Q_OS_MAC)
+        if (hideShowStatusBar)
             mainWindow()->statusBar()->show();
+#else
+    #error Unsupported platform
+#endif
     }
 
     // Update our modified settings
