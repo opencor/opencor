@@ -1821,21 +1821,24 @@ void CentralWidget::updateGui()
 
     // Replace the current view with the new one, if needed
     // Note: to do this as smoothly as possible, we temporarily hide the status
-    //       bar. Indeed, not to do this will result in some awful flickering
-    //       when switching from one file to another with the mouse over a
-    //       button-like widget and the status bar visible (see issues #405 and
-    //       #1027)...
+    //       bar, if we are not over a tab bar. Indeed, not to do this will
+    //       result in some awful flickering when switching from one file to
+    //       another with the mouse over a push button and the status bar
+    //       visible (see issues #405 and #1027). As for the tab bar, this is
+    //       somehow required to prevent some other GUI glitches (see issue
+    //       #1696)...
 
     if (mContents->currentWidget() != newView) {
-        bool statusBarVisible = mainWindow()->statusBar()->isVisible();
+        bool statusBarVisibleAndNotOverTabBar =     mainWindow()->statusBar()->isVisible()
+                                                && !qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos())));
 
-        if (statusBarVisible)
+        if (statusBarVisibleAndNotOverTabBar)
             mainWindow()->statusBar()->hide();
 
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
 
-        if (statusBarVisible)
+        if (statusBarVisibleAndNotOverTabBar)
             mainWindow()->statusBar()->show();
     }
 
