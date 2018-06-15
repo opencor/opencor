@@ -1838,13 +1838,10 @@ void CentralWidget::updateGui()
     emit guiUpdated(viewPlugin, fileName);
 
     // Replace the current view with the new one, if needed
-    // Note: to do this as smoothly as possible, we temporarily hide the status
-    //       bar, if we are not over a tab bar. Indeed, not to do this will
-    //       result in some awful flickering when switching from one file to
-    //       another with the mouse over a push button and the status bar
-    //       visible (see issues #405 and #1027). As for the tab bar, this is
-    //       somehow required to prevent some other GUI glitches (see issue
-    //       #1696)...
+    // Note: we have to do various things depending on the platform on which we
+    //       are as well as over which widget we are when needing to replace the
+    //       current view with the new one. This, so that we don't get the GUI
+    //       glitches described in issues #405, #1027 and #1696...
 
     if (mContents->currentWidget() != newView) {
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
