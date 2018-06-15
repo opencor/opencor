@@ -1829,17 +1829,21 @@ void CentralWidget::updateGui()
     //       #1696)...
 
     if (mContents->currentWidget() != newView) {
+#ifdef Q_OS_MAC
         bool statusBarVisibleAndNotOverTabBar =     mainWindow()->statusBar()->isVisible()
                                                 && !qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos())));
 
         if (statusBarVisibleAndNotOverTabBar)
             mainWindow()->statusBar()->hide();
+#endif
 
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
 
+#ifdef Q_OS_MAC
         if (statusBarVisibleAndNotOverTabBar)
             mainWindow()->statusBar()->show();
+#endif
     }
 
     // Update our modified settings
