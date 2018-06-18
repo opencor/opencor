@@ -143,8 +143,11 @@ int JupyterKernelPlugin::runKernel(const QStringList &pArguments)
     }
 
     // Run the the kernel using our connection file
+    // Note: any backslashes in the filename need to be escaped for Python
 
-    PythonQtSupport::evalScript(jupyterKernel.arg(pArguments[0]));
+    QString connectionFile = pArguments[0];
+
+    PythonQtSupport::evalScript(jupyterKernel.arg(connectionFile.replace("\\", "\\\\")));
 
     return 0;
 }
