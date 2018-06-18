@@ -1250,11 +1250,6 @@ if(WIN32)
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})
 
-    # Python runtime libraries and utilities
-
-    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
-            DESTINATION .)
-
     # Qt libraries required by OpenCOR
 
     foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick QuickWidgets Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
@@ -1274,20 +1269,19 @@ if(WIN32)
     windows_deploy_qt_plugin(printsupport windowsprintersupport)
     windows_deploy_qt_plugin(sqldrivers qsqlite)
 
-    # Batch and VBScript files to run Jupyter
+    # Python runtime libraries and utilities
 
-    set(JUPYTER_BAT_FILE ${PROJECT_BUILD_DIR}/Jupyter.bat)
-    set(JUPYTER_VBS_FILE ${PROJECT_BUILD_DIR}/Jupyter.vbs)
-
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.bat.in
-                   ${JUPYTER_BAT_FILE})
-    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.vbs.in
-                   ${JUPYTER_VBS_FILE})
-
-    install(FILES ${JUPYTER_BAT_FILE}
+    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
-    install(FILES ${JUPYTER_VBS_FILE}
+
+    # Batch, VBScript and Python scripts to start Jupyter
+
+    install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.bat
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.vbs
             DESTINATION .)
+
+    install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/start_jupyter.py
+            DESTINATION ./Python/Scripts)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)

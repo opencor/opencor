@@ -398,6 +398,7 @@ else()
                                  COMMAND ${CMAKE_COMMAND} -E copy ${ZLIB_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_CRYPTO_DLL} bin
                                  COMMAND ${CMAKE_COMMAND} -E copy ${OPENSSL_SSL_DLL} bin
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${SQLITE3_LIBRARY_DIR}/${SQLITE3_SHARED_LIBRARY} bin
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
 
