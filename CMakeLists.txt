@@ -1390,12 +1390,6 @@ else()
     install(FILES ${MESA_LIBRARY}
             DESTINATION lib)
 
-    # Python runtime libraries and utilities
-
-    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/python
-            DESTINATION .
-            USE_SOURCE_PERMISSIONS)
-
     # Qt libraries required by OpenCOR
     # Note: unlike for Windows and macOS, we don't have a macro for deploying
     #       all of our Qt libraries at once. Indeed, on Linux, the version of a
@@ -1421,6 +1415,13 @@ else()
     linux_deploy_qt_plugin(printsupport cupsprintersupport)
     linux_deploy_qt_plugin(sqldrivers qsqlite)
     linux_deploy_qt_plugin(xcbglintegrations qxcb-egl-integration qxcb-glx-integration)
+
+
+    # Python runtime libraries and utilities
+
+    INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/python
+            DESTINATION .
+            USE_SOURCE_PERMISSIONS)
 
     # Shell script to run Jupyter
 
