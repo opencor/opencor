@@ -200,27 +200,13 @@ else()
 
     # Install Sphinx
 
-    if(WIN32)
-        # On Windows, we need to explicitly install Sphinx to create *-script-py
-        # files that can then be modified during the installation of OpenCOR, so
-        # that they reference our newly installed Python executable
-
-        add_custom_target(installSphinx
-            COMMAND ${PIP_INSTALL_COMMAND}
-                https://github.com/opencor/sphinx/archive/v${SPHINX_VERSION}.tar.gz
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    else()
-        add_custom_target(installSphinx
-            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                sphinx==${SPHINX_VERSION}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    endif()
+    add_custom_target(installSphinx
+        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+            sphinx==${SPHINX_VERSION}
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+        VERBATIM
+    )
 
     add_dependencies(${PACKAGE_BUILD} installSphinx)
     add_dependencies(installSphinx otherPackages)
