@@ -2,7 +2,7 @@
 
 TITLE Running the Jupyter environment...
 
-REM Get the directory containg this batch file
+REM Get the directory containing this batch file
 SET OPENCOR_ROOT=%~dp0
 
 REM Make sure the path to Python is correct before starting Jupyter
