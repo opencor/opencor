@@ -147,14 +147,14 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 300090ab49946305bff0fd288d72c02fbfef7478
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0de2d253e3313881819abf3c8151826bf29e956c
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6004c301f5f3cb477742ce511331d9695c30ce22
-                                              88ae01bb2cc1448fc46b01e5628248f63a912e3e
-                                              a1667dc362bc820db35bb91220931cefaa6ecf7c
+                                  SHA1_VALUES b1be278f738a9711bd5b40cf30a707af74b90ec2
+                                              4bf8513c6d031c6056bbca2286ea2834be96d807
+                                              11e62b05b8508cb6785e014cc2f96e8532146a61
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              f13f17ef0a4879451193e4b0b996ec763d257def)
+                                              981012b78a22e0470f2d5acc349ac6745cc986c0)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 1d8c126dc5cc4c17b0a487f1b5bc899340fbd954
