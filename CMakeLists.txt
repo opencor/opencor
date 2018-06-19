@@ -1274,10 +1274,9 @@ if(WIN32)
     INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
-    # Batch, VBScript and Python scripts to start Jupyter
+    # Scripts to start Jupyter
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.vbs
             DESTINATION .)
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/start_jupyter.py
