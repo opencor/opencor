@@ -113,30 +113,34 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
         // Complete initialisation by loading any SED-ML properties
 
-        const QString initialisationError = simulation->furtherInitialize();
+        if (simulation->fileType() == SimulationSupport::Simulation::SedmlFile
+         || simulation->fileType() == SimulationSupport::Simulation::CombineArchive) {
 
-        if (!initialisationError.isEmpty()) {
-            // We couldn't complete initialisation so no longer manage the simulation
+            const QString initialisationError = simulation->furtherInitialize();
 
-            simulationManager->unmanage(pFileName);
+            if (!initialisationError.isEmpty()) {
+                // We couldn't complete initialisation so no longer manage the simulation
 
-            // And raise a Python exception
+                simulationManager->unmanage(pFileName);
 
-            PyErr_SetString(PyExc_ValueError, initialisationError.toStdString().c_str());
+                // And raise a Python exception
 
-            return NULL;
-        } else {
-            // Reset both the simulation's data and results (well, initialise in the
-            // case of its data)
+                PyErr_SetString(PyExc_ValueError, initialisationError.toStdString().c_str());
 
-            simulation->data()->reset();
-            simulation->results()->reset();
-
-            // Return the simulation as a Python object
-
-            return PythonQt::priv()->wrapQObject(simulation);
+                return NULL;
+            }
         }
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data)
+
+        simulation->data()->reset();
+        simulation->results()->reset();
+
+        // Return the simulation as a Python object
+
+        return PythonQt::priv()->wrapQObject(simulation);
     }
+
     Py_RETURN_NONE;
 }
 
