@@ -39,15 +39,15 @@ extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
 //==============================================================================
 
 static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
+static const auto ViewModeEditing    = QStringLiteral("EditingMode");
+static const auto ViewModeSimulation = QStringLiteral("SimulationMode");
+static const auto ViewModeAnalysis   = QStringLiteral("AnalysisMode");
 #ifdef ENABLE_SAMPLE_PLUGINS
 static const auto ViewModeSample     = QStringLiteral("SampleMode");
 #endif
 #ifdef ENABLE_TEST_PLUGINS
 static const auto ViewModeTest       = QStringLiteral("TestMode");
 #endif
-static const auto ViewModeEditing    = QStringLiteral("EditingMode");
-static const auto ViewModeSimulation = QStringLiteral("SimulationMode");
-static const auto ViewModeAnalysis   = QStringLiteral("AnalysisMode");
 
 //==============================================================================
 
@@ -58,6 +58,12 @@ QString ViewInterface::modeAsString(Mode pMode)
     switch (pMode) {
     case UnknownMode:
         return ViewModeUnknown;
+    case EditingMode:
+        return ViewModeEditing;
+    case SimulationMode:
+        return ViewModeSimulation;
+    case AnalysisMode:
+        return ViewModeAnalysis;
 #ifdef ENABLE_SAMPLE_PLUGINS
     case SampleMode:
         return ViewModeSample;
@@ -66,12 +72,6 @@ QString ViewInterface::modeAsString(Mode pMode)
     case TestMode:
         return ViewModeTest;
 #endif
-    case EditingMode:
-        return ViewModeEditing;
-    case SimulationMode:
-        return ViewModeSimulation;
-    case AnalysisMode:
-        return ViewModeAnalysis;
     }
 
     return "???";
@@ -85,28 +85,20 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
 {
     // Return the mode string corresponding to the given mode
 
-#if defined(ENABLE_SAMPLE_PLUGINS) && defined(ENABLE_TEST_PLUGINS)
-    if (!pMode.compare(ViewModeSample))
-        return SampleMode;
-    else if (!pMode.compare(ViewModeTest))
-        return TestMode;
-    else if (!pMode.compare(ViewModeEditing))
-#elif defined(ENABLE_SAMPLE_PLUGINS)
-    if (!pMode.compare(ViewModeSample))
-        return SampleMode;
-    else if (!pMode.compare(ViewModeEditing))
-#elif defined(ENABLE_TEST_PLUGINS)
-    if (!pMode.compare(ViewModeTest))
-        return TestMode;
-    else if (!pMode.compare(ViewModeEditing))
-#else
     if (!pMode.compare(ViewModeEditing))
-#endif
         return EditingMode;
     else if (!pMode.compare(ViewModeSimulation))
         return SimulationMode;
     else if (!pMode.compare(ViewModeAnalysis))
         return AnalysisMode;
+#ifdef ENABLE_SAMPLE_PLUGINS
+    else if (!pMode.compare(ViewModeSample))
+        return SampleMode;
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    else if (!pMode.compare(ViewModeTest))
+        return TestMode;
+#endif
 
     return UnknownMode;
 }

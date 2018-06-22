@@ -164,15 +164,15 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our modes
 
+    mModes.insert(ViewInterface::EditingMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::SimulationMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::AnalysisMode, new CentralWidgetMode(this));
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModes.insert(ViewInterface::SampleMode, new CentralWidgetMode(this));
 #endif
 #ifdef ENABLE_TEST_PLUGINS
     mModes.insert(ViewInterface::TestMode, new CentralWidgetMode(this));
 #endif
-    mModes.insert(ViewInterface::EditingMode, new CentralWidgetMode(this));
-    mModes.insert(ViewInterface::SimulationMode, new CentralWidgetMode(this));
-    mModes.insert(ViewInterface::AnalysisMode, new CentralWidgetMode(this));
     // Note: these will be deleted in CentralWidget's destructor...
 
     // Create our files tab bar widget
@@ -441,7 +441,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         // The previously selected file doesn't exist anymore, so select the
         // first file (otherwise the last file will be selected)
 
-        setTabBarCurrentIndex(mFileTabs, 0);
+        mFileTabs->setCurrentIndex(0);
     }
 
     // Retrieve the seleted modes and views, in case there are no files
@@ -450,7 +450,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings->value(SettingsFileMode.arg(QString())).toString());
 
         if (fileMode != ViewInterface::UnknownMode)
-            setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(fileMode));
+            mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(fileMode));
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
@@ -462,7 +462,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
             for (int j = 0, jMax = viewPlugins.count(); j < jMax; ++j) {
                 if (!viewPluginName.compare(viewPlugins[j]->name())) {
-                    setTabBarCurrentIndex(mode->viewTabs(), j);
+                    mode->viewTabs()->setCurrentIndex(j);
 
                     break;
                 }
@@ -617,6 +617,12 @@ void CentralWidget::retranslateUi()
 {
     // Retranslate our modes tab bar
 
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::EditingMode, -1),
+                          tr("Editing"));
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SimulationMode, -1),
+                          tr("Simulation"));
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::AnalysisMode, -1),
+                          tr("Analysis"));
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SampleMode, -1),
                           tr("Sample"));
@@ -625,12 +631,6 @@ void CentralWidget::retranslateUi()
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::TestMode, -1),
                           tr("Test"));
 #endif
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::EditingMode, -1),
-                          tr("Editing"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SimulationMode, -1),
-                          tr("Simulation"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::AnalysisMode, -1),
-                          tr("Analysis"));
 
     // Retranslate our mode views tab bar
 
@@ -760,7 +760,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
 
     for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!mFileNames[i].compare(fileName)) {
-            setTabBarCurrentIndex(mFileTabs, i);
+            mFileTabs->setCurrentIndex(i);
 
             return QString();
         }
@@ -790,7 +790,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
 
     updateFileTab(fileTabIndex);
 
-    setTabBarCurrentIndex(mFileTabs, fileTabIndex);
+    mFileTabs->setCurrentIndex(fileTabIndex);
 
     // Everything went fine, so let our plugins know that our file has been
     // opened
@@ -1238,9 +1238,9 @@ void CentralWidget::previousFile()
     // Select the previous file
 
     if (mFileTabs->count()) {
-        setTabBarCurrentIndex(mFileTabs, mFileTabs->currentIndex()?
-                                             mFileTabs->currentIndex()-1:
-                                             mFileTabs->count()-1);
+        mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
+                                       mFileTabs->currentIndex()-1:
+                                       mFileTabs->count()-1);
     }
 }
 
@@ -1251,9 +1251,9 @@ void CentralWidget::nextFile()
     // Select the next file
 
     if (mFileTabs->count()) {
-        setTabBarCurrentIndex(mFileTabs, (mFileTabs->currentIndex() == mFileTabs->count()-1)?
-                                             0:
-                                             mFileTabs->currentIndex()+1);
+        mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
+                                       0:
+                                       mFileTabs->currentIndex()+1);
     }
 }
 
@@ -1458,7 +1458,7 @@ bool CentralWidget::selectMode(const QString &pModeName)
     ViewInterface::Mode mode = ViewInterface::modeFromString(pModeName);
 
     if (mode != ViewInterface::UnknownMode) {
-        setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(mode));
+        mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(mode));
 
         return true;
     } else {
@@ -1481,7 +1481,7 @@ bool CentralWidget::selectView(const QString &pViewName)
 
             for (int j = 0, iMax = viewPlugins.count(); j < iMax; ++j) {
                 if (!viewPlugins[j]->name().compare(pViewName)) {
-                    setTabBarCurrentIndex(mode->viewTabs(), j);
+                    mode->viewTabs()->setCurrentIndex(j);
 
                     return true;
                 }
@@ -1670,38 +1670,17 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
 
 //==============================================================================
 
-void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
-{
-    // Update the current index of the given tab bar widget, after having
-    // temporarily disabled its handling of the currentChanged() signal, if
-    // needed
-
-    if (mState == UpdatingGui) {
-        disconnect(pTabBar, &TabBarWidget::currentChanged,
-                   this, &CentralWidget::updateGui);
-    }
-
-    pTabBar->setCurrentIndex(pIndex);
-
-    if (mState == UpdatingGui) {
-        connect(pTabBar, &TabBarWidget::currentChanged,
-                this, &CentralWidget::updateGui);
-    }
-}
-
-//==============================================================================
-
 void CentralWidget::updateGui()
 {
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
 
     if (mState != Idling) {
-        // We are doing something, so too risky to update the GUI during that
-        // time (e.g. things may not be fully initialised), so revert to our old
-        // tab index, if possible
+        // We are doing something, so it's too risky to update the GUI for now
+        // (e.g. things may not be fully initialised), so revert to our old tab
+        // index, if possible
 
         if (tabBar)
-            setTabBarCurrentIndex(tabBar, tabBar->oldIndex());
+            tabBar->setCurrentIndex(tabBar->oldIndex());
 
         return;
     }
@@ -1748,12 +1727,9 @@ void CentralWidget::updateGui()
             if (changedModes)
                 fileModeTabIndex = mModeTabs->currentIndex();
             else
-                setTabBarCurrentIndex(mModeTabs, fileModeTabIndex);
+                mModeTabs->setCurrentIndex(fileModeTabIndex);
 
-            CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
-            QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
-
-            setTabBarCurrentIndex(mode->viewTabs(), modeViewTabIndexes.value(fileModeTabIndex));
+            mModes.value(mModeTabIndexModes.value(fileModeTabIndex))->viewTabs()->setCurrentIndex(mFileModeViewTabIndexes.value(fileName).value(fileModeTabIndex));
         } else if (!changedViews) {
             // We are opening a file, so determine the default views that we
             // should try and if there are none, then try the Raw Text view
@@ -1795,20 +1771,38 @@ void CentralWidget::updateGui()
         }
     }
 
-    // Show/hide the editing, simulation and analysis modes' corresponding views
-    // tab, as needed, and retrieve the corresponding view plugin
+    // Show/hide the different modes' corresponding views tab, as needed, and
+    // retrieve the corresponding view plugin
+    // Note: to prevent some GUI glitches on Windows and Linux, we must first
+    //       make sure that all the views tabs are hidden before we can actually
+    //       show the one we are after...
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
+    mModes.value(ViewInterface::EditingMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::SimulationMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->hide();
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModes.value(ViewInterface::SampleMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode));
+    mModes.value(ViewInterface::SampleMode)->viewTabs()->hide();
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModes.value(ViewInterface::TestMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode));
+    mModes.value(ViewInterface::TestMode)->viewTabs()->hide();
 #endif
-    mModes.value(ViewInterface::EditingMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode));
-    mModes.value(ViewInterface::SimulationMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode));
-    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode));
+
+    if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode))
+        mModes.value(ViewInterface::EditingMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode))
+        mModes.value(ViewInterface::SimulationMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode))
+        mModes.value(ViewInterface::AnalysisMode)->viewTabs()->show();
+#ifdef ENABLE_SAMPLE_PLUGINS
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode))
+        mModes.value(ViewInterface::SampleMode)->viewTabs()->show();
+#endif
+#ifdef ENABLE_TEST_PLUGINS
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode))
+        mModes.value(ViewInterface::TestMode)->viewTabs()->show();
+#endif
 
     // Ask the GUI interface for the widget to use the current file (should
     // there be one)
@@ -1868,23 +1862,35 @@ void CentralWidget::updateGui()
     emit guiUpdated(viewPlugin, fileName);
 
     // Replace the current view with the new one, if needed
-    // Note: to do this as smoothly as possible, we temporarily hide the status
-    //       bar. Indeed, not to do this will result in some awful flickering
-    //       when switching from one file to another with the mouse over a
-    //       button-like widget and the status bar visible (see issues #405 and
-    //       #1027)...
+    // Note: we have to do various things depending on the platform on which we
+    //       are as well as over which widget we are when needing to replace the
+    //       current view with the new one. This, so that we don't get the GUI
+    //       glitches described in issues #405, #1027 and #1696...
 
     if (mContents->currentWidget() != newView) {
-        bool statusBarVisible = mainWindow()->statusBar()->isVisible();
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        mContents->setUpdatesEnabled(false);
+#elif defined(Q_OS_MAC)
+        bool hideShowStatusBar =     mainWindow()->statusBar()->isVisible()
+                                 && !qobject_cast<QTabBar *>(childAt(mapFromGlobal(QCursor::pos())));
 
-        if (statusBarVisible)
+        if (hideShowStatusBar)
             mainWindow()->statusBar()->hide();
+#else
+    #error Unsupported platform
+#endif
 
         mContents->removeWidget(mContents->currentWidget());
         mContents->addWidget(newView);
 
-        if (statusBarVisible)
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        mContents->setUpdatesEnabled(true);
+#elif defined(Q_OS_MAC)
+        if (hideShowStatusBar)
             mainWindow()->statusBar()->show();
+#else
+    #error Unsupported platform
+#endif
     }
 
     // Update our modified settings

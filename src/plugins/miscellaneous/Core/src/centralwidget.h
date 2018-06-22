@@ -189,8 +189,6 @@ private:
 
     void fileReloadedOrSaved(const QString &pFileName, bool pFileReloaded);
 
-    void setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex);
-
     void reloadFile(int pIndex, bool pForce);
 
     bool closeFile(int pIndex, bool pForceClosing);
