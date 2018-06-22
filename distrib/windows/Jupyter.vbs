@@ -7,10 +7,10 @@ REM Create a shell for running our commands
 Set shell = CreateObject("WScript.Shell")
 
 REM Get the directory containing this script file
-OPENCOR_ROOT = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
+OPENCOR_DIR = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
 
 REM Ensure the path to Python is correct before starting Jupyter
-updatePythonPath = """"&OPENCOR_ROOT&"\Python\bin\Python.exe"" """&OPENCOR_ROOT&"\Python\Scripts\set_python_path.py"" """&OPENCOR_ROOT&"\Python"" -s"
+updatePythonPath = """"&OPENCOR_DIR&"\Python\bin\Python.exe"" """&OPENCOR_DIR&"\Python\Scripts\set_python_path.py"" """&OPENCOR_DIR&"\Python"" -s"
 
 shell.Run updatePythonPath, 0, True
 
@@ -20,7 +20,7 @@ For Each arg in WScript.Arguments
     args = args & " " & arg
 Next
 
-Jupyter = """"&OPENCOR_ROOT&"\Python\bin\Python.exe"" """&OPENCOR_ROOT&"\Python\Scripts\start_jupyter.py"" " & args
+Jupyter = """"&OPENCOR_DIR&"\Python\bin\Python.exe"" """&OPENCOR_DIR&"\Python\Scripts\start_jupyter.py"" " & args
 
 Set JupyterRun = shell.Exec(Jupyter)
 Do Until JupyterRun.StdOut.AtEndOfStream
