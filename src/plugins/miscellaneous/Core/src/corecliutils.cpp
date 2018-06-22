@@ -534,19 +534,13 @@ QString openRemoteFile(const QString &pUrl)
 
         if (readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
-            // our file manager to create a new remote file
+            // our file manager to create a new remote file and get its filename
 
-            FileManager::Status createStatus = fileManagerInstance->create(fileNameOrUrl, fileContents);
-
-            // Make sure that the file has indeed been created
-
-            if (createStatus != FileManager::Created) {
+            if (!fileManagerInstance->newFile(fileName, fileContents)) {
 #ifdef QT_DEBUG
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
                 return QObject::tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
-            } else {
-                return QString("");
             }
         } else {
             // We were not able to retrieve the contents of the remote file, so
@@ -554,9 +548,10 @@ QString openRemoteFile(const QString &pUrl)
 
             return QObject::tr("'%1' could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage));
         }
-    } else {
-        return openFile(fileName, File::Remote, fileNameOrUrl);
     }
+    // We now have the file so open it, which will add it to the file manager
+
+    return openFile(fileName, File::Remote, fileNameOrUrl);
 }
 
 //==============================================================================
