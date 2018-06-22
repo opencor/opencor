@@ -1277,6 +1277,7 @@ if(WIN32)
     # Scripts to start Jupyter
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/Jupyter.bat
+                  ${CMAKE_SOURCE_DIR}/distrib/windows/Notebook.bat
             DESTINATION .)
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/start_jupyter.py
@@ -1338,14 +1339,15 @@ elseif(APPLE)
     install(TARGETS ${CMAKE_PROJECT_NAME} BUNDLE
             DESTINATION .)
 
-    # Shell script to run Jupyter
+    # Shell scripts to run Jupyter
 
     set(JUPYTER_SCRIPT ${PROJECT_BUILD_DIR}/jupyter.sh)
-
     configure_file(${CMAKE_SOURCE_DIR}/distrib/macos/jupyter.sh.in
                    ${JUPYTER_SCRIPT} @ONLY)
 
-    install(FILES ${JUPYTER_SCRIPT}
+    set(NOTEBOOK_SCRIPT ${CMAKE_SOURCE_DIR}/distrib/macos/notebook.sh)
+
+    install(FILES ${JUPYTER_SCRIPT} ${NOTEBOOK_SCRIPT}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
@@ -1422,11 +1424,12 @@ else()
             DESTINATION .
             USE_SOURCE_PERMISSIONS)
 
-    # Shell script to run Jupyter
+    # Shell scripts to run Jupyter
 
     set(JUPYTER_SCRIPT ${CMAKE_SOURCE_DIR}/distrib/linux/jupyter.sh)
+    set(NOTEBOOK_SCRIPT ${CMAKE_SOURCE_DIR}/distrib/linux/notebook.sh)
 
-    install(FILES ${JUPYTER_SCRIPT}
+    install(FILES ${JUPYTER_SCRIPT} ${NOTEBOOK_SCRIPT}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
