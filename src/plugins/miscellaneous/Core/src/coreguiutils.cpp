@@ -93,11 +93,18 @@ bool readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
     // Read the contents of the file, which URL is given, showing our busy
     // widget
 
-    centralWidget()->showBusyWidget();
+    // Showing the busy widget requires us to be in GUI mode, so don't do
+    // so if we are not in that mode
+
+    bool guiMode = Core::mainWindow() != 0;
+
+    if (guiMode)
+        centralWidget()->showBusyWidget();
 
     bool res = readFileContentsFromUrl(pUrl, pFileContents, pErrorMessage);
 
-    centralWidget()->hideBusyWidget();
+    if (guiMode)
+        centralWidget()->hideBusyWidget();
 
     return res;
 }
