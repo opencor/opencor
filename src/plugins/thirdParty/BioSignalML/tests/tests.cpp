@@ -18,37 +18,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// BioSignalML API plugin
+// BioSignalML tests
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
+#include "tests.h"
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace BioSignalMLAPI {
+#include <QtTest/QtTest>
 
 //==============================================================================
 
-PLUGININFO_FUNC BioSignalMLAPIPluginInfo();
+#include "biosignalml/biosignalml.h"
+#include "typedobject/typedobject.h"
 
 //==============================================================================
 
-class BioSignalMLAPIPlugin : public QObject
+void Tests::basicTests()
 {
-    Q_OBJECT
+    // Some very basic tests to make sure that we have access to BioSignalML
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.BioSignalMLAPIPlugin" FILE "biosignalmlapiplugin.json")
-};
+    // Check the version of BioSignalML and typedobject
+
+    QCOMPARE(bsml::VERSION.c_str(), "0.8.4");
+    QCOMPARE(tobj::VERSION.c_str(), "1.1.2");
+}
 
 //==============================================================================
 
-}   // namespace BioSignalMLAPI
-}   // namespace OpenCOR
+QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
 // End of file

@@ -18,24 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// BioSignalML API tests
+// BioSignalML plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QObject>
+#include "biosignalmlplugin.h"
 
 //==============================================================================
 
-class Tests : public QObject
+namespace OpenCOR {
+namespace BioSignalML {
+
+//==============================================================================
+
+PLUGININFO_FUNC BioSignalMLPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-private slots:
-    void basicTests();
-};
+    descriptions.insert("en", QString::fromUtf8("a plugin to access BioSignalML."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder BioSignalML."));
+
+    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+                          QStringList(),
+                          descriptions);
+}
+
+//==============================================================================
+
+}   // namespace BioSignalML
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file
