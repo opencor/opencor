@@ -18,24 +18,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SBML API tests
+// libNuML tests
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QObject>
+#include "tests.h"
 
 //==============================================================================
 
-class Tests : public QObject
+#include <QtTest/QtTest>
+
+//==============================================================================
+
+#include "numl/common/libnuml-version.h"
+#include "numl/NUMLDocument.h"
+
+//==============================================================================
+
+void Tests::basicTests()
 {
-    Q_OBJECT
+    // Some very basic tests to make sure that we have access to libNuML
 
-private slots:
-    void basicTests();
-};
+    // Check the version of libNuML
+
+    QCOMPARE(libnuml::getLibNUMLDottedVersion(), "1.1.1");
+
+    // Create a NuML document with a model inside it, then set the name of the
+    // model and check that it has been properly set
+
+    libnuml::NUMLDocument *numlDocument = new libnuml::NUMLDocument();
+
+    static const std::string ElementName = "numl";
+
+    QCOMPARE(numlDocument->getElementName(), ElementName       );
+
+    delete numlDocument;
+}
+
+//==============================================================================
+
+QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
 // End of file

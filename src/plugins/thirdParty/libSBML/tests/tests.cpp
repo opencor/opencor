@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API tests
+// libSBML tests
 //==============================================================================
 
 #include "tests.h"
@@ -29,34 +29,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "sedmlapibegin.h"
-    #include "sedml/common/libsedml-version.h"
-    #include "sedml/SedDocument.h"
-#include "sedmlapiend.h"
+#include "libsbmlbegin.h"
+    #include "sbml/common/libsbml-version.h"
+    #include "sbml/SBMLDocument.h"
+#include "libsbmlend.h"
 
 //==============================================================================
 
 void Tests::basicTests()
 {
-    // Some very basic tests to make sure that we have access to libSEDML
+    // Some very basic tests to make sure that we have access to libSBML
 
-    // Check the version of libSEDML
+    // Check the version of libSBML
 
-    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.4.3");
+    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.17.0");
 
-    // Create a SED-ML document with a model inside it, then set the name of the
+    // Check against which libraries libSBML has been compiled
+
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("bzip2"));
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
+    QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("zip"));
+
+    // Create an SBML document with a model inside it, then set the name of the
     // model and check that it has been properly set
 
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
-    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
+    libsbml::SBMLDocument *sbmlDocument = new libsbml::SBMLDocument();
+    libsbml::Model *sbmlModel = sbmlDocument->createModel();
 
     static const std::string ModelName = "myModel";
 
-    sedmlModel->setName(ModelName);
+    sbmlModel->setName(ModelName);
 
-    QCOMPARE(sedmlModel->getName(), ModelName);
+    QCOMPARE(sbmlModel->getName(), ModelName);
 
-    delete sedmlDocument;
+    delete sbmlDocument;
 }
 
 //==============================================================================

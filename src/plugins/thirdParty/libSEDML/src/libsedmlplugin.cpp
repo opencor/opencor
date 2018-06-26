@@ -18,24 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API tests
+// libSEDML plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QObject>
+#include "libsedmlplugin.h"
 
 //==============================================================================
 
-class Tests : public QObject
+namespace OpenCOR {
+namespace libSEDML {
+
+//==============================================================================
+
+PLUGININFO_FUNC libSEDMLPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-private slots:
-    void basicTests();
-};
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
+
+    return new PluginInfo(PluginInfo::Api, false, false,
+                          QStringList() << "libNuML" << "libSBML",
+                          descriptions);
+}
+
+//==============================================================================
+
+}   // namespace libSEDML
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

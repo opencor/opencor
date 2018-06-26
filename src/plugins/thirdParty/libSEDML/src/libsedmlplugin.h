@@ -18,58 +18,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SBML API tests
+// libSEDML plugin
 //==============================================================================
 
-#include "tests.h"
-
-//==============================================================================
-
-#include <QtTest/QtTest>
+#pragma once
 
 //==============================================================================
 
-#include "sbmlapibegin.h"
-    #include "sbml/common/libsbml-version.h"
-    #include "sbml/SBMLDocument.h"
-#include "sbmlapiend.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
-void Tests::basicTests()
+namespace OpenCOR {
+namespace libSEDML {
+
+//==============================================================================
+
+PLUGININFO_FUNC libSEDMLPluginInfo();
+
+//==============================================================================
+
+class libSEDMLPlugin : public QObject
 {
-    // Some very basic tests to make sure that we have access to libSBML
+    Q_OBJECT
 
-    // Check the version of libSBML
-
-    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.17.0");
-
-    // Check against which libraries libSBML has been compiled
-
-    QVERIFY(!libsbml::isLibSBMLCompiledWith("bzip2"));
-    QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
-    QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
-    QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
-    QVERIFY(!libsbml::isLibSBMLCompiledWith("zip"));
-
-    // Create an SBML document with a model inside it, then set the name of the
-    // model and check that it has been properly set
-
-    libsbml::SBMLDocument *sbmlDocument = new libsbml::SBMLDocument();
-    libsbml::Model *sbmlModel = sbmlDocument->createModel();
-
-    static const std::string ModelName = "myModel";
-
-    sbmlModel->setName(ModelName);
-
-    QCOMPARE(sbmlModel->getName(), ModelName);
-
-    delete sbmlDocument;
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.libSEDMLPlugin" FILE "libsedmlplugin.json")
+};
 
 //==============================================================================
 
-QTEST_GUILESS_MAIN(Tests)
+}   // namespace libSEDML
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

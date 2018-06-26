@@ -18,34 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// NuML API plugin
+// libSEDML end
 //==============================================================================
 
-#include "numlapiplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace NuMLAPI {
-
-//==============================================================================
-
-PLUGININFO_FUNC NuMLAPIPluginInfo()
-{
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
-
-    return new PluginInfo(PluginInfo::Api, false, false,
-                          QStringList() << "SBMLAPI",
-                          descriptions);
-}
-
-//==============================================================================
-
-}   // namespace NuMLAPI
-}   // namespace OpenCOR
+#if defined(Q_OS_WIN)
+    #pragma warning(pop)
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic pop
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic pop
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 // End of file

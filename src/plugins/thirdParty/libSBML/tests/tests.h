@@ -18,37 +18,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// NuML API plugin
+// libSBML tests
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "plugininfo.h"
+#include <QObject>
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace NuMLAPI {
-
-//==============================================================================
-
-PLUGININFO_FUNC NuMLAPIPluginInfo();
-
-//==============================================================================
-
-class NuMLAPIPlugin : public QObject
+class Tests : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.NuMLAPIPlugin" FILE "numlapiplugin.json")
+private slots:
+    void basicTests();
 };
-
-//==============================================================================
-
-}   // namespace NuMLAPI
-}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

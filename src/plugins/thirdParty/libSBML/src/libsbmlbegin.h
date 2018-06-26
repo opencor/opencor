@@ -18,37 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SED-ML API plugin
+// libSBML begin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace SEDMLAPI {
-
-//==============================================================================
-
-PLUGININFO_FUNC SEDMLAPIPluginInfo();
-
-//==============================================================================
-
-class SEDMLAPIPlugin : public QObject
-{
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.SEDMLAPIPlugin" FILE "sedmlapiplugin.json")
-};
-
-//==============================================================================
-
-}   // namespace SEDMLAPI
-}   // namespace OpenCOR
+#ifdef Q_OS_WIN
+    #pragma warning(push)
+    #pragma warning(disable: 4005)
+#endif
 
 //==============================================================================
 // End of file

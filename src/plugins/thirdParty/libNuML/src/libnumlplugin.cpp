@@ -18,33 +18,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SBML API plugin
+// libNuML plugin
 //==============================================================================
 
-#include "sbmlapiplugin.h"
+#include "libnumlplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SBMLAPI {
+namespace libNuML {
 
 //==============================================================================
 
-PLUGININFO_FUNC SBMLAPIPluginInfo()
+PLUGININFO_FUNC libNuMLPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/NuML/NuML/\">libNuML</a>."));
 
-    return new PluginInfo(PluginInfo::Api, false, false,
-                          QStringList(),
+    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+                          QStringList() << "libSBML",
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace SBMLAPI
+}   // namespace libNuML
 }   // namespace OpenCOR
 
 //==============================================================================

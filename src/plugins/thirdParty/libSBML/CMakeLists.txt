@@ -1,4 +1,4 @@
-project(SBMLAPIPlugin)
+project(libSBMLPlugin)
 
 # Name and version of our package
 
@@ -54,7 +54,7 @@ endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-if(USE_PREBUILT_SBMLAPI_PACKAGE)
+if(USE_PREBUILT_LIBSBML_PACKAGE)
     # Retrieve the plugin's package
 
     string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -100,7 +100,7 @@ else()
         endif()
 
         set(DEPENDENCIES_FILENAME libSBML_dependencies_vs14_${MODE}_x64.zip)
-        set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/api/SBMLAPI/ext/dependencies)
+        set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext/dependencies)
         set(DEPENDENCIES_MODE_DIR ${DEPENDENCIES_DIR}/${MODE})
 
         if(NOT EXISTS ${DEPENDENCIES_MODE_DIR})
@@ -203,22 +203,19 @@ endif()
 
 # Allow other external projects to find our libSBML package
 
-set(SBMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-set(SBMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-set(SBMLAPI_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+set(LIBSBML_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(LIBSBML_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+set(LIBSBML_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
-# Note: we would normally use '${PACKAGE_NAME}' rather than 'SBMLAPI', but it
-#       can't be done here since the name of our package is different from that
-#       of our plugin...
 
-add_plugin(SBMLAPI
+add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
-        src/sbmlapiplugin.cpp
+        src/libsbmlplugin.cpp
     HEADERS_MOC
-        src/sbmlapiplugin.h
+        src/libsbmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

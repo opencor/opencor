@@ -18,36 +18,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// SBML API plugin
+// libSBML plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
+#include "libsbmlplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SBMLAPI {
+namespace libSBML {
 
 //==============================================================================
 
-PLUGININFO_FUNC SBMLAPIPluginInfo();
-
-//==============================================================================
-
-class SBMLAPIPlugin : public QObject
+PLUGININFO_FUNC libSBMLPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SBMLAPIPlugin" FILE "sbmlapiplugin.json")
-};
+    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
+
+    return new PluginInfo(PluginInfo::Api, false, false,
+                          QStringList(),
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace SBMLAPI
+}   // namespace libSBML
 }   // namespace OpenCOR
 
 //==============================================================================

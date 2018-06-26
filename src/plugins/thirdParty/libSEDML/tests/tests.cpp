@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// NuML API tests
+// libSEDML tests
 //==============================================================================
 
 #include "tests.h"
@@ -29,29 +29,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "numl/common/libnuml-version.h"
-#include "numl/NUMLDocument.h"
+#include "libsedmlbegin.h"
+    #include "sedml/common/libsedml-version.h"
+    #include "sedml/SedDocument.h"
+#include "libsedmlend.h"
 
 //==============================================================================
 
 void Tests::basicTests()
 {
-    // Some very basic tests to make sure that we have access to libNuML
+    // Some very basic tests to make sure that we have access to libSEDML
 
-    // Check the version of libNuML
+    // Check the version of libSEDML
 
-    QCOMPARE(libnuml::getLibNUMLDottedVersion(), "1.1.1");
+    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.4.3");
 
-    // Create a NuML document with a model inside it, then set the name of the
+    // Create a SED-ML document with a model inside it, then set the name of the
     // model and check that it has been properly set
 
-    libnuml::NUMLDocument *numlDocument = new libnuml::NUMLDocument();
+    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
 
-    static const std::string ElementName = "numl";
+    static const std::string ModelName = "myModel";
 
-    QCOMPARE(numlDocument->getElementName(), ElementName       );
+    sedmlModel->setName(ModelName);
 
-    delete numlDocument;
+    QCOMPARE(sedmlModel->getName(), ModelName);
+
+    delete sedmlDocument;
 }
 
 //==============================================================================

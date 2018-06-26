@@ -1,4 +1,4 @@
-project(SEDMLAPIPlugin)
+project(libSEDMLPlugin)
 
 # Name and version of our package
 
@@ -54,7 +54,7 @@ endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-if(USE_PREBUILT_SEDMLAPI_PACKAGE)
+if(USE_PREBUILT_LIBSEDML_PACKAGE)
     # Retrieve the plugin's package
 
     string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -104,22 +104,22 @@ else()
         endif()
     endif()
 
-    set(NUMLAPI_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/api/NuMLAPI/ext)
-    set(SBMLAPI_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/api/SBMLAPI/ext)
+    set(LIBNUML_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libNuML/ext)
+    set(LIBSBML_EXT_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext)
 
     if(WIN32)
-        set(LIBNUML_INCLUDE_DIR ${NUMLAPI_EXT_DIR}/${MODE}/include)
-        set(LIBNUML_LIBRARY ${NUMLAPI_EXT_DIR}/${MODE}/lib/libnuml${CMAKE_IMPORT_LIBRARY_SUFFIX})
-        set(LIBSBML_INCLUDE_DIR ${SBMLAPI_EXT_DIR}/${MODE}/include)
-        set(LIBSBML_LIBRARY ${SBMLAPI_EXT_DIR}/${MODE}/lib/libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        set(LIBNUML_INCLUDE_DIR ${LIBNUML_EXT_DIR}/${MODE}/include)
+        set(LIBNUML_LIBRARY ${LIBNUML_EXT_DIR}/${MODE}/lib/libnuml${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/${MODE}/include)
+        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/${MODE}/lib/libsbml${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-        set(DEFINE_LIBZ_INCLUDE_DIR -DLIBZ_INCLUDE_DIR=${SBMLAPI_EXT_DIR}/dependencies/${MODE}/include)
-        set(DEFINE_LIBZ_LIBRARY -DLIBZ_LIBRARY=${SBMLAPI_EXT_DIR}/dependencies/${MODE}/lib/zdll${CMAKE_IMPORT_LIBRARY_SUFFIX})
+        set(DEFINE_LIBZ_INCLUDE_DIR -DLIBZ_INCLUDE_DIR=${LIBSBML_EXT_DIR}/dependencies/${MODE}/include)
+        set(DEFINE_LIBZ_LIBRARY -DLIBZ_LIBRARY=${LIBSBML_EXT_DIR}/dependencies/${MODE}/lib/zdll${CMAKE_IMPORT_LIBRARY_SUFFIX})
     else()
-        set(LIBNUML_INCLUDE_DIR ${NUMLAPI_EXT_DIR}/include)
-        set(LIBNUML_LIBRARY ${NUMLAPI_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}numl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.1${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
-        set(LIBSBML_INCLUDE_DIR ${SBMLAPI_EXT_DIR}/include)
-        set(LIBSBML_LIBRARY ${SBMLAPI_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.5${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+        set(LIBNUML_INCLUDE_DIR ${LIBNUML_EXT_DIR}/include)
+        set(LIBNUML_LIBRARY ${LIBNUML_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}numl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.1${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+        set(LIBSBML_INCLUDE_DIR ${LIBSBML_EXT_DIR}/include)
+        set(LIBSBML_LIBRARY ${LIBSBML_EXT_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}sbml${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.5${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     endif()
 
     ExternalProject_Add(${PACKAGE_BUILD}
@@ -149,8 +149,8 @@ else()
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
         DEPENDS
-            NuMLAPIPlugin
-            SBMLAPIPlugin
+            libNuMLPlugin
+            libSBMLPlugin
     )
 
     # Do some post-processing that is specific to each platform
@@ -188,22 +188,19 @@ endif()
 
 # Allow other external projects to find our libSEDML package
 
-set(SEDMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-set(SEDMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-set(SEDMLAPI_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
+set(LIBSEDML_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(LIBSEDML_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+set(LIBSEDML_LIBRARY ${EXTERNAL_BINARIES_DIR}/${IMPORT_LIBRARY} PARENT_SCOPE)
 
 # Add the plugin
-# Note: we would normally use '${PACKAGE_NAME}' rather than 'SEDMLAPI', but it
-#       can't be done here since the name of our package is different from that
-#       of our plugin...
 
-add_plugin(SEDMLAPI
+add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
-        src/sedmlapiplugin.cpp
+        src/libsedmlplugin.cpp
     HEADERS_MOC
-        src/sedmlapiplugin.h
+        src/libsedmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
