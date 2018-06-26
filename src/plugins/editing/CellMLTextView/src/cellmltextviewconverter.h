@@ -70,9 +70,9 @@ public:
 
     QString output() const;
 
+    QString errorMessage() const;
     int errorLine() const;
     int errorColumn() const;
-    QString errorMessage() const;
 
     bool hasWarnings() const;
     CellMLTextViewConverterWarnings warnings() const;
@@ -117,9 +117,9 @@ private:
 
     OutputType mLastOutputType;
 
+    QString mErrorMessage;
     int mErrorLine;
     int mErrorColumn;
-    QString mErrorMessage;
 
     CellMLTextViewConverterWarnings mWarnings;
 

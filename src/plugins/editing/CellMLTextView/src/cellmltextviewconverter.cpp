@@ -189,6 +189,15 @@ QString CellMLTextViewConverter::output() const
 
 //==============================================================================
 
+QString CellMLTextViewConverter::errorMessage() const
+{
+    // Return our error message
+
+    return mErrorMessage;
+}
+
+//==============================================================================
+
 int CellMLTextViewConverter::errorLine() const
 {
     // Return our error line
@@ -203,15 +212,6 @@ int CellMLTextViewConverter::errorColumn() const
     // Return our error column
 
     return mErrorColumn;
-}
-
-//==============================================================================
-
-QString CellMLTextViewConverter::errorMessage() const
-{
-    // Return our error message
-
-    return mErrorMessage;
 }
 
 //==============================================================================
@@ -262,9 +262,9 @@ void CellMLTextViewConverter::reset()
 
     mLastOutputType = None;
 
+    mErrorMessage = QString();
     mErrorLine = -1;
     mErrorColumn = -1;
-    mErrorMessage = QString();
 
     mWarnings = CellMLTextViewConverterWarnings();
 
