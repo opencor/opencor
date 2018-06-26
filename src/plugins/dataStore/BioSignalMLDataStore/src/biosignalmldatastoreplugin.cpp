@@ -50,7 +50,7 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à BioSignalML."));
 
     return new PluginInfo(PluginInfo::DataStore, true, false,
-                          QStringList() << "BioSignalMLAPI" << "DataStore",
+                          QStringList() << "BioSignalML" << "DataStore",
                           descriptions);
 }
 
