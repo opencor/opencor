@@ -56,9 +56,16 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
     setLayout(layout);
 
     // Create, customise and add an inactive marker to our layout
+    // Note: we want the width of our marker to be 3 pixels wide. However, on
+    //       macOS, to actually get a 3-pixel-wide marker, we need to make it 4
+    //       pixels wide...!?
 
     enum {
+#ifdef Q_OS_MAC
+        MarkerWidth = 4
+#else
         MarkerWidth = 3
+#endif
     };
 
     mMarker = new QFrame(this);

@@ -104,6 +104,8 @@ public:
 
     int zoomLevel() const;
 
+    bool handleChanges() const;
+
     static QString specials(const QString &pString);
 
 protected:
@@ -116,7 +118,11 @@ protected:
     void keyPressEvent(QKeyEvent *pEvent) override;
     void wheelEvent(QWheelEvent *pEvent) override;
 
+    void setHandleChanges(bool pHandleChanges);
+
 private:
+    bool mHandleChanges;
+
     QFont mFont;
 
     QMenu *mContextMenu;
@@ -137,6 +143,9 @@ public slots:
     void zoomIn() override;
     void zoomOut() override;
     void zoomTo(int pSize) override;
+
+    void undo() override;
+    void redo() override;
 
 private slots:
     void updateUi();

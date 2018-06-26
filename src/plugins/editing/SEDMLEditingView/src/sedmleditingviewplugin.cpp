@@ -177,13 +177,13 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
 
     if (editingViewInterface) {
-        EditorWidget::EditorWidget *editorWidget = editingViewInterface->editorWidget(pFileName);
+        EditorWidget::EditorWidget *editor = editingViewInterface->editorWidget(pFileName);
 
-        if (editorWidget) {
-            editorWidget->setContextMenu(editorWidget->contextMenu()->actions() << mEditReformatSeparator
-                                                                                << mEditReformatAction
-                                                                                << mToolsSedmlValidationSeparator
-                                                                                << mToolsSedmlValidationAction);
+        if (editor) {
+            editor->setContextMenu(editor->contextMenu()->actions() << mEditReformatSeparator
+                                                                    << mEditReformatAction
+                                                                    << mToolsSedmlValidationSeparator
+                                                                    << mToolsSedmlValidationAction);
         }
     }
 

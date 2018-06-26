@@ -286,17 +286,17 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget && validate(pFileName, true)) {
-        int cursorLine;
-        int cursorColumn;
+        int line;
+        int column;
 
-        editingWidget->editorWidget()->cursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->cursorPosition(line, column);
 
         QDomDocument domDocument;
 
         domDocument.setContent(editingWidget->editorWidget()->contents());
 
         editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), true);
-        editingWidget->editorWidget()->setCursorPosition(cursorLine, cursorColumn);
+        editingWidget->editorWidget()->setCursorPosition(line, column);
     }
 }
 

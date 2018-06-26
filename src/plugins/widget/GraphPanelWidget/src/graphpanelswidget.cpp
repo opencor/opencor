@@ -284,11 +284,9 @@ bool GraphPanelsWidget::removeCurrentGraphPanel()
         // graph panel
 
         setUpdatesEnabled(false);
+            addGraphPanel();
 
-        addGraphPanel();
-
-        bool res = removeGraphPanel(mGraphPanels.first());
-
+            bool res = removeGraphPanel(mGraphPanels.first());
         setUpdatesEnabled(true);
 
         return res;
@@ -305,12 +303,10 @@ void GraphPanelsWidget::removeAllGraphPanels()
     // we want at least one graph panel at any given point in time)
 
     setUpdatesEnabled(false);
+        addGraphPanel();
 
-    addGraphPanel();
-
-    while (mGraphPanels.count() > 1)
-        removeGraphPanel(mGraphPanels.first());
-
+        while (mGraphPanels.count() > 1)
+            removeGraphPanel(mGraphPanels.first());
     setUpdatesEnabled(true);
 }
 

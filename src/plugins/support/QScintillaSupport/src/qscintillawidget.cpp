@@ -45,6 +45,7 @@ namespace QScintillaSupport {
 
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
+    mHandleChanges(true),
     mCanSelectAll(false),
     mInsertMode(true)
 {
@@ -129,26 +130,18 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mCursorPositionWidget = new QLabel(this);
     mEditingModeWidget = new QLabel(this);
 
-    // Keep track of the change to the UI
+    // Keep track of various changes
 
     connect(this, &QScintillaWidget::SCN_UPDATEUI,
             this, &QScintillaWidget::updateUi);
 
-    // Keep track of changes to our editor and resize the margin line numbers
-    // accordingly
-
     connect(this, &QScintillaWidget::textChanged,
             this, &QScintillaWidget::updateMarginLineNumbersWidth);
-
-    // Keep track of changes to our editor that may affect our ability to select
-    // all of its text
 
     connect(this, &QScintillaWidget::selectionChanged,
             this, &QScintillaWidget::checkCanSelectAll);
     connect(this, &QScintillaWidget::textChanged,
             this, &QScintillaWidget::checkCanSelectAll);
-
-    // Keep track of the change in the cursor position
 
     connect(this, &QScintillaWidget::cursorPositionChanged,
             this, &QScintillaWidget::updateCursorPosition);
@@ -181,7 +174,7 @@ void QScintillaWidget::cursorPosition(int &pLine, int &pColumn)
 {
     // Retrieve our cursor position
 
-    QsciScintilla::getCursorPosition(&pLine, &pColumn);
+    getCursorPosition(&pLine, &pColumn);
 }
 
 //==============================================================================
@@ -356,12 +349,8 @@ void QScintillaWidget::selectWordAt(int pLine, int pColumn)
     int startPosition = SendScintilla(SCI_WORDSTARTPOSITION, position, true);
     int endPosition = SendScintilla(SCI_WORDENDPOSITION, position, true);
 
-    if (endPosition-startPosition > 0) {
-        setSelection(SendScintilla(SCI_LINEFROMPOSITION, startPosition),
-                     SendScintilla(SCI_GETCOLUMN, startPosition),
-                     SendScintilla(SCI_LINEFROMPOSITION, endPosition),
-                     SendScintilla(SCI_GETCOLUMN, endPosition));
-    }
+    if (endPosition-startPosition > 0)
+        SendScintilla(SCI_SETSEL, startPosition, endPosition);
 }
 
 //==============================================================================
@@ -474,6 +463,38 @@ int QScintillaWidget::zoomLevel() const
     // Return our zoom level
 
     return SendScintilla(SCI_GETZOOM);
+}
+
+//==============================================================================
+
+bool QScintillaWidget::handleChanges() const
+{
+    // Return our changes should be handled
+
+    return mHandleChanges;
+}
+
+//==============================================================================
+
+void QScintillaWidget::setHandleChanges(bool pHandleChanges)
+{
+    // Set whether we should handle changes
+
+    mHandleChanges = pHandleChanges;
+
+    // Emit a few signals, if we should handle changes
+    // Note: this is to ensure that our owner is up-to-date with whatever we
+    //       have done when changes weren't handled...
+
+    if (pHandleChanges) {
+        int line;
+        int column;
+
+        cursorPosition(line, column);
+
+        emit textChanged();
+        emit cursorPositionChanged(line, column);
+    }
 }
 
 //==============================================================================
@@ -666,8 +687,37 @@ void QScintillaWidget::zoomTo(int pSize)
 
 //==============================================================================
 
+void QScintillaWidget::undo()
+{
+    // Undo the last action, but without handling changes since this may slow
+    // things done (e.g. when the last action was a replacing all action)
+
+    setHandleChanges(false);
+        QsciScintilla::undo();
+    setHandleChanges(true);
+}
+
+//==============================================================================
+
+void QScintillaWidget::redo()
+{
+    // Redo the last action, but without handling changes since this may slow
+    // things done (e.g. when the last action was a replacing all action)
+
+    setHandleChanges(false);
+        QsciScintilla::redo();
+    setHandleChanges(true);
+}
+
+//==============================================================================
+
 void QScintillaWidget::updateUi()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Update our editing mode, if needed
 
     bool newInsertMode = !overwriteMode();
@@ -684,6 +734,11 @@ void QScintillaWidget::updateUi()
 
 void QScintillaWidget::updateMarginLineNumbersWidth()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Resize the margin line numbers width
     // Note: the +6 is to ensure that the margin line numbers width is indeed
     //       wide enough (there is clearly a 'problem' with the width computed
@@ -698,6 +753,11 @@ void QScintillaWidget::updateMarginLineNumbersWidth()
 
 void QScintillaWidget::checkCanSelectAll()
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Check whether we can select all the text
 
     bool newCanSelectAll = !text().isEmpty() && selectedText().compare(text());
@@ -736,6 +796,11 @@ void QScintillaWidget::updateColors()
 
 void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 {
+    // Make sure that we are allowed to handle connections
+
+    if (!mHandleChanges)
+        return;
+
     // Update our cursor position
 
     mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(pLine+1)

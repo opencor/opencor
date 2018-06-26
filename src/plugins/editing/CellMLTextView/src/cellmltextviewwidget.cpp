@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "editorlistwidget.h"
-#include "editorwidget.h"
 #include "editorwidgeteditorwidget.h"
 #include "filemanager.h"
 #include "mathmlviewerwidget.h"
@@ -239,10 +238,10 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
         // line, so start by retrieving the position of our cursor within our
         // editor
 
-        EditorWidget::EditorWidgetEditorWidget *editor = editorWidget()->editor();
-        int lineNumber, columnNumber;
+        EditorWidget::EditorWidget *editor = editorWidget();
+        int line, column;
 
-        editor->getCursorPosition(&lineNumber, &columnNumber);
+        editor->cursorPosition(line, column);
 
         // Check whether some text is selected
 
@@ -252,9 +251,9 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
 
             int lineFrom, columnFrom, lineTo, columnTo;
 
-            editor->getSelection(&lineFrom, &columnFrom, &lineTo, &columnTo);
+            editor->selection(lineFrom, columnFrom, lineTo, columnTo);
 
-            int selectedTextEndPosition = editor->positionFromLineIndex(lineTo, columnTo);
+            int selectedTextEndPosition = editor->position(lineTo, columnTo);
             QString editorEolString = editor->eolString();
 
             if (    !columnFrom
@@ -339,29 +338,29 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
 
             // Reselect the text/lines
 
-            if ((lineNumber == lineFrom) && (columnNumber == columnFrom))
+            if ((line == lineFrom) && (column == columnFrom))
                 editor->setSelection(lineTo, columnTo, lineFrom, columnFrom);
             else
                 editor->setSelection(lineFrom, columnFrom, lineTo, columnTo);
         } else {
             // No text is selected, so simply (un)comment the current line
 
-            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(SingleLineCommentString);
+            bool commentLine = !editor->text(line).trimmed().startsWith(SingleLineCommentString);
 
-            if (commentOrUncommentLine(editor, lineNumber, commentLine)) {
+            if (commentOrUncommentLine(editor, line, commentLine)) {
                 if (commentLine) {
                     // We commented the line, so our position will be fine
                     // unless we were at the beginning of the line, in which
                     // case we need to update it
 
-                    if (!columnNumber)
-                        editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+SingleLineCommentLength);
+                    if (!column)
+                        editor->setCursorPosition(line, column+SingleLineCommentLength);
                 } else {
                     // We uncommented the line, so go back to our original
                     // position (since uncommenting the line will have shifted
                     // it a bit)
 
-                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-SingleLineCommentLength);
+                    editor->setCursorPosition(line, column-SingleLineCommentLength);
                 }
             }
         }
@@ -376,13 +375,13 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
 
 //==============================================================================
 
-bool CellmlTextViewWidgetEditingWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditorWidget,
+bool CellmlTextViewWidgetEditingWidget::commentOrUncommentLine(EditorWidget::EditorWidget *pEditor,
                                                                int pLineNumber,
                                                                bool pCommentLine)
 {
     // (Un)comment the current line
 
-    QString line = pEditorWidget->text(pLineNumber).trimmed();
+    QString line = pEditor->text(pLineNumber).trimmed();
 
     if (line.isEmpty())
         return false;
@@ -390,21 +389,15 @@ bool CellmlTextViewWidgetEditingWidget::commentOrUncommentLine(QScintillaSupport
     // We are not dealing with an empty line, so we can (un)comment it
 
     if (pCommentLine) {
-        pEditorWidget->insertAt(SingleLineCommentString, pLineNumber, 0);
+        pEditor->insertText(SingleLineCommentString, pLineNumber, 0);
     } else {
         // Uncomment the line, should it be commented
 
         if (line.startsWith(SingleLineCommentString)) {
-            int commentLineNumber, commentColumnNumber;
-
-            pEditorWidget->lineIndexFromPosition(pEditorWidget->findTextInRange(pEditorWidget->positionFromLineIndex(pLineNumber, 0),
-                                                                                pEditorWidget->contentsSize(), SingleLineCommentString,
-                                                                                false, false, false),
-                                                 &commentLineNumber, &commentColumnNumber);
-
-            pEditorWidget->setSelection(commentLineNumber, commentColumnNumber,
-                                        commentLineNumber, commentColumnNumber+SingleLineCommentLength);
-            pEditorWidget->removeSelectedText();
+            pEditor->removeText(pEditor->findTextInRange(pEditor->position(pLineNumber, 0),
+                                                         pEditor->contentsSize(), SingleLineCommentString,
+                                                         false, false, false),
+                                SingleLineCommentLength);
         }
     }
 
@@ -501,10 +494,16 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             foreach (const CellMLTextViewConverterWarning &warning, mConverter.warnings()) {
                 editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
-                                                           successfulConversion?-1:warning.line(),
                                                            successfulConversion?
-                                                               QString("[%1] %2").arg(warning.line())
-                                                                                 .arg(warning.message()):
+                                                               -1:
+                                                               warning.lineNumber(),
+                                                           successfulConversion?
+                                                               -1:
+                                                               warning.columnNumber(),
+                                                           successfulConversion?
+                                                               QString("[%1:%2] %3").arg(warning.lineNumber())
+                                                                                    .arg(warning.columnNumber())
+                                                                                    .arg(warning.message()):
                                                                warning.message().arg(QString()));
             }
         }
@@ -516,7 +515,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
             // The conversion was successful, so we can apply our CellML Text
             // lexer to our editor
 
-            editingWidget->editorWidget()->editor()->setLexer(new CellmlTextViewLexer(this));
+            editingWidget->editorWidget()->setLexer(new CellmlTextViewLexer(this));
 
             // Update our viewer whenever necessary
 
@@ -543,7 +542,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
             // Apply an XML lexer to our editor
 
-            editingWidget->editorWidget()->editor()->setLexer(new QsciLexerXML(this));
+            editingWidget->editorWidget()->setLexer(new QsciLexerXML(this));
         }
 
         // Keep track of our editing widget (and of whether the conversion was
@@ -551,7 +550,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
-                                                               CellMLSupport::CellmlFile::version(pFileName);
+                                                               CellMLSupport::CellmlFile::fileVersion(pFileName);
 
         data = new CellmlTextViewWidgetData(editingWidget,
                                             Core::sha1(editingWidget->editorWidget()->contents()),
@@ -895,15 +894,15 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
 
     if (data && parse(pFileName, true)) {
         EditorWidget::EditorWidget *editor = data->editingWidget()->editorWidget();
-        int cursorLine;
-        int cursorColumn;
+        int line;
+        int column;
 
-        editor->cursorPosition(cursorLine, cursorColumn);
+        editor->cursorPosition(line, column);
 
         mConverter.execute(Core::serialiseDomDocument(mParser.domDocument()));
 
         editor->setContents(mConverter.output(), true);
-        editor->setCursorPosition(cursorLine, cursorColumn);
+        editor->setCursorPosition(line, column);
     }
 }
 
@@ -1162,10 +1161,13 @@ QString CellmlTextViewWidget::statement(int pPosition) const
 void CellmlTextViewWidget::updateViewer()
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
+    // closed since the signal was emitted) and that its editor allows us to
+    // handle connections
 
-    if (!mEditingWidget)
+    if (   !mEditingWidget
+        || !mEditingWidget->editorWidget()->handleEditorChanges()) {
         return;
+    }
 
     // Retrieve the statement, if any, around our current position
 

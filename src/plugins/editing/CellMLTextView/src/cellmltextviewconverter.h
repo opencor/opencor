@@ -40,16 +40,17 @@ namespace CellMLTextView {
 class CellMLTextViewConverterWarning
 {
 public:
-    explicit CellMLTextViewConverterWarning(int pLine, const QString &pMessage);
-
-    int line() const;
+    explicit CellMLTextViewConverterWarning(const QString &pMessage,
+                                            int pLineNumber, int pColumnNumber);
 
     QString message() const;
+    int lineNumber() const;
+    int columnNumber() const;
 
 private:
-    int mLine;
-
     QString mMessage;
+    int mLineNumber;
+    int mColumnNumber;
 };
 
 //==============================================================================
@@ -69,9 +70,9 @@ public:
 
     QString output() const;
 
+    QString errorMessage() const;
     int errorLine() const;
     int errorColumn() const;
-    QString errorMessage() const;
 
     bool hasWarnings() const;
     CellMLTextViewConverterWarnings warnings() const;
@@ -116,9 +117,9 @@ private:
 
     OutputType mLastOutputType;
 
+    QString mErrorMessage;
     int mErrorLine;
     int mErrorColumn;
-    QString mErrorMessage;
 
     CellMLTextViewConverterWarnings mWarnings;
 

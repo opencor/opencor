@@ -393,11 +393,11 @@ void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
                &&  (   (pEvent->key() == Qt::Key_Return)
                     || (pEvent->key() == Qt::Key_Enter))) {
         if (mGui->findEdit->hasFocus()) {
-            mOwner->editor()->findNext();
+            mOwner->findNext();
 
             pEvent->accept();
         } else if (mGui->replaceEdit->hasFocus()) {
-            mOwner->editor()->replaceAndFind();
+            mOwner->replaceAndFind();
 
             pEvent->accept();
         } else {

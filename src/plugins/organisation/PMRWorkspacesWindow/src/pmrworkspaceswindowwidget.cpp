@@ -1314,8 +1314,10 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
                                          tr("View the current workspace on the computer"):
                                          tr("View the current workspaces on the computer"));
 
-    PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
-    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspace->gitWorkspaceStatus();
+    PMRSupport::PmrWorkspace *workspace = currentItem()?currentItem()->workspace():0;
+    PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspace?
+                                                  workspace->gitWorkspaceStatus():
+                                                  PMRSupport::PmrWorkspace::StatusUnknown;
 
     mViewWorkspaceInPmrAction->setEnabled(items.count());
     mViewWorkspaceOncomputerAction->setEnabled(nbOfWorkspacePaths && (nbOfWorkspacePaths == workspaces.count()));

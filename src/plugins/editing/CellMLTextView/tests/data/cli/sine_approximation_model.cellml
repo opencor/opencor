@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.cellml.org/cellml/2.0#" xmlns:cellml="http://www.cellml.org/cellml/2.0#" xmlns:xlink="http://www.w3.org/1999/xlink" name="sine_approximation">
+    <component name="main">
+        <variable initial_value="0" name="x" interface="public_and_private" units="dimensionless"/>
+        <variable name="sin1" interface="public_and_private" units="dimensionless"/>
+        <variable name="sin2" interface="public_and_private" units="dimensionless"/>
+        <variable initial_value="0" name="deriv_approx_initial_value" interface="public_and_private" units="dimensionless"/>
+        <variable name="sin3" interface="public_and_private" units="dimensionless"/>
+    </component>
+    <component name="actual_sin" id="sin">
+        <variable name="x" interface="public_and_private" units="dimensionless"/>
+        <variable name="sin" interface="public_and_private" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply id="actual_sin">
+                <eq/>
+                <ci>sin</ci>
+                <apply>
+                    <sin/>
+                    <ci>x</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="deriv_approx_sin" id="sin">
+        <variable name="x" interface="public_and_private" units="dimensionless"/>
+        <variable initial_value="0" name="sin" interface="public_and_private" units="dimensionless"/>
+        <variable name="sin_initial_value" interface="public_and_private" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>x</ci>
+                    </bvar>
+                    <ci>sin</ci>
+                </apply>
+                <apply>
+                    <cos/>
+                    <ci>x</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="parabolic_approx_sin" id="sin">
+        <variable name="x" interface="public_and_private" units="dimensionless"/>
+        <variable name="sin" interface="public_and_private" units="dimensionless"/>
+        <variable name="k2_oPi" interface="public_and_private" units="dimensionless"/>
+        <variable name="k2Pi" interface="public_and_private" units="dimensionless"/>
+        <variable name="kPi_2" interface="public_and_private" units="dimensionless"/>
+        <variable name="kPi" interface="public_and_private" units="dimensionless"/>
+        <variable name="kPi_32" interface="public_and_private" units="dimensionless"/>
+        <variable name="z" interface="public_and_private" units="dimensionless"/>
+        <variable initial_value="0.75" units="dimensionless" name="C" interface="public_and_private"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply id="k2_oPi">
+                <eq/>
+                <ci>k2_oPi</ci>
+                <apply>
+                    <divide/>
+                    <cn cellml:units="dimensionless">2.0</cn>
+                    <pi/>
+                </apply>
+            </apply>
+            <apply id="k2Pi">
+                <eq/>
+                <ci>k2Pi</ci>
+                <apply>
+                    <times/>
+                    <cn cellml:units="dimensionless">2.0</cn>
+                    <pi/>
+                </apply>
+            </apply>
+            <apply id="kPi_2">
+                <eq/>
+                <ci>kPi_2</ci>
+                <apply>
+                    <divide/>
+                    <pi/>
+                    <cn cellml:units="dimensionless">2.0</cn>
+                </apply>
+            </apply>
+            <apply id="kPi">
+                <eq/>
+                <ci>kPi</ci>
+                <pi/>
+            </apply>
+            <apply id="kPi_32">
+                <eq/>
+                <ci>kPi_32</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <cn cellml:units="dimensionless">3.0</cn>
+                        <pi/>
+                    </apply>
+                    <cn cellml:units="dimensionless">2.0</cn>
+                </apply>
+            </apply>
+            <apply id="z">
+                <eq/>
+                <ci>z</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <times/>
+                                <ci>x</ci>
+                                <ci>k2_oPi</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">0.5</cn>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>x</ci>
+                            <ci>kPi_2</ci>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <times/>
+                                <apply>
+                                    <minus/>
+                                    <pi/>
+                                    <ci>x</ci>
+                                </apply>
+                                <ci>k2_oPi</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">0.5</cn>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>x</ci>
+                            <ci>kPi</ci>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <times/>
+                                <apply>
+                                    <minus/>
+                                    <ci>x</ci>
+                                    <pi/>
+                                </apply>
+                                <ci>k2_oPi</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">0.5</cn>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>x</ci>
+                            <ci>kPi_32</ci>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <times/>
+                                <apply>
+                                    <minus/>
+                                    <ci>k2Pi</ci>
+                                    <ci>x</ci>
+                                </apply>
+                                <ci>k2_oPi</ci>
+                            </apply>
+                            <cn cellml:units="dimensionless">0.5</cn>
+                        </apply>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply id="sin">
+                <eq/>
+                <ci>sin</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <plus/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <times/>
+                                    <ci>z</ci>
+                                    <ci>z</ci>
+                                </apply>
+                            </apply>
+                            <ci>C</ci>
+                            <ci>z</ci>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>x</ci>
+                            <ci>kPi_2</ci>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <apply>
+                            <plus/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <times/>
+                                    <ci>z</ci>
+                                    <ci>z</ci>
+                                </apply>
+                            </apply>
+                            <ci>C</ci>
+                            <ci>z</ci>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>x</ci>
+                            <ci>kPi</ci>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <times/>
+                                    <ci>z</ci>
+                                    <ci>z</ci>
+                                </apply>
+                                <ci>C</ci>
+                            </apply>
+                            <ci>z</ci>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>x</ci>
+                            <ci>kPi_32</ci>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <apply>
+                            <minus/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <times/>
+                                    <ci>z</ci>
+                                    <ci>z</ci>
+                                </apply>
+                                <ci>C</ci>
+                            </apply>
+                            <ci>z</ci>
+                        </apply>
+                    </otherwise>
+                </piecewise>
+            </apply>
+        </math>
+    </component>
+    <connection component_1="actual_sin" component_2="main">
+        <map_variables variable_1="sin" variable_2="sin1"/>
+        <map_variables variable_1="x" variable_2="x"/>
+    </connection>
+    <connection component_1="deriv_approx_sin" component_2="main">
+        <map_variables variable_1="sin" variable_2="sin2"/>
+        <map_variables variable_1="x" variable_2="x"/>
+        <map_variables variable_1="sin_initial_value" variable_2="deriv_approx_initial_value"/>
+    </connection>
+    <connection component_1="parabolic_approx_sin" component_2="main">
+        <map_variables variable_1="sin" variable_2="sin3"/>
+        <map_variables variable_1="x" variable_2="x"/>
+    </connection>
+    <encapsulation>
+        <component_ref component="main">
+            <component_ref component="actual_sin"/>
+            <component_ref component="deriv_approx_sin"/>
+            <component_ref component="parabolic_approx_sin"/>
+        </component_ref>
+    </encapsulation>
+</model>

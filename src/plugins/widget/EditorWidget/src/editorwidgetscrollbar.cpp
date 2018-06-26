@@ -70,36 +70,38 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
     #error Unsupported platform
 #endif
 
-    // Draw our position
-
-    static const QPen PositionPen = QPen(Qt::darkGray);
-
-    int line;
-    int lastLine;
-    int dummy;
-
-    mOwner->getCursorPosition(&line, &dummy);
-    mOwner->lineIndexFromPosition(mOwner->text().length(), &lastLine, &dummy);
-
-    double positionScaling = double(height()-2*arrowButtonHeight-1)/lastLine;
-    int cursorPosition = arrowButtonHeight+line*positionScaling;
-
-    QPainter painter(this);
-
-    painter.setPen(PositionPen);
-    painter.drawLine(0, cursorPosition, width(), cursorPosition);
-
     // Draw our highlights
 
-    static const QPen HighlightPen = QColor(0, 192, 0);
+    static int PenAlpha = 96;
+    static const QPen HighlightPen = QColor(0, 192, 0, PenAlpha);
+
+    QPainter painter(this);
+    double positionScaling = double(height()-2*arrowButtonHeight-1)/mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->text().length());
+    int cursorPosition;
+    QIntSet cursorPositions = QIntSet();
 
     painter.setPen(HighlightPen);
 
     foreach (int highlightedLine, mOwner->highlightedLines()) {
         cursorPosition = arrowButtonHeight+highlightedLine*positionScaling;
 
-        painter.drawLine(0, cursorPosition, width(), cursorPosition);
+        if (!cursorPositions.contains(cursorPosition)) {
+            cursorPositions << cursorPosition;
+
+            painter.drawLine(0, cursorPosition, width(), cursorPosition);
+        }
     }
+
+    // Draw our position
+
+    static const QPen PositionPen = QColor(0, 0, 0, PenAlpha);
+
+    int line = mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS));
+
+    cursorPosition = arrowButtonHeight+line*positionScaling;
+
+    painter.setPen(PositionPen);
+    painter.drawLine(0, cursorPosition, width(), cursorPosition);
 }
 
 //==============================================================================

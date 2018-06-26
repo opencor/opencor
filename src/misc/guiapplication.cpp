@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QFileInfo>
 #include <QFileOpenEvent>
 #include <QLoggingCategory>
 
@@ -34,8 +35,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
-GuiApplication::GuiApplication(const QString &pId, int &pArgC, char **pArgV) :
-    QtSingleApplication(pId, pArgC, pArgV),
+GuiApplication::GuiApplication(int &pArgC, char **pArgV) :
+    QtSingleApplication(QFileInfo(pArgV[0]).baseName(), pArgC, pArgV),
     mCanEmitFileOpenRequestSignal(false),
     mFileNamesOrOpencorUrls(QStringList())
 {
