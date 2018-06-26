@@ -1167,14 +1167,14 @@ CellmlFile::Version CellmlFile::version()
     // Return our version
 
     if (load())
-        return CellmlFile::version(mModel);
+        return modelVersion(mModel);
     else
         return CellmlFile::Unknown;
 }
 
 //==============================================================================
 
-CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
+CellmlFile::Version CellmlFile::modelVersion(iface::cellml_api::Model *pModel)
 {
     // Return the version of the given CellML model, if any
 
@@ -1196,7 +1196,7 @@ CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
 
 //==============================================================================
 
-CellmlFile::Version CellmlFile::version(const QString &pFileName)
+CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
@@ -1206,6 +1206,25 @@ CellmlFile::Version CellmlFile::version(const QString &pFileName)
         return cellmlFile->version();
     else
         return Unknown;
+}
+
+//==============================================================================
+
+CellmlFile::Version CellmlFile::fileContentsVersion(const QString &pFileContents)
+{
+    // Return the version of the given CellML file contents
+
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    ObjRef<iface::cellml_api::Model> model;
+
+    try {
+        model = modelLoader->createFromText(pFileContents.toStdWString());
+    } catch (...) {
+        return Unknown;
+    }
+
+    return modelVersion(model);
 }
 
 //==============================================================================

@@ -544,7 +544,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
-                                                               CellMLSupport::CellmlFile::version(pFileName);
+                                                               CellMLSupport::CellmlFile::fileVersion(pFileName);
 
         data = new CellmlTextViewWidgetData(editingWidget,
                                             Core::sha1(editingWidget->editorWidget()->contents()),
