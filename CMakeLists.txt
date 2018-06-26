@@ -849,7 +849,6 @@ set(PLUGINS
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
 
-    api/CellMLAPI
     api/SBMLAPI
     api/NuMLAPI
     api/SEDMLAPI
@@ -896,6 +895,7 @@ set(PLUGINS
     support/ZIPSupport
 
     thirdParty/BioSignalML
+    thirdParty/CellMLAPI
     thirdParty/libgit2
     thirdParty/LibXDiff
     thirdParty/LLVMClang
