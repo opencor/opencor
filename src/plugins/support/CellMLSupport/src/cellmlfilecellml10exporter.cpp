@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmlfile.h"
 #include "cellmlfilecellml10exporter.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -39,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmlapibegin.h"
     #include "AnnoToolsBootstrap.hpp"
+    #include "CellMLBootstrap.hpp"
     #include "CeVASBootstrap.hpp"
 #include "cellmlapiend.h"
 
@@ -51,11 +53,18 @@ namespace CellMLSupport {
 
 CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
                                                        const QString &pFileName) :
-    CellmlFileCellmlExporter(pModel, L"1.0"),
+    CellmlFileExporter(),
+    mModel(pModel),
     mCopiedUnits(QSet<QPair<QString, QString>>()),
     mComponentNames(QSet<QString>()),
     mRootGroup(0)
 {
+    // Create an empty CellML 1.0 model
+
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+
+    mExportedModel = cellmlBootstrap->createModel(L"1.0");
+
     // Set the model's name and cmeta:id, if any
 
     mExportedModel->name(pModel->name());
@@ -739,6 +748,27 @@ void CellmlFileCellml10Exporter::propagateInitialValues()
                 componentVariable->initialValue(sourceVariable->initialValue());
             }
         }
+    }
+}
+
+//==============================================================================
+
+bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
+                                           const QString &pFileName)
+{
+    // Save the given model or ouput it to the console, if no file name has been
+    // provided, and this after having reformatted the given model
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(QString::fromStdWString(pModel->serialisedText()));
+
+    if (pFileName.isEmpty()) {
+        std::wcout << QString(Core::serialiseDomDocument(domDocument)).toStdWString() << std::endl;
+
+        return true;
+    } else {
+        return Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
     }
 }
 

@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfileexporter.h"
-#include "corecliutils.h"
 
 //==============================================================================
 
@@ -53,27 +52,6 @@ QString CellmlFileExporter::errorMessage() const
     // Return the error message following the conversion
 
     return mErrorMessage;
-}
-
-//==============================================================================
-
-bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
-                                   const QString &pFileName)
-{
-    // Save the given model or ouput it to the console, if no file name has been
-    // provided, and this after having reformatted the given model
-
-    QDomDocument domDocument;
-
-    domDocument.setContent(QString::fromStdWString(pModel->serialisedText()));
-
-    if (pFileName.isEmpty()) {
-        std::wcout << QString(Core::serialiseDomDocument(domDocument)).toStdWString() << std::endl;
-
-        return true;
-    } else {
-        return Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
-    }
 }
 
 //==============================================================================
