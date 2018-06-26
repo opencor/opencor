@@ -1,8 +1,8 @@
-project(BioSignalMLPlugin)
+project(BioSignalMLAPIPlugin)
 
 # Name and version of our package
 
-set(PACKAGE_NAME BioSignalML)
+set(PACKAGE_NAME BioSignalMLAPI)
 set(PACKAGE_VERSION 1.0)
 
 # Version of our package's libraries
@@ -68,7 +68,7 @@ endif()
 
 # Use the pre-built version of our package unless instructed otherwise
 
-if(USE_PREBUILT_BIOSIGNALML_PACKAGE)
+if(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE)
     # Retrieve the plugin's package
 
     string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
@@ -160,7 +160,7 @@ else()
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${BIOSIGNALML_IMPORT_LIBRARY}
         DEPENDS
-            typedObjectBuild
+            TypedObjectBuild
     )
 
     if(WIN32)
@@ -199,15 +199,15 @@ else()
     set(DEPENDS_ON ${PACKAGE_BUILD})
 endif()
 
-# Allow other external projects to find our BioSignalML package
+# Allow other external projects to find our BioSignalML API package
 
-set(BIOSIGNALML_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
-set(BIOSIGNALML_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
-set(BIOSIGNALML_BIOSIGNALML_LIBRARY ${EXTERNAL_BINARIES_DIR}/${BIOSIGNALML_IMPORT_LIBRARY} PARENT_SCOPE)
-set(BIOSIGNALML_TYPEDOBJECT_LIBRARY ${EXTERNAL_BINARIES_DIR}/${TYPEDOBJECT_IMPORT_LIBRARY} PARENT_SCOPE)
-set(BIOSIGNALML_LIBRARIES
-    ${EXTERNAL_BINARIES_DIR}/${BIOSIGNALML_BIOSIGNALML_LIBRARY}
-    ${EXTERNAL_BINARIES_DIR}/${BIOSIGNALML_TYPEDOBJECT_LIBRARY}
+set(BIOSIGNALMLAPI_ROOT_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} PARENT_SCOPE)
+set(BIOSIGNALMLAPI_INCLUDE_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/include PARENT_SCOPE)
+set(BIOSIGNALMLAPI_BIOSIGNALML_LIBRARY ${EXTERNAL_BINARIES_DIR}/${BIOSIGNALML_IMPORT_LIBRARY} PARENT_SCOPE)
+set(BIOSIGNALMLAPI_TYPEDOBJECT_LIBRARY ${EXTERNAL_BINARIES_DIR}/${TYPEDOBJECT_IMPORT_LIBRARY} PARENT_SCOPE)
+set(BIOSIGNALMLAPI_LIBRARIES
+    ${EXTERNAL_BINARIES_DIR}/${BIOSIGNALMLAPI_BIOSIGNALML_LIBRARY}
+    ${EXTERNAL_BINARIES_DIR}/${BIOSIGNALMLAPI_TYPEDOBJECT_LIBRARY}
     PARENT_SCOPE
 )
 
@@ -217,9 +217,9 @@ add_plugin(${PACKAGE_NAME}
     SOURCES
         ../../plugininfo.cpp
 
-        src/biosignalmlplugin.cpp
+        src/biosignalmlapiplugin.cpp
     HEADERS_MOC
-        src/biosignalmlplugin.h
+        src/biosignalmlapiplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
