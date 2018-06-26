@@ -13,8 +13,6 @@ add_plugin(CellMLSupport
 
         src/cellmlfile.cpp
         src/cellmlfilecellml10exporter.cpp
-        src/cellmlfilecellml11exporter.cpp
-        src/cellmlfilecellmlexporter.cpp
         src/cellmlfileexporter.cpp
         src/cellmlfileissue.cpp
         src/cellmlfilemanager.cpp
