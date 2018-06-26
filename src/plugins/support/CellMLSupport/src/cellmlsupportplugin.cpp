@@ -257,7 +257,7 @@ void CellMLSupportPlugin::newCellmlFile()
                                 QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                                         "<model xmlns=\"http://www.cellml.org/cellml/%1#\" name=\"my_model\">\n"
                                         "    <!-- Your code goes here-->\n"
-                                        "</model>\n").arg(Cellml_Latest));
+                                        "</model>\n").arg(CellmlRefVersion));
 
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
