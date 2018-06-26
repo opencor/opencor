@@ -842,6 +842,7 @@ set(PLUGINS
     thirdParty/zlib
     thirdParty/OpenSSL
 
+    thirdParty/libSBML
     thirdParty/Python
     thirdParty/PythonPackages
 
@@ -893,7 +894,6 @@ set(PLUGINS
     thirdParty/CellMLAPI
     thirdParty/libgit2
     thirdParty/libNuML
-    thirdParty/libSBML
     thirdParty/libSEDML
     thirdParty/LibXDiff
     thirdParty/LLVMClang
