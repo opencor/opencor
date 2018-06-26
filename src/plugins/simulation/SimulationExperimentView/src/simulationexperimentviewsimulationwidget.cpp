@@ -1687,13 +1687,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
     libsedml::SedDocument *sedmlDocument = pSedmlFile->sedmlDocument();
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(mSimulation->cellmlFile()?
-                                                                                              mSimulation->cellmlFile()->model():
-                                                                                              0);
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::modelVersion(mSimulation->cellmlFile()?
+                                                                                                   mSimulation->cellmlFile()->model():
+                                                                                                   0);
 
-    namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
-                        CellMLSupport::Cellml_1_1_Namespace.toStdString():
-                        CellMLSupport::Cellml_1_0_Namespace.toStdString(),
+    namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
+                        CellMLSupport::Cellml_1_0_Namespace.toStdString():
+                        CellMLSupport::Cellml_1_1_Namespace.toStdString(),
                     "cellml");
 
     // Create and customise a model
@@ -1701,9 +1701,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
 
     sedmlModel->setId("model");
-    sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)?
-                                SEDMLSupport::Language::Cellml_1_1.toStdString():
-                                SEDMLSupport::Language::Cellml_1_0.toStdString());
+    sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
+                                SEDMLSupport::Language::Cellml_1_0.toStdString():
+                                SEDMLSupport::Language::Cellml_1_1.toStdString());
     sedmlModel->setSource(pModelSource.toStdString());
 
     // Create and customise a repeated task containing a uniform time course
@@ -2205,10 +2205,12 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
         if (combineArchive->addFile(sedmlFileName, sedmlFileLocation,
                                     COMBINESupport::CombineArchiveFile::Sedml, true)) {
+            CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
+
             if (combineArchive->addFile(localCellmlFileName, modelSource,
-                                        (cellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_1)?
-                                            COMBINESupport::CombineArchiveFile::Cellml_1_1:
-                                            COMBINESupport::CombineArchiveFile::Cellml_1_0)) {
+                                        (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
+                                            COMBINESupport::CombineArchiveFile::Cellml_1_0:
+                                            COMBINESupport::CombineArchiveFile::Cellml_1_1)) {
                 foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
                     QString realImportedFileName = remoteCellmlFile?
                                                        remoteImportedFileNames.value(importedFileName):

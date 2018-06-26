@@ -494,10 +494,16 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             foreach (const CellMLTextViewConverterWarning &warning, mConverter.warnings()) {
                 editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
-                                                           successfulConversion?-1:warning.line(),
                                                            successfulConversion?
-                                                               QString("[%1] %2").arg(warning.line())
-                                                                                 .arg(warning.message()):
+                                                               -1:
+                                                               warning.lineNumber(),
+                                                           successfulConversion?
+                                                               -1:
+                                                               warning.columnNumber(),
+                                                           successfulConversion?
+                                                               QString("[%1:%2] %3").arg(warning.lineNumber())
+                                                                                    .arg(warning.columnNumber())
+                                                                                    .arg(warning.message()):
                                                                warning.message().arg(QString()));
             }
         }
@@ -544,7 +550,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
-                                                               CellMLSupport::CellmlFile::version(pFileName);
+                                                               CellMLSupport::CellmlFile::fileVersion(pFileName);
 
         data = new CellmlTextViewWidgetData(editingWidget,
                                             Core::sha1(editingWidget->editorWidget()->contents()),
