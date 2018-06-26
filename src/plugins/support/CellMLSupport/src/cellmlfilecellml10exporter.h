@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "cellmlfilecellmlexporter.h"
+#include "cellmlfileexporter.h"
 
 //==============================================================================
 
@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlapibegin.h"
+    #include "cellml-api-cxx-support.hpp"
+
     #include "IfaceAnnoTools.hxx"
     #include "IfaceCeVAS.hxx"
 #include "cellmlapiend.h"
@@ -47,7 +49,7 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-class CellmlFileCellml10Exporter : public CellmlFileCellmlExporter
+class CellmlFileCellml10Exporter : public CellmlFileExporter
 {
     Q_OBJECT
 
@@ -56,6 +58,9 @@ public:
                                         const QString &pFileName);
 
 private:
+    iface::cellml_api::Model *mModel;
+    ObjRef<iface::cellml_api::Model> mExportedModel;
+
     ObjRef<iface::cellml_services::AnnotationSet> mAnnotationSet;
 
     QSet<QPair<QString, QString>> mCopiedUnits;
@@ -89,6 +94,8 @@ private:
     void copyConnections(iface::cellml_api::Model *pModel);
 
     void propagateInitialValues();
+
+    bool saveModel(iface::cellml_api::Model *pModel, const QString &pFileName);
 };
 
 //==============================================================================

@@ -16,14 +16,6 @@
         <translation>Exporter le fichier CellML vers CellML 1.0</translation>
     </message>
     <message>
-        <source>CellML 1.1...</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Export the CellML file to CellML 1.1</source>
-        <translation>Exporter le fichier CellML vers CellML 1.1</translation>
-    </message>
-    <message>
         <source>User-Defined Format...</source>
         <translation>Format Défini Par Utilisateur...</translation>
     </message>

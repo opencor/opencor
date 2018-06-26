@@ -70,7 +70,6 @@ private:
     QMenu *mCellmlFileExportToMenu;
 
     QAction *mExportToCellml10Action;
-    QAction *mExportToCellml11Action;
 
     QAction *mExportToUserDefinedFormatAction;
 
@@ -81,7 +80,6 @@ private:
 
 private slots:
     void exportToCellml10();
-    void exportToCellml11();
 
     void exportToUserDefinedFormat();
 };

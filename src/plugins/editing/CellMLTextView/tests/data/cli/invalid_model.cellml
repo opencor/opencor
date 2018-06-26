@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<model name="invalid_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+    <component name="main">
+        <units name="per_second">
+            <unit exponent="-1" units="second"/>
+        </units>
+        <variable name="time" units="second"/>
+        <variable initial_value="0" name="x" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <ci>x</ci>
+                </apply>
+                <cn cellml:units="per_second">0</cn>
+            </apply>
+        </math>
+    </component>
+</model>

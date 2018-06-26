@@ -3309,20 +3309,6 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-        plot->setUpdatesEnabled(false);
-        // Note #1: this is needed on Windows and Linux otherwise to switch
-        //          files that use different modes (e.g. the N62 SED-ML file
-        //          uses the Simulation Experiment view, i.e. Simulation mode,
-        //          and the N62 CellML file uses the CellML Text view, i.e. the
-        //          Editing mode) may result in the view tab of both modes being
-        //          temporarily visible. No idea why to temporarily disable
-        //          updates fixes things, but it does...
-        // Note #2: to have this on macOS may result in a graph panel becoming
-        //          black, so we definitely don't want to do it on that
-        //          platform...
-#endif
-
         // Determine how much space we should have directly to the left and
         // right of the X axis
         // Note: normally, we would initialise minBorderDistStartX and
@@ -3403,10 +3389,6 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                 replot();
             }
         }
-
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-        plot->setUpdatesEnabled(true);
-#endif
     }
 }
 
