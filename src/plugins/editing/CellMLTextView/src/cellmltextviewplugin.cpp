@@ -378,10 +378,16 @@ QString CellMLTextViewPlugin::viewDefaultFileExtension() const
 
 QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML 1.0/1.1 file
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
+
+    if (   !cellmlFile
+        ||  (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+             && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1))) {
         return 0;
+    }
 
     // Update and return our CellML Text view widget using the given CellML
     // file
@@ -458,7 +464,19 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
     }
 
-    // At this stage, we have the contents of the file, so we can do the
+    // At this stage, we have the contents of the file, so we need to check that
+    // it is a CellML 1.0/1.1 file if we want to import it
+
+    if (errorMessage.isEmpty() && pImport) {
+        CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileContentsVersion(fileContents);
+
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+            errorMessage = QString("Only CellML 1.0/1.1 files can be imported.");
+        }
+    }
+
+    // We know that the file is a CellML 1.0/1.1 file, so we can do the
     // import/export
 
     if (errorMessage.isEmpty()) {
