@@ -60,10 +60,15 @@ void CliTests::importTests()
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << "non_existing_file"),
              QStringList() << "The file could not be found." << QString());
 
-    // Try to import a non CellML file
+    // Try to import a non-CellML 1.0/1.1 file
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/noble_model_1962.out")),
-             QStringList() << "The file could not be imported:" << " [1:1] Error occurred while parsing element." << QString());
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/sine_approximation_model.cellml")),
+             QStringList() << "Only CellML 1.0/1.1 files can be imported." << QString());
+
+    // Try to import an invalid CellML file
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::import" << OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/cli/invalid_model.cellml")),
+             QStringList() << "The file could not be imported:" << " [13:26] A 'diff' element must have two siblings." << QString());
 
     // Import the Noble 1962 model to the CellML Text format
 
@@ -80,7 +85,7 @@ void CliTests::exportTests()
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << "non_existing_file"),
              QStringList() << "The file could not be found." << QString());
 
-    // Try to export a non CellML Text file
+    // Try to export a non-CellML Text file
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTextView::export" << OpenCOR::fileName("models/noble_model_1962.cellml")),
              QStringList() << "The file could not be exported:" << " [1:1] 'def' is expected, but '<' was found instead." << QString());

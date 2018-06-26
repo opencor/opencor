@@ -40,16 +40,17 @@ namespace CellMLTextView {
 class CellMLTextViewConverterWarning
 {
 public:
-    explicit CellMLTextViewConverterWarning(int pLine, const QString &pMessage);
-
-    int line() const;
+    explicit CellMLTextViewConverterWarning(const QString &pMessage,
+                                            int pLineNumber, int pColumnNumber);
 
     QString message() const;
+    int lineNumber() const;
+    int columnNumber() const;
 
 private:
-    int mLine;
-
     QString mMessage;
+    int mLineNumber;
+    int mColumnNumber;
 };
 
 //==============================================================================

@@ -37,20 +37,13 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellMLTextViewConverterWarning::CellMLTextViewConverterWarning(int pLine,
-                                                               const QString &pMessage) :
-    mLine(pLine),
-    mMessage(pMessage)
+CellMLTextViewConverterWarning::CellMLTextViewConverterWarning(const QString &pMessage,
+                                                               int pLineNumber,
+                                                               int pColumnNumber) :
+    mMessage(pMessage),
+    mLineNumber(pLineNumber),
+    mColumnNumber(pColumnNumber)
 {
-}
-
-//==============================================================================
-
-int CellMLTextViewConverterWarning::line() const
-{
-    // Return our line number
-
-    return mLine;
 }
 
 //==============================================================================
@@ -60,6 +53,24 @@ QString CellMLTextViewConverterWarning::message() const
     // Return our message
 
     return mMessage;
+}
+
+//==============================================================================
+
+int CellMLTextViewConverterWarning::lineNumber() const
+{
+    // Return our line number
+
+    return mLineNumber;
+}
+
+//==============================================================================
+
+int CellMLTextViewConverterWarning::columnNumber() const
+{
+    // Return our column number
+
+    return mColumnNumber;
 }
 
 //==============================================================================
@@ -607,8 +618,9 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
     QString baseUnits = cellmlAttributeNodeValue(pDomNode, "base_units", false);
 
     if (!baseUnits.isEmpty() && baseUnits.compare("yes") && baseUnits.compare("no")) {
-        mErrorLine = pDomNode.lineNumber();
         mErrorMessage = tr("A 'base_units' attribute must have a value of 'yes' or 'no'.");
+        mErrorLine = pDomNode.lineNumber();
+        mErrorColumn = pDomNode.columnNumber();
 
         return false;
     }
@@ -1243,6 +1255,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
     }
 
     mErrorLine = domNode.lineNumber();
+    mErrorColumn = domNode.columnNumber();
 
     pHasError = true;
 
@@ -1807,6 +1820,7 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
                         mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
                                                                                                                            .arg("degree");
                         mErrorLine = childNode.lineNumber();
+                        mErrorColumn = childNode.columnNumber();
 
                         pHasError = true;
 
@@ -1970,6 +1984,7 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
                     mErrorMessage = tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
                                                                                                                        .arg("bvar");
                     mErrorLine = childNode.lineNumber();
+                    mErrorColumn = childNode.columnNumber();
 
                     pHasError = true;
 
@@ -2056,6 +2071,7 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
                     mErrorMessage = tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
                                                                                                                                     .arg("degree");
                     mErrorLine = childNode.lineNumber();
+                    mErrorColumn = childNode.columnNumber();
 
                     pHasError = true;
 
@@ -2173,16 +2189,18 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
         if (!relationship.compare("encapsulation")) {
             isEncapsulation = true;
         } else if (relationship.compare("containment")) {
-            mErrorLine = pDomNode.lineNumber();
             mErrorMessage = tr("A 'relationship' attribute in the CellML namespace must have a value of 'encapsulation' or 'containment'.");
+            mErrorLine = pDomNode.lineNumber();
+            mErrorColumn = pDomNode.columnNumber();
 
             return false;
         }
     }
 
     if (isEncapsulation && !name.isEmpty()) {
-        mErrorLine = pDomNode.lineNumber();
         mErrorMessage = tr("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute.");
+        mErrorLine = pDomNode.lineNumber();
+        mErrorColumn = pDomNode.columnNumber();
 
         return false;
     }
@@ -2321,8 +2339,9 @@ bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
     // Make sure that we haven't already processed a map components node
 
     if (!pMapComponents.isEmpty()) {
-        mErrorLine = pDomNode.lineNumber();
         mErrorMessage = tr("A 'connection' element must contain exactly one 'map_components' element.");
+        mErrorLine = pDomNode.lineNumber();
+        mErrorColumn = pDomNode.columnNumber();
 
         return false;
     }
@@ -2405,68 +2424,81 @@ bool CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode,
 
         break;
     case QDomNode::AttributeNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("An attribute was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("An attribute was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::TextNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("Some text was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("Some text was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::CDATASectionNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A CDATA section was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A CDATA section was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::EntityReferenceNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("An entity reference was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("An entity reference was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::EntityNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("An entity was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("An entity was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::ProcessingInstructionNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A processing instruction was found in the original CellML file, but it is not known and cannot therefore be processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A processing instruction was found in the original CellML file, but it is not known and cannot therefore be processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::CommentNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A comment was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A comment was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::DocumentNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A document was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A document was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::DocumentTypeNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A document type was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A document type was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::DocumentFragmentNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A document fragment was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A document fragment was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::NotationNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A notation was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A notation was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::BaseNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("A base was found in the original CellML file, but it was not processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("A base was found in the original CellML file, but it was not processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     case QDomNode::CharacterDataNode:
-        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                    tr("Some character data was found in the original CellML file, but it is not known and cannot therefore be processed."));
+        mWarnings << CellMLTextViewConverterWarning(tr("Some character data was found in the original CellML file, but it is not known and cannot therefore be processed."),
+                                                    pDomNode.lineNumber(),
+                                                    pDomNode.columnNumber());
 
         break;
     }
@@ -2483,17 +2515,19 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
     // The given node is known, but we don't support it, so consider it as an
     // error or a warning, depending on the case
 
-    int lineNumber = pDomNode.lineNumber();
     QString message = tr("A%1 '%2' element was found in the original CellML file, but it is not supported and cannot therefore be processed.").arg(pExtra)
                                                                                                                                               .arg(pDomNode.prefix().isEmpty()?
                                                                                                                                                        pDomNode.localName():
                                                                                                                                                        pDomNode.prefix()+":"+pDomNode.localName());
+    int lineNumber = pDomNode.lineNumber();
+    int columnNumber = pDomNode.columnNumber();
 
     if (pError) {
-        mErrorLine = lineNumber;
         mErrorMessage = message;
+        mErrorLine = lineNumber;
+        mErrorColumn = columnNumber;
     } else {
-        mWarnings << CellMLTextViewConverterWarning(lineNumber, message);
+        mWarnings << CellMLTextViewConverterWarning(message, lineNumber, columnNumber);
     }
 
     // Keep track of the give node, if it is a child of the model element and if
