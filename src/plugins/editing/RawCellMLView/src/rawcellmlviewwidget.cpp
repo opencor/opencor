@@ -343,8 +343,9 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
         bool res = cellmlFile->isValid(editingWidget->editorWidget()->contents(), cellmlFileIssues, true);
 
-        // Warn the user about the CellML issues being maybe for a (in)direclty
-        // imported CellML file, should we be dealing with a CellML 1.1 file
+        // Warn the user about the CellML issues being maybe for a(n)
+        // (in)direclty imported CellML file, should we be dealing with a CellML
+        // 1.1 file
 
         int nbOfReportedIssues = 0;
 
