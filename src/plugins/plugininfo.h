@@ -72,7 +72,6 @@ public:
 #endif
         Invalid = -1,
         Analysis,
-        Api,
         DataStore,
         Editing,
         Miscellaneous,

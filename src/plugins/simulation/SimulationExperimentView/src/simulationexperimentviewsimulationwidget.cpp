@@ -66,13 +66,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "sbmlapibegin.h"
+#include "libsbmlbegin.h"
     #include "sbml/math/FormulaParser.h"
-#include "sbmlapiend.h"
+#include "libsbmlend.h"
 
 //==============================================================================
 
-#include "sedmlapibegin.h"
+#include "libsedmlbegin.h"
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
@@ -81,7 +81,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "sedml/SedSimulation.h"
     #include "sedml/SedUniformTimeCourse.h"
     #include "sedml/SedVectorRange.h"
-#include "sedmlapiend.h"
+#include "libsedmlend.h"
 
 //==============================================================================
 
