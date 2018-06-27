@@ -98,8 +98,6 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
         return QObject::tr("Invalid");
     case PluginInfo::Analysis:
         return QObject::tr("Analysis");
-    case PluginInfo::Api:
-        return QObject::tr("API");
     case PluginInfo::DataStore:
         return QObject::tr("Data Store");
     case PluginInfo::Editing:
@@ -146,8 +144,6 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
         return QObject::tr("Plugins that are not valid.");
     case PluginInfo::Analysis:
         return QObject::tr("Plugins to analyse files.");
-    case PluginInfo::Api:
-        return QObject::tr("Plugins to access various APIs.");
     case PluginInfo::DataStore:
         return QObject::tr("Plugins to store and manipulate data.");
     case PluginInfo::Editing:

@@ -32,9 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "sedmlapibegin.h"
+#include "libsedmlbegin.h"
     #include "sedml/SedDocument.h"
-#include "sedmlapiend.h"
+#include "libsedmlend.h"
 
 //==============================================================================
 

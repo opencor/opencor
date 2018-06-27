@@ -908,15 +908,19 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
 
 //==============================================================================
 
-bool CellmlTextViewWidget::validate(const QString &pFileName)
+bool CellmlTextViewWidget::validate(const QString &pFileName, QString &pExtra)
 {
+    // No extra information by default
+
+    pExtra = QString();
+
     // Validate the given file
 
     if (mData.contains(pFileName)) {
         // To validate currently consists of trying to parse the contents of the
         // editor
 
-        return parse(pFileName);
+        return parse(pFileName, pExtra);
     } else {
         // The file doesn't exist, so it can't be validated
 
@@ -926,7 +930,8 @@ bool CellmlTextViewWidget::validate(const QString &pFileName)
 
 //==============================================================================
 
-bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
+bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra,
+                                 bool pOnlyErrors)
 {
     // Parse the given file, should it exist
 
@@ -956,10 +961,38 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
 
         editingWidget->editorListWidget()->selectFirstItem();
 
+        // Provide some extra information in case, if we are dealing with a
+        // CellML 1.0/1.1 files and are therefore using the CellML API
+
+        if (   (data->cellmlVersion() == CellMLSupport::CellmlFile::Cellml_1_0)
+            || (data->cellmlVersion() == CellMLSupport::CellmlFile::Cellml_1_1)) {
+            pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> cannot be used in this view, so only validation against the <a href=\"http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.");
+        }
+
         return res;
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra)
+{
+    // Parse the given file
+
+    return parse(pFileName, pExtra, false);
+}
+
+//==============================================================================
+
+bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
+{
+    // Parse the given file
+
+    QString dummy;
+
+    return parse(pFileName, dummy, pOnlyErrors);
 }
 
 //==============================================================================

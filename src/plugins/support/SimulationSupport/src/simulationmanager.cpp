@@ -27,11 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "sbmlapibegin.h"
-#include "sbmlapiend.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SimulationSupport {
 

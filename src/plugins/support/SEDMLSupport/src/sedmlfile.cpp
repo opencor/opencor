@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "sedmlapibegin.h"
+#include "libsedmlbegin.h"
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "sedml/SedWriter.h"
     #include "sedml/SedUniformTimeCourse.h"
     #include "sedml/SedVectorRange.h"
-#include "sedmlapiend.h"
+#include "libsedmlend.h"
 
 //==============================================================================
 

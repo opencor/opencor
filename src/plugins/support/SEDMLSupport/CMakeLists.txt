@@ -22,6 +22,6 @@ add_plugin(SEDMLSupport
         src/sedmlsupportplugin.h
     PLUGINS
         CellMLSupport
-        SBMLAPI
-        SEDMLAPI
+        libSBML
+        libSEDML
 )

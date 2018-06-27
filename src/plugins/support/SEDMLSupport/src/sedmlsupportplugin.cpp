@@ -48,7 +48,7 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
     return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "CellMLSupport" << "SBMLAPI" << "SEDMLAPI" << "StandardSupport",
+                          QStringList() << "CellMLSupport" << "libSBML" << "libSEDML" << "StandardSupport",
                           descriptions);
 }
 
