@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Zinc API tests
+// Zinc tests
 //==============================================================================
 
 #include "../../../../tests/src/testsutils.h"
@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void Tests::basicTests()
 {
-    // Some very basic tests to make sure that we have access to the Zinc API
+    // Some very basic tests to make sure that we have access to Zinc
 
     // Create a context and check a few things
 
