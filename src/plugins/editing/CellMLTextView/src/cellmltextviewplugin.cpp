@@ -377,11 +377,12 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
     // Make sure that we are dealing with a CellML 1.0/1.1 file
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
+    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?
+                                                           cellmlFile->version():
+                                                           CellMLSupport::CellmlFile::Unknown;
 
-    if (   !cellmlFile
-        ||  (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-             && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1))) {
+    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
         return 0;
     }
 
