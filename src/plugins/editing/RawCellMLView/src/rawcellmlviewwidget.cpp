@@ -322,9 +322,13 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 
 //==============================================================================
 
-bool RawCellmlViewWidget::validate(const QString &pFileName,
+bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
                                    bool pOnlyErrors) const
 {
+    // No extra information by default
+
+    pExtra = QString();
+
     // Validate the given file
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
@@ -343,8 +347,9 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
         bool res = cellmlFile->isValid(editingWidget->editorWidget()->contents(), cellmlFileIssues, true);
 
-        // Warn the user about the CellML issues being maybe for a (in)direclty
-        // imported CellML file, should we be dealing with a CellML 1.1 file
+        // Warn the user about the CellML issues being maybe for a(n)
+        // (in)direclty imported CellML file, should we be dealing with a CellML
+        // 1.1 file
 
         int nbOfReportedIssues = 0;
 
@@ -353,7 +358,9 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
                                   ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
         }
 
-        if (   (cellmlFile->version() != CellMLSupport::CellmlFile::Cellml_1_0)
+        CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
+
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
             && cellmlFile->model() && cellmlFile->model()->imports()->length()
             && nbOfReportedIssues) {
             editorList->addItem(EditorWidget::EditorListItem::Information,
@@ -379,12 +386,42 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
         editorList->selectFirstItem();
 
+        // Provide some extra information in case, if we are dealing with a
+        // CellML 1.0/1.1 files and are therefore using the CellML API
+
+        if (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+            || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)) {
+            pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
+        }
+
         return res;
     } else {
         // The file doesn't exist, so it can't be validated
 
         return false;
     }
+}
+
+//==============================================================================
+
+bool RawCellmlViewWidget::validate(const QString &pFileName,
+                                   QString &pExtra) const
+{
+    // Validate the given file
+
+    return validate(pFileName, pExtra, false);
+}
+
+//==============================================================================
+
+bool RawCellmlViewWidget::validate(const QString &pFileName,
+                                   bool pOnlyErrors) const
+{
+    // Validate the given file
+
+    QString dummy;
+
+    return validate(pFileName, dummy, pOnlyErrors);
 }
 
 //==============================================================================

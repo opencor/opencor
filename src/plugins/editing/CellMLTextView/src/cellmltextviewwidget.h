@@ -162,7 +162,7 @@ public:
 
     void reformat(const QString &pFileName);
 
-    bool validate(const QString &pFileName);
+    bool validate(const QString &pFileName, QString &pExtra);
 
 private:
     bool mNeedLoadingSettings;
@@ -183,6 +183,8 @@ private:
 
     QString mContentMathmlEquation;
 
+    bool parse(const QString &pFileName, QString &pExtra, bool pOnlyErrors);
+    bool parse(const QString &pFileName, QString &pExtra);
     bool parse(const QString &pFileName, bool pOnlyErrors = false);
 
     QString partialStatement(int pPosition, int &pFromPosition,
