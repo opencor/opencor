@@ -928,8 +928,7 @@ endif()
 foreach(PLUGIN ${PLUGINS})
     set(PLUGIN_DIR src/plugins/${PLUGIN})
 
-    if(   "${PLUGIN}" MATCHES "^api/.*$"
-       OR "${PLUGIN}" MATCHES "^thirdParty/.*$")
+    if("${PLUGIN}" MATCHES "^thirdParty/.*$")
         include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR}/include)
     endif()
 
