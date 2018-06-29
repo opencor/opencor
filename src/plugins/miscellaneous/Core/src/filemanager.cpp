@@ -531,7 +531,7 @@ bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
 
     // Create a new file with the given contents
 
-    if (writeFileContentsToFile(fileName, pContents)) {
+    if (writeFile(fileName, pContents)) {
         pFileName = fileName;
 
         return true;

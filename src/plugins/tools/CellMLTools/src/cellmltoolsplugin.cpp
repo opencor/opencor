@@ -349,7 +349,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
             fileName = Core::temporaryFileName();
 
-            if (!Core::writeFileContentsToFile(fileName, fileContents))
+            if (!Core::writeFile(fileName, fileContents))
                 errorMessage = "The file could not be saved locally.";
         } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));

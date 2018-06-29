@@ -181,8 +181,8 @@ bool SedmlFile::save(const QString &pFileName)
 
     domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
 
-    if (Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
-                                      Core::serialiseDomDocument(domDocument))) {
+    if (Core::writeFile(pFileName.isEmpty()?mFileName:pFileName,
+                        Core::serialiseDomDocument(domDocument))) {
         mNew = false;
 
         return StandardFile::save(pFileName);
@@ -1264,7 +1264,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
 
                 QString cellmlFileName = Core::temporaryFileName();
 
-                if (Core::writeFileContentsToFile(cellmlFileName, fileContents)) {
+                if (Core::writeFile(cellmlFileName, fileContents)) {
                     fileManagerInstance->manage(cellmlFileName, Core::File::Remote, modelSource);
 
                     mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);

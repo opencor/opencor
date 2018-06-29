@@ -125,7 +125,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
     return crtEditorWidget?
-               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents()):
+               Core::writeFile(pNewFileName, crtEditorWidget->contents()):
                false;
 }
 

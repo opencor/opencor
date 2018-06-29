@@ -553,8 +553,8 @@ bool CellmlFile::save(const QString &pFileName)
 
     // Write out the contents of our DOM document to our CellML file
 
-    return Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
-                                         Core::serialiseDomDocument(domDocument))?
+    return Core::writeFile(pFileName.isEmpty()?mFileName:pFileName,
+                           Core::serialiseDomDocument(domDocument))?
                StandardFile::save(pFileName):
                false;
 }
@@ -1121,7 +1121,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         if (pFileName.isEmpty()) {
             std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
-        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
+        } else if (!Core::writeFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the output file could not be saved"));
 

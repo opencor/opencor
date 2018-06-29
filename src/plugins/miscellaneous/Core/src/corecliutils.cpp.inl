@@ -519,8 +519,7 @@ bool readFileContentsFromUrl(const QString &pUrl, QString &pFileContents,
 
 //==============================================================================
 
-bool writeFileContentsToFile(const QString &pFileName,
-                             const QByteArray &pFileContents)
+bool writeFile(const QString &pFileName, const QByteArray &pFileContents)
 {
     // Write the given file contents to a temporary file and rename it to the
     // given file name, if successful
@@ -561,12 +560,11 @@ bool writeFileContentsToFile(const QString &pFileName,
 
 //==============================================================================
 
-bool writeFileContentsToFile(const QString &pFileName,
-                             const QString &pFileContents)
+bool writeFile(const QString &pFileName, const QString &pFileContents)
 {
     // Write the given file contents to the given file name
 
-    return writeFileContentsToFile(pFileName, pFileContents.toUtf8());
+    return writeFile(pFileName, pFileContents.toUtf8());
 }
 
 //==============================================================================
@@ -576,7 +574,7 @@ bool writeResourceToFile(const QString &pFileName, const QString &pResource)
     // Write the given resource to the given file, if possible
 
     if (QResource(pResource).isValid())
-        return writeFileContentsToFile(pFileName, resource(pResource));
+        return writeFile(pFileName, resource(pResource));
     else
         return false;
 }

@@ -836,7 +836,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             // Serialise our DOM document
 
-            if (Core::writeFileContentsToFile(pNewFileName, Core::serialiseDomDocument(domDocument))) {
+            if (Core::writeFile(pNewFileName, Core::serialiseDomDocument(domDocument))) {
                 // We could serialise our DOM document, so update our SHA-1
                 // value
 
@@ -858,7 +858,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
                                                          Core::newFileName(pNewFileName, "txt"));
 
                 if (!fileName.isEmpty())
-                    Core::writeFileContentsToFile(fileName, data->editingWidget()->editorWidget()->contents());
+                    Core::writeFile(fileName, data->editingWidget()->editorWidget()->contents());
             }
 
             pNeedFeedback = false;
