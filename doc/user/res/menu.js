@@ -32,7 +32,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 1, "label": "Simulation", "subMenuHeader": true },
                                 { "level": 2, "label": "SimulationExperimentView", "link": "user/plugins/simulation/SimulationExperimentView.html", "subMenuItem": true },
                                 { "level": 1, "label": "Solver", "subMenuHeader": true },
-                                { "level": 2, "label": "CVODESSolver", "link": "user/plugins/solver/CVODESSolver.html", "subMenuItem": true },
+                                { "level": 2, "label": "CVODESolver", "link": "user/plugins/solver/CVODESolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "ForwardEulerSolver", "link": "user/plugins/solver/ForwardEulerSolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "FourthOrderRungeKuttaSolver", "link": "user/plugins/solver/FourthOrderRungeKuttaSolver.html", "subMenuItem": true },
                                 { "level": 2, "label": "HeunSolver", "link": "user/plugins/solver/HeunSolver.html", "subMenuItem": true },

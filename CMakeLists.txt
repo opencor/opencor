@@ -871,7 +871,7 @@ set(PLUGINS
     simulation/PendulumWindow
     simulation/SimulationExperimentView
 
-    solver/CVODESSolver
+    solver/CVODESolver
     solver/ForwardEulerSolver
     solver/FourthOrderRungeKuttaSolver
     solver/HeunSolver
