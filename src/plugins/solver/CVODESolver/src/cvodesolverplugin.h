@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CVODES solver plugin
+// CVODE solver plugin
 //==============================================================================
 
 #pragma once
@@ -32,20 +32,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CVODESSolver {
+namespace CVODESolver {
 
 //==============================================================================
 
-PLUGININFO_FUNC CVODESSolverPluginInfo();
+PLUGININFO_FUNC CVODESolverPluginInfo();
 
 //==============================================================================
 
-class CVODESSolverPlugin : public QObject, public I18nInterface,
-                           public SolverInterface
+class CVODESolverPlugin : public QObject, public I18nInterface,
+                          public SolverInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CVODESSolverPlugin" FILE "cvodessolverplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CVODESolverPlugin" FILE "cvodesolverplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::SolverInterface)
@@ -57,7 +57,7 @@ public:
 
 //==============================================================================
 
-}   // namespace CVODESSolver
+}   // namespace CVODESolver
 }   // namespace OpenCOR
 
 //==============================================================================

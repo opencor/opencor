@@ -18,10 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CVODES solver
+// CVODE solver
 //==============================================================================
 
-#include "cvodessolver.h"
+#include "cvodesolver.h"
 
 //==============================================================================
 
@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CVODESSolver {
+namespace CVODESolver {
 
 //==============================================================================
 
@@ -47,7 +47,7 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
     // Compute the RHS function
 
-    CvodesSolverUserData *userData = static_cast<CvodesSolverUserData *>(pUserData);
+    CvodeSolverUserData *userData = static_cast<CvodeSolverUserData *>(pUserData);
 
     userData->computeRates()(pVoi, userData->constants(),
                              N_VGetArrayPointer_Serial(pRates),
@@ -65,16 +65,16 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     Q_UNUSED(pModule);
     Q_UNUSED(pFunction);
 
-    // Forward errors to our CvodesSolver object
+    // Forward errors to our CvodeSolver object
 
     if (pErrorCode != CV_WARNING)
-        static_cast<CvodesSolver *>(pUserData)->emitError(pErrorMessage);
+        static_cast<CvodeSolver *>(pUserData)->emitError(pErrorMessage);
 }
 
 //==============================================================================
 
-CvodesSolverUserData::CvodesSolverUserData(double *pConstants, double *pAlgebraic,
-                                           Solver::OdeSolver::ComputeRatesFunction pComputeRates) :
+CvodeSolverUserData::CvodeSolverUserData(double *pConstants, double *pAlgebraic,
+                                         Solver::OdeSolver::ComputeRatesFunction pComputeRates) :
     mConstants(pConstants),
     mAlgebraic(pAlgebraic),
     mComputeRates(pComputeRates)
@@ -83,7 +83,7 @@ CvodesSolverUserData::CvodesSolverUserData(double *pConstants, double *pAlgebrai
 
 //==============================================================================
 
-double * CvodesSolverUserData::constants() const
+double * CvodeSolverUserData::constants() const
 {
     // Return our constants array
 
@@ -92,7 +92,7 @@ double * CvodesSolverUserData::constants() const
 
 //==============================================================================
 
-double * CvodesSolverUserData::algebraic() const
+double * CvodeSolverUserData::algebraic() const
 {
     // Return our algebraic array
 
@@ -101,7 +101,7 @@ double * CvodesSolverUserData::algebraic() const
 
 //==============================================================================
 
-Solver::OdeSolver::ComputeRatesFunction CvodesSolverUserData::computeRates() const
+Solver::OdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() const
 {
     // Return our compute rates function
 
@@ -110,7 +110,7 @@ Solver::OdeSolver::ComputeRatesFunction CvodesSolverUserData::computeRates() con
 
 //==============================================================================
 
-CvodesSolver::CvodesSolver() :
+CvodeSolver::CvodeSolver() :
     mSolver(0),
     mStatesVector(0),
     mMatrix(0),
@@ -122,7 +122,7 @@ CvodesSolver::CvodesSolver() :
 
 //==============================================================================
 
-CvodesSolver::~CvodesSolver()
+CvodeSolver::~CvodeSolver()
 {
     // Make sure that the solver has been initialised
 
@@ -142,10 +142,10 @@ CvodesSolver::~CvodesSolver()
 
 //==============================================================================
 
-void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
-                              double *pConstants, double *pRates,
-                              double *pStates, double *pAlgebraic,
-                              ComputeRatesFunction pComputeRates)
+void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
+                             double *pConstants, double *pRates,
+                             double *pStates, double *pAlgebraic,
+                             ComputeRatesFunction pComputeRates)
 {
     // Retrieve our properties
 
@@ -316,8 +316,7 @@ void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
 
     // Set our user data
 
-    mUserData = new CvodesSolverUserData(pConstants, pAlgebraic,
-                                         pComputeRates);
+    mUserData = new CvodeSolverUserData(pConstants, pAlgebraic, pComputeRates);
 
     CVodeSetUserData(mSolver, mUserData);
 
@@ -390,7 +389,7 @@ void CvodesSolver::initialize(double pVoi, int pRatesStatesCount,
 
 //==============================================================================
 
-void CvodesSolver::reinitialize(double pVoi)
+void CvodeSolver::reinitialize(double pVoi)
 {
     // Reinitialise our CVODES object
 
@@ -399,7 +398,7 @@ void CvodesSolver::reinitialize(double pVoi)
 
 //==============================================================================
 
-void CvodesSolver::solve(double &pVoi, double pVoiEnd) const
+void CvodeSolver::solve(double &pVoi, double pVoiEnd) const
 {
     // Solve the model
 
@@ -421,7 +420,7 @@ void CvodesSolver::solve(double &pVoi, double pVoiEnd) const
 
 //==============================================================================
 
-}   // namespace CVODESSolver
+}   // namespace CVODESolver
 }   // namespace OpenCOR
 
 //==============================================================================

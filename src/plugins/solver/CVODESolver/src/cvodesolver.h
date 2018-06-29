@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CVODES solver
+// CVODE solver
 //==============================================================================
 
 #pragma once
@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CVODESSolver {
+namespace CVODESolver {
 
 //==============================================================================
 
@@ -107,11 +107,11 @@ static const bool InterpolateSolutionDefaultValue = true;
 
 //==============================================================================
 
-class CvodesSolverUserData
+class CvodeSolverUserData
 {
 public:
-    explicit CvodesSolverUserData(double *pConstants, double *pAlgebraic,
-                                  Solver::OdeSolver::ComputeRatesFunction pComputeRates);
+    explicit CvodeSolverUserData(double *pConstants, double *pAlgebraic,
+                                 Solver::OdeSolver::ComputeRatesFunction pComputeRates);
 
     double * constants() const;
     double * algebraic() const;
@@ -127,13 +127,13 @@ private:
 
 //==============================================================================
 
-class CvodesSolver : public OpenCOR::Solver::OdeSolver
+class CvodeSolver : public OpenCOR::Solver::OdeSolver
 {
     Q_OBJECT
 
 public:
-    explicit CvodesSolver();
-    ~CvodesSolver() override;
+    explicit CvodeSolver();
+    ~CvodeSolver() override;
 
     void initialize(double pVoi, int pRatesStatesCount, double *pConstants,
                     double *pRates, double *pStates, double *pAlgebraic,
@@ -150,14 +150,14 @@ private:
     SUNMatrix mMatrix;
     SUNLinearSolver mLinearSolver;
 
-    CvodesSolverUserData *mUserData;
+    CvodeSolverUserData *mUserData;
 
     bool mInterpolateSolution;
 };
 
 //==============================================================================
 
-}   // namespace CVODESSolver
+}   // namespace CVODESolver
 }   // namespace OpenCOR
 
 //==============================================================================
