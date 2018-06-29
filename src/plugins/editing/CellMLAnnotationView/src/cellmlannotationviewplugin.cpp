@@ -273,10 +273,17 @@ QString CellMLAnnotationViewPlugin::viewDefaultFileExtension() const
 
 QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML 1.0/1.1 file
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?
+                                                           cellmlFile->version():
+                                                           CellMLSupport::CellmlFile::Unknown;
+
+    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
         return 0;
+    }
 
     // Update and return our CellML Annotation view widget using the given
     // CellML file
