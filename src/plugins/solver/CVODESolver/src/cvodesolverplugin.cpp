@@ -18,25 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CVODES solver plugin
+// CVODE solver plugin
 //==============================================================================
 
-#include "cvodessolver.h"
-#include "cvodessolverplugin.h"
+#include "cvodesolver.h"
+#include "cvodesolverplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CVODESSolver {
+namespace CVODESolver {
 
 //==============================================================================
 
-PLUGININFO_FUNC CVODESSolverPluginInfo()
+PLUGININFO_FUNC CVODESolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> to solve ODEs."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> pour résoudre des EDOs."));
+    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> to solve ODEs."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> pour résoudre des EDOs."));
 
     return new PluginInfo(PluginInfo::Solver, true, false,
                           QStringList() << "SUNDIALS",
@@ -47,7 +47,7 @@ PLUGININFO_FUNC CVODESSolverPluginInfo()
 // I18n interface
 //==============================================================================
 
-void CVODESSolverPlugin::retranslateUi()
+void CVODESolverPlugin::retranslateUi()
 {
     // We don't handle this interface...
     // Note: even though we don't handle this interface, we still want to
@@ -59,16 +59,16 @@ void CVODESSolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-Solver::Solver * CVODESSolverPlugin::solverInstance() const
+Solver::Solver * CVODESolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
-    return new CvodesSolver();
+    return new CvodeSolver();
 }
 
 //==============================================================================
 
-QString CVODESSolverPlugin::id(const QString &pKisaoId) const
+QString CVODESolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
@@ -102,7 +102,7 @@ QString CVODESSolverPlugin::id(const QString &pKisaoId) const
 
 //==============================================================================
 
-QString CVODESSolverPlugin::kisaoId(const QString &pId) const
+QString CVODESolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
@@ -136,7 +136,7 @@ QString CVODESSolverPlugin::kisaoId(const QString &pId) const
 
 //==============================================================================
 
-Solver::Type CVODESSolverPlugin::solverType() const
+Solver::Type CVODESolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -145,16 +145,16 @@ Solver::Type CVODESSolverPlugin::solverType() const
 
 //==============================================================================
 
-QString CVODESSolverPlugin::solverName() const
+QString CVODESolverPlugin::solverName() const
 {
     // Return the name of the solver
 
-    return "CVODES";
+    return "CVODE";
 }
 
 //==============================================================================
 
-Solver::Properties CVODESSolverPlugin::solverProperties() const
+Solver::Properties CVODESolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
@@ -234,7 +234,7 @@ Solver::Properties CVODESSolverPlugin::solverProperties() const
 
 //==============================================================================
 
-QMap<QString, bool> CVODESSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
     // Return the visibility of our properties based on the given properties
     // values
@@ -292,7 +292,7 @@ QMap<QString, bool> CVODESSolverPlugin::solverPropertiesVisibility(const QMap<QS
 
 //==============================================================================
 
-}   // namespace CVODESSolver
+}   // namespace CVODESolver
 }   // namespace OpenCOR
 
 //==============================================================================
