@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::CVODESSolver::CvodesSolver</name>
+    <name>OpenCOR::CVODESolver::CvodeSolver</name>
     <message>
         <source>the &quot;Maximum step&quot; property value could not be retrieved</source>
         <translation>la valeur de la propriété &quot;Pas maximum&quot; n&apos;a pas pu être retrouvée</translation>
