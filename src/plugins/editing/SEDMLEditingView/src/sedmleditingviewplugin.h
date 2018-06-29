@@ -41,6 +41,12 @@ class SedmlEditingViewInterface;
 
 //==============================================================================
 
+namespace EditorWidget {
+    class EditorWidget;
+}   // namespace EditorWidget
+
+//==============================================================================
+
 namespace SEDMLEditingView {
 
 //==============================================================================
@@ -78,6 +84,9 @@ private:
     QAction *mToolsSedmlValidationSeparator;
 
     QString mFileName;
+
+    EditorWidget::EditorWidget *mEditor;
+
     SedmlEditingViewInterface *mSedmlEditingViewInterface;
 
 private slots:
