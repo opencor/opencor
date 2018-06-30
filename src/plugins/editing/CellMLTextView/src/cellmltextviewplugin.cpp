@@ -444,21 +444,17 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     // its contents
 
     QString errorMessage = QString();
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
-
     QByteArray fileContents;
 
-    if (isLocalFile) {
-        if (!QFile::exists(fileNameOrUrl))
-            errorMessage = "The file could not be found.";
-        else if (!Core::readFile(fileNameOrUrl, fileContents))
-            errorMessage = "The file could not be opened.";
-    } else {
-        if (!Core::readFile(fileNameOrUrl, fileContents, &errorMessage))
+    if (!Core::readFile(pArguments[0], fileContents, &errorMessage)) {
+        if (errorMessage.isEmpty()) {
+            if (QFile::exists(pArguments[0]))
+                errorMessage = "The file could not be opened.";
+            else
+                errorMessage = "The file could not be found.";
+        } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
+        }
     }
 
     // At this stage, we have the contents of the file, so we need to check that
