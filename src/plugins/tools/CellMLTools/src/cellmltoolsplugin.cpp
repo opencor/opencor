@@ -102,16 +102,14 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);
 
-    // Enable/disable and show/hide our tools in case we are dealing with a
-    // CellML-based view plugin
+    // Enable/disable our tools in case we are dealing with a CellML file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?cellmlFile->version():CellMLSupport::CellmlFile::Unknown;
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    mExportToCellml10Action->setEnabled(   cellmlFile && cellmlFile->model()
-                                        && (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1));
+    mExportToCellml10Action->setEnabled(cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1);
 
-    mExportToUserDefinedFormatAction->setEnabled(cellmlFile && cellmlFile->model());
+    mExportToUserDefinedFormatAction->setEnabled(   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+                                                 || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1));
 
     // Keep track of the file name
 
