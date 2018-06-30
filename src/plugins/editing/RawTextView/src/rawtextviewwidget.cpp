@@ -101,7 +101,7 @@ void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         QByteArray fileContents;
 
-        Core::readFileContentsFromFile(pFileName, fileContents);
+        Core::readFile(pFileName, fileContents);
 
         newEditor = new EditorWidget::EditorWidget(fileContents,
                                                    !Core::FileManager::instance()->isReadableAndWritable(pFileName),

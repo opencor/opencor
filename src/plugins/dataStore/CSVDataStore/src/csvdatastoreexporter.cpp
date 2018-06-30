@@ -48,12 +48,11 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     // Do the export itself
     // Note: we would normally rely on a string to which we would append our
     //       header and then data, and then use that string as a parameter to
-    //       Core::writeFileContentsToFile(). However, although this works fine
-    //       with 'small' amounts of data to export, this can crash OpenCOR if
-    //       we really have a lot of data to write. So, instead, we do what
-    //       Core::writeFileContentsToFile() does, but rather than writing one
-    //       potentially humongous string, we first write our header and then
-    //       our data, one row at a time...
+    //       Core::writeFile(). However, although this works fine with 'small'
+    //       amounts of data to export, this can crash OpenCOR if we really have
+    //       a lot of data to write. So, instead, we do what Core::writeFile()
+    //       does, but rather than writing one potentially humongous string, we
+    //       first write our header and then our data, one row at a time...
 
     QFile file(Core::temporaryFileName());
 

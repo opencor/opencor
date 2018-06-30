@@ -478,7 +478,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
         QByteArray fileContents;
 
-        Core::readFileContentsFromFile(pFileName, fileContents);
+        Core::readFile(pFileName, fileContents);
 
         bool fileIsEmpty = fileContents.trimmed().isEmpty();
         bool successfulConversion = fileIsEmpty?true:mConverter.execute(fileContents);
@@ -753,7 +753,7 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
 
             QString fileContents;
 
-            Core::readFileContentsFromFile(pFileName, fileContents);
+            Core::readFile(pFileName, fileContents);
 
             // Check whether we already know about that file contents and, if
             // not, determine its converted version (and keep track of it)
@@ -836,7 +836,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             // Serialise our DOM document
 
-            if (Core::writeFileContentsToFile(pNewFileName, Core::serialiseDomDocument(domDocument))) {
+            if (Core::writeFile(pNewFileName, Core::serialiseDomDocument(domDocument))) {
                 // We could serialise our DOM document, so update our SHA-1
                 // value
 
@@ -858,7 +858,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
                                                          Core::newFileName(pNewFileName, "txt"));
 
                 if (!fileName.isEmpty())
-                    Core::writeFileContentsToFile(fileName, data->editingWidget()->editorWidget()->contents());
+                    Core::writeFile(fileName, data->editingWidget()->editorWidget()->contents());
             }
 
             pNeedFeedback = false;

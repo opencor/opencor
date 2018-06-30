@@ -316,10 +316,7 @@ QWidget * SimulationExperimentViewPlugin::viewWidget(const QString &pFileName)
     // Make sure that we are dealing with a CellML 1.0/1.1 file, a SED-ML file
     // or a COMBINE archive
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?
-                                                           cellmlFile->version():
-                                                           CellMLSupport::CellmlFile::Unknown;
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
         &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)

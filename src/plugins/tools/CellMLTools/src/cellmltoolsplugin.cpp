@@ -102,16 +102,14 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);
 
-    // Enable/disable and show/hide our tools in case we are dealing with a
-    // CellML-based view plugin
+    // Enable/disable our tools in case we are dealing with a CellML file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?cellmlFile->version():CellMLSupport::CellmlFile::Unknown;
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    mExportToCellml10Action->setEnabled(   cellmlFile && cellmlFile->model()
-                                        && (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1));
+    mExportToCellml10Action->setEnabled(cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1);
 
-    mExportToUserDefinedFormatAction->setEnabled(cellmlFile && cellmlFile->model());
+    mExportToUserDefinedFormatAction->setEnabled(   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+                                                 || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1));
 
     // Keep track of the file name
 
@@ -343,13 +341,13 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
         QByteArray fileContents;
 
-        if (Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (Core::readFile(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
             fileName = Core::temporaryFileName();
 
-            if (!Core::writeFileContentsToFile(fileName, fileContents))
+            if (!Core::writeFile(fileName, fileContents))
                 errorMessage = "The file could not be saved locally.";
         } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
@@ -359,12 +357,14 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // At this stage, we should have a real file (be it originally local or
     // remote), so carry on with the export
 
+    bool fileExists = QFile::exists(fileName);
+
     if (errorMessage.isEmpty()) {
         // Before actually doing the export, we need to make sure that the file
         // exists, that it is a valid CellML file, that it can be managed and
         // that it can be loaded
 
-        if (!QFile::exists(fileName)) {
+        if (!fileExists) {
             errorMessage = "The file could not be found.";
         } else if (!CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName)) {
             errorMessage = "The file is not a CellML file.";
@@ -434,7 +434,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Delete the temporary file, if any, i.e. we are dealing with a remote file
     // and it has a temporay file associated with it
 
-    if (!isLocalFile && QFile::exists(fileName))
+    if (!isLocalFile && fileExists)
         QFile::remove(fileName);
 
     // Let the user know if something went wrong at some point and then leave

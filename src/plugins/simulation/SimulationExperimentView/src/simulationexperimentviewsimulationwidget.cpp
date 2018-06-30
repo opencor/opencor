@@ -2168,8 +2168,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
             if (remoteCellmlFile) {
                 QString localImportedFileName = Core::temporaryFileName();
 
-                Core::writeFileContentsToFile(localImportedFileName,
-                                              cellmlFile->importedFileContents(importedFileName));
+                Core::writeFile(localImportedFileName,
+                                cellmlFile->importedFileContents(importedFileName));
 
                 remoteImportedFileNames.insert(importedFileName, localImportedFileName);
             }

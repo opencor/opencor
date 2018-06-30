@@ -113,7 +113,7 @@ void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         QByteArray fileContents;
 
-        Core::readFileContentsFromFile(pFileName, fileContents);
+        Core::readFile(pFileName, fileContents);
 
         newEditingWidget = new SEDMLEditingView::SedmlEditingViewWidget(fileContents,
                                                                         !Core::FileManager::instance()->isReadableAndWritable(pFileName),
