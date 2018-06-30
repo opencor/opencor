@@ -54,6 +54,10 @@ QByteArray CORE_EXPORT resource(const QString &pResource);
 QString CORE_EXPORT temporaryDirName();
 QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
 
+void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
+                                    bool &pOutIsLocalFile,
+                                    QString &pOutFileNameOrUrl);
+
 bool CORE_EXPORT readFileContentsFromFile(const QString &pFileName,
                                           QByteArray &pFileContents);
 bool CORE_EXPORT readFileContentsFromFile(const QString &pFileName,
