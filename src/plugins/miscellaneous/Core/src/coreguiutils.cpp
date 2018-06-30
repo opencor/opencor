@@ -86,7 +86,7 @@ CentralWidget * centralWidget()
 
 //==============================================================================
 
-bool readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
+bool readFileWithBusyWidget(const QString &pUrl,
                                            QByteArray &pFileContents,
                                            QString *pErrorMessage)
 {
@@ -104,7 +104,7 @@ bool readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
 
 //==============================================================================
 
-bool readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
+bool readFileWithBusyWidget(const QString &pUrl,
                                            QString &pFileContents,
                                            QString *pErrorMessage)
 {
@@ -112,7 +112,7 @@ bool readFileContentsFromUrlWithBusyWidget(const QString &pUrl,
 
     QByteArray fileContents = QByteArray();
 
-    bool res = readFileContentsFromUrlWithBusyWidget(pUrl, fileContents, pErrorMessage);
+    bool res = readFileWithBusyWidget(pUrl, fileContents, pErrorMessage);
 
     pFileContents = fileContents;
 

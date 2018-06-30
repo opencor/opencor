@@ -1256,7 +1256,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
             QByteArray fileContents;
             QString errorMessage;
 
-            if (Core::readFileContentsFromUrlWithBusyWidget(modelSource, fileContents, &errorMessage)) {
+            if (Core::readFileWithBusyWidget(modelSource, fileContents, &errorMessage)) {
                 // Save the contents of our model source to a local file and use
                 // that to create a CellML file object after having asked our
                 // file manager to manage it (so that CellML 1.1 files can be
