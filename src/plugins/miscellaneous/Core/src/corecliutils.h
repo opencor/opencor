@@ -143,10 +143,6 @@ bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
 
 void CORE_EXPORT doNothing(int pMax);
 
-void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
-                                    bool &pOutIsLocalFile,
-                                    QString &pOutFileNameOrUrl);
-
 QString CORE_EXPORT formatXml(const QString &pXml);
 
 QString CORE_EXPORT cleanContentMathml(const QString &pContentMathml);

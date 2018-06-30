@@ -41,6 +41,12 @@ class CellmlEditingViewInterface;
 
 //==============================================================================
 
+namespace EditorWidget {
+    class EditorWidget;
+}   // namespace EditorWidget
+
+//==============================================================================
+
 namespace CellMLEditingView {
 
 //==============================================================================
@@ -78,6 +84,9 @@ private:
     QAction *mToolsCellmlValidationSeparator;
 
     QString mFileName;
+
+    EditorWidget::EditorWidget *mEditor;
+
     CellmlEditingViewInterface *mCellmlEditingViewInterface;
 
 private slots:

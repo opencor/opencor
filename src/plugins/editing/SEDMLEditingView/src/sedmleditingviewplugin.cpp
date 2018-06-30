@@ -57,6 +57,7 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
 
 SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
     mFileName(QString()),
+    mEditor(0),
     mSedmlEditingViewInterface(0)
 {
 }
@@ -94,7 +95,7 @@ void SEDMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
     // The given file has been un/locked, so show/enable or hide/disable our
     // reformat action, if needed
 
-    if (!pFileName.compare(mFileName)) {
+    if (mEditor && !pFileName.compare(mFileName)) {
         bool hasFileNameAndIsReadableAndWritable = !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
         Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
@@ -159,32 +160,29 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the SED-ML editing interface
 
+    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
+
+    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):0;
     mSedmlEditingViewInterface = pViewPlugin?qobject_cast<SedmlEditingViewInterface *>(pViewPlugin->instance()):0;
 
     bool hasFileName = !pFileName.isEmpty();
-    bool hasFileNameAndIsReadableAndWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
+    bool hasFileNameAndIsReadWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-    Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
-    Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+    Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface, mEditor && hasFileNameAndIsReadWritable);
+    Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface, hasFileNameAndIsReadWritable);
 
-    Core::showEnableAction(mToolsSedmlValidationAction, mSedmlEditingViewInterface, hasFileName);
+    Core::showEnableAction(mToolsSedmlValidationAction, mSedmlEditingViewInterface, mEditor && hasFileName);
     Core::showEnableAction(mToolsSedmlValidationSeparator, mSedmlEditingViewInterface, hasFileName);
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
     //       EditingViewPlugin::updateGui()...
 
-    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
-
-    if (editingViewInterface) {
-        EditorWidget::EditorWidget *editor = editingViewInterface->editorWidget(pFileName);
-
-        if (editor) {
-            editor->setContextMenu(editor->contextMenu()->actions() << mEditReformatSeparator
-                                                                    << mEditReformatAction
-                                                                    << mToolsSedmlValidationSeparator
-                                                                    << mToolsSedmlValidationAction);
-        }
+    if (mEditor) {
+        mEditor->setContextMenu(mEditor->contextMenu()->actions() << mEditReformatSeparator
+                                                                  << mEditReformatAction
+                                                                  << mToolsSedmlValidationSeparator
+                                                                  << mToolsSedmlValidationAction);
     }
 
     // Keep track of the file name

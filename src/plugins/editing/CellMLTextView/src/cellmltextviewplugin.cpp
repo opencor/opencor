@@ -376,10 +376,7 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML 1.0/1.1 file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?
-                                                           cellmlFile->version():
-                                                           CellMLSupport::CellmlFile::Unknown;
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
         && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
@@ -443,22 +440,18 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     // Check whether we are dealing with a local or a remote file, and retrieve
     // its contents
 
-    QString errorMessage = QString();
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
-
     QByteArray fileContents;
+    QString errorMessage = QString();
 
-    if (isLocalFile) {
-        if (!QFile::exists(fileNameOrUrl))
-            errorMessage = "The file could not be found.";
-        else if (!Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
-            errorMessage = "The file could not be opened.";
-    } else {
-        if (!Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage))
+    if (!Core::readFile(pArguments[0], fileContents, &errorMessage)) {
+        if (errorMessage.isEmpty()) {
+            if (QFile::exists(pArguments[0]))
+                errorMessage = "The file could not be opened.";
+            else
+                errorMessage = "The file could not be found.";
+        } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
+        }
     }
 
     // At this stage, we have the contents of the file, so we need to check that

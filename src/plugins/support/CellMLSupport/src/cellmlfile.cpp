@@ -262,13 +262,15 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         import->instantiateFromText(mImportContents.value(fileNameOrUrl).toStdWString());
                     } else {
                         // We haven't already loaded the import contents, so do
-                        // so now
+                        // so now, with a busy widget if requested and if we are
+                        // not dealing with a local file
 
                         QString fileContents;
 
-                        if (   ( isLocalFile &&  Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
-                            || (!isLocalFile &&  pWithBusyWidget && Core::readFileContentsFromUrlWithBusyWidget(fileNameOrUrl, fileContents))
-                            || (!isLocalFile && !pWithBusyWidget && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
+                        if (   (   !isLocalFile
+                                &&  pWithBusyWidget
+                                &&  Core::readFileWithBusyWidget(fileNameOrUrl, fileContents))
+                            || Core::readFile(fileNameOrUrl, fileContents)) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
@@ -553,8 +555,8 @@ bool CellmlFile::save(const QString &pFileName)
 
     // Write out the contents of our DOM document to our CellML file
 
-    return Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
-                                         Core::serialiseDomDocument(domDocument))?
+    return Core::writeFile(pFileName.isEmpty()?mFileName:pFileName,
+                           Core::serialiseDomDocument(domDocument))?
                StandardFile::save(pFileName):
                false;
 }
@@ -1083,7 +1085,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         QByteArray fileContents;
 
-        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, fileContents)) {
+        if (!Core::readFile(pUserDefinedFormatFileName, fileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file could not be read"));
 
@@ -1121,7 +1123,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         if (pFileName.isEmpty()) {
             std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
-        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
+        } else if (!Core::writeFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the output file could not be saved"));
 
@@ -1176,10 +1178,26 @@ CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 
     CellmlFile *cellmlFile = CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    if (cellmlFile)
+    if (cellmlFile) {
+        // The given CellML file is managed, so simply return its version
+
         return cellmlFile->version();
-    else
-        return Unknown;
+    } else {
+        // The given CellML file is not managed, so try to load it and return
+        // its version
+
+        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+        ObjRef<iface::cellml_api::Model> model;
+
+        try {
+            model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+        } catch (...) {
+            return Unknown;
+        }
+
+        return modelVersion(model);
+    }
 }
 
 //==============================================================================

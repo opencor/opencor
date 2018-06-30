@@ -125,7 +125,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
     return crtEditorWidget?
-               Core::writeFileContentsToFile(pNewFileName, crtEditorWidget->contents()):
+               Core::writeFile(pNewFileName, crtEditorWidget->contents()):
                false;
 }
 
@@ -335,10 +335,14 @@ QString RawCellMLViewPlugin::viewDefaultFileExtension() const
 
 QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML 1.0/1.1 file
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
+
+    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
         return 0;
+    }
 
     // Update and return our Raw CellML view widget using the given CellML file
 
