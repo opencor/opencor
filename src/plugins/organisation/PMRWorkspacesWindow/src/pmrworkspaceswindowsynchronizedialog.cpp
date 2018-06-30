@@ -955,14 +955,25 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     if (   !(oldFileEmpty && newFileEmpty)
         &&  (oldFileEmpty || Core::isTextFile(oldFileName))
         &&  (newFileEmpty || Core::isTextFile(pFileName))) {
-        // Both versions of the given file are not text files, so check whether
-        // they are also CellML files
+        // Both versions of the given file are text files, so check whether they
+        // are CellML 1.0/1.1 files
+
+        CellMLSupport::CellmlFile *oldCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(oldFileName);
+        CellMLSupport::CellmlFile::Version oldCellmlVersion = oldCellmlFile?
+                                                                  oldCellmlFile->version():
+                                                                  CellMLSupport::CellmlFile::Unknown;
+        CellMLSupport::CellmlFile *newCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+        CellMLSupport::CellmlFile::Version newCellmlVersion = newCellmlFile?
+                                                                  newCellmlFile->version():
+                                                                  CellMLSupport::CellmlFile::Unknown;
 
         if (   mWebViewerCellmlTextFormatAction->isChecked()
             && !mInvalidCellmlCode.contains(oldFileContents)
             && !mInvalidCellmlCode.contains(newFileContents)
-            && (oldFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(oldFileName))
-            && (newFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))) {
+            && (oldFileEmpty || (oldCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0)
+                             || (oldCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1))
+            && (newFileEmpty || (newCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0)
+                             || (newCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1))) {
             // We are dealing with a CellML file, so generate the CellML Text
             // version of the file, this for both its head and working versions,
             // and if successful then diff them
