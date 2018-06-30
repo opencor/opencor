@@ -262,12 +262,15 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         import->instantiateFromText(mImportContents.value(fileNameOrUrl).toStdWString());
                     } else {
                         // We haven't already loaded the import contents, so do
-                        // so now
+                        // so now, with a busy widget if requested and if we are
+                        // not dealing with a local file
 
                         QString fileContents;
 
-                        if (   ( pWithBusyWidget && Core::readFileWithBusyWidget(fileNameOrUrl, fileContents))
-                            || (!pWithBusyWidget && Core::readFile(fileNameOrUrl, fileContents))) {
+                        if (   (   !isLocalFile
+                                &&  pWithBusyWidget
+                                &&  Core::readFileWithBusyWidget(fileNameOrUrl, fileContents))
+                            || Core::readFile(fileNameOrUrl, fileContents)) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
