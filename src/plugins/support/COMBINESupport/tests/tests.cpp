@@ -158,8 +158,8 @@ void Tests::basicTests()
         QByteArray otherFileContents;
         QByteArray yetAnotherFileContents;
 
-        QVERIFY(OpenCOR::Core::readFileContentsFromFile(otherFileName, otherFileContents));
-        QVERIFY(OpenCOR::Core::readFileContentsFromFile(yetAnotherFileName, yetAnotherFileContents));
+        QVERIFY(OpenCOR::Core::readFile(otherFileName, otherFileContents));
+        QVERIFY(OpenCOR::Core::readFile(yetAnotherFileName, yetAnotherFileContents));
 
         QCOMPARE(OpenCOR::Core::sha1(otherFileContents),
                  OpenCOR::Core::sha1(yetAnotherFileContents));

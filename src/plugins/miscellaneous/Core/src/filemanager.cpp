@@ -616,7 +616,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
         QByteArray fileContents;
 
-        if (readFileContentsFromFile(pFileName, fileContents)) {
+        if (readFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our
             // given file
 

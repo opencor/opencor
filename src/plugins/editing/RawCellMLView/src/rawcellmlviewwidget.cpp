@@ -122,7 +122,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         QByteArray fileContents;
 
-        Core::readFileContentsFromFile(pFileName, fileContents);
+        Core::readFile(pFileName, fileContents);
 
         editingWidget = new CellMLEditingView::CellmlEditingViewWidget(fileContents,
                                                                        !Core::FileManager::instance()->isReadableAndWritable(pFileName),

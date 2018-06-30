@@ -494,61 +494,48 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
 
 //==============================================================================
 
-bool readFileContentsFromFile(const QString &pFileName,
-                              QByteArray &pFileContents)
+bool readFile(const QString &pFileNameOrUrl, QByteArray &pFileContents,
+              QString *pErrorMessage)
 {
-    // Read the contents of the file, which file name is given
+    // Determine whether we are dealing with a local or a remote file
 
-    QFile file(pFileName);
+    bool isLocalFile;
+    QString fileNameOrUrl;
 
-    if (file.open(QIODevice::ReadOnly)) {
-        pFileContents = file.readAll();
+    checkFileNameOrUrl(pFileNameOrUrl, isLocalFile, fileNameOrUrl);
 
-        file.close();
+    // Read the contents of the file, which file name or URL is given
 
-        return true;
+    if (isLocalFile) {
+        QFile file(fileNameOrUrl);
+
+        if (file.open(QIODevice::ReadOnly)) {
+            pFileContents = file.readAll();
+
+            file.close();
+
+            return true;
+        } else {
+            pFileContents = QByteArray();
+
+            return false;
+        }
     } else {
-        pFileContents = QByteArray();
+        static SynchronousFileDownloader synchronousFileDownloader;
 
-        return false;
+        return synchronousFileDownloader.download(fileNameOrUrl, pFileContents, pErrorMessage);
     }
 }
 
 //==============================================================================
 
-bool readFileContentsFromFile(const QString &pFileName, QString &pFileContents)
+bool readFile(const QString &pFileNameOrUrl, QString &pFileContents,
+              QString *pErrorMessage)
 {
-    // Read the contents of the file, which file name is given
+    // Read the contents of the file, which file name or URL is given
 
     QByteArray fileContents = QByteArray();
-    bool res = readFileContentsFromFile(pFileName, fileContents);
-
-    pFileContents = fileContents;
-
-    return res;
-}
-
-//==============================================================================
-
-bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
-                             QString *pErrorMessage)
-{
-    // Read the contents of the file, which URL is given
-
-    static SynchronousFileDownloader synchronousFileDownloader;
-
-    return synchronousFileDownloader.download(pUrl, pFileContents, pErrorMessage);
-}
-
-//==============================================================================
-
-bool readFileContentsFromUrl(const QString &pUrl, QString &pFileContents,
-                             QString *pErrorMessage)
-{
-    // Read the contents of the file, which URL is given
-
-    QByteArray fileContents = QByteArray();
-    bool res = readFileContentsFromUrl(pUrl, fileContents, pErrorMessage);
+    bool res = readFile(pFileNameOrUrl, fileContents, pErrorMessage);
 
     pFileContents = fileContents;
 
@@ -625,7 +612,7 @@ bool isTextFile(const QString &pFileName)
 
     QByteArray fileContents;
 
-    readFileContentsFromFile(pFileName, fileContents);
+    readFile(pFileName, fileContents);
 
     return fileContents == QString(fileContents).toUtf8();
 }

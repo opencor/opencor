@@ -332,7 +332,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     // Retrieve our diff template
 
-    Core::readFileContentsFromFile(":/PMRWorkspacesWindow/diff.html", mDiffTemplate);
+    Core::readFile(":/PMRWorkspacesWindow/diff.html", mDiffTemplate);
 
     // Select our first changes
 
@@ -940,7 +940,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
 
     QByteArray newFileContents;
 
-    Core::readFileContentsFromFile(pFileName, newFileContents);
+    Core::readFile(pFileName, newFileContents);
 
     // Check whether both the head and working versions of the given file are
     // text files

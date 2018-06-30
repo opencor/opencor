@@ -266,9 +266,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                         QString fileContents;
 
-                        if (   ( isLocalFile &&  Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
-                            || (!isLocalFile &&  pWithBusyWidget && Core::readFileWithBusyWidget(fileNameOrUrl, fileContents))
-                            || (!isLocalFile && !pWithBusyWidget && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
+                        if (   ( pWithBusyWidget && Core::readFileWithBusyWidget(fileNameOrUrl, fileContents))
+                            || (!pWithBusyWidget && Core::readFile(fileNameOrUrl, fileContents))) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
@@ -1083,7 +1082,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         QByteArray fileContents;
 
-        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, fileContents)) {
+        if (!Core::readFile(pUserDefinedFormatFileName, fileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file could not be read"));
 

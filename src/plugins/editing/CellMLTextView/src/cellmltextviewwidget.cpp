@@ -478,7 +478,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
         QByteArray fileContents;
 
-        Core::readFileContentsFromFile(pFileName, fileContents);
+        Core::readFile(pFileName, fileContents);
 
         bool fileIsEmpty = fileContents.trimmed().isEmpty();
         bool successfulConversion = fileIsEmpty?true:mConverter.execute(fileContents);
@@ -753,7 +753,7 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
 
             QString fileContents;
 
-            Core::readFileContentsFromFile(pFileName, fileContents);
+            Core::readFile(pFileName, fileContents);
 
             // Check whether we already know about that file contents and, if
             // not, determine its converted version (and keep track of it)

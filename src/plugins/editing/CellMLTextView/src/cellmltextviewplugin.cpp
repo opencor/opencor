@@ -454,10 +454,10 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     if (isLocalFile) {
         if (!QFile::exists(fileNameOrUrl))
             errorMessage = "The file could not be found.";
-        else if (!Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
+        else if (!Core::readFile(fileNameOrUrl, fileContents))
             errorMessage = "The file could not be opened.";
     } else {
-        if (!Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage))
+        if (!Core::readFile(fileNameOrUrl, fileContents, &errorMessage))
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
     }
 

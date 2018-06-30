@@ -58,17 +58,11 @@ void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
                                     bool &pOutIsLocalFile,
                                     QString &pOutFileNameOrUrl);
 
-bool CORE_EXPORT readFileContentsFromFile(const QString &pFileName,
-                                          QByteArray &pFileContents);
-bool CORE_EXPORT readFileContentsFromFile(const QString &pFileName,
-                                          QString &pFileContents);
-
-bool CORE_EXPORT readFileContentsFromUrl(const QString &pUrl,
-                                         QByteArray &pFileContents,
-                                         QString *pErrorMessage = 0);
-bool CORE_EXPORT readFileContentsFromUrl(const QString &pUrl,
-                                         QString &pFileContents,
-                                         QString *pErrorMessage = 0);
+bool CORE_EXPORT readFile(const QString &pFileNameOrUrl,
+                          QByteArray &pFileContents,
+                          QString *pErrorMessage = 0);
+bool CORE_EXPORT readFile(const QString &pFileNameOrUrl, QString &pFileContents,
+                          QString *pErrorMessage = 0);
 
 bool CORE_EXPORT writeFile(const QString &pFileName,
                            const QByteArray &pFileContents);

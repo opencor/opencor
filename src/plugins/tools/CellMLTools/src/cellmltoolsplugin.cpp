@@ -343,7 +343,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
         QByteArray fileContents;
 
-        if (Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (Core::readFile(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
