@@ -956,7 +956,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
         &&  (oldFileEmpty || Core::isTextFile(oldFileName))
         &&  (newFileEmpty || Core::isTextFile(pFileName))) {
         // Both versions of the given file are text files, so check whether they
-        // are CellML 1.0/1.1 files
+        // are also CellML 1.0/1.1 files
 
         CellMLSupport::CellmlFile::Version oldCellmlVersion = CellMLSupport::CellmlFile::fileVersion(oldFileName);
         CellMLSupport::CellmlFile::Version newCellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
