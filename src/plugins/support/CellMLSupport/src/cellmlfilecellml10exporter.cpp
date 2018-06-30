@@ -768,7 +768,7 @@ bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
 
         return true;
     } else {
-        return Core::writeFileContentsToFile(pFileName, Core::serialiseDomDocument(domDocument));
+        return Core::writeFile(pFileName, Core::serialiseDomDocument(domDocument));
     }
 }
 

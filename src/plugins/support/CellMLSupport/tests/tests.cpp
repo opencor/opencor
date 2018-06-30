@@ -91,7 +91,7 @@ void Tests::runtimeTests()
 
     fileContents.replace("cellml/1.0#", "cellml/1.1#");
 
-    QVERIFY(OpenCOR::Core::writeFileContentsToFile(fileName, fileContents));
+    QVERIFY(OpenCOR::Core::writeFile(fileName, fileContents));
 
     runtimeTest(fileName, "1.1", modelParameters);
 

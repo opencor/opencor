@@ -303,7 +303,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Create our output for ontological terms
 
-    Core::readFileContentsFromFile(":/CellMLAnnotationView/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
+    Core::readFile(":/CellMLAnnotationView/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
 
     mOutputOntologicalTerms = new WebViewerWidget::WebViewerWidget(mOutput);
 

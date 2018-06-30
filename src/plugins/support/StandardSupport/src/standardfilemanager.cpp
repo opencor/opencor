@@ -79,7 +79,7 @@ bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking)
 
     QByteArray fileContents;
 
-    if (Core::readFileContentsFromFile(pFileName, fileContents)) {
+    if (Core::readFile(pFileName, fileContents)) {
         if (fileContents.trimmed().isEmpty())
             return true;
 

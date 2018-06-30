@@ -332,7 +332,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     // Retrieve our diff template
 
-    Core::readFileContentsFromFile(":/PMRWorkspacesWindow/diff.html", mDiffTemplate);
+    Core::readFile(":/PMRWorkspacesWindow/diff.html", mDiffTemplate);
 
     // Select our first changes
 
@@ -934,13 +934,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     QString oldFileName = Core::temporaryFileName();
     QByteArray oldFileContents = mWorkspace->headFileContents(QDir(mWorkspace->path()).relativeFilePath(pFileName));
 
-    Core::writeFileContentsToFile(oldFileName, oldFileContents);
+    Core::writeFile(oldFileName, oldFileContents);
 
     // Retrieve the contents of the working version of the given file
 
     QByteArray newFileContents;
 
-    Core::readFileContentsFromFile(pFileName, newFileContents);
+    Core::readFile(pFileName, newFileContents);
 
     // Check whether both the head and working versions of the given file are
     // text files
@@ -955,17 +955,22 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     if (   !(oldFileEmpty && newFileEmpty)
         &&  (oldFileEmpty || Core::isTextFile(oldFileName))
         &&  (newFileEmpty || Core::isTextFile(pFileName))) {
-        // Both versions of the given file are not text files, so check whether
-        // they are also CellML files
+        // Both versions of the given file are text files, so check whether they
+        // are also CellML 1.0/1.1 files
+
+        CellMLSupport::CellmlFile::Version oldCellmlVersion = CellMLSupport::CellmlFile::fileVersion(oldFileName);
+        CellMLSupport::CellmlFile::Version newCellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
         if (   mWebViewerCellmlTextFormatAction->isChecked()
             && !mInvalidCellmlCode.contains(oldFileContents)
             && !mInvalidCellmlCode.contains(newFileContents)
-            && (oldFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(oldFileName))
-            && (newFileEmpty || CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))) {
-            // We are dealing with a CellML file, so generate the CellML Text
-            // version of the file, this for both its head and working versions,
-            // and if successful then diff them
+            && (oldFileEmpty || (oldCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+                             || (oldCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1))
+            && (newFileEmpty || (newCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+                             || (newCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1))) {
+            // We are dealing with a CellML 1.0/1.1 file, so generate the CellML
+            // Text version of the file, this for both its head and working
+            // versions, and if successful then diff them
 
             QString oldCellmlTextContents = QString();
             QString newCellmlTextContents = QString();

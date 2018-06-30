@@ -303,7 +303,7 @@ bool CombineArchive::save(const QString &pFileName)
         if (file.location().compare(".")) {
             QByteArray fileContents;
 
-            if (!Core::readFileContentsFromFile(mDirName+"/"+file.location(), fileContents))
+            if (!Core::readFile(mDirName+"/"+file.location(), fileContents))
                 return false;
 
             zipWriter.addFile(file.location(), fileContents);
@@ -373,8 +373,8 @@ bool CombineArchive::isValid()
     QByteArray manifestContents;
     QByteArray schemaContents;
 
-    Core::readFileContentsFromFile(manifestFileName, manifestContents);
-    Core::readFileContentsFromFile(":/COMBINESupport/omex.xsd", schemaContents);
+    Core::readFile(manifestFileName, manifestContents);
+    Core::readFile(":/COMBINESupport/omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,

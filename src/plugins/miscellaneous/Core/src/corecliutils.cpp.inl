@@ -456,34 +456,86 @@ QString temporaryFileName(const QString &pExtension)
 
 //==============================================================================
 
-bool readFileContentsFromFile(const QString &pFileName,
-                              QByteArray &pFileContents)
+void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
+                        QString &pOutFileNameOrUrl)
 {
-    // Read the contents of the file, which file name is given
+    // Determine whether pInFileNameOrUrl refers to a local or a remote file,
+    // and set pOutIsLocalFile and pOutFileNameOrUrl accordingly
+    // Note #1: to use QUrl::isLocalFile() is not enough. Indeed, say that
+    //          pInFileNameOrUrl is equal to
+    //              /home/me/mymodel.cellml
+    //          then QUrl(pInFileNameOrUrl).isLocalFile() will be false. For it
+    //          to be true, we would have to initialise the QUrl object using
+    //          QUrl::fromLocalFile(), but we can't do that since we don't know
+    //          whether pInFileNameOrUrl refers to a local file or not. So,
+    //          instead we test for the scheme and host of the QUrl object...
+    // Note #2: a local file can be passed as a URL. For example,
+    //              file:///home/me/mymodel.cellml
+    //          is a URL, but effectively a local file, hence pOutIsLocalFile is
+    //          to be true and pOutFileNameOrUrl is to be set to
+    //              /home/me/mymodel.cellml
+    //          However, to use fileNameOrUrl.toLocalFile() to retrieve that
+    //          file won't work with a path that contains spaces, hence we
+    //          return pInFileNameOrUrl after having removed "file:///" or
+    //          "file://" from it on Windows and Linux/macOS, respectively...
 
-    QFile file(pFileName);
+    QUrl fileNameOrUrl = pInFileNameOrUrl;
 
-    if (file.open(QIODevice::ReadOnly)) {
-        pFileContents = file.readAll();
+    pOutIsLocalFile =    !fileNameOrUrl.scheme().compare("file")
+                      ||  fileNameOrUrl.host().isEmpty();
+    pOutFileNameOrUrl = pOutIsLocalFile?
+#ifdef Q_OS_WIN
+                            canonicalFileName(QString(pInFileNameOrUrl).remove("file:///")):
+#else
+                            canonicalFileName(QString(pInFileNameOrUrl).remove("file://")):
+#endif
+                            fileNameOrUrl.url();
+}
 
-        file.close();
+//==============================================================================
 
-        return true;
+bool readFile(const QString &pFileNameOrUrl, QByteArray &pFileContents,
+              QString *pErrorMessage)
+{
+    // Determine whether we are dealing with a local or a remote file
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    checkFileNameOrUrl(pFileNameOrUrl, isLocalFile, fileNameOrUrl);
+
+    // Read the contents of the file, which file name or URL is given
+
+    if (isLocalFile) {
+        QFile file(fileNameOrUrl);
+
+        if (file.open(QIODevice::ReadOnly)) {
+            pFileContents = file.readAll();
+
+            file.close();
+
+            return true;
+        } else {
+            pFileContents = QByteArray();
+
+            return false;
+        }
     } else {
-        pFileContents = QByteArray();
+        static SynchronousFileDownloader synchronousFileDownloader;
 
-        return false;
+        return synchronousFileDownloader.download(fileNameOrUrl, pFileContents, pErrorMessage);
     }
 }
 
 //==============================================================================
 
-bool readFileContentsFromFile(const QString &pFileName, QString &pFileContents)
+bool readFile(const QString &pFileNameOrUrl, QString &pFileContents,
+              QString *pErrorMessage)
 {
-    // Read the contents of the file, which file name is given
+    // Read the contents of the file, which file name or URL is given
 
     QByteArray fileContents = QByteArray();
-    bool res = readFileContentsFromFile(pFileName, fileContents);
+    bool res = readFile(pFileNameOrUrl, fileContents, pErrorMessage);
 
     pFileContents = fileContents;
 
@@ -492,35 +544,7 @@ bool readFileContentsFromFile(const QString &pFileName, QString &pFileContents)
 
 //==============================================================================
 
-bool readFileContentsFromUrl(const QString &pUrl, QByteArray &pFileContents,
-                             QString *pErrorMessage)
-{
-    // Read the contents of the file, which URL is given
-
-    static SynchronousFileDownloader synchronousFileDownloader;
-
-    return synchronousFileDownloader.download(pUrl, pFileContents, pErrorMessage);
-}
-
-//==============================================================================
-
-bool readFileContentsFromUrl(const QString &pUrl, QString &pFileContents,
-                             QString *pErrorMessage)
-{
-    // Read the contents of the file, which URL is given
-
-    QByteArray fileContents = QByteArray();
-    bool res = readFileContentsFromUrl(pUrl, fileContents, pErrorMessage);
-
-    pFileContents = fileContents;
-
-    return res;
-}
-
-//==============================================================================
-
-bool writeFileContentsToFile(const QString &pFileName,
-                             const QByteArray &pFileContents)
+bool writeFile(const QString &pFileName, const QByteArray &pFileContents)
 {
     // Write the given file contents to a temporary file and rename it to the
     // given file name, if successful
@@ -561,12 +585,11 @@ bool writeFileContentsToFile(const QString &pFileName,
 
 //==============================================================================
 
-bool writeFileContentsToFile(const QString &pFileName,
-                             const QString &pFileContents)
+bool writeFile(const QString &pFileName, const QString &pFileContents)
 {
     // Write the given file contents to the given file name
 
-    return writeFileContentsToFile(pFileName, pFileContents.toUtf8());
+    return writeFile(pFileName, pFileContents.toUtf8());
 }
 
 //==============================================================================
@@ -576,7 +599,7 @@ bool writeResourceToFile(const QString &pFileName, const QString &pResource)
     // Write the given resource to the given file, if possible
 
     if (QResource(pResource).isValid())
-        return writeFileContentsToFile(pFileName, resource(pResource));
+        return writeFile(pFileName, resource(pResource));
     else
         return false;
 }
@@ -589,7 +612,7 @@ bool isTextFile(const QString &pFileName)
 
     QByteArray fileContents;
 
-    readFileContentsFromFile(pFileName, fileContents);
+    readFile(pFileName, fileContents);
 
     return fileContents == QString(fileContents).toUtf8();
 }

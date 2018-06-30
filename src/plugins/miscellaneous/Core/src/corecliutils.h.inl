@@ -54,22 +54,20 @@ QByteArray CORE_EXPORT resource(const QString &pResource);
 QString CORE_EXPORT temporaryDirName();
 QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
 
-bool CORE_EXPORT readFileContentsFromFile(const QString &pFileName,
-                                          QByteArray &pFileContents);
-bool CORE_EXPORT readFileContentsFromFile(const QString &pFileName,
-                                          QString &pFileContents);
+void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
+                                    bool &pOutIsLocalFile,
+                                    QString &pOutFileNameOrUrl);
 
-bool CORE_EXPORT readFileContentsFromUrl(const QString &pUrl,
-                                         QByteArray &pFileContents,
-                                         QString *pErrorMessage = 0);
-bool CORE_EXPORT readFileContentsFromUrl(const QString &pUrl,
-                                         QString &pFileContents,
-                                         QString *pErrorMessage = 0);
+bool CORE_EXPORT readFile(const QString &pFileNameOrUrl,
+                          QByteArray &pFileContents,
+                          QString *pErrorMessage = 0);
+bool CORE_EXPORT readFile(const QString &pFileNameOrUrl, QString &pFileContents,
+                          QString *pErrorMessage = 0);
 
-bool CORE_EXPORT writeFileContentsToFile(const QString &pFileName,
-                                         const QByteArray &pFileContents);
-bool CORE_EXPORT writeFileContentsToFile(const QString &pFileName,
-                                         const QString &pFileContents);
+bool CORE_EXPORT writeFile(const QString &pFileName,
+                           const QByteArray &pFileContents);
+bool CORE_EXPORT writeFile(const QString &pFileName,
+                           const QString &pFileContents);
 
 bool CORE_EXPORT writeResourceToFile(const QString &pFileName,
                                      const QString &pResource);
