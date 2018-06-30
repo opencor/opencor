@@ -440,8 +440,8 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     // Check whether we are dealing with a local or a remote file, and retrieve
     // its contents
 
-    QString errorMessage = QString();
     QByteArray fileContents;
+    QString errorMessage = QString();
 
     if (!Core::readFile(pArguments[0], fileContents, &errorMessage)) {
         if (errorMessage.isEmpty()) {
