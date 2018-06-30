@@ -364,13 +364,10 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         // exists, that it is a valid CellML file, that it can be managed and
         // that it can be loaded
 
-        CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(fileName);
-
         if (!fileExists) {
             errorMessage = "The file could not be found.";
-        } else if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-                   && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
-            errorMessage = "The file is not a CellML 1.0/1.1 file.";
+        } else if (!CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName)) {
+            errorMessage = "The file is not a CellML file.";
         } else {
             Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
