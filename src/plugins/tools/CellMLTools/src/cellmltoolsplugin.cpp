@@ -359,12 +359,14 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // At this stage, we should have a real file (be it originally local or
     // remote), so carry on with the export
 
+    bool fileExists = QFile::exists(fileName);
+
     if (errorMessage.isEmpty()) {
         // Before actually doing the export, we need to make sure that the file
         // exists, that it is a valid CellML file, that it can be managed and
         // that it can be loaded
 
-        if (!QFile::exists(fileName)) {
+        if (!fileExists) {
             errorMessage = "The file could not be found.";
         } else if (!CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName)) {
             errorMessage = "The file is not a CellML file.";
@@ -434,7 +436,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Delete the temporary file, if any, i.e. we are dealing with a remote file
     // and it has a temporay file associated with it
 
-    if (!isLocalFile && QFile::exists(fileName))
+    if (!isLocalFile && fileExists)
         QFile::remove(fileName);
 
     // Let the user know if something went wrong at some point and then leave
