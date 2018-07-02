@@ -30,6 +30,10 @@ FOR %%I IN (developer user) DO (
 
     FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
     FOR    %%I IN (*.*) DO DEL /Q "%%I"
+
+    CD ..
+
+    RMDIR /S /Q %%I
 )
 
 CD %CurrentPath%\ext
