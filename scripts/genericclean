@@ -9,7 +9,7 @@ fi
 rm -fr build/* build/.ninja* > /dev/null 2>&1
 
 if [ "$1" = "all" ]; then
-    rm -fr doc/developer doc/user ext/* > /dev/null 2>&1
+    rm -fr ext/* > /dev/null 2>&1
 
     for i in distrib src; do
         for j in `find $i -name ext`; do
