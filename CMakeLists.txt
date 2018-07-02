@@ -942,10 +942,12 @@ foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
 
-# Build the documentation, if we have the right version of Sphinx installed
+# Retrieve and build both our user and developer documentations
 
-message("---OPENCOR--- BUILD THE OpenCOR DOCUMENTATION...")
-message(">>> SPHINX_BUILD_EXECUTABLE: >${SPHINX_BUILD_EXECUTABLE}<")
+include(FetchContent)
+
+add_documentation(user)
+add_documentation(developer)
 
 # Build the GUI version of OpenCOR
 

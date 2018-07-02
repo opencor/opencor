@@ -43,6 +43,26 @@ endmacro()
 
 #===============================================================================
 
+macro(add_documentation DOCUMENTATION_NAME)
+    # Specify where our documentation comes from and where it should be
+    # retrieved and built
+
+    set(DOCUMENTATION_BINARY_FOLDER ${CMAKE_BINARY_DIR}/doc/${DOCUMENTATION_NAME})
+
+    FetchContent_Declare(${DOCUMENTATION_NAME}
+        GIT_REPOSITORY https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
+        BINARY_DIR ${DOCUMENTATION_BINARY_FOLDER}
+    )
+
+    # Retrieve and build our documentation
+
+    FetchContent_Populate(${DOCUMENTATION_NAME})
+
+    add_subdirectory(${${DOCUMENTATION_NAME}_SOURCE_DIR} ${DOCUMENTATION_BINARY_FOLDER})
+endmacro()
+
+#===============================================================================
+
 macro(add_plugin PLUGIN_NAME)
     # Various initialisations
 
