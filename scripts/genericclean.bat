@@ -25,6 +25,13 @@ GOTO END
 
 :ALL2
 
+FOR %%I IN (developer user) DO (
+    CD %CurrentPath%\doc\%%I
+
+    FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
+    FOR    %%I IN (*.*) DO DEL /Q "%%I"
+)
+
 CD %CurrentPath%\ext
 
 FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
