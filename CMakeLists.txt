@@ -942,12 +942,24 @@ foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
 
-# Retrieve and build both our user and developer documentations
+# Fetch parts of our documentation and build it
 
 include(FetchContent)
 
-add_documentation(user)
-add_documentation(developer)
+set(DOCUMENTATION_SOURCE_DIR ${CMAKE_BINARY_DIR}/doc-src)
+
+fetch_repository_contents(user-documentation ${DOCUMENTATION_SOURCE_DIR}/user)
+fetch_repository_contents(developer-documentation ${DOCUMENTATION_SOURCE_DIR}/developer)
+fetch_repository_contents(sphinx-theme ${DOCUMENTATION_SOURCE_DIR}/theme)
+
+string(TIMESTAMP SPHINX_YEAR "%Y")
+
+configure_file("${CMAKE_SOURCE_DIR}/doc/conf.py.in"
+               "${DOCUMENTATION_SOURCE_DIR}/conf.py"
+               @ONLY)
+
+build_documentation(user)
+build_documentation(developer)
 
 # Build the GUI version of OpenCOR
 

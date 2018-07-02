@@ -43,22 +43,30 @@ endmacro()
 
 #===============================================================================
 
-macro(add_documentation DOCUMENTATION_NAME)
-    # Specify where our documentation comes from and where it should be
-    # retrieved and built
+macro(fetch_repository_contents REPOSITORY_NAME REPOSITORY_SOURCE_DIR)
+    # Specify where our repository comes from
 
-    set(DOCUMENTATION_BINARY_FOLDER ${CMAKE_BINARY_DIR}/doc/${DOCUMENTATION_NAME})
-
-    FetchContent_Declare(${DOCUMENTATION_NAME}
-        GIT_REPOSITORY https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
-        BINARY_DIR ${DOCUMENTATION_BINARY_FOLDER}
+    FetchContent_Declare(${REPOSITORY_NAME}
+        GIT_REPOSITORY https://github.com/opencor/${REPOSITORY_NAME}
+        SOURCE_DIR ${REPOSITORY_SOURCE_DIR}
     )
 
-    # Retrieve and build our documentation
+    # Retrieve the contents of our repository
 
-    FetchContent_Populate(${DOCUMENTATION_NAME})
+    FetchContent_Populate(${REPOSITORY_NAME})
+endmacro()
 
-    add_subdirectory(${${DOCUMENTATION_NAME}_SOURCE_DIR} ${DOCUMENTATION_BINARY_FOLDER})
+#===============================================================================
+
+macro(build_documentation DOCUMENTATION_NAME)
+    # Build the given documentation
+
+    add_custom_target(${DOCUMENTATION_NAME} ALL
+                      ${SPHINX_BUILD_EXECUTABLE} -q -b html
+                                                 -c "${DOCUMENTATION_SOURCE_DIR}"
+                                                 "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
+                                                 "${CMAKE_BINARY_DIR}/doc/${DOCUMENTATION_NAME}"
+                      COMMENT "Building the ${DOCUMENTATION_NAME} documentation")
 endmacro()
 
 #===============================================================================
