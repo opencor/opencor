@@ -958,6 +958,9 @@ configure_file("${CMAKE_SOURCE_DIR}/doc/conf.py.in"
                "${DOCUMENTATION_SOURCE_DIR}/conf.py"
                @ONLY)
 
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_SOURCE_DIR}/doc ${CMAKE_BINARY_DIR}/doc)
+
 build_documentation(user)
 build_documentation(developer)
 
