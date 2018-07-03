@@ -437,11 +437,13 @@ else()
         set(BUILT_PYTHON "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
     endif()
 
+    # Install the Python package manager and dependencies
+
     if(WIN32)
-        # On Windows, we need to explicitly install setuptools, pip and wheel in
-        # order to create *-script-py files that can then be modified during the
-        # installation of OpenCOR, so that they reference our newly installed
-        # Python executable
+        # On Windows, we use our version of pip that is modified to
+        # create `*-script.py` files when installing packaages with
+        # console scripts, so that they can then be updated to
+        # reference OpenCOR's Python executable.
 
         # Install the Python setuptools package
 
@@ -457,7 +459,7 @@ else()
             INSTALL_DIR
                 ${SETUPTOOLS_SOURCE_DIR}
             GIT_REPOSITORY
-                https://github.com/opencor/setuptools.git
+                https://github.com/pypa/setuptools.git
             GIT_TAG
                 ${SETUPTOOLS_GIT_TAG}
             CONFIGURE_COMMAND
@@ -470,7 +472,7 @@ else()
                 ${PACKAGE_BUILD}
         )
 
-        # Install the Python package installer
+        # Install our Python package installer
 
         set(PIP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/pip)
 
@@ -486,7 +488,7 @@ else()
             GIT_REPOSITORY
                 https://github.com/opencor/pip.git
             GIT_TAG
-                ${PIP_GIT_TAG}
+                opencor_v${PIP_GIT_TAG}
             CONFIGURE_COMMAND
                 ""
             BUILD_COMMAND
@@ -497,44 +499,14 @@ else()
                 installSetuptools
         )
 
-        # Install the wheel Python package
-
-        set(WHEEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/wheel)
-
-        ExternalProject_Add(installWheel
-            DOWNLOAD_DIR
-                ${WHEEL_SOURCE_DIR}
-            SOURCE_DIR
-                ${WHEEL_SOURCE_DIR}
-            BINARY_DIR
-                ${WHEEL_SOURCE_DIR}
-            INSTALL_DIR
-                ${WHEEL_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/wheel.git
-            GIT_TAG
-                ${WHEEL_GIT_TAG}
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ${BUILT_PYTHON} setup.py build
-            INSTALL_COMMAND
-                ${BUILT_PYTHON} setup.py install
-            DEPENDS
-                installPip
-        )
-
-        set(CREATE_PACKAGE_TARGET installWheel)
+        set(CREATE_PACKAGE_TARGET installPip)
     else()
-        # On Linux and macOS, install the Python package manager, wheel, and
-        # dependencies
-
         ExternalProject_Add_Step(${PACKAGE_BUILD} installPip
-                                 COMMAND ${BUILT_PYTHON} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
+                                 COMMAND ${BUILT_PYTHON} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py --no-wheel
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
                                  DEPENDEES cleanSitePackagesDirectory)
 
-        set(CREATE_PACKAGE_TARGET ${PACKAGE_BUILD})
+        set(CREATE_PACKAGE_TARGET installPip)
     endif()
 
     # Package Python's include files and libraries
@@ -573,3 +545,13 @@ add_dependencies(OpenCORBuild ${PROJECT_NAME})
 if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
 endif()
+
+# Copy a script to update the Python path in copied scripts and run it
+
+add_custom_command(TARGET PythonPlugin POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
+                                     ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}
+    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
+                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
+                    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s
+    )

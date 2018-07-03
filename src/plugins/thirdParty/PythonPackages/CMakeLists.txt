@@ -29,12 +29,13 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 # Where Python packages are installed
 
-set(LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages)
+set(LOCAL_SITE_PACKAGES_DIR ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages)
+set(FULL_LOCAL_SITE_PACKAGES_DIR ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${LOCAL_SITE_PACKAGES_DIR})
 
 # Directories we package
 
 set(PACKAGED_FILES
-    ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages
+    ${LOCAL_SITE_PACKAGES_DIR}
     ${PYTHON_RELATIVE_SCRIPT_DIR}
 )
 
@@ -42,7 +43,7 @@ set(PACKAGED_FILES
 # Note: at least one file must have its SHA-1 value checked...
 
 set(SHA1_FILES
-    ${PYTHON_RELATIVE_RUNTIME_DIR}/site-packages/sphinx/cmdline.py
+    ${LOCAL_SITE_PACKAGES_DIR}/sphinx/cmdline.py
 )
 
 # Use the pre-built version of our package unless instructed otherwise
@@ -98,41 +99,28 @@ else()
 
     # Ensure local site packages directory exists
 
-    file(MAKE_DIRECTORY ${LOCAL_SITE_PACKAGES_DIR})
+    file(MAKE_DIRECTORY ${FULL_LOCAL_SITE_PACKAGES_DIR})
 
     # Use our installed pip
 
     file(TO_NATIVE_PATH ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX)
 
     set(PIP_INSTALL_COMMAND
-        ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
+        ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
         ${PYTHON_EXECUTABLE} -s -m
         pip install --prefix ${FULL_LOCAL_EXTERNAL_PACKAGE_PREFIX}
-                    --upgrade --upgrade-strategy only-if-needed)
+                    --upgrade --upgrade-strategy only-if-needed
+                    --no-warn-script-location)
 
     # Install Sphinx
 
-    if(WIN32)
-        # On Windows, we need to explicitly install Sphinx to create *-script-py
-        # files that can then be modified during the installation of OpenCOR, so
-        # that they reference our newly installed Python executable
-
-        add_custom_target(installSphinx
-            COMMAND ${PIP_INSTALL_COMMAND}
-                https://github.com/opencor/sphinx/archive/v${SPHINX_VERSION}.tar.gz
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    else()
-        add_custom_target(installSphinx
-            COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-                sphinx==${SPHINX_VERSION}
-            WORKING_DIRECTORY
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-            VERBATIM
-        )
-    endif()
+    add_custom_target(installSphinx
+        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
+            sphinx==${SPHINX_VERSION}
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+        VERBATIM
+    )
 
     add_dependencies(${PACKAGE_BUILD} installSphinx)
     add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
@@ -159,7 +147,7 @@ else()
 endif()
 
 set(SPHINX_BUILD_EXECUTABLE
-    ${CMAKE_COMMAND} -E env "PYTHONPATH=${LOCAL_SITE_PACKAGES_DIR}"
+    ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
     ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE
 )
 
@@ -173,3 +161,11 @@ add_dependencies(OpenCORBuild ${PROJECT_NAME})
 if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
 endif()
+
+# Update the Python path in newly copied scripts
+
+add_custom_command(TARGET PythonPackagesPlugin POST_BUILD
+    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py
+                --update-path ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
+                ${PYTHON_ROOT_DIR} -s
+    )
