@@ -548,9 +548,8 @@ endif()
 
 # Copy a script to update the Python path in copied scripts
 
-add_custom_command(OUTPUT ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
-    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
-                                     ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR})
 
 # And run it
 
