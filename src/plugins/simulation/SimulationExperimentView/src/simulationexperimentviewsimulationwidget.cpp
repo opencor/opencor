@@ -3394,8 +3394,7 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 
     GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY, graphPanel);
 
-    graphPanel->addGraph(graph,
-                         GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
+    graphPanel->addGraph(graph, GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
 }
 
 //==============================================================================
