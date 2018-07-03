@@ -1291,7 +1291,13 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
         newTitle = newParameterY->formattedName();
 
+        disconnect(pProperty->owner(), &Core::PropertyEditorWidget::propertyChanged,
+                   this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
+
         properties[1]->setValue(newTitle);
+
+        connect(pProperty->owner(), &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
     }
 
     graph->setTitle(newTitle);
