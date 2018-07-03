@@ -1346,15 +1346,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     graph->setSymbol(symbolStyle, symbolFillColor, symbolColor, symbolSize);
 
-    // Update our graph's GUI if the title of our graph is different (which may
-    // result in our legend's width being updated), let people know if the X
-    // and/or Y parameters of our graph have changed, or replot it if its
-    // settings have changed
+    // Update our graph's GUI if the title of our graph or its symbol is
+    // different (both of which may result in our legend's width being updated),
+    // let people know if the X and/or Y parameters of our graph have changed,
+    // or replot it if its settings have changed
     // Note: we want several if statements rather than if...elseif...elseif...
-    //       Indeed, to change the Y property may result in the title being also
-    //       changed...
+    //       Indeed, to change the Y property may, for example, result in the
+    //       title being also changed...
 
-    if (oldTitle != graph->title())
+    if ((oldTitle != graph->title()) || graphSymbolUpdated)
         graph->plot()->updateGui();
 
     if (   (oldParameterX != graph->parameterX())
