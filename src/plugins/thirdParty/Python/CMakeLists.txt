@@ -400,7 +400,7 @@ else()
         #  - Add RPATH to the Python executable, so that it can use libraries
         #    when installed (into Frameworks/Python/bin);
         #  - Use a relative path to the Python library; and
-        #  - set RPATH in the Python library to enable linking independent of
+        #  - Set RPATH in the Python library to enable linking independent of
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
@@ -437,13 +437,12 @@ else()
         set(BUILT_PYTHON "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
     endif()
 
-    # Install the Python package manager and dependencies
+    # Install the Python package manager and its dependencies
 
     if(WIN32)
-        # On Windows, we use our version of pip that is modified to
-        # create `*-script.py` files when installing packaages with
-        # console scripts, so that they can then be updated to
-        # reference OpenCOR's Python executable.
+        # On Windows, we use our version of pip that is modified to create
+        # *-script.py files when installing packages with console scripts, so
+        # that they can then be updated to reference OpenCOR's Python executable
 
         # Install the Python setuptools package
 
@@ -554,6 +553,6 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
 # And run it
 
 add_custom_command(TARGET PythonPlugin POST_BUILD
-    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
-                ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
-                    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
+                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)

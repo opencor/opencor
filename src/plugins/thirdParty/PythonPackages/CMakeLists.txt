@@ -115,12 +115,9 @@ else()
     # Install Sphinx
 
     add_custom_target(installSphinx
-        COMMAND ${PIP_INSTALL_COMMAND} --only-binary all
-            sphinx==${SPHINX_VERSION}
-        WORKING_DIRECTORY
-            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
-        VERBATIM
-    )
+                      COMMAND ${PIP_INSTALL_COMMAND} --only-binary all sphinx==${SPHINX_VERSION}
+                      WORKING_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+                      VERBATIM)
 
     add_dependencies(${PACKAGE_BUILD} installSphinx)
     add_dependencies(installSphinx ${BUILD_DEPENDENCIES})
@@ -165,7 +162,6 @@ endif()
 # Update the Python path in newly copied scripts
 
 add_custom_command(TARGET PythonPackagesPlugin POST_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py
-                --update-path ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
-                ${PYTHON_ROOT_DIR} -s
-    )
+                   COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py
+                                                --update-path ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
+                                                ${PYTHON_ROOT_DIR} -s)
