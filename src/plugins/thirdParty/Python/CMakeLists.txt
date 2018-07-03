@@ -521,7 +521,6 @@ else()
         set(CREATE_PACKAGE_TARGET installPip)
     endif()
 
-
     # Package Python's include files and libraries
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -578,13 +577,15 @@ add_plugin(Python
         ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY}
 )
 
-# Copy a script to update the Python path in copied scripts and run it
+# Copy a script to update the Python path in copied scripts
+
+file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR})
+
+# And run it
 
 add_custom_command(TARGET PythonPlugin POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
-                                     ${ROOT_DIR}/${SCRIPT_DIR}
-    COMMAND ${ROOT_DIR}/${PYTHON_EXECUTABLE} ${ROOT_DIR}/${SCRIPT_DIR}/set_python_path.py ${ROOT_DIR} -s
-    )
+    COMMAND ${ROOT_DIR}/${PYTHON_EXECUTABLE} ${ROOT_DIR}/${SCRIPT_DIR}/set_python_path.py ${ROOT_DIR} -s)
 
 # Update our list of Python dependencies for other plugins
 
