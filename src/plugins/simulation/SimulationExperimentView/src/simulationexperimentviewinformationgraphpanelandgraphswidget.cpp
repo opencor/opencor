@@ -1254,12 +1254,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
         fileName = propertyFileName.split(PropertySeparator).last();
     }
 
-    // Update the graph's title
-
-    QString oldTitle = graph->title();
-
-    graph->setTitle(properties[1]->value());
-
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
     // Note: we absolutely want to check the parameter (so that an icon can be
@@ -1282,6 +1276,25 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     pProperty->setName( properties[2]->value()
                        +PropertySeparator
                        +properties[3]->value());
+
+    // Update the graph's title
+
+    QString oldTitle = graph->title();
+    QString newTitle = properties[1]->value();
+    CellMLSupport::CellmlFileRuntimeParameter *newParameterY = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY());
+
+    if (   newParameterY && (newParameterY != oldParameterY)
+        && oldTitle.isEmpty() && newTitle.isEmpty()) {
+        // The graph didn't and still doesn't have a title, and we have a valid
+        // (and different) Y property, so use its formatted name as a default
+        // value for our graph's title
+
+        newTitle = newParameterY->formattedName();
+
+        properties[1]->setValue(newTitle);
+    }
+
+    graph->setTitle(newTitle);
 
     // Update the status (i.e. icon) of our (section) property
 
@@ -1331,13 +1344,19 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     // result in our legend's width being updated), let people know if the X
     // and/or Y parameters of our graph have changed, or replot it if its
     // settings have changed
+    // Note: we want several if statements rather than if...elseif...elseif...
+    //       Indeed, to change the Y property may result in the title being also
+    //       changed...
 
-    if (oldTitle != graph->title()) {
+    if (oldTitle != graph->title())
         graph->plot()->updateGui();
-    } else if (   (oldParameterX != graph->parameterX())
-               || (oldParameterY != graph->parameterY())) {
+
+    if (   (oldParameterX != graph->parameterX())
+        || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
-    } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
+    }
+
+    if ((oldLinePen != linePen) || graphSymbolUpdated) {
         graph->plot()->replot();
 
         processEvents();
