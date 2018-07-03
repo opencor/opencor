@@ -1335,7 +1335,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     if (oldTitle != graph->title()) {
         graph->plot()->updateGui();
     } else if (   (oldParameterX != graph->parameterX())
-        || (oldParameterY != graph->parameterY())) {
+               || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
     } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
         graph->plot()->replot();
