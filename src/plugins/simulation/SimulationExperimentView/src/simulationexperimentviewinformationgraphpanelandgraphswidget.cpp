@@ -618,8 +618,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph()
     // add an 'empty' graph
 
     GraphPanelWidget::GraphPanelWidget * graphPanel = mGraphPanels.value(mGraphsPropertyEditor);
+    GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(graphPanel);
 
-    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(graphPanel));
+    graphPanel->addGraph(graph, GraphPanelWidget::GraphPanelPlotGraphProperties(graph->color()));
 }
 
 //==============================================================================
