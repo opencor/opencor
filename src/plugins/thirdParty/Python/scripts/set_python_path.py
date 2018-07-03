@@ -171,24 +171,23 @@ def update_pycs(lib_dir, new_path, lib_name):
                     update_pyc(filename, local_path)
 
 
-def update_paths(base, new_path, clear_args, extra_args):
+def update_paths(base, scripts_dir, clear_args, extra_args):
     """Updates all paths in a virtualenv to a new one."""
-    if new_path == 'auto':
-        new_path = os.path.abspath(base)
-    if not os.path.isabs(new_path):
-        print('error: %s is not an absolute path' % new_path)
-        return False
-
+    new_path = os.path.abspath(base)
     bin_dir = os.path.join(base, 'bin')
     lib_dir = None
     lib_name = None
 
+    if scripts_dir == 'auto':
+        if windows:
+            scripts_dir = os.path.join(base, 'Scripts')
+        else:
+            scripts_dir = bin_dir
+
     if windows:
-        scripts_dir = os.path.join(base, 'Scripts')
         base_lib_dir = base
         lib_name = 'Lib'
     else:
-        scripts_dir = bin_dir
         base_lib_dir = os.path.join(base, 'lib')
         if os.path.isdir(base_lib_dir):
             for folder in os.listdir(base_lib_dir):
@@ -196,15 +195,14 @@ def update_paths(base, new_path, clear_args, extra_args):
                     lib_name = folder
                     break
 
-    if lib_name:
-        lib_dir = os.path.join(base_lib_dir, lib_name)
-
-    if (lib_dir is None
+    if (lib_name is None
      or not os.path.isdir(scripts_dir)
      or not os.path.isdir(bin_dir)
      or not os.path.isfile(os.path.join(bin_dir, python_exe))):
         print('error: %s does not refer to a Python installation' % base)
         return False
+
+    lib_dir = os.path.join(base_lib_dir, lib_name)
 
     update_scripts(scripts_dir, new_path, clear_args, extra_args)
     update_pycs(lib_dir, new_path, lib_name)
