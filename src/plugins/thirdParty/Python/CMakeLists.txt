@@ -114,14 +114,14 @@ endif()
 # Add headers, scripts and libraries to the package archive
 
 set(PACKAGED_FILES
+    bin
     include
     ${RUNTIME_DIR}
-    ${SCRIPT_DIR}
     ${SHA1_FILES}
 )
 
 if(WIN32)
-    list(APPEND PACKAGED_FILES Scripts)
+    list(APPEND PACKAGED_FILES ${SCRIPT_DIR})
 elseif()
     list(APPEND PACKAGED_FILES ${RUNTIME_DIR}/config-${PYTHON_BUILT_VERSION})
 endif()
@@ -137,22 +137,22 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c99e62188b191a6fc8bed55e6ec6303cf112223c
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 201c3a0a7621901c7c5da8c121aabff69800ab93
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 7cc5560a76bf97f9bf5d415f36f46fdc53b21957
-                                              d157939f61d9ed5506fc5cf876fcec39c41924a3
-                                              a7c7246f8ee95c8039ae4220ba61bbda2308fad3
+                                  SHA1_VALUES b45336c90f5a8d39067c8873c46eed73e0596d82
+                                              1fb636519bc0d86f181febbac697c842945f645b
+                                              41fcf7de51b0150cb5d526696ab4ea6943fff4aa
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              c73d9f185b186d00a34c84345b3b3541c156a421)
+                                              b9d15e7df553a66f8f0a42f27016ff878051196d)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1d8c126dc5cc4c17b0a487f1b5bc899340fbd954
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1651cf41ba9aca0767eecdea908d34217ec653ce
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 71cba1a8dedb5533daa303b2f796d840f7fbc764
-                                              2763cb98d5b09e623d1c3dfa060eec8720883ecf
-                                              8ad14e1441b92c84b27d6b3f469e284653fe0b91
+                                  SHA1_VALUES eaec9798ba6c5a1bf4b1cc161b6c7dfc59d1ea80
+                                              6e79fbfa322c9c56189932c9d6007b9e1f55d3af
+                                              c0d0bd4c50ad3f0760b95696d50abe9336ecfe6c
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              164b0decaac36ba4fba601023b0669f2443f9e7b)
+                                              41e1905467d98d2f0ddfdb273795dfac9e3402f7)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -400,7 +400,7 @@ else()
         #  - Add RPATH to the Python executable, so that it can use libraries
         #    when installed (into Frameworks/Python/bin);
         #  - Use a relative path to the Python library; and
-        #  - set RPATH in the Python library to enable linking independent of
+        #  - Set RPATH in the Python library to enable linking independent of
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
@@ -437,11 +437,12 @@ else()
         set(BUILT_PYTHON "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
     endif()
 
+    # Install the Python package manager and its dependencies
+
     if(WIN32)
-        # On Windows, we need to explicitly install setuptools, pip and wheel in
-        # order to create *-script-py files that can then be modified during the
-        # installation of OpenCOR, so that they reference our newly installed
-        # Python executable
+        # On Windows, we use our version of pip that is modified to create
+        # *-script.py files when installing packages with console scripts, so
+        # that they can then be updated to reference OpenCOR's Python executable
 
         # Install the Python setuptools package
 
@@ -457,7 +458,7 @@ else()
             INSTALL_DIR
                 ${SETUPTOOLS_SOURCE_DIR}
             GIT_REPOSITORY
-                https://github.com/opencor/setuptools.git
+                https://github.com/pypa/setuptools.git
             GIT_TAG
                 ${SETUPTOOLS_GIT_TAG}
             CONFIGURE_COMMAND
@@ -470,7 +471,7 @@ else()
                 ${PACKAGE_BUILD}
         )
 
-        # Install the Python package installer
+        # Install our Python package installer
 
         set(PIP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/pip)
 
@@ -486,7 +487,7 @@ else()
             GIT_REPOSITORY
                 https://github.com/opencor/pip.git
             GIT_TAG
-                ${PIP_GIT_TAG}
+                opencor_v${PIP_GIT_TAG}
             CONFIGURE_COMMAND
                 ""
             BUILD_COMMAND
@@ -497,44 +498,14 @@ else()
                 installSetuptools
         )
 
-        # Install the wheel Python package
-
-        set(WHEEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/wheel)
-
-        ExternalProject_Add(installWheel
-            DOWNLOAD_DIR
-                ${WHEEL_SOURCE_DIR}
-            SOURCE_DIR
-                ${WHEEL_SOURCE_DIR}
-            BINARY_DIR
-                ${WHEEL_SOURCE_DIR}
-            INSTALL_DIR
-                ${WHEEL_SOURCE_DIR}
-            GIT_REPOSITORY
-                https://github.com/opencor/wheel.git
-            GIT_TAG
-                ${WHEEL_GIT_TAG}
-            CONFIGURE_COMMAND
-                ""
-            BUILD_COMMAND
-                ${BUILT_PYTHON} setup.py build
-            INSTALL_COMMAND
-                ${BUILT_PYTHON} setup.py install
-            DEPENDS
-                installPip
-        )
-
-        set(CREATE_PACKAGE_TARGET installWheel)
+        set(CREATE_PACKAGE_TARGET installPip)
     else()
-        # On Linux and macOS, install the Python package manager, wheel, and
-        # dependencies
-
         ExternalProject_Add_Step(${PACKAGE_BUILD} installPip
-                                 COMMAND ${BUILT_PYTHON} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py
+                                 COMMAND ${BUILT_PYTHON} -s ${PROJECT_SOURCE_DIR}/scripts/get-pip.py --no-wheel
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
                                  DEPENDEES cleanSitePackagesDirectory)
 
-        set(CREATE_PACKAGE_TARGET ${PACKAGE_BUILD})
+        set(CREATE_PACKAGE_TARGET installPip)
     endif()
 
     # Package Python's include files and libraries
@@ -573,3 +544,15 @@ add_dependencies(OpenCORBuild ${PROJECT_NAME})
 if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
 endif()
+
+# Copy a script to update the Python path in copied scripts
+
+file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR})
+
+# And run it
+
+add_custom_command(TARGET PythonPlugin POST_BUILD
+                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
