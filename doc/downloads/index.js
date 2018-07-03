@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 5, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 27, "month": 6, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,10 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> General: fixed a problem with not being able to start OpenCOR from the system PATH (see issue <a href=\"https://github.com/opencor/opencor/issues/1688\">#1688</a>)." },
-                       { "change": "<strong>Text-based editors:</strong> prevent infinite \"Replace all\" actions (see issue <a href=\"https://github.com/opencor/opencor/issues/1677\">#1677</a>). Sped up our highlight/replace all method (see issue <a href=\"https://github.com/opencor/opencor/issues/1679\">#1679</a>). Now have word-wrap alignment <a href=\"https://github.com/opencor/opencor/issues/1680\">#1680</a>)." },
-                       { "change": "<strong>Simualtion Experiment view:</strong> fixed an issue with the Y axis being doubled in a very specific case (see issue <a href=\"https://github.com/opencor/opencor/issues/1683\">#1683</a>). Fixed some GUI glitches (see issue <a href=\"https://github.com/opencor/opencor/issues/1696\">#1696</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1672\">#1672</a>)." }
+                       { "change": "<strong>Solvers:</strong> reference <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> rather than <a href=\"https://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1711\">#1711</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

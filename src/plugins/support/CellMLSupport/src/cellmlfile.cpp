@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cellmlfile.h"
 #include "cellmlfilecellml10exporter.h"
-#include "cellmlfilecellml11exporter.h"
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
@@ -199,7 +198,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
     // and then keep track of that fact (so we don't fully instantiate everytime
     // we come here)
 
-    Version cellmlVersion = version(pModel);
+    Version cellmlVersion = modelVersion(pModel);
 
     if (   ((pModel != mModel) || mFullInstantiationNeeded)
         && (cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
@@ -263,13 +262,15 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         import->instantiateFromText(mImportContents.value(fileNameOrUrl).toStdWString());
                     } else {
                         // We haven't already loaded the import contents, so do
-                        // so now
+                        // so now, with a busy widget if requested and if we are
+                        // not dealing with a local file
 
                         QString fileContents;
 
-                        if (   ( isLocalFile &&  Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
-                            || (!isLocalFile &&  pWithBusyWidget && Core::readFileContentsFromUrlWithBusyWidget(fileNameOrUrl, fileContents))
-                            || (!isLocalFile && !pWithBusyWidget && Core::readFileContentsFromUrl(fileNameOrUrl, fileContents))) {
+                        if (   (   !isLocalFile
+                                &&  pWithBusyWidget
+                                &&  Core::readFileWithBusyWidget(fileNameOrUrl, fileContents))
+                            || Core::readFile(fileNameOrUrl, fileContents)) {
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
@@ -554,8 +555,8 @@ bool CellmlFile::save(const QString &pFileName)
 
     // Write out the contents of our DOM document to our CellML file
 
-    return Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
-                                         Core::serialiseDomDocument(domDocument))?
+    return Core::writeFile(pFileName.isEmpty()?mFileName:pFileName,
+                           Core::serialiseDomDocument(domDocument))?
                StandardFile::save(pFileName):
                false;
 }
@@ -1024,62 +1025,37 @@ bool CellmlFile::exportTo(const QString &pFileName, Version pVersion,
     if (load()) {
         // Check that it actually makes sense to export the model
 
+        CellmlFile::Version modelVersion = CellmlFile::modelVersion(mModel);
+
         switch (pVersion) {
         case Unknown:
-            // We clearly cannot export to an unknown version
+        case Cellml_1_1:
+            // We cannot export to an unknown or CellML 1.1 format
 
             return false;
         case Cellml_1_0:
-            // To export to CellML 1.0, the model must be in a non CellML 1.0
-            // format
+            // To export to CellML 1.0, the model must be in a CellML 1.1 format
 
-            if (version(mModel) == Cellml_1_0)
-                return false;
-
-            break;
-        case Cellml_1_1:
-            // To export to CellML 1.1, the model must be in a non CellML 1.1
-            // format
-
-            if (version(mModel) == Cellml_1_1)
+            if (modelVersion != Cellml_1_1)
                 return false;
 
             break;
         }
 
-        // Fully instantiate all the imports
+        // Do the actual export to CellML 1.0, after having fully instantiated
+        // all the imports
 
         if (!fullyInstantiateImports(mModel, mIssues, pWithBusyWidget))
             return false;
 
-        // Do the actual export
+        CellmlFileCellml10Exporter exporter(mModel, pFileName);
 
-        switch (pVersion) {
-        case Unknown:
-            // We clearly cannot export to an unknown version
-
-            return false;
-        case Cellml_1_0: {
-            CellmlFileCellml10Exporter exporter(mModel, pFileName);
-
-            if (!exporter.errorMessage().isEmpty()) {
-                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                           exporter.errorMessage());
-            }
-
-            return exporter.result();
+        if (!exporter.errorMessage().isEmpty()) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       exporter.errorMessage());
         }
-        case Cellml_1_1: {
-            CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
-            if (!exporter.errorMessage().isEmpty()) {
-                mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                           exporter.errorMessage());
-            }
-
-            return exporter.result();
-        }
-        }
+        return exporter.result();
     }
 
     return false;
@@ -1109,7 +1085,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         QByteArray fileContents;
 
-        if (!Core::readFileContentsFromFile(pUserDefinedFormatFileName, fileContents)) {
+        if (!Core::readFile(pUserDefinedFormatFileName, fileContents)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file could not be read"));
 
@@ -1147,7 +1123,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         if (pFileName.isEmpty()) {
             std::wcout << QString::fromStdWString(codeExporter->generateCode(mModel)).trimmed().toStdWString() << std::endl;
-        } else if (!Core::writeFileContentsToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
+        } else if (!Core::writeFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the output file could not be saved"));
 
@@ -1167,14 +1143,14 @@ CellmlFile::Version CellmlFile::version()
     // Return our version
 
     if (load())
-        return CellmlFile::version(mModel);
+        return modelVersion(mModel);
     else
         return CellmlFile::Unknown;
 }
 
 //==============================================================================
 
-CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
+CellmlFile::Version CellmlFile::modelVersion(iface::cellml_api::Model *pModel)
 {
     // Return the version of the given CellML model, if any
 
@@ -1196,16 +1172,51 @@ CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
 
 //==============================================================================
 
-CellmlFile::Version CellmlFile::version(const QString &pFileName)
+CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
     CellmlFile *cellmlFile = CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    if (cellmlFile)
+    if (cellmlFile) {
+        // The given CellML file is managed, so simply return its version
+
         return cellmlFile->version();
-    else
+    } else {
+        // The given CellML file is not managed, so try to load it and return
+        // its version
+
+        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+        ObjRef<iface::cellml_api::Model> model;
+
+        try {
+            model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+        } catch (...) {
+            return Unknown;
+        }
+
+        return modelVersion(model);
+    }
+}
+
+//==============================================================================
+
+CellmlFile::Version CellmlFile::fileContentsVersion(const QString &pFileContents)
+{
+    // Return the version of the given CellML file contents
+
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    ObjRef<iface::cellml_api::Model> model;
+
+    try {
+        model = modelLoader->createFromText(pFileContents.toStdWString());
+    } catch (...) {
         return Unknown;
+    }
+
+    return modelVersion(model);
 }
 
 //==============================================================================

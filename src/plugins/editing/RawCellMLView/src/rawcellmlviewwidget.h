@@ -84,7 +84,7 @@ public:
 
     void reformat(const QString &pFileName);
 
-    bool validate(const QString &pFileName, bool pOnlyErrors = false) const;
+    bool validate(const QString &pFileName, QString &pExtra) const;
 
 private:
     bool mNeedLoadingSettings;
@@ -101,6 +101,10 @@ private:
 
     QString retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
                                           int pPosition) const;
+
+    bool validate(const QString &pFileName, QString &pExtra,
+                  bool pOnlyErrors) const;
+    bool validate(const QString &pFileName, bool pOnlyErrors) const;
 
 private slots:
     void updateViewer();

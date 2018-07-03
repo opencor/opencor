@@ -830,8 +830,8 @@ bool validXmlFile(const QString &pXmlFileName, const QString &pSchemaFileName)
     QByteArray xmlContents;
     QByteArray schemaContents;
 
-    readFileContentsFromFile(pXmlFileName, xmlContents);
-    readFileContentsFromFile(pSchemaFileName, schemaContents);
+    readFile(pXmlFileName, xmlContents);
+    readFile(pSchemaFileName, schemaContents);
 
     return validXml(xmlContents, schemaContents);
 }

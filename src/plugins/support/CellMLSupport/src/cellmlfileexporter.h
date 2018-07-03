@@ -54,8 +54,6 @@ protected:
     bool mResult;
 
     QString mErrorMessage;
-
-    bool saveModel(iface::cellml_api::Model *pModel, const QString &pFileName);
 };
 
 //==============================================================================

@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "sedmlapibegin.h"
+#include "libsedmlbegin.h"
     #include "sedml/SedAlgorithm.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "sedml/SedWriter.h"
     #include "sedml/SedUniformTimeCourse.h"
     #include "sedml/SedVectorRange.h"
-#include "sedmlapiend.h"
+#include "libsedmlend.h"
 
 //==============================================================================
 
@@ -181,8 +181,8 @@ bool SedmlFile::save(const QString &pFileName)
 
     domDocument.setContent(QString(libsedml::writeSedMLToString(mSedmlDocument)));
 
-    if (Core::writeFileContentsToFile(pFileName.isEmpty()?mFileName:pFileName,
-                                      Core::serialiseDomDocument(domDocument))) {
+    if (Core::writeFile(pFileName.isEmpty()?mFileName:pFileName,
+                        Core::serialiseDomDocument(domDocument))) {
         mNew = false;
 
         return StandardFile::save(pFileName);
@@ -1256,7 +1256,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
             QByteArray fileContents;
             QString errorMessage;
 
-            if (Core::readFileContentsFromUrlWithBusyWidget(modelSource, fileContents, &errorMessage)) {
+            if (Core::readFileWithBusyWidget(modelSource, fileContents, &errorMessage)) {
                 // Save the contents of our model source to a local file and use
                 // that to create a CellML file object after having asked our
                 // file manager to manage it (so that CellML 1.1 files can be
@@ -1264,7 +1264,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
 
                 QString cellmlFileName = Core::temporaryFileName();
 
-                if (Core::writeFileContentsToFile(cellmlFileName, fileContents)) {
+                if (Core::writeFile(cellmlFileName, fileContents)) {
                     fileManagerInstance->manage(cellmlFileName, Core::File::Remote, modelSource);
 
                     mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);

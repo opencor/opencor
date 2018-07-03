@@ -43,9 +43,9 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const auto Cellml_1_0    = QStringLiteral("1.0");
-static const auto Cellml_1_1    = QStringLiteral("1.1");
-static const auto Cellml_Latest = Cellml_1_1;
+static const auto Cellml_1_0       = QStringLiteral("1.0");
+static const auto Cellml_1_1       = QStringLiteral("1.1");
+static const auto CellmlRefVersion = Cellml_1_1;
 
 //==============================================================================
 
@@ -148,8 +148,9 @@ public:
 
     Version version();
 
-    static Version version(iface::cellml_api::Model *pModel);
-    static Version version(const QString &pFileName);
+    static Version modelVersion(iface::cellml_api::Model *pModel);
+    static Version fileVersion(const QString &pFileName);
+    static Version fileContentsVersion(const QString &pFileContents);
 
     static QString versionAsString(Version pVersion);
 

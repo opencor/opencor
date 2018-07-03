@@ -332,10 +332,6 @@
         <translation>Analyse</translation>
     </message>
     <message>
-        <source>API</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Data Store</source>
         <translation>Magasin de Données</translation>
     </message>
@@ -390,10 +386,6 @@
     <message>
         <source>Plugins to analyse files.</source>
         <translation>Extensions pour analyser des fichiers.</translation>
-    </message>
-    <message>
-        <source>Plugins to access various APIs.</source>
-        <translation>Extensions pour accéder différentes APIs.</translation>
     </message>
     <message>
         <source>Plugins to store and manipulate data.</source>

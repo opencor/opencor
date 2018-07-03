@@ -72,11 +72,7 @@ bool CellMLTextViewPlugin::validCellml(const QString &pFileName,
 {
     // Validate the given file
 
-//---OPENCOR--- THE BELOW EXTRA INFORMATION SHOULD BE REMOVED ONCE WE USE
-//              libCellML AND ONCE WE CAN TRULY DO CellML VALIDATION...
-    pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> cannot be used in this view, so only validation against the <a href=\"http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.");
-
-    return mViewWidget->validate(pFileName);
+    return mViewWidget->validate(pFileName, pExtra);
 }
 
 //==============================================================================
@@ -378,10 +374,14 @@ QString CellMLTextViewPlugin::viewDefaultFileExtension() const
 
 QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
+    // Make sure that we are dealing with a CellML 1.0/1.1 file
 
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
+
+    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
         return 0;
+    }
 
     // Update and return our CellML Text view widget using the given CellML
     // file
@@ -440,25 +440,33 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     // Check whether we are dealing with a local or a remote file, and retrieve
     // its contents
 
-    QString errorMessage = QString();
-    bool isLocalFile;
-    QString fileNameOrUrl;
-
-    Core::checkFileNameOrUrl(pArguments[0], isLocalFile, fileNameOrUrl);
-
     QByteArray fileContents;
+    QString errorMessage = QString();
 
-    if (isLocalFile) {
-        if (!QFile::exists(fileNameOrUrl))
-            errorMessage = "The file could not be found.";
-        else if (!Core::readFileContentsFromFile(fileNameOrUrl, fileContents))
-            errorMessage = "The file could not be opened.";
-    } else {
-        if (!Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage))
+    if (!Core::readFile(pArguments[0], fileContents, &errorMessage)) {
+        if (errorMessage.isEmpty()) {
+            if (QFile::exists(pArguments[0]))
+                errorMessage = "The file could not be opened.";
+            else
+                errorMessage = "The file could not be found.";
+        } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
+        }
     }
 
-    // At this stage, we have the contents of the file, so we can do the
+    // At this stage, we have the contents of the file, so we need to check that
+    // it is a CellML 1.0/1.1 file if we want to import it
+
+    if (errorMessage.isEmpty() && pImport) {
+        CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileContentsVersion(fileContents);
+
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+            errorMessage = QString("Only CellML 1.0/1.1 files can be imported.");
+        }
+    }
+
+    // We know that the file is a CellML 1.0/1.1 file, so we can do the
     // import/export
 
     if (errorMessage.isEmpty()) {

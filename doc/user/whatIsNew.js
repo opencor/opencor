@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 29, "month": 5, "year": 2018,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 27, "month": 6, "year": 2018,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -95,11 +95,6 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> solver (formerly known as the <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver)",
-                             "entries": [
-                               { "type": "added", "description": "Support for sensitivity analysis." }
-                             ]
-                           },
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver",
                              "entries": [
                                { "type": "added", "description": "Parametrisation of the solver." }

@@ -53,29 +53,12 @@ void Tests::helpTests()
 
 //==============================================================================
 
-void Tests::exportTests()
+void Tests::exportToUserDefinedFormatTests()
 {
-    // Try to export a CellML 1.0 file to CellML 1.0
-
-    QString fileName = OpenCOR::fileName("models/noble_model_1962.cellml");
-
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
-             QStringList() << "The file is already a CellML 1.0 file." << QString());
-
-    // Export a CellML 1.1 file to CellML 1.0
-
-    fileName = OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
-
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());
-
-    // Try to export a non-existing CellML file to CellML 1.0
-
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_file" << "cellml_1_0"),
-             QStringList() << "The file could not be found." << QString());
-
     // Try to export to a user-defined format, which file description doesn't
     // exist
+
+    QString fileName = OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "non_existing_user_defined_format_file"),
              QStringList() << "The user-defined format file could not be found." << QString());
@@ -92,6 +75,30 @@ void Tests::exportTests()
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << matlabFormatFileName),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_non_windows.out")));
 #endif
+}
+
+//==============================================================================
+
+void Tests::exportToCellml10Tests()
+{
+    // Try to export a CellML 1.0 file to CellML 1.0
+
+    QString fileName = OpenCOR::fileName("models/noble_model_1962.cellml");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
+             QStringList() << "The file must be a CellML 1.1 file." << QString());
+
+    // Export a CellML 1.1 file to CellML 1.0
+
+    fileName = OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());
+
+    // Try to export a non-existing CellML file to CellML 1.0
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_file" << "cellml_1_0"),
+             QStringList() << "The file could not be found." << QString());
 }
 
 //==============================================================================

@@ -102,22 +102,14 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);
 
-    // Enable/disable and show/hide our tools in case we are dealing with a
-    // CellML-based view plugin
+    // Enable/disable our tools in case we are dealing with a CellML file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?cellmlFile->version():CellMLSupport::CellmlFile::Unknown;
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    mExportToCellml10Action->setEnabled(   cellmlFile && cellmlFile->model()
-                                        && (cellmlVersion != CellMLSupport::CellmlFile::Unknown)
-                                        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0));
-    mExportToCellml11Action->setEnabled(   cellmlFile && cellmlFile->model()
-                                        && (cellmlVersion != CellMLSupport::CellmlFile::Unknown)
-                                        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1));
-//---OPENCOR--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
-Core::showEnableAction(mExportToCellml11Action, false);
+    mExportToCellml10Action->setEnabled(cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1);
 
-    mExportToUserDefinedFormatAction->setEnabled(cellmlFile && cellmlFile->model());
+    mExportToUserDefinedFormatAction->setEnabled(   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+                                                 || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1));
 
     // Keep track of the file name
 
@@ -155,8 +147,6 @@ void CellMLToolsPlugin::retranslateUi()
 
     retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."),
                       tr("Export the CellML file to CellML 1.0"));
-    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."),
-                      tr("Export the CellML file to CellML 1.1"));
 
     retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."),
                       tr("Export the CellML file to some user-defined format"));
@@ -204,12 +194,10 @@ void CellMLToolsPlugin::initializePlugin()
     // Tools | Export To menu
 
     mExportToCellml10Action = Core::newAction(Core::mainWindow());
-    mExportToCellml11Action = Core::newAction(Core::mainWindow());
 
     mExportToUserDefinedFormatAction = Core::newAction(Core::mainWindow());
 
     mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
-    mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
     mCellmlFileExportToMenu->addSeparator();
     mCellmlFileExportToMenu->addAction(mExportToUserDefinedFormatAction);
 
@@ -217,8 +205,6 @@ void CellMLToolsPlugin::initializePlugin()
 
     connect(mExportToCellml10Action, &QAction::triggered,
             this, &CellMLToolsPlugin::exportToCellml10);
-    connect(mExportToCellml11Action, &QAction::triggered,
-            this, &CellMLToolsPlugin::exportToCellml11);
 
     connect(mExportToUserDefinedFormatAction, &QAction::triggered,
             this, &CellMLToolsPlugin::exportToUserDefinedFormat);
@@ -273,11 +259,14 @@ void CellMLToolsPlugin::handleUrl(const QUrl &pUrl)
 
 void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
 {
+    // Make sure that we want to export either to CellML 1.0
+
+    if (pVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        return;
+
     // Ask for the name of the file that will contain the export
 
-    QString format = (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
-                         "CellML 1.0":
-                         "CellML 1.1";
+    QString format = "CellML 1.0";
     QStringList cellmlFilters = Core::filters(FileTypeInterfaces() << CellMLSupport::fileTypeInterface());
     QString firstCellmlFilter = cellmlFilters.first();
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
@@ -352,13 +341,13 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
         QByteArray fileContents;
 
-        if (Core::readFileContentsFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (Core::readFile(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
             fileName = Core::temporaryFileName();
 
-            if (!Core::writeFileContentsToFile(fileName, fileContents))
+            if (!Core::writeFile(fileName, fileContents))
                 errorMessage = "The file could not be saved locally.";
         } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
@@ -368,12 +357,14 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // At this stage, we should have a real file (be it originally local or
     // remote), so carry on with the export
 
+    bool fileExists = QFile::exists(fileName);
+
     if (errorMessage.isEmpty()) {
         // Before actually doing the export, we need to make sure that the file
         // exists, that it is a valid CellML file, that it can be managed and
         // that it can be loaded
 
-        if (!QFile::exists(fileName)) {
+        if (!fileExists) {
             errorMessage = "The file could not be found.";
         } else if (!CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName)) {
             errorMessage = "The file is not a CellML file.";
@@ -397,24 +388,25 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                     // At this stage, everything is fine with the file, so now
                     // we need to check the type of export the user wants
 
-                    QString predefinedFormatOrUserDefinedFormatFileName = pArguments[1];
-                    bool wantExportToUserDefinedFormat = predefinedFormatOrUserDefinedFormatFileName.compare("cellml_1_0");
+                    static const QString Cellml10Export = "cellml_1_0";
 
-                    // If we want to export to CellML 1.0, then we need to make
-                    // sure that the file is not already in that format
+                    QString formatOrFileName = pArguments[1];
+                    bool isCellml10Format = !formatOrFileName.compare(Cellml10Export);
+                    bool isFileName = !isCellml10Format;
+                    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
-                    if (    wantExportToUserDefinedFormat
-                        && !QFile::exists(predefinedFormatOrUserDefinedFormatFileName)) {
+                    if (    isFileName
+                        && !QFile::exists(formatOrFileName)) {
                         errorMessage = "The user-defined format file could not be found.";
-                    } else if (   !wantExportToUserDefinedFormat
-                               && (cellmlFile->version() == CellMLSupport::CellmlFile::Cellml_1_0)) {
-                        errorMessage = "The file is already a CellML 1.0 file.";
+                    } else if (   isCellml10Format
+                               && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+                        errorMessage = "The file must be a CellML 1.1 file.";
                     } else {
                         // Everything seems to be fine, so attempt the export
                         // itself
 
-                        if (   ( wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), predefinedFormatOrUserDefinedFormatFileName))
-                            || (!wantExportToUserDefinedFormat && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Cellml_1_0))) {
+                        if (   (isFileName && !cellmlFile->exportTo(QString(), formatOrFileName))
+                            || (isCellml10Format && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Cellml_1_0))) {
                             errorMessage = "The file could not be exported";
 
                             if (cellmlFile->issues().count()) {
@@ -442,7 +434,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Delete the temporary file, if any, i.e. we are dealing with a remote file
     // and it has a temporay file associated with it
 
-    if (!isLocalFile && QFile::exists(fileName))
+    if (!isLocalFile && fileExists)
         QFile::remove(fileName);
 
     // Let the user know if something went wrong at some point and then leave
@@ -463,15 +455,6 @@ void CellMLToolsPlugin::exportToCellml10()
     // Export the current file to CellML 1.0
 
     exportTo(CellMLSupport::CellmlFile::Cellml_1_0);
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::exportToCellml11()
-{
-    // Export the current file to CellML 1.1
-
-    exportTo(CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================

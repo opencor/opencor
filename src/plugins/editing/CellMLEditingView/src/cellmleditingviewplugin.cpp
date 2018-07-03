@@ -57,6 +57,7 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
 
 CellMLEditingViewPlugin::CellMLEditingViewPlugin() :
     mFileName(QString()),
+    mEditor(0),
     mCellmlEditingViewInterface(0)
 {
 }
@@ -94,7 +95,7 @@ void CellMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
     // The given file has been un/locked, so show/enable or hide/disable our
     // reformat action, if needed
 
-    if (!pFileName.compare(mFileName)) {
+    if (mEditor && !pFileName.compare(mFileName)) {
         bool hasFileNameAndIsReadableAndWritable = !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
         Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
@@ -159,32 +160,29 @@ void CellMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the CellML editing interface
 
+    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
+
+    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):0;
     mCellmlEditingViewInterface = pViewPlugin?qobject_cast<CellmlEditingViewInterface *>(pViewPlugin->instance()):0;
 
     bool hasFileName = !pFileName.isEmpty();
-    bool hasFileNameAndIsReadableAndWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
+    bool hasFileNameAndIsReadWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-    Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
-    Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+    Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface, mEditor && hasFileNameAndIsReadWritable);
+    Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface, hasFileNameAndIsReadWritable);
 
-    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface, hasFileName);
+    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface, mEditor && hasFileName);
     Core::showEnableAction(mToolsCellmlValidationSeparator, mCellmlEditingViewInterface, hasFileName);
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
     //       EditingViewPlugin::updateGui()...
 
-    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
-
-    if (editingViewInterface) {
-        EditorWidget::EditorWidget *editor = editingViewInterface->editorWidget(pFileName);
-
-        if (editor) {
-            editor->setContextMenu(editor->contextMenu()->actions() << mEditReformatSeparator
-                                                                    << mEditReformatAction
-                                                                    << mToolsCellmlValidationSeparator
-                                                                    << mToolsCellmlValidationAction);
-        }
+    if (mEditor) {
+        mEditor->setContextMenu(mEditor->contextMenu()->actions() << mEditReformatSeparator
+                                                                  << mEditReformatAction
+                                                                  << mToolsCellmlValidationSeparator
+                                                                  << mToolsCellmlValidationAction);
     }
 
     // Keep track of the file name

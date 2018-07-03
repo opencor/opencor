@@ -441,7 +441,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         // The previously selected file doesn't exist anymore, so select the
         // first file (otherwise the last file will be selected)
 
-        mFileTabs->setCurrentIndex(0);
+        setTabBarCurrentIndex(mFileTabs, 0);
     }
 
     // Retrieve the seleted modes and views, in case there are no files
@@ -450,7 +450,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings->value(SettingsFileMode.arg(QString())).toString());
 
         if (fileMode != ViewInterface::UnknownMode)
-            mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(fileMode));
+            setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(fileMode));
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
@@ -462,7 +462,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
             for (int j = 0, jMax = viewPlugins.count(); j < jMax; ++j) {
                 if (!viewPluginName.compare(viewPlugins[j]->name())) {
-                    mode->viewTabs()->setCurrentIndex(j);
+                    setTabBarCurrentIndex(mode->viewTabs(), j);
 
                     break;
                 }
@@ -760,7 +760,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
 
     for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!mFileNames[i].compare(fileName)) {
-            mFileTabs->setCurrentIndex(i);
+            setTabBarCurrentIndex(mFileTabs, i);
 
             return QString();
         }
@@ -790,7 +790,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
 
     updateFileTab(fileTabIndex);
 
-    mFileTabs->setCurrentIndex(fileTabIndex);
+    setTabBarCurrentIndex(mFileTabs, fileTabIndex);
 
     // Everything went fine, so let our plugins know that our file has been
     // opened
@@ -863,15 +863,15 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         QString errorMessage;
 
         showBusyWidget();
-        // Note: our call to readFileContentsFromUrlWithBusyWidget() will also
-        //       show a busy widget, but it will also hide it while we want to
-        //       keep it visible in case we are loading a SED-ML file / COMBINE
-        //       archive. Indeed, such files may require further initialisation
-        //       (in the case of the Simulation Experiment view, for example).
-        //       So, we rely on nested calls to our busy widget to have it
-        //       remain visible until it gets hidden in updateGui()...
+        // Note: our call to readFileWithBusyWidget() will also show a busy
+        //       widget, but it will also hide it while we want to keep it
+        //       visible in case we are loading a SED-ML file / COMBINE archive.
+        //       Indeed, such files may require further initialisation (in the
+        //       case of the Simulation Experiment view, for example). So, we
+        //       rely on nested calls to our busy widget to have it remain
+        //       visible until it gets hidden in updateGui()...
 
-        if (readFileContentsFromUrlWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (readFileWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -990,20 +990,20 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                     QString errorMessage;
 
                     showBusyWidget();
-                    // Note: our call to readFileContentsFromUrlWithBusyWidget()
-                    //       will also show a busy widget, but it will also hide
-                    //       it while we want to keep it visible in case we are
-                    //       reloading a SED-ML file / COMBINE archive. Indeed,
-                    //       such files may require further initialisation (in
-                    //       the case of the Simulation Experiment view, for
-                    //       example). So, we rely on nested calls to our busy
-                    //       widget to have it remain visible until it gets
-                    //       hidden in updateGui()...
+                    // Note: our call to readFileWithBusyWidget() will also show
+                    //       a busy widget, but it will also hide it while we
+                    //       want to keep it visible in case we are reloading a
+                    //       SED-ML file / COMBINE archive. Indeed, such files
+                    //       may require further initialisation (in the case of
+                    //       the Simulation Experiment view, for example). So,
+                    //       we rely on nested calls to our busy widget to have
+                    //       it remain visible until it gets hidden in
+                    //       updateGui()...
 
-                    bool res = readFileContentsFromUrlWithBusyWidget(url, fileContents, &errorMessage);
+                    bool res = readFileWithBusyWidget(url, fileContents, &errorMessage);
 
                     if (res) {
-                        writeFileContentsToFile(fileName, fileContents);
+                        writeFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
                     } else {
@@ -1238,9 +1238,9 @@ void CentralWidget::previousFile()
     // Select the previous file
 
     if (mFileTabs->count()) {
-        mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
-                                       mFileTabs->currentIndex()-1:
-                                       mFileTabs->count()-1);
+        setTabBarCurrentIndex(mFileTabs, mFileTabs->currentIndex()?
+                                             mFileTabs->currentIndex()-1:
+                                             mFileTabs->count()-1);
     }
 }
 
@@ -1251,9 +1251,9 @@ void CentralWidget::nextFile()
     // Select the next file
 
     if (mFileTabs->count()) {
-        mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
-                                       0:
-                                       mFileTabs->currentIndex()+1);
+        setTabBarCurrentIndex(mFileTabs, (mFileTabs->currentIndex() == mFileTabs->count()-1)?
+                                             0:
+                                             mFileTabs->currentIndex()+1);
     }
 }
 
@@ -1458,7 +1458,7 @@ bool CentralWidget::selectMode(const QString &pModeName)
     ViewInterface::Mode mode = ViewInterface::modeFromString(pModeName);
 
     if (mode != ViewInterface::UnknownMode) {
-        mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(mode));
+        setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(mode));
 
         return true;
     } else {
@@ -1481,7 +1481,7 @@ bool CentralWidget::selectView(const QString &pViewName)
 
             for (int j = 0, iMax = viewPlugins.count(); j < iMax; ++j) {
                 if (!viewPlugins[j]->name().compare(pViewName)) {
-                    mode->viewTabs()->setCurrentIndex(j);
+                    setTabBarCurrentIndex(mode->viewTabs(), j);
 
                     return true;
                 }
@@ -1670,6 +1670,27 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
 
 //==============================================================================
 
+void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
+{
+    // Update the current index of the given tab bar widget, after having
+    // temporarily disabled its handling of the currentChanged() signal, if
+    // needed
+
+    if (mState == UpdatingGui) {
+        disconnect(pTabBar, &TabBarWidget::currentChanged,
+                   this, &CentralWidget::updateGui);
+    }
+
+    pTabBar->setCurrentIndex(pIndex);
+
+    if (mState == UpdatingGui) {
+        connect(pTabBar, &TabBarWidget::currentChanged,
+                this, &CentralWidget::updateGui);
+    }
+}
+
+//==============================================================================
+
 void CentralWidget::updateGui()
 {
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
@@ -1680,7 +1701,7 @@ void CentralWidget::updateGui()
         // index, if possible
 
         if (tabBar)
-            tabBar->setCurrentIndex(tabBar->oldIndex());
+            setTabBarCurrentIndex(tabBar, tabBar->oldIndex());
 
         return;
     }
@@ -1727,9 +1748,10 @@ void CentralWidget::updateGui()
             if (changedModes)
                 fileModeTabIndex = mModeTabs->currentIndex();
             else
-                mModeTabs->setCurrentIndex(fileModeTabIndex);
+                setTabBarCurrentIndex(mModeTabs, fileModeTabIndex);
 
-            mModes.value(mModeTabIndexModes.value(fileModeTabIndex))->viewTabs()->setCurrentIndex(mFileModeViewTabIndexes.value(fileName).value(fileModeTabIndex));
+            setTabBarCurrentIndex(mModes.value(mModeTabIndexModes.value(fileModeTabIndex))->viewTabs(),
+                                  mFileModeViewTabIndexes.value(fileName).value(fileModeTabIndex));
         } else if (!changedViews) {
             // We are opening a file, so determine the default views that we
             // should try and if there are none, then try the Raw Text view

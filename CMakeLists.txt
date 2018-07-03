@@ -17,13 +17,12 @@ endif()
 
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
 
-option(USE_PREBUILT_BIOSIGNALMLAPI_PACKAGE "Use the pre-built version of the BioSignalML API package" ON)
+option(USE_PREBUILT_BIOSIGNALML_PACKAGE "Use the pre-built version of the BioSignalML package" ON)
 option(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
-option(USE_PREBUILT_NUMLAPI_PACKAGE "Use the pre-built version of the NuML API package" ON)
-option(USE_PREBUILT_SBMLAPI_PACKAGE "Use the pre-built version of the SBML API package" ON)
-option(USE_PREBUILT_SEDMLAPI_PACKAGE "Use the pre-built version of the SED-ML API package" ON)
-
 option(USE_PREBUILT_LIBGIT2_PACKAGE "Use the pre-built version of the libgit2 package" ON)
+option(USE_PREBUILT_LIBNUML_PACKAGE "Use the pre-built version of the libNuML package" ON)
+option(USE_PREBUILT_LIBSBML_PACKAGE "Use the pre-built version of the libSBML package" ON)
+option(USE_PREBUILT_LIBSEDML_PACKAGE "Use the pre-built version of the libSEDML package" ON)
 option(USE_PREBUILT_LIBXDIFF_PACKAGE "Use the pre-built version of the LibXDiff package" ON)
 option(USE_PREBUILT_LLVMCLANG_PACKAGE "Use the pre-built version of the LLVMClang package" ON)
 option(USE_PREBUILT_OAUTH_PACKAGE "Use the pre-built version of the OAuth package" ON)
@@ -842,18 +841,13 @@ set(PLUGINS
     thirdParty/zlib
     thirdParty/OpenSSL
 
+    thirdParty/libSBML
     thirdParty/Python
     thirdParty/PythonPackages
     thirdParty/PythonQtAPI
 
     ${SAMPLE_PLUGINS}
     ${TEST_PLUGINS}
-
-    api/BioSignalMLAPI
-    api/CellMLAPI
-    api/SBMLAPI
-    api/NuMLAPI
-    api/SEDMLAPI
 
     dataStore/BioSignalMLDataStore
     dataStore/CSVDataStore
@@ -882,7 +876,7 @@ set(PLUGINS
 
     simulation/SimulationExperimentView
 
-    solver/CVODESSolver
+    solver/CVODESolver
     solver/ForwardEulerSolver
     solver/FourthOrderRungeKuttaSolver
     solver/HeunSolver
@@ -900,7 +894,11 @@ set(PLUGINS
     support/StandardSupport
     support/ZIPSupport
 
+    thirdParty/BioSignalML
+    thirdParty/CellMLAPI
     thirdParty/libgit2
+    thirdParty/libNuML
+    thirdParty/libSEDML
     thirdParty/LibXDiff
     thirdParty/LLVMClang
     thirdParty/OAuth
@@ -943,8 +941,7 @@ endif()
 foreach(PLUGIN ${PLUGINS})
     set(PLUGIN_DIR src/plugins/${PLUGIN})
 
-    if(   "${PLUGIN}" MATCHES "^api/.*$"
-       OR "${PLUGIN}" MATCHES "^thirdParty/.*$")
+    if("${PLUGIN}" MATCHES "^thirdParty/.*$")
         include_directories(${CMAKE_SOURCE_DIR}/${PLUGIN_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR}/include)
     endif()
 
