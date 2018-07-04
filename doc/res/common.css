@@ -158,16 +158,6 @@ p.note3:before {
     content: "Note #3:";
 }
 
-pre {
-    margin: 3px 13px 3px 13px;
-    border: 1px solid rgba(103, 103, 103, 0.13);
-    padding: 3px;
-    background: rgba(103, 103, 103, 0.05);
-    font-family: "Consolas", "Menlo", "Deja Vu Sans Mono", "Bitstream Vera Sans Mono", "Monospace";
-    font-size: 9pt;
-    overflow: auto;
-}
-
 span.anchor {
     display: block;
     height: 23px;
