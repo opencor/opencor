@@ -249,6 +249,18 @@ span.changes {
     color: rgb(103, 103, 103);
 }
 
+table.team {
+    margin-left: 2.5em;
+}
+
+table.team td div {
+    padding-bottom: 0.5em;
+    color: rgb(103, 103, 103);
+    font-size: 12pt;
+    font-style: italic;
+    font-weight: bold;
+}
+
 table.version,
 table.changes {
     width: 100%;
