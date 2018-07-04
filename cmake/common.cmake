@@ -43,7 +43,7 @@ endmacro()
 
 #===============================================================================
 
-macro(fetch_repository_contents REPOSITORY_NAME REPOSITORY_SOURCE_DIR)
+macro(fetch_repository REPOSITORY_NAME REPOSITORY_SOURCE_DIR)
     # Specify where our repository comes from
 
     FetchContent_Declare(${REPOSITORY_NAME}

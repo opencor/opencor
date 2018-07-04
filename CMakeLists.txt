@@ -950,9 +950,9 @@ include(FetchContent)
 
 set(DOCUMENTATION_SOURCE_DIR ${CMAKE_BINARY_DIR}/doc-src)
 
-fetch_repository_contents(user-documentation ${DOCUMENTATION_SOURCE_DIR}/user)
-fetch_repository_contents(developer-documentation ${DOCUMENTATION_SOURCE_DIR}/developer)
-fetch_repository_contents(sphinx-theme ${DOCUMENTATION_SOURCE_DIR}/theme)
+fetch_repository(user-documentation ${DOCUMENTATION_SOURCE_DIR}/user)
+fetch_repository(developer-documentation ${DOCUMENTATION_SOURCE_DIR}/developer)
+fetch_repository(sphinx-theme ${DOCUMENTATION_SOURCE_DIR}/theme)
 
 string(TIMESTAMP SPHINX_YEAR "%Y")
 
