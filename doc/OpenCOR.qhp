@@ -4,7 +4,8 @@
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
-            <file>*.*</file>
+            <file>user/*.*</file>
+            <file>user/_static/*.*</file>
         </files>
     </filterSection>
 </QtHelpProject>
