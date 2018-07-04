@@ -808,7 +808,9 @@ endif()
 
 # Specify a target to build our non-library packages (e.g. Python)
 
-add_custom_target(OpenCORBuild ALL)
+set(PROJECT_BUILD ${PROJECT_NAME}Build)
+
+add_custom_target(${PROJECT_BUILD} ALL)
 
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any

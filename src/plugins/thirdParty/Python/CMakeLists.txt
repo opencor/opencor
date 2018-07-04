@@ -539,7 +539,7 @@ set(PYTHON_FULL_VERSION ${MAJOR_MINOR_LIBRARY_VERSION}${PYTHON_ABIFLAGS} PARENT_
 
 add_custom_target(${PROJECT_NAME})
 
-add_dependencies(OpenCORBuild ${PROJECT_NAME})
+add_dependencies(${PROJECT_BUILD} ${PROJECT_NAME})
 
 if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
@@ -552,7 +552,7 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
 
 # And run it
 
-add_custom_command(TARGET PythonPlugin POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
