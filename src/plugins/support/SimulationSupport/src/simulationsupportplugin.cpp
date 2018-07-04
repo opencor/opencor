@@ -43,7 +43,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
 // TODO: we need a better way to include all the solver plugins...
     return new PluginInfo(PluginInfo::Support, false, false,
                           QStringList() << "COMBINESupport" << "DataStore" << "PythonQtSupport"
-                                        << "CVODESSolver" << "ForwardEulerSolver"
+                                        << "CVODESolver" << "ForwardEulerSolver"
                                         << "FourthOrderRungeKuttaSolver" << "HeunSolver"
                                         << "KINSOLSolver" << "SecondOrderRungeKuttaSolver",
                           descriptions);
