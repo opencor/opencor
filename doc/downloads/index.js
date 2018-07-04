@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Solvers:</strong> reference <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> rather than <a href=\"https://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1711\">#1711</a>)." }
+                       { "change": "<strong>Solvers:</strong> reference <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> rather than <a href=\"https://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1711\">#1711</a>)." },
+                       { "change": "<strong>Simualtion Experiment view:</strong> fixed some issues with manually added graphs and graphs associated with another file (see issue <a href=\"https://github.com/opencor/opencor/issues/1716\">#1716</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

@@ -100,6 +100,16 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTit
 
 //==============================================================================
 
+GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QColor &pColor) :
+    GraphPanelPlotGraphProperties(DefaultSelected, DefaultTitle,
+                                  DefaultLineStyle, DefaultLineWidth, pColor,
+                                  DefaultSymbolStyle, DefaultSymbolSize, pColor,
+                                  DefaultSymbolFilled, DefaultSymbolFillColor)
+{
+}
+
+//==============================================================================
+
 bool GraphPanelPlotGraphProperties::isSelected() const
 {
     // Return our selected state
