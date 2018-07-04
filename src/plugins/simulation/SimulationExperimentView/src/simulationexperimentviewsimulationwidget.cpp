@@ -3394,8 +3394,7 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 
     GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY, graphPanel);
 
-    graphPanel->addGraph(graph,
-                         GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
+    graphPanel->addGraph(graph, GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
 }
 
 //==============================================================================
@@ -3480,14 +3479,23 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
         graph->setVisible(graph->isValid() && graph->isSelected());
 
-        // Update the graph's data
+        // Update the graph's data, accounting for the fact that the simulation
+        // may (now) have a different number of runs
         // Note: we need to check that we have a simulation since our graph may
-        //       indeed refer to a file that has not yet been activated and
-        //       therefore doesn't yet have a simulation associated with it...
+        //       indeed refer to a file that has not yet been activated and/or
+        //       doesn't yet have a simulation associated with it...
 
         SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
 
-        updateGraphData(graph, simulation?simulation->results()->size():0);
+        graph->removeRuns();
+
+        if (simulation) {
+            for (int i = 0, iMax = simulation->runsCount(); i < iMax; ++i) {
+                graph->addRun();
+
+                updateGraphData(graph, simulation->results()->size(i), i);
+            }
+        }
 
         // Keep track of the plot that needs to be updated and replotted
 
