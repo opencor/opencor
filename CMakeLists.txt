@@ -61,6 +61,7 @@ else()
     endif()
 endif()
 
+# Determine the effective build directory
 
 set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
 
