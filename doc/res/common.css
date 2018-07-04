@@ -28,7 +28,6 @@ a.noHover:hover {
 }
 
 div.copyright {
-    z-index: 999;
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -47,14 +46,14 @@ div.copyright div {
     bottom: 2px;
 }
 
-div.copyright div.left {
-    left: 4px;
-}
-
 div.copyright div.center {
     position: absolute;
     left: 50%;
     top: 50%;
+}
+
+div.copyright div.left {
+    left: 4px;
 }
 
 div.copyright div.right {

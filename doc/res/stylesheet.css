@@ -1,21 +1,11 @@
 @import "common.css";
 
-div.header {
-    background: rgb(103, 103, 103);
-}
-
 div.contents {
     border-radius: 0px 0px 13px 13px;
 }
 
-div.official {
-    border: 1px solid rgb(170, 187, 133);
-    background: rgba(118, 146, 60, 0.13);
-}
-
-div.officialSection {
-    border-bottom: none;
-    background: rgba(118, 146, 60, 0.39);
+div.header {
+    background: rgb(103, 103, 103);
 }
 
 div.latest {
@@ -34,6 +24,22 @@ div.latestInfo {
 div.latestSection {
     border-bottom: none;
     background: rgba(227, 108, 9, 0.39);
+}
+
+div.main {
+    position: relative;
+    margin-top: -200px;
+    margin-left: 330px;
+}
+
+div.official {
+    border: 1px solid rgb(170, 187, 133);
+    background: rgba(118, 146, 60, 0.13);
+}
+
+div.officialSection {
+    border-bottom: none;
+    background: rgba(118, 146, 60, 0.39);
 }
 
 div.old {
@@ -77,12 +83,6 @@ img.downloads:hover {
     background: rgba(103, 103, 103, 0.13);
 }
 
-div.main {
-    position: relative;
-    margin-top: -200px;
-    margin-left: 330px;
-}
-
 span.changes {
     color: rgb(103, 103, 103);
 }
@@ -92,17 +92,8 @@ table.changes {
     width: 100%;
 }
 
-table.version td.topSeparator,
-table.changes td.topSeparator {
-    border-top: 1px dashed rgba(103, 103, 103, 0.39);
-}
-
 table.version td.leftSeparator {
     border-left: 1px dashed rgba(103, 103, 103, 0.39);
-}
-
-table.version td.platform td.logo {
-    width: 80px;
 }
 
 table.version td.platform div {
@@ -119,7 +110,16 @@ table.version td.platform div.supported {
     font-size: 8pt;
 }
 
+table.version td.platform td.logo {
+    width: 80px;
+}
+
 table.version td.platform span.fileSize {
     font-size: 7pt;
     font-style: italic;
+}
+
+table.version td.topSeparator,
+table.changes td.topSeparator {
+    border-top: 1px dashed rgba(103, 103, 103, 0.39);
 }
