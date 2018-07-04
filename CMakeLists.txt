@@ -67,7 +67,7 @@ endif()
 #       we determine and retrieve that value ourselves...
 
 try_run(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-        ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+        ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
         RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
 if(NOT ARCHITECTURE_COMPILE)
@@ -95,7 +95,7 @@ endif()
 # Try to build our runpath2rpath program, if we are on Linux
 
 if(NOT WIN32 AND NOT APPLE)
-    set(RUNPATH2RPATH ${CMAKE_BINARY_DIR}/runpath2rpath)
+    set(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
 
     execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
@@ -111,7 +111,7 @@ find_program(CLCACHE clcache)
 find_program(CCACHE ccache)
 
 if(CLCACHE)
-    set(CLCACHEWRAPPER ${CMAKE_BINARY_DIR}/clcachewrapper)
+    set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
 
     execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
@@ -255,7 +255,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 include(ExternalProject)
 
-set(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
+set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
 
 set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
@@ -948,7 +948,7 @@ endforeach()
 
 include(FetchContent)
 
-set(DOCUMENTATION_SOURCE_DIR ${CMAKE_BINARY_DIR}/doc-src)
+set(DOCUMENTATION_SOURCE_DIR ${PROJECT_BUILD_DIR}/doc-src)
 
 fetch_repository(user-documentation ${DOCUMENTATION_SOURCE_DIR}/user)
 fetch_repository(developer-documentation ${DOCUMENTATION_SOURCE_DIR}/developer)
@@ -961,7 +961,7 @@ configure_file("${CMAKE_SOURCE_DIR}/doc/conf.py.in"
                @ONLY)
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
-                        ${CMAKE_SOURCE_DIR}/doc ${CMAKE_BINARY_DIR}/doc)
+                        ${CMAKE_SOURCE_DIR}/doc ${PROJECT_BUILD_DIR}/doc)
 
 build_documentation(user)
 build_documentation(developer)

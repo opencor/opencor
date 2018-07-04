@@ -67,7 +67,7 @@ macro(build_documentation DOCUMENTATION_NAME)
                        COMMAND ${SPHINX_BUILD_EXECUTABLE} -q -b html
                                                           -c "${DOCUMENTATION_SOURCE_DIR}"
                                                           "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
-                                                          "${CMAKE_BINARY_DIR}/doc/${DOCUMENTATION_NAME}"
+                                                          "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}"
                        COMMENT "Building the ${DOCUMENTATION_NAME} documentation")
 endmacro()
 
@@ -335,7 +335,7 @@ macro(add_plugin PLUGIN_NAME)
         string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
                PLUGIN_BUILD_DIR "${PROJECT_SOURCE_DIR}")
 
-        set(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
+        set(PLUGIN_BUILD_DIR ${PROJECT_BUILD_DIR}/${PLUGIN_BUILD_DIR})
 
         if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
             set(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
