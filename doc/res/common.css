@@ -122,14 +122,6 @@ div.section table td span.whatIsNew {
     font-weight: normal;
 }
 
-div.subSection {
-    margin: 1.5em 0em 0.5em 0em;
-    /* Note: mimicking what has been done in div.section... */
-    font-size: 11pt;
-    font-style: italic;
-    font-weight: bold;
-}
-
 img.center {
     display: block;
     margin-left: auto;
