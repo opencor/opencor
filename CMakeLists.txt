@@ -61,6 +61,37 @@ else()
     endif()
 endif()
 
+
+set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+if(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+    # With Xcode, we have a configuration directory, but it messes up our build
+    # system, so ask for all the binaries to be generated in our build folder
+
+    set(XCODE TRUE)
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+else()
+    # Check whether there is a configuration directory (the case with MSVC) and,
+    # if so, make use of it
+
+    set(XCODE FALSE)
+
+    if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+        set(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+    endif()
+endif()
+
 # Make sure that we are building OpenCOR on a supported architecture
 # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in some
 #       cases it may not be set (e.g. when generating an Xcode project file), so
@@ -167,38 +198,6 @@ else()
 endif()
 
 set(PLATFORM_DIR ${PLATFORM})
-
-# Determine the effective build directory
-
-set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-if(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
-    # With Xcode, we have a configuration directory, but it messes up our build
-    # system, so ask for all the binaries to be generated in our build folder
-
-    set(XCODE TRUE)
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-else()
-    # Check whether there is a configuration directory (the case with MSVC) and,
-    # if so, make use of it
-
-    set(XCODE FALSE)
-
-    if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        set(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-    endif()
-endif()
 
 # Default location of external binaries and packages
 
