@@ -568,11 +568,6 @@ file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
 keep_track_of_file(${VERSION_DATE_FILENAME})
 
-# Configure our help file
-
-configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
-
 # Configure our QRC files
 
 set(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
@@ -962,6 +957,9 @@ configure_file("${CMAKE_SOURCE_DIR}/doc/conf.py.in"
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
                         ${CMAKE_SOURCE_DIR}/doc ${PROJECT_BUILD_DIR}/doc)
+
+configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
 build_documentation(user)
 build_documentation(developer)
