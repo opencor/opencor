@@ -60,13 +60,15 @@ endmacro()
 
 macro(build_documentation DOCUMENTATION_NAME)
     # Build the given documentation
+    # Note: we add a depency so that we are certain that the Sphinx script uses
+    #       our copy of Python (see the Python and PythonPacakges plugins)...
 
-    add_custom_target(${DOCUMENTATION_NAME} ALL
-                      ${SPHINX_BUILD_EXECUTABLE} -q -b html
-                                                 -c "${DOCUMENTATION_SOURCE_DIR}"
-                                                 "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
-                                                 "${CMAKE_BINARY_DIR}/doc/${DOCUMENTATION_NAME}"
-                      COMMENT "Building the ${DOCUMENTATION_NAME} documentation")
+    add_custom_command(TARGET ${PROJECT_BUILD} POST_BUILD
+                       COMMAND ${SPHINX_BUILD_EXECUTABLE} -q -b html
+                                                          -c "${DOCUMENTATION_SOURCE_DIR}"
+                                                          "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
+                                                          "${CMAKE_BINARY_DIR}/doc/${DOCUMENTATION_NAME}"
+                       COMMENT "Building the ${DOCUMENTATION_NAME} documentation")
 endmacro()
 
 #===============================================================================
