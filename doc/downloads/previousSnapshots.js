@@ -748,6 +748,6 @@ var jsonData = { "versions": [
                        { "change": "<strong>Data store:</strong> made it possible to select a group of data (see issue <a href=\"https://github.com/opencor/opencor/issues/1143\">#1143</a>)." },
                        { "change": "<strong>Web Browser window:</strong> added a Web browser like window (see issue <a href=\"https://github.com/opencor/opencor/issues/1115\">#1115</a>)." }
                      ]
-                   },
+                   }
                  ]
                };
