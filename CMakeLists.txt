@@ -61,13 +61,45 @@ else()
     endif()
 endif()
 
+# Determine the effective build directory
+
+set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+if(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+    # With Xcode, we have a configuration directory, but it messes up our build
+    # system, so ask for all the binaries to be generated in our build folder
+
+    set(XCODE TRUE)
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+else()
+    # Check whether there is a configuration directory (the case with MSVC) and,
+    # if so, make use of it
+
+    set(XCODE FALSE)
+
+    if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+        set(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+    endif()
+endif()
+
 # Make sure that we are building OpenCOR on a supported architecture
 # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in some
 #       cases it may not be set (e.g. when generating an Xcode project file), so
 #       we determine and retrieve that value ourselves...
 
 try_run(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-        ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+        ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
         RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
 if(NOT ARCHITECTURE_COMPILE)
@@ -95,7 +127,7 @@ endif()
 # Try to build our runpath2rpath program, if we are on Linux
 
 if(NOT WIN32 AND NOT APPLE)
-    set(RUNPATH2RPATH ${CMAKE_BINARY_DIR}/runpath2rpath)
+    set(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
 
     execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
@@ -111,7 +143,7 @@ find_program(CLCACHE clcache)
 find_program(CCACHE ccache)
 
 if(CLCACHE)
-    set(CLCACHEWRAPPER ${CMAKE_BINARY_DIR}/clcachewrapper)
+    set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
 
     execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
@@ -168,38 +200,6 @@ endif()
 
 set(PLATFORM_DIR ${PLATFORM})
 
-# Determine the effective build directory
-
-set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-if(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
-    # With Xcode, we have a configuration directory, but it messes up our build
-    # system, so ask for all the binaries to be generated in our build folder
-
-    set(XCODE TRUE)
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-else()
-    # Check whether there is a configuration directory (the case with MSVC) and,
-    # if so, make use of it
-
-    set(XCODE FALSE)
-
-    if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        set(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-    endif()
-endif()
-
 # Default location of external binaries and packages
 
 if(WIN32)
@@ -255,7 +255,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 include(ExternalProject)
 
-set(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
+set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
 
 set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 

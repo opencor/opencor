@@ -1,4 +1,4 @@
-When building `Qwt <http://qwt.sourceforge.net/>`_, both `[OpenCOR]/build/ext/Build/QwtBuild/src/Makefile.Release` and `[OpenCOR]/build/ext/Build/QwtBuild/src/Makefile.Debug` get generated.
+When building `Qwt <http://qwt.sourceforge.net/>`__, both `[OpenCOR]/build/ext/Build/QwtBuild/src/Makefile.Release` and `[OpenCOR]/build/ext/Build/QwtBuild/src/Makefile.Debug` get generated.
 Towards the top of those files, there are two lines that read:
 
     ::
