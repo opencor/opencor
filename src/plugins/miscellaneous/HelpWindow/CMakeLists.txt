@@ -3,11 +3,11 @@ project(HelpWindowPlugin)
 # Generate the help files which will be embedded in the executable as a resource
 
 execute_process(COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
-                                                           -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc
+                                                           -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc
                 OUTPUT_QUIET)
 
-keep_track_of_file(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qch)
-keep_track_of_file(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc)
+keep_track_of_file(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qch)
+keep_track_of_file(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
 # Add the plugin
 

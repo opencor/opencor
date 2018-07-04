@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <stdio.h>
+#include <stdlib.h>
 
 //==============================================================================
 
@@ -33,27 +34,25 @@ int main(int pArgC, char *pArgV[])
     #define STRING_SIZE 32768
 
     char clcacheCommand[STRING_SIZE] = "clcache";
-    char clcacheArgument[STRING_SIZE];
+    int k = 6;
 
     for (int i = 2; i < pArgC; ++i) {
-        int k = -1;
+        clcacheCommand[++k] = ' ';
 
-        for (int j = 0, jMax = strlen(pArgV[i]); j < jMax; ++j) {
+        for (int j = 0; pArgV[i][j]; ++j) {
             if (pArgV[i][j] == '\\') {
-                clcacheArgument[++k] = '\\';
-                clcacheArgument[++k] = '\\';
+                clcacheCommand[++k] = '\\';
+                clcacheCommand[++k] = '\\';
             } else if (pArgV[i][j] == '"') {
-                clcacheArgument[++k] = '\\';
-                clcacheArgument[++k] = '"';
+                clcacheCommand[++k] = '\\';
+                clcacheCommand[++k] = '"';
             } else {
-                clcacheArgument[++k] = pArgV[i][j];
+                clcacheCommand[++k] = pArgV[i][j];
             }
         }
-
-        clcacheArgument[++k] = '\0';
-
-        sprintf(clcacheCommand, "%s %s", clcacheCommand, clcacheArgument);
     }
+
+    clcacheCommand[++k] = '\0';
 
     return system(clcacheCommand);
 }
