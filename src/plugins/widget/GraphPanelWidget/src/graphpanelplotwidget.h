@@ -101,6 +101,7 @@ public:
                                            const QColor &pSymbolFillColor = DefaultSymbolFillColor);
     explicit GraphPanelPlotGraphProperties(const QString &pTitle,
                                            const QColor &pColor);
+    explicit GraphPanelPlotGraphProperties(const QColor &pColor);
 
     bool isSelected() const;
 
