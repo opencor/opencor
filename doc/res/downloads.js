@@ -200,16 +200,16 @@ function versions(downloads) {
 
             // Output some general information about the version
 
-            var sectionClass = "section";
+            var downloadClass = "download";
 
             if (versionType === 1)
-                sectionClass += " official officialSection";
+                downloadClass += " official officialDownload";
             else if ((versionType === 2) && downloads)
-                sectionClass += " latest latestSection";
+                downloadClass += " latest latestDownload";
             else
-                sectionClass += " old oldSection";
+                downloadClass += " old oldDownload";
 
-            document.write("<div class=\""+sectionClass+"\">\n");
+            document.write("<div class=\""+downloadClass+"\">\n");
             document.write("    <table>\n");
             document.write("        <tbody>\n");
             document.write("            <tr>\n");
