@@ -153,7 +153,7 @@ set(SPHINX_BUILD_EXECUTABLE
 
 add_custom_target(${PROJECT_NAME})
 
-add_dependencies(OpenCORBuild ${PROJECT_NAME})
+add_dependencies(${PROJECT_BUILD} ${PROJECT_NAME})
 
 if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
@@ -161,7 +161,7 @@ endif()
 
 # Update the Python path in newly copied scripts
 
-add_custom_command(TARGET PythonPackagesPlugin POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py
                                                 --update-path ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
                                                 ${PYTHON_ROOT_DIR} -s)
