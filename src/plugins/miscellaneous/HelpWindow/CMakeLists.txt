@@ -2,11 +2,11 @@ project(HelpWindowPlugin)
 
 # Generate the help files which will be embedded in the executable as a resource
 
-add_custom_target(GenerateHelpFiles)
+add_custom_target(GenerateQtHelpFiles)
 
-add_dependencies(${PROJECT_BUILD_TARGET} GenerateHelpFiles)
+add_dependencies(${PROJECT_BUILD_TARGET} GenerateQtHelpFiles)
 
-add_custom_command(TARGET GenerateHelpFiles
+add_custom_command(TARGET GenerateQtHelpFiles
                    COMMAND ${SILENTRUN}
                            ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
                                                               -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
