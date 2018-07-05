@@ -64,7 +64,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    // Customise our GUI which consists of two main parts:
+    // Customise our GUI, which consists of two main parts:
     //
     //  1) A couple of lists (for CellML elements and metadata, resp.); and
     //  2) Some details (for a CellML element or metadata).
