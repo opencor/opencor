@@ -552,7 +552,7 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
 
 # And run it
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME}
                    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
