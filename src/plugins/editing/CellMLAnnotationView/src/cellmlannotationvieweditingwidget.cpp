@@ -75,7 +75,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     // Create our two main parts
 
     mCellmlList = new CellmlAnnotationViewCellmlListWidget(this);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pAnnotationWidget, this, mCellmlFile, this);
+    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pAnnotationWidget, this);
 
     // Populate ourselves
 
