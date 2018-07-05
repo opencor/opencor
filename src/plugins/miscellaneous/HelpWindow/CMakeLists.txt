@@ -4,7 +4,7 @@ project(HelpWindowPlugin)
 
 add_custom_target(GenerateQtHelpFiles)
 
-add_dependencies(${PROJECT_BUILD_TARGET} GenerateQtHelpFiles)
+add_dependencies(GenerateQtHelpFiles ${PROJECT_BUILD_TARGET})
 
 add_custom_command(TARGET GenerateQtHelpFiles
                    COMMAND ${SILENTRUN}
@@ -38,4 +38,6 @@ add_plugin(HelpWindow
     QT_MODULES
         Help
         PrintSupport
+    DEPENDS_ON
+        GenerateQtHelpFiles
 )
