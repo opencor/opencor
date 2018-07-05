@@ -47,12 +47,10 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                                                      CellmlAnnotationViewWidget *pAnnotationWidget,
-                                                                                     CellmlAnnotationViewEditingWidget *pEditingWidget,
-                                                                                     CellMLSupport::CellmlFile *pCellmlFile,
-                                                                                     QWidget *pParent) :
+                                                                                     CellmlAnnotationViewEditingWidget *pParent) :
     Widget(pParent),
     mPlugin(pPlugin),
-    mCellmlFile(pCellmlFile),
+    mCellmlFile(pParent->cellmlFile()),
     mElement(0)
 {
     // Create and set our vertical layout
@@ -86,8 +84,8 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our details widgets
 
-    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pAnnotationWidget, pEditingWidget, pCellmlFile, mSplitter);
-    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pCellmlFile, mSplitter);
+    mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pAnnotationWidget, pParent, mCellmlFile, mSplitter);
+    mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(mCellmlFile, mSplitter);
     mWebViewer = new WebViewerWidget::WebViewerWidget(mSplitter);
 
     mWebViewer->showProgressBar();
