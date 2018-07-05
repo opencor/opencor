@@ -63,7 +63,7 @@ macro(build_documentation DOCUMENTATION_NAME)
     # Note: we add a depency so that we are certain that the Sphinx script uses
     #       our copy of Python (see the Python and PythonPacakges plugins)...
 
-    add_custom_command(TARGET ${PROJECT_BUILD_TARGET} POST_BUILD
+    add_custom_command(TARGET ${PROJECT_BUILD_TARGET}
                        COMMAND ${SPHINX_BUILD_EXECUTABLE} -q -b html
                                                           -c "${DOCUMENTATION_SOURCE_DIR}"
                                                           "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
