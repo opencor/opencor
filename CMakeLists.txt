@@ -806,11 +806,11 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
-# Specify a target to build our non-library packages (e.g. Python)
+# Specify a target to help us build certain plugins (e.g. the Python plugin)
 
-set(PROJECT_BUILD ${PROJECT_NAME}Build)
+set(PROJECT_BUILD_TARGET ${PROJECT_NAME}Build)
 
-add_custom_target(${PROJECT_BUILD} ALL)
+add_custom_target(${PROJECT_BUILD_TARGET} ALL)
 
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
