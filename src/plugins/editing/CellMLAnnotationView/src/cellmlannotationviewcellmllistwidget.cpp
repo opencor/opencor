@@ -532,22 +532,6 @@ void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(bool pSelect
 
 void CellmlAnnotationViewCellmlListWidget::populateModel()
 {
-    // Make sure that the CellML file was properly loaded
-
-    if (mCellmlFile->issues().count()) {
-        // Something went wrong while trying to load the CellML file, so report
-        // the issue(s) and leave
-
-        foreach (const CellMLSupport::CellmlFileIssue &issue, mCellmlFile->issues()) {
-            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issue.type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                                     QString("[%1:%2] %3").arg(issue.line())
-                                                                                                                          .arg(issue.column())
-                                                                                                                          .arg(issue.formattedMessage())));
-        }
-
-        return;
-    }
-
     // Retrieve the model's root
 
     CellmlAnnotationViewCellmlElementItem *modelItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Model,

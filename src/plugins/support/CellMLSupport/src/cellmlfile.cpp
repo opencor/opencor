@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDir>
 #include <QDomDocument>
 #include <QFile>
 #include <QStringList>
@@ -287,7 +288,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                             if (isLocalFile && (pModel == mModel))
                                 dependencies << fileNameOrUrl;
                         } else {
-                            throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved").arg(xmlBaseFileNameOrUrl)
+                            throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl))
                                                                                                                                                   .arg(xlinkHrefString)));
                         }
                     }
@@ -297,9 +298,10 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                     ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
 
-                    if (!importModel)
-                        throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(xmlBaseFileNameOrUrl)
+                    if (!importModel) {
+                        throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl))
                                                                                                                                                    .arg(xlinkHrefString)));
+                    }
 
                     retrieveImports(isLocalFile?
                                         QUrl::fromLocalFile(fileNameOrUrl).toString():
@@ -1176,28 +1178,17 @@ CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
-    CellmlFile *cellmlFile = CellmlFileManager::instance()->cellmlFile(pFileName);
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    ObjRef<iface::cellml_api::Model> model;
 
-    if (cellmlFile) {
-        // The given CellML file is managed, so simply return its version
-
-        return cellmlFile->version();
-    } else {
-        // The given CellML file is not managed, so try to load it and return
-        // its version
-
-        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
-        ObjRef<iface::cellml_api::Model> model;
-
-        try {
-            model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
-        } catch (...) {
-            return Unknown;
-        }
-
-        return modelVersion(model);
+    try {
+        model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+    } catch (...) {
+        return Unknown;
     }
+
+    return modelVersion(model);
 }
 
 //==============================================================================
