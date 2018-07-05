@@ -153,7 +153,7 @@ set(SPHINX_BUILD_EXECUTABLE
 
 add_custom_target(${PROJECT_NAME})
 
-add_dependencies(${PROJECT_BUILD} ${PROJECT_NAME})
+add_dependencies(${PROJECT_BUILD_TARGET} ${PROJECT_NAME})
 
 if(NOT "${DEPENDS_ON}" STREQUAL "")
     add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
