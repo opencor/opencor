@@ -1178,28 +1178,17 @@ CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
 {
     // Return the version of the given CellML file
 
-    CellmlFile *cellmlFile = CellmlFileManager::instance()->cellmlFile(pFileName);
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    ObjRef<iface::cellml_api::Model> model;
 
-    if (cellmlFile) {
-        // The given CellML file is managed, so simply return its version
-
-        return cellmlFile->version();
-    } else {
-        // The given CellML file is not managed, so try to load it and return
-        // its version
-
-        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
-        ObjRef<iface::cellml_api::Model> model;
-
-        try {
-            model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
-        } catch (...) {
-            return Unknown;
-        }
-
-        return modelVersion(model);
+    try {
+        model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+    } catch (...) {
+        return Unknown;
     }
+
+    return modelVersion(model);
 }
 
 //==============================================================================
