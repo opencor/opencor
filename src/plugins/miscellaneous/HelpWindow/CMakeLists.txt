@@ -4,7 +4,7 @@ project(HelpWindowPlugin)
 
 add_custom_target(GenerateHelpFiles)
 
-add_dependencies(${PROJECT_BUILD} GenerateHelpFiles)
+add_dependencies(${PROJECT_BUILD_TARGET} GenerateHelpFiles)
 
 add_custom_command(TARGET GenerateHelpFiles POST_BUILD
                    COMMAND ${SILENTRUN}
