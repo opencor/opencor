@@ -298,9 +298,10 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                     ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
 
-                    if (!importModel)
+                    if (!importModel) {
                         throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which CellML object could not be retrieved").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl))
                                                                                                                                                    .arg(xlinkHrefString)));
+                    }
 
                     retrieveImports(isLocalFile?
                                         QUrl::fromLocalFile(fileNameOrUrl).toString():
