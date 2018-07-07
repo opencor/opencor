@@ -13,7 +13,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.2)
 
 # Git tag for our library
 
-set(GIT_TAG opencor)
+set(GIT_TAG v0.27.2-opencor)
 
 # Specify where our local package will be installed
 
