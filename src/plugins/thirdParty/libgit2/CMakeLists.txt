@@ -13,7 +13,7 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.2)
 
 # Git tag for our library
 
-set(GIT_TAG opencor)
+set(GIT_TAG v0.27.2)
 
 # Specify where our local package will be installed
 
@@ -151,7 +151,7 @@ else()
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SHARED_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MINOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
                                                                   ${SHARED_LIBRARY}
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
