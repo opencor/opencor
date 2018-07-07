@@ -913,6 +913,7 @@ set(PLUGINS
     widget/WebViewerWidget
 )
 set(PLUGINS
+    thirdParty/OpenSSL
     thirdParty/libgit2
 )
 
