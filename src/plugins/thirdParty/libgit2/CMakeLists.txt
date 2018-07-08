@@ -15,6 +15,10 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.2)
 
 set(GIT_TAG v0.27.2-opencor)
 
+# Release tag
+
+set(RELEASE_TAG v0.27.2-opencor)
+
 # Specify where our local package will be installed
 
 set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKAGE_DIR})
@@ -64,12 +68,14 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} e2f9c332da05a75502a348adc1191f84ddae7ddf
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES ef2757cd1f20bdbfac71506f56bff34158591ef4
                                               1d5e522bd0cc9c198caafb356f21f3e2f4f9fa12)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 7cd1798be8f397d477557d2c647eb8390b347f46
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES b1ce44e4c6d566748051ac2ec0ac1685aa182027
                                               599072007cee7639036d0f5543fecc0ed9fc08ce)
@@ -77,11 +83,13 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} ef1d9df43f5ce7ca57d3d9b72704a0f0e4afc0f5
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES fdf2736d9739c812045a85d8508b57b220515bb5)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} dd28f2e42400d34f0be11c036e06085c9db3a8c4
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 16de526e197318d0ffb2c991c5fbab4da44a68ba)
     endif()
