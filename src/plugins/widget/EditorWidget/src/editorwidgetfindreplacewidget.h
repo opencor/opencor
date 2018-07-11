@@ -128,6 +128,8 @@ private slots:
     void replaceAllButtonClicked();
 
     void searchOptionChanged();
+
+    void emitCanFindReplace();
 };
 
 //==============================================================================
