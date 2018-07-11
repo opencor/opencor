@@ -110,6 +110,9 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(EditorWidget *pPare
 
     // Some connections for our find-related widgets
 
+    connect(mGui->findEdit, &QLineEdit::textChanged,
+            this, &EditorWidgetFindReplaceWidget::emitCanFindReplace);
+
     connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
             mGui->findPreviousButton, &QToolButton::setEnabled);
     connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
@@ -546,6 +549,15 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
     // Let people know that our search options have changed
 
     emit searchOptionsChanged();
+}
+
+//==============================================================================
+
+void EditorWidgetFindReplaceWidget::emitCanFindReplace()
+{
+    // Let people know whether we can find/replace
+
+    emit canFindReplace(!findText().isEmpty());
 }
 
 //==============================================================================
