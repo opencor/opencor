@@ -335,12 +335,14 @@ QString RawCellMLViewPlugin::viewDefaultFileExtension() const
 
 QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML 1.0/1.1 file
+    // Make sure that we are dealing with either a new file or a CellML 1.0/1.1
+    // file
 
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+    if (   !Core::FileManager::instance()->isNew(pFileName)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
         return 0;
     }
 
