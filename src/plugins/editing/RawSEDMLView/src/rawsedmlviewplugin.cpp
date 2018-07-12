@@ -337,7 +337,7 @@ QString RawSEDMLViewPlugin::viewDefaultFileExtension() const
 
 QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a SED-ML file
+    // Make sure that we are dealing with a SED-ML file (be it new or not)
 
     if (!SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
         return 0;
