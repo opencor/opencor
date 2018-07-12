@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmltextviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -374,12 +375,14 @@ QString CellMLTextViewPlugin::viewDefaultFileExtension() const
 
 QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML 1.0/1.1 file
+    // Make sure that we are dealing with either a new file or a CellML 1.0/1.1
+    // file
 
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+    if (   !Core::FileManager::instance()->isNew(pFileName)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
         return 0;
     }
 
