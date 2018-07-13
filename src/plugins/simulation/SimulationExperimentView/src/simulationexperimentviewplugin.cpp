@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
+#include "filemanager.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
@@ -313,15 +314,16 @@ QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
 
 QWidget * SimulationExperimentViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML 1.0/1.1 file, a SED-ML file
-    // or a COMBINE archive
+    // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
+    // file, a SED-ML file or a COMBINE archive
 
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    if (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
-        && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
-        && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)) {
+    if (   Core::FileManager::instance()->isNew(pFileName)
+        || (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+            &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
+            && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
+            && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))) {
         return 0;
     }
 

@@ -544,12 +544,12 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QString crtFileNameOrUrl = QString();
 
     if (fileNames.count()) {
-        QString crtFileName = mFileNames[mFileTabs->currentIndex()];
+        QString fileName = mFileNames[mFileTabs->currentIndex()];
 
-        if (fileNames.contains(crtFileName)) {
-            crtFileNameOrUrl = fileManagerInstance->isRemote(crtFileName)?
-                                   fileManagerInstance->url(crtFileName):
-                                   crtFileName;
+        if (fileNames.contains(fileName)) {
+            crtFileNameOrUrl = fileManagerInstance->isRemote(fileName)?
+                                   fileManagerInstance->url(fileName):
+                                   fileName;
         }
     }
 
@@ -1967,10 +1967,17 @@ void CentralWidget::updateNoViewMsg()
     // Customise, if possible, our no view widget so that it shows a relevant
     // warning message
 
-    Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+    int fileTabIndex = mFileTabs->currentIndex();
+    Plugin *fileViewPlugin = viewPlugin(fileTabIndex);
 
-    if (fileViewPlugin)
-        mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
+    if (fileViewPlugin) {
+        if (Core::FileManager::instance()->isNew(mFileNames[fileTabIndex]))
+            mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support new files...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
+        else
+            mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
+    } else {
+        mNoViewMsg->resetMessage();
+    }
 }
 
 //==============================================================================
