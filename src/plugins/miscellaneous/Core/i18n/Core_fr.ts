@@ -120,6 +120,10 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
     </message>
     <message>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support new files...</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas les nouveaux fichiers...</translation>
+    </message>
+    <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
         <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier...</translation>
     </message>
