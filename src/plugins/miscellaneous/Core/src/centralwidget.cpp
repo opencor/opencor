@@ -544,12 +544,12 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QString crtFileNameOrUrl = QString();
 
     if (fileNames.count()) {
-        QString crtFileName = mFileNames[mFileTabs->currentIndex()];
+        QString fileName = mFileNames[mFileTabs->currentIndex()];
 
-        if (fileNames.contains(crtFileName)) {
-            crtFileNameOrUrl = fileManagerInstance->isRemote(crtFileName)?
-                                   fileManagerInstance->url(crtFileName):
-                                   crtFileName;
+        if (fileNames.contains(fileName)) {
+            crtFileNameOrUrl = fileManagerInstance->isRemote(fileName)?
+                                   fileManagerInstance->url(fileName):
+                                   fileName;
         }
     }
 
