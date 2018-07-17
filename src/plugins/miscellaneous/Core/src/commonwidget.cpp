@@ -150,7 +150,7 @@ void CommonWidget::hideBusyWidget(bool pForceHiding)
     if (!mBusyWidget)
         return;
 
-    // Check whether we want to force hiding our busy widget
+    // Check whether we want to force the hiding of our busy widget
 
     if (pForceHiding)
         mCounter = 1;
