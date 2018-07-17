@@ -86,40 +86,6 @@ CentralWidget * centralWidget()
 
 //==============================================================================
 
-bool readFileWithBusyWidget(const QString &pUrl, QByteArray &pFileContents,
-                            QString *pErrorMessage, bool pHideBusyWidget)
-{
-    // Read the contents of the file, which URL is given, showing our busy
-    // widget
-
-    centralWidget()->showBusyWidget();
-
-    bool res = readFile(pUrl, pFileContents, pErrorMessage);
-
-    if (pHideBusyWidget)
-        centralWidget()->hideBusyWidget();
-
-    return res;
-}
-
-//==============================================================================
-
-bool readFileWithBusyWidget(const QString &pUrl, QString &pFileContents,
-                            QString *pErrorMessage, bool pHideBusyWidget)
-{
-    // Read the contents of the file, which URL is given
-
-    QByteArray fileContents = QByteArray();
-
-    bool res = readFileWithBusyWidget(pUrl, fileContents, pErrorMessage, pHideBusyWidget);
-
-    pFileContents = fileContents;
-
-    return res;
-}
-
-//==============================================================================
-
 QString allFilters(const QStringList &pFilters)
 {
     QStringList filters = pFilters;

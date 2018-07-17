@@ -856,18 +856,18 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents
-        // Note: our call to readFileWithBusyWidget() shows a busy widget and it
-        //       would, by default, hide it while we want to keep it visible in
-        //       case we are loading a SED-ML file / COMBINE archive. Indeed,
-        //       such files may require further initialisation (in the case of
-        //       the Simulation Experiment view, for example). So, we ask
-        //       readFileWithBusyWidget() not to hide it, so that it can remain
-        //       visible until it gets hidden in updateGui()...
 
         QByteArray fileContents;
         QString errorMessage;
 
-        if (readFileWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage, false)) {
+        showBusyWidget();
+        // Note: we don't subsequently hide our busy widget in case we are
+        //       loading a SED-ML file / COMBINE archive. Indeed, such files may
+        //       require further initialisation (in the case of the Simulation
+        //       Experiment view, for example). So, instead, our busy widget
+        //       will get hidden in updateGui()...
+
+        if (readFile(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -980,18 +980,15 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                     QByteArray fileContents;
                     QString errorMessage;
 
-                    bool res = readFileWithBusyWidget(url, fileContents, &errorMessage, false);
-                    // Note: our call to readFileWithBusyWidget() shows a busy
-                    //       widget and it would, by default, hide it while we
-                    //       want to keep it visible in case we are loading a
-                    //       SED-ML file / COMBINE archive. Indeed, such files
-                    //       may require further initialisation (in the case of
-                    //       the Simulation Experiment view, for example). So,
-                    //       we ask readFileWithBusyWidget() not to hide it, so
-                    //       that it can remain visible until it gets hidden in
-                    //       updateGui()...
+                    showBusyWidget();
+                    // Note: we don't subsequently hide our busy widget in case
+                    //       we are loading a SED-ML file / COMBINE archive.
+                    //       Indeed, such files may require further
+                    //       initialisation (in the case of the Simulation
+                    //       Experiment view, for example). So, instead, our
+                    //       busy widget will get hidden in updateGui()...
 
-                    if (res) {
+                    if (readFile(url, fileContents, &errorMessage)) {
                         writeFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
