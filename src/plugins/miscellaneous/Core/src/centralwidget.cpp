@@ -856,20 +856,18 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents
+        // Note: our call to readFileWithBusyWidget() shows a busy widget and it
+        //       would, by default, hide it while we want to keep it visible in
+        //       case we are loading a SED-ML file / COMBINE archive. Indeed,
+        //       such files may require further initialisation (in the case of
+        //       the Simulation Experiment view, for example). So, we ask
+        //       readFileWithBusyWidget() not to hide it, so that it can remain
+        //       visible until it gets hidden in updateGui()...
 
         QByteArray fileContents;
         QString errorMessage;
 
-        showBusyWidget();
-        // Note: our call to readFileWithBusyWidget() will also show a busy
-        //       widget, but it will also hide it while we want to keep it
-        //       visible in case we are loading a SED-ML file / COMBINE archive.
-        //       Indeed, such files may require further initialisation (in the
-        //       case of the Simulation Experiment view, for example). So, we
-        //       rely on nested calls to our busy widget to have it remain
-        //       visible until it gets hidden in updateGui()...
-
-        if (readFileWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (readFileWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage, false)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -982,18 +980,16 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                     QByteArray fileContents;
                     QString errorMessage;
 
-                    showBusyWidget();
-                    // Note: our call to readFileWithBusyWidget() will also show
-                    //       a busy widget, but it will also hide it while we
-                    //       want to keep it visible in case we are reloading a
+                    bool res = readFileWithBusyWidget(url, fileContents, &errorMessage, false);
+                    // Note: our call to readFileWithBusyWidget() shows a busy
+                    //       widget and it would, by default, hide it while we
+                    //       want to keep it visible in case we are loading a
                     //       SED-ML file / COMBINE archive. Indeed, such files
                     //       may require further initialisation (in the case of
                     //       the Simulation Experiment view, for example). So,
-                    //       we rely on nested calls to our busy widget to have
-                    //       it remain visible until it gets hidden in
+                    //       we ask readFileWithBusyWidget() not to hide it, so
+                    //       that it can remain visible until it gets hidden in
                     //       updateGui()...
-
-                    bool res = readFileWithBusyWidget(url, fileContents, &errorMessage);
 
                     if (res) {
                         writeFile(fileName, fileContents);
