@@ -194,7 +194,7 @@ private:
     void closeAllFiles(bool pForceClosing);
 
 signals:
-    void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
+    void guiUpdated();
 
     void atLeastOneView(bool pAtLeastOneView);
 

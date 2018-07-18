@@ -152,7 +152,7 @@ private slots:
     void actionCheckForUpdatesTriggered();
     void actionAboutTriggered();
 
-    void updateGui(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
+    void updateGui();
 
     void showDockedWindows(bool pShow);
     void toggleDockedWindows();

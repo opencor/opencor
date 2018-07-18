@@ -1848,9 +1848,17 @@ void CentralWidget::updateGui()
         updateStatusBarWidgets(QList<QWidget *>());
     }
 
+    // Let our different plugins know that the GUI has been updated
+    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
+    //       tools that may need to be enabled/disabled and shown/hidden,
+    //       depending on which view plugin and/or file are currently active...
+
+    foreach (Plugin *plugin, mLoadedGuiPlugins)
+        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
+
     // Let people know that we are about to update the GUI
 
-    emit guiUpdated(viewPlugin, fileName);
+    emit guiUpdated();
 
     // Replace the current view with the new one, if needed
     // Note: we have to do various things depending on the platform on which we

@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "guiapplication.h"
-#include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
@@ -635,8 +634,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         //       located in our Core plugin and we don't know anything about
         //       it...
 
-        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(OpenCOR::Plugin *, const QString &)),
-                this, SLOT(updateGui(OpenCOR::Plugin *, const QString &)));
+        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated()),
+                this, SLOT(updateGui()));
     }
 
     // Add the plugin's window, in case we are dealing with a window plugin
@@ -1311,23 +1310,11 @@ void MainWindow::showEnableActions(const QList<QAction *> &pActions)
 
 //==============================================================================
 
-void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
-                           const QString &pFileName)
+void MainWindow::updateGui()
 {
     // We come here as a result of our central widget having updated its GUI,
-    // meaning that a new view or file has been selected, so we may need to
-    // enable/disable and/or show/hide some menus/actions/etc.
-
-    // Let our different plugins know that the GUI has been updated
-    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
-    //       tools that may need to be enabled/disabled and shown/hidden,
-    //       depending on which view plugin and/or file are currently active...
-
-    foreach (Plugin *plugin, mLoadedGuiPlugins)
-        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(pViewPlugin, pFileName);
-
-    // Go through our different menus and show/hide them, depending on whether
-    // they have visible items
+    // so we need to go through our different menus and show/hide them,
+    // depending on whether they have visible items
 
     showEnableActions(mGui->menuBar->actions());
 }
