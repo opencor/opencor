@@ -1883,11 +1883,6 @@ void CentralWidget::updateGui()
         updateStatusBarWidgets(QList<QWidget *>());
     }
 
-    // Go through our different menus and show/hide them, depending on whether
-    // they have visible items
-
-    showEnableActions(mainWindow()->menuBar()->actions());
-
     // Replace the current view with the new one, if needed
     // Note: we have to do various things depending on the platform on which we
     //       are as well as over which widget we are when needing to replace the
@@ -1936,6 +1931,11 @@ void CentralWidget::updateGui()
 
     foreach (Plugin *plugin, mLoadedGuiPlugins)
         qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
+
+    // Go through our different menus and show/hide them, depending on whether
+    // they have visible items
+
+    showEnableActions(mainWindow()->menuBar()->actions());
 
     // Give the focus to the new view after first checking that it has a focused
     // widget
