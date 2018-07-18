@@ -1890,11 +1890,8 @@ void CentralWidget::updateGui()
 
     // Force the hiding of our busy widget (useful in some cases, e.g. when we
     // open/reload a remote file)
-    // Note: we need to force the hiding in case we are starting OpenCOR with a
-    //       remote SED-ML file / COMBINE archive, which result in more calls to
-    //       showBusyWidget() than to hideBusyWidget()...
 
-    hideBusyWidget(true);
+    hideBusyWidget();
 
     // Give the focus to the new view after first checking that it has a focused
     // widget
