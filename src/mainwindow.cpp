@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
-#include "coreinterface.h"
 #include "guiapplication.h"
 #include "guiinterface.h"
 #include "guiutils.h"
@@ -35,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pluginsdialog.h"
 #include "preferencesdialog.h"
 #include "preferencesinterface.h"
-#include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
 
