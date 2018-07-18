@@ -1883,14 +1883,6 @@ void CentralWidget::updateGui()
         updateStatusBarWidgets(QList<QWidget *>());
     }
 
-    // Let our different plugins know that the GUI has been updated
-    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
-    //       tools that may need to be enabled/disabled and shown/hidden,
-    //       depending on which view plugin and/or file are currently active...
-
-    foreach (Plugin *plugin, mLoadedGuiPlugins)
-        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
-
     // Go through our different menus and show/hide them, depending on whether
     // they have visible items
 
@@ -1936,6 +1928,14 @@ void CentralWidget::updateGui()
     // open/reload a remote file)
 
     hideBusyWidget();
+
+    // Let our different plugins know that the GUI has been updated
+    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
+    //       tools that may need to be enabled/disabled and shown/hidden,
+    //       depending on which view plugin and/or file are currently active...
+
+    foreach (Plugin *plugin, mLoadedGuiPlugins)
+        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
 
     // Give the focus to the new view after first checking that it has a focused
     // widget
