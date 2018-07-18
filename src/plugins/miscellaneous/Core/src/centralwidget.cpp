@@ -1891,9 +1891,8 @@ void CentralWidget::updateGui()
     foreach (Plugin *plugin, mLoadedGuiPlugins)
         qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
 
-    // We come here as a result of our central widget having updated its GUI,
-    // so we need to go through our different menus and show/hide them,
-    // depending on whether they have visible items
+    // Go through our different menus and show/hide them, depending on whether
+    // they have visible items
 
     showEnableActions(mainWindow()->menuBar()->actions());
 
