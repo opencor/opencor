@@ -112,8 +112,6 @@ private:
     QMenu *mViewWindowsMenu;
     QAction *mViewSeparator;
 
-    Plugin *mViewPlugin;
-
     bool mDockedWindowsVisible;
 
     QByteArray mDockedWindowsState;

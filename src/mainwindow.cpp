@@ -102,7 +102,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mFileNewMenu(0),
     mViewWindowsMenu(0),
     mViewSeparator(0),
-    mViewPlugin(0),
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
@@ -1321,17 +1320,13 @@ void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
     // meaning that a new view or file has been selected, so we may need to
     // enable/disable and/or show/hide some menus/actions/etc.
 
-    // Keep track of our view plugin
-
-    mViewPlugin = pViewPlugin;
-
     // Let our different plugins know that the GUI has been updated
     // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
     //       tools that may need to be enabled/disabled and shown/hidden,
     //       depending on which view plugin and/or file are currently active...
 
     foreach (Plugin *plugin, mLoadedGuiPlugins)
-        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(mViewPlugin, pFileName);
+        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(pViewPlugin, pFileName);
 
     // Go through our different menus and show/hide them, depending on whether
     // they have visible items
