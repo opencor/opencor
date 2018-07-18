@@ -84,6 +84,8 @@ private:
 
     BusyWidget *mBusyWidget;
 
+    int mCounter;
+
     void showBusyWidget(double pProgress);
 };
 

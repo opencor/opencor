@@ -46,7 +46,8 @@ namespace Core {
 
 CommonWidget::CommonWidget(QWidget *pParent) :
     mParent(pParent),
-    mBusyWidget(0)
+    mBusyWidget(0),
+    mCounter(0)
 {
 }
 
@@ -100,28 +101,27 @@ bool CommonWidget::isBusyWidgetVisible() const
 
 void CommonWidget::showBusyWidget(double pProgress)
 {
-    // Make sure that our previous busy widget, if any, is hidden (and deleted)
+    // Create and show our new busy widget resized, and then disable our parent,
+    // but only if we are visible (i.e. our parent is visible)
 
-    hideBusyWidget();
+    if (mParent->isVisible() && (++mCounter == 1)) {
+        mBusyWidget = new BusyWidget(mParent, pProgress);
 
-    // Create and show our new busy widget resized, and then disable our parent
+        resizeBusyWidget();
 
-    mBusyWidget = new BusyWidget(mParent, pProgress);
+        if (mParent == centralWidget())
+            mainWindow()->setEnabled(false);
+        else
+            mParent->setEnabled(false);
 
-    resizeBusyWidget();
+        // Make sure that our busy widget is shown straightaway
+        // Note: indeed, depending on the operating system (e.g. macOS) and on
+        //       what we do next (e.g. retrieving a remote file), our busy
+        //       widget may or not show straightaway...
 
-    if (mParent == centralWidget())
-        mainWindow()->setEnabled(false);
-    else
-        mParent->setEnabled(false);
-
-    // Make sure that our busy widget is shown straightaway
-    // Note: indeed, depending on the operating system (e.g. macOS) and on what
-    //       we do next (e.g. retrieving a remote file), our busy widget may or
-    //       not show straightaway...
-
-    QCoreApplication::sendPostedEvents();
-    QCoreApplication::processEvents();
+        QCoreApplication::sendPostedEvents();
+        QCoreApplication::processEvents();
+    }
 }
 
 //==============================================================================
@@ -146,22 +146,20 @@ void CommonWidget::showProgressBusyWidget()
 
 void CommonWidget::hideBusyWidget()
 {
-    // Make sure that we have a busy widget
-
-    if (!mBusyWidget)
-        return;
-
     // Enable ourselves (or OpenCOR itself in case we are the central widget)
-    // and hide our busy widget by deleting it
+    // and hide our busy widget by deleting it, but only if we have a busy
+    // widget
 
-    if (mParent == centralWidget())
-        mainWindow()->setEnabled(true);
-    else
-        mParent->setEnabled(true);
+    if (mBusyWidget && (--mCounter == 0)) {
+        if (mParent == centralWidget())
+            mainWindow()->setEnabled(true);
+        else
+            mParent->setEnabled(true);
 
-    delete mBusyWidget;
+        delete mBusyWidget;
 
-    mBusyWidget = 0;
+        mBusyWidget = 0;
+    }
 }
 
 //==============================================================================
