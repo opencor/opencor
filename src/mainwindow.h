@@ -132,8 +132,6 @@ private:
 
     void restart(bool pSaveSettings) const;
 
-    void showEnableActions(const QList<QAction *> &pActions);
-
     void showPreferencesDialog(const QString &pPluginName = QString());
 
     void showDockedWindows(bool pShow, bool pInitialisation);
@@ -151,8 +149,6 @@ private slots:
     void actionHomePageTriggered();
     void actionCheckForUpdatesTriggered();
     void actionAboutTriggered();
-
-    void updateGui();
 
     void showDockedWindows(bool pShow);
     void toggleDockedWindows();

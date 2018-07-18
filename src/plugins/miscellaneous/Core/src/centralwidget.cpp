@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QAction>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
@@ -46,6 +47,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
 #include <QMimeData>
 #include <QPushButton>
 #include <QRect>
@@ -1660,6 +1663,38 @@ void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
 
 //==============================================================================
 
+void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
+{
+    // Show/enable or hide/disable the given actions, depending on whether they
+    // correspond to a menu with visible/enabled or hidden/disabled actions,
+    // respectively
+
+    foreach (QAction *action, pActions) {
+        QMenu *actionMenu = action->menu();
+
+        if (actionMenu) {
+            QList<QAction *> actionMenuActions = actionMenu->actions();
+
+            showEnableActions(actionMenuActions);
+
+            bool showEnable = false;
+
+            foreach (QAction *actionMenuAction, actionMenuActions) {
+                if (   !actionMenuAction->isSeparator()
+                    &&  actionMenuAction->isVisible()) {
+                    showEnable = true;
+
+                    break;
+                }
+            }
+
+            showEnableAction(action, showEnable);
+        }
+    }
+}
+
+//==============================================================================
+
 void CentralWidget::updateGui()
 {
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
@@ -1856,9 +1891,11 @@ void CentralWidget::updateGui()
     foreach (Plugin *plugin, mLoadedGuiPlugins)
         qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
 
-    // Let people know that we are about to update the GUI
+    // We come here as a result of our central widget having updated its GUI,
+    // so we need to go through our different menus and show/hide them,
+    // depending on whether they have visible items
 
-    emit guiUpdated();
+    showEnableActions(mainWindow()->menuBar()->actions());
 
     // Replace the current view with the new one, if needed
     // Note: we have to do various things depending on the platform on which we

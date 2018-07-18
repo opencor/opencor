@@ -48,13 +48,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QLocale>
-#include <QMenu>
-#include <QMenuBar>
 #include <QRect>
 #include <QSettings>
 #include <QShortcut>
@@ -628,14 +625,6 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         setCentralWidget(qobject_cast<CoreInterface *>(pPlugin->instance())->centralWidget());
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
-
-        // Also keep track of GUI updates in our central widget
-        // Note: we cannot use the new connect() syntax since the signal is
-        //       located in our Core plugin and we don't know anything about
-        //       it...
-
-        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated()),
-                this, SLOT(updateGui()));
     }
 
     // Add the plugin's window, in case we are dealing with a window plugin
@@ -1274,49 +1263,6 @@ void MainWindow::restart(bool pSaveSettings) const
         saveSettings();
 
     qApp->exit(pSaveSettings?NormalRestart:CleanRestart);
-}
-
-//==============================================================================
-
-void MainWindow::showEnableActions(const QList<QAction *> &pActions)
-{
-    // Show/enable or hide/disable the given actions, depending on whether they
-    // correspond to a menu with visible/enabled or hidden/disabled actions,
-    // respectively
-
-    foreach (QAction *action, pActions) {
-        QMenu *actionMenu = action->menu();
-
-        if (actionMenu) {
-            QList<QAction *> actionMenuActions = actionMenu->actions();
-
-            showEnableActions(actionMenuActions);
-
-            bool showEnable = false;
-
-            foreach (QAction *actionMenuAction, actionMenuActions) {
-                if (   !actionMenuAction->isSeparator()
-                    &&  actionMenuAction->isVisible()) {
-                    showEnable = true;
-
-                    break;
-                }
-            }
-
-            showEnableAction(action, showEnable);
-        }
-    }
-}
-
-//==============================================================================
-
-void MainWindow::updateGui()
-{
-    // We come here as a result of our central widget having updated its GUI,
-    // so we need to go through our different menus and show/hide them,
-    // depending on whether they have visible items
-
-    showEnableActions(mGui->menuBar->actions());
 }
 
 //==============================================================================
