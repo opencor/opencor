@@ -24,9 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
-#include "coreinterface.h"
 #include "guiapplication.h"
-#include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
@@ -35,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pluginsdialog.h"
 #include "preferencesdialog.h"
 #include "preferencesinterface.h"
-#include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
 
@@ -51,13 +48,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QLocale>
-#include <QMenu>
-#include <QMenuBar>
 #include <QRect>
 #include <QSettings>
 #include <QShortcut>
@@ -102,7 +96,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mFileNewMenu(0),
     mViewWindowsMenu(0),
     mViewSeparator(0),
-    mViewPlugin(0),
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
@@ -632,14 +625,6 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         setCentralWidget(qobject_cast<CoreInterface *>(pPlugin->instance())->centralWidget());
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
-
-        // Also keep track of GUI updates in our central widget
-        // Note: we cannot use the new connect() syntax since the signal is
-        //       located in our Core plugin and that we don't know anything
-        //       about it...
-
-        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(OpenCOR::Plugin *, const QString &)),
-                this, SLOT(updateGui(OpenCOR::Plugin *, const QString &)));
     }
 
     // Add the plugin's window, in case we are dealing with a window plugin
@@ -1278,65 +1263,6 @@ void MainWindow::restart(bool pSaveSettings) const
         saveSettings();
 
     qApp->exit(pSaveSettings?NormalRestart:CleanRestart);
-}
-
-//==============================================================================
-
-void MainWindow::showEnableActions(const QList<QAction *> &pActions)
-{
-    // Show/enable or hide/disable the given actions, depending on whether they
-    // correspond to a menu with visible/enabled or hidden/disabled actions,
-    // respectively
-
-    foreach (QAction *action, pActions) {
-        QMenu *actionMenu = action->menu();
-
-        if (actionMenu) {
-            QList<QAction *> actionMenuActions = actionMenu->actions();
-
-            showEnableActions(actionMenuActions);
-
-            bool showEnable = false;
-
-            foreach (QAction *actionMenuAction, actionMenuActions) {
-                if (   !actionMenuAction->isSeparator()
-                    &&  actionMenuAction->isVisible()) {
-                    showEnable = true;
-
-                    break;
-                }
-            }
-
-            showEnableAction(action, showEnable);
-        }
-    }
-}
-
-//==============================================================================
-
-void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
-                           const QString &pFileName)
-{
-    // We come here as a result of our central widget having updated its GUI,
-    // meaning that a new view or file has been selected, so we may need to
-    // enable/disable and/or show/hide some menus/actions/etc.
-
-    // Keep track of our view plugin
-
-    mViewPlugin = pViewPlugin;
-
-    // Let our different plugins know that the GUI has been updated
-    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
-    //       tools that may need to be enabled/disabled and shown/hidden,
-    //       depending on which view plugin and/or file are currently active...
-
-    foreach (Plugin *plugin, mLoadedGuiPlugins)
-        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(mViewPlugin, pFileName);
-
-    // Go through our different menus and show/hide them, depending on whether
-    // they have visible items
-
-    showEnableActions(mGui->menuBar->actions());
 }
 
 //==============================================================================

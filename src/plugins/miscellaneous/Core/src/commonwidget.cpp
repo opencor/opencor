@@ -101,9 +101,10 @@ bool CommonWidget::isBusyWidgetVisible() const
 
 void CommonWidget::showBusyWidget(double pProgress)
 {
-    // Create and show our new busy widget resized, and then disable our parent
+    // Create and show our new busy widget resized, and then disable our parent,
+    // but only if we are visible (i.e. our parent is visible)
 
-    if (++mCounter == 1) {
+    if (mParent->isVisible() && (++mCounter == 1)) {
         mBusyWidget = new BusyWidget(mParent, pProgress);
 
         resizeBusyWidget();

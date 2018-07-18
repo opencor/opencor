@@ -315,7 +315,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 
         domDocument.setContent(editingWidget->editorWidget()->contents());
 
-        editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), true);
+        editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), false);
         editingWidget->editorWidget()->setCursorPosition(line, column);
     }
 }
