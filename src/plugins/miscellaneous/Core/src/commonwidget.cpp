@@ -144,13 +144,22 @@ void CommonWidget::showProgressBusyWidget()
 
 //==============================================================================
 
-void CommonWidget::hideBusyWidget()
+void CommonWidget::hideBusyWidget(bool pForceHiding)
 {
-    // Enable ourselves (or OpenCOR itself in case we are the central widget)
-    // and hide our busy widget by deleting it, but only if we have a busy
-    // widget
+    // Make sure that we have a busy widget
 
-    if (mBusyWidget && (--mCounter == 0)) {
+    if (!mBusyWidget)
+        return;
+
+    // Check whether we want to force hiding our busy widget
+
+    if (pForceHiding)
+        mCounter = 1;
+
+    // Enable ourselves (or OpenCOR itself in case we are the central widget)
+    // and hide our busy widget by deleting it
+
+    if (--mCounter == 0) {
         if (mParent == centralWidget())
             mainWindow()->setEnabled(true);
         else

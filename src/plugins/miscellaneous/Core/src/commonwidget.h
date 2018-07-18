@@ -68,7 +68,7 @@ public:
     void showBusyWidget();
     void showProgressBusyWidget();
 
-    void hideBusyWidget();
+    void hideBusyWidget(bool pForceHiding = false);
 
     void resizeBusyWidget();
 
