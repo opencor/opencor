@@ -240,22 +240,22 @@ QString QScintillaWidget::contents() const
 
 //==============================================================================
 
-void QScintillaWidget::setContents(const QString &pContents, bool pKeepHistory)
+void QScintillaWidget::setContents(const QString &pContents,
+                                   bool pEmptyUndoBuffer)
 {
-    // Set our contents and keep our history, if required
+    // Set our contents and empty our undo buffer, if required
 
-    if (pKeepHistory) {
-        bool readOnly = isReadOnly();
+    bool readOnly = isReadOnly();
 
-        if (readOnly)
-            setReadOnly(false);
+    if (readOnly)
+        setReadOnly(false);
 
-        SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
+    SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
 
-        setReadOnly(readOnly);
-    } else {
-        setText(pContents);
-    }
+    if (pEmptyUndoBuffer)
+        SendScintilla(SCI_EMPTYUNDOBUFFER);
+
+    setReadOnly(readOnly);
 }
 
 //==============================================================================

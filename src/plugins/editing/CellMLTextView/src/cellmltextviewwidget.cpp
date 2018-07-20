@@ -901,7 +901,7 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
 
         mConverter.execute(Core::serialiseDomDocument(mParser.domDocument()));
 
-        editor->setContents(mConverter.output(), true);
+        editor->setContents(mConverter.output(), false);
         editor->setCursorPosition(line, column);
     }
 }

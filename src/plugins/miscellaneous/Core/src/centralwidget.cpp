@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QAction>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
@@ -46,6 +47,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
 #include <QMimeData>
 #include <QPushButton>
 #include <QRect>
@@ -861,15 +864,13 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         QString errorMessage;
 
         showBusyWidget();
-        // Note: our call to readFileWithBusyWidget() will also show a busy
-        //       widget, but it will also hide it while we want to keep it
-        //       visible in case we are loading a SED-ML file / COMBINE archive.
-        //       Indeed, such files may require further initialisation (in the
-        //       case of the Simulation Experiment view, for example). So, we
-        //       rely on nested calls to our busy widget to have it remain
-        //       visible until it gets hidden in updateGui()...
+        // Note: we don't subsequently hide our busy widget in case we are
+        //       loading a SED-ML file / COMBINE archive. Indeed, such files may
+        //       require further initialisation (in the case of the Simulation
+        //       Experiment view, for example). So, instead, our busy widget
+        //       will get hidden in updateGui()...
 
-        if (readFileWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (readFile(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -983,19 +984,14 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                     QString errorMessage;
 
                     showBusyWidget();
-                    // Note: our call to readFileWithBusyWidget() will also show
-                    //       a busy widget, but it will also hide it while we
-                    //       want to keep it visible in case we are reloading a
-                    //       SED-ML file / COMBINE archive. Indeed, such files
-                    //       may require further initialisation (in the case of
-                    //       the Simulation Experiment view, for example). So,
-                    //       we rely on nested calls to our busy widget to have
-                    //       it remain visible until it gets hidden in
-                    //       updateGui()...
+                    // Note: we don't subsequently hide our busy widget in case
+                    //       we are loading a SED-ML file / COMBINE archive.
+                    //       Indeed, such files may require further
+                    //       initialisation (in the case of the Simulation
+                    //       Experiment view, for example). So, instead, our
+                    //       busy widget will get hidden in updateGui()...
 
-                    bool res = readFileWithBusyWidget(url, fileContents, &errorMessage);
-
-                    if (res) {
+                    if (readFile(url, fileContents, &errorMessage)) {
                         writeFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
@@ -1667,6 +1663,38 @@ void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
 
 //==============================================================================
 
+void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
+{
+    // Show/enable or hide/disable the given actions, depending on whether they
+    // correspond to a menu with visible/enabled or hidden/disabled actions,
+    // respectively
+
+    foreach (QAction *action, pActions) {
+        QMenu *actionMenu = action->menu();
+
+        if (actionMenu) {
+            QList<QAction *> actionMenuActions = actionMenu->actions();
+
+            showEnableActions(actionMenuActions);
+
+            bool showEnable = false;
+
+            foreach (QAction *actionMenuAction, actionMenuActions) {
+                if (   !actionMenuAction->isSeparator()
+                    &&  actionMenuAction->isVisible()) {
+                    showEnable = true;
+
+                    break;
+                }
+            }
+
+            showEnableAction(action, showEnable);
+        }
+    }
+}
+
+//==============================================================================
+
 void CentralWidget::updateGui()
 {
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
@@ -1855,10 +1883,6 @@ void CentralWidget::updateGui()
         updateStatusBarWidgets(QList<QWidget *>());
     }
 
-    // Let people know that we are about to update the GUI
-
-    emit guiUpdated(viewPlugin, fileName);
-
     // Replace the current view with the new one, if needed
     // Note: we have to do various things depending on the platform on which we
     //       are as well as over which widget we are when needing to replace the
@@ -1897,11 +1921,21 @@ void CentralWidget::updateGui()
 
     // Force the hiding of our busy widget (useful in some cases, e.g. when we
     // open/reload a remote file)
-    // Note: we need to force the hiding in case we are starting OpenCOR with a
-    //       remote SED-ML file / COMBINE archive, which result in more calls to
-    //       showBusyWidget() than to hideBusyWidget()...
 
-    hideBusyWidget(true);
+    hideBusyWidget();
+
+    // Let our different plugins know that the GUI has been updated
+    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
+    //       tools that may need to be enabled/disabled and shown/hidden,
+    //       depending on which view plugin and/or file are currently active...
+
+    foreach (Plugin *plugin, mLoadedGuiPlugins)
+        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
+
+    // Go through our different menus and show/hide them, depending on whether
+    // they have visible items
+
+    showEnableActions(mainWindow()->menuBar()->actions());
 
     // Give the focus to the new view after first checking that it has a focused
     // widget

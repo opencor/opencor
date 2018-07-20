@@ -72,7 +72,7 @@ public:
     void setCurrentPosition(int pCurrentPosition);
 
     QString contents() const;
-    void setContents(const QString &pContents, bool pKeepHistory = false);
+    void setContents(const QString &pContents, bool pEmptyUndoBuffer = true);
 
     int contentsSize() const;
 
