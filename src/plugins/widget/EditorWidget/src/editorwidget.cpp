@@ -317,11 +317,11 @@ QString EditorWidget::contents() const
 
 //==============================================================================
 
-void EditorWidget::setContents(const QString &pContents, bool pKeepHistory)
+void EditorWidget::setContents(const QString &pContents, bool pEmptyUndoBuffer)
 {
     // Set the contents of our editor
 
-    mEditor->setContents(pContents, pKeepHistory);
+    mEditor->setContents(pContents, pEmptyUndoBuffer);
 }
 
 //==============================================================================

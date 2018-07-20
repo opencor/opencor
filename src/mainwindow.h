@@ -112,8 +112,6 @@ private:
     QMenu *mViewWindowsMenu;
     QAction *mViewSeparator;
 
-    Plugin *mViewPlugin;
-
     bool mDockedWindowsVisible;
 
     QByteArray mDockedWindowsState;
@@ -134,8 +132,6 @@ private:
 
     void restart(bool pSaveSettings) const;
 
-    void showEnableActions(const QList<QAction *> &pActions);
-
     void showPreferencesDialog(const QString &pPluginName = QString());
 
     void showDockedWindows(bool pShow, bool pInitialisation);
@@ -153,8 +149,6 @@ private slots:
     void actionHomePageTriggered();
     void actionCheckForUpdatesTriggered();
     void actionAboutTriggered();
-
-    void updateGui(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
 
     void showDockedWindows(bool pShow);
     void toggleDockedWindows();

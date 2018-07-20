@@ -193,9 +193,9 @@ private:
     bool closeFile(int pIndex, bool pForceClosing);
     void closeAllFiles(bool pForceClosing);
 
-signals:
-    void guiUpdated(OpenCOR::Plugin *pViewPlugin, const QString &pFileName);
+    void showEnableActions(const QList<QAction *> &pActions);
 
+signals:
     void atLeastOneView(bool pAtLeastOneView);
 
     void canSave(bool pEnabled);
