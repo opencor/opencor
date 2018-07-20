@@ -55,9 +55,6 @@ FileManager::FileManager() :
             this, &FileManager::checkFiles);
 
     // Keep track of when OpenCOR gets/loses the focus
-    // Note: the focusWindowChanged() signal comes from QGuiApplication, so we
-    //       need to check whether we are running the console version of OpenCOR
-    //       or its GUI version...
 
     if (qobject_cast<QGuiApplication *>(QCoreApplication::instance())) {
         connect(qApp, &QApplication::focusWindowChanged,
