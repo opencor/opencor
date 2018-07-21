@@ -70,7 +70,7 @@ CentralWidget * centralWidget()
     if (firstTime) {
         foreach (QObject *object, mainWindow()->children()) {
             if (!strcmp(object->metaObject()->className(), "OpenCOR::Core::CentralWidget")) {
-                res = dynamic_cast<CentralWidget *>(object);
+                res = qobject_cast<CentralWidget *>(object);
 
                 break;
             }
