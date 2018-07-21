@@ -1869,7 +1869,7 @@ void CentralWidget::updateGui()
     //       don't end up with several identical connections (something that
     //       might happen if we were to switch views and back)...
 
-    ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
+    ViewWidget *newViewWidget = qobject_cast<ViewWidget *>(newView);
 
     if (newViewWidget) {
         connect(newViewWidget, &ViewWidget::updateFileTabIcon,
