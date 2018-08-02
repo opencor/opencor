@@ -37,11 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> various minor GUI improvements here and there." },
-                       { "change": "<strong>Solvers:</strong> reference <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> rather than <a href=\"https://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1711\">#1711</a>)." },
-                       { "change": "<strong>CellML-based views:</strong> fixed an issue that prevented some views from showing a CellML file that cannot be fully instantiated (see issue <a href=\"https://github.com/opencor/opencor/issues/1725\">#1725</a>)." },
-                       { "change": "<strong>Simualtion Experiment view:</strong> fixed some issues with manually added graphs and graphs associated with another file (see issue <a href=\"https://github.com/opencor/opencor/issues/1716\">#1716</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 6.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1729\">#1729</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.7 (see issue <a href=\"https://github.com/opencor/opencor/issues/1731\">#1731</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1736\">#1736</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1743\">#1743</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
