@@ -71,7 +71,6 @@ public:
         Test = -2,
 #endif
         Invalid = -1,
-        Analysis,
         DataStore,
         Editing,
         Miscellaneous,
