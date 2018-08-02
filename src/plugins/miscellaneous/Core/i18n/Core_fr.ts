@@ -332,10 +332,6 @@
         <translation>Invalide</translation>
     </message>
     <message>
-        <source>Analysis</source>
-        <translation>Analyse</translation>
-    </message>
-    <message>
         <source>Data Store</source>
         <translation>Magasin de Données</translation>
     </message>
@@ -386,10 +382,6 @@
     <message>
         <source>Plugins that are not valid.</source>
         <translation>Extensions qui ne sont pas valides.</translation>
-    </message>
-    <message>
-        <source>Plugins to analyse files.</source>
-        <translation>Extensions pour analyser des fichiers.</translation>
     </message>
     <message>
         <source>Plugins to store and manipulate data.</source>
