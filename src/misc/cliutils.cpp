@@ -49,10 +49,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QtMessageHandler defaultMessageHandler;
+#ifdef QT_DEBUG
+static QtMessageHandler defaultMessageHandler;
+#endif
 
 //==============================================================================
 
+#ifdef QT_DEBUG
 void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
                      const QString &pMessage)
 {
@@ -65,6 +68,7 @@ void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
     if (pMessage.compare("libpng warning: iCCP: known incorrect sRGB profile"))
         defaultMessageHandler(pType, pContext, pMessage);
 }
+#endif
 
 //==============================================================================
 

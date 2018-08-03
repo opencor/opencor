@@ -74,7 +74,7 @@ void initQtMessagePattern();
 
 void initPluginsPath(int pArgC, char *pArgV[]);
 
-void initApplication(QString *pAppDate = 0);
+void initApplication(QString *pAppDate = nullptr);
 
 QString applicationDescription(bool pGuiMode = true);
 
