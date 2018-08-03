@@ -191,7 +191,7 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
         perVoiUnitDegree += "/"+pVoiUnit;
 
         if (mDegree > 1)
-            perVoiUnitDegree += mDegree;
+            perVoiUnitDegree += "^"+QString::number(mDegree);
     }
 
     return mUnit+perVoiUnitDegree;
