@@ -96,7 +96,7 @@ bool isGitDirectory(const QString &pDirName)
     if (pDirName.isEmpty()) {
         return false;
     } else {
-        git_repository *gitRepository = 0;
+        git_repository *gitRepository = nullptr;
 
         if (!git_repository_open(&gitRepository, pDirName.toUtf8().constData())) {
             git_repository_free(gitRepository);
