@@ -181,7 +181,7 @@ quint64 totalMemory()
 
     size_t len = sizeof(res);
 
-    sysctl(mib, 2, &res, &len, 0, 0);
+    sysctl(mib, 2, &res, &len, nullptr, 0);
 #else
     #error Unsupported platform
 #endif
@@ -209,7 +209,10 @@ quint64 freeMemory()
     res = quint64(sysconf(_SC_AVPHYS_PAGES))*quint64(sysconf(_SC_PAGESIZE));
 #elif defined(Q_OS_MAC)
     vm_statistics_data_t vmStats;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
     mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
+#pragma clang diagnostic pop
 
     host_statistics(mach_host_self(), HOST_VM_INFO,
                     host_info_t(&vmStats), &infoCount);
@@ -369,7 +372,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
         qApp->setProperty(objectName, res);
     }
 
-    return (void *) res.toULongLong();
+    return reinterpret_cast<void *>(res.toULongLong());
 }
 
 //==============================================================================
@@ -656,8 +659,6 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
         else
             return fileCanonicalPath+fileBaseName+separator+extra+fileCompleteSuffix;
     }
-
-    return fileName;
 }
 
 //==============================================================================
@@ -732,7 +733,7 @@ void cleanDomElement(QDomElement &pDomElement,
     // before removing them from the element and adding a new attribute that
     // will later on be used for string replacement
 
-    static const int AttributeNumberWidth = ceil(log(ULLONG_MAX));
+    static const int AttributeNumberWidth = int(ceil(log(ULLONG_MAX)));
 
     static quint64 attributeNumber = 0;
 

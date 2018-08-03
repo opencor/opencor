@@ -91,7 +91,10 @@ void UserMessageWidget::setScale(double pScale)
 {
     // Scale ourselves, if needed
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
     if (pScale != mScale) {
+#pragma clang diagnostic pop
         mScale = pScale;
 
         QFont newFont = font();
@@ -143,7 +146,7 @@ void UserMessageWidget::updateGui()
 
         setText(Message.arg(mIcon.isEmpty()?
                                 QString():
-                                Icon.arg(iconDataUri(mIcon, mScale*32, mScale*32)))
+                                Icon.arg(iconDataUri(mIcon, int(mScale*32), int(mScale*32))))
                        .arg(mMessage)
                        .arg(mExtraMessage.isEmpty()?
                                 QString():

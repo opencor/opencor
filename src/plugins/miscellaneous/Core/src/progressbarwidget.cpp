@@ -51,7 +51,7 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
     QPainter painter(this);
 
     if (isEnabled()) {
-        int value = mValue*width();
+        int value = int(mValue*width());
 
         if (value)
             painter.fillRect(0, 0, value, height(), highlightColor());
@@ -82,7 +82,10 @@ void ProgressBarWidget::setValue(double pValue)
 
     double value = qMin(1.0, qMax(pValue, 0.0));
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
     if (value != mValue) {
+#pragma clang diagnostic pop
         bool needUpdate = int(mValue*width()) != int(value*width());
 
         mValue = value;

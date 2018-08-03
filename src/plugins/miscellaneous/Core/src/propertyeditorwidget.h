@@ -373,42 +373,42 @@ public:
 
     void selectFirstProperty();
 
-    Property * addSectionProperty(const QString &pName, Property *pParent = 0);
-    Property * addSectionProperty(Property *pParent = 0);
+    Property * addSectionProperty(const QString &pName, Property *pParent = nullptr);
+    Property * addSectionProperty(Property *pParent = nullptr);
 
-    Property * addStringProperty(const QString &pString, Property *pParent = 0);
-    Property * addStringProperty(Property *pParent = 0);
+    Property * addStringProperty(const QString &pString, Property *pParent = nullptr);
+    Property * addStringProperty(Property *pParent = nullptr);
 
-    Property * addIntegerProperty(int pValue, Property *pParent = 0);
-    Property * addIntegerProperty(Property *pParent = 0);
+    Property * addIntegerProperty(int pValue, Property *pParent = nullptr);
+    Property * addIntegerProperty(Property *pParent = nullptr);
 
-    Property * addIntegerGe0Property(int pValue, Property *pParent = 0);
-    Property * addIntegerGe0Property(Property *pParent = 0);
+    Property * addIntegerGe0Property(int pValue, Property *pParent = nullptr);
+    Property * addIntegerGe0Property(Property *pParent = nullptr);
 
-    Property * addIntegerGt0Property(int pValue, Property *pParent = 0);
-    Property * addIntegerGt0Property(Property *pParent = 0);
+    Property * addIntegerGt0Property(int pValue, Property *pParent = nullptr);
+    Property * addIntegerGt0Property(Property *pParent = nullptr);
 
-    Property * addDoubleProperty(double pValue, Property *pParent = 0);
-    Property * addDoubleProperty(Property *pParent = 0);
+    Property * addDoubleProperty(double pValue, Property *pParent = nullptr);
+    Property * addDoubleProperty(Property *pParent = nullptr);
 
-    Property * addDoubleGe0Property(double pValue, Property *pParent = 0);
-    Property * addDoubleGe0Property(Property *pParent = 0);
+    Property * addDoubleGe0Property(double pValue, Property *pParent = nullptr);
+    Property * addDoubleGe0Property(Property *pParent = nullptr);
 
-    Property * addDoubleGt0Property(double pValue, Property *pParent = 0);
-    Property * addDoubleGt0Property(Property *pParent = 0);
+    Property * addDoubleGt0Property(double pValue, Property *pParent = nullptr);
+    Property * addDoubleGt0Property(Property *pParent = nullptr);
 
     Property * addListProperty(const QStringList &pValues,
                                const QString &pDefaultValue,
-                               Property *pParent = 0);
+                               Property *pParent = nullptr);
     Property * addListProperty(const QStringList &pValues,
-                               Property *pParent = 0);
-    Property * addListProperty(Property *pParent = 0);
+                               Property *pParent = nullptr);
+    Property * addListProperty(Property *pParent = nullptr);
 
-    Property * addBooleanProperty(bool pValue, Property *pParent = 0);
-    Property * addBooleanProperty(Property *pParent = 0);
+    Property * addBooleanProperty(bool pValue, Property *pParent = nullptr);
+    Property * addBooleanProperty(Property *pParent = nullptr);
 
-    Property * addColorProperty(const QColor &pValue, Property *pParent = 0);
-    Property * addColorProperty(Property *pParent = 0);
+    Property * addColorProperty(const QColor &pValue, Property *pParent = nullptr);
+    Property * addColorProperty(Property *pParent = nullptr);
 
     bool removeProperty(Property *pProperty);
 

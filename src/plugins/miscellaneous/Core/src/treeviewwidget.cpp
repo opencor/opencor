@@ -268,7 +268,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
         drag->setMimeData(mimeData);
         drag->setPixmap(pixmap);
-        drag->setHotSpot(QPoint(0.5*pixmap.width(), 0.5*pixmap.height()));
+        drag->setHotSpot(QPoint(pixmap.width() >> 1, pixmap.height() >> 1));
 
         // Do the dragging itself
 

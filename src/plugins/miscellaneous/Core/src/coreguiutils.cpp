@@ -65,7 +65,7 @@ CentralWidget * centralWidget()
     // Retrieve and return our central widget
 
     static bool firstTime = true;
-    static CentralWidget *res = 0;
+    static CentralWidget *res = nullptr;
 
     if (firstTime) {
         foreach (QObject *object, mainWindow()->children()) {
@@ -329,7 +329,7 @@ void setFocusTo(QWidget *pWidget)
 
     QWidget *focusedWidget = qApp->activeWindow()?
                                  qApp->activeWindow()->focusWidget():
-                                 0;
+                                 nullptr;
 
     if (   !focusedWidget
         || (pWidget->parentWidget() == focusedWidget->parentWidget())) {
@@ -735,9 +735,9 @@ QColor lockedColor(const QColor &pColor)
     static const double Alpha = 0.05;
     static const double OneMinusAlpha = 1.0-Alpha;
 
-    return QColor(Alpha*lockedRed+OneMinusAlpha*red,
-                  Alpha*lockedGreen+OneMinusAlpha*green,
-                  Alpha*lockedBlue+OneMinusAlpha*blue);
+    return QColor(int(Alpha*lockedRed+OneMinusAlpha*red),
+                  int(Alpha*lockedGreen+OneMinusAlpha*green),
+                  int(Alpha*lockedBlue+OneMinusAlpha*blue));
 }
 
 //==============================================================================

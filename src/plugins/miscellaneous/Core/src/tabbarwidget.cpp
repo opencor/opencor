@@ -90,7 +90,7 @@ void TabBarStyle::drawControl(ControlElement pElement,
                 pPainter->drawPixmap(iconRect.x(), iconRect.y(),
                                      tab->icon.pixmap(pWidget?
                                                           pWidget->window()->windowHandle():
-                                                          0,
+                                                          nullptr,
                                                       tab->iconSize,
                                                       (tab->state & State_Enabled)?
                                                           QIcon::Normal:
@@ -181,8 +181,8 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
 
     int horizontalShift = pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, pOption, pWidget);
     int verticalShift = pixelMetric(QStyle::PM_TabBarTabShiftVertical, pOption, pWidget);
-    int horizontalPadding = 0.5*pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget);
-    int verticalPadding = 0.5*pixelMetric(QStyle::PM_TabBarTabVSpace, pOption, pWidget);
+    int horizontalPadding = pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget) >> 1;
+    int verticalPadding = pixelMetric(QStyle::PM_TabBarTabVSpace, pOption, pWidget) >> 1;
 
     if (   (pOption->shape == QTabBar::RoundedSouth)
         || (pOption->shape == QTabBar::TriangularSouth)) {
@@ -231,7 +231,7 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
         tabIconSize = QSize(qMin(tabIconSize.width(), iconSize.width()),
                             qMin(tabIconSize.height(), iconSize.height()));
 
-        *pIconRect = QRect(textRect.left(), textRect.center().y()-0.5*tabIconSize.height(),
+        *pIconRect = QRect(textRect.left(), textRect.center().y()-(tabIconSize.height() >> 1),
                            tabIconSize.width(), tabIconSize.height());
 
         if (!verticalTab)
