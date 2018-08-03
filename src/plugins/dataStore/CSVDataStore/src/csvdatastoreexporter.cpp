@@ -62,7 +62,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
         DataStore::DataStore *dataStore = mDataStoreData->dataStore();
         DataStore::DataStoreVariables variables = mDataStoreData->variables();
-        DataStore::DataStoreVariable *voi = variables.contains(dataStore->voi())?dataStore->voi():0;
+        DataStore::DataStoreVariable *voi = variables.contains(dataStore->voi())?dataStore->voi():nullptr;
 
         variables.removeOne(voi);
 
@@ -157,12 +157,12 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         if (res) {
             emit progress(++stepNb*oneOverNbOfSteps);
 
-            for (quint64 i = 0, iMax = voiValues.count(); i < iMax; ++i) {
+            for (int i = 0, iMax = voiValues.count(); i < iMax; ++i) {
                 QString rowData = QString();
-                double voiValue = voiValues[i];
+                QString voiValue = QString::number(voiValues[i]);
 
                 if (voi)
-                    rowData += QString::number(voiValue);
+                    rowData += voiValue;
 
                 bool firstRowData = true;
                 QBoolList updateRunsIndex = QBoolList();
@@ -180,7 +180,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                             rowData += ',';
 
                         if (   (runsIndex[j] < dataStore->size(j))
-                            && (dataStore->voi()->value(runsIndex[j], j) == voiValue)) {
+                            && (!QString::number(dataStore->voi()->value(runsIndex[j], j)).compare(voiValue))) {
                             rowData += QString::number(variableRun->value(runsIndex[j], j));
 
                             updateRunsIndex[j] = true;

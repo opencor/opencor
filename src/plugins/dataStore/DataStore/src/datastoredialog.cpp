@@ -111,7 +111,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
     mGui->treeView->setItemDelegate(new DataItemDelegate(this));
 
     QString dataHierarchy = QString();
-    QStandardItem *hierarchyItem = 0;
+    QStandardItem *hierarchyItem = nullptr;
 
     foreach (DataStoreVariable *variable,
              pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
@@ -131,7 +131,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
                 QStandardItem *parentHierarchyItem = mModel->invisibleRootItem();
 
                 foreach (const QString &hierarchyPart, crtDataHierarchy.split('/')) {
-                    hierarchyItem = 0;
+                    hierarchyItem = nullptr;
 
                     for (int i = 0, iMax = parentHierarchyItem->rowCount(); i < iMax; ++i) {
                         QStandardItem *childHierarchyItem = parentHierarchyItem->child(i);
@@ -181,7 +181,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
 
     mGui->treeView->expandAll();
 
-    updateDataSelectedState(0);
+    updateDataSelectedState(nullptr);
 
     // Set our minimum size
 

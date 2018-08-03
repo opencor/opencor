@@ -68,7 +68,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
     // Export the given data store to a BioSignalML file
 
-    bsml::HDF5::Recording *recording = 0;
+    bsml::HDF5::Recording *recording = nullptr;
 
     try {
         // Create and populate a recording
@@ -124,10 +124,13 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
             };
 
             bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
-            int j = -1;
+            bsml::HDF5::SignalArray::size_type j = 0;
 
-            foreach (DataStore::DataStoreVariable *variable, variables)
-                (*signalArray)[++j]->set_label(variable->label().toStdString());
+            foreach (DataStore::DataStoreVariable *variable, variables) {
+                (*signalArray)[j]->set_label(variable->label().toStdString());
+
+                ++j;
+            }
 
             double *data = new double[variables.count()*BufferRows] {};
             double *dataPointer = data;
@@ -140,7 +143,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
                 ++rowCount;
 
                 if (rowCount >= BufferRows) {
-                    signalArray->extend(data, variables.count()*BufferRows);
+                    signalArray->extend(data, size_t(variables.count()*BufferRows));
 
                     dataPointer = data;
 
@@ -150,7 +153,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
                 emit progress(++stepNb*oneOverNbOfSteps);
             }
 
-            signalArray->extend(data, variables.count()*rowCount);
+            signalArray->extend(data, size_t(variables.count()*rowCount));
 
             delete[] data;
         }
