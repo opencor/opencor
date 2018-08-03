@@ -75,10 +75,7 @@ BusyWidget::BusyWidget(QWidget *pParent, double pProgress) :
 
     show();
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (pProgress == -1.0)
-#pragma clang diagnostic pop
+    if (qIsNull(pProgress+1.0))
         mTimer->start();
 }
 
@@ -163,10 +160,7 @@ void BusyWidget::setBackgroundRoundness(double pBackgroundRoundness)
 {
     // Set our background roundness
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (pBackgroundRoundness != mBackgroundRoundness) {
-#pragma clang diagnostic pop
+    if (!qIsNull(pBackgroundRoundness-mBackgroundRoundness)) {
         mBackgroundRoundness = pBackgroundRoundness;
 
         update();
@@ -255,10 +249,7 @@ void BusyWidget::setRoundness(double pRoundness)
 {
     // Set the roundness of our lines
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (pRoundness != mRoundness) {
-#pragma clang diagnostic pop
+    if (!qIsNull(pRoundness-mRoundness)) {
         mRoundness = pRoundness;
 
         update();
@@ -302,10 +293,7 @@ void BusyWidget::setOpacity(double pOpacity)
 {
     // Set the opacity of our lines
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (pOpacity != mOpacity) {
-#pragma clang diagnostic pop
+    if (!qIsNull(pOpacity-mOpacity)) {
         mOpacity = pOpacity;
 
         update();
@@ -349,16 +337,10 @@ void BusyWidget::setProgress(double pProgress)
 {
     // Set our progress and enable/disable our timer, depending on the case
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (pProgress != mProgress) {
-#pragma clang diagnostic pop
+    if (!qIsNull(pProgress-mProgress)) {
         mProgress = pProgress;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-        if (pProgress == -1.0) {
-#pragma clang diagnostic pop
+        if (qIsNull(pProgress+1.0)) {
             mMainLine = 0;
 
             mTimer->start();
@@ -430,10 +412,7 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
     // Draw ourselves and accept the event
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (mProgress == -1.0) {
-#pragma clang diagnostic pop
+    if (qIsNull(mProgress+1.0)) {
         double lineCornerRadius = mRoundness*(mThickness >> 1);
 
         for (int i = 0; i < mCount; ++i) {
@@ -463,10 +442,7 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
         painter.setBrush(mForegroundColor);
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-        if (mProgress == 1.0) {
-#pragma clang diagnostic pop
+        if (qIsNull(mProgress-1.0)) {
             painter.drawEllipse(QPointF(0.0, 0.0), 0.5*size, 0.5*size);
         } else {
             painter.drawPie(QRectF(-0.5*size, -0.5*size, size, size),

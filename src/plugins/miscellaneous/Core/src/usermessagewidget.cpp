@@ -91,10 +91,7 @@ void UserMessageWidget::setScale(double pScale)
 {
     // Scale ourselves, if needed
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (pScale != mScale) {
-#pragma clang diagnostic pop
+    if (!qIsNull(pScale-mScale)) {
         mScale = pScale;
 
         QFont newFont = font();

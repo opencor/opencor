@@ -82,10 +82,7 @@ void ProgressBarWidget::setValue(double pValue)
 
     double value = qMin(1.0, qMax(pValue, 0.0));
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-    if (value != mValue) {
-#pragma clang diagnostic pop
+    if (!qIsNull(value-mValue)) {
         bool needUpdate = int(mValue*width()) != int(value*width());
 
         mValue = value;
