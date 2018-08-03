@@ -159,10 +159,10 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
             for (int i = 0, iMax = voiValues.count(); i < iMax; ++i) {
                 QString rowData = QString();
-                QString voiValue = QString::number(voiValues[i]);
+                double voiValue = voiValues[i];
 
                 if (voi)
-                    rowData += voiValue;
+                    rowData += QString::number(voiValue);
 
                 bool firstRowData = true;
                 QBoolList updateRunsIndex = QBoolList();
@@ -180,7 +180,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                             rowData += ',';
 
                         if (   (runsIndex[j] < dataStore->size(j))
-                            && (!QString::number(dataStore->voi()->value(runsIndex[j], j)).compare(voiValue))) {
+                            && qIsNull(dataStore->voi()->value(runsIndex[j], j)-voiValue)) {
                             rowData += QString::number(variableRun->value(runsIndex[j], j));
 
                             updateRunsIndex[j] = true;
