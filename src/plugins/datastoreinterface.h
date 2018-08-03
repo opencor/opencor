@@ -65,7 +65,7 @@ typedef QList<DataStoreVariableRun *> DataStoreVariableRuns;
 class DataStoreVariable
 {
 public:
-    explicit DataStoreVariable(double *pValue = 0);
+    explicit DataStoreVariable(double *pValue = nullptr);
     ~DataStoreVariable();
 
     static bool compare(DataStoreVariable *pVariable1,
@@ -155,7 +155,7 @@ public:
     DataStoreVariables variables();
     DataStoreVariables voiAndVariables();
 
-    DataStoreVariable * addVariable(double *pValue = 0);
+    DataStoreVariable * addVariable(double *pValue = nullptr);
     DataStoreVariables addVariables(double *pValues, int pCount);
 
     void addValues(double pVoiValue);
@@ -208,6 +208,8 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion();
 class DataStoreInterface
 {
 public:
+    virtual ~DataStoreInterface();
+
 #define INTERFACE_DEFINITION
     #include "datastoreinterface.inl"
 #undef INTERFACE_DEFINITION

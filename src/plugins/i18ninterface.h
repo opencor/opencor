@@ -46,6 +46,8 @@ extern "C" Q_DECL_EXPORT int i18nInterfaceVersion();
 class I18nInterface
 {
 public:
+    virtual ~I18nInterface();
+
     void updateTranslator(const QString &pTranslator);
 
 #define INTERFACE_DEFINITION

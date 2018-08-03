@@ -44,6 +44,8 @@ extern "C" Q_DECL_EXPORT int windowInterfaceVersion();
 class WindowInterface
 {
 public:
+    virtual ~WindowInterface();
+
 #define INTERFACE_DEFINITION
     #include "windowinterface.inl"
 #undef INTERFACE_DEFINITION

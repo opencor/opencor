@@ -334,12 +334,12 @@ double * DataStoreVariable::values(int pRun) const
     // Return the values for the given run, if any
 
     if (mRuns.isEmpty()) {
-        return 0;
+        return nullptr;
     } else {
         if (pRun == -1)
             return mRuns.last()->values();
         else
-            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():0;
+            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():nullptr;
     }
 }
 
@@ -501,7 +501,7 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
     // some runs
 
     if (mVoi->runsCount())
-        return 0;
+        return nullptr;
 
     DataStoreVariable *variable = new DataStoreVariable(pValue);
 
@@ -611,6 +611,15 @@ void DataStoreExporter::started()
 //==============================================================================
 
 }   // namespace DataStore
+
+//==============================================================================
+
+DataStoreInterface::~DataStoreInterface()
+{
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

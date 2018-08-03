@@ -54,6 +54,8 @@ public:
         AnalysisMode
     };
 
+    virtual ~ViewInterface();
+
 #define INTERFACE_DEFINITION
     #include "viewinterface.inl"
 #undef INTERFACE_DEFINITION
