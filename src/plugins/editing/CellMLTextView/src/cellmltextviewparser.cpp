@@ -2453,6 +2453,10 @@ QString CellmlTextViewParser::mathmlName(CellmlTextViewScanner::TokenType pToken
     default:
 #ifdef QT_DEBUG
         qFatal("FATAL ERROR | %s:%d: no MathML name exists for the given token type.", __FILE__, __LINE__);
+
+    #ifdef Q_OS_WIN
+        return "???";
+    #endif
 #else
         return "???";
 #endif
