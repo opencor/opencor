@@ -85,7 +85,7 @@ LibXDiffPlugin::LibXDiffPlugin()
 {
     // Set our memory allocator
 
-    memallocator_t memoryAllocator = { 0, mallocWrapper, freeWrapper, reallocWrapper };
+    memallocator_t memoryAllocator = { nullptr, mallocWrapper, freeWrapper, reallocWrapper };
 
     xdl_set_allocator(&memoryAllocator);
 }
