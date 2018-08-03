@@ -47,7 +47,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
                                                        QWidget *pParent) :
     ViewWidget(pParent),
     mPlugin(pPlugin),
-    mEditingWidget(0),
+    mEditingWidget(nullptr),
     mEditingWidgets(QMap<QString, CellmlAnnotationViewEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mMetadataDetailsWidgetSizes(QIntList())
@@ -172,7 +172,7 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
         // Reset our memory of the current editor, if needed
 
         if (editingWidget == mEditingWidget)
-            mEditingWidget = 0;
+            mEditingWidget = nullptr;
     }
 }
 

@@ -51,7 +51,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     Widget(pParent),
     mPlugin(pPlugin),
     mCellmlFile(pParent->cellmlFile()),
-    mElement(0)
+    mElement(nullptr)
 {
     // Create and set our vertical layout
 

@@ -103,7 +103,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(boo
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(bool pError,
                                                                              const QString &pText) :
-    CellmlAnnotationViewCellmlElementItem(false, pError?Error:Warning, pText, 0, -1)
+    CellmlAnnotationViewCellmlElementItem(false, pError?Error:Warning, pText, nullptr, -1)
 {
     // Disable the item and use its text as a tooltip (in case it's too long and
     // doesn't fit within the allocated space we have)
@@ -121,7 +121,7 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(boo
 
 CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(Type pType,
                                                                              const QString &pText) :
-    CellmlAnnotationViewCellmlElementItem(true, pType, pText, 0, -1)
+    CellmlAnnotationViewCellmlElementItem(true, pType, pText, nullptr, -1)
 {
     // Use its text as a tooltip (in case it's too long and doesn't fit within
     // the allocated space we have)
@@ -283,10 +283,6 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(Type pType)
         QStandardItem::setIcon(ConnectionIcon);
 
         break;
-    default:
-        // A type that doesn't require an icon
-
-        ;
     }
 }
 
