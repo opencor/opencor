@@ -40,6 +40,8 @@ extern "C" Q_DECL_EXPORT int cellmlEditingViewInterfaceVersion();
 class CellmlEditingViewInterface
 {
 public:
+    virtual ~CellmlEditingViewInterface();
+
 #define INTERFACE_DEFINITION
     #include "cellmleditingviewinterface.inl"
 #undef INTERFACE_DEFINITION
