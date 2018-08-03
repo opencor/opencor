@@ -40,6 +40,8 @@ extern "C" Q_DECL_EXPORT int editingViewInterfaceVersion();
 class EditingViewInterface
 {
 public:
+    virtual ~EditingViewInterface();
+
 #define INTERFACE_DEFINITION
     #include "editingviewinterface.inl"
 #undef INTERFACE_DEFINITION
