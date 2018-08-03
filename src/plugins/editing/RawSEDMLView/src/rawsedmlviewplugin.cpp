@@ -340,7 +340,7 @@ QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
     // Make sure that we are dealing with a SED-ML file (be it new or not)
 
     if (!SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
-        return 0;
+        return nullptr;
 
     // Update and return our Raw SED-ML view widget using the given SED-ML file
 
