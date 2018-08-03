@@ -50,7 +50,7 @@ namespace OpenCOR {
 //==============================================================================
 
 #ifdef QT_DEBUG
-static QtMessageHandler defaultMessageHandler;
+static QtMessageHandler gDefaultMessageHandler;
 #endif
 
 //==============================================================================
@@ -66,7 +66,7 @@ void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
     //       hence our filtering it out...
 
     if (pMessage.compare("libpng warning: iCCP: known incorrect sRGB profile"))
-        defaultMessageHandler(pType, pContext, pMessage);
+        gDefaultMessageHandler(pType, pContext, pMessage);
 }
 #endif
 
@@ -79,7 +79,7 @@ void initQtMessagePattern()
     // we want to filter out
 
 #ifdef QT_DEBUG
-    defaultMessageHandler = qInstallMessageHandler(messageHandler);
+    gDefaultMessageHandler = qInstallMessageHandler(messageHandler);
 #else
     qSetMessagePattern("%{if-debug}%{endif}"
                        "%{if-warning}%{endif}"
