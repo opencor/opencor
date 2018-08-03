@@ -122,10 +122,10 @@ void CellmlFile::reset()
 
     // Reset all of our properties
 
-    mModel = 0;
+    mModel = nullptr;
 
-    mRdfApiRepresentation = 0;
-    mRdfDataSource = 0;
+    mRdfApiRepresentation = nullptr;
+    mRdfDataSource = nullptr;
 
     foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
         delete rdfTriple;
@@ -614,7 +614,7 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
     int cellmlErrorsCount = 0;
 
-    for (int i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
+    for (uint32_t i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
         ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
         ObjRef<iface::cellml_services::CellMLRepresentationValidityError> cellmlRepresentationValidityError = QueryInterface(cellmlValidityIssue);
 
@@ -699,7 +699,7 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
         // Append the issue to our list
 
-        pIssues << CellmlFileIssue(issueType, line, column,
+        pIssues << CellmlFileIssue(issueType, int(line), int(column),
                                    QString::fromStdWString(cellmlValidityIssue->description()),
                                    importedFile);
     }
@@ -779,9 +779,9 @@ CellmlFileRuntime * CellmlFile::runtime(bool pWithBusyWidget)
 
         return fullyInstantiateImports(mModel, mIssues, pWithBusyWidget)?
                    new CellmlFileRuntime(this):
-                   0;
+                   nullptr;
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -843,7 +843,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
         // The given CellML element doesn't have a 'proper' cmeta:id, so it
         // cannot have RDF triples associated with it
 
-        return 0;
+        return nullptr;
     }
 
     // Go through the RDF triples associated with the given CellML element and
@@ -861,7 +861,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
 
     // We couldn't find the RDF triple
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================
