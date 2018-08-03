@@ -586,12 +586,12 @@ bool GraphPanelPlotGraph::hasData() const
 
 //==============================================================================
 
-quint64 GraphPanelPlotGraph::dataSize() const
+int GraphPanelPlotGraph::dataSize() const
 {
     // Return the size of our data, i.e. raw samples, for our current (i.e.
     // last) run, if any
 
-    return mRuns.isEmpty()?0:mRuns.last()->dataSize();
+    return mRuns.isEmpty()?0:int(mRuns.last()->dataSize());
 }
 
 //==============================================================================
@@ -3244,8 +3244,7 @@ int GraphPanelPlotWidget::graphIndex(GraphPanelPlotGraph *pGraph) const
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
-                                         quint64 pFrom)
+bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph, int pFrom)
 {
     // Direct paint our graph from the given point unless we can't direct paint
     // (due to the axes having been changed), in which case we replot ourselves

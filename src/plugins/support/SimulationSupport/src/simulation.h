@@ -181,7 +181,7 @@ public:
 
     void addPoint(double pPoint);
 
-    quint64 size(int pRun = -1) const;
+    int size(int pRun = -1) const;
 
     DataStore::DataStore * dataStore() const;
 

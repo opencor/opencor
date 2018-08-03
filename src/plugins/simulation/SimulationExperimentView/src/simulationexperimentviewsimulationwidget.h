@@ -145,10 +145,10 @@ public:
 
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 quint64 pSimulationResultsSize,
+                                 int pSimulationResultsSize,
                                  int pSimulationRun, Task pTask);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 quint64 pSimulationResultsSize, Task pTask);
+                                 int pSimulationResultsSize, Task pTask);
 
     void resetSimulationProgress();
 
@@ -233,7 +233,7 @@ private:
 
     bool mNeedUpdatePlots;
 
-    QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
+    QMap<GraphPanelWidget::GraphPanelPlotGraph *, int> mOldDataSizes;
 
     void output(const QString &pMessage);
 
@@ -256,9 +256,9 @@ private:
                   int pRun) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         quint64 pSize, int pRun = -1);
+                         int pSize, int pRun = -1);
 
-    void updateSimulationProperties(Core::Property *pProperty = 0);
+    void updateSimulationProperties(Core::Property *pProperty = nullptr);
     void updateSolversProperties(Core::Property *pProperty,
                                  bool pResetNlaSolver);
     void updateSolversProperties(Core::Property *pProperty);
@@ -324,7 +324,7 @@ private slots:
 
     void simulationResultsExport();
 
-    void updateDelayValue(double pDelayValue);
+    void updateDelayValue(int pDelayValue);
 
     void simulationRunning(bool pIsResuming);
     void simulationPaused();

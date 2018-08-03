@@ -67,10 +67,10 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mGraphsColumnWidths(QIntList()),
     mParametersColumnWidths(QIntList()),
     mGraphPanelSectionsExpanded(QMap<int, bool>()),
-    mSimulationWidget(0),
+    mSimulationWidget(nullptr),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
-    mSimulationResultsSizes(QMap<QString, quint64>())
+    mSimulationResultsSizes(QMap<QString, int>())
 {
 }
 
@@ -259,7 +259,7 @@ void SimulationExperimentViewWidget::finalize(const QString &pFileName)
         // Next, we reset our memory of the simulation widget, if needed
 
         if (simulationWidget == mSimulationWidget)
-            mSimulationWidget = 0;
+            mSimulationWidget = nullptr;
     }
 }
 
@@ -474,7 +474,7 @@ SimulationSupport::Simulation * SimulationExperimentViewWidget::simulation(const
     if (simulationWidget)
         return simulationWidget->simulation();
     else
-        return 0;
+        return nullptr;
 }
 
 //==============================================================================
@@ -488,7 +488,7 @@ CellMLSupport::CellmlFileRuntime * SimulationExperimentViewWidget::runtime(const
     if (simulationWidget)
         return simulationWidget->simulation()->runtime();
     else
-        return 0;
+        return nullptr;
 }
 
 //==============================================================================
@@ -502,7 +502,7 @@ QWidget * SimulationExperimentViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-quint64 SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
+int SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
 {
     // Return the results size for the given file name
 
@@ -530,7 +530,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     if (   (pTask == SimulationExperimentViewSimulationWidget::AddRun)
         && (simulationRunsCount > 1)) {
-        quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
+        int previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
 
         if (previousSimulationResultsSize != mSimulationResultsSizes.value(pFileName)) {
             foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
@@ -547,7 +547,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    quint64 simulationResultsSize = simulation->results()->size();
+    int simulationResultsSize = simulation->results()->size();
 
     if (   (pTask != SimulationExperimentViewSimulationWidget::None)
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {

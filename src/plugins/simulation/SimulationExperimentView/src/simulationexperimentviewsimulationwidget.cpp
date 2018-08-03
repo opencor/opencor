@@ -118,7 +118,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, int>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -170,10 +170,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                          mToolBarWidget);
     mSedmlExportSedmlFileAction = (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)?
                                       Core::newAction(mToolBarWidget):
-                                      0;
+                                      nullptr;
     mSedmlExportCombineArchiveAction = (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)?
                                            Core::newAction(mToolBarWidget):
-                                           0;
+                                           nullptr;
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
 
@@ -231,8 +231,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDelayValueWidget = new QLabel(mToolBarWidget);
 
     mDelayWidget->setBorderWidth(0);
-    mDelayWidget->setFixedSize(0.07*qApp->desktop()->screenGeometry().width(),
-                               0.5*mDelayWidget->height());
+    mDelayWidget->setFixedSize(int(0.07*qApp->desktop()->screenGeometry().width()),
+                               mDelayWidget->height() >> 1);
     mDelayWidget->setFocusPolicy(Qt::NoFocus);
     mDelayWidget->setRange(0.0, 55.0);
     mDelayWidget->setWheelBorderWidth(0);
@@ -556,7 +556,7 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
 
     // Retranslate our delay and delay value widgets
 
-    updateDelayValue(mDelayWidget->value());
+    updateDelayValue(int(mDelayWidget->value()));
     // Note: we do this because we want to display the delay using digit
     //       grouping, this respecting the current locale...
 
@@ -809,13 +809,13 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
                 switch (sedmlFileIssue.type()) {
                 case SEDMLSupport::SedmlFileIssue::Unknown:
-#ifdef QT_DEBUG
                     // We should never come here...
 
+#ifdef QT_DEBUG
                     qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
-#endif
-
+#else
                     break;
+#endif
                 case SEDMLSupport::SedmlFileIssue::Information:
                     issueType = tr("Information:");
 
@@ -853,7 +853,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
         CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
         bool validRuntime = runtime && runtime->isValid();
 
-        CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():0;
+        CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():nullptr;
 
         if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
             information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
@@ -1112,7 +1112,7 @@ int SimulationExperimentViewSimulationWidget::tabBarPixmapSize() const
 {
     // Return the size of a file tab icon
 
-    return style()->pixelMetric(QStyle::PM_TabBarIconSize, 0, this);
+    return style()->pixelMetric(QStyle::PM_TabBarIconSize, nullptr, this);
 }
 
 //==============================================================================
@@ -1689,7 +1689,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     XMLNamespaces *namespaces = sedmlDocument->getNamespaces();
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::modelVersion(mSimulation->cellmlFile()?
                                                                                                    mSimulation->cellmlFile()->model():
-                                                                                                   0);
+                                                                                                   nullptr);
 
     namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
                         CellMLSupport::Cellml_1_0_Namespace.toStdString():
@@ -1733,8 +1733,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     double startingPoint = mSimulation->data()->startingPoint();
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
-    quint64 nbOfPoints = ceil((endingPoint-startingPoint)/pointInterval);
-    bool needOneStepTask = (endingPoint-startingPoint)/nbOfPoints != pointInterval;
+    int nbOfPoints = int(ceil((endingPoint-startingPoint)/pointInterval));
+    bool needOneStepTask = !qIsNull((endingPoint-startingPoint)/nbOfPoints-pointInterval);
 
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
 
@@ -2396,7 +2396,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(bool pRes
 {
     // Update all of our solver(s) properties (and solvers widget)
 
-    updateSolversProperties(0, pResetNlaSolver);
+    updateSolversProperties(nullptr, pResetNlaSolver);
 }
 
 //==============================================================================
@@ -2405,7 +2405,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties()
 {
     // Update all of our solver(s) properties (and solvers widget)
 
-    updateSolversProperties(0, true);
+    updateSolversProperties(nullptr, true);
 }
 
 //==============================================================================
@@ -2464,7 +2464,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================
@@ -2502,7 +2502,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     SimulationExperimentViewInformationSolversWidgetData *odeSolverData = solversWidget->odeSolverData();
     const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
-    SolverInterface *odeSolverInterface = 0;
+    SolverInterface *odeSolverInterface = nullptr;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
     Core::Properties solverProperties = Core::Properties();
     QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
@@ -2525,7 +2525,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         return false;
     }
 
-    for (int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+    for (uint i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
         const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
         QString kisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
         QString id = odeSolverInterface->id(kisaoId);
@@ -2537,13 +2537,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                 switch (solverProperty->type()) {
                 case Core::Property::Section:
-#ifdef QT_DEBUG
                     // We should never come here...
 
+#ifdef QT_DEBUG
                     qFatal("FATAL ERROR | %s:%d: a solver property cannot be of section type.", __FILE__, __LINE__);
-#endif
-
+#else
                     break;
+#endif
                 case Core::Property::String:
                     solverProperty->setValue(solverPropertyValue.toString());
 
@@ -2569,13 +2569,13 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                     break;
                 case Core::Property::Color:
-#ifdef QT_DEBUG
                     // We should never come here...
 
+#ifdef QT_DEBUG
                     qFatal("FATAL ERROR | %s:%d: a solver property cannot be of colour type.", __FILE__, __LINE__);
-#endif
-
+#else
                     break;
+#endif
                 }
 
                 propertySet = solverProperty->type() != Core::Property::Section;
@@ -2712,20 +2712,20 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Add some graph panels, so that their number corresponds to the number of
     // 2D outputs mentioned in the SED-ML file
 
-    int newNbOfGraphPanels = sedmlDocument->getNumOutputs();
+    uint newNbOfGraphPanels = sedmlDocument->getNumOutputs();
 
-    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels)
+    while (graphPanelsWidget->graphPanels().count() != int(newNbOfGraphPanels))
         graphPanelsWidget->addGraphPanel(false);
 
     // Customise our graph panel and graphs
 
     QIntList graphPanelsWidgetSizes = QIntList();
 
-    for (int i = 0; i < newNbOfGraphPanels; ++i) {
+    for (uint i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
         libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
-        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
+        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[int(i)];
 
         graphPanelAndGraphsWidget->reinitialize(graphPanel);
 
@@ -3115,7 +3115,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayValue)
+void SimulationExperimentViewSimulationWidget::updateDelayValue(int pDelayValue)
 {
     // Update our delay value widget
 
@@ -3707,14 +3707,14 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
         // Not a relevant type, so return null
         // Note: we should never reach this point...
 
-        return 0;
+        return nullptr;
     }
 }
 
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               quint64 pSize,
+                                                               int pSize,
                                                                int pRun)
 {
     // Update our graph's data from the given run
@@ -3767,7 +3767,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       quint64 pSimulationResultsSize,
+                                                                       int pSimulationResultsSize,
                                                                        int pSimulationRun,
                                                                        Task pTask)
 {
@@ -3821,7 +3821,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       not visible means that when we come back to this file,
                 //       part of the graphs will be missing...
 
-                quint64 oldDataSize = graph->dataSize();
+                int oldDataSize = graph->dataSize();
 
                 if (visible)
                     mOldDataSizes.insert(graph, oldDataSize);
@@ -3832,7 +3832,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // first segment or if we were invisible at some point during
                 // the simulation
 
-                quint64 realOldDataSize = mOldDataSizes.value(graph);
+                int realOldDataSize = mOldDataSizes.value(graph);
 
                 needFullUpdatePlot =    needFullUpdatePlot || !realOldDataSize
                                      || (oldDataSize != realOldDataSize);
@@ -3854,10 +3854,10 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (quint64 i = oldDataSize?oldDataSize-1:0;
+                        for (int i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data(pSimulationRun)->sample(i).x();
-                            double valY = graph->data(pSimulationRun)->sample(i).y();
+                            double valX = graph->data(pSimulationRun)->sample(size_t(i)).x();
+                            double valY = graph->data(pSimulationRun)->sample(size_t(i)).y();
 
                             minX = qMin(minX, valX);
                             maxX = qMax(maxX, valX);
@@ -3927,7 +3927,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
             // We are not visible, so create an icon that shows our simulation's
             // progress and let people know about it
 
-            int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
+            int newProgress = int((tabBarPixmapSize()-2)*simulationProgress);
             // Note: tabBarPixmapSize()-2 because we want a one-pixel wide
             //       border...
 
@@ -3951,7 +3951,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       quint64 pSimulationResultsSize,
+                                                                       int pSimulationResultsSize,
                                                                        Task pTask)
 {
     // Update our simulation results

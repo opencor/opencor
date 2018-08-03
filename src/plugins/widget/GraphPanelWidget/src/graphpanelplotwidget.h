@@ -209,7 +209,7 @@ public:
     void setVisible(bool pVisible);
 
     bool hasData() const;
-    quint64 dataSize() const;
+    int dataSize() const;
 
     QwtSeriesData<QPointF> *data(int pRun = -1) const;
     void setData(double *pDataX, double *pDataY, int pSize, int pRun = -1);
@@ -489,7 +489,7 @@ public:
                  bool pEmitSignal = true, bool pForceXAxisSetting = false,
                  bool pForceYAxisSetting = false);
 
-    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
+    bool drawGraphFrom(GraphPanelPlotGraph *pGraph, int pFrom);
 
     GraphPanelPlotWidgets neighbors() const;
 

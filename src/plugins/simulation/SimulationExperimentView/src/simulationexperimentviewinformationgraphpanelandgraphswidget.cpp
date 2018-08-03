@@ -62,8 +62,8 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
     mGraphPanelPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mGraphsPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
-    mGraphPanelPropertyEditor(0),
-    mGraphsPropertyEditor(0),
+    mGraphPanelPropertyEditor(nullptr),
+    mGraphsPropertyEditor(nullptr),
     mGraphs(QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *>()),
     mGraphProperties(QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
@@ -407,8 +407,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(Grap
 
     if (   (graphPanelPropertyEditor == mGraphPanelPropertyEditor)
         && (graphsPropertyEditor == mGraphsPropertyEditor)) {
-        mGraphPanelPropertyEditor = 0;
-        mGraphsPropertyEditor = 0;
+        mGraphPanelPropertyEditor = nullptr;
+        mGraphsPropertyEditor = nullptr;
     }
 
     mGraphPanels.remove(graphPanelPropertyEditor);
@@ -1077,7 +1077,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     // Now, add our model parameters to it
 
     QString componentHierarchy = QString();
-    QMenu *componentMenu = 0;
+    QMenu *componentMenu = nullptr;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
         // Check whether the current parameter is in the same component
@@ -1096,7 +1096,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
                 // Check whether we already have a menu for our current
                 // component
 
-                componentMenu = 0;
+                componentMenu = nullptr;
 
                 foreach (QObject *object, parentComponentMenu->children()) {
                     QMenu *subMenu = qobject_cast<QMenu *>(object);
@@ -1160,7 +1160,7 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::checkParamete
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime
 
-    CellMLSupport::CellmlFileRuntimeParameter *res = 0;
+    CellMLSupport::CellmlFileRuntimeParameter *res = nullptr;
 
     if (pRuntime) {
         // Retrieve the component and parameter of the property

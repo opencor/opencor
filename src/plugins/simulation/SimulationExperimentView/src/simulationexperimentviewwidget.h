@@ -96,7 +96,7 @@ public:
 
     QWidget * widget(const QString &pFileName) override;
 
-    quint64 simulationResultsSize(const QString &pFileName) const;
+    int simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
                                 SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::None);
@@ -127,7 +127,7 @@ private:
 
     QStringList mFileNames;
 
-    QMap<QString, quint64> mSimulationResultsSizes;
+    QMap<QString, int> mSimulationResultsSizes;
 
     void updateContentsInformationGui(SimulationExperimentViewSimulationWidget *pSimulationWidget);
 

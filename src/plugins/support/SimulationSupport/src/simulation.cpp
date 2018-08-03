@@ -705,7 +705,7 @@ void SimulationResults::addPoint(double pPoint)
 
 //==============================================================================
 
-quint64 SimulationResults::size(int pRun) const
+int SimulationResults::size(int pRun) const
 {
     // Return the size of our data store for the given run
 
