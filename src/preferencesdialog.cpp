@@ -186,7 +186,7 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     // Populate the data model with our plugins that support the Preferences
     // interface
 
-    QStandardItem *selectedPluginItem = 0;
+    QStandardItem *selectedPluginItem = nullptr;
 
     foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
@@ -225,13 +225,13 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     mGui->treeView->expandAll();
     mGui->treeView->resizeColumnToContents(0);
 
-    mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
+    mGui->treeView->setMinimumWidth(int(1.15*mGui->treeView->columnWidth(0)));
     mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
 
     // Make, through the stacked widget, sure that the dialog has a minimum
     // width
 
-    mGui->stackedWidget->setMinimumWidth(2.5*mGui->treeView->minimumWidth());
+    mGui->stackedWidget->setMinimumWidth(int(2.5*mGui->treeView->minimumWidth()));
 
     // Make sure that the dialog has a reasonable starting size
 

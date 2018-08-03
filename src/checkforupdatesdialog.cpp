@@ -218,7 +218,7 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
                                              const QString &pApplicationDate,
                                              QWidget *pParent) :
-    CheckForUpdatesDialog(pSettings, pApplicationDate, 0, pParent)
+    CheckForUpdatesDialog(pSettings, pApplicationDate, nullptr, pParent)
 {
 }
 
@@ -226,7 +226,7 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 
 CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
                                              CheckForUpdatesEngine *pEngine) :
-    CheckForUpdatesDialog(pSettings, QString(), pEngine, 0)
+    CheckForUpdatesDialog(pSettings, QString(), pEngine, nullptr)
 {
 }
 
