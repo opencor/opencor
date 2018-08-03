@@ -57,8 +57,8 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
 
 SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
     mFileName(QString()),
-    mEditor(0),
-    mSedmlEditingViewInterface(0)
+    mEditor(nullptr),
+    mSedmlEditingViewInterface(nullptr)
 {
 }
 
@@ -160,10 +160,10 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the SED-ML editing interface
 
-    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
+    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
-    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):0;
-    mSedmlEditingViewInterface = pViewPlugin?qobject_cast<SedmlEditingViewInterface *>(pViewPlugin->instance()):0;
+    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):nullptr;
+    mSedmlEditingViewInterface = pViewPlugin?qobject_cast<SedmlEditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
     bool hasFileName = !pFileName.isEmpty();
     bool hasFileNameAndIsReadWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
