@@ -3857,8 +3857,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
                         for (quint64 i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
-                            double valX = graph->data(pSimulationRun)->sample(size_t(i)).x();
-                            double valY = graph->data(pSimulationRun)->sample(size_t(i)).y();
+                            double valX = graph->data(pSimulationRun)->sample(i).x();
+                            double valY = graph->data(pSimulationRun)->sample(i).y();
 
                             minX = qMin(minX, valX);
                             maxX = qMax(maxX, valX);

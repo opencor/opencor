@@ -95,7 +95,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
             bsml::HDF5::Clock::Ptr clock = recording->new_clock(recordingUri+"/clock/"+voi->uri().toStdString()+runNb,
                                                                 rdf::URI(baseUnits+voi->unit().toStdString()),
                                                                 voi->values(i),
-                                                                size_t(voi->size(i)));
+                                                                voi->size(i));
 
             clock->set_label(voi->label().toStdString());
 
