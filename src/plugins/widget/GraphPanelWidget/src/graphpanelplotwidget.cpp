@@ -612,7 +612,7 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(int pRun) const
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, int pSize,
+void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, quint64 pSize,
                                   int pRun)
 {
     // Set our data, i.e. raw samples, to the given run, if it exists
@@ -3244,7 +3244,8 @@ int GraphPanelPlotWidget::graphIndex(GraphPanelPlotGraph *pGraph) const
 
 //==============================================================================
 
-bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph, int pFrom)
+bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
+                                         quint64 pFrom)
 {
     // Direct paint our graph from the given point unless we can't direct paint
     // (due to the axes having been changed), in which case we replot ourselves
