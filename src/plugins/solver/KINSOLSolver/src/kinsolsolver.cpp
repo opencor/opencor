@@ -185,7 +185,7 @@ void KinsolSolverData::setUserData(KinsolSolverUserData *pUserData)
 //==============================================================================
 
 KinsolSolver::KinsolSolver() :
-    mData(QMap<ComputeSystemFunction, KinsolSolverData *>())
+    mData(QMap<void *, KinsolSolverData *>())
 {
 }
 
@@ -206,7 +206,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 {
     // Check whether we need to initialise or update ourselves
 
-    KinsolSolverData *data = mData.value(pComputeSystem);
+    KinsolSolverData *data = mData.value(reinterpret_cast<void *>(pComputeSystem));
 
     if (!data) {
         // Retrieve our properties
@@ -327,7 +327,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
         data = new KinsolSolverData(solver, parametersVector, onesVector,
                                     matrix, linearSolver, userData);
 
-        mData.insert(pComputeSystem, data);
+        mData.insert(reinterpret_cast<void *>(pComputeSystem), data);
     } else {
         // We are already initiliased, so simply update our user data
 
