@@ -307,7 +307,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
                               SCI_REPLACETARGET;
     QByteArray replaceText = mFindReplace->replaceText().toUtf8();
     const char *rawReplaceText = replaceText.constData();
-    size_t rawReplaceTextLen = strlen(rawReplaceText);
+    ulong rawReplaceTextLen = ulong(strlen(rawReplaceText));
     int textLenDiff = replaceText.length()-findTextLen;
 
     forever {
