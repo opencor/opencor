@@ -108,7 +108,8 @@ public:
     typedef void (*ComputeSystemFunction)(double *, double *, void *);
 
     virtual void solve(ComputeSystemFunction pComputeSystem,
-                       double *pParameters, int pSize, void *pUserData = 0) = 0;
+                       double *pParameters, int pSize,
+                       void *pUserData = nullptr) = 0;
 };
 
 //==============================================================================
@@ -179,6 +180,8 @@ extern "C" Q_DECL_EXPORT int solverInterfaceVersion();
 class SolverInterface
 {
 public:
+    virtual ~SolverInterface();
+
 #define INTERFACE_DEFINITION
     #include "solverinterface.inl"
 #undef INTERFACE_DEFINITION

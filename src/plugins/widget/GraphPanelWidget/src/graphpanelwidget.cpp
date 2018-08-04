@@ -108,7 +108,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
 GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                                    QWidget *pParent) :
-    GraphPanelWidget(pNeighbors, 0, 0, pParent)
+    GraphPanelWidget(pNeighbors, nullptr, nullptr, pParent)
 {
 }
 

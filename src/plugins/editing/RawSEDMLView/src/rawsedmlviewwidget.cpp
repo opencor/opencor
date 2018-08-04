@@ -55,7 +55,7 @@ RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
-    mEditingWidget(0),
+    mEditingWidget(nullptr),
     mEditingWidgets(QMap<QString, SEDMLEditingView::SedmlEditingViewWidget *>())
 {
 }
@@ -185,7 +185,7 @@ void RawSedmlViewWidget::finalize(const QString &pFileName)
             settings.endGroup();
 
             mNeedLoadingSettings = true;
-            mEditingWidget = 0;
+            mEditingWidget = nullptr;
         }
 
         // Delete the editor and remove it from our list
@@ -251,7 +251,7 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFi
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editorWidget():0;
+    return editingWidget?editingWidget->editorWidget():nullptr;
 }
 
 //==============================================================================
@@ -332,13 +332,13 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 
                 switch (sedmlFileIssue.type()) {
                 case SEDMLSupport::SedmlFileIssue::Unknown:
-#ifdef QT_DEBUG
                     // We should never come here...
 
+#ifdef QT_DEBUG
                     qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
-#endif
-
+#else
                     break;
+#endif
                 case SEDMLSupport::SedmlFileIssue::Information:
                     issueType = EditorWidget::EditorListItem::Information;
 

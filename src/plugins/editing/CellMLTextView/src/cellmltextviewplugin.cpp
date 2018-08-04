@@ -383,7 +383,7 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
     if (   !Core::FileManager::instance()->isNew(pFileName)
         &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
         &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
-        return 0;
+        return nullptr;
     }
 
     // Update and return our CellML Text view widget using the given CellML

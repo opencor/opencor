@@ -429,7 +429,7 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     QRectF rect = pEvent->rect();
 
-    if (!rect.width() || !rect.height())
+    if (qIsNull(rect.width()) || qIsNull(rect.height()))
         return;
 
     // Clear our background

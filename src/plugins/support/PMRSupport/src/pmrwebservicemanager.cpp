@@ -54,9 +54,9 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
                                            PmrWebService *pPmrWebService) :
     QNetworkAccessManager(pPmrWebService),
     mPmrWebService(pPmrWebService),
-    mPmrAuthentication(0),
-    mWebViewerDialog(0),
-    mWebViewer(0),
+    mPmrAuthentication(nullptr),
+    mWebViewerDialog(nullptr),
+    mWebViewer(nullptr),
     mWebViewerUsed(false)
 {
     // Create our 'special' settings
@@ -174,7 +174,8 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
     QMainWindow *mainWindow = Core::mainWindow();
 
-    mWebViewerDialog->resize(0.7*mainWindow->width(), 0.7*mainWindow->height());
+    mWebViewerDialog->resize(int(0.7*mainWindow->width()),
+                             int(0.7*mainWindow->height()));
 
     mWebViewer->webView()->load(pUrl);
 
@@ -188,10 +189,10 @@ void PmrWebServiceManager::closeBrowser()
     // Close our temporary web browser, but only if the current page has
     // finished loading otherwise try again in a bit
 
-    if (mWebViewer->progressBarWidget()->value())
-        QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);
-    else
+    if (qIsNull(mWebViewer->progressBarWidget()->value()))
         mWebViewerDialog->close();
+    else
+        QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);
 }
 
 //==============================================================================
@@ -217,7 +218,7 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
     if (!Core::internetConnectionAvailable()) {
         emit error(Core::noInternetConnectionAvailableMessage());
 
-        return 0;
+        return nullptr;
     }
 
     // Let the user know that we are (going to be) busy

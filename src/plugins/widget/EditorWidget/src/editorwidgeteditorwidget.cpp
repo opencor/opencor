@@ -286,8 +286,8 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
     // Keep track of the current selection
 
-    int selectionStart = SendScintilla(SCI_GETSELECTIONSTART);
-    int selectionEnd = SendScintilla(SCI_GETSELECTIONEND);
+    int selectionStart = int(SendScintilla(SCI_GETSELECTIONSTART));
+    int selectionEnd = int(SendScintilla(SCI_GETSELECTIONEND));
     int selectionShift = 0;
 
     // Specify our search flags
@@ -302,11 +302,12 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
     const char *rawFindText = findText.constData();
     int findTextLen = findText.length();
     int findTextPos = text().length();
-    int replaceCommand = mFindReplace->useRegularExpression()?
-                             SCI_REPLACETARGETRE:
-                             SCI_REPLACETARGET;
+    uint replaceCommand = mFindReplace->useRegularExpression()?
+                              SCI_REPLACETARGETRE:
+                              SCI_REPLACETARGET;
     QByteArray replaceText = mFindReplace->replaceText().toUtf8();
     const char *rawReplaceText = replaceText.constData();
+    ulong rawReplaceTextLen = ulong(strlen(rawReplaceText));
     int textLenDiff = replaceText.length()-findTextLen;
 
     forever {
@@ -318,7 +319,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         SendScintilla(SCI_SETTARGETSTART, findTextPos);
         SendScintilla(SCI_SETTARGETEND, 0);
 
-        findTextPos = SendScintilla(SCI_SEARCHINTARGET, findTextLen, rawFindText);
+        findTextPos = int(SendScintilla(SCI_SEARCHINTARGET, ulong(findTextLen), rawFindText));
 
         if (findTextPos == -1) {
             // No more occurrences, so just leave our loop
@@ -329,9 +330,9 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
             if (pAction == HighlightAll) {
                 SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
-                SendScintilla(SCI_INDICATORFILLRANGE, findTextPos, findTextLen);
+                SendScintilla(SCI_INDICATORFILLRANGE, ulong(findTextPos), findTextLen);
 
-                int line = SendScintilla(SCI_LINEFROMPOSITION, findTextPos);
+                int line = int(SendScintilla(SCI_LINEFROMPOSITION, findTextPos));
 
                 mHighlightedLines << line;
             } else {
@@ -341,7 +342,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
                 SendScintilla(SCI_SETTARGETSTART, findTextPos);
                 SendScintilla(SCI_SETTARGETEND, findTextPos+findTextLen);
 
-                SendScintilla(replaceCommand, -1, rawReplaceText);
+                SendScintilla(replaceCommand, rawReplaceTextLen, rawReplaceText);
             }
         }
     }

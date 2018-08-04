@@ -42,7 +42,7 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     PropertyEditorWidget(false, pParent),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mSimulation(0),
+    mSimulation(nullptr),
     mNeedClearing(false),
     mVoiAccessible(false)
 {
@@ -268,7 +268,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
     // Populate our property editor with the parameters
 
     QString componentHierarchy = QString();
-    Core::Property *sectionProperty = 0;
+    Core::Property *sectionProperty = nullptr;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
         // Check whether the current parameter is in the same component
@@ -281,13 +281,13 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
             // create a new section hierarchy for our 'new' component, reusing
             // existing sections, whenever possible
 
-            Core::Property *parentSectionProperty = 0;
+            Core::Property *parentSectionProperty = nullptr;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a section for our current
                 // component
 
-                sectionProperty = 0;
+                sectionProperty = nullptr;
 
                 if (parentSectionProperty) {
                     // We have a parent section, so go through its children and
@@ -397,7 +397,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 {
     // Create our two main menu items
 
-    QAction *voiAction = mVoiAccessible?mContextMenu->addAction(QString()):0;
+    QAction *voiAction = mVoiAccessible?mContextMenu->addAction(QString()):nullptr;
     QMenu *plotAgainstMenu = new QMenu(mContextMenu);
 
     mContextMenu->addAction(plotAgainstMenu->menuAction());
@@ -419,7 +419,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
     // Populate our context menu with the parameters
 
     QString componentHierarchy = QString();
-    QMenu *componentMenu = 0;
+    QMenu *componentMenu = nullptr;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
         // Check whether the current parameter is in the same component
@@ -438,7 +438,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
                 // Check whether we already have a menu for our current
                 // component
 
-                componentMenu = 0;
+                componentMenu = nullptr;
 
                 foreach (QObject *object, menu->children()) {
                     QMenu *subMenu = qobject_cast<QMenu *>(object);

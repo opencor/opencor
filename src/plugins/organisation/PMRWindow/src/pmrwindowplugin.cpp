@@ -159,7 +159,7 @@ Preferences::PreferencesWidget * PMRWindowPlugin::preferencesWidget()
 {
     // We don't handle this interface...
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================

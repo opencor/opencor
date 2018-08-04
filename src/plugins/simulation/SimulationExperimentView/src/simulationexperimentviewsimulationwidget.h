@@ -258,7 +258,7 @@ private:
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          quint64 pSize, int pRun = -1);
 
-    void updateSimulationProperties(Core::Property *pProperty = 0);
+    void updateSimulationProperties(Core::Property *pProperty = nullptr);
     void updateSolversProperties(Core::Property *pProperty,
                                  bool pResetNlaSolver);
     void updateSolversProperties(Core::Property *pProperty);

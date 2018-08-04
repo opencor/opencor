@@ -130,7 +130,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     QVBoxLayout *messageLayout = new QVBoxLayout(messageWidget);
     int margin;
 
-    messageLayout->getContentsMargins(0, 0, 0, &margin);
+    messageLayout->getContentsMargins(nullptr, nullptr, nullptr, &margin);
 
     int halfMargin = margin >> 1;
 
@@ -434,7 +434,7 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                 // about it and, if so, whether its SHA-1 is still the same and
                 // if that's not the case then reset a few things
 
-                PmrWorkspacesWindowSynchronizeDialogItem *fileItem = 0;
+                PmrWorkspacesWindowSynchronizeDialogItem *fileItem = nullptr;
                 QString fileName = fileNode->path();
                 QString sha1 = Core::File::sha1(fileName);
 
@@ -678,7 +678,7 @@ int xdiffCallback(void *data, mmbuffer_t *pBuffer, int pBufferSize)
     // Add the given buffer to the given data
 
     for (int i = 0; i < pBufferSize; ++i)
-        *static_cast<QString *>(data) += QString(pBuffer[i].ptr).left(pBuffer[i].size);
+        *static_cast<QString *>(data) += QString(pBuffer[i].ptr).left(int(pBuffer[i].size));
 
     return 0;
 }
@@ -826,9 +826,9 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC);
 
     memcpy(xdl_mmfile_writeallocate(&oldBlock, oldByteArray.size()),
-           oldByteArray.constData(), oldByteArray.size());
+           oldByteArray.constData(), size_t(oldByteArray.size()));
     memcpy(xdl_mmfile_writeallocate(&newBlock, newByteArray.size()),
-           newByteArray.constData(), newByteArray.size());
+           newByteArray.constData(), size_t(newByteArray.size()));
 
     xpparam_t parameters;
     xdemitconf_t context;

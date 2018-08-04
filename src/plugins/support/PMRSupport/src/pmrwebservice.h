@@ -88,7 +88,7 @@ private:
 
     void requestWorkspaceInformation(const QString &pUrl,
                                      const QString &pPath,
-                                     PmrExposure *pExposure = 0);
+                                     PmrExposure *pExposure = nullptr);
     void requestWorkspaceCredentials(PmrWorkspace *pWorkspace);
 
     void requestExposureFileInformation(const QString &pUrl,

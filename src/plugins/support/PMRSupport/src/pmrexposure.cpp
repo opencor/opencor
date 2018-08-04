@@ -36,7 +36,7 @@ PmrExposure::PmrExposure(const QString &pUrl, const QString &pName,
     QObject(pParent),
     mUrl(pUrl),
     mName(pName),
-    mWorkspace(0),
+    mWorkspace(nullptr),
     mExposureFiles(QStringList())
 {
 }

@@ -49,6 +49,8 @@ extern "C" Q_DECL_EXPORT int pluginInterfaceVersion();
 class PluginInterface
 {
 public:
+    virtual ~PluginInterface();
+
 #define INTERFACE_DEFINITION
     #include "plugininterface.inl"
 #undef INTERFACE_DEFINITION

@@ -169,7 +169,7 @@ private:
 private slots:
     void refreshChanges();
 
-    void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);
+    void updateSelectAllChangesCheckBox(QStandardItem *pItem = nullptr);
     void selectAllChangesCheckBoxClicked();
 
     void updateOkButton();

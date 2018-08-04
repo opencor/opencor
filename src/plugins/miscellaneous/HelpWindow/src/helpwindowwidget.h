@@ -72,7 +72,7 @@ public:
 protected:
     QNetworkReply * createRequest(Operation pOperation,
                                   const QNetworkRequest &pRequest,
-                                  QIODevice *pOutgoingData = 0) override;
+                                  QIODevice *pOutgoingData = nullptr) override;
 
 private:
     QHelpEngine *mHelpEngine;

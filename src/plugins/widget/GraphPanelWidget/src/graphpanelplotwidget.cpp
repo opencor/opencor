@@ -237,8 +237,8 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
     mBoundingRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
     mBoundingLogRect(InvalidRect),
     mBoundingLogRects(QMap<GraphPanelPlotGraphRun *, QRectF>()),
-    mPlot(0),
-    mDummyRun(0),
+    mPlot(nullptr),
+    mDummyRun(nullptr),
     mRuns(GraphPanelPlotGraphRuns())
 {
     // Determine our default colour
@@ -267,7 +267,7 @@ GraphPanelPlotGraph::GraphPanelPlotGraph(void *pParameterX, void *pParameterY,
 //==============================================================================
 
 GraphPanelPlotGraph::GraphPanelPlotGraph(GraphPanelWidget *pOwner) :
-    GraphPanelPlotGraph(0, 0, pOwner)
+    GraphPanelPlotGraph(nullptr, nullptr, pOwner)
 {
 }
 
@@ -311,7 +311,7 @@ void GraphPanelPlotGraph::detach()
     foreach (GraphPanelPlotGraphRun *run, mRuns)
         run->detach();
 
-    mPlot = 0;
+    mPlot = nullptr;
 }
 
 //==============================================================================
@@ -380,7 +380,7 @@ GraphPanelPlotGraphRun * GraphPanelPlotGraph::lastRun() const
 {
     // Return our last run, if any
 
-    return mRuns.isEmpty()?0:mRuns.last();
+    return mRuns.isEmpty()?nullptr:mRuns.last();
 }
 
 //==============================================================================
@@ -601,35 +601,35 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(int pRun) const
     // Return the data, i.e. raw samples, of the given run, if it exists
 
     if (mRuns.isEmpty()) {
-        return 0;
+        return nullptr;
     } else {
         if (pRun == -1)
             return mRuns.last()->data();
         else
-            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->data():0;
+            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->data():nullptr;
     }
 }
 
 //==============================================================================
 
-void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, int pSize,
+void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, quint64 pSize,
                                   int pRun)
 {
     // Set our data, i.e. raw samples, to the given run, if it exists
 
-    GraphPanelPlotGraphRun *run = 0;
+    GraphPanelPlotGraphRun *run = nullptr;
 
     if (!mRuns.isEmpty()) {
         if (pRun == -1)
             run = mRuns.last();
         else
-            run = ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]:0;
+            run = ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]:nullptr;
     }
 
     if (!run)
         return;
 
-    run->setRawSamples(pDataX, pDataY, pSize);
+    run->setRawSamples(pDataX, pDataY, int(pSize));
 
     // Reset the cached version of our bounding rectangles
 
@@ -818,8 +818,8 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
         // Note: see drawCoordinates() as why we use QPoint rather than
         //       QPointF...
 
-        painter.drawLine(0, point.y(), canvasRect.width(), point.y());
-        painter.drawLine(point.x(), 0, point.x(), canvasRect.height());
+        painter.drawLine(0, point.y(), int(canvasRect.width()), point.y());
+        painter.drawLine(point.x(), 0, point.x(), int(canvasRect.height()));
 
         // Draw the coordinates of our point
 
@@ -913,10 +913,10 @@ QRect GraphPanelPlotOverlayWidget::zoomRegion() const
     QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
     QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-    int minX = canvasMapX.transform(mOwner->minX());
-    int maxX = canvasMapX.transform(mOwner->maxX());
-    int minY = canvasMapY.transform(mOwner->maxY());
-    int maxY = canvasMapY.transform(mOwner->minY());
+    int minX = int(canvasMapX.transform(mOwner->minX()));
+    int maxX = int(canvasMapX.transform(mOwner->maxX()));
+    int minY = int(canvasMapY.transform(mOwner->maxY()));
+    int maxY = int(canvasMapY.transform(mOwner->minY()));
 
     if (mOwner->canZoomInX() || mOwner->canZoomInY()) {
         QPoint originPoint = optimisedPoint(mOriginPoint);
@@ -1008,10 +1008,10 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
         QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
         QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-        QPoint topLeftPoint = QPoint(canvasMapX.transform(mOwner->minX()),
-                                     canvasMapY.transform(mOwner->maxY()));
-        QPoint bottomRightPoint = QPoint(canvasMapX.transform(mOwner->maxX()),
-                                         canvasMapY.transform(mOwner->minY()));
+        QPoint topLeftPoint = QPoint(int(canvasMapX.transform(mOwner->minX())),
+                                     int(canvasMapY.transform(mOwner->maxY())));
+        QPoint bottomRightPoint = QPoint(int(canvasMapX.transform(mOwner->maxX())),
+                                         int(canvasMapY.transform(mOwner->minY())));
 
         if (coordinatesRect.top() < topLeftPoint.y())
             coordinatesRect.moveTop(pPoint.y()+plusShift);
@@ -1713,10 +1713,10 @@ void GraphPanelPlotWidget::updateActions()
 
     QRectF dRect = realDataRect();
 
-    mResetZoomAction->setEnabled(   (crtMinX != dRect.left())
-                                 || (crtMaxX != dRect.left()+dRect.width())
-                                 || (crtMinY != dRect.top())
-                                 || (crtMaxY != dRect.top()+dRect.height()));
+    mResetZoomAction->setEnabled(   !qIsNull(crtMinX-dRect.left())
+                                 || !qIsNull(crtMaxX-(dRect.left()+dRect.width()))
+                                 || !qIsNull(crtMinY-dRect.top())
+                                 || !qIsNull(crtMaxY-(dRect.top()+dRect.height())));
 }
 
 //==============================================================================
@@ -2496,11 +2496,11 @@ void GraphPanelPlotWidget::optimiseAxis(double &pMin, double &pMax) const
 {
     // Make sure that the given values are different
 
-    if (pMin == pMax) {
+    if (qIsNull(pMin-pMax)) {
         // The given values are the same, so update them so that we can properly
         // optimise them below
 
-        double powerValue = pMin?std::floor(log10(qAbs(pMin)))-1.0:0.0;
+        double powerValue = qIsNull(pMin)?0.0:qFloor(log10(qAbs(pMin)))-1.0;
 
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
@@ -2665,13 +2665,13 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     bool xAxisValuesChanged = false;
     bool yAxisValuesChanged = false;
 
-    if (pForceXAxisSetting || (pMinX != oldMinX) || (pMaxX != oldMaxX)) {
+    if (pForceXAxisSetting || !qIsNull(pMinX-oldMinX) || !qIsNull(pMaxX-oldMaxX)) {
         setAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
         xAxisValuesChanged = true;
     }
 
-    if (pForceYAxisSetting || (pMinY != oldMinY) || (pMaxY != oldMaxY)) {
+    if (pForceYAxisSetting || !qIsNull(pMinY-oldMinY) || !qIsNull(pMaxY-oldMaxY)) {
         setAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
         yAxisValuesChanged = true;
@@ -3071,7 +3071,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         QRectF zoomRegion = QRectF(canvasPoint(zoomRegionRect.topLeft()),
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height())));
 
-        if (zoomRegion.width() && zoomRegion.height()) {
+        if (!qIsNull(zoomRegion.width()) && !qIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
                     zoomRegion.top()+zoomRegion.height(), zoomRegion.top());
         }
@@ -3137,7 +3137,7 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
         &&  canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
-        // Make sure that we are not already carrying out a action
+        // Make sure that we are not already carrying out an action
 
         if (mAction == None) {
             int delta = pEvent->delta();
@@ -3251,7 +3251,7 @@ bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
     // (due to the axes having been changed), in which case we replot ourselves
 
     if (mCanDirectPaint) {
-        mDirectPainter->drawSeries(pGraph->lastRun(), pFrom, -1);
+        mDirectPainter->drawSeries(pGraph->lastRun(), int(pFrom), -1);
 
         return false;
     } else {
@@ -3381,17 +3381,17 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                                                           yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
 
         if (pCanReplot) {
-            if (    pForceAlignment
-                || (newMinBorderDistStartX != oldMinBorderDistStartX)
-                || (newMinBorderDistEndX != oldMinBorderDistEndX)
-                || (newMinExtentY != oldMinExtentY)) {
+            if (     pForceAlignment
+                ||  (newMinBorderDistStartX != oldMinBorderDistStartX)
+                ||  (newMinBorderDistEndX != oldMinBorderDistEndX)
+                || !qIsNull(newMinExtentY-oldMinExtentY)) {
                 if (    pForceAlignment
                     || (newMinBorderDistStartX != oldMinBorderDistStartX)
                     || (newMinBorderDistEndX != oldMinBorderDistEndX)) {
                     xScaleWidget->updateLayout();
                 }
 
-                if (pForceAlignment || (newMinExtentY != oldMinExtentY))
+                if (pForceAlignment || !qIsNull(newMinExtentY-oldMinExtentY))
                     yScaleWidget->updateLayout();
 
                 plot->replot();
@@ -3448,7 +3448,7 @@ void GraphPanelPlotWidget::exportTo()
 
     if (!fileName.isEmpty()) {
         static double InToMm = 25.4;
-        static double Dpi = 85.0;
+        static int Dpi = 85;
 
         if (QFileInfo(fileName).completeSuffix().isEmpty())
             QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
@@ -3497,8 +3497,8 @@ void GraphPanelPlotWidget::customAxes()
         double newMinY = customAxesDialog.minY();
         double newMaxY = customAxesDialog.maxY();
 
-        if (   (newMinX != oldMinX) || (newMaxX != oldMaxX)
-            || (newMinY != oldMinY) || (newMaxY != oldMaxY)) {
+        if (   !qIsNull(newMinX-oldMinX) || !qIsNull(newMaxX-oldMaxX)
+            || !qIsNull(newMinY-oldMinY) || !qIsNull(newMaxY-oldMaxY)) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY);
         }
     }

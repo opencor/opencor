@@ -110,7 +110,7 @@ DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pF
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================

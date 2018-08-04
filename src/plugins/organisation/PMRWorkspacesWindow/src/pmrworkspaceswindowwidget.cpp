@@ -97,8 +97,8 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(Type pType,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
     PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
-                            pWorkspace, 0, pCollapsedIcon, pWorkspace->name(),
-                            pCollapsedIcon, pExpandedIcon)
+                            pWorkspace, nullptr, pCollapsedIcon,
+                            pWorkspace->name(), pCollapsedIcon, pExpandedIcon)
 {
 }
 
@@ -299,7 +299,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mExpandedWorkspaceIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
 
     int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
-    int overlayIconSize = 0.57*folderIconSize;
+    int overlayIconSize = int(0.57*folderIconSize);
 
     mStagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, StagedIcon,
                                                         folderIconSize, folderIconSize,
@@ -364,7 +364,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     int fileIconSize = mFileIcon.availableSizes().first().width();
 
-    overlayIconSize = 0.57*fileIconSize;
+    overlayIconSize = int(0.57*fileIconSize);
 
     mIaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
                                       fileIconSize, fileIconSize,
@@ -558,7 +558,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // folder
 
         QString clonedWorkspaceUrl = QString();
-        git_repository *gitRepository = 0;
+        git_repository *gitRepository = nullptr;
 
         if (!git_repository_open(&gitRepository,
                                  clonedWorkspaceFolder.toUtf8().constData())) {
@@ -569,7 +569,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
                     char *name = remotes.strings[i];
 
                     if (!strcmp(name, "origin")) {
-                        git_remote *remote = 0;
+                        git_remote *remote = nullptr;
 
                         if (!git_remote_lookup(&remote, gitRepository, name)) {
                             const char *remoteUrl = git_remote_url(remote);
@@ -893,7 +893,7 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::workspaceItem(PMRSupport::P
             return item;
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================
@@ -1029,7 +1029,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         // Check whether we already know about the file node
 
-        PmrWorkspacesWindowItem *newItem = 0;
+        PmrWorkspacesWindowItem *newItem = nullptr;
 
         for (int i = 0, iMax = pFolderItem->rowCount(); i < iMax; ++i) {
             PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(pFolderItem->child(i));
@@ -1314,7 +1314,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
                                          tr("View the current workspace on the computer"):
                                          tr("View the current workspaces on the computer"));
 
-    PMRSupport::PmrWorkspace *workspace = currentItem()?currentItem()->workspace():0;
+    PMRSupport::PmrWorkspace *workspace = currentItem()?currentItem()->workspace():nullptr;
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspace?
                                                   workspace->gitWorkspaceStatus():
                                                   PMRSupport::PmrWorkspace::StatusUnknown;
