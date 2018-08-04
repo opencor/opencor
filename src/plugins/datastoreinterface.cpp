@@ -51,7 +51,7 @@ namespace DataStore {
 
 //==============================================================================
 
-DataStoreVariableRun::DataStoreVariableRun(int pCapacity, double *pValue) :
+DataStoreVariableRun::DataStoreVariableRun(quint64 pCapacity, double *pValue) :
     mCapacity(pCapacity),
     mSize(0),
     mValue(pValue)
@@ -72,7 +72,7 @@ DataStoreVariableRun::~DataStoreVariableRun()
 
 //==============================================================================
 
-int DataStoreVariableRun::size() const
+quint64 DataStoreVariableRun::size() const
 {
     // Return our size
 
@@ -107,7 +107,7 @@ void DataStoreVariableRun::addValue(double pValue)
 
 //==============================================================================
 
-double DataStoreVariableRun::value(int pPosition) const
+double DataStoreVariableRun::value(quint64 pPosition) const
 {
     // Return the value at the given position
 
@@ -184,7 +184,7 @@ int DataStoreVariable::runsCount() const
 
 //==============================================================================
 
-void DataStoreVariable::addRun(int pCapacity)
+void DataStoreVariable::addRun(quint64 pCapacity)
 {
     // Add a run of the given capacity
 
@@ -278,7 +278,7 @@ void DataStoreVariable::setUnit(const QString &pUnit)
 
 //==============================================================================
 
-int DataStoreVariable::size(int pRun) const
+quint64 DataStoreVariable::size(int pRun) const
 {
     // Return our size for the given run
 
@@ -312,7 +312,7 @@ void DataStoreVariable::addValue(double pValue)
 
 //==============================================================================
 
-double DataStoreVariable::value(int pPosition, int pRun) const
+double DataStoreVariable::value(quint64 pPosition, int pRun) const
 {
     // Return the value at the given position and this for the given run
 
@@ -422,7 +422,7 @@ int DataStore::runsCount() const
 
 //==============================================================================
 
-bool DataStore::addRun(int pCapacity)
+bool DataStore::addRun(quint64 pCapacity)
 {
     // Try to add a run to our VOI and all our variables
 
@@ -450,7 +450,7 @@ bool DataStore::addRun(int pCapacity)
 
 //==============================================================================
 
-int DataStore::size(int pRun) const
+quint64 DataStore::size(int pRun) const
 {
     // Return our size, i.e. the size of our VOI, for example
 

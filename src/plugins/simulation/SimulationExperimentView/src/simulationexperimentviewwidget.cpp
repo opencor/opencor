@@ -70,7 +70,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidget(nullptr),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
-    mSimulationResultsSizes(QMap<QString, int>())
+    mSimulationResultsSizes(QMap<QString, quint64>())
 {
 }
 
@@ -502,7 +502,7 @@ QWidget * SimulationExperimentViewWidget::widget(const QString &pFileName)
 
 //==============================================================================
 
-int SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
+quint64 SimulationExperimentViewWidget::simulationResultsSize(const QString &pFileName) const
 {
     // Return the results size for the given file name
 
@@ -530,7 +530,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     if (   (pTask == SimulationExperimentViewSimulationWidget::AddRun)
         && (simulationRunsCount > 1)) {
-        int previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
+        quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
 
         if (previousSimulationResultsSize != mSimulationResultsSizes.value(pFileName)) {
             foreach (SimulationExperimentViewSimulationWidget *currentSimulationWidget, mSimulationWidgets) {
@@ -547,7 +547,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     //       since another simulation widget may have graphs that refer to the
     //       given simulation widget...
 
-    int simulationResultsSize = simulation->results()->size();
+    quint64 simulationResultsSize = simulation->results()->size();
 
     if (   (pTask != SimulationExperimentViewSimulationWidget::None)
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {

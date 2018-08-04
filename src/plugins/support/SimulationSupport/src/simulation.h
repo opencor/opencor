@@ -181,7 +181,7 @@ public:
 
     void addPoint(double pPoint);
 
-    int size(int pRun = -1) const;
+    quint64 size(int pRun = -1) const;
 
     DataStore::DataStore * dataStore() const;
 
@@ -257,7 +257,7 @@ public:
     int delay() const;
     void setDelay(int pDelay);
 
-    double size();
+    quint64 size();
 
     bool run();
     bool pause();

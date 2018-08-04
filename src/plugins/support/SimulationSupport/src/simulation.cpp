@@ -686,7 +686,7 @@ bool SimulationResults::addRun()
     // Note: we consider things to be fine if our data store has had no problems
     //       adding a run to itself or if the simulation size is zero...
 
-    int simulationSize = int(mSimulation->size());
+    quint64 simulationSize = mSimulation->size();
 
     if (simulationSize)
         return mDataStore->addRun(simulationSize);
@@ -705,7 +705,7 @@ void SimulationResults::addPoint(double pPoint)
 
 //==============================================================================
 
-int SimulationResults::size(int pRun) const
+quint64 SimulationResults::size(int pRun) const
 {
     // Return the size of our data store for the given run
 
@@ -1057,17 +1057,15 @@ bool Simulation::simulationSettingsOk(bool pEmitSignal)
 
 //==============================================================================
 
-double Simulation::size()
+quint64 Simulation::size()
 {
     // Return the size of our simulation (i.e. the number of data points that
     // should be generated), if possible
-    // Note: we return a double rather than an int in case the simulation
-    //       requires an insane amount of memory...
 
     if (simulationSettingsOk(false))
-        return ceil((mData->endingPoint()-mData->startingPoint())/mData->pointInterval())+1.0;
+        return quint64(ceil((mData->endingPoint()-mData->startingPoint())/mData->pointInterval())+1.0);
     else
-        return 0.0;
+        return 0;
 }
 
 //==============================================================================

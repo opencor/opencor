@@ -245,14 +245,10 @@ QString digitGroupNumber(const QString &pNumber)
 
 //==============================================================================
 
-QString sizeAsString(double pSize, int pPrecision)
+QString sizeAsString(quint64 pSize, int pPrecision)
 {
-    // Note: pSize is a double rather than an int, in case we need to convert an
-    //       insane size...
-
     QString units[9] = { QObject::tr("B"), QObject::tr("KB"), QObject::tr("MB"),
-                         QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB"),
-                         QObject::tr("EB"), QObject::tr("ZB"), QObject::tr("YB") };
+                         QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB") };
 
     int i = qFloor(log(pSize)/log(1024.0));
     double size = pSize/qPow(1024.0, i);

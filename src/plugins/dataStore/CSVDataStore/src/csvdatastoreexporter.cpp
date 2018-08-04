@@ -85,7 +85,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         }
 
         int nbOfRuns = dataStore->runsCount();
-        QIntList runsIndex = QIntList();
+        QList<quint64> runsIndex = QList<quint64>();
         QDoubleList voiValues = QDoubleList();
 
         for (int i = 0; i < nbOfRuns; ++i) {
@@ -95,7 +95,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
             // VOI values
 
-            for (int j = 0, jMax = dataStore->size(i); j < jMax; ++j)
+            for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j)
                 voiValues << dataStore->voi()->value(j, i);
 
             // Variables

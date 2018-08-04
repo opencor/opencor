@@ -3715,7 +3715,7 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                                                               int pSize,
+                                                               quint64 pSize,
                                                                int pRun)
 {
     // Update our graph's data from the given run

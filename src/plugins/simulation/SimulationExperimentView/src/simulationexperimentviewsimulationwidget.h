@@ -256,7 +256,7 @@ private:
                   int pRun) const;
 
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
-                         int pSize, int pRun = -1);
+                         quint64 pSize, int pRun = -1);
 
     void updateSimulationProperties(Core::Property *pProperty = nullptr);
     void updateSolversProperties(Core::Property *pProperty,
