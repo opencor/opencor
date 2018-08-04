@@ -492,8 +492,11 @@ void MainWindow::registerOpencorUrlScheme()
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
     }
 #elif defined(Q_OS_MAC)
-    LSSetDefaultHandlerForURLScheme(reinterpret_cast<CFStringRef>(__builtin___CFStringMakeConstantString("opencor")),
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+    LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
                                     CFBundleGetIdentifier(CFBundleGetMainBundle()));
+#pragma clang diagnostic pop
 #else
     #error Unsupported platform
 #endif
