@@ -43,6 +43,12 @@ extern "C" Q_DECL_EXPORT int i18nInterfaceVersion()
 
 //==============================================================================
 
+I18nInterface::~I18nInterface()
+{
+}
+
+//==============================================================================
+
 void I18nInterface::updateTranslator(const QString &pTranslator)
 {
     // Update the plugin's translator

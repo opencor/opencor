@@ -108,17 +108,17 @@ CentralWidget CORE_EXPORT * centralWidget();
 
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
-                                    QString *pSelectedFilter = 0);
+                                    QString *pSelectedFilter = nullptr);
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
                                          const QStringList &pFilters = QStringList(),
-                                         QString *pSelectedFilter = 0);
+                                         QString *pSelectedFilter = nullptr);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
                                     const QStringList &pFilters = QStringList(),
-                                    QString *pSelectedFilter = 0);
+                                    QString *pSelectedFilter = nullptr);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
-                                    QString *pSelectedFilter = 0);
+                                    QString *pSelectedFilter = nullptr);
 
 QString CORE_EXPORT getDirectory(const QString &pCaption,
                                  const QString &pDirName = QString(),

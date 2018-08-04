@@ -103,7 +103,7 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
             return new DataStore::DataStoreData(fileName, pDataStore, dataStoreDialog.selectedData());
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================

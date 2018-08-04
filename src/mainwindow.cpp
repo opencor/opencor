@@ -90,12 +90,12 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mLoadedGuiPlugins(Plugins()),
     mLoadedPreferencesPlugins(Plugins()),
     mLoadedWindowPlugins(Plugins()),
-    mCoreInterface(0),
+    mCoreInterface(nullptr),
     mRawLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
-    mFileNewMenu(0),
-    mViewWindowsMenu(0),
-    mViewSeparator(0),
+    mFileNewMenu(nullptr),
+    mViewWindowsMenu(nullptr),
+    mViewSeparator(nullptr),
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
@@ -492,8 +492,11 @@ void MainWindow::registerOpencorUrlScheme()
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
     }
 #elif defined(Q_OS_MAC)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
                                     CFBundleGetIdentifier(CFBundleGetMainBundle()));
+#pragma clang diagnostic pop
 #else
     #error Unsupported platform
 #endif
@@ -556,7 +559,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         for (int i = guiMenuActions.count()-1; i >= 0; --i) {
             // Insert the action/separator to the right menu, if any
 
-            QMenu *menu = 0;
+            QMenu *menu = nullptr;
 
             if (guiMenuActions[i].type() == Gui::MenuAction::File)
                 menu = mGui->menuFile;

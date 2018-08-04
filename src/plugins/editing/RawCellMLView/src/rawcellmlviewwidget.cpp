@@ -57,7 +57,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
-    mEditingWidget(0),
+    mEditingWidget(nullptr),
     mEditingWidgets(QMap<QString, CellMLEditingView::CellmlEditingViewWidget *>()),
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
@@ -205,7 +205,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
             settings.endGroup();
 
             mNeedLoadingSettings = true;
-            mEditingWidget = 0;
+            mEditingWidget = nullptr;
         }
 
         // Delete the editor and remove it from our list
@@ -271,7 +271,7 @@ EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pF
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editorWidget():0;
+    return editingWidget?editingWidget->editorWidget():nullptr;
 }
 
 //==============================================================================

@@ -148,7 +148,7 @@ void Tests::voidFunctionTests()
                                          "    pArrayA[2] = 789.0;\n"
                                          "}"));
 
-    ((void (*)(double *)) (intptr_t) mCompilerEngine->getFunction("function"))(arrayA);
+    reinterpret_cast<void (*)(double *)>(mCompilerEngine->getFunction("function"))(arrayA);
 
     QCOMPARE(arrayA[0], 123.0);
     QCOMPARE(arrayA[1], 456.0);
@@ -163,7 +163,7 @@ void Tests::voidFunctionTests()
                                          "    pArrayB[2] = pArrayA[0];\n"
                                          "}"));
 
-    ((void (*)(double *, double *)) (intptr_t) mCompilerEngine->getFunction("function"))(arrayA, arrayB);
+    reinterpret_cast<void (*)(double *, double *)>(mCompilerEngine->getFunction("function"))(arrayA, arrayB);
 
     QCOMPARE(arrayB[0], 789.0);
     QCOMPARE(arrayB[1], 456.0);
@@ -179,9 +179,9 @@ void Tests::timesOperatorTests()
                                          "    return pNb1*pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0*5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              mA*mB);
 }
 
@@ -194,9 +194,9 @@ void Tests::divideOperatorTests()
                                          "    return pNb1/pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0/5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              mA/mB);
 }
 
@@ -209,9 +209,9 @@ void Tests::moduloOperatorTests()
                                          "    return (double) ((int) pNb1 % (int) pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(11.0*3.0, 5.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(11.0*3.0, 5.0),
              double(int(11.0*3.0) % int(5.0)));
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(11.0*mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(11.0*mA, mB),
              double(int(11.0*mA) % int(mB)));
 }
 
@@ -224,9 +224,9 @@ void Tests::plusOperatorTests()
                                          "    return pNb1+pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0+5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              mA+mB);
 }
 
@@ -239,9 +239,9 @@ void Tests::minusOperatorTests()
                                          "    return pNb1-pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              3.0-5.7);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              mA-mB);
 }
 
@@ -254,13 +254,13 @@ void Tests::notOperatorTests()
                                          "    return !pNb;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              0.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(0.0),
              1.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              0.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(!mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA)),
              1.0);
 }
 
@@ -273,21 +273,21 @@ void Tests::orOperatorTests()
                                          "    return pNb1 || pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(0.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 0.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 0.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 0.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(0.0, 0.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, !mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!mA, !mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
              0.0);
 }
 
@@ -300,21 +300,21 @@ void Tests::xorOperatorTests()
                                          "    return (pNb1 != 0) ^ (pNb2 != 0);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(0.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 0.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 0.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 0.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(0.0, 0.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, !mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!mA, !mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
              0.0);
 }
 
@@ -327,21 +327,21 @@ void Tests::andOperatorTests()
                                          "    return pNb1 && pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(0.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 0.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 0.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(0.0, 0.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(0.0, 0.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, !mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(!mA, !mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
              0.0);
 }
 
@@ -354,13 +354,13 @@ void Tests::equalEqualOperatorTests()
                                          "    return pNb1 == pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA+2.9, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA+2.9, mB),
              1.0);
 }
 
@@ -373,13 +373,13 @@ void Tests::notEqualOperatorTests()
                                          "    return pNb1 != pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA+2.9, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA+2.9, mB),
              0.0);
 }
 
@@ -392,17 +392,17 @@ void Tests::lowerThanOperatorTests()
                                          "    return pNb1 < pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(5.7, 3.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA+2.9, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA+2.9, mB),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mB, mA),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mB, mA),
              0.0);
 }
 
@@ -415,17 +415,17 @@ void Tests::greaterThanOperatorTests()
                                          "    return pNb1 > pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(5.7, 3.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA+2.9, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA+2.9, mB),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mB, mA),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mB, mA),
              1.0);
 }
 
@@ -438,17 +438,17 @@ void Tests::lowerOrEqualThanOperatorTests()
                                          "    return pNb1 <= pNb2;\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(5.7, 3.0),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA+2.9, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA+2.9, mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mB, mA),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mB, mA),
              0.0);
 }
 
@@ -461,17 +461,17 @@ void Tests::greaterOrEqualThanOperatorTests()
                                          "    return (double) (pNb1 >= pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.7),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0+2.7, 5.7),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7, 3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(5.7, 3.0),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              0.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA+2.9, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA+2.9, mB),
              1.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mB, mA),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mB, mA),
              1.0);
 }
 
@@ -484,13 +484,13 @@ void Tests::absFunctionTests()
                                          "    return fabs(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              3.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(-3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(-3.0),
              3.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              5.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mMinusA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mMinusA),
              5.0);
 }
 
@@ -503,9 +503,9 @@ void Tests::expFunctionTests()
                                          "    return exp(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_exp(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_exp(mA));
 }
 
@@ -518,9 +518,9 @@ void Tests::logFunctionTests()
                                          "    return log(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_log(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_log(mA));
 }
 
@@ -533,13 +533,13 @@ void Tests::ceilFunctionTests()
                                          "    return ceil(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(5.7),
              6.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mB),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mB),
              8.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(-5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(-5.7),
              -5.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mMinusB),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mMinusB),
              -7.0);
 }
 
@@ -552,13 +552,13 @@ void Tests::floorFunctionTests()
                                          "    return floor(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(5.7),
              5.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mB),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mB),
              7.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(-5.7),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(-5.7),
              -6.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mMinusB),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mMinusB),
              -8.0);
 }
 
@@ -571,9 +571,9 @@ void Tests::factorialFunctionTests()
                                          "    return factorial(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              6.0);
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              120.0);
 }
 
@@ -586,9 +586,9 @@ void Tests::sinFunctionTests()
                                          "    return sin(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_sin(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_sin(mA));
 }
 
@@ -601,9 +601,9 @@ void Tests::sinhFunctionTests()
                                          "    return sinh(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_sinh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_sinh(mA));
 }
 
@@ -616,9 +616,9 @@ void Tests::asinFunctionTests()
                                          "    return asin(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/3.0),
              compiler_asin(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/mA),
              compiler_asin(1.0/mA));
 }
 
@@ -631,9 +631,9 @@ void Tests::asinhFunctionTests()
                                          "    return asinh(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_asinh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_asinh(mA));
 }
 
@@ -646,9 +646,9 @@ void Tests::cosFunctionTests()
                                          "    return cos(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_cos(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_cos(mA));
 }
 
@@ -661,9 +661,9 @@ void Tests::coshFunctionTests()
                                          "    return cosh(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_cosh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_cosh(mA));
 }
 
@@ -676,9 +676,9 @@ void Tests::acosFunctionTests()
                                          "    return acos(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/3.0),
              compiler_acos(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/mA),
              compiler_acos(1.0/mA));
 }
 
@@ -691,9 +691,9 @@ void Tests::acoshFunctionTests()
                                          "    return acosh(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_acosh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_acosh(mA));
 }
 
@@ -706,9 +706,9 @@ void Tests::tanFunctionTests()
                                          "    return tan(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_tan(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_tan(mA));
 }
 
@@ -721,9 +721,9 @@ void Tests::tanhFunctionTests()
                                          "    return tanh(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_tanh(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_tanh(mA));
 }
 
@@ -736,9 +736,9 @@ void Tests::atanFunctionTests()
                                          "    return atan(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_atan(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_atan(mA));
 }
 
@@ -751,9 +751,9 @@ void Tests::atanhFunctionTests()
                                          "    return atanh(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/3.0),
              compiler_atanh(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/mA),
              compiler_atanh(1.0/mA));
 }
 
@@ -766,9 +766,9 @@ void Tests::secFunctionTests()
                                          "    return sec(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_sec(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_sec(mA));
 }
 
@@ -781,9 +781,9 @@ void Tests::sechFunctionTests()
                                          "    return sech(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_sech(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_sech(mA));
 }
 
@@ -796,9 +796,9 @@ void Tests::asecFunctionTests()
                                          "    return asec(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_asec(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_asec(mA));
 }
 
@@ -811,9 +811,9 @@ void Tests::asechFunctionTests()
                                          "    return asech(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/3.0),
              compiler_asech(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/mA),
              compiler_asech(1.0/mA));
 }
 
@@ -826,9 +826,9 @@ void Tests::cscFunctionTests()
                                          "    return csc(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_csc(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_csc(mA));
 }
 
@@ -841,9 +841,9 @@ void Tests::cschFunctionTests()
                                          "    return csch(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_csch(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_csch(mA));
 }
 
@@ -856,9 +856,9 @@ void Tests::acscFunctionTests()
                                          "    return acsc(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_acsc(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_acsc(mA));
 }
 
@@ -871,9 +871,9 @@ void Tests::acschFunctionTests()
                                          "    return acsch(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_acsch(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_acsch(mA));
 }
 
@@ -886,9 +886,9 @@ void Tests::cotFunctionTests()
                                          "    return cot(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_cot(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_cot(mA));
 }
 
@@ -901,9 +901,9 @@ void Tests::cothFunctionTests()
                                          "    return coth(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_coth(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_coth(mA));
 }
 
@@ -916,9 +916,9 @@ void Tests::acotFunctionTests()
                                          "    return acot(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/3.0),
              compiler_acot(1.0/3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(1.0/mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(1.0/mA),
              compiler_acot(1.0/mA));
 }
 
@@ -931,9 +931,9 @@ void Tests::acothFunctionTests()
                                          "    return acoth(pNb);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(3.0),
              compiler_acoth(3.0));
-    QCOMPARE(((double (*)(double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              compiler_acoth(mA));
 }
 
@@ -946,9 +946,9 @@ void Tests::powFunctionTests()
                                          "    return pow(pNb1, pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.0),
              compiler_pow(3.0, 5.0));
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              compiler_pow(mA, mB));
 }
 
@@ -961,9 +961,9 @@ void Tests::arbitraryLogFunctionTests()
                                          "    return arbitrary_log(pNb1, pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0, 5.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0, 5.0),
              compiler_log(3.0)/log(5.0));
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mA, mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              compiler_log(mA)/log(mB));
 }
 
@@ -976,9 +976,9 @@ void Tests::minFunctionTests()
                                          "    return multi_min(2, pNb1, pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              9282.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              9282.0);
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
@@ -986,9 +986,9 @@ void Tests::minFunctionTests()
                                          "    return multi_min(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              595.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
              595.0);
 }
 
@@ -1001,9 +1001,9 @@ void Tests::maxFunctionTests()
                                          "    return multi_max(2, pNb1, pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              15015.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              15015.0);
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
@@ -1011,9 +1011,9 @@ void Tests::maxFunctionTests()
                                          "    return multi_max(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              15015.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
              15015.0);
 }
 
@@ -1026,9 +1026,9 @@ void Tests::gcdFunctionTests()
                                          "    return gcd_multi(2, pNb1, pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              273.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              273.0);
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
@@ -1036,9 +1036,9 @@ void Tests::gcdFunctionTests()
                                          "    return gcd_multi(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              7.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
              7.0);
 }
 
@@ -1051,9 +1051,9 @@ void Tests::lcmFunctionTests()
                                          "    return lcm_multi(2, pNb1, pNb2);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0),
              510510.0);
-    QCOMPARE(((double (*)(double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB),
              510510.0);
 
     QVERIFY(mCompilerEngine->compileCode("double function(double pNb1, double pNb2, double pNb3)\n"
@@ -1061,9 +1061,9 @@ void Tests::lcmFunctionTests()
                                          "    return lcm_multi(3, pNb1, pNb2, pNb3);\n"
                                          "}"));
 
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(3.0*5.0*7.0*11.0*13.0, 2.0*3.0*7.0*13.0*17.0, 5.0*7.0*17.0),
              510510.0);
-    QCOMPARE(((double (*)(double, double, double)) (intptr_t) mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
+    QCOMPARE(reinterpret_cast<double (*)(double, double, double)>(mCompilerEngine->getFunction("function"))(mBigA, mBigB, mBigC),
              510510.0);
 }
 

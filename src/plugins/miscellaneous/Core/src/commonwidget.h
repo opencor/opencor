@@ -57,6 +57,7 @@ class CORE_EXPORT CommonWidget
 {
 public:
     explicit CommonWidget(QWidget *pParent);
+    virtual ~CommonWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

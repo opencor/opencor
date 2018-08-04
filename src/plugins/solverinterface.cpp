@@ -105,11 +105,11 @@ void Solver::emitError(const QString &pErrorMessage)
 OdeSolver::OdeSolver() :
     Solver(),
     mRatesStatesCount(0),
-    mConstants(0),
-    mStates(0),
-    mRates(0),
-    mAlgebraic(0),
-    mComputeRates(0)
+    mConstants(nullptr),
+    mStates(nullptr),
+    mRates(nullptr),
+    mAlgebraic(nullptr),
+    mComputeRates(nullptr)
 {
 }
 
@@ -151,7 +151,7 @@ NlaSolver * nlaSolver(const QString &pRuntimeAddress)
 
     QVariant res = qApp->property(pRuntimeAddress.toUtf8().constData());
 
-    return res.isValid()?static_cast<NlaSolver *>((void *) res.toULongLong()):0;
+    return res.isValid()?reinterpret_cast<NlaSolver *>(res.toULongLong()):nullptr;
 }
 
 //==============================================================================
@@ -245,6 +245,15 @@ bool Property::hasVoiUnit() const
 //==============================================================================
 
 }   // namespace Solver
+
+//==============================================================================
+
+SolverInterface::~SolverInterface()
+{
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -109,7 +109,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
     mTitle = new CollapsibleHeaderTitleWidget(subWidget);
     mMenu = new QToolButton(subWidget);
 
-    int iconSize = 0.4*mTitle->height();
+    int iconSize = int(0.4*mTitle->height());
 
     mButton->setIcon(pCollapsible?DownIcon:NoIcon);
     mButton->setIconSize(QSize(iconSize, iconSize));
@@ -365,7 +365,7 @@ CollapsibleHeaderWidget * CollapsibleWidget::addWidget(QWidget *pWidget,
     // Make sure that there is a widget to add
 
     if (!pWidget)
-        return 0;
+        return nullptr;
 
     // We want to add a widget, so we first need to add a header to our layout
 

@@ -57,7 +57,7 @@ QLayout * Widget::createLayout(LayoutType pLayoutType)
 {
     // Create and set a layout
 
-    QLayout *layout = 0;
+    QLayout *layout = nullptr;
 
     switch (pLayoutType) {
     case VerticalLayout:

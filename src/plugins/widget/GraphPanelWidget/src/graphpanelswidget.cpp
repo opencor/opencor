@@ -46,7 +46,7 @@ namespace GraphPanelWidget {
 GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     Core::SplitterWidget(pParent),
     mGraphPanels(GraphPanelWidgets()),
-    mActiveGraphPanel(0),
+    mActiveGraphPanel(nullptr),
     mInternalSizes(QIntList()),
     mUseInternalSizes(true)
 {
@@ -157,7 +157,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
         double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalHeight/oldTotalHeight;
 
         for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i)
-            newSizes << round(scalingFactor*oldSizes[i]);
+            newSizes << qRound(scalingFactor*oldSizes[i]);
 
         setSizes(newSizes << newTotalHeight-std::accumulate(newSizes.begin(), newSizes.end(), 0));
     }
@@ -191,7 +191,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
     // Note: at startup, activeGraphPanelPlot is (obviously) null, hence we use
     //       our newly created graph panel's plot instead...
 
-    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():0;
+    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():nullptr;
 
     if (!activeGraphPanelPlot)
         activeGraphPanelPlot = mActiveGraphPanel->plot();

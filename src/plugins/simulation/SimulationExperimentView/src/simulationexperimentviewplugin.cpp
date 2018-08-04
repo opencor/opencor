@@ -324,7 +324,7 @@ QWidget * SimulationExperimentViewPlugin::viewWidget(const QString &pFileName)
             &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
             && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
             && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))) {
-        return 0;
+        return nullptr;
     }
 
     // Update and return our simulation view widget using the given CellML file,

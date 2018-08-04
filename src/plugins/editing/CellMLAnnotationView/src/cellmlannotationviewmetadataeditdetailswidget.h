@@ -171,7 +171,7 @@ private:
     void upudateOutputMessage(bool pLookUpTerm,
                               const QString &pErrorMessage,
                               bool pInternetConnectionAvailable,
-                              bool *pShowBusyWidget = 0);
+                              bool *pShowBusyWidget = nullptr);
     void updateOutputHeaders();
 
     void updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
@@ -210,7 +210,7 @@ private slots:
     void lookUpTerm();
 
     void termChanged(const QString &pTerm);
-    void termLookedUp(QNetworkReply *pNetworkReply = 0);
+    void termLookedUp(QNetworkReply *pNetworkReply = nullptr);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
 

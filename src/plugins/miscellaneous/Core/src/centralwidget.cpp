@@ -135,7 +135,7 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mState(Starting),
-    mSettings(0),
+    mSettings(nullptr),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -1578,9 +1578,9 @@ Plugin * CentralWidget::viewPlugin(int pIndex) const
         int modeTabIndex = mFileModeTabIndexes.value(mFileNames[pIndex]);
         CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(modeTabIndex));
 
-        return mode?mode->viewPlugins()[mFileModeViewTabIndexes.value(mFileNames[pIndex]).value(modeTabIndex)]:0;
+        return mode?mode->viewPlugins()[mFileModeViewTabIndexes.value(mFileNames[pIndex]).value(modeTabIndex)]:nullptr;
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -1595,7 +1595,7 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
             return viewPlugin(i);
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================
@@ -1834,8 +1834,8 @@ void CentralWidget::updateGui()
     // there be one)
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
-    Plugin *viewPlugin = mode?mode->viewPlugins()[mode->viewTabs()->currentIndex()]:0;
-    ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):0;
+    Plugin *viewPlugin = mode?mode->viewPlugins()[mode->viewTabs()->currentIndex()]:nullptr;
+    ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):nullptr;
     QWidget *newView;
 
     if (fileName.isEmpty()) {
@@ -1845,7 +1845,7 @@ void CentralWidget::updateGui()
 
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
 
-        newView = viewInterface?viewInterface->viewWidget(fileName):0;
+        newView = viewInterface?viewInterface->viewWidget(fileName):nullptr;
 
         if (newView) {
             // We could get a view for the current file, so keep track of it

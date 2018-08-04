@@ -69,6 +69,8 @@ extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion();
 class PreferencesInterface
 {
 public:
+    virtual ~PreferencesInterface();
+
 #define INTERFACE_DEFINITION
     #include "preferencesinterface.inl"
 #undef INTERFACE_DEFINITION

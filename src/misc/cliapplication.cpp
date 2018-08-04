@@ -44,7 +44,7 @@ namespace OpenCOR {
 //==============================================================================
 
 CliApplication::CliApplication(int &pArgC, char **pArgV) :
-    mPluginManager(0),
+    mPluginManager(nullptr),
     mLoadedPluginPlugins(Plugins()),
     mLoadedCliPlugins(Plugins())
 {

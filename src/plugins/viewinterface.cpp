@@ -38,6 +38,12 @@ extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
 
 //==============================================================================
 
+ViewInterface::~ViewInterface()
+{
+}
+
+//==============================================================================
+
 static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
 static const auto ViewModeEditing    = QStringLiteral("EditingMode");
 static const auto ViewModeSimulation = QStringLiteral("SimulationMode");

@@ -206,7 +206,7 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
     // Make sure that the loading state of all the plugins is right, including
     // that of the plugins which the user cannot manage
 
-    updatePluginsSelectedState(0, true);
+    updatePluginsSelectedState(nullptr, true);
 
     // Expand the whole tree view widget and make sure that it only takes as
     // much width as necessary
@@ -219,12 +219,12 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
     mGui->treeView->expandAll();
     mGui->treeView->resizeColumnToContents(0);
 
-    mGui->treeView->setMinimumWidth(1.15*mGui->treeView->columnWidth(0));
+    mGui->treeView->setMinimumWidth(int(1.15*mGui->treeView->columnWidth(0)));
     mGui->treeView->setMaximumWidth(mGui->treeView->minimumWidth());
 
     // Make, through the note label, sure that the dialog has a minimum width
 
-    mGui->noteLabel->setMinimumWidth(2.5*mGui->treeView->minimumWidth());
+    mGui->noteLabel->setMinimumWidth(int(2.5*mGui->treeView->minimumWidth()));
 
     // Make sure that the dialog has a reasonable starting size
 
@@ -321,9 +321,9 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
     // Update the information view with the category's or plugin's information
 
-    QStandardItem *item = pNewIndex.isValid()?mModel->itemFromIndex(pNewIndex):0;
+    QStandardItem *item = pNewIndex.isValid()?mModel->itemFromIndex(pNewIndex):nullptr;
     QString itemText = item?item->text():QString();
-    Plugin *plugin = (item && item->parent())?mPluginManager->plugin(itemText):0;
+    Plugin *plugin = (item && item->parent())?mPluginManager->plugin(itemText):nullptr;
 
     if (plugin) {
         // We are supposedly dealing with a plugin, so retrieve its information,

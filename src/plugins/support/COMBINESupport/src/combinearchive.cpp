@@ -123,10 +123,13 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 CombineArchive::CombineArchive(const QString &pFileName, bool pNew) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName()),
-    mNew(pNew),
-    mSedmlFile(0),
+    mSedmlFile(nullptr),
     mUpdated(false)
 {
+    // Override our inherited value of mNew with our given one
+
+    mNew = pNew;
+
     // Reset ourselves
 
     reset();
@@ -166,7 +169,7 @@ void CombineArchive::reset()
 
     delete mSedmlFile;
 
-    mSedmlFile = 0;
+    mSedmlFile = nullptr;
 }
 
 //==============================================================================
@@ -206,17 +209,17 @@ bool CombineArchive::load()
     ZIPSupport::QZipReader zipReader(mFileName);
     uchar signatureData[SignatureSize];
 
-    if (zipReader.device()->read((char *) signatureData, SignatureSize) != SignatureSize) {
+    if (zipReader.device()->read(reinterpret_cast<char *>(signatureData), SignatureSize) != SignatureSize) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
                                        tr("the archive is not signed"));
 
         return false;
     }
 
-    uint signature =   signatureData[0]
-                     +(signatureData[1] <<  8)
-                     +(signatureData[2] << 16)
-                     +(signatureData[3] << 24);
+    uint signature =   uint(signatureData[0])
+                     +(uint(signatureData[1]) <<  8)
+                     +(uint(signatureData[2]) << 16)
+                     +(uint(signatureData[3]) << 24);
 
     if (signature != 0x04034b50) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,

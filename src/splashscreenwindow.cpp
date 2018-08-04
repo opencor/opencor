@@ -62,7 +62,7 @@ namespace OpenCOR {
 //==============================================================================
 
 SplashScreenWindow::SplashScreenWindow() :
-    QWidget(0, Qt::SplashScreen|Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint),
+    QWidget(nullptr, Qt::SplashScreen|Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint),
     mGui(new Ui::SplashScreenWindow)
 {
     // Set up the GUI
@@ -152,18 +152,18 @@ void SplashScreenWindow::closeAndDeleteAfter(QWidget *pWindow)
             timer.start();
 
             while (!window->isExposed()) {
-                int remaining = TimeOut-timer.elapsed();
+                int remaining = int(TimeOut-timer.elapsed());
 
                 if (remaining <= 0)
                     break;
 
                 QCoreApplication::processEvents(QEventLoop::AllEvents, remaining);
-                QCoreApplication::sendPostedEvents(0, QEvent::DeferredDelete);
+                QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
 
 #ifdef Q_OS_WIN
                 Sleep(ShortDelay);
 #else
-                nanosleep(&shortDelaySpec, 0);
+                nanosleep(&shortDelaySpec, nullptr);
 #endif
             }
         }

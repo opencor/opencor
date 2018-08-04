@@ -32,9 +32,9 @@ namespace FourthOrderRungeKuttaSolver {
 
 FourthOrderRungeKuttaSolver::FourthOrderRungeKuttaSolver() :
     mStep(StepDefaultValue),
-    mK1(0),
-    mK23(0),
-    mYk123(0)
+    mK1(nullptr),
+    mK23(nullptr),
+    mYk123(nullptr)
 {
 }
 
@@ -105,7 +105,7 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
     double realStep = mStep;
     double realHalfStep = 0.5*realStep;
 
-    while (pVoi != pVoiEnd) {
+    while (!qIsNull(pVoi-pVoiEnd)) {
         // Check that the time step is correct
 
         if (pVoi+realStep > pVoiEnd) {
@@ -157,7 +157,7 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
 
         // Advance through time
 
-        if (realStep != mStep)
+        if (!qIsNull(realStep-mStep))
             pVoi = pVoiEnd;
         else
             pVoi = voiStart+(++stepNumber)*mStep;

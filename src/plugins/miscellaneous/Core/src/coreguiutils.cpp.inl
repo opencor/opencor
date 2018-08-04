@@ -39,7 +39,7 @@ Dialog::Dialog(QSettings *pSettings, QWidget *pParent) :
 
 Dialog::Dialog(QWidget *pParent) :
     QDialog(pParent),
-    mSettings(0)
+    mSettings(nullptr)
 {
 }
 
@@ -156,7 +156,7 @@ QMainWindow * mainWindow()
     // Retrieve and return our main window
 
     static bool firstTime = true;
-    static QMainWindow *res = 0;
+    static QMainWindow *res = nullptr;
 
     if (firstTime) {
         foreach (QWidget *widget, qApp->topLevelWidgets()) {
@@ -347,17 +347,17 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
     Q_ASSERT(buttonBox);
 
-    uint mask = QMessageBox::FirstButton;
+    int mask = QMessageBox::FirstButton;
 
     while (mask <= QMessageBox::LastButton) {
-        uint standardButton = pButtons & mask;
+        int standardButton = pButtons & mask;
 
         mask <<= 1;
 
         if (!standardButton)
             continue;
 
-        QPushButton *button = messageBox.addButton((QMessageBox::StandardButton) standardButton);
+        QPushButton *button = messageBox.addButton(QMessageBox::StandardButton(standardButton));
 
         if (messageBox.defaultButton())
             continue;
@@ -365,7 +365,7 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
         if (   (   (pDefaultButton == QMessageBox::NoButton)
                 && (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole))
             || (   (pDefaultButton != QMessageBox::NoButton) &&
-                   (standardButton == uint(pDefaultButton)))) {
+                   (standardButton == pDefaultButton))) {
             messageBox.setDefaultButton(button);
         }
     }
@@ -458,7 +458,7 @@ void aboutMessageBox(const QString &pTitle, const QString &pText)
     }
 #endif
 
-    QMessageBox *messageBox = new QMessageBox(  pTitle, pText, QMessageBox::Information, 0, 0, 0, mainWindow()
+    QMessageBox *messageBox = new QMessageBox(  QMessageBox::Information, pTitle, pText, QMessageBox::NoButton, mainWindow()
 #ifdef Q_OS_MAC
                                               , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
 #endif

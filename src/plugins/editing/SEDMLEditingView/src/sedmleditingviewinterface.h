@@ -40,6 +40,8 @@ extern "C" Q_DECL_EXPORT int sedmlEditingViewInterfaceVersion();
 class SedmlEditingViewInterface
 {
 public:
+    virtual ~SedmlEditingViewInterface();
+
 #define INTERFACE_DEFINITION
     #include "sedmleditingviewinterface.inl"
 #undef INTERFACE_DEFINITION

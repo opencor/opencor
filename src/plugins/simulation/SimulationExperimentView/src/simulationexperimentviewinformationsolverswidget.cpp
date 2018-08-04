@@ -182,8 +182,8 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
     // interested
 
     QMap<QString, SolverInterface *> solversInterfaces = QMap<QString, SolverInterface *>();
-    Core::Property *solversProperty = 0;
-    Core::Property *solversListProperty = 0;
+    Core::Property *solversProperty = nullptr;
+    Core::Property *solversListProperty = nullptr;
     QStringList solversNames = QStringList();
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
 
@@ -208,7 +208,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
 
             // Add the solver's properties
 
-            Core::Property *property = 0;
+            Core::Property *property = nullptr;
             Core::Properties properties = Core::Properties();
 
             foreach (const Solver::Property &solverInterfaceProperty,
@@ -304,7 +304,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
                                                                         solversListProperty,
                                                                         solversProperties);
     } else {
-        return 0;
+        return nullptr;
     }
 }
 

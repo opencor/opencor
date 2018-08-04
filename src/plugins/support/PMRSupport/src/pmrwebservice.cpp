@@ -150,9 +150,9 @@ PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
 
     if (pmrResponse) {
-        PmrWorkspace *workspace = 0;
+        PmrWorkspace *workspace = nullptr;
 
-        pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) &workspace));
+        pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue(reinterpret_cast<void *>(&workspace)));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::workspaceResponse);
@@ -168,7 +168,7 @@ PmrWorkspace * PmrWebService::workspace(const QString &pUrl) const
 
         return workspace;
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -178,7 +178,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
 {
     // Retrieve the workspace from the given PMR response
 
-    PmrWorkspace **workspacePointer = (PmrWorkspace **) sender()->property(WorkspaceProperty).value<void *>();
+    PmrWorkspace **workspacePointer = reinterpret_cast<PmrWorkspace **>(sender()->property(WorkspaceProperty).value<void *>());
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
     QVariantList itemsList = collectionMap["items"].toList();
 
@@ -322,7 +322,7 @@ void PmrWebService::requestWorkspaceInformation(const QString &pUrl,
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, true);
 
     if (pmrResponse) {
-        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) pExposure));
+        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue(reinterpret_cast<void *>(pExposure)));
         pmrResponse->setProperty(PathProperty, pPath);
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
@@ -363,7 +363,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 
         // Retrieve the exposure
 
-        PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
+        PmrExposure *exposure = reinterpret_cast<PmrExposure *>(sender()->property(ExposureProperty).value<void *>());
 
         if (!workspaceUrl.isEmpty()) {
             // Make sure that our workspace is a Git repository
@@ -519,7 +519,7 @@ void PmrWebService::requestWorkspaceCredentials(PmrWorkspace *pWorkspace)
                                                                         true, true);
 
     if (pmrResponse) {
-        pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue((void *) pWorkspace));
+        pmrResponse->setProperty(WorkspaceProperty, QVariant::fromValue(reinterpret_cast<void *>(pWorkspace)));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::workspaceCredentialsResponse);
@@ -542,7 +542,7 @@ void PmrWebService::workspaceCredentialsResponse(const QJsonDocument &pJsonDocum
     // Retrieve the credentials from the given PMR response
 
     QVariantMap jsonResponse = pJsonDocument.object().toVariantMap();
-    PmrWorkspace *workspace = (PmrWorkspace *) sender()->property(WorkspaceProperty).value<void *>();
+    PmrWorkspace *workspace = reinterpret_cast<PmrWorkspace *>(sender()->property(WorkspaceProperty).value<void *>());
 
     if (workspace && !jsonResponse["target"].toString().compare(workspace->url()))
         workspace->setCredentials(jsonResponse["user"].toString(), jsonResponse["key"].toString());
@@ -558,7 +558,7 @@ void PmrWebService::requestExposureFileInformation(const QString &pUrl,
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, false);
 
     if (pmrResponse) {
-        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) pExposure));
+        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue(reinterpret_cast<void *>(pExposure)));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::exposureFileInformationResponse);
@@ -571,7 +571,7 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
 {
     // Retrieve some information about an exposure file
 
-    PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
+    PmrExposure *exposure = reinterpret_cast<PmrExposure *>(sender()->property(ExposureProperty).value<void *>());
 
     if (exposure) {
         bool hasExposureFileInformation = false;
@@ -660,7 +660,7 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
     PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(exposure->url(), false);
 
     if (pmrResponse) {
-        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) exposure));
+        pmrResponse->setProperty(ExposureProperty, QVariant::fromValue(reinterpret_cast<void *>(exposure)));
         pmrResponse->setProperty(NextActionProperty, RequestExposureFiles);
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
@@ -676,7 +676,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
     // and then clone it (if requested) and retrieve some information for all
     // the corresponding exposure files
 
-    PmrExposure *exposure = (PmrExposure *) sender()->property(ExposureProperty).value<void *>();
+    PmrExposure *exposure = reinterpret_cast<PmrExposure *>(sender()->property(ExposureProperty).value<void *>());
 
     if (exposure) {
         // Retrieve the URLs that will help us to retrieve some information
@@ -770,7 +770,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pUrl)
         PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, false);
 
         if (pmrResponse) {
-            pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) exposure));
+            pmrResponse->setProperty(ExposureProperty, QVariant::fromValue(reinterpret_cast<void *>(exposure)));
             pmrResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
 
             connect(pmrResponse, &PmrWebServiceResponse::response,

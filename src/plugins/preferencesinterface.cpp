@@ -74,6 +74,12 @@ PreferencesWidget::~PreferencesWidget()
 
 //==============================================================================
 
+PreferencesInterface::~PreferencesInterface()
+{
+}
+
+//==============================================================================
+
 QVariant PreferencesInterface::preference(const QString &pPluginName,
                                           const QString &pKey,
                                           const QVariant &pDefaultValue)
