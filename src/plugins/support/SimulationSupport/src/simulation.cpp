@@ -683,7 +683,7 @@ int SimulationResults::runsCount() const
 bool SimulationResults::addRun()
 {
     // Ask our data store to add a run to itself
-    // Note: we consider things to be fine if our data store has had no problem
+    // Note: we consider things to be fine if our data store has had no problems
     //       adding a run to itself or if the simulation size is zero...
 
     int simulationSize = int(mSimulation->size());
