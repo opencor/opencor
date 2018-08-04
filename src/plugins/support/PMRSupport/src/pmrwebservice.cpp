@@ -770,7 +770,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pUrl)
         PmrWebServiceResponse *pmrResponse = mPmrWebServiceManager->request(pUrl, false);
 
         if (pmrResponse) {
-            pmrResponse->setProperty(ExposureProperty, QVariant::fromValue((void *) exposure));
+            pmrResponse->setProperty(ExposureProperty, QVariant::fromValue(reinterpret_cast<void *>(exposure)));
             pmrResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
 
             connect(pmrResponse, &PmrWebServiceResponse::response,
