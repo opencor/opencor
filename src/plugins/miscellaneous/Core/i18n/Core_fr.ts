@@ -456,18 +456,6 @@
         <translation>Po</translation>
     </message>
     <message>
-        <source>EB</source>
-        <translation>Eo</translation>
-    </message>
-    <message>
-        <source>ZB</source>
-        <translation>Zo</translation>
-    </message>
-    <message>
-        <source>YB</source>
-        <translation>Yo</translation>
-    </message>
-    <message>
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
