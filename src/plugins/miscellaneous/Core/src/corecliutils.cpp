@@ -247,8 +247,8 @@ QString digitGroupNumber(const QString &pNumber)
 
 QString sizeAsString(double pSize, int pPrecision)
 {
-    // Note: pSize is a double rather than a quint64, in case we need to convert
-    //       an insane size...
+    // Note: pSize is a double rather than an int, in case we need to convert an
+    //       insane size...
 
     QString units[9] = { QObject::tr("B"), QObject::tr("KB"), QObject::tr("MB"),
                          QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB"),
@@ -735,7 +735,7 @@ void cleanDomElement(QDomElement &pDomElement,
 
     static const int AttributeNumberWidth = int(ceil(log(ULLONG_MAX)));
 
-    static quint64 attributeNumber = 0;
+    static int attributeNumber = 0;
 
     if (pDomElement.hasAttributes()) {
         QStringList serialisedAttributes = QStringList();
