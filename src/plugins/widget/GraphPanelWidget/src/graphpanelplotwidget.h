@@ -209,7 +209,7 @@ public:
     void setVisible(bool pVisible);
 
     bool hasData() const;
-    int dataSize() const;
+    quint64 dataSize() const;
 
     QwtSeriesData<QPointF> *data(int pRun = -1) const;
     void setData(double *pDataX, double *pDataY, int pSize, int pRun = -1);

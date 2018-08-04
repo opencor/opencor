@@ -118,7 +118,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, int>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -3768,7 +3768,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       int pSimulationResultsSize,
+                                                                       quint64 pSimulationResultsSize,
                                                                        int pSimulationRun,
                                                                        Task pTask)
 {
@@ -3822,7 +3822,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       not visible means that when we come back to this file,
                 //       part of the graphs will be missing...
 
-                int oldDataSize = graph->dataSize();
+                quint64 oldDataSize = graph->dataSize();
 
                 if (visible)
                     mOldDataSizes.insert(graph, oldDataSize);
@@ -3833,7 +3833,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 // first segment or if we were invisible at some point during
                 // the simulation
 
-                int realOldDataSize = mOldDataSizes.value(graph);
+                quint64 realOldDataSize = mOldDataSizes.value(graph);
 
                 needFullUpdatePlot =    needFullUpdatePlot || !realOldDataSize
                                      || (oldDataSize != realOldDataSize);
@@ -3855,7 +3855,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                         double minY = plotMinY;
                         double maxY = plotMaxY;
 
-                        for (int i = oldDataSize?oldDataSize-1:0;
+                        for (quint64 i = oldDataSize?oldDataSize-1:0;
                              i < pSimulationResultsSize; ++i) {
                             double valX = graph->data(pSimulationRun)->sample(size_t(i)).x();
                             double valY = graph->data(pSimulationRun)->sample(size_t(i)).y();
@@ -3952,7 +3952,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                                                       int pSimulationResultsSize,
+                                                                       quint64 pSimulationResultsSize,
                                                                        Task pTask)
 {
     // Update our simulation results

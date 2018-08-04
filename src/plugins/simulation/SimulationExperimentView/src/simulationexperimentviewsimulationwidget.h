@@ -145,10 +145,10 @@ public:
 
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 int pSimulationResultsSize,
+                                 quint64 pSimulationResultsSize,
                                  int pSimulationRun, Task pTask);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
-                                 int pSimulationResultsSize, Task pTask);
+                                 quint64 pSimulationResultsSize, Task pTask);
 
     void resetSimulationProgress();
 
@@ -233,7 +233,7 @@ private:
 
     bool mNeedUpdatePlots;
 
-    QMap<GraphPanelWidget::GraphPanelPlotGraph *, int> mOldDataSizes;
+    QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
     void output(const QString &pMessage);
 

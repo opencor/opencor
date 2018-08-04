@@ -586,12 +586,12 @@ bool GraphPanelPlotGraph::hasData() const
 
 //==============================================================================
 
-int GraphPanelPlotGraph::dataSize() const
+quint64 GraphPanelPlotGraph::dataSize() const
 {
     // Return the size of our data, i.e. raw samples, for our current (i.e.
     // last) run, if any
 
-    return mRuns.isEmpty()?0:int(mRuns.last()->dataSize());
+    return mRuns.isEmpty()?0:mRuns.last()->dataSize();
 }
 
 //==============================================================================
