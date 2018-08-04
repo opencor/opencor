@@ -324,7 +324,7 @@ private slots:
 
     void simulationResultsExport();
 
-    void updateDelayValue(int pDelayValue);
+    void updateDelayValue(double pDelayValue);
 
     void simulationRunning(bool pIsResuming);
     void simulationPaused();

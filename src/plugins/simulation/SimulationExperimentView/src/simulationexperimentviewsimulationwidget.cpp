@@ -556,7 +556,7 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
 
     // Retranslate our delay and delay value widgets
 
-    updateDelayValue(int(mDelayWidget->value()));
+    updateDelayValue(mDelayWidget->value());
     // Note: we do this because we want to display the delay using digit
     //       grouping, this respecting the current locale...
 
@@ -1776,7 +1776,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
         int graphPlotCounter;
         bool logAxisX;
         bool logAxisY;
-        char padding[2];
+        char padding[2];   // Just for alignment
     } GraphsData;
 
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = mContentsWidget->informationWidget()->graphPanelAndGraphsWidget();
@@ -2713,20 +2713,20 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     // Add some graph panels, so that their number corresponds to the number of
     // 2D outputs mentioned in the SED-ML file
 
-    uint newNbOfGraphPanels = sedmlDocument->getNumOutputs();
+    int newNbOfGraphPanels = int(sedmlDocument->getNumOutputs());
 
-    while (graphPanelsWidget->graphPanels().count() != int(newNbOfGraphPanels))
+    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels)
         graphPanelsWidget->addGraphPanel(false);
 
     // Customise our graph panel and graphs
 
     QIntList graphPanelsWidgetSizes = QIntList();
 
-    for (uint i = 0; i < newNbOfGraphPanels; ++i) {
+    for (int i = 0; i < newNbOfGraphPanels; ++i) {
         // Customise our graph panel
 
-        libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(i));
-        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[int(i)];
+        libsedml::SedPlot2D *sedmlPlot2d = static_cast<libsedml::SedPlot2D *>(sedmlDocument->getOutput(uint(i)));
+        GraphPanelWidget::GraphPanelWidget *graphPanel = graphPanelsWidget->graphPanels()[i];
 
         graphPanelAndGraphsWidget->reinitialize(graphPanel);
 
@@ -3116,7 +3116,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateDelayValue(int pDelayValue)
+void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayValue)
 {
     // Update our delay value widget
 
@@ -3124,7 +3124,7 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(int pDelayValue)
     int increment = 1;
     int multiple = 10;
 
-    for (int i = 0, iMax = pDelayValue; i < iMax; ++i) {
+    for (int i = 0, iMax = int(pDelayValue); i < iMax; ++i) {
         delay += increment;
 
         if (!(delay % multiple)) {

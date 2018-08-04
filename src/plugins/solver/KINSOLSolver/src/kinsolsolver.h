@@ -133,7 +133,7 @@ public:
                int pSize, void *pUserData) override;
 
 private:
-    QMap<void *, KinsolSolverData *> mData;
+    QMap<ComputeSystemFunction, KinsolSolverData *> mData;
 };
 
 //==============================================================================

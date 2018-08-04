@@ -157,7 +157,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
         double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalHeight/oldTotalHeight;
 
         for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i)
-            newSizes << int(round(scalingFactor*oldSizes[i]));
+            newSizes << qRound(scalingFactor*oldSizes[i]);
 
         setSizes(newSizes << newTotalHeight-std::accumulate(newSizes.begin(), newSizes.end(), 0));
     }

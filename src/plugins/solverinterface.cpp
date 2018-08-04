@@ -151,7 +151,7 @@ NlaSolver * nlaSolver(const QString &pRuntimeAddress)
 
     QVariant res = qApp->property(pRuntimeAddress.toUtf8().constData());
 
-    return res.isValid()?static_cast<NlaSolver *>(reinterpret_cast<void *>(res.toULongLong())):nullptr;
+    return res.isValid()?reinterpret_cast<NlaSolver *>(res.toULongLong()):nullptr;
 }
 
 //==============================================================================

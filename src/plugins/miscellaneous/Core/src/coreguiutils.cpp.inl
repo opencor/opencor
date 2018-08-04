@@ -365,7 +365,7 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
         if (   (   (pDefaultButton == QMessageBox::NoButton)
                 && (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole))
             || (   (pDefaultButton != QMessageBox::NoButton) &&
-                   (standardButton == int(pDefaultButton)))) {
+                   (standardButton == pDefaultButton))) {
             messageBox.setDefaultButton(button);
         }
     }

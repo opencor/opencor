@@ -152,12 +152,12 @@ void SplashScreenWindow::closeAndDeleteAfter(QWidget *pWindow)
             timer.start();
 
             while (!window->isExposed()) {
-                qint64 remaining = TimeOut-timer.elapsed();
+                int remaining = int(TimeOut-timer.elapsed());
 
                 if (remaining <= 0)
                     break;
 
-                QCoreApplication::processEvents(QEventLoop::AllEvents, int(remaining));
+                QCoreApplication::processEvents(QEventLoop::AllEvents, remaining);
                 QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
 
 #ifdef Q_OS_WIN
