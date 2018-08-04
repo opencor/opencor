@@ -32,7 +32,7 @@ namespace SecondOrderRungeKuttaSolver {
 
 SecondOrderRungeKuttaSolver::SecondOrderRungeKuttaSolver() :
     mStep(StepDefaultValue),
-    mYk1(0)
+    mYk1(nullptr)
 {
 }
 
@@ -92,7 +92,7 @@ void SecondOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
     double realStep = mStep;
     double realHalfStep = 0.5*realStep;
 
-    while (pVoi != pVoiEnd) {
+    while (!qIsNull(pVoi-pVoiEnd)) {
         // Check that the time step is correct
 
         if (pVoi+realStep > pVoiEnd) {
@@ -120,7 +120,7 @@ void SecondOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
 
         // Advance through time
 
-        if (realStep != mStep)
+        if (!qIsNull(realStep-mStep))
             pVoi = pVoiEnd;
         else
             pVoi = voiStart+(++stepNumber)*mStep;

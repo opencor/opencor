@@ -37,7 +37,7 @@ namespace CellMLTextView {
 
 CellmlTextViewScanner::CellmlTextViewScanner() :
     mText(QString()),
-    mChar(0),
+    mChar(nullptr),
     mCharType(EofChar),
     mCharLine(1),
     mCharColumn(0),

@@ -157,7 +157,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          ModelQualifier pModelQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
-    CellmlFileRdfTriple(pCellmlFile, 0, BioModelsDotNetQualifier,
+    CellmlFileRdfTriple(pCellmlFile, nullptr, BioModelsDotNetQualifier,
                         pModelQualifier, BioUnknown, pResource, pId)
 {
     // Create our RDF triple elements
@@ -177,8 +177,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          BioQualifier pBioQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
-    CellmlFileRdfTriple(pCellmlFile, 0, BioModelsDotNetQualifier, ModelUnknown,
-                        pBioQualifier, pResource, pId)
+    CellmlFileRdfTriple(pCellmlFile, nullptr, BioModelsDotNetQualifier,
+                        ModelUnknown, pBioQualifier, pResource, pId)
 {
     // Create our RDF triple elements
 
@@ -216,7 +216,7 @@ void CellmlFileRdfTriple::setRdfTriple(iface::rdf_api::Triple *pRdfTriple)
 {
     // Set the RDF triple's CellML API RDF triple
 
-    mRdfTriple = 0;   // This will release the previous one, if any
+    mRdfTriple = nullptr;   // This will release the previous one, if any
     mRdfTriple = pRdfTriple;
 }
 

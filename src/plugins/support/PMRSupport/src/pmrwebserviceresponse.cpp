@@ -68,15 +68,15 @@ void PmrWebServiceResponse::processResponse()
 
         memset(&stream, 0, sizeof(z_stream));
 
-        if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
+        if (inflateInit2_(&stream, MAX_WBITS+16, ZLIB_VERSION, sizeof(z_stream)) == Z_OK) {
             enum {
                 BufferSize = 32768
             };
 
             Bytef buffer[BufferSize];
 
-            stream.next_in = (Bytef *) compressedJsonResponse.data();
-            stream.avail_in = compressedJsonResponse.size();
+            stream.next_in = reinterpret_cast<Bytef *>(compressedJsonResponse.data());
+            stream.avail_in = uint(compressedJsonResponse.size());
 
             do {
                 stream.next_out = buffer;
@@ -85,7 +85,7 @@ void PmrWebServiceResponse::processResponse()
                 inflate(&stream, Z_NO_FLUSH);
 
                 if (!stream.msg)
-                    jsonResponse += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
+                    jsonResponse += QByteArray::fromRawData(reinterpret_cast<char *>(buffer), int(BufferSize-stream.avail_out));
                 else
                     jsonResponse = QByteArray();
             } while (!stream.avail_out);

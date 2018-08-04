@@ -40,6 +40,8 @@ extern "C" Q_DECL_EXPORT int coreInterfaceVersion();
 class CoreInterface
 {
 public:
+    virtual ~CoreInterface();
+
 #define INTERFACE_DEFINITION
     #include "coreinterface.inl"
 #undef INTERFACE_DEFINITION

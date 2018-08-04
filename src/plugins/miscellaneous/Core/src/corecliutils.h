@@ -120,7 +120,7 @@ quint64 CORE_EXPORT freeMemory();
 
 QString CORE_EXPORT digitGroupNumber(const QString &pNumber);
 
-QString CORE_EXPORT sizeAsString(double pSize, int pPrecision = 1);
+QString CORE_EXPORT sizeAsString(quint64 pSize, int pPrecision = 1);
 
 QString CORE_EXPORT sha1(const QByteArray &pByteArray);
 QString CORE_EXPORT sha1(const QString &pString);
@@ -133,7 +133,7 @@ void CORE_EXPORT stringLineColumnAsPosition(const QString &pString,
                                             int pColumn, int &pPosition);
 
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
-                                  void *pDefaultGlobalInstance = 0);
+                                  void *pDefaultGlobalInstance = nullptr);
 
 QString CORE_EXPORT activeDirectory();
 void CORE_EXPORT setActiveDirectory(const QString &pDirName);

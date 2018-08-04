@@ -257,7 +257,7 @@ public:
     int delay() const;
     void setDelay(int pDelay);
 
-    double size();
+    quint64 size();
 
     bool run();
     bool pause();

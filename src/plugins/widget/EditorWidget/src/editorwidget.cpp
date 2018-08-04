@@ -635,8 +635,8 @@ int EditorWidget::styleAt(int pPosition) const
 {
     // Return the style used at the given position
 
-    return mEditor->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
-                                  mEditor->text().left(pPosition).toUtf8().length());
+    return int(mEditor->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
+                                      mEditor->text().left(pPosition).toUtf8().length()));
 }
 
 //==============================================================================
@@ -673,7 +673,7 @@ void EditorWidget::removeText(int pPosition, int pLength)
     // Select the text at the given position, and for the given length, and
     // remove it
 
-    mEditor->SendScintilla(QsciScintilla::SCI_SETSEL, pPosition, pPosition+pLength);
+    mEditor->SendScintilla(QsciScintilla::SCI_SETSEL, ulong(pPosition), pPosition+pLength);
     mEditor->removeSelectedText();
 }
 

@@ -41,6 +41,8 @@ extern "C" Q_DECL_EXPORT int fileHandlingInterfaceVersion();
 class FileHandlingInterface
 {
 public:
+    virtual ~FileHandlingInterface();
+
 #define INTERFACE_DEFINITION
     #include "filehandlinginterface.inl"
 #undef INTERFACE_DEFINITION

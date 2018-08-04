@@ -134,8 +134,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     Core::Widget(pParent),
     mAnnotationWidget(pAnnotationWidget),
     mEditingWidget(pEditingWidget),
-    mTermValue(0),
-    mAddTermButton(0),
+    mTermValue(nullptr),
+    mAddTermButton(nullptr),
     mTerm(QString()),
     mTerms(QStringList()),
     mItems(CellmlAnnotationViewMetadataEditDetailsItems()),
@@ -147,13 +147,13 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
     mEnabledItems(QMap<QString, bool>()),
     mCellmlFile(pCellmlFile),
-    mElement(0),
+    mElement(nullptr),
     mUrls(QMap<QString, QString>()),
     mItemInformationSha1s(QStringList()),
     mItemInformationSha1(QString()),
     mLink(QString()),
     mTextContent(QString()),
-    mNetworkReply(0)
+    mNetworkReply(nullptr)
 {
     // Create a network access manager so that we can then retrieve a list of
     // ontological terms models from PMR
@@ -922,7 +922,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
     if (mNetworkReply) {
         mNetworkReply->close();
 
-        mNetworkReply = 0;
+        mNetworkReply = nullptr;
     }
 
     // Now, retrieve some ontological terms, but only if we are connected to the
@@ -961,7 +961,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
             return;
         } else {
-            mNetworkReply = 0;
+            mNetworkReply = nullptr;
         }
 
         // Keep track of the term we have just looked up

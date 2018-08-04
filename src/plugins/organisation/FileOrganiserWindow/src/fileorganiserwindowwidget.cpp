@@ -369,7 +369,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
         // Create the item, in case we are not dealing with the root folder item
 
-        QStandardItem *childParentItem = 0;
+        QStandardItem *childParentItem = nullptr;
 
         if (parentItemIndex == -1) {
             // We are dealing with the root folder item, so don't do anything
@@ -443,7 +443,7 @@ void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
     // Retrieve the data model
 
     pSettings->beginGroup(SettingsModel);
-        loadItemSettings(pSettings, 0);
+        loadItemSettings(pSettings, nullptr);
     pSettings->endGroup();
 
     // Retrieve the currently selected item, if any

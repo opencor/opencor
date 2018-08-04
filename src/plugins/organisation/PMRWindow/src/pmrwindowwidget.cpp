@@ -133,7 +133,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
-    int overlayIconSize = 0.57*folderIconSize;
+    int overlayIconSize = int(0.57*folderIconSize);
 
     mContextMenu = new QMenu(this);
 
@@ -335,7 +335,7 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
 
     // Retrieve the item which URL is given
 
-    PmrWindowItem *item = 0;
+    PmrWindowItem *item = nullptr;
 
     for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         item = static_cast<PmrWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));

@@ -60,9 +60,9 @@ void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
 
 bool CORE_EXPORT readFile(const QString &pFileNameOrUrl,
                           QByteArray &pFileContents,
-                          QString *pErrorMessage = 0);
+                          QString *pErrorMessage = nullptr);
 bool CORE_EXPORT readFile(const QString &pFileNameOrUrl, QString &pFileContents,
-                          QString *pErrorMessage = 0);
+                          QString *pErrorMessage = nullptr);
 
 bool CORE_EXPORT writeFile(const QString &pFileName,
                            const QByteArray &pFileContents);

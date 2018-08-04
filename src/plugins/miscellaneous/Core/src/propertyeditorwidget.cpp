@@ -334,16 +334,16 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
     // Create and return an editor for our item, based on its type
 
-    QWidget *editor = 0;
-    TextEditorWidget *textEditor = 0;
-    ListEditorWidget *listEditor = 0;
+    QWidget *editor = nullptr;
+    TextEditorWidget *textEditor = nullptr;
+    ListEditorWidget *listEditor = nullptr;
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
     case Property::Section:
         // A section, so no editor
 
-        return 0;
+        return nullptr;
     case Property::String:
         editor = textEditor = new TextEditorWidget(pParent);
 
@@ -517,11 +517,11 @@ Property::Property(Type pType, PropertyEditorWidget *pParent) :
     mId(QString()),
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
-    mUnit(pParent->showUnits()?new PropertyItem(this):0),
+    mUnit(pParent->showUnits()?new PropertyItem(this):nullptr),
     mListValues(QStringList()),
     mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
-    mParentProperty(0),
+    mParentProperty(nullptr),
     mProperties(Properties())
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
@@ -1266,8 +1266,8 @@ PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
     mAutoUpdateHeight(pAutoUpdateHeight),
     mProperties(Properties()),
     mAllProperties(Properties()),
-    mProperty(0),
-    mPropertyEditor(0),
+    mProperty(nullptr),
+    mPropertyEditor(nullptr),
     mRightClicking(false),
     mPropertyChecked(QMap<Property *, bool>())
 {
@@ -1825,7 +1825,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // The user wants to start/stop editing the property
 
         if (mPropertyEditor)
-            editProperty(0);
+            editProperty(nullptr);
         else
             editProperty(currentProperty());
 
@@ -2078,13 +2078,13 @@ void PropertyEditorWidget::editorClosed()
     // Reset our focus proxy and make sure that we get the focus (see
     // editorOpened() above for the reason)
 
-    setFocusProxy(0);
+    setFocusProxy(nullptr);
     setFocus();
 
     // Reset some information about the property
 
-    mProperty = 0;
-    mPropertyEditor = 0;
+    mProperty = nullptr;
+    mPropertyEditor = nullptr;
 }
 
 //==============================================================================
@@ -2240,7 +2240,7 @@ void PropertyEditorWidget::finishEditing(bool pCommitData)
 {
     // The user wants to finish the editing
 
-    editProperty(0, pCommitData);
+    editProperty(nullptr, pCommitData);
 }
 
 //==============================================================================
@@ -2309,7 +2309,7 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
     // Don't waste time if the given index isn't valid
 
     if (!pIndex.isValid())
-        return 0;
+        return nullptr;
 
     // Return our information about the property at the given index
 
@@ -2318,7 +2318,7 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
             return property;
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================

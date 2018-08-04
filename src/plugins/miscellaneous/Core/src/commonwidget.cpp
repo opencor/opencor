@@ -46,8 +46,14 @@ namespace Core {
 
 CommonWidget::CommonWidget(QWidget *pParent) :
     mParent(pParent),
-    mBusyWidget(0),
+    mBusyWidget(nullptr),
     mCounter(0)
+{
+}
+
+//==============================================================================
+
+CommonWidget::~CommonWidget()
 {
 }
 
@@ -59,8 +65,8 @@ QSize CommonWidget::defaultSize(double pRatio) const
 
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
 
-    return QSize(pRatio*desktopGeometry.width(),
-                 pRatio*desktopGeometry.height());
+    return QSize(int(pRatio*desktopGeometry.width()),
+                 int(pRatio*desktopGeometry.height()));
 }
 
 //==============================================================================
@@ -167,7 +173,7 @@ void CommonWidget::hideBusyWidget(bool pForceHiding)
 
         delete mBusyWidget;
 
-        mBusyWidget = 0;
+        mBusyWidget = nullptr;
     }
 }
 

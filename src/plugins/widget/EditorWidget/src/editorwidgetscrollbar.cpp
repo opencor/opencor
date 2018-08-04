@@ -83,7 +83,7 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
     painter.setPen(HighlightPen);
 
     foreach (int highlightedLine, mOwner->highlightedLines()) {
-        cursorPosition = arrowButtonHeight+highlightedLine*positionScaling;
+        cursorPosition = int(arrowButtonHeight+highlightedLine*positionScaling);
 
         if (!cursorPositions.contains(cursorPosition)) {
             cursorPositions << cursorPosition;
@@ -96,9 +96,9 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
 
     static const QPen PositionPen = QColor(0, 0, 0, PenAlpha);
 
-    int line = mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS));
+    int line = int(mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->SendScintilla(QsciScintilla::SCI_GETCURRENTPOS)));
 
-    cursorPosition = arrowButtonHeight+line*positionScaling;
+    cursorPosition = int(arrowButtonHeight+line*positionScaling);
 
     painter.setPen(PositionPen);
     painter.drawLine(0, cursorPosition, width(), cursorPosition);

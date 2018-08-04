@@ -209,7 +209,7 @@ void SimulationWorker::started()
     // Set up our NLA solver, if needed
     // Note: we unset it at the end of this method...
 
-    Solver::NlaSolver *nlaSolver = 0;
+    Solver::NlaSolver *nlaSolver = nullptr;
 
     if (mRuntime->needNlaSolver()) {
         nlaSolver = static_cast<Solver::NlaSolver *>(mSimulation->data()->nlaSolverInterface()->solverInstance());
@@ -318,7 +318,7 @@ void SimulationWorker::started()
 
             // Some post-processing, if needed
 
-            if ((mCurrentPoint == endingPoint) || mStopped) {
+            if (qIsNull(mCurrentPoint-endingPoint) || mStopped) {
                 // We have reached our ending point or we have been asked to
                 // stop, so leave our main work loop
 
@@ -383,7 +383,7 @@ void SimulationWorker::started()
     //       slot for our finished() signal, but we want our simulation owner to
     //       know as quickly as possible that we are done...
 
-    mSelf = 0;
+    mSelf = nullptr;
 
     // Let people know that we are done and give them the elapsed time
 

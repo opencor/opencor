@@ -45,7 +45,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     mGuiMode(pGuiMode),
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
-    mCorePlugin(0)
+    mCorePlugin(nullptr)
 {
     // Retrieve OpenCOR's plugins directory
     // Note #1: the plugin's directory is retrieved in main()...
@@ -73,7 +73,7 @@ PluginManager::PluginManager(bool pGuiMode) :
         QString pluginError = QString();
         PluginInfo *pluginInfo = (Plugin::pluginInfoVersion(fileName) == pluginInfoVersion())?
                                      Plugin::info(fileName, &pluginError):
-                                     0;
+                                     nullptr;
 
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
@@ -285,7 +285,7 @@ Plugin * PluginManager::plugin(const QString &pName) const
             return plugin;
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================

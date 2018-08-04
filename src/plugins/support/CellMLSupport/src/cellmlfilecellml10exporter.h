@@ -87,7 +87,7 @@ private:
 
     void copyGroup(iface::cellml_api::Model *pModel,
                    iface::cellml_api::ComponentRefSet *pComponentReferences,
-                   iface::cellml_api::ComponentRef *pToComponentReference = 0);
+                   iface::cellml_api::ComponentRef *pToComponentReference = nullptr);
     void copyGroups(iface::cellml_api::Model *pModel);
 
     void copyConnection(iface::cellml_api::Connection *pConnection);

@@ -269,7 +269,7 @@ double compiler_pow(double pNb1, double pNb2)
 double compiler_multi_min(int pCount, ...)
 {
     if (!pCount)
-        return strtod("NAN", 0);
+        return strtod("NAN", nullptr);
 
     va_list parameters;
 
@@ -293,7 +293,7 @@ double compiler_multi_min(int pCount, ...)
 double compiler_multi_max(int pCount, ...)
 {
     if (!pCount)
-        return strtod("NAN", 0);
+        return strtod("NAN", nullptr);
 
     va_list parameters;
 
@@ -318,8 +318,8 @@ double compiler_gcd_pair(double pNb1, double pNb2)
 {
     #define EVEN(pNb) !(pNb & 1)
 
-    int nb1 = std::fabs(pNb1);
-    int nb2 = std::fabs(pNb2);
+    int nb1 = int(std::fabs(pNb1));
+    int nb2 = int(std::fabs(pNb2));
 
     if (!nb1)
         return nb2;

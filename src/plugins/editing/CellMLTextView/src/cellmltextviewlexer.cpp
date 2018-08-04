@@ -762,7 +762,7 @@ bool CellmlTextViewLexer::validString(int pFrom, int pTo, int pStyle) const
     // Check whether the string, which range is given, is valid, i.e. is either
     // of the default or given style
 
-    int style;
+    long style;
 
     for (int i = pFrom; i < pTo; ++i) {
         style = editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,

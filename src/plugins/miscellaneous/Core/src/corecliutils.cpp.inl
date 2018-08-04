@@ -403,13 +403,13 @@ QByteArray resource(const QString &pResource)
         if (resource.isCompressed()) {
             // The resource is compressed, so uncompress it before returning it
 
-            return qUncompress(resource.data(), resource.size());
+            return qUncompress(resource.data(), int(resource.size()));
         } else {
             // The resource is not compressed, so just return it after doing the
             // right conversion
 
             return QByteArray(reinterpret_cast<const char *>(resource.data()),
-                              resource.size());
+                              int(resource.size()));
         }
     } else {
         return QByteArray();

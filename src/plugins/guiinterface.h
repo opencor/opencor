@@ -109,6 +109,8 @@ extern "C" Q_DECL_EXPORT int guiInterfaceVersion();
 class GuiInterface
 {
 public:
+    virtual ~GuiInterface();
+
 #define INTERFACE_DEFINITION
     #include "guiinterface.inl"
 #undef INTERFACE_DEFINITION

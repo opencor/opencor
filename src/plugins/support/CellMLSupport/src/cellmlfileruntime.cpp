@@ -191,7 +191,7 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
         perVoiUnitDegree += "/"+pVoiUnit;
 
         if (mDegree > 1)
-            perVoiUnitDegree += mDegree;
+            perVoiUnitDegree += "^"+QString::number(mDegree);
     }
 
     return mUnit+perVoiUnitDegree;
@@ -239,12 +239,12 @@ QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
 
 CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     mCellmlFile(pCellmlFile),
-    mCodeInformation(0),
+    mCodeInformation(nullptr),
     mConstantsCount(0),
     mStatesRatesCount(0),
     mAlgebraicCount(0),
-    mCompilerEngine(0),
-    mVoi(0),
+    mCompilerEngine(nullptr),
+    mVoi(nullptr),
     mParameters(CellmlFileRuntimeParameters())
 {
     // Reset the runtime's properties
@@ -272,9 +272,9 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     //       those numbers (e.g. see
     //       SimulationExperimentViewSimulationResults::addPoint())...
 
-    mConstantsCount = mCodeInformation->constantIndexCount();
-    mStatesRatesCount = mCodeInformation->rateIndexCount();
-    mAlgebraicCount = mCodeInformation->algebraicIndexCount();
+    mConstantsCount = int(mCodeInformation->constantIndexCount());
+    mStatesRatesCount = int(mCodeInformation->rateIndexCount());
+    mAlgebraicCount = int(mCodeInformation->algebraicIndexCount());
 
     // Go through the variables defined or referenced in our main CellML file
     // and do a mapping between the source of that variable and that variable
@@ -407,11 +407,11 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
             CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
-                                                                                   computationTarget->degree(),
+                                                                                   int(computationTarget->degree()),
                                                                                    QString::fromStdWString(realVariable->unitsName()),
                                                                                    componentHierarchy(realVariable),
                                                                                    parameterType,
-                                                                                   computationTarget->assignedIndex());
+                                                                                   int(computationTarget->assignedIndex()));
 
             if (parameterType == CellmlFileRuntimeParameter::Voi) {
                 if (!mVoi) {
@@ -522,15 +522,15 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
         if (mAtLeastOneNlaSystem) {
             llvm::sys::DynamicLibrary::AddSymbol("doNonLinearSolve",
-                                                 (void *) (intptr_t) doNonLinearSolve);
+                                                 reinterpret_cast<void *>(doNonLinearSolve));
         }
 
         // Retrieve the ODE functions
 
-        mInitializeConstants = (InitializeConstantsFunction) (intptr_t) mCompilerEngine->getFunction("initializeConstants");
-        mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
-        mComputeVariables = (ComputeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeVariables");
-        mComputeRates = (ComputeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeRates");
+        mInitializeConstants = reinterpret_cast<InitializeConstantsFunction>(mCompilerEngine->getFunction("initializeConstants"));
+        mComputeComputedConstants = reinterpret_cast<ComputeComputedConstantsFunction>(mCompilerEngine->getFunction("computeComputedConstants"));
+        mComputeVariables = reinterpret_cast<ComputeVariablesFunction>(mCompilerEngine->getFunction("computeVariables"));
+        mComputeRates = reinterpret_cast<ComputeRatesFunction>(mCompilerEngine->getFunction("computeRates"));
 
         // Make sure that we managed to retrieve all the ODE functions
 
@@ -687,7 +687,7 @@ void CellmlFileRuntime::resetCodeInformation()
     // Note: setting it to zero will automatically delete the current instance,
     //       if any
 
-    mCodeInformation = 0;
+    mCodeInformation = nullptr;
 }
 
 //==============================================================================
@@ -696,10 +696,10 @@ void CellmlFileRuntime::resetFunctions()
 {
     // Reset the functions
 
-    mInitializeConstants = 0;
-    mComputeComputedConstants = 0;
-    mComputeVariables = 0;
-    mComputeRates = 0;
+    mInitializeConstants = nullptr;
+    mComputeComputedConstants = nullptr;
+    mComputeVariables = nullptr;
+    mComputeRates = nullptr;
 }
 
 //==============================================================================
@@ -717,7 +717,7 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
     if (pRecreateCompilerEngine)
         mCompilerEngine = new Compiler::CompilerEngine();
     else
-        mCompilerEngine = 0;
+        mCompilerEngine = nullptr;
 
     resetFunctions();
 
@@ -730,7 +730,7 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
     foreach (CellmlFileRuntimeParameter *parameter, mParameters)
         delete parameter;
 
-    mVoi = 0;
+    mVoi = nullptr;
 
     mParameters.clear();
 }

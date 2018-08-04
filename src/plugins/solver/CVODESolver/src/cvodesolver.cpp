@@ -111,11 +111,11 @@ Solver::OdeSolver::ComputeRatesFunction CvodeSolverUserData::computeRates() cons
 //==============================================================================
 
 CvodeSolver::CvodeSolver() :
-    mSolver(0),
-    mStatesVector(0),
-    mMatrix(0),
-    mLinearSolver(0),
-    mUserData(0),
+    mSolver(nullptr),
+    mStatesVector(nullptr),
+    mMatrix(nullptr),
+    mLinearSolver(nullptr),
+    mUserData(nullptr),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
