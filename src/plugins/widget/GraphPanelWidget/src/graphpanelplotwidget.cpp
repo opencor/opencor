@@ -3137,7 +3137,7 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
         &&  canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
-        // Make sure that we are not already carrying out a action
+        // Make sure that we are not already carrying out an action
 
         if (mAction == None) {
             int delta = pEvent->delta();
