@@ -53,7 +53,7 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 
 //==============================================================================
 
-QtMessageHandler gOrigMessageHandler;
+static QtMessageHandler gOrigMessageHandler;
 
 //==============================================================================
 
