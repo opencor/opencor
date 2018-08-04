@@ -39,24 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef Q_OS_LINUX
-    #include <stdint.h>
-    // Note: the above header file is required on Linux, so we can use uint32_t
-    //       (required to 'properly' make use of the CellML API). Now, we would
-    //       normally use
-    //           #include <cstdint>
-    //       but this is not supported by the current ISO C++ standard. Indeed,
-    //       to include it will generate the following error at compile time:
-    //           error: #error This file requires compiler and library support
-    //           for the upcoming ISO C++ standard, C++0x. This support is
-    //           currently experimental, and must be enabled with the -std=c++0x
-    //           or -std=gnu++0x compiler options.
-    //       and well, we don't want to enable either of these options since
-    //       support is still only experimental...
-#endif
-
-//==============================================================================
-
 #include "cellmlapibegin.h"
     #include "IfaceCeLEDSExporter.hxx"
     #include "IfaceVACSS.hxx"
@@ -614,14 +596,14 @@ bool CellmlFile::isValid(iface::cellml_api::Model *pModel,
 
     int cellmlErrorsCount = 0;
 
-    for (uint32_t i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
+    for (uint i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
         ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
         ObjRef<iface::cellml_services::CellMLRepresentationValidityError> cellmlRepresentationValidityError = QueryInterface(cellmlValidityIssue);
 
         // Determine the issue's location
 
-        uint32_t line = 0;
-        uint32_t column = 0;
+        uint line = 0;
+        uint column = 0;
         QString importedFile = QString();
 
         if (cellmlRepresentationValidityError) {

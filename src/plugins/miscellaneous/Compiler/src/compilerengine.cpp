@@ -321,55 +321,55 @@ bool CompilerEngine::compileCode(const QString &pCode)
     #error Unsupported platform
 #endif
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("fabs"), reinterpret_cast<uint64_t>(compiler_fabs));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("fabs"), reinterpret_cast<quint64>(compiler_fabs));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("log"), reinterpret_cast<uint64_t>(compiler_log));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("exp"), reinterpret_cast<uint64_t>(compiler_exp));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("log"), reinterpret_cast<quint64>(compiler_log));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("exp"), reinterpret_cast<quint64>(compiler_exp));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("floor"), reinterpret_cast<uint64_t>(compiler_floor));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("ceil"), reinterpret_cast<uint64_t>(compiler_ceil));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("floor"), reinterpret_cast<quint64>(compiler_floor));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("ceil"), reinterpret_cast<quint64>(compiler_ceil));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("factorial"), reinterpret_cast<uint64_t>(compiler_factorial));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("factorial"), reinterpret_cast<quint64>(compiler_factorial));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sin"), reinterpret_cast<uint64_t>(compiler_sin));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sinh"), reinterpret_cast<uint64_t>(compiler_sinh));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asin"), reinterpret_cast<uint64_t>(compiler_asin));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asinh"), reinterpret_cast<uint64_t>(compiler_asinh));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sin"), reinterpret_cast<quint64>(compiler_sin));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sinh"), reinterpret_cast<quint64>(compiler_sinh));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asin"), reinterpret_cast<quint64>(compiler_asin));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asinh"), reinterpret_cast<quint64>(compiler_asinh));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cos"), reinterpret_cast<uint64_t>(compiler_cos));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cosh"), reinterpret_cast<uint64_t>(compiler_cosh));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acos"), reinterpret_cast<uint64_t>(compiler_acos));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acosh"), reinterpret_cast<uint64_t>(compiler_acosh));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cos"), reinterpret_cast<quint64>(compiler_cos));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cosh"), reinterpret_cast<quint64>(compiler_cosh));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acos"), reinterpret_cast<quint64>(compiler_acos));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acosh"), reinterpret_cast<quint64>(compiler_acosh));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tan"), reinterpret_cast<uint64_t>(compiler_tan));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tanh"), reinterpret_cast<uint64_t>(compiler_tanh));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atan"), reinterpret_cast<uint64_t>(compiler_atan));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atanh"), reinterpret_cast<uint64_t>(compiler_atanh));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tan"), reinterpret_cast<quint64>(compiler_tan));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tanh"), reinterpret_cast<quint64>(compiler_tanh));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atan"), reinterpret_cast<quint64>(compiler_atan));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atanh"), reinterpret_cast<quint64>(compiler_atanh));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sec"), reinterpret_cast<uint64_t>(compiler_sec));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sech"), reinterpret_cast<uint64_t>(compiler_sech));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asec"), reinterpret_cast<uint64_t>(compiler_asec));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asech"), reinterpret_cast<uint64_t>(compiler_asech));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sec"), reinterpret_cast<quint64>(compiler_sec));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sech"), reinterpret_cast<quint64>(compiler_sech));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asec"), reinterpret_cast<quint64>(compiler_asec));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asech"), reinterpret_cast<quint64>(compiler_asech));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csc"), reinterpret_cast<uint64_t>(compiler_csc));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csch"), reinterpret_cast<uint64_t>(compiler_csch));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsc"), reinterpret_cast<uint64_t>(compiler_acsc));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsch"), reinterpret_cast<uint64_t>(compiler_acsch));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csc"), reinterpret_cast<quint64>(compiler_csc));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csch"), reinterpret_cast<quint64>(compiler_csch));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsc"), reinterpret_cast<quint64>(compiler_acsc));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsch"), reinterpret_cast<quint64>(compiler_acsch));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cot"), reinterpret_cast<uint64_t>(compiler_cot));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("coth"), reinterpret_cast<uint64_t>(compiler_coth));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acot"), reinterpret_cast<uint64_t>(compiler_acot));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acoth"), reinterpret_cast<uint64_t>(compiler_acoth));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cot"), reinterpret_cast<quint64>(compiler_cot));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("coth"), reinterpret_cast<quint64>(compiler_coth));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acot"), reinterpret_cast<quint64>(compiler_acot));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acoth"), reinterpret_cast<quint64>(compiler_acoth));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("arbitrary_log"), reinterpret_cast<uint64_t>(compiler_arbitrary_log));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("arbitrary_log"), reinterpret_cast<quint64>(compiler_arbitrary_log));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("pow"), reinterpret_cast<uint64_t>(compiler_pow));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("pow"), reinterpret_cast<quint64>(compiler_pow));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_min"), reinterpret_cast<uint64_t>(compiler_multi_min));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_max"), reinterpret_cast<uint64_t>(compiler_multi_max));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_min"), reinterpret_cast<quint64>(compiler_multi_min));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_max"), reinterpret_cast<quint64>(compiler_multi_max));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("gcd_multi"), reinterpret_cast<uint64_t>(compiler_gcd_multi));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("lcm_multi"), reinterpret_cast<uint64_t>(compiler_lcm_multi));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("gcd_multi"), reinterpret_cast<quint64>(compiler_gcd_multi));
+    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("lcm_multi"), reinterpret_cast<quint64>(compiler_lcm_multi));
 
     return true;
 }
