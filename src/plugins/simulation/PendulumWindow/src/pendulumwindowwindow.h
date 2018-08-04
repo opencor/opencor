@@ -83,7 +83,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initData(const int &pDataSize, const double &pMinimumTime,
+    void initData(const quint64 &pDataSize, const double &pMinimumTime,
                   const double &pMaximumTime, const double &pTimeInterval,
                   double *pR0Values, double *pQ1Values, double *pThetaValues);
     void addData(const int &pCurrentDataSize);

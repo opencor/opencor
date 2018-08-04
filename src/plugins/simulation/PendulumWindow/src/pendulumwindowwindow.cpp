@@ -57,15 +57,15 @@ namespace PendulumWindow {
 PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
     Core::WindowWidget(pParent),
     mGui(new Ui::PendulumWindowWindow),
-    mZincContext(0),
-    mZincSceneViewerDescription(0),
+    mZincContext(nullptr),
+    mZincSceneViewerDescription(nullptr),
     mAxesFontPointSize(0),
     mInitialiseZincScene(true),
     mCurrentDataSize(0),
-    mTimeValues(0),
-    mR0Values(0),
-    mQ1Values(0),
-    mThetaValues(0)
+    mTimeValues(nullptr),
+    mR0Values(nullptr),
+    mQ1Values(nullptr),
+    mThetaValues(nullptr)
 {
     // Set up the GUI
 
@@ -176,7 +176,7 @@ void PendulumWindowWindow::createAndSetZincContext()
 
 //==============================================================================
 
-void PendulumWindowWindow::initData(const int &pDataSize,
+void PendulumWindowWindow::initData(const quint64 &pDataSize,
                                     const double &pMinimumTime,
                                     const double &pMaximumTime,
                                     const double &pTimeInterval,
@@ -197,7 +197,7 @@ void PendulumWindowWindow::initData(const int &pDataSize,
 
     mTimeValues = new double[pDataSize];
 
-    for (int i = 0; i < pDataSize; ++i)
+    for (quint64 i = 0; i < pDataSize; ++i)
         mTimeValues[i] = i*pTimeInterval;
 
     mR0Values = pR0Values;
@@ -261,7 +261,7 @@ void PendulumWindowWindow::initData(const int &pDataSize,
             // Create a single node with storage for time-varying mR0, mQ1 and
             // mTheta
 
-            OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(pDataSize, mTimeValues);
+            OpenCMISS::Zinc::Timesequence timeSequence = mFieldModule.getMatchingTimesequence(int(pDataSize), mTimeValues);
             OpenCMISS::Zinc::Nodeset nodeSet = mFieldModule.findNodesetByFieldDomainType(OpenCMISS::Zinc::Field::DOMAIN_TYPE_NODES);
             OpenCMISS::Zinc::Nodetemplate nodeTemplate = nodeSet.createNodetemplate();
 
@@ -332,7 +332,7 @@ void PendulumWindowWindow::initData(const int &pDataSize,
         OpenCMISS::Zinc::Tessellationmodule tessellationModule = scene.getTessellationmodule();
         OpenCMISS::Zinc::Tessellation tessellation = tessellationModule.createTessellation();
 
-        const int tessellationData[] = { pDataSize };
+        const int tessellationData[] = { int(pDataSize) };
 
         tessellation.setMinimumDivisions(1, tessellationData);
 
@@ -448,7 +448,7 @@ void PendulumWindowWindow::initData(const int &pDataSize,
         static const double zero = 0.0;
 
         mFieldModule.beginChange();
-            for (int i = 0; i < pDataSize; ++i) {
+            for (quint64 i = 0; i < pDataSize; ++i) {
                 mFieldCache.setTime(mTimeValues[i]);
 
                 mR0.assignReal(mFieldCache, 1, &zero);
@@ -463,8 +463,8 @@ void PendulumWindowWindow::initData(const int &pDataSize,
     mTimeKeeper.setMinimumTime(pMinimumTime);
     mTimeKeeper.setMaximumTime(pMaximumTime);
 
-    mTimeSlider->setMinimum(pMinimumTime/pTimeInterval);
-    mTimeSlider->setMaximum(pMaximumTime/pTimeInterval);
+    mTimeSlider->setMinimum(int(pMinimumTime/pTimeInterval));
+    mTimeSlider->setMaximum(int(pMaximumTime/pTimeInterval));
 
     // Disable our time-related widgets
 
@@ -564,28 +564,30 @@ void PendulumWindowWindow::updateScene(const int &pTime)
     // Note: this is so that we can customise the way we want our pendulum scene
     //       to look...
 
-    if (0) {
-        OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
+//#define CAN_CUSTOMIZE
 
-        double left, right, bottom, top, nearPlane, farPlane;
+#ifdef CAN_CUSTOMIZE
+    OpenCMISS::Zinc::Sceneviewer sceneViewer = mZincWidget->sceneViewer();
 
-        sceneViewer.getViewingVolume(&left, &right, &bottom, &top, &nearPlane, &farPlane);
+    double left, right, bottom, top, nearPlane, farPlane;
 
-        qDebug("---------");
-        qDebug("sceneViewer.setViewingVolume(%f, %f, %f, %f, %f, %f);\n", left, right, bottom, top, nearPlane, farPlane);
+    sceneViewer.getViewingVolume(&left, &right, &bottom, &top, &nearPlane, &farPlane);
 
-        double lookAtPosition[3];
-        double eyePosition[3];
-        double upVector[3];
+    qDebug("---------");
+    qDebug("sceneViewer.setViewingVolume(%f, %f, %f, %f, %f, %f);\n", left, right, bottom, top, nearPlane, farPlane);
 
-        sceneViewer.getLookatPosition(lookAtPosition);
-        sceneViewer.getEyePosition(eyePosition);
-        sceneViewer.getUpVector(upVector);
+    double lookAtPosition[3];
+    double eyePosition[3];
+    double upVector[3];
 
-        qDebug("const double lookAtPosition[] = { %f, %f, %f };", lookAtPosition[0], lookAtPosition[1], lookAtPosition[2]);
-        qDebug("const double eyePosition[] = { %f, %f, %f };", eyePosition[0], eyePosition[1], eyePosition[2]);
-        qDebug("const double upVector[] = { %f, %f, %f };", upVector[0], upVector[1], upVector[2]);
-    }
+    sceneViewer.getLookatPosition(lookAtPosition);
+    sceneViewer.getEyePosition(eyePosition);
+    sceneViewer.getUpVector(upVector);
+
+    qDebug("const double lookAtPosition[] = { %f, %f, %f };", lookAtPosition[0], lookAtPosition[1], lookAtPosition[2]);
+    qDebug("const double eyePosition[] = { %f, %f, %f };", eyePosition[0], eyePosition[1], eyePosition[2]);
+    qDebug("const double upVector[] = { %f, %f, %f };", upVector[0], upVector[1], upVector[2]);
+#endif
 }
 
 //==============================================================================

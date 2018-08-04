@@ -527,9 +527,9 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     // (be it its CellML or SED-ML version)
 
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
-    CellMLSupport::CellmlFileRuntimeParameter *q1Parameter = 0;
-    CellMLSupport::CellmlFileRuntimeParameter *thetaParameter = 0;
-    CellMLSupport::CellmlFileRuntimeParameter *r0Parameter = 0;
+    CellMLSupport::CellmlFileRuntimeParameter *q1Parameter = nullptr;
+    CellMLSupport::CellmlFileRuntimeParameter *thetaParameter = nullptr;
+    CellMLSupport::CellmlFileRuntimeParameter *r0Parameter = nullptr;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, simulation->runtime()->parameters()) {
         QString parameterFullyFormattedName = parameter->fullyFormattedName();
