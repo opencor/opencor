@@ -260,7 +260,7 @@ void Tests::notOperatorTests()
              1.0);
     QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(!qIsNull(mA)),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA)),
              1.0);
 }
 
@@ -283,11 +283,11 @@ void Tests::orOperatorTests()
              0.0);
     QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(!qIsNull(mA), mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, !qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(!qIsNull(mA), !qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
              0.0);
 }
 
@@ -310,11 +310,11 @@ void Tests::xorOperatorTests()
              0.0);
     QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(!qIsNull(mA), mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, !qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(!qIsNull(mA), !qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
              0.0);
 }
 
@@ -337,11 +337,11 @@ void Tests::andOperatorTests()
              0.0);
     QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(!qIsNull(mA), mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, !qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(!qIsNull(mA), !qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
              0.0);
 }
 
