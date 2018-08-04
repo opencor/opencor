@@ -55,7 +55,7 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
     //       solver is badly set up (e.g. Forward Euler with an integration step
     //       that is too big)...
 
-    for (long i = 0, iMax = reinterpret_cast<N_VectorContent_Serial>(pF->content)->length; i < iMax; ++i) {
+    for (long i = 0, iMax = static_cast<N_VectorContent_Serial>(pF->content)->length; i < iMax; ++i) {
         if (!qIsFinite(f[i]))
             return 1;
     }
