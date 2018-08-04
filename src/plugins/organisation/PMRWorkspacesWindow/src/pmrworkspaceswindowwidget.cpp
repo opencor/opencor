@@ -569,7 +569,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
                     char *name = remotes.strings[i];
 
                     if (!strcmp(name, "origin")) {
-                        git_remote *remote = 0;
+                        git_remote *remote = nullptr;
 
                         if (!git_remote_lookup(&remote, gitRepository, name)) {
                             const char *remoteUrl = git_remote_url(remote);
