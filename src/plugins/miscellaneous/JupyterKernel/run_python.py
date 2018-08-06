@@ -1,5 +1,6 @@
 import os
 import platform
+import subprocess
 import sys
 
 import nbformat
@@ -43,6 +44,12 @@ def run_python(script_file):
     except CellExecutionError as err:
         pass
 
+    # Tracebacks may contain ANSI escape codes which Windows
+    # by default doesn't recognise
+
+    if platform.system() == 'Windows':
+        subprocess.call('', shell=True)
+
     # Write any output from the Python code
 
     for output in nb.cells[1].outputs:
@@ -76,17 +83,14 @@ def setup_paths():
 
     elif opsys == 'Linux':
         path = os.environ['PATH'].split(':')
-#        root = '/'.join(sys.executable.split('/')[:-4])
-#        path.insert(0, '%s/MacOS' % root)
-#        path.insert(0, '%s/Frameworks/Python/bin' % root)
+        root = '/'.join(sys.executable.split('/')[:-3])
+        path.insert(0, '%s/bin' % root)
         os.environ['PATH'] = ':'.join(path)
 
     elif opsys == 'Windows':
         path = os.environ['PATH'].split(';')
         root = '\\'.join(sys.executable.split('\\')[:-3])
         path.insert(0, '%s\\bin' % root)
-        path.insert(0, '%s\\Python\\Scripts' % root)
-        path.insert(0, '%s\\Python\\bin' % root)
         os.environ['PATH'] = ';'.join(path)
 
 
