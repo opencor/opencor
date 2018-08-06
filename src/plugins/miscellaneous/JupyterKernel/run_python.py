@@ -1,30 +1,26 @@
-#!/Users/dave/build/OpenCOR-2018-06-22-macOS/OpenCOR.app/Contents/Frameworks/Python/bin/python
-
 import os
+import platform
 import sys
 
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
+from nbconvert.preprocessors.execute import CellExecutionError
 
 
-def main():
-#==========
+def run_python(script_file):
+#===========================
 
-    if len(sys.argv) < 2:
-        sys.exit('Usage: {} PYTHON_FILE'.format(sys.argv[0]))
+    # Set path to file script
 
-    # Initialise path and file names
-
-    source_file = sys.argv[1]
-    script_path = os.path.split(source_file)[0]
+    script_path = os.path.split(script_file)[0]
 
     # Read the Python source code
 
     try:
-        with open(source_file) as f:
+        with open(script_file) as f:
           source = f.read()
     except IOError:
-        sys.exit('Cannot read file: {}'.format(source_file))
+        sys.exit('Cannot read file: {}'.format(script_file))
 
     # Create a new notebook with a single cell containing the
     # contents of the Python file
@@ -41,16 +37,22 @@ def main():
     # Create an execution process that runs an OpenCOR kernel
     # and use it to run the notebook
 
-    ep = ExecutePreprocessor(timeout=-1, kernel_name='opencor')
-    ep.preprocess(nb, {'metadata': {'path': script_path + '/'}})
+    try:
+        ep = ExecutePreprocessor(timeout=-1, kernel_name='opencor')
+        ep.preprocess(nb, {'metadata': {'path': script_path + '/'}})
+    except CellExecutionError as err:
+        pass
 
     # Write any output from the Python code
 
     for output in nb.cells[1].outputs:
-        if output.name == 'stdout':
-            sys.stdout.write(output.text)
-        elif output.name == 'stderr':
-            sys.stderr.write(output.text)
+        if output.output_type == 'stream':
+            if output.name == 'stdout':
+                sys.stdout.write(output.text)
+            elif output.name == 'stderr':
+                sys.stderr.write(output.text)
+        elif output.output_type == 'error':
+            sys.stderr.write('\n'.join(output.traceback) + '\n')
 
     # Close output streams
 
@@ -60,18 +62,44 @@ def main():
 
 def setup_paths():
 #=================
-    pass
-#### Windows
-### Get OpenCOR's root directory
-##root = '\\'.join(sys.executable.split('\\')[:-3])
-### Add the location of our binaries to the head of the system PATH
-##path = os.environ['PATH'].split(';')
-##path.insert(0, '%s\\bin' % root)
-##path.insert(0, '%s\\Python\\Scripts' % root)
-##path.insert(0, '%s\\Python\\bin' % root)
-##os.environ['PATH'] = ';'.join(path)
+
+    # Determine the location of OpenCOR from the Python executable
+    # and add it to the head of the system PATH
+
+    opsys = platform.system()
+
+    if   opsys == 'Darwin':
+        path = os.environ['PATH'].split(':')
+        root = '/'.join(sys.executable.split('/')[:-6])
+        path.insert(0, root)
+        os.environ['PATH'] = ':'.join(path)
+
+    elif opsys == 'Linux':
+        path = os.environ['PATH'].split(':')
+#        root = '/'.join(sys.executable.split('/')[:-4])
+#        path.insert(0, '%s/MacOS' % root)
+#        path.insert(0, '%s/Frameworks/Python/bin' % root)
+        os.environ['PATH'] = ':'.join(path)
+
+    elif opsys == 'Windows':
+        path = os.environ['PATH'].split(';')
+        root = '\\'.join(sys.executable.split('\\')[:-3])
+        path.insert(0, '%s\\bin' % root)
+        path.insert(0, '%s\\Python\\Scripts' % root)
+        path.insert(0, '%s\\Python\\bin' % root)
+        os.environ['PATH'] = ';'.join(path)
+
+
+def main():
+#==========
+    if len(sys.argv) < 2:
+        sys.exit('Usage: {} PYTHON_FILE'.format(sys.argv[0]))
+
+    setup_paths()
+
+    run_python(sys.argv[1])
 
 
 if __name__ == '__main__':
-    setup_paths()
+#=========================
     main()
