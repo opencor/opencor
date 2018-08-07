@@ -107,7 +107,7 @@ void SampleViewWidget::update(const QString &pFileName)
     QString sha1Value = fileManagerInstance->sha1(pFileName);
 
     mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
-    mGui->sizeValue->setText(Core::sizeAsString(QFile(pFileName).size()));
+    mGui->sizeValue->setText(Core::sizeAsString(quint64(QFile(pFileName).size())));
 }
 
 //==============================================================================
