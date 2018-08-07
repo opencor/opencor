@@ -6,6 +6,7 @@
         <files>
             <file>user/*.*</file>
 
+            <file>user/_images/*.*</file>
             <file>user/_static/*.*</file>
 
             <file>user/plugins/*.*</file>
