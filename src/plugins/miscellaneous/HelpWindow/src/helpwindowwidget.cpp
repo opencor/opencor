@@ -169,7 +169,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     // Note: we call setUrl() rather than goToHomePage() because we want and
     //       need our home page to be loaded straightaway (otherwise if our home
     //       page is wrong and OpenCOR is in a non-English locale then our
-    //       contents will empty upon starting OpenCOR)...
+    //       contents will be empty upon starting OpenCOR)...
 
     setHomePage("qthelp://opencor/doc/user/index.html");
 
