@@ -5,7 +5,20 @@
     <filterSection>
         <files>
             <file>user/*.*</file>
+
             <file>user/_static/*.*</file>
+
+            <file>user/plugins/*.*</file>
+
+            <file>user/plugins/dataStore/*.*</file>
+            <file>user/plugins/editing/*.*</file>
+            <file>user/plugins/miscellaneous/*.*</file>
+            <file>user/plugins/organisation/*.*</file>
+            <file>user/plugins/simulation/*.*</file>
+            <file>user/plugins/solver/*.*</file>
+            <file>user/plugins/tools/*.*</file>
+
+            <file>user/userInterfaces/*.*</file>
         </files>
     </filterSection>
 </QtHelpProject>
