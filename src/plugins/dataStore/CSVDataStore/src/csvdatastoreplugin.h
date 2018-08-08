@@ -40,23 +40,19 @@ PLUGININFO_FUNC CSVDataStorePluginInfo();
 
 //==============================================================================
 
-class CsvDataStoreExporter;
-
-//==============================================================================
-
-class CSVDataStorePlugin : public QObject, public I18nInterface,
-                           public DataStoreInterface
+class CSVDataStorePlugin : public QObject, public DataStoreInterface,
+                           public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CSVDataStorePlugin" FILE "csvdatastoreplugin.json")
 
-    Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::DataStoreInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-#include "i18ninterface.inl"
 #include "datastoreinterface.inl"
+#include "i18ninterface.inl"
 };
 
 //==============================================================================

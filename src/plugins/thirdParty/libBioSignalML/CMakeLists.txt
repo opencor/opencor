@@ -1,4 +1,4 @@
-project(BioSignalMLPlugin)
+project(libBioSignalMLPlugin)
 
 # Name and version of our package
 
@@ -212,14 +212,17 @@ set(BIOSIGNALML_LIBRARIES
 )
 
 # Add the plugin
+# Note: we would normally use '${PACKAGE_NAME}' rather than 'OAuth', but it
+#       can't be done here since the name of our package is different from that
+#       of our plugin...
 
-add_plugin(${PACKAGE_NAME}
+add_plugin(libBioSignalML
     SOURCES
         ../../plugininfo.cpp
 
-        src/biosignalmlplugin.cpp
+        src/libbiosignalmlplugin.cpp
     HEADERS_MOC
-        src/biosignalmlplugin.h
+        src/libbiosignalmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
