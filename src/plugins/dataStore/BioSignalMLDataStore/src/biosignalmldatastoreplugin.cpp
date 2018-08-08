@@ -27,13 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "biosignalmldatastoreplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "datastoredialog.h"
 
 //==============================================================================
 
-#include <QApplication>
 #include <QMainWindow>
-#include <QSettings>
 
 //==============================================================================
 
