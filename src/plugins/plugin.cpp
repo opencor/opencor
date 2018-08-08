@@ -394,9 +394,7 @@ int Plugin::pluginInfoVersion(const QString &pFileName)
     QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
-    QLibrary plugin(pFileName);
-
-    PluginInfoVersionFunc function = reinterpret_cast<PluginInfoVersionFunc>(plugin.resolve("pluginInfoVersion"));
+    PluginInfoVersionFunc function = reinterpret_cast<PluginInfoVersionFunc>(QLibrary::resolve(pFileName, "pluginInfoVersion"));
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
@@ -420,9 +418,7 @@ int Plugin::interfaceVersion(const QString &pFileName,
     QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
-    QLibrary plugin(pFileName);
-
-    InterfaceVersionFunc function = reinterpret_cast<InterfaceVersionFunc>(plugin.resolve(qPrintable(pFunctionName)));
+    InterfaceVersionFunc function = reinterpret_cast<InterfaceVersionFunc>(QLibrary::resolve(pFileName, qPrintable(pFunctionName)));
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);

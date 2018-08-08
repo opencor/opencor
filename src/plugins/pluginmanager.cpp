@@ -167,7 +167,6 @@ PluginManager::PluginManager(bool pGuiMode) :
 
     foreach (const QString &pluginFileName, pluginFileNames) {
         QString pluginName = Plugin::name(pluginFileName);
-
         Plugin *plugin = new Plugin(pluginFileName,
                                     pluginsInfo.value(pluginName),
                                     pluginsError.value(pluginName),
