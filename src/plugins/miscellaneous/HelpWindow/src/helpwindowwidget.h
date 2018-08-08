@@ -46,8 +46,7 @@ class HelpWindowNetworkReply : public QNetworkReply
 {
 public:
     explicit HelpWindowNetworkReply(const QNetworkRequest &pRequest,
-                                    const QByteArray &pData,
-                                    const QString &pMimeType);
+                                    const QByteArray &pData);
 
     void abort() override;
     qint64 bytesAvailable() const override;
