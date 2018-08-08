@@ -40,10 +40,6 @@ PLUGININFO_FUNC CSVDataStorePluginInfo();
 
 //==============================================================================
 
-class CsvDataStoreExporter;
-
-//==============================================================================
-
 class CSVDataStorePlugin : public QObject, public I18nInterface,
                            public DataStoreInterface
 {
