@@ -52,18 +52,6 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
 }
 
 //==============================================================================
-// I18n interface
-//==============================================================================
-
-void CSVDataStorePlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
-}
-
-//==============================================================================
 // Data store interface
 //==============================================================================
 
@@ -113,6 +101,18 @@ DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(Dat
     // Return an instance of our CSV data store exporter
 
     return new CsvDataStoreExporter(pDataStoreData);
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void CSVDataStorePlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
 }
 
 //==============================================================================

@@ -19,6 +19,6 @@ add_plugin(BioSignalMLDataStore
         src/biosignalmldatastoreexporter.h
         src/biosignalmldatastoreplugin.h
     PLUGINS
-        BioSignalML
         DataStore
+        libBioSignalML
 )

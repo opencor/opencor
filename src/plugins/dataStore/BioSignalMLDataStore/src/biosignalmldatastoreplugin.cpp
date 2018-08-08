@@ -27,13 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "biosignalmldatastoreplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "datastoredialog.h"
 
 //==============================================================================
 
-#include <QApplication>
 #include <QMainWindow>
-#include <QSettings>
 
 //==============================================================================
 
@@ -50,20 +47,8 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à BioSignalML."));
 
     return new PluginInfo(PluginInfo::DataStore, true, false,
-                          QStringList() << "BioSignalML" << "DataStore",
+                          QStringList() << "DataStore" << "libBioSignalML",
                           descriptions);
-}
-
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void BioSignalMLDataStorePlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
 }
 
 //==============================================================================
@@ -120,6 +105,18 @@ DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::dataStoreExporterInst
     // Return an instance of our BioSignalML data store exporter
 
     return new BiosignalmlDataStoreExporter(pDataStoreData);
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void BioSignalMLDataStorePlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
 }
 
 //==============================================================================

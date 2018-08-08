@@ -132,7 +132,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
                 ++j;
             }
 
-            double *data = new double[variables.count()*BufferRows] {};
+            double *data = new double[quint64(variables.count()*BufferRows)] {};
             double *dataPointer = data;
             int rowCount = 0;
 
