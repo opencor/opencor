@@ -18,33 +18,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// BioSignalML plugin
+// libBioSignalML plugin
 //==============================================================================
 
-#include "biosignalmlplugin.h"
+#pragma once
+
+//==============================================================================
+
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace BioSignalML {
+namespace libBioSignalML {
 
 //==============================================================================
 
-PLUGININFO_FUNC BioSignalMLPluginInfo()
+PLUGININFO_FUNC libBioSignalMLPluginInfo();
+
+//==============================================================================
+
+class libBioSignalMLPlugin : public QObject
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access BioSignalML."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder BioSignalML."));
-
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
-                          QStringList(),
-                          descriptions);
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.libBioSignalMLPlugin" FILE "libbiosignalmlplugin.json")
+};
 
 //==============================================================================
 
-}   // namespace BioSignalML
+}   // namespace libBioSignalML
 }   // namespace OpenCOR
 
 //==============================================================================
