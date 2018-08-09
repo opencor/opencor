@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Developer documentation for OpenCOR build configuration file
+# User documentation for OpenCOR build configuration file
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -39,7 +39,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Developer documentation for OpenCOR'
+project = u'User documentation for OpenCOR'
 copyright = u'2011-@SPHINX_YEAR@, University of Auckland'
 author = u'University of Auckland'
 
@@ -112,7 +112,7 @@ html_show_copyright = False
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DeveloperdocumentationforOpenCORdoc'
+htmlhelp_basename = 'UserdocumentationforOpenCORdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -138,7 +138,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'DeveloperdocumentationforOpenCOR.tex', u'Developer documentation for OpenCOR',
+    (master_doc, 'UserdocumentationforOpenCOR.tex', u'User documentation for OpenCOR',
      u'University of Auckland', 'manual'),
 ]
 
@@ -147,7 +147,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'developerdocumentationforopencor', u'Developer documentation for OpenCOR',
+    (master_doc, 'Userdocumentationforopencor', u'User documentation for OpenCOR',
      [author], 1)
 ]
 
@@ -157,7 +157,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'DeveloperdocumentationforOpenCOR', u'Developer documentation for OpenCOR',
-     author, 'DeveloperdocumentationforOpenCOR', 'Developer documentation for OpenCOR.',
+    (master_doc, 'UserdocumentationforOpenCOR', u'User documentation for OpenCOR',
+     author, 'UserdocumentationforOpenCOR', 'User documentation for OpenCOR.',
      'Miscellaneous'),
 ]
