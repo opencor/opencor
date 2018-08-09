@@ -97,7 +97,7 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
     case PluginInfo::Invalid:
         return QObject::tr("Invalid");
     case PluginInfo::DataStore:
-        return QObject::tr("Data Store");
+        return QObject::tr("Data store");
     case PluginInfo::Editing:
         return QObject::tr("Editing");
     case PluginInfo::Miscellaneous:
