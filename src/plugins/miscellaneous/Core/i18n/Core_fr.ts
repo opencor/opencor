@@ -332,8 +332,8 @@
         <translation>Invalide</translation>
     </message>
     <message>
-        <source>Data Store</source>
-        <translation>Magasin de Données</translation>
+        <source>Data store</source>
+        <translation>Magasin de données</translation>
     </message>
     <message>
         <source>Editing</source>
