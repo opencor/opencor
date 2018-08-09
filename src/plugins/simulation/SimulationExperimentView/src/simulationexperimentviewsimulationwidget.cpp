@@ -3920,7 +3920,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
     if (simulation == mSimulation) {
         QString simulationFileName = mSimulation->fileName();
-        double simulationProgress = mViewWidget->simulationResultsSize(simulationFileName)/simulation->size();
+        double simulationProgress = double(mViewWidget->simulationResultsSize(simulationFileName))/simulation->size();
 
         if ((pTask != None) || visible) {
             mProgressBarWidget->setValue(simulationProgress);
