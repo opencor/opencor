@@ -408,8 +408,8 @@
         <translation>Extensions pour accéder différents solveurs.</translation>
     </message>
     <message>
-        <source>Plugins to support various third-party libraries and APIs.</source>
-        <translation>Extensions pour supporter différentes librairies externes et APIs.</translation>
+        <source>Plugins to support various third-party libraries.</source>
+        <translation>Extensions pour supporter différentes librairies externes.</translation>
     </message>
     <message>
         <source>Plugins to access various third-party libraries.</source>
