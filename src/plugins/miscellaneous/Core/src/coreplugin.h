@@ -107,7 +107,7 @@ private:
     QAction *mFileReopenSubMenuSeparator2;
     QAction *mFileClearReopenSubMenuAction;
 
-    QStringList mRecentFileNamesOrUrls;
+    QStringList mRecentFiles;
 
     QList<QAction *> mRecentFileActions;
 
@@ -123,8 +123,6 @@ private slots:
     void reopenRecentFile();
     void reopenMostRecentFile();
     void clearReopenSubMenu();
-
-    void doUpdateFileReopenMenu();
 };
 
 //==============================================================================
