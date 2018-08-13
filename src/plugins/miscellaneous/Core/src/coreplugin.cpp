@@ -211,7 +211,7 @@ void CorePlugin::fileClosed(const QString &pFileName)
 {
     // Add, if isn't new and it still exists (i.e. we are not here because the
     // file has been deleted), the file to our list of recent files (making sure
-    // that we don't end up with more than 10 recent file names) and update our
+    // that we don't end up with more than 10 recent files) and update our
     // Reopen sub-menu
     // Note: the most recent file is to be shown first...
 
@@ -448,7 +448,7 @@ void CorePlugin::initializePlugin()
                                  mainWindow());
     mFileCloseAllAction = newAction(mainWindow());
 
-    // Create the separator before which we will insert our Reopen sub-menu
+    // Create the separator before which we will insert in our Reopen sub-menu
 
     mFileOpenReloadSeparator = newSeparator(mainWindow());
 
@@ -528,7 +528,7 @@ void CorePlugin::initializePlugin()
     connect(mCentralWidget, &CentralWidget::atLeastOneFile,
             mFileCloseAllAction, &QAction::setEnabled);
 
-    // A connection related to our Reopen sub-menu
+    // Some connections related to our Reopen sub-menu
 
     connect(mFileReopenMostRecentFileAction, &QAction::triggered,
             this, &CorePlugin::reopenMostRecentFile);
@@ -731,7 +731,7 @@ void CorePlugin::doUpdateFileReopenMenu()
         mRecentFileActions << action;
     }
 
-    // Enable/disable our reopen sub-menu actions
+    // Enable/disable our Reopen sub-menu actions
 
     enabled = enabled && !mRecentFiles.isEmpty();
 
@@ -759,8 +759,8 @@ void CorePlugin::updateFileReopenMenu()
 
 void CorePlugin::updateNewModifiedSensitiveActions()
 {
-    // Update our actions keeping in mind the fact that a file may be modified
-    // and even possibly new
+    // Update our actions, keeping in mind the fact that a file may be modified
+    // or even new
 
     QString fileName = mCentralWidget->currentFileName();
 
@@ -783,7 +783,7 @@ void CorePlugin::updateNewModifiedSensitiveActions()
 
     mFileLockedAction->setChecked(!FileManager::instance()->isReadableAndWritable(fileName));
     // Note: we really want to call isReadableAndWritable() rather than
-    //       isLocked() since from the GUI perspective a file should only be
+    //       isLocked() since from a GUI perspective a file should only be
     //       considered unlocked if it can be both readable and writable
     //       (see CentralWidget::updateFileTab())...
 }
@@ -798,7 +798,7 @@ void CorePlugin::reopenFile(const QString &pFileName)
     if (mRecentFiles.removeOne(pFileName))
         updateFileReopenMenu();
 
-    // Check that the recent file still exists
+    // Open the recent file after checking that it still exists, if needed
 
     bool isLocalFile;
     QString fileNameOrUrl;
@@ -807,18 +807,12 @@ void CorePlugin::reopenFile(const QString &pFileName)
 
     if (isLocalFile) {
         if (QFile::exists(fileNameOrUrl)) {
-            // Open the recent file
-
             mCentralWidget->openFile(fileNameOrUrl);
         } else {
-            // The file doesn't exist anymore, so let the user know about it
-
             warningMessageBox(tr("Reopen File"),
                               tr("<strong>%1</strong> does not exist anymore.").arg(QDir::toNativeSeparators(fileNameOrUrl)));
         }
     } else {
-        // Open the recent remote file
-
         mCentralWidget->openRemoteFile(fileNameOrUrl);
     }
 }
