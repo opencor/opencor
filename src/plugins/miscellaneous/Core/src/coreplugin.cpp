@@ -140,9 +140,9 @@ void CorePlugin::fileOpened(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (fileManagerInstance->isRemote(pFileName)?
-            mRecentFiles.removeOne(fileManagerInstance->url(pFileName)):
-            mRecentFiles.removeOne(pFileName)) {
+    if (mRecentFiles.removeOne(fileManagerInstance->isRemote(pFileName)?
+                                   fileManagerInstance->url(pFileName):
+                                   pFileName)) {
         updateFileReopenMenu();
     }
 }
@@ -219,10 +219,9 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
     if (   !fileManagerInstance->isNew(pFileName)
         &&  QFile::exists(pFileName)) {
-        if (fileManagerInstance->isRemote(pFileName))
-            mRecentFiles.prepend(fileManagerInstance->url(pFileName));
-        else
-            mRecentFiles.prepend(pFileName);
+        mRecentFiles.prepend(fileManagerInstance->isRemote(pFileName)?
+                                 fileManagerInstance->url(pFileName):
+                                 pFileName);
 
         while (mRecentFiles.count() > 10)
             mRecentFiles.removeLast();
