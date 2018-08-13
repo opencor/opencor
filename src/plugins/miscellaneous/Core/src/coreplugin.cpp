@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QPalette>
 #include <QSettings>
-#include <QTimer>
 
 //==============================================================================
 
@@ -135,16 +134,13 @@ bool CorePlugin::saveFile(const QString &pOldFileName,
 
 void CorePlugin::fileOpened(const QString &pFileName)
 {
-    // Remove the file from our list of recent files and update our Reopen
-    // sub-menu
+    // Remove the file from our list of recent files
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (mRecentFiles.removeOne(fileManagerInstance->isRemote(pFileName)?
-                                   fileManagerInstance->url(pFileName):
-                                   pFileName)) {
-        updateFileReopenMenu();
-    }
+    mRecentFiles.removeOne(fileManagerInstance->isRemote(pFileName)?
+                               fileManagerInstance->url(pFileName):
+                               pFileName);
 }
 
 //==============================================================================
@@ -195,8 +191,7 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
     //       done in that case (thus avoiding us from having to test for its
     //       presence)...
 
-    if (mRecentFiles.removeOne(pNewFileName))
-        updateFileReopenMenu();
+    mRecentFiles.removeOne(pNewFileName);
 
     // A file has been created or saved under a new name, so we want the old
     // file name to be added to our list of recent files, i.e. as if it had been
@@ -211,8 +206,7 @@ void CorePlugin::fileClosed(const QString &pFileName)
 {
     // Add, if isn't new and it still exists (i.e. we are not here because the
     // file has been deleted), the file to our list of recent files (making sure
-    // that we don't end up with more than 10 recent files) and update our
-    // Reopen sub-menu
+    // that we don't end up with more than 10 recent files)
     // Note: the most recent file is to be shown first...
 
     FileManager *fileManagerInstance = FileManager::instance();
@@ -225,8 +219,6 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
         while (mRecentFiles.count() > 10)
             mRecentFiles.removeLast();
-
-        updateFileReopenMenu();
     }
 }
 
@@ -529,6 +521,9 @@ void CorePlugin::initializePlugin()
 
     // Some connections related to our Reopen sub-menu
 
+    connect(mFileReopenSubMenu, &QMenu::aboutToShow,
+            this, &CorePlugin::updateFileReopenMenu);
+
     connect(mFileReopenMostRecentFileAction, &QAction::triggered,
             this, &CorePlugin::reopenMostRecentFile);
     connect(mFileClearReopenSubMenuAction, &QAction::triggered,
@@ -625,10 +620,6 @@ void CorePlugin::loadSettings(QSettings *pSettings)
 
     mRecentFiles = pSettings->value(SettingsRecentFiles).toStringList();
 
-    // Update our Reopen sub-menu
-
-    updateFileReopenMenu();
-
     // Retrieve the central widget settings
 
     pSettings->beginGroup(mCentralWidget->objectName());
@@ -700,7 +691,7 @@ void CorePlugin::newFile()
 
 //==============================================================================
 
-void CorePlugin::doUpdateFileReopenMenu()
+void CorePlugin::updateFileReopenMenu()
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
@@ -742,20 +733,6 @@ void CorePlugin::doUpdateFileReopenMenu()
 
 //==============================================================================
 
-void CorePlugin::updateFileReopenMenu()
-{
-    // Update the contents of our Reopen sub-menu
-    // Note #1: we need to do this through a single shot otherwise, on macOS,
-    //          our menu items will look disabled (before looking enabled; see
-    //          issue #1633)...
-    // Note #2: it all used to work fine before, so could it be an issue with
-    //          Qt?...
-
-    QTimer::singleShot(0, this, &CorePlugin::doUpdateFileReopenMenu);
-}
-
-//==============================================================================
-
 void CorePlugin::updateNewModifiedSensitiveActions()
 {
     // Update our actions, keeping in mind the fact that a file may be modified
@@ -791,11 +768,9 @@ void CorePlugin::updateNewModifiedSensitiveActions()
 
 void CorePlugin::reopenFile(const QString &pFileName)
 {
-    // Remove the file from our list of recent files and update our Reopen
-    // sub-menu, if needed
+    // Remove the file from our list of recent files
 
-    if (mRecentFiles.removeOne(pFileName))
-        updateFileReopenMenu();
+    mRecentFiles.removeOne(pFileName);
 
     // Open the recent file after checking that it still exists, if needed
 
@@ -845,8 +820,6 @@ void CorePlugin::clearReopenSubMenu()
     // Indirectly clear our Reopen sub-menu
 
     mRecentFiles.clear();
-
-    updateFileReopenMenu();
 }
 
 //==============================================================================
