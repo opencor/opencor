@@ -47,7 +47,11 @@ GeneralPreferencesWidget::GeneralPreferencesWidget(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    mGui->styleValue->addItems(QStyleFactory::keys());
+    QStringList styles = QStyleFactory::keys();
+
+    styles.sort();
+
+    mGui->styleValue->addItems(styles);
 
     mStyle = mSettings->value(SettingsPreferencesStyle, SettingsPreferencesStyleDefault).toString();
 
