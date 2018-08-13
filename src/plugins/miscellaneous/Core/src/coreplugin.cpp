@@ -713,7 +713,7 @@ void CorePlugin::doUpdateFileReopenMenu()
 
     mRecentFileNameOrUrlActions.clear();
 
-    // Add the recent files to our Reopen sub-menu
+    // Add the recent files or URLs to our Reopen sub-menu
 
     bool enabled = mFileOpenAction->isEnabled();
 
