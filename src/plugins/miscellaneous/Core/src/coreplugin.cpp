@@ -705,10 +705,10 @@ void CorePlugin::doUpdateFileReopenMenu()
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
-    foreach (QAction *action, mRecentFileNamesOrUrlActions) {
-        mFileReopenSubMenu->removeAction(action);
+    foreach (QAction *recentFileNamesOrUrlAction, mRecentFileNamesOrUrlActions) {
+        mFileReopenSubMenu->removeAction(recentFileNamesOrUrlAction);
 
-        delete action;
+        delete recentFileNamesOrUrlAction;
     }
 
     mRecentFileNamesOrUrlActions.clear();
@@ -717,11 +717,11 @@ void CorePlugin::doUpdateFileReopenMenu()
 
     bool enabled = mFileOpenAction->isEnabled();
 
-    foreach (const QString &recentFile, mRecentFileNamesOrUrls) {
+    foreach (const QString &recentFileNamesOrUrl, mRecentFileNamesOrUrls) {
         QAction *action = newAction(mainWindow());
 
         action->setEnabled(enabled);
-        action->setText(recentFile);
+        action->setText(recentFileNamesOrUrl);
 
         connect(action, &QAction::triggered,
                 this, &CorePlugin::reopenRecentFile);
