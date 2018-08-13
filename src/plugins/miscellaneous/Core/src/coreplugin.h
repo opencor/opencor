@@ -109,7 +109,7 @@ private:
 
     QStringList mRecentFileNamesOrUrls;
 
-    QList<QAction *> mRecentFileNamesOrUrlActions;
+    QList<QAction *> mRecentFileNameOrUrlActions;
 
     void updateNewModifiedSensitiveActions();
 
