@@ -123,8 +123,6 @@ private slots:
     void reopenRecentFile();
     void reopenMostRecentFile();
     void clearReopenSubMenu();
-
-    void doUpdateFileReopenMenu();
 };
 
 //==============================================================================
