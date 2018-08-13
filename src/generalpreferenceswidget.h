@@ -44,7 +44,7 @@ static const auto SettingsPreferencesStyle = QStringLiteral("Style");
 //==============================================================================
 
 #if defined(Q_OS_WIN)
-    static const auto SettingsPreferencesStyleDefault = QStringLiteral("Windows");
+    static const auto SettingsPreferencesStyleDefault = QStringLiteral("WindowsVista");
 #elif defined(Q_OS_LINUX)
     static const auto SettingsPreferencesStyleDefault = QStringLiteral("Fusion");
 #elif defined(Q_OS_MAC)
