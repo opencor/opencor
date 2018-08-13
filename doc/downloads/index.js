@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1743\">#1743</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.1.0h (see issue <a href=\"https://github.com/opencor/opencor/issues/1751\">#1751</a>)." }
                      ]
                    },
