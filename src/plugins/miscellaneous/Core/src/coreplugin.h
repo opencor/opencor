@@ -107,9 +107,9 @@ private:
     QAction *mFileReopenSubMenuSeparator2;
     QAction *mFileClearReopenSubMenuAction;
 
-    QStringList mRecentFileNamesOrUrls;
+    QStringList mRecentFiles;
 
-    QList<QAction *> mRecentFileNameOrUrlActions;
+    QList<QAction *> mRecentFileActions;
 
     void updateNewModifiedSensitiveActions();
 
