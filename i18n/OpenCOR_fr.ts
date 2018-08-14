@@ -25,6 +25,13 @@
     </message>
 </context>
 <context>
+    <name>GeneralPreferencesWidget</name>
+    <message>
+        <source>Style</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>&amp;File</source>
@@ -143,14 +150,6 @@
         <translation>Montrer/cacher toutes les fenêtres ancrées récentes/actuelles</translation>
     </message>
     <message>
-        <source>Check For Updates...</source>
-        <translation>Vérifier Pour Des Mises À Jour...</translation>
-    </message>
-    <message>
-        <source>Check for updates</source>
-        <translation>Vérifier pour des mises à jour</translation>
-    </message>
-    <message>
         <source>&amp;Preferences...</source>
         <translation>&amp;Préférences...</translation>
     </message>
@@ -161,6 +160,14 @@
     <message>
         <source>Preferences for OpenCOR and its plugins</source>
         <translation>Préférences pour OpenCOR et ses extensions</translation>
+    </message>
+    <message>
+        <source>Check For Updates...</source>
+        <translation>Vérifier Pour Des Mises À Jour...</translation>
+    </message>
+    <message>
+        <source>Check for updates</source>
+        <translation>Vérifier pour des mises à jour</translation>
     </message>
 </context>
 <context>
@@ -315,12 +322,16 @@
 <context>
     <name>OpenCOR::PreferencesDialog</name>
     <message>
+        <source>Reset</source>
+        <translation>Réinitialiser</translation>
+    </message>
+    <message>
         <source>Reset All</source>
         <translation>Tout Réinitialiser</translation>
     </message>
     <message>
-        <source>Reset Plugin</source>
-        <translation>Réinitialiser Extension</translation>
+        <source>General</source>
+        <translation>Général</translation>
     </message>
     <message>
         <source>%1.</source>

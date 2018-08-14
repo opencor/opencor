@@ -18,78 +18,65 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences interface
+// General preferences widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <QVariant>
-#include <QWidget>
+#include "preferencesinterface.h"
 
 //==============================================================================
 
-class QSettings;
+namespace Ui {
+    class GeneralPreferencesWidget;
+}   // namespace Ui
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Preferences {
 
 //==============================================================================
 
-static const auto GeneralPreferences = QStringLiteral("General");
+static const auto SettingsPreferencesStyle = QStringLiteral("Style");
 
 //==============================================================================
 
-class PreferencesWidget : public QWidget
+#if defined(Q_OS_WIN)
+    static const auto SettingsPreferencesStyleDefault = QStringLiteral("WindowsVista");
+#elif defined(Q_OS_LINUX)
+    static const auto SettingsPreferencesStyleDefault = QStringLiteral("Fusion");
+#elif defined(Q_OS_MAC)
+    static const auto SettingsPreferencesStyleDefault = QStringLiteral("Macintosh");
+#else
+    #error Unsupported platform
+#endif
+
+//==============================================================================
+
+class GeneralPreferencesWidget : public Preferences::PreferencesWidget
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesWidget(const QString &pName, QWidget *pParent);
-    ~PreferencesWidget() override;
+    explicit GeneralPreferencesWidget(QWidget *pParent);
+    ~GeneralPreferencesWidget() override;
 
-    virtual bool preferencesChanged() const = 0;
+    bool preferencesChanged() const override;
 
-    virtual void resetPreferences() = 0;
-    virtual void savePreferences() = 0;
+    void resetPreferences() override;
+    void savePreferences() override;
 
-protected:
-    QSettings *mSettings;
-};
+private:
+    Ui::GeneralPreferencesWidget *mGui;
 
-//==============================================================================
-
-}   // namespace Preferences
-
-//==============================================================================
-
-extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion();
-
-//==============================================================================
-
-class PreferencesInterface
-{
-public:
-    virtual ~PreferencesInterface();
-
-#define INTERFACE_DEFINITION
-    #include "preferencesinterface.inl"
-#undef INTERFACE_DEFINITION
-
-    static QVariant preference(const QString &pName, const QString &pKey,
-                               const QVariant &pDefaultValue = QVariant());
+    QString mStyle;
 };
 
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::PreferencesInterface, "OpenCOR::PreferencesInterface")
 
 //==============================================================================
 // End of file
