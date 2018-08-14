@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> Clang code model related cleaning up (see issue <a href=\"https://github.com/opencor/opencor/issues/1747\">#1747</a>). Allow the use of another Qt style (see issue <a href=\"https://github.com/opencor/opencor/issues/1761\">#1761</a>)." },
+                       { "change": "<strong>General:</strong> Clang code model related cleaning up (see issue <a href=\"https://github.com/opencor/opencor/issues/1747\">#1747</a>). Allow the use of another Qt style (see issue <a href=\"https://github.com/opencor/opencor/issues/1761\">#1761</a>). Improved HiDPI support (see issue <a href=\"https://github.com/opencor/opencor/issues/1763\">#1763</a>)." },
                        { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1743\">#1743</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.1.0h (see issue <a href=\"https://github.com/opencor/opencor/issues/1751\">#1751</a>). Renamed our BioSignalML plugin to libBioSignalML (see issue <a href=\"https://github.com/opencor/opencor/issues/1754\">#1754</a>)." }
                      ]
