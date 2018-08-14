@@ -261,6 +261,11 @@ TabBarWidget::TabBarWidget(QWidget *pParent) :
 #ifdef Q_OS_MAC
     setStyle(new TabBarStyle());
 #endif
+
+    // Force the size of the icons to be 16 by 16 pixels
+    // Note: this ensures that our icons have a decent size on HiDPI screens...
+
+    setIconSize(QSize(16, 16));
 }
 
 //==============================================================================

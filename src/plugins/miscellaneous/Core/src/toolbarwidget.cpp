@@ -51,6 +51,7 @@ ToolBarWidget::ToolBarWidget() :
                   "}");
 
     // Force the size of the icons to be 20 by 20 pixels
+    // Note: this ensures that our icons have a decent size on HiDPI screens...
 
     setIconSize(QSize(20, 20));
 }
