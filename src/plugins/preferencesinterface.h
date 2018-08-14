@@ -39,6 +39,10 @@ namespace Preferences {
 
 //==============================================================================
 
+static const auto SettingsPreferences = QStringLiteral("Preferences");
+
+//==============================================================================
+
 static const auto GeneralPreferences = QStringLiteral("General");
 
 //==============================================================================
