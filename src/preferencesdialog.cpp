@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cliutils.h"
+#include "generalpreferenceswidget.h"
 #include "guiutils.h"
 #include "pluginmanager.h"
 #include "preferencesdialog.h"
@@ -35,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QFormLayout>
 #include <QLabel>
+#include <QMainWindow>
 #include <QPushButton>
 #include <QStandardItemModel>
 
@@ -156,16 +158,16 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &PreferencesDialog::reject);
 
-    // Customise our GUI's button box by having both a reset plugin settings and
-    // reset all settings buttons
+    // Customise our GUI's button box by having both a reset and a reset all
+    // (settings) button
 
+    mResetButton = mGui->buttonBox->addButton(tr("Reset"), QDialogButtonBox::ActionRole);
     mResetAllButton = mGui->buttonBox->addButton(tr("Reset All"), QDialogButtonBox::ActionRole);
-    mResetPluginButton = mGui->buttonBox->addButton(tr("Reset Plugin"), QDialogButtonBox::ActionRole);
 
+    connect(mResetButton, &QPushButton::clicked,
+            this, &PreferencesDialog::reset);
     connect(mResetAllButton, &QPushButton::clicked,
             this, &PreferencesDialog::resetAll);
-    connect(mResetPluginButton, &QPushButton::clicked,
-            this, &PreferencesDialog::resetPlugin);
 
     // Create and add our plugin category widget
 
@@ -183,10 +185,21 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     mGui->treeView->setModel(mModel);
     mGui->treeView->setItemDelegate(new PreferencesItemDelegate(this));
 
+    // Populate the data model with our General section
+
+    QStandardItem *generalPluginItem = new QStandardItem(tr("General"));
+    QStandardItem *selectedPluginItem = generalPluginItem;
+
+    mModel->invisibleRootItem()->appendRow(generalPluginItem);
+
+    Preferences::PreferencesWidget *generalPreferencesWidget = new GeneralPreferencesWidget(mainWindow());
+
+    mGui->stackedWidget->addWidget(generalPreferencesWidget);
+
+    mItemPreferencesWidgets.insert(generalPluginItem, generalPreferencesWidget);
+
     // Populate the data model with our plugins that support the Preferences
     // interface
-
-    QStandardItem *selectedPluginItem = nullptr;
 
     foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
@@ -218,9 +231,9 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     // much width as necessary
     // Note: for some reasons, the retrieved column size gives us a width that
     //       is slightly too small and therefore requires a horizontal scroll
-    //       bar, hence we add 15% to it (those extra 15% seems to be enough
-    //       to account even for a big number of plugins which would then
-    //       require a vertical scroll bar)
+    //       bar, hence we add 15% to it (those extra 15% seem to be enough to
+    //       account even for a big number of plugins which would then require a
+    //       vertical scroll bar)
 
     mGui->treeView->expandAll();
     mGui->treeView->resizeColumnToContents(0);
@@ -242,15 +255,11 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     connect(mGui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &PreferencesDialog::updatePreferencesWidget);
 
-    // Select our first item or that of the given plugin, if any
+    // Select our selected item (!!)
 
-    if (selectedPluginItem) {
-        mGui->treeView->setCurrentIndex(selectedPluginItem->index());
+    mGui->treeView->setCurrentIndex(selectedPluginItem->index());
 
-        mGui->stackedWidget->currentWidget()->setFocus();
-    } else {
-        mGui->treeView->setCurrentIndex(mModel->invisibleRootItem()->child(0)->index());
-    }
+    mGui->stackedWidget->currentWidget()->setFocus();
 }
 
 //==============================================================================
@@ -327,8 +336,8 @@ void PreferencesDialog::treeViewCollapsed(const QModelIndex &pIndex)
 
 void PreferencesDialog::buttonBoxAccepted()
 {
-    // Save all of our plugins' preferences, if they have changed, and keep
-    // track of their name
+    // Save all of our general and plugins' preferences, if they have changed,
+    // and keep track of the plugins' name
 
     mPluginNames = QStringList();
 
@@ -336,7 +345,8 @@ void PreferencesDialog::buttonBoxAccepted()
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
-            mPluginNames << mPreferencesWidgetPluginNames.value(preferencesWidget);
+            if (mPreferencesWidgetPluginNames.contains(preferencesWidget))
+                mPluginNames << mPreferencesWidgetPluginNames.value(preferencesWidget);
         }
     }
 
@@ -352,24 +362,24 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 {
     Q_UNUSED(pOldIndex);
 
-    // Check whether we are dealing with a plugin category or a plugin's
-    // preferences
+    // Check whether we are dealing with a plugin category
 
     QStandardItem *item = mModel->itemFromIndex(pNewIndex);
     bool isPluginCategory = mCategoryItems.values().contains(item);
 
-    mResetPluginButton->setEnabled(!isPluginCategory);
+    mResetButton->setEnabled(!isPluginCategory);
 
     if (isPluginCategory) {
-        // We are dealing with a plugin category, so retrieve and set the name
-        // and description of the plugin
+        // We are dealing with a plugin category, so retrieve and set its name
+        // and description
 
         mPluginCategoryWidget->setCategory(item->text());
         mPluginCategoryWidget->setDescription(tr("%1.").arg(formatMessage(pluginCategoryDescription(mItemCategories.value(item)))));
 
         mGui->stackedWidget->setCurrentWidget(mPluginCategoryWidget);
     } else {
-        // We are dealing with a plugin's preferences, so show it
+        // We are dealing with our general or a plugin's preferences, so show
+        // them
 
         mGui->stackedWidget->setCurrentWidget(mItemPreferencesWidgets.value(item));
     }
@@ -390,21 +400,21 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
 //==============================================================================
 
-void PreferencesDialog::resetAll()
+void PreferencesDialog::reset()
 {
-    // Reset all of our plugins' preferences
+    // Reset all of our general / current plugin's preferences
 
-    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets)
-        preferencesWidget->resetPreferences();
+    static_cast<Preferences::PreferencesWidget *>(mGui->stackedWidget->currentWidget())->resetPreferences();
 }
 
 //==============================================================================
 
-void PreferencesDialog::resetPlugin()
+void PreferencesDialog::resetAll()
 {
-    // Reset all of the current plugin's preferences
+    // Reset all of our general and plugins' preferences
 
-    static_cast<Preferences::PreferencesWidget *>(mGui->stackedWidget->currentWidget())->resetPreferences();
+    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets)
+        preferencesWidget->resetPreferences();
 }
 
 //==============================================================================

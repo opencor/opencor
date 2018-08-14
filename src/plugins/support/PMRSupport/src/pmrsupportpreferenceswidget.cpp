@@ -100,13 +100,9 @@ void PmrSupportPreferencesWidget::resetPreferences()
 {
     // Reset our preferences
 
-    mPmrUrl = mGui->pmrUrlValue->itemText(0);
-    mName = QString();
-    mEmail = QString();
-
-    mGui->pmrUrlValue->setCurrentText(mPmrUrl);
-    mGui->nameValue->setText(mName);
-    mGui->emailValue->setText(mEmail);
+    mGui->pmrUrlValue->setCurrentText(SettingsPreferencesPmrUrlDefault);
+    mGui->nameValue->setText(QString());
+    mGui->emailValue->setText(QString());
 }
 
 //==============================================================================
@@ -115,13 +111,9 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-    mPmrUrl = mGui->pmrUrlValue->currentText();
-    mName = mGui->nameValue->text();
-    mEmail = mGui->emailValue->text();
-
-    mSettings->setValue(SettingsPreferencesPmrUrl, mPmrUrl);
-    mSettings->setValue(SettingsPreferencesName, mName);
-    mSettings->setValue(SettingsPreferencesEmail, mEmail);
+    mSettings->setValue(SettingsPreferencesPmrUrl, mGui->pmrUrlValue->currentText());
+    mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
+    mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
 }
 
 //==============================================================================

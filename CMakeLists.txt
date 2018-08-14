@@ -583,6 +583,7 @@ configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
 
 set(SOURCES
     src/checkforupdatesdialog.cpp
+    src/generalpreferenceswidget.cpp
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
@@ -613,6 +614,7 @@ set(SOURCES
 
 set(HEADERS_MOC
     src/checkforupdatesdialog.h
+    src/generalpreferenceswidget.h
     src/mainwindow.h
     src/pluginsdialog.h
     src/preferencesdialog.h
@@ -631,6 +633,7 @@ set(HEADERS_MOC
 
 set(UIS
     src/checkforupdatesdialog.ui
+    src/generalpreferenceswidget.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
     src/preferencesdialog.ui
@@ -686,6 +689,7 @@ endif()
 #       Core CLI/GUI utilities)...
 
 include_directories(
+    src
     src/misc
     src/plugins
     src/plugins/miscellaneous/Core/src

@@ -114,8 +114,8 @@ private:
 
     PreferencesPluginCategoryWidget *mPluginCategoryWidget;
 
+    QPushButton *mResetButton;
     QPushButton *mResetAllButton;
-    QPushButton *mResetPluginButton;
 
     QStringList mPluginNames;
 
@@ -129,8 +129,8 @@ private slots:
     void updatePreferencesWidget(const QModelIndex &pNewIndex,
                                  const QModelIndex &pOldIndex);
 
+    void reset();
     void resetAll();
-    void resetPlugin();
 };
 
 //==============================================================================

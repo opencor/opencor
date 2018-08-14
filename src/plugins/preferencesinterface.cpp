@@ -48,14 +48,16 @@ namespace Preferences {
 
 //==============================================================================
 
-PreferencesWidget::PreferencesWidget(const QString &pPluginName,
-                                     QWidget *pParent) :
+PreferencesWidget::PreferencesWidget(const QString &pName, QWidget *pParent) :
     QWidget(pParent)
 {
     mSettings = new QSettings();
 
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup(pPluginName);
+    if (pName.compare(GeneralPreferences)) {
+        mSettings->beginGroup(SettingsPlugins);
+        mSettings->beginGroup(pName);
+    }
+
     mSettings->beginGroup("Preferences");
 }
 
@@ -80,18 +82,21 @@ PreferencesInterface::~PreferencesInterface()
 
 //==============================================================================
 
-QVariant PreferencesInterface::preference(const QString &pPluginName,
+QVariant PreferencesInterface::preference(const QString &pName,
                                           const QString &pKey,
                                           const QVariant &pDefaultValue)
 {
-    // Retrieve the preference, which key is given, associated with the plugin,
-    // which name is given, and for which we have a given default value in case
-    // the preference doesn't exist
+    // Retrieve the preference, which key is given, associated with the given
+    // set of preferences, which name is given, and for which we have a given
+    // default value in case the preference doesn't exist
 
     QSettings settings;
 
-    settings.beginGroup(SettingsPlugins);
-    settings.beginGroup(pPluginName);
+    if (pName.compare(Preferences::GeneralPreferences)) {
+        settings.beginGroup(SettingsPlugins);
+        settings.beginGroup(pName);
+    }
+
     settings.beginGroup("Preferences");
 
     return settings.value(pKey, pDefaultValue);

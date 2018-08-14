@@ -18,78 +18,93 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences interface
+// General preferences widget
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include <QVariant>
-#include <QWidget>
+#include "generalpreferenceswidget.h"
 
 //==============================================================================
 
-class QSettings;
+#include "ui_generalpreferenceswidget.h"
+
+//==============================================================================
+
+#include <QApplication>
+#include <QSettings>
+#include <QStyleFactory>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Preferences {
 
 //==============================================================================
 
-static const auto GeneralPreferences = QStringLiteral("General");
-
-//==============================================================================
-
-class PreferencesWidget : public QWidget
+GeneralPreferencesWidget::GeneralPreferencesWidget(QWidget *pParent) :
+    Preferences::PreferencesWidget(Preferences::GeneralPreferences, pParent),
+    mGui(new Ui::GeneralPreferencesWidget)
 {
-    Q_OBJECT
+    // Set up the GUI
 
-public:
-    explicit PreferencesWidget(const QString &pName, QWidget *pParent);
-    ~PreferencesWidget() override;
+    mGui->setupUi(this);
 
-    virtual bool preferencesChanged() const = 0;
+    QStringList styles = QStyleFactory::keys();
 
-    virtual void resetPreferences() = 0;
-    virtual void savePreferences() = 0;
+    styles.sort();
 
-protected:
-    QSettings *mSettings;
-};
+    mGui->styleValue->addItems(styles);
 
-//==============================================================================
+    mStyle = mSettings->value(SettingsPreferencesStyle, SettingsPreferencesStyleDefault).toString();
 
-}   // namespace Preferences
+    mGui->styleValue->setCurrentText(mStyle);
+
+    setFocusProxy(mGui->styleValue);
+}
 
 //==============================================================================
 
-extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion();
-
-//==============================================================================
-
-class PreferencesInterface
+GeneralPreferencesWidget::~GeneralPreferencesWidget()
 {
-public:
-    virtual ~PreferencesInterface();
+    // Delete the GUI
 
-#define INTERFACE_DEFINITION
-    #include "preferencesinterface.inl"
-#undef INTERFACE_DEFINITION
+    delete mGui;
+}
 
-    static QVariant preference(const QString &pName, const QString &pKey,
-                               const QVariant &pDefaultValue = QVariant());
-};
+//==============================================================================
+
+bool GeneralPreferencesWidget::preferencesChanged() const
+{
+    // Return whether our preferences have changed
+
+    return mGui->styleValue->currentText().compare(mStyle);
+}
+
+//==============================================================================
+
+void GeneralPreferencesWidget::resetPreferences()
+{
+    // Reset our preferences
+
+    mGui->styleValue->setCurrentText(SettingsPreferencesStyleDefault);
+}
+
+//==============================================================================
+
+void GeneralPreferencesWidget::savePreferences()
+{
+    // Save our preferences
+
+    QString style = mGui->styleValue->currentText();
+
+    mSettings->setValue(SettingsPreferencesStyle, style);
+
+    // Update our style
+
+    QApplication::setStyle(style);
+}
 
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::PreferencesInterface, "OpenCOR::PreferencesInterface")
 
 //==============================================================================
 // End of file
