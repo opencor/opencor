@@ -21,7 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // GUI application
 //==============================================================================
 
+#include "generalpreferenceswidget.h"
 #include "guiapplication.h"
+#include "preferencesinterface.h"
 
 //==============================================================================
 
@@ -40,6 +42,12 @@ GuiApplication::GuiApplication(int &pArgC, char **pArgV) :
     mCanEmitFileOpenRequestSignal(false),
     mFileNamesOrOpencorUrls(QStringList())
 {
+    // Set our style
+
+    QApplication::setStyle(PreferencesInterface::preference(Preferences::GeneralPreferences,
+                                                            SettingsPreferencesStyle,
+                                                            SettingsPreferencesStyleDefault).toString());
+
     // Filter out OpenSSL warning messages
 
     QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
