@@ -7,11 +7,11 @@ set(PACKAGE_VERSION 1.1.0i)
 
 # Version of our library
 
-set(LIBRARY_VERSION 1.0.0)
+set(LIBRARY_VERSION 1.1)
 
 # Git tag for our library
 
-set(GIT_TAG opencor)
+set(GIT_TAG OpenSSL_1_1_0i)
 
 # Release tag
 
