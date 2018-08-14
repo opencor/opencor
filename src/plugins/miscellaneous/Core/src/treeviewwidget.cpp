@@ -52,6 +52,11 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
 #endif
     setFrameShape(QFrame::NoFrame);
     setItemDelegate(new StyledItemDelegate(this));
+
+    // Force the size of the icons to be 16 by 16 pixels
+    // Note: this ensures that our icons have a decent size on HiDPI screens...
+
+    setIconSize(QSize(16, 16));
 }
 
 //==============================================================================
