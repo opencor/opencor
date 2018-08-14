@@ -142,12 +142,9 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initPluginsPath(pArgC, pArgV);
 
-    // Create the GUI version of OpenCOR and make sure that it supports high DPI
+    // Create the GUI version of OpenCOR
 
     OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
-
-    guiApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-    guiApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR minus the first one since it corresponds to the full

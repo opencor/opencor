@@ -48,6 +48,11 @@ GuiApplication::GuiApplication(int &pArgC, char **pArgV) :
                                                             SettingsPreferencesStyle,
                                                             SettingsPreferencesStyleDefault).toString());
 
+    // Add support for HiDPI screens
+
+    setAttribute(Qt::AA_EnableHighDpiScaling);
+    setAttribute(Qt::AA_UseHighDpiPixmaps);
+
     // Filter out OpenSSL warning messages
 
     QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
