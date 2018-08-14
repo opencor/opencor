@@ -3,19 +3,23 @@ project(OpenSSLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME OpenSSL)
-set(PACKAGE_VERSION 1.1.0h)
+set(PACKAGE_VERSION 1.1.0i)
 
 # Version of our library
 
-set(LIBRARY_VERSION 1.0.0)
+if(WIN32)
+    set(LIBRARY_VERSION 1_1)
+else()
+    set(LIBRARY_VERSION 1.1)
+endif()
 
 # Git tag for our library
 
-set(GIT_TAG opencor)
+set(GIT_TAG OpenSSL_1_1_0i)
 
 # Release tag
 
-set(RELEASE_TAG OpenSSL_1_1_0h)
+set(RELEASE_TAG OpenSSL_1_1_0i)
 
 # Specify where our local package will be installed
 
@@ -24,11 +28,14 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 if(WIN32)
-    set(CRYPTO_SHARED_LIBRARY libeay32${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(CRYPTO_IMPORT_LIBRARY libeay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CRYPTO_SHARED_LIBRARY libcrypto-${LIBRARY_VERSION}-x64${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CRYPTO_IMPORT_LIBRARY libcrypto-${LIBRARY_VERSION}-x64${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    set(SSL_SHARED_LIBRARY ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(SSL_IMPORT_LIBRARY ssleay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(SSL_SHARED_LIBRARY libssl-${LIBRARY_VERSION}-x64${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(SSL_IMPORT_LIBRARY libssl-${LIBRARY_VERSION}-x64${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    set(REAL_CRYPTO_IMPORT_LIBRARY libcrypto${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(REAL_SSL_IMPORT_LIBRARY libssl${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
     set(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     set(CRYPTO_IMPORT_LIBRARY ${CRYPTO_SHARED_LIBRARY})
@@ -71,37 +78,37 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 25bcee0a629f4195114262d964e640f2e9fb6667
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1d4bc9a859e0ea17c24adb5490742ecda6a1ca4c
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 2db691e14fc5aad940c5a7a88165a756e14eb7b2
-                                              91bd0c116c6d5c42e2ac05b04903c86a5accbe82
-                                              aa0ec4cf292ccdfea01396829bee98b20a54b41a
-                                              251d5dd8b45d2b54101ed48f33a922e3c32cb73b)
+                                  SHA1_VALUES 1cf33672e5be0e7a1c2652159bd00ff299300071
+                                              c1d6cbf779f1326a007a244da83242b1fca1c2db
+                                              d38f812ed543811ea0a227ac34ff1c794de87a49
+                                              210f680fd7087cd587ced535edd7d6173cb536df)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 7ced79377e2bb4f6accd1d7e9601342a2c9da2fb
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0f2e500437ec698e37632a3c7c029f5b120056a0
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a121230d16f198a1a2bce4673235054fa6a602e9
-                                              10913b5d4895051e97b14e0e563080c827269adc
-                                              ef819da87657c13f197f3186cc80cb4063c06a55
-                                              3ab9bb6b42e56d10f80404855e99eaa305ba0a8c)
+                                  SHA1_VALUES 91191d36ca09df13d198bf1cf8a19dfa49ed6848
+                                              b014ceeb6a0c161b1e80118434d8d81d76f4b9d5
+                                              b7ef43215abd56a432b8e4f6e8ac328a26ac0b94
+                                              c4850b1636abb30ccfd0ecb8d2ba57ba52c63ad8)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a380ca2fd32d38ac3bf27bce5329b332c76152b6
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 2d8f3dd42cca6d3794ecb9358cf1a39b4e322365
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 6e5c212f7851d2c2ac47cda39ee23131dd25facf
-                                          5a1f579d9baf6541ff2478b170cdd125130f3b3a)
+                              SHA1_VALUES a57d74a680dd87a43b13b0393eac3ca73cbbcc7a
+                                          3405b68f6bfc8d92e3177ec404c2aae595a0e75a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 61dabb78530fd926ec2b41112368ad2d2788976e
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e1c53b7904170463c209c726ef9a4ea3658ffcfe
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES aacfd3b8e1a9baa08cf482d86e4fc83ce9085fe4
-                                          67c58e48c28cd02cf9e3c7030283c61f1b7487db)
+                              SHA1_VALUES beeb006c846ab315faa8f6e4ccd9e199a3752ba3
+                                          3d3581f21b601a643e53e7ba3285c051a32e013b)
     endif()
 else()
     # We require Perl to build OpenSSL
@@ -113,14 +120,13 @@ else()
     set(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}")
 
     if(WIN32)
+        list(APPEND CONFIG_OPTIONS no-asm)
+
         if(RELEASE_MODE)
             set(PLATFORM VC-WIN64A)
         else()
             set(PLATFORM debug-VC-WIN64A)
         endif()
-
-        set(MAKEFILE /f ms/ntdll.mak)
-        set(INSTALL_TARGET install)
     else()
         list(APPEND CONFIG_OPTIONS shared)
 
@@ -131,9 +137,6 @@ else()
 
             list(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         endif()
-
-        set(MAKEFILE -f Makefile)
-        set(INSTALL_TARGET install_sw)
     endif()
 
     # Build OpenSSL as an external project
@@ -157,9 +160,9 @@ else()
         CONFIGURE_COMMAND
             ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
         BUILD_COMMAND
-            ${MAKE_NMAKE_COMMAND} ${MAKEFILE}
+            ${MAKE_NMAKE_COMMAND}
         INSTALL_COMMAND
-            ${MAKE_NMAKE_COMMAND} ${MAKEFILE} ${INSTALL_TARGET}
+            ${MAKE_NMAKE_COMMAND} install_sw
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${CRYPTO_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SSL_IMPORT_LIBRARY}
@@ -168,19 +171,13 @@ else()
     # Do some post-processing that is specific to each platform
 
     if(WIN32)
-        # Windows requires an additional configuration step
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} postConfigure
-                                 COMMAND "ms/do_win64a"
-                                 WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
-                                 DEPENDEES configure
-                                 DEPENDERS build)
-
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDllsAndRenameLibs
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
+                                 COMMAND ${CMAKE_COMMAND} -E copy lib/${REAL_CRYPTO_IMPORT_LIBRARY} lib/${CRYPTO_IMPORT_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy lib/${REAL_SSL_IMPORT_LIBRARY} lib/${SSL_IMPORT_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     else()
