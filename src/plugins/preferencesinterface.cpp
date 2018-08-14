@@ -58,7 +58,7 @@ PreferencesWidget::PreferencesWidget(const QString &pName, QWidget *pParent) :
         mSettings->beginGroup(pName);
     }
 
-    mSettings->beginGroup("Preferences");
+    mSettings->beginGroup(SettingsPreferences);
 }
 
 //==============================================================================
@@ -97,7 +97,7 @@ QVariant PreferencesInterface::preference(const QString &pName,
         settings.beginGroup(pName);
     }
 
-    settings.beginGroup("Preferences");
+    settings.beginGroup(Preferences::SettingsPreferences);
 
     return settings.value(pKey, pDefaultValue);
 }
