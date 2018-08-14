@@ -7,7 +7,11 @@ set(PACKAGE_VERSION 1.1.0i)
 
 # Version of our library
 
-set(LIBRARY_VERSION 1.1)
+if(WIN32)
+    set(LIBRARY_VERSION 1_1)
+else()
+    set(LIBRARY_VERSION 1.1)
+endif()
 
 # Git tag for our library
 
@@ -24,11 +28,11 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 if(WIN32)
-    set(CRYPTO_SHARED_LIBRARY libeay32${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(CRYPTO_IMPORT_LIBRARY libeay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CRYPTO_SHARED_LIBRARY libcrypto-${LIBRARY_VERSION}-x64${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CRYPTO_IMPORT_LIBRARY libcrypto-${LIBRARY_VERSION}-x64${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    set(SSL_SHARED_LIBRARY ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(SSL_IMPORT_LIBRARY ssleay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(SSL_SHARED_LIBRARY libssl-${LIBRARY_VERSION}-x64${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(SSL_IMPORT_LIBRARY libssl-${LIBRARY_VERSION}-x64${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
     set(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     set(CRYPTO_IMPORT_LIBRARY ${CRYPTO_SHARED_LIBRARY})
@@ -113,14 +117,13 @@ else()
     set(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}")
 
     if(WIN32)
+        list(APPEND CONFIG_OPTIONS no-asm)
+
         if(RELEASE_MODE)
             set(PLATFORM VC-WIN64A)
         else()
             set(PLATFORM debug-VC-WIN64A)
         endif()
-
-        set(MAKEFILE /f ms/ntdll.mak)
-        set(INSTALL_TARGET install)
     else()
         list(APPEND CONFIG_OPTIONS shared)
 
@@ -131,9 +134,6 @@ else()
 
             list(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         endif()
-
-        set(MAKEFILE -f Makefile)
-        set(INSTALL_TARGET install_sw)
     endif()
 
     # Build OpenSSL as an external project
@@ -157,9 +157,9 @@ else()
         CONFIGURE_COMMAND
             ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
         BUILD_COMMAND
-            ${MAKE_NMAKE_COMMAND} ${MAKEFILE}
+            ${MAKE_NMAKE_COMMAND}
         INSTALL_COMMAND
-            ${MAKE_NMAKE_COMMAND} ${MAKEFILE} ${INSTALL_TARGET}
+            ${MAKE_NMAKE_COMMAND} install_sw
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${CRYPTO_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SSL_IMPORT_LIBRARY}
@@ -168,14 +168,6 @@ else()
     # Do some post-processing that is specific to each platform
 
     if(WIN32)
-        # Windows requires an additional configuration step
-
-        ExternalProject_Add_Step(${PACKAGE_BUILD} postConfigure
-                                 COMMAND "ms/do_win64a"
-                                 WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
-                                 DEPENDEES configure
-                                 DEPENDERS build)
-
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
