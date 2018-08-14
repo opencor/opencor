@@ -921,7 +921,7 @@ set(PLUGINS
     thirdParty/zlib
     thirdParty/OpenSSL
 
-   thirdParty/libgit2
+    thirdParty/libgit2
 )
 
 if(ENABLE_TEST_PLUGINS)
