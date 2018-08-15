@@ -117,26 +117,18 @@ else()
 
     # Set platform specific configuration options and tool names
 
-    set(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}")
+    set(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} no-asm no-tests")
 
     if(WIN32)
-        list(APPEND CONFIG_OPTIONS no-asm)
-
         if(RELEASE_MODE)
             set(PLATFORM VC-WIN64A)
         else()
             set(PLATFORM debug-VC-WIN64A)
         endif()
+
+        set(CONFIGURE_COMMAND ${PERL_EXECUTABLE} Configure ${PLATFORM} ${CONFIG_OPTIONS})
     else()
-        list(APPEND CONFIG_OPTIONS shared)
-
-        if(APPLE)
-            set(PLATFORM darwin64-x86_64-cc)
-        else()
-            set(PLATFORM linux-x86_64)
-
-            list(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
-        endif()
+        set(CONFIGURE_COMMAND ./config ${CONFIG_OPTIONS})
     endif()
 
     # Build OpenSSL as an external project
@@ -158,7 +150,7 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${PERL_EXECUTABLE} ./Configure ${PLATFORM} ${CONFIG_OPTIONS}
+            ${CONFIGURE_COMMAND}
         BUILD_COMMAND
             ${MAKE_NMAKE_COMMAND}
         INSTALL_COMMAND
