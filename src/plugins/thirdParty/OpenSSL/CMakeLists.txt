@@ -148,7 +148,7 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${PERL_EXECUTABLE} Configure ${PLATFORM} --prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} no-asm no-tests
+            ${PERL_EXECUTABLE} Configure ${PLATFORM} --prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} no-asm
         BUILD_COMMAND
             ${MAKE_NMAKE_COMMAND}
         INSTALL_COMMAND
