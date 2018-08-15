@@ -115,9 +115,7 @@ else()
 
     find_package(Perl REQUIRED QUIET)
 
-    # Set platform specific configuration options and tool names
-
-    set(CONFIG_OPTIONS "--prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} no-asm no-tests")
+    # Specify the platform on which we want to build OpenSSL
 
     if(WIN32)
         if(RELEASE_MODE)
@@ -125,10 +123,10 @@ else()
         else()
             set(PLATFORM debug-VC-WIN64A)
         endif()
-
-        set(CONFIGURE_COMMAND ${PERL_EXECUTABLE} Configure ${PLATFORM} ${CONFIG_OPTIONS})
+    elseif(APPLE)
+        set(PLATFORM darwin64-x86_64-cc)
     else()
-        set(CONFIGURE_COMMAND ./config ${CONFIG_OPTIONS})
+        set(PLATFORM linux-x86_64)
     endif()
 
     # Build OpenSSL as an external project
@@ -150,7 +148,7 @@ else()
         GIT_TAG
             ${GIT_TAG}
         CONFIGURE_COMMAND
-            ${CONFIGURE_COMMAND}
+            ${PERL_EXECUTABLE} Configure ${PLATFORM} --prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} no-asm no-tests
         BUILD_COMMAND
             ${MAKE_NMAKE_COMMAND}
         INSTALL_COMMAND
