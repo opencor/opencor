@@ -119,10 +119,11 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
         string(REGEX REPLACE "${REMOTE_EXTERNAL_PACKAGE_DIR}/ext" "${LOCAL_EXTERNAL_PACKAGE_DIR}"
                LIB_DIRNAME "${LIB_DIRNAME}")
 
-        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIB_DIRNAME}/${CRYPTO_IMPORT_LIBRARY}
-                                                         ${LIB_DIRNAME}/${EXPECTED_CRYPTO_IMPORT_LIBRARY}
-                        COMMAND ${CMAKE_COMMAND} -E copy ${LIB_DIRNAME}/${SSL_IMPORT_LIBRARY}
-                                                         ${LIB_DIRNAME}/${EXPECTED_SSL_IMPORT_LIBRARY})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${CRYPTO_IMPORT_LIBRARY}
+                                                         ${EXPECTED_CRYPTO_IMPORT_LIBRARY}
+                        COMMAND ${CMAKE_COMMAND} -E copy ${SSL_IMPORT_LIBRARY}
+                                                         ${EXPECTED_SSL_IMPORT_LIBRARY}
+                        WORKING_DIRECTORY ${LIB_DIRNAME})
     endif()
 else()
     # We require Perl to build OpenSSL
