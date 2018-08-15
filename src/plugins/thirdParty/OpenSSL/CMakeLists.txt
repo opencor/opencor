@@ -110,6 +110,20 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                               SHA1_VALUES c34251763d15bea1ba9b52caaddad3d723654536
                                           39dd38510c4a2849c2995edc76b8c2d57a693b00)
     endif()
+
+    # On Windows, we need to duplicate our import libraries
+
+    if(WIN32)
+        set(LIB_DIRNAME ${CMAKE_SOURCE_DIR}/${RELATIVE_PROJECT_SOURCE_DIR}/ext/lib)
+
+        string(REGEX REPLACE "${REMOTE_EXTERNAL_PACKAGE_DIR}/ext" "${LOCAL_EXTERNAL_PACKAGE_DIR}"
+               LIB_DIRNAME "${LIB_DIRNAME}")
+
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${LIB_DIRNAME}/${CRYPTO_IMPORT_LIBRARY}
+                                                         ${LIB_DIRNAME}/${EXPECTED_CRYPTO_IMPORT_LIBRARY}
+                        COMMAND ${CMAKE_COMMAND} -E copy ${LIB_DIRNAME}/${SSL_IMPORT_LIBRARY}
+                                                         ${LIB_DIRNAME}/${EXPECTED_SSL_IMPORT_LIBRARY})
+    endif()
 else()
     # We require Perl to build OpenSSL
 
@@ -163,7 +177,7 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDllsAndRenameLibs
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDllsAndDuplicateLibs
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy lib/${CRYPTO_IMPORT_LIBRARY} lib/${EXPECTED_CRYPTO_IMPORT_LIBRARY}
