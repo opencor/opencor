@@ -13,6 +13,25 @@ endmacro()
 
 #===============================================================================
 
+macro(track_project_files PROJECT_TARGET)
+    # Keep track of the given files and associate them with the given project
+
+    set(TRACK_TARGET "TRACK_${PROJECT_TARGET}_FILES")
+    set(BYPRODUCTS)
+
+    foreach(FILENAME ${ARGN})
+        list(APPEND BYPRODUCTS ${FILENAME})
+    endforeach()
+
+    add_custom_target(${TRACK_TARGET}
+                      COMMAND ${CMAKE_COMMAND} -E sleep 0
+                      BYPRODUCTS ${BYPRODUCTS})
+
+    add_dependencies(${PROJECT_TARGET} ${TRACK_TARGET})
+endmacro()
+
+#===============================================================================
+
 macro(update_language_files TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files, which will later on be embedded in the project
