@@ -111,7 +111,7 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                                           39dd38510c4a2849c2995edc76b8c2d57a693b00)
     endif()
 
-    # On Windows, we need to duplicate our import libraries
+    # On Windows, we also need to duplicate our import libraries
 
     if(WIN32)
         set(LIB_DIRNAME ${CMAKE_SOURCE_DIR}/${RELATIVE_PROJECT_SOURCE_DIR}/ext/lib)
