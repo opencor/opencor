@@ -119,6 +119,14 @@ else()
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
 
+    # Track our shared library
+    # Note: this can be useful when building all of OpenCOR, including
+    #       libgit2...
+
+    track_project_files(${PACKAGE_BUILD}
+        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SHARED_LIBRARY}
+    )
+
     # Do some post-processing that is specific to each platform
 
     if(WIN32)
