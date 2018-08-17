@@ -176,15 +176,6 @@ else()
             <INSTALL_DIR>/lib/${EXPECTED_SSL_IMPORT_LIBRARY}
     )
 
-    # Track our shared libraries
-    # Note: this can be useful when building all of OpenCOR, including
-    #       OpenSSL...
-
-    track_project_files(${PACKAGE_BUILD}
-        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${CRYPTO_SHARED_LIBRARY}
-        ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/lib/${SSL_SHARED_LIBRARY}
-    )
-
     # Do some post-processing that is specific to each platform
 
     if(WIN32)
