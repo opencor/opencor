@@ -7,11 +7,7 @@ set(PACKAGE_VERSION 1.0.2p)
 
 # Version of our library
 
-if(WIN32)
-    set(LIBRARY_VERSION 1_0)
-else()
-    set(LIBRARY_VERSION 1.0.0)
-endif()
+set(LIBRARY_VERSION 1.0.0)
 
 # Git tag for our library
 
@@ -28,23 +24,17 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 # Name of our package's shared libraries (and of their import libraries, if any)
 
 if(WIN32)
-    set(CRYPTO_SHARED_LIBRARY libcrypto-${LIBRARY_VERSION}-x64${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(CRYPTO_IMPORT_LIBRARY libcrypto${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(CRYPTO_SHARED_LIBRARY libeay32${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(CRYPTO_IMPORT_LIBRARY libeay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
-    set(SSL_SHARED_LIBRARY libssl-${LIBRARY_VERSION}-x64${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(SSL_IMPORT_LIBRARY libssl${CMAKE_IMPORT_LIBRARY_SUFFIX})
-
-    set(EXPECTED_CRYPTO_IMPORT_LIBRARY libcrypto-${LIBRARY_VERSION}-x64${CMAKE_IMPORT_LIBRARY_SUFFIX})
-    set(EXPECTED_SSL_IMPORT_LIBRARY libssl-${LIBRARY_VERSION}-x64${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    set(SSL_SHARED_LIBRARY ssleay32${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(SSL_IMPORT_LIBRARY ssleay32${CMAKE_IMPORT_LIBRARY_SUFFIX})
 else()
     set(CRYPTO_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}crypto${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     set(CRYPTO_IMPORT_LIBRARY ${CRYPTO_SHARED_LIBRARY})
 
     set(SSL_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}ssl${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     set(SSL_IMPORT_LIBRARY ${SSL_SHARED_LIBRARY})
-
-    set(EXPECTED_CRYPTO_IMPORT_LIBRARY ${CRYPTO_IMPORT_LIBRARY})
-    set(EXPECTED_SSL_IMPORT_LIBRARY ${SSL_IMPORT_LIBRARY})
 endif()
 
 # Retrieve our package's binaries
@@ -113,21 +103,6 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                               SHA1_VALUES c34251763d15bea1ba9b52caaddad3d723654536
                                           39dd38510c4a2849c2995edc76b8c2d57a693b00)
     endif()
-
-    # On Windows, we also need to duplicate our import libraries
-
-    if(WIN32)
-        set(LIB_DIRNAME ${CMAKE_SOURCE_DIR}/${RELATIVE_PROJECT_SOURCE_DIR}/ext/lib)
-
-        string(REGEX REPLACE "${REMOTE_EXTERNAL_PACKAGE_DIR}/ext" "${LOCAL_EXTERNAL_PACKAGE_DIR}"
-               LIB_DIRNAME "${LIB_DIRNAME}")
-
-        execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${CRYPTO_IMPORT_LIBRARY}
-                                                         ${EXPECTED_CRYPTO_IMPORT_LIBRARY}
-                        COMMAND ${CMAKE_COMMAND} -E copy ${SSL_IMPORT_LIBRARY}
-                                                         ${EXPECTED_SSL_IMPORT_LIBRARY}
-                        WORKING_DIRECTORY ${LIB_DIRNAME})
-    endif()
 else()
     # We require Perl to build OpenSSL
 
@@ -143,6 +118,9 @@ else()
         else()
             set(PLATFORM debug-VC-WIN64A)
         endif()
+
+        set(MAKEFILE /f ms/ntdll.mak)
+        set(INSTALL_TARGET install)
     else()
         list(APPEND CONFIG_OPTIONS shared)
 
@@ -151,6 +129,9 @@ else()
         else()
             set(PLATFORM linux-x86_64)
         endif()
+
+        set(MAKEFILE -f Makefile)
+        set(INSTALL_TARGET install_sw)
     endif()
 
     # Build OpenSSL as an external project
@@ -174,12 +155,12 @@ else()
         CONFIGURE_COMMAND
             ${PERL_EXECUTABLE} Configure ${PLATFORM} ${CONFIG_OPTIONS}
         BUILD_COMMAND
-            ${MAKE_NMAKE_COMMAND}
+            ${MAKE_NMAKE_COMMAND} ${MAKEFILE}
         INSTALL_COMMAND
-            ${MAKE_NMAKE_COMMAND} install_sw
+            ${MAKE_NMAKE_COMMAND} ${MAKEFILE} ${INSTALL_TARGET}
         BUILD_BYPRODUCTS
-            <INSTALL_DIR>/lib/${EXPECTED_CRYPTO_IMPORT_LIBRARY}
-            <INSTALL_DIR>/lib/${EXPECTED_SSL_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${CRYPTO_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${SSL_IMPORT_LIBRARY}
     )
 
     # Do some post-processing that is specific to each platform
@@ -187,11 +168,9 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDllsAndDuplicateLibs
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
-                                 COMMAND ${CMAKE_COMMAND} -E copy lib/${CRYPTO_IMPORT_LIBRARY} lib/${EXPECTED_CRYPTO_IMPORT_LIBRARY}
-                                 COMMAND ${CMAKE_COMMAND} -E copy lib/${SSL_IMPORT_LIBRARY} lib/${EXPECTED_SSL_IMPORT_LIBRARY}
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}
                                  DEPENDEES install)
     else()
