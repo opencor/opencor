@@ -166,6 +166,14 @@ else()
     # Do some post-processing that is specific to each platform
 
     if(WIN32)
+        # Windows requires an additional configuration step
+
+         ExternalProject_Add_Step(${PACKAGE_BUILD} postConfigure
+                                 COMMAND "ms/do_win64a"
+                                 WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
+                                 DEPENDEES configure
+                                 DEPENDERS build)
+
         # We want both our shared and import libraries to be in the same place
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} copyDlls
