@@ -110,7 +110,7 @@ else()
 
     # Set platform specific configuration options
 
-    set(CONFIG_OPTIONS --prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} no-asm)
+    set(CONFIG_OPTIONS --prefix=${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
 
     if(WIN32)
         if(RELEASE_MODE)
@@ -128,6 +128,8 @@ else()
             set(PLATFORM darwin64-x86_64-cc)
         else()
             set(PLATFORM linux-x86_64)
+
+            list(APPEND CONFIG_OPTIONS "-Wa,--noexecstack")
         endif()
 
         set(MAKEFILE -f Makefile)
@@ -168,7 +170,7 @@ else()
     if(WIN32)
         # Windows requires an additional configuration step
 
-         ExternalProject_Add_Step(${PACKAGE_BUILD} postConfigure
+        ExternalProject_Add_Step(${PACKAGE_BUILD} postConfigure
                                  COMMAND "ms/do_win64a"
                                  WORKING_DIRECTORY ${PACKAGE_BUILD_DIR}
                                  DEPENDEES configure
