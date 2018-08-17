@@ -71,22 +71,22 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1b97db1091d7699d4ac3b656ba5ce3ba3961bb81
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} fba9fda0727c803efe0df4a376fff0644264399c
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES aba5c9adf42bad05e7e8a76558a2b7b5ac05bb4f
-                                              b0f218e15d3f9aca013a006834664d318c0f8960
-                                              d5eec2035013edc06ffd6ebab8d1becea35bf8ad
-                                              9a77c75aac1e4dd115ac6f029454ffe7c42e1eb9)
+                                  SHA1_VALUES 85c5aa8ce1eda4d2618311237284a963ff86225b
+                                              f6cdcffb9c4ab0bd333dadca271b379a1eb14a7d
+                                              4ad542700d87ec983676ebf841f4b182da5b3017
+                                              1e2d6bba3b40d163835194e70f4806dd388b8828)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 813a5b02df7fa00f5825795c5b1fdea05fe0f22e
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 86fa98b18b6ec10e98309a92cdecd8a7cfa8fbfb
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 179a66f1ad664fdd20ec72e21a45d2b0c2b0c959
-                                              fb3460d29d88e2b325e109786f0336858dd00877
-                                              77e10bfe069541e85c99785c6e1d653d75e1f339
-                                              c333e0589970a2475acb944ae076bfc9aecb0fa4)
+                                  SHA1_VALUES 4762bd22ad7a82650b55c98e29fe5bed4d596f02
+                                              5501820a30ce36c8434ed4f76e91e9048f2b8b2c
+                                              5345acc21eb20d7cdc2c2a3b0b4e608017c18418
+                                              e23e8edd7b3586749bf455b92882c077b1b6e12a)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
