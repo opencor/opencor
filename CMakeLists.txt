@@ -563,8 +563,10 @@ set(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
 file(WRITE ${SOURCE_DIRECTORY_FILENAME} "${CMAKE_SOURCE_DIR}")
 file(WRITE ${BUILD_DIRECTORY_FILENAME} "${PROJECT_BUILD_DIR}")
 
-keep_track_of_file(${SOURCE_DIRECTORY_FILENAME})
-keep_track_of_file(${BUILD_DIRECTORY_FILENAME})
+track_files(
+    ${SOURCE_DIRECTORY_FILENAME}
+    ${BUILD_DIRECTORY_FILENAME}
+)
 
 # Version/snapshot of OpenCOR
 
@@ -586,7 +588,7 @@ set(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
 
 file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
-keep_track_of_file(${VERSION_DATE_FILENAME})
+track_files(${VERSION_DATE_FILENAME})
 
 # Configure our QRC files
 
@@ -770,7 +772,7 @@ if(ENABLE_TESTS)
 
     file(WRITE ${TESTS_LIST_FILENAME})
 
-    keep_track_of_file(${TESTS_LIST_FILENAME})
+    track_files(${TESTS_LIST_FILENAME})
 
     # Destination tests directory
     # Note: DEST_TESTS_DIR isn't only used here, but also in our add_plugin()

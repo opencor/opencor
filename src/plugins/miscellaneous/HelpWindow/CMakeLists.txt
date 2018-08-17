@@ -11,8 +11,10 @@ add_custom_command(TARGET GenerateQtHelpFiles
                            ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
                                                               -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
-keep_track_of_file(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qch)
-keep_track_of_file(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
+track_files(
+    ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qch
+    ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc
+)
 
 # Add the plugin
 

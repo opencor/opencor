@@ -1,12 +1,14 @@
-macro(keep_track_of_file FILE_NAME)
-    # Keep track of the given file
+macro(track_files)
+    # Keep track of the given files
     # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
     #       and then used to build other files. Now, the 'problem' is that
     #       Ninja needs to know about those files (see CMake policy CMP0058),
     #       which we ensure it does through the below...
 
-    add_custom_command(OUTPUT ${FILE_NAME}
-                       COMMAND ${CMAKE_COMMAND} -E sleep 0)
+    foreach(FILENAME ${ARGN})
+        add_custom_command(OUTPUT ${FILENAME}
+                           COMMAND ${CMAKE_COMMAND} -E sleep 0)
+    endforeach()
 endmacro()
 
 #===============================================================================
@@ -36,7 +38,7 @@ macro(update_language_files TARGET_NAME)
                                                           -qm ${QM_FILE}
                             OUTPUT_QUIET)
 
-            keep_track_of_file(${QM_FILE})
+            track_files(${QM_FILE})
         endif()
     endforeach()
 endmacro()
