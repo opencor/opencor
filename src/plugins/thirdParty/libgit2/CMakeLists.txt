@@ -82,16 +82,16 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a697fdc8efffecfd518820c0b77a54466cac6b4f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 40335cc68e0e0b213de883f04089d8993371f85e
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3a762e29621d390420cdf36a6a7b86d81870e560)
+                              SHA1_VALUES 9d7a89b3ce8611828c4ca5704a8c795e90843f43)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f08e454a9d5f63c8a0ea92b1598484bb6235e32a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c612e2b577ec7b588bb11cc2758846aecb2afed9
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 5d101d259d57ad2c6dd2b0bf783912eedbbba425)
+                              SHA1_VALUES 848bc303d3c809b0731e0c7fdd10d5cf2cdbc39c)
     endif()
 else()
     # Ignore some warnings
