@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfileruntime.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
-#include "graphpanelwidget.h"
 #include "i18ninterface.h"
 #include "preferencesinterface.h"
 #include "sedmlsupport.h"
@@ -282,7 +281,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 //==============================================================================
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                              bool pActive)
+                                                                              const GraphPanelWidget::GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
+                                                                              bool pActive,
+                                                                              bool pCustomize)
 {
     // Retrieve the graph panel and graphs property editors for the given file
     // name or create some, if none exists
@@ -309,19 +310,16 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
         mGraphPanelPropertyEditors.insert(pGraphPanel, mGraphPanelPropertyEditor);
         mGraphsPropertyEditors.insert(pGraphPanel, mGraphsPropertyEditor);
 
-        // Customise our corresponding graph panel with our preferences
+        // Customise our corresponding graph panel with our preferences, if
+        // required
 
-        GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = pGraphPanel->plot();
+        if (pCustomize) {
+            GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = pGraphPanel->plot();
 
-        graphPanelPlot->setBackgroundColor(PreferencesInterface::preference(PluginName,
-                                                                            SettingsPreferencesGraphPanelBackgroundColor,
-                                                                            SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>());
-        graphPanelPlot->setForegroundColor(PreferencesInterface::preference(PluginName,
-                                                                            SettingsPreferencesGraphPanelForegroundColor,
-                                                                            SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>());
-        graphPanelPlot->setTitle(PreferencesInterface::preference(PluginName,
-                                                                  SettingsPreferencesGraphPanelTitle,
-                                                                  SettingsPreferencesGraphPanelTitleDefault).toString());
+            graphPanelPlot->setBackgroundColor(pGraphPanelWidgetProperties.backgroundColor());
+            graphPanelPlot->setForegroundColor(pGraphPanelWidgetProperties.foregroundColor());
+            graphPanelPlot->setTitle(pGraphPanelWidgetProperties.title());
+        }
 
         // Populate our graph panel property editor
 
@@ -400,11 +398,22 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                              const GraphPanelWidget::GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
+                                                                              bool pActive)
+{
+    // Initialise the given graph panel
+
+    initialize(pGraphPanel, pGraphPanelWidgetProperties, pActive, true);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // Initialise the given graph panel
 
-    initialize(pGraphPanel, true);
+    initialize(pGraphPanel, GraphPanelWidget::GraphPanelWidgetProperties(), true, false);
 }
 
 //==============================================================================
@@ -924,6 +933,23 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::reinitialize(
 
     finalize(pGraphPanel);
     initialize(pGraphPanel);
+}
+
+//==============================================================================
+
+GraphPanelWidget::GraphPanelWidgetProperties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties()
+{
+    // Return our default graph panel properties
+
+    return GraphPanelWidget::GraphPanelWidgetProperties(PreferencesInterface::preference(PluginName,
+                                                                                         SettingsPreferencesGraphPanelBackgroundColor,
+                                                                                         SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>(),
+                                                        PreferencesInterface::preference(PluginName,
+                                                                                         SettingsPreferencesGraphPanelForegroundColor,
+                                                                                         SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>(),
+                                                        PreferencesInterface::preference(PluginName,
+                                                                                         SettingsPreferencesGraphPanelTitle,
+                                                                                         SettingsPreferencesGraphPanelTitleDefault).toString());
 }
 
 //==============================================================================

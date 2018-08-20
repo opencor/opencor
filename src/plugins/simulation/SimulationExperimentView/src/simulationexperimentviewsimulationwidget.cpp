@@ -398,7 +398,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     SimulationExperimentViewInformationGraphPanelAndGraphsWidget *graphPanelAndGraphsWidget = informationWidget->graphPanelAndGraphsWidget();
 
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelAdded,
-            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *, bool>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
+            graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *, const GraphPanelWidget::GraphPanelWidgetProperties &, bool>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize));
     connect(graphPanelsWidget, &GraphPanelWidget::GraphPanelsWidget::graphPanelRemoved,
             graphPanelAndGraphsWidget, QOverload<GraphPanelWidget::GraphPanelWidget *>::of(&SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize));
 
@@ -1027,7 +1027,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 informationWidget->graphPanelAndGraphsWidget()->initialize(mSimulation);
             mCanUpdatePlotsForUpdatedGraphs = true;
 
-            mContentsWidget->graphPanelsWidget()->initialize();
+            mContentsWidget->graphPanelsWidget()->initialize(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
 
             // Initialise our simulation
 
@@ -1421,7 +1421,7 @@ void SimulationExperimentViewSimulationWidget::addGraphPanel()
 {
     // Ask our graph panels widget to add a new graph panel
 
-    mContentsWidget->graphPanelsWidget()->addGraphPanel();
+    mContentsWidget->graphPanelsWidget()->addGraphPanel(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
 }
 
 //==============================================================================
@@ -1440,7 +1440,7 @@ void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
 {
     // Ask our graph panels widget to remove the current graph panel
 
-    if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel()) {
+    if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties())) {
         processEvents();
         // Note: this ensures that our remaining graph panels get realigned at
         //       once...
@@ -1453,7 +1453,7 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 {
     // Ask our graph panels widget to remove the current graph panel
 
-    mContentsWidget->graphPanelsWidget()->removeAllGraphPanels();
+    mContentsWidget->graphPanelsWidget()->removeAllGraphPanels(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
 }
 
 //==============================================================================
@@ -2724,15 +2724,17 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
-    graphPanelsWidget->removeAllGraphPanels();
+    graphPanelsWidget->removeAllGraphPanels(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
 
     // Add some graph panels, so that their number corresponds to the number of
     // 2D outputs mentioned in the SED-ML file
 
     int newNbOfGraphPanels = int(sedmlDocument->getNumOutputs());
 
-    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels)
-        graphPanelsWidget->addGraphPanel(false);
+    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels) {
+        graphPanelsWidget->addGraphPanel(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties(),
+                                         false);
+    }
 
     // Customise our graph panel and graphs
 
