@@ -2950,16 +2950,16 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 return false;
             }
 
-            bool selected = GraphPanelWidget::DefaultSelected;
-            QString title = GraphPanelWidget::DefaultTitle;
-            Qt::PenStyle lineStyle = GraphPanelWidget::DefaultLineStyle;
-            int lineWidth = GraphPanelWidget::DefaultLineWidth;
-            QColor lineColor = GraphPanelWidget::DefaultLineColor;
-            QwtSymbol::Style symbolStyle = GraphPanelWidget::DefaultSymbolStyle;
-            int symbolSize = GraphPanelWidget::DefaultSymbolSize;
-            QColor symbolColor = GraphPanelWidget::DefaultSymbolColor;
-            bool symbolFilled = GraphPanelWidget::DefaultSymbolFilled;
-            QColor symbolFillColor = GraphPanelWidget::DefaultSymbolFillColor;
+            bool selected = GraphPanelWidget::DefaultGraphSelected;
+            QString title = GraphPanelWidget::DefaultGraphTitle;
+            Qt::PenStyle lineStyle = GraphPanelWidget::DefaultGraphLineStyle;
+            int lineWidth = GraphPanelWidget::DefaultGraphLineWidth;
+            QColor lineColor = GraphPanelWidget::DefaultGraphLineColor;
+            QwtSymbol::Style symbolStyle = GraphPanelWidget::DefaultGraphSymbolStyle;
+            int symbolSize = GraphPanelWidget::DefaultGraphSymbolSize;
+            QColor symbolColor = GraphPanelWidget::DefaultGraphSymbolColor;
+            bool symbolFilled = GraphPanelWidget::DefaultGraphSymbolFilled;
+            QColor symbolFillColor = GraphPanelWidget::DefaultGraphSymbolFillColor;
 
             annotation = sedmlCurve->getAnnotation();
 
