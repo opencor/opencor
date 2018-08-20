@@ -276,7 +276,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(QMargins());
 
     setLayout(layout);
 
