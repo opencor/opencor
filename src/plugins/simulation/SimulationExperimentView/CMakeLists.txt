@@ -29,6 +29,7 @@ add_plugin(SimulationExperimentView
         ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
+        ../../preferencesinterface.h
         ../../solverinterface.h
 
         src/simulationexperimentviewcontentswidget.h
