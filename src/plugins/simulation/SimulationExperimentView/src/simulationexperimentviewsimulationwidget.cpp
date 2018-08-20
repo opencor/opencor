@@ -176,6 +176,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                            nullptr;
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
+    mPreferencesAction = Core::newAction(QIcon(":/oxygen/categories/preferences-system.png"),
+                                         mToolBarWidget);
 
     mCellmlOpenAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CellmlFile);
     mSedmlExportAction->setEnabled(mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive);
@@ -214,6 +216,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
         connect(mSedmlExportCombineArchiveAction, &QAction::triggered,
                 this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive));
     }
+
+    connect(mPreferencesAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::preferences);
 
     // Enable/disable our development mode action depending on whether our file
     // is readable/writable and of CellML type
@@ -346,6 +351,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(simulationResultsExportToolButton);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mPreferencesAction);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -2273,6 +2280,15 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive()
     // Export the simulation to a COMBINE archive
 
     sedmlExportCombineArchive(QString());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::preferences()
+{
+    // Show our preferences
+
+    QDesktopServices::openUrl(QUrl("opencor://openPreferencesDialog/SimulationExperimentView"));
 }
 
 //==============================================================================

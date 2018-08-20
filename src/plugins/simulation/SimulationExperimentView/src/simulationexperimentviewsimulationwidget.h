@@ -195,6 +195,7 @@ private:
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
     QAction *mSimulationResultsExportAction;
+    QAction *mPreferencesAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
@@ -319,6 +320,7 @@ private slots:
     void clearSimulationResults();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
+    void preferences();
 
     void emitSplitterMoved();
 

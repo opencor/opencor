@@ -332,6 +332,17 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewPreferencesWidget</name>
+    <message>
+        <source>Graph Panel</source>
+        <translation>Panneau Graphique</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Graphe</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationWidget</name>
     <message>
         <source>Run Simulation</source>

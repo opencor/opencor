@@ -18,61 +18,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Simulation Experiment view plugin
+// Simulation Experiment view preferences widget
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "filehandlinginterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
 #include "preferencesinterface.h"
-#include "viewinterface.h"
+
+//==============================================================================
+
+namespace Ui {
+    class SimulationExperimentViewPreferencesWidget;
+}   // namespace Ui
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TabBarWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace SimulationExperimentView {
 
 //==============================================================================
 
-PLUGININFO_FUNC SimulationExperimentViewPluginInfo();
+static const auto PluginName = QStringLiteral("SimulationExperimentView");
 
 //==============================================================================
 
-class SimulationExperimentViewWidget;
-
-//==============================================================================
-
-class SimulationExperimentViewPlugin : public QObject,
-                                       public FileHandlingInterface,
-                                       public I18nInterface,
-                                       public PluginInterface,
-                                       public PreferencesInterface,
-                                       public ViewInterface
+class SimulationExperimentViewPreferencesWidget : public Preferences::PreferencesWidget
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SimulationExperimentViewPlugin" FILE "simulationexperimentviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::PreferencesInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
 public:
-#include "filehandlinginterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "preferencesinterface.inl"
-#include "viewinterface.inl"
+    explicit SimulationExperimentViewPreferencesWidget(QWidget *pParent);
+    ~SimulationExperimentViewPreferencesWidget() override;
+
+    bool preferencesChanged() const override;
+
+    void resetPreferences() override;
+    void savePreferences() override;
 
 private:
-    SimulationExperimentViewWidget *mViewWidget;
+    Ui::SimulationExperimentViewPreferencesWidget *mGui;
+
+    Core::TabBarWidget *mCategoryTabs;
+
+     void updateGui();
 };
 
 //==============================================================================
