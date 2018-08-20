@@ -40,6 +40,8 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
+    class BorderedWidget;
+    class PropertyEditorWidget;
     class TabBarWidget;
 }   // namespace Core
 
@@ -71,7 +73,14 @@ private:
 
     Core::TabBarWidget *mCategoryTabs;
 
-     void updateGui();
+    Core::PropertyEditorWidget *mGraphPanelProperties;
+    Core::PropertyEditorWidget *mGraphProperties;
+
+    QMap<int, Core::BorderedWidget *> mPropertyEditors;
+
+    void updateGui();
+
+    int defaultWidth();
 };
 
 //==============================================================================
