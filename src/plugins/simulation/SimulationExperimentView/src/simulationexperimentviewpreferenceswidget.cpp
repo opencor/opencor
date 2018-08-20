@@ -149,22 +149,22 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
 
 //==============================================================================
 
-void SimulationExperimentViewPreferencesWidget::updateGui()
-{
-    // Update our GUI by showing the right property editor
-
-    for (int i = 0, iMax = mCategoryTabs->count(); i < iMax; ++i)
-        mPropertyEditors.value(i)->setVisible(i == mCategoryTabs->currentIndex());
-}
-
-//==============================================================================
-
 int SimulationExperimentViewPreferencesWidget::defaultWidth()
 {
     // Return the default width we want to use for the first column of a
     // property editor
 
     return int(0.35*width());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewPreferencesWidget::updateGui()
+{
+    // Update our GUI by showing the right property editor
+
+    for (int i = 0, iMax = mCategoryTabs->count(); i < iMax; ++i)
+        mPropertyEditors.value(i)->setVisible(i == mCategoryTabs->currentIndex());
 }
 
 //==============================================================================

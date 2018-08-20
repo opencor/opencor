@@ -78,9 +78,10 @@ private:
 
     QMap<int, Core::BorderedWidget *> mPropertyEditors;
 
-    void updateGui();
-
     int defaultWidth();
+
+private slots:
+    void updateGui();
 };
 
 //==============================================================================
