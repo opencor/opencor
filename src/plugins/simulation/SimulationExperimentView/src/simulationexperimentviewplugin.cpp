@@ -275,12 +275,9 @@ Preferences::PreferencesWidget * SimulationExperimentViewPlugin::preferencesWidg
 
 void SimulationExperimentViewPlugin::preferencesChanged(const QStringList &pPluginNames)
 {
-    // Check whether it's the Simulation Experiment view preferences that have
-    // changed and, if so, then update ourselves accordingly
+    Q_UNUSED(pPluginNames);
 
-    if (pPluginNames.contains(SimulationExperimentView::PluginName)) {
-//---ISSUE1772--- TO BE DONE...
-    }
+    // We don't handle this interface...
 }
 
 //==============================================================================
