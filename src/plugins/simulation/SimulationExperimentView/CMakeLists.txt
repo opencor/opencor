@@ -10,6 +10,7 @@ add_plugin(SimulationExperimentView
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
+        ../../preferencesinterface.cpp
         ../../pluginmanager.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
