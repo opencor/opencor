@@ -79,8 +79,15 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphProperties->addStringProperty()->setName(tr("Title"));
 
-    mGraphPanelProperties->setColumnWidth(0, mSettings->value(SettingsGraphPanelPropertiesWidth, defaultWidth()).toInt());
-    mGraphProperties->setColumnWidth(0, mSettings->value(SettingsGraphPropertiesWidth, defaultWidth()).toInt());
+    int defaultWidth = int(0.42*width());
+
+    mGraphPanelProperties->setColumnWidth(0, mSettings->value(SettingsGraphPanelPropertiesWidth, defaultWidth).toInt());
+    mGraphProperties->setColumnWidth(0, mSettings->value(SettingsGraphPropertiesWidth, defaultWidth).toInt());
+
+    connect(mGraphPanelProperties->header(), &QHeaderView::sectionResized,
+            this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
+    connect(mGraphProperties->header(), &QHeaderView::sectionResized,
+            this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
 
     // Add our property editors (with a border) to our layout
 
@@ -130,12 +137,9 @@ return false;
 
 void SimulationExperimentViewPreferencesWidget::resetPreferences()
 {
-    // Reset our preferences and GUI settings
+    // Reset our preferences
 
 //---ISSUE1772--- TO BE DONE...
-
-    mGraphPanelProperties->setColumnWidth(0, defaultWidth());
-    mGraphProperties->setColumnWidth(0, defaultWidth());
 }
 
 //==============================================================================
@@ -149,22 +153,36 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
 
 //==============================================================================
 
-int SimulationExperimentViewPreferencesWidget::defaultWidth()
-{
-    // Return the default width we want to use for the first column of a
-    // property editor
-
-    return int(0.35*width());
-}
-
-//==============================================================================
-
 void SimulationExperimentViewPreferencesWidget::updateGui()
 {
     // Update our GUI by showing the right property editor
 
     for (int i = 0, iMax = mCategoryTabs->count(); i < iMax; ++i)
         mPropertyEditors.value(i)->setVisible(i == mCategoryTabs->currentIndex());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewPreferencesWidget::headerSectionResized(int pIndex,
+                                                                     int pOldSize,
+                                                                     int pNewSize)
+{
+    Q_UNUSED(pOldSize);
+
+    // Update the column width of our property editors
+
+    disconnect(mGraphPanelProperties->header(), &QHeaderView::sectionResized,
+               this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
+    disconnect(mGraphProperties->header(), &QHeaderView::sectionResized,
+               this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
+
+    mGraphPanelProperties->setColumnWidth(pIndex, pNewSize);
+    mGraphProperties->setColumnWidth(pIndex, pNewSize);
+
+    connect(mGraphPanelProperties->header(), &QHeaderView::sectionResized,
+            this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
+    connect(mGraphProperties->header(), &QHeaderView::sectionResized,
+            this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
 }
 
 //==============================================================================

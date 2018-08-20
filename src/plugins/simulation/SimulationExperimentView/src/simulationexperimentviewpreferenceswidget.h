@@ -78,10 +78,10 @@ private:
 
     QMap<int, Core::BorderedWidget *> mPropertyEditors;
 
-    int defaultWidth();
-
 private slots:
     void updateGui();
+
+    void headerSectionResized(int pIndex, int pOldSize, int pNewSize);
 };
 
 //==============================================================================
