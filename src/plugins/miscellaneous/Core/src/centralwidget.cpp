@@ -1978,10 +1978,6 @@ TabBarWidget *CentralWidget::newTabBarWidget(QTabBar::Shape pShape,
 
     TabBarWidget *res = new TabBarWidget(this);
 
-    res->setExpanding(false);
-    // Note: if the above property is not enabled and many files are opened,
-    //       then the central widget will widen, reducing the width of any
-    //       docked window, which is clearly not what we want...
     res->setFocusPolicy(Qt::NoFocus);
     res->setMovable(pFileTabs);
     res->setShape(pShape);
