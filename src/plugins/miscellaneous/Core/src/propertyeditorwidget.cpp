@@ -1830,8 +1830,8 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             editProperty(currentProperty());
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
-        // The user wants to cancel the editing
+    } else if (isEditing() && noModifiers && (pEvent->key() == Qt::Key_Escape)) {
+        // The user is editing and wants to cancel it
 
         finishEditing(false);
 
