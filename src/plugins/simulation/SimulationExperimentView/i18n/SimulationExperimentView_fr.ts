@@ -341,6 +341,18 @@
         <source>Graph</source>
         <translation>Graphe</translation>
     </message>
+    <message>
+        <source>Background colour</source>
+        <translation>Couleur d&apos;arrière-plan</translation>
+    </message>
+    <message>
+        <source>Foreground colour</source>
+        <translation>Couleur de premier plan</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Titre</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationWidget</name>
