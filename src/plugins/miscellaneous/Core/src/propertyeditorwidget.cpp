@@ -1815,7 +1815,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         &&  (pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
-        && (pEvent->key() == Qt::Key_A)) {
+        &&  (pEvent->key() == Qt::Key_A)) {
         // The user wants to select everything, which we don't want to allow,
         // so just accept the event...
 
