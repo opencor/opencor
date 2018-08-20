@@ -547,6 +547,8 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                      tr("Open the referenced CellML file"));
     I18nInterface::retranslateAction(mSedmlExportAction, tr("SED-ML Export"),
                                      tr("Export the simulation to SED-ML"));
+    I18nInterface::retranslateAction(mPreferencesAction, tr("Preferences"),
+                                     tr("Preferences for the Simulation Experiment view"));
 
     if (mSedmlExportSedmlFileAction) {
         I18nInterface::retranslateAction(mSedmlExportSedmlFileAction, tr("SED-ML File..."),

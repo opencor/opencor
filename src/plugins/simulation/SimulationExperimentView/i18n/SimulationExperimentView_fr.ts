@@ -445,6 +445,14 @@
         <translation>Exporter la simulation vers SED-ML</translation>
     </message>
     <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>Preferences for the Simulation Experiment view</source>
+        <translation>Préférences pour la vue Expérience De Simulation</translation>
+    </message>
+    <message>
         <source>SED-ML File...</source>
         <translation>Fichier SED-ML...</translation>
     </message>
