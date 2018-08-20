@@ -266,6 +266,14 @@ TabBarWidget::TabBarWidget(QWidget *pParent) :
     // Note: this ensures that our icons have a decent size on HiDPI screens...
 
     setIconSize(QSize(16, 16));
+
+    // Enable the scrolling of tabs
+    // Note: this is style dependent and, by default, not enabled on macOS, but
+    //       we want to be consistent throughout, so set it in all cases, even
+    //       though it's already set on Windows and Linux (better be safe than
+    //       sorry)...
+
+    setUsesScrollButtons(true);
 }
 
 //==============================================================================

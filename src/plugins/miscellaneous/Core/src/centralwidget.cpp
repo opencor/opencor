@@ -1986,10 +1986,6 @@ TabBarWidget *CentralWidget::newTabBarWidget(QTabBar::Shape pShape,
     res->setMovable(pFileTabs);
     res->setShape(pShape);
     res->setTabsClosable(pFileTabs);
-    res->setUsesScrollButtons(true);
-    // Note: the above property is style dependent and it happens that it's not
-    //       enabled on macOS, so set it in all cases, even though it's already
-    //       set on Windows and Linux (but better be safe than sorry)...
 
     return res;
 }
