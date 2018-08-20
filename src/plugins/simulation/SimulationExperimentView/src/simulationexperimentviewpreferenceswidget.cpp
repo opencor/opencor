@@ -68,16 +68,24 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     connect(mCategoryTabs, &Core::TabBarWidget::currentChanged,
             this, &SimulationExperimentViewPreferencesWidget::updateGui);
 
+    // Retrieve our preferences
+
+    mGraphPanelBackgroundColor = mSettings->value(SettingsPreferencesGraphPanelBackgroundColor, SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>();
+    mGraphPanelForegroundColor = mSettings->value(SettingsPreferencesGraphPanelForegroundColor, SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>();
+    mGraphPanelTitle = mSettings->value(SettingsPreferencesGraphPanelTitle, SettingsPreferencesGraphPanelTitleDefault).toString();
+
+    mGraphTitle = mSettings->value(SettingsPreferencesGraphTitle, SettingsPreferencesGraphTitleDefault).toString();
+
     // Create and customise our property editors
 
     mGraphPanelProperties = new Core::PropertyEditorWidget(false, false, this);
     mGraphProperties = new Core::PropertyEditorWidget(false, false, this);
 
-    mGraphPanelProperties->addColorProperty()->setName(tr("Background colour"));
-    mGraphPanelProperties->addColorProperty()->setName(tr("Foreground colour"));
-    mGraphPanelProperties->addStringProperty()->setName(tr("Title"));
+    mGraphPanelProperties->addColorProperty(mGraphPanelBackgroundColor)->setName(tr("Background colour"));
+    mGraphPanelProperties->addColorProperty(mGraphPanelForegroundColor)->setName(tr("Foreground colour"));
+    mGraphPanelProperties->addStringProperty(mGraphPanelTitle)->setName(tr("Title"));
 
-    mGraphProperties->addStringProperty()->setName(tr("Title"));
+    mGraphProperties->addStringProperty(mGraphTitle)->setName(tr("Title"));
 
     int defaultWidth = int(0.42*width());
 
@@ -127,10 +135,22 @@ SimulationExperimentViewPreferencesWidget::~SimulationExperimentViewPreferencesW
 
 bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
 {
+    // Finish any pending editing
+
+    mGraphPanelProperties->finishEditing();
+    mGraphProperties->finishEditing();
+
     // Return whether our preferences have changed
 
-//---ISSUE1772--- TO BE DONE...
-return false;
+    Core::Properties graphPanelProperties = mGraphPanelProperties->properties();
+    Core::Properties graphProperties = mGraphProperties->properties();
+
+    return    // Graph panel preferences
+              (graphPanelProperties[0]->colorValue() != mGraphPanelBackgroundColor)
+           || (graphPanelProperties[1]->colorValue() != mGraphPanelForegroundColor)
+           ||  graphPanelProperties[2]->valueAsString().compare(mGraphPanelTitle)
+              // Graph preferences
+           ||  graphProperties[0]->valueAsString().compare(mGraphTitle);
 }
 
 //==============================================================================
@@ -139,7 +159,15 @@ void SimulationExperimentViewPreferencesWidget::resetPreferences()
 {
     // Reset our preferences
 
-//---ISSUE1772--- TO BE DONE...
+    Core::Properties graphPanelProperties = mGraphPanelProperties->properties();
+
+    graphPanelProperties[0]->setColorValue(SettingsPreferencesGraphPanelBackgroundColorDefault);
+    graphPanelProperties[1]->setColorValue(SettingsPreferencesGraphPanelForegroundColorDefault);
+    graphPanelProperties[2]->setValue(SettingsPreferencesGraphPanelTitleDefault);
+
+    Core::Properties graphProperties = mGraphProperties->properties();
+
+    graphProperties[0]->setValue(SettingsPreferencesGraphTitleDefault);
 }
 
 //==============================================================================
@@ -148,7 +176,14 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-//---ISSUE1772--- TO BE DONE...
+    Core::Properties graphPanelProperties = mGraphPanelProperties->properties();
+    Core::Properties graphProperties = mGraphProperties->properties();
+
+    mSettings->setValue(SettingsPreferencesGraphPanelBackgroundColor, graphPanelProperties[0]->colorValue());
+    mSettings->setValue(SettingsPreferencesGraphPanelForegroundColor, graphPanelProperties[1]->colorValue());
+    mSettings->setValue(SettingsPreferencesGraphPanelTitle, graphPanelProperties[2]->valueAsString());
+
+    mSettings->setValue(SettingsPreferencesGraphTitle, graphProperties[0]->valueAsString());
 }
 
 //==============================================================================

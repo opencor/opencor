@@ -55,6 +55,26 @@ static const auto PluginName = QStringLiteral("SimulationExperimentView");
 
 //==============================================================================
 
+static const auto SettingsPreferencesGraphPanelBackgroundColor = QStringLiteral("GraphPanelBackgroundColor");
+static const auto SettingsPreferencesGraphPanelForegroundColor = QStringLiteral("GraphPanelForegroundColor");
+static const auto SettingsPreferencesGraphPanelTitle           = QStringLiteral("GraphPanelTitle");
+
+//==============================================================================
+
+static const auto SettingsPreferencesGraphPanelBackgroundColorDefault = QColor(Qt::white);
+static const auto SettingsPreferencesGraphPanelForegroundColorDefault = QColor(Qt::black);
+static const auto SettingsPreferencesGraphPanelTitleDefault           = QStringLiteral("");
+
+//==============================================================================
+
+static const auto SettingsPreferencesGraphTitle = QStringLiteral("GraphTitle");
+
+//==============================================================================
+
+static const auto SettingsPreferencesGraphTitleDefault = QStringLiteral("");
+
+//==============================================================================
+
 class SimulationExperimentViewPreferencesWidget : public Preferences::PreferencesWidget
 {
     Q_OBJECT
@@ -77,6 +97,12 @@ private:
     Core::PropertyEditorWidget *mGraphProperties;
 
     QMap<int, Core::BorderedWidget *> mPropertyEditors;
+
+    QColor mGraphPanelBackgroundColor;
+    QColor mGraphPanelForegroundColor;
+    QString mGraphPanelTitle;
+
+    QString mGraphTitle;
 
 private slots:
     void updateGui();
