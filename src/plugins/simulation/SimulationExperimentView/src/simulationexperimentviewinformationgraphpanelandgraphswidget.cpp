@@ -26,9 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "graphpanelwidget.h"
 #include "i18ninterface.h"
+#include "preferencesinterface.h"
 #include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
+#include "simulationexperimentviewpreferenceswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -306,6 +308,20 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
         mGraphPanelPropertyEditors.insert(pGraphPanel, mGraphPanelPropertyEditor);
         mGraphsPropertyEditors.insert(pGraphPanel, mGraphsPropertyEditor);
+
+        // Customise our corresponding graph panel with our preferences
+
+        GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = pGraphPanel->plot();
+
+        graphPanelPlot->setBackgroundColor(PreferencesInterface::preference(PluginName,
+                                                                            SettingsPreferencesGraphPanelBackgroundColor,
+                                                                            SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>());
+        graphPanelPlot->setForegroundColor(PreferencesInterface::preference(PluginName,
+                                                                            SettingsPreferencesGraphPanelForegroundColor,
+                                                                            SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>());
+        graphPanelPlot->setTitle(PreferencesInterface::preference(PluginName,
+                                                                  SettingsPreferencesGraphPanelTitle,
+                                                                  SettingsPreferencesGraphPanelTitleDefault).toString());
 
         // Populate our graph panel property editor
 
@@ -1028,7 +1044,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Title
 
-    mGraphPanelPropertyEditor->addStringProperty();
+    mGraphPanelPropertyEditor->addStringProperty(graphPanelPlot->title().text());
 
     // X axis
 
