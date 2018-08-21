@@ -41,8 +41,7 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-static const auto SettingsGraphPanelPropertiesWidth = QStringLiteral("GraphPanelPropertiesWidth");
-static const auto SettingsGraphPropertiesWidth      = QStringLiteral("GraphPropertiesWidth");
+static const auto SettingsPropertiesWidth = QStringLiteral("PropertiesWidth");
 
 //==============================================================================
 
@@ -87,10 +86,10 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphProperties->addStringProperty(mGraphTitle)->setName(tr("Title"));
 
-    int defaultWidth = int(0.42*width());
+    int propertiesWidth = mSettings->value(SettingsPropertiesWidth, int(0.42*width())).toInt();
 
-    mGraphPanelProperties->setColumnWidth(0, mSettings->value(SettingsGraphPanelPropertiesWidth, defaultWidth).toInt());
-    mGraphProperties->setColumnWidth(0, mSettings->value(SettingsGraphPropertiesWidth, defaultWidth).toInt());
+    mGraphPanelProperties->setColumnWidth(0, propertiesWidth);
+    mGraphProperties->setColumnWidth(0, propertiesWidth);
 
     connect(mGraphPanelProperties->header(), &QHeaderView::sectionResized,
             this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
@@ -121,10 +120,10 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
 SimulationExperimentViewPreferencesWidget::~SimulationExperimentViewPreferencesWidget()
 {
-    // Keep track of the sizes of our property editors
+    // Keep track of the width of our property editors (using that of our graph
+    // panel property editor since they all have the same width)
 
-    mSettings->setValue(SettingsGraphPanelPropertiesWidth, mGraphPanelProperties->columnWidth(0));
-    mSettings->setValue(SettingsGraphPropertiesWidth, mGraphProperties->columnWidth(0));
+    mSettings->setValue(SettingsPropertiesWidth, mGraphPanelProperties->columnWidth(0));
 
     // Delete the GUI
 
