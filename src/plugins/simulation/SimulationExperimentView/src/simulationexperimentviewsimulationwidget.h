@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -269,6 +270,8 @@ private:
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
                                                                  QString &pCellmlComponent,
                                                                  QString &pCellmlVariable);
+
+    GraphPanelWidget::GraphPanelWidgetProperties defaultGraphPanelProperties() const;
 
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);

@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
-#include "simulationexperimentviewpreferenceswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -928,20 +927,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::reinitialize(
 
     finalize(pGraphPanel);
     initialize(pGraphPanel);
-}
-
-//==============================================================================
-
-GraphPanelWidget::GraphPanelWidgetProperties SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties()
-{
-    // Return our default graph panel properties
-
-    return GraphPanelWidget::GraphPanelWidgetProperties(PreferencesInterface::preference(PluginName,
-                                                                                         SettingsPreferencesGraphPanelBackgroundColor,
-                                                                                         SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>(),
-                                                        PreferencesInterface::preference(PluginName,
-                                                                                         SettingsPreferencesGraphPanelForegroundColor,
-                                                                                         SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>());
 }
 
 //==============================================================================

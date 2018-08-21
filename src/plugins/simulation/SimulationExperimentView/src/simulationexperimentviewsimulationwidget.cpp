@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulationexperimentviewinformationsolverswidget.h"
 #include "simulationexperimentviewinformationwidget.h"
 #include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewpreferenceswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 #include "simulationmanager.h"
@@ -1031,7 +1032,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 informationWidget->graphPanelAndGraphsWidget()->initialize(mSimulation);
             mCanUpdatePlotsForUpdatedGraphs = true;
 
-            mContentsWidget->graphPanelsWidget()->initialize(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
+            mContentsWidget->graphPanelsWidget()->initialize(defaultGraphPanelProperties());
 
             // Initialise our simulation
 
@@ -1425,7 +1426,7 @@ void SimulationExperimentViewSimulationWidget::addGraphPanel()
 {
     // Ask our graph panels widget to add a new graph panel
 
-    mContentsWidget->graphPanelsWidget()->addGraphPanel(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
+    mContentsWidget->graphPanelsWidget()->addGraphPanel(defaultGraphPanelProperties());
 }
 
 //==============================================================================
@@ -1444,7 +1445,7 @@ void SimulationExperimentViewSimulationWidget::removeCurrentGraphPanel()
 {
     // Ask our graph panels widget to remove the current graph panel
 
-    if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties())) {
+    if (mContentsWidget->graphPanelsWidget()->removeCurrentGraphPanel(defaultGraphPanelProperties())) {
         processEvents();
         // Note: this ensures that our remaining graph panels get realigned at
         //       once...
@@ -1457,7 +1458,7 @@ void SimulationExperimentViewSimulationWidget::removeAllGraphPanels()
 {
     // Ask our graph panels widget to remove the current graph panel
 
-    mContentsWidget->graphPanelsWidget()->removeAllGraphPanels(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
+    mContentsWidget->graphPanelsWidget()->removeAllGraphPanels(defaultGraphPanelProperties());
 }
 
 //==============================================================================
@@ -2490,6 +2491,20 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
 
 //==============================================================================
 
+GraphPanelWidget::GraphPanelWidgetProperties SimulationExperimentViewSimulationWidget::defaultGraphPanelProperties() const
+{
+    // Return our default graph panel properties
+
+    return GraphPanelWidget::GraphPanelWidgetProperties(PreferencesInterface::preference(PluginName,
+                                                                                         SettingsPreferencesGraphPanelBackgroundColor,
+                                                                                         SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>(),
+                                                        PreferencesInterface::preference(PluginName,
+                                                                                         SettingsPreferencesGraphPanelForegroundColor,
+                                                                                         SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>());
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 {
     // Customise our simulation widget
@@ -2728,7 +2743,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
-    graphPanelsWidget->removeAllGraphPanels(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties());
+    graphPanelsWidget->removeAllGraphPanels(defaultGraphPanelProperties());
 
     // Add some graph panels, so that their number corresponds to the number of
     // 2D outputs mentioned in the SED-ML file
@@ -2736,7 +2751,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     int newNbOfGraphPanels = int(sedmlDocument->getNumOutputs());
 
     while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels) {
-        graphPanelsWidget->addGraphPanel(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::defaultGraphPanelProperties(),
+        graphPanelsWidget->addGraphPanel(defaultGraphPanelProperties(),
                                          false);
     }
 

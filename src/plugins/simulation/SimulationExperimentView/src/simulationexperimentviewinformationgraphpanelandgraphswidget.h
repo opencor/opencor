@@ -105,8 +105,6 @@ public:
 
     void reinitialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
 
-    static GraphPanelWidget::GraphPanelWidgetProperties defaultGraphPanelProperties();
-
 private:
     Mode mMode;
 
