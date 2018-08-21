@@ -51,8 +51,14 @@ QStringList lineStyles()
 int indexLineStyle(const QString &pStringLineStyle)
 {
     // Return the given string line style as an index line style
+    // Note: if the given string line style is invalid then we return the index
+    //       line style for a solid line...
 
-    return lineStyles().indexOf(pStringLineStyle);
+    int res = lineStyles().indexOf(pStringLineStyle);
+
+    return (res != -1)?
+                res:
+                1;
 }
 
 //==============================================================================
@@ -60,11 +66,13 @@ int indexLineStyle(const QString &pStringLineStyle)
 QString stringLineStyle(int pIndexLineStyle)
 {
     // Return the given index line style as a string line style
+    // Note: if the given index line style is invalid then we return the string
+    //       line style for a solid line...
 
     return lineStyles()[(   (pIndexLineStyle >= 0)
                          && (pIndexLineStyle < lineStyles().count()))?
                             pIndexLineStyle:
-                            0];
+                            1];
 }
 
 //==============================================================================
@@ -72,6 +80,8 @@ QString stringLineStyle(int pIndexLineStyle)
 QString stringLineStyle(Qt::PenStyle pLineStyle)
 {
     // Return the given line style as a string line style
+    // Note: if the given line style is invalid then we return the string line
+    //       style for a solid line...
 
     return lineStyles()[int((pLineStyle > Qt::DashDotDotLine)?
                                 Qt::SolidLine:
@@ -102,8 +112,14 @@ QStringList symbolStyles()
 int indexSymbolStyle(const QString &pStringSymbolStyle)
 {
     // Return the given string symbol style as an index symbol style
+    // Note: if the given string symbol style is invalid then we return the
+    //       index symbol style for a "none" symbol...
 
-    return symbolStyles().indexOf(pStringSymbolStyle);
+    int res = symbolStyles().indexOf(pStringSymbolStyle);
+
+    return (res != -1)?
+                res:
+                0;
 }
 
 //==============================================================================
@@ -111,6 +127,8 @@ int indexSymbolStyle(const QString &pStringSymbolStyle)
 QString stringSymbolStyle(int pIndexSymbolStyle)
 {
     // Return the given index symbol style as a string symbol style
+    // Note: if the given index symbol style is invalid then we return the
+    //       string symbol style for a "none" symbol...
 
     return symbolStyles()[(   (pIndexSymbolStyle >= 0)
                            && (pIndexSymbolStyle < symbolStyles().count()))?
@@ -123,6 +141,8 @@ QString stringSymbolStyle(int pIndexSymbolStyle)
 QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle)
 {
     // Return the given symbol style as a string symbol style
+    // Note: if the given symbol style is invalid then we return the string
+    //       symbol style for a "none" symbol...
 
     return symbolStyles()[int((pSymbolStyle <= QwtSymbol::DTriangle)?
                                   pSymbolStyle+1:
