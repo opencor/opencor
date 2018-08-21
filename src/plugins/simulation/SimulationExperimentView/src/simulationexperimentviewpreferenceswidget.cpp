@@ -75,24 +75,29 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphTitle = mSettings->value(SettingsPreferencesGraphTitle, SettingsPreferencesGraphTitleDefault).toString();
 
-    // Create and customise our property editors
+    // Create and customise our graph panel property editor
 
     mGraphPanelProperties = new Core::PropertyEditorWidget(false, false, this);
-    mGraphProperties = new Core::PropertyEditorWidget(false, false, this);
 
     mGraphPanelProperties->addColorProperty(mGraphPanelBackgroundColor)->setName(tr("Background colour"));
     mGraphPanelProperties->addColorProperty(mGraphPanelForegroundColor)->setName(tr("Foreground colour"));
     mGraphPanelProperties->addStringProperty(mGraphPanelTitle)->setName(tr("Title"));
 
-    mGraphProperties->addStringProperty(mGraphTitle)->setName(tr("Title"));
-
     int propertiesWidth = mSettings->value(SettingsPropertiesWidth, int(0.42*width())).toInt();
 
     mGraphPanelProperties->setColumnWidth(0, propertiesWidth);
-    mGraphProperties->setColumnWidth(0, propertiesWidth);
 
     connect(mGraphPanelProperties->header(), &QHeaderView::sectionResized,
             this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
+
+    // Create and customise our graph property editor
+
+    mGraphProperties = new Core::PropertyEditorWidget(false, false, this);
+
+    mGraphProperties->addStringProperty(mGraphTitle)->setName(tr("Title"));
+
+    mGraphProperties->setColumnWidth(0, propertiesWidth);
+
     connect(mGraphProperties->header(), &QHeaderView::sectionResized,
             this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
 
