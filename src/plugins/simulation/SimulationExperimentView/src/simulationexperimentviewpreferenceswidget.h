@@ -29,6 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "qwtbegin.h"
+    #include "qwt_symbol.h"
+#include "qwtend.h"
+
+//==============================================================================
+
 namespace Ui {
     class SimulationExperimentViewPreferencesWidget;
 }   // namespace Ui
@@ -67,11 +73,21 @@ static const auto SettingsPreferencesGraphPanelTitleDefault             = QStrin
 
 //==============================================================================
 
-static const auto SettingsPreferencesGraphTitle = QStringLiteral("GraphTitle");
+static const auto SettingsPreferencesGraphTitle        = QStringLiteral("GraphTitle");
+static const auto SettingsPreferencesGraphLineStyle    = QStringLiteral("GraphLineStyle");
+static const auto SettingsPreferencesGraphLineWidth    = QStringLiteral("GraphLineWidth");
+static const auto SettingsPreferencesGraphSymbolStyle  = QStringLiteral("GraphSymbolStyle");
+static const auto SettingsPreferencesGraphSymbolSize   = QStringLiteral("GraphSymbolSize");
+static const auto SettingsPreferencesGraphSymbolFilled = QStringLiteral("GraphSymbolFilled");
 
 //==============================================================================
 
-static const auto SettingsPreferencesGraphTitleDefault = QStringLiteral("");
+static const auto SettingsPreferencesGraphTitleDefault                   = QStringLiteral("");
+static const Qt::PenStyle SettingsPreferencesGraphLineStyleDefault       = Qt::SolidLine;
+static const int SettingsPreferencesGraphLineWidthDefault                = 3;
+static const QwtSymbol::Style SettingsPreferencesGraphSymbolStyleDefault = QwtSymbol::NoSymbol;
+static const int SettingsPreferencesGraphSymbolSizeDefault               = 8;
+static const bool SettingsPreferencesGraphSymbolFilledDefault            = true;
 
 //==============================================================================
 
@@ -103,6 +119,11 @@ private:
     QString mGraphPanelTitle;
 
     QString mGraphTitle;
+    Qt::PenStyle mGraphLineStyle;
+    int mGraphLineWidth;
+    QwtSymbol::Style mGraphSymbolStyle;
+    int mGraphSymbolSize;
+    bool mGraphSymbolFilled;
 
 private slots:
     void updateGui();

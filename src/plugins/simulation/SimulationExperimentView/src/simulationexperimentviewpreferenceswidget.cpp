@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "borderedwidget.h"
 #include "propertyeditorwidget.h"
+#include "sedmlsupport.h"
 #include "simulationexperimentviewpreferenceswidget.h"
 #include "tabbarwidget.h"
 
@@ -74,6 +75,11 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     mGraphPanelTitle = mSettings->value(SettingsPreferencesGraphPanelTitle, SettingsPreferencesGraphPanelTitleDefault).toString();
 
     mGraphTitle = mSettings->value(SettingsPreferencesGraphTitle, SettingsPreferencesGraphTitleDefault).toString();
+    mGraphLineStyle = SEDMLSupport::lineStyle(mSettings->value(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString());
+    mGraphLineWidth = mSettings->value(SettingsPreferencesGraphLineWidth, SettingsPreferencesGraphLineWidthDefault).toInt();
+    mGraphSymbolStyle = SEDMLSupport::symbolStyle(mSettings->value(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString());
+    mGraphSymbolSize = mSettings->value(SettingsPreferencesGraphSymbolSize, SettingsPreferencesGraphSymbolSizeDefault).toInt();
+    mGraphSymbolFilled = mSettings->value(SettingsPreferencesGraphSymbolFilled, SettingsPreferencesGraphSymbolFilledDefault).toBool();
 
     // Create and customise our graph panel property editor
 
@@ -96,7 +102,23 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphProperties->addStringProperty(mGraphTitle)->setName(tr("Title"));
 
+    Core::Property *lineProperty = mGraphProperties->addSectionProperty(tr("Line"));
+
+    mGraphProperties->addListProperty(SEDMLSupport::lineStyles(),
+                                      SEDMLSupport::stringLineStyle(mGraphLineStyle),
+                                      lineProperty)->setName(tr("Style"));
+    mGraphProperties->addIntegerGt0Property(mGraphLineWidth, lineProperty)->setName(tr("Width"));
+
+    Core::Property *symbolProperty = mGraphProperties->addSectionProperty(tr("Symbol"));
+
+    mGraphProperties->addListProperty(SEDMLSupport::symbolStyles(),
+                                      SEDMLSupport::stringSymbolStyle(mGraphSymbolStyle),
+                                      symbolProperty)->setName(tr("Style"));
+    mGraphProperties->addIntegerGt0Property(mGraphSymbolSize, symbolProperty)->setName(tr("Size"));
+    mGraphProperties->addBooleanProperty(mGraphSymbolFilled, symbolProperty)->setName(tr("Filled"));
+
     mGraphProperties->setColumnWidth(0, propertiesWidth);
+    mGraphProperties->expandAll();
 
     connect(mGraphProperties->header(), &QHeaderView::sectionResized,
             this, &SimulationExperimentViewPreferencesWidget::headerSectionResized);
@@ -148,13 +170,22 @@ bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
 
     Core::Properties graphPanelProperties = mGraphPanelProperties->properties();
     Core::Properties graphProperties = mGraphProperties->properties();
+    Core::Properties graphLineProperties = graphProperties[1]->properties();
+    Core::Properties graphSymbolProperties = graphProperties[2]->properties();
 
     return    // Graph panel preferences
               (graphPanelProperties[0]->colorValue() != mGraphPanelBackgroundColor)
            || (graphPanelProperties[1]->colorValue() != mGraphPanelForegroundColor)
            ||  graphPanelProperties[2]->stringValue().compare(mGraphPanelTitle)
               // Graph preferences
-           ||  graphProperties[0]->stringValue().compare(mGraphTitle);
+           ||  graphProperties[0]->stringValue().compare(mGraphTitle)
+              // Graph line preferences
+           ||  (graphLineProperties[0]->listValueIndex() != SEDMLSupport::indexLineStyle(mGraphLineStyle))
+           ||  (graphLineProperties[1]->integerValue() != mGraphLineWidth)
+              // Graph line preferences
+           ||  (graphSymbolProperties[0]->listValueIndex() != SEDMLSupport::indexSymbolStyle(mGraphSymbolStyle))
+           ||  (graphSymbolProperties[1]->integerValue() != mGraphSymbolSize)
+           ||  (graphSymbolProperties[2]->booleanValue() != mGraphSymbolFilled);
 }
 
 //==============================================================================
@@ -172,6 +203,17 @@ void SimulationExperimentViewPreferencesWidget::resetPreferences()
     Core::Properties graphProperties = mGraphProperties->properties();
 
     graphProperties[0]->setValue(SettingsPreferencesGraphTitleDefault);
+
+    Core::Properties graphLineProperties = graphProperties[1]->properties();
+
+    graphLineProperties[0]->setValue(SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault));
+    graphLineProperties[1]->setIntegerValue(SettingsPreferencesGraphLineWidthDefault);
+
+    Core::Properties graphSymbolProperties = graphProperties[2]->properties();
+
+    graphSymbolProperties[0]->setValue(SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault));
+    graphSymbolProperties[1]->setIntegerValue(SettingsPreferencesGraphSymbolSizeDefault);
+    graphSymbolProperties[2]->setBooleanValue(SettingsPreferencesGraphSymbolFilledDefault);
 }
 
 //==============================================================================
@@ -189,6 +231,17 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
     Core::Properties graphProperties = mGraphProperties->properties();
 
     mSettings->setValue(SettingsPreferencesGraphTitle, graphProperties[0]->stringValue());
+
+    Core::Properties graphLineProperties = graphProperties[1]->properties();
+
+    mSettings->setValue(SettingsPreferencesGraphLineStyle, graphLineProperties[0]->listValue());
+    mSettings->setValue(SettingsPreferencesGraphLineWidth, graphLineProperties[1]->integerValue());
+
+    Core::Properties graphSymbolProperties = graphProperties[2]->properties();
+
+    mSettings->setValue(SettingsPreferencesGraphSymbolStyle, graphSymbolProperties[0]->listValue());
+    mSettings->setValue(SettingsPreferencesGraphSymbolSize, graphSymbolProperties[1]->integerValue());
+    mSettings->setValue(SettingsPreferencesGraphSymbolFilled, graphSymbolProperties[2]->booleanValue());
 }
 
 //==============================================================================
