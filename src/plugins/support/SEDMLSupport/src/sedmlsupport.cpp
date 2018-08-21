@@ -48,7 +48,7 @@ QStringList lineStyles()
 
 //==============================================================================
 
-int lineStyleIntegerValue(const QString &pLineStyleValue)
+int integerLineStyle(const QString &pLineStyleValue)
 {
     // Return the index of the given line style value
 
@@ -57,7 +57,7 @@ int lineStyleIntegerValue(const QString &pLineStyleValue)
 
 //==============================================================================
 
-QString lineStyleStringValue(int pLineStyleValueIndex)
+QString stringLineStyle(int pLineStyleValueIndex)
 {
     // Return the line style value for the given index
 
@@ -71,7 +71,7 @@ QString lineStyleStringValue(int pLineStyleValueIndex)
 
 //==============================================================================
 
-QString lineStyleStringValue(Qt::PenStyle pLineStyle)
+QString stringLineStyle(Qt::PenStyle pLineStyle)
 {
     // Return the line style value for the given line style
 
@@ -101,7 +101,7 @@ QStringList symbolStyles()
 
 //==============================================================================
 
-int symbolStyleIntegerValue(const QString &pSymbolStyleValue)
+int integerSymbolStyle(const QString &pSymbolStyleValue)
 {
     // Return the index of the given symbol style value
 
@@ -110,7 +110,7 @@ int symbolStyleIntegerValue(const QString &pSymbolStyleValue)
 
 //==============================================================================
 
-QString symbolStyleStringValue(int pSymbolStyleValueIndex)
+QString stringSymbolStyle(int pSymbolStyleValueIndex)
 {
     // Return the symbol style value for the given index
 
@@ -124,7 +124,7 @@ QString symbolStyleStringValue(int pSymbolStyleValueIndex)
 
 //==============================================================================
 
-QString symbolStyleStringValue(QwtSymbol::Style pSymbolStyle)
+QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle)
 {
     // Return the symbol style value for the given symbol style
 

@@ -510,7 +510,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *lineProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                          SEDMLSupport::lineStyleStringValue(pGraphProperties.lineStyle()),
+                                          SEDMLSupport::stringLineStyle(pGraphProperties.lineStyle()),
                                           lineProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.lineWidth(), lineProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.lineColor(), lineProperty);
@@ -520,7 +520,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *symbolProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::symbolStyles(),
-                                          SEDMLSupport::symbolStyleStringValue(pGraphProperties.symbolStyle()),
+                                          SEDMLSupport::stringSymbolStyle(pGraphProperties.symbolStyle()),
                                           symbolProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.symbolSize(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolColor(), symbolProperty);
@@ -1033,7 +1033,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *gridLinesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleStringValue(graphPanelPlot->gridLinesStyle()),
+                                               SEDMLSupport::stringLineStyle(graphPanelPlot->gridLinesStyle()),
                                                gridLinesProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->gridLinesWidth(), gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->gridLinesColor(), gridLinesProperty);
@@ -1047,7 +1047,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleStringValue(graphPanelPlot->pointCoordinatesStyle()),
+                                               SEDMLSupport::stringLineStyle(graphPanelPlot->pointCoordinatesStyle()),
                                                pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesWidth(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesColor(), pointCoordinatesProperty);
@@ -1083,7 +1083,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleStringValue(graphPanelPlot->zoomRegionStyle()),
+                                               SEDMLSupport::stringLineStyle(graphPanelPlot->zoomRegionStyle()),
                                                zoomRegionProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionWidth(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionColor(), zoomRegionProperty);

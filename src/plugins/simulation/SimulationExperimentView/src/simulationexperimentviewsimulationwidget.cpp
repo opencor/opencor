@@ -1821,7 +1821,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::GridLines)
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::lineStyleStringValue(gridLinesProperties[0]->listValueIndex()))
+                                                      .arg(SEDMLSupport::stringLineStyle(gridLinesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
                                                       .arg(gridLinesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
@@ -1838,7 +1838,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::PointCoordinates)
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::lineStyleStringValue(pointCoordinatesProperties[0]->listValueIndex()))
+                                                      .arg(SEDMLSupport::stringLineStyle(pointCoordinatesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
                                                       .arg(pointCoordinatesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
@@ -1887,7 +1887,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::ZoomRegion)
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::lineStyleStringValue(zoomRegionProperties[0]->listValueIndex()))
+                                                      .arg(SEDMLSupport::stringLineStyle(zoomRegionProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
                                                       .arg(zoomRegionProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
@@ -1999,14 +1999,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                             .arg(properties[1]->stringValue())
                                                               +SedmlProperty.arg(SEDMLSupport::Line)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                                                               .arg(SEDMLSupport::lineStyleStringValue(lineProperties[0]->listValueIndex()))
+                                                                                               .arg(SEDMLSupport::stringLineStyle(lineProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Width)
                                                                                                .arg(lineProperties[1]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)
                                                                                                .arg(lineProperties[2]->stringValue()))
                                                               +SedmlProperty.arg(SEDMLSupport::Symbol)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                                                               .arg(SEDMLSupport::symbolStyleStringValue(symbolProperties[0]->listValueIndex()))
+                                                                                               .arg(SEDMLSupport::stringSymbolStyle(symbolProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Size)
                                                                                                .arg(symbolProperties[1]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)
@@ -2991,7 +2991,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
                                     if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
-                                        lineStyle = Qt::PenStyle(SEDMLSupport::lineStyleIntegerValue(linePropertyNodeValue));
+                                        lineStyle = Qt::PenStyle(SEDMLSupport::integerLineStyle(linePropertyNodeValue));
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
                                         lineWidth = linePropertyNodeValue.toInt();
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
@@ -3005,7 +3005,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
                                     if (!symbolPropertyNodeName.compare(SEDMLSupport::Style)) {
-                                        int symbolStyleValue = SEDMLSupport::symbolStyleIntegerValue(symbolPropertyNodeValue);
+                                        int symbolStyleValue = SEDMLSupport::integerSymbolStyle(symbolPropertyNodeValue);
 
                                         symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
                                     } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size)) {
