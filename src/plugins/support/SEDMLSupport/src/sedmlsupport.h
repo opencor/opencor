@@ -41,7 +41,7 @@ namespace SEDMLSupport {
 QStringList SEDMLSUPPORT_EXPORT lineStyles();
 
 int SEDMLSUPPORT_EXPORT lineStyleValueIndex(const QString &pLineStyleValue);
-QString SEDMLSUPPORT_EXPORT lineStyleValue(int pLineStyleValueIndex);
+QString SEDMLSUPPORT_EXPORT lineStyleValue(Qt::PenStyle pLineStyle);
 
 QStringList SEDMLSUPPORT_EXPORT symbolStyles();
 

@@ -508,9 +508,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *lineProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                          SEDMLSupport::lineStyleValue((pGraphProperties.lineStyle() > Qt::DashDotDotLine)?
-                                                                           Qt::SolidLine:
-                                                                           pGraphProperties.lineStyle()),
+                                          SEDMLSupport::lineStyleValue(pGraphProperties.lineStyle()),
                                           lineProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.lineWidth(), lineProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.lineColor(), lineProperty);
@@ -1037,9 +1035,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *gridLinesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleValue((graphPanelPlot->gridLinesStyle() > Qt::DashDotDotLine)?
-                                                                                 Qt::SolidLine:
-                                                                                 graphPanelPlot->gridLinesStyle()),
+                                               SEDMLSupport::lineStyleValue(graphPanelPlot->gridLinesStyle()),
                                                gridLinesProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->gridLinesWidth(), gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->gridLinesColor(), gridLinesProperty);
@@ -1053,9 +1049,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleValue((graphPanelPlot->pointCoordinatesStyle() > Qt::DashDotDotLine)?
-                                                                                 Qt::SolidLine:
-                                                                                 graphPanelPlot->pointCoordinatesStyle()),
+                                               SEDMLSupport::lineStyleValue(graphPanelPlot->pointCoordinatesStyle()),
                                                pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesWidth(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesColor(), pointCoordinatesProperty);
@@ -1091,9 +1085,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleValue((graphPanelPlot->zoomRegionStyle() > Qt::DashDotDotLine)?
-                                                                                 Qt::SolidLine:
-                                                                                 graphPanelPlot->zoomRegionStyle()),
+                                               SEDMLSupport::lineStyleValue(graphPanelPlot->zoomRegionStyle()),
                                                zoomRegionProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionWidth(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionColor(), zoomRegionProperty);

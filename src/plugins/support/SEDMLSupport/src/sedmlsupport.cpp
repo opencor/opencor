@@ -57,16 +57,13 @@ int lineStyleValueIndex(const QString &pLineStyleValue)
 
 //==============================================================================
 
-QString lineStyleValue(int pLineStyleValueIndex)
+QString lineStyleValue(Qt::PenStyle pLineStyle)
 {
-    // Return the line style value for the given index
+    // Return the line style value for the given line style
 
-    if (   (pLineStyleValueIndex >= 0)
-        && (pLineStyleValueIndex < lineStyles().count())) {
-        return lineStyles()[pLineStyleValueIndex];
-    } else {
-        return QString();
-    }
+    return lineStyles()[int((pLineStyle > Qt::DashDotDotLine)?
+                                Qt::SolidLine:
+                                pLineStyle)];
 }
 
 //==============================================================================

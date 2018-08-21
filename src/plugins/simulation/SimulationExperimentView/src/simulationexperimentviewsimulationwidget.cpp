@@ -1819,7 +1819,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::GridLines)
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
+                                                      .arg(SEDMLSupport::lineStyleValue(Qt::PenStyle(gridLinesProperties[0]->listValueIndex())))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
                                                       .arg(gridLinesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
@@ -1836,7 +1836,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::PointCoordinates)
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
+                                                      .arg(SEDMLSupport::lineStyleValue(Qt::PenStyle(pointCoordinatesProperties[0]->listValueIndex())))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
                                                       .arg(pointCoordinatesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
@@ -1885,7 +1885,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::ZoomRegion)
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                      .arg(SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
+                                                      .arg(SEDMLSupport::lineStyleValue(Qt::PenStyle(zoomRegionProperties[0]->listValueIndex())))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
                                                       .arg(zoomRegionProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
@@ -1997,7 +1997,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                             .arg(properties[1]->stringValue())
                                                               +SedmlProperty.arg(SEDMLSupport::Line)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                                                               .arg(SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
+                                                                                               .arg(SEDMLSupport::lineStyleValue(Qt::PenStyle(lineProperties[0]->listValueIndex())))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Width)
                                                                                                .arg(lineProperties[1]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)
