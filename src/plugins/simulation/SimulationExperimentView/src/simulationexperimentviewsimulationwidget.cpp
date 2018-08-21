@@ -1805,11 +1805,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
         sedmlPlot2d->setId(QString("plot%1").arg(++graphPlotCounter).toStdString());
 
         QString annotation =  SedmlProperty.arg(SEDMLSupport::BackgroundColor)
-                                           .arg(graphPanelProperties[0]->valueAsString())
+                                           .arg(graphPanelProperties[0]->stringValue())
                              +SedmlProperty.arg(SEDMLSupport::FontSize)
-                                           .arg(graphPanelProperties[1]->valueAsString())
+                                           .arg(graphPanelProperties[1]->stringValue())
                              +SedmlProperty.arg(SEDMLSupport::ForegroundColor)
-                                           .arg(graphPanelProperties[2]->valueAsString())
+                                           .arg(graphPanelProperties[2]->stringValue())
                              +SedmlProperty.arg(SEDMLSupport::Height)
                                            .arg(graphPanelsWidgetSizes[graphPlotCounter-1]);
 
@@ -1821,14 +1821,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
                                                       .arg(SEDMLSupport::lineStyleValue(gridLinesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
-                                                      .arg(gridLinesProperties[1]->valueAsString())
+                                                      .arg(gridLinesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
-                                                      .arg(gridLinesProperties[2]->valueAsString()));
+                                                      .arg(gridLinesProperties[2]->stringValue()));
 
         // Legend
 
         annotation += SedmlProperty.arg(SEDMLSupport::Legend)
-                                   .arg(graphPanelProperties[4]->valueAsString());
+                                   .arg(graphPanelProperties[4]->stringValue());
 
         // Point coordinates
 
@@ -1838,11 +1838,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
                                                       .arg(SEDMLSupport::lineStyleValue(pointCoordinatesProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
-                                                      .arg(pointCoordinatesProperties[1]->valueAsString())
+                                                      .arg(pointCoordinatesProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
-                                                      .arg(pointCoordinatesProperties[2]->valueAsString())
+                                                      .arg(pointCoordinatesProperties[2]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::FontColor)
-                                                      .arg(pointCoordinatesProperties[3]->valueAsString()));
+                                                      .arg(pointCoordinatesProperties[3]->stringValue()));
 
         // Surrounding area
 
@@ -1850,14 +1850,14 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::SurroundingArea)
                                    .arg( SedmlProperty.arg(SEDMLSupport::BackgroundColor)
-                                                      .arg(surroundingAreaProperties[0]->valueAsString())
+                                                      .arg(surroundingAreaProperties[0]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::ForegroundColor)
-                                                      .arg(surroundingAreaProperties[1]->valueAsString()));
+                                                      .arg(surroundingAreaProperties[1]->stringValue()));
 
         // Title
 
         annotation += SedmlProperty.arg(SEDMLSupport::Title)
-                                   .arg(graphPanelProperties[7]->valueAsString());
+                                   .arg(graphPanelProperties[7]->stringValue());
 
         // X axis
 
@@ -1865,9 +1865,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::XAxis)
                                    .arg( SedmlProperty.arg(SEDMLSupport::LogarithmicScale)
-                                                      .arg(xAxisProperties[0]->valueAsString())
+                                                      .arg(xAxisProperties[0]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Title)
-                                                      .arg(xAxisProperties[1]->valueAsString()));
+                                                      .arg(xAxisProperties[1]->stringValue()));
 
         // Y axis
 
@@ -1875,9 +1875,9 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         annotation += SedmlProperty.arg(SEDMLSupport::YAxis)
                                    .arg( SedmlProperty.arg(SEDMLSupport::LogarithmicScale)
-                                                      .arg(yAxisProperties[0]->valueAsString())
+                                                      .arg(yAxisProperties[0]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Title)
-                                                      .arg(yAxisProperties[1]->valueAsString()));
+                                                      .arg(yAxisProperties[1]->stringValue()));
 
         // Zoom region
 
@@ -1887,15 +1887,15 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                    .arg( SedmlProperty.arg(SEDMLSupport::Style)
                                                       .arg(SEDMLSupport::lineStyleValue(zoomRegionProperties[0]->listValueIndex()))
                                         +SedmlProperty.arg(SEDMLSupport::Width)
-                                                      .arg(zoomRegionProperties[1]->valueAsString())
+                                                      .arg(zoomRegionProperties[1]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Color)
-                                                      .arg(zoomRegionProperties[2]->valueAsString())
+                                                      .arg(zoomRegionProperties[2]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::FontColor)
-                                                      .arg(zoomRegionProperties[3]->valueAsString())
+                                                      .arg(zoomRegionProperties[3]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::Filled)
-                                                      .arg(zoomRegionProperties[4]->valueAsString())
+                                                      .arg(zoomRegionProperties[4]->stringValue())
                                         +SedmlProperty.arg(SEDMLSupport::FillColor)
-                                                      .arg(zoomRegionProperties[5]->valueAsString()));;
+                                                      .arg(zoomRegionProperties[5]->stringValue()));;
 
         // Add our properties as an annotation
 
@@ -1994,25 +1994,25 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                                      TrueValue:
                                                                                      FalseValue)
                                                               +SedmlProperty.arg(SEDMLSupport::Title)
-                                                                            .arg(properties[1]->valueAsString())
+                                                                            .arg(properties[1]->stringValue())
                                                               +SedmlProperty.arg(SEDMLSupport::Line)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
                                                                                                .arg(SEDMLSupport::lineStyleValue(lineProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Width)
-                                                                                               .arg(lineProperties[1]->valueAsString())
+                                                                                               .arg(lineProperties[1]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)
-                                                                                               .arg(lineProperties[2]->valueAsString()))
+                                                                                               .arg(lineProperties[2]->stringValue()))
                                                               +SedmlProperty.arg(SEDMLSupport::Symbol)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
                                                                                                .arg(SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Size)
-                                                                                               .arg(symbolProperties[1]->valueAsString())
+                                                                                               .arg(symbolProperties[1]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)
-                                                                                               .arg(symbolProperties[2]->valueAsString())
+                                                                                               .arg(symbolProperties[2]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Filled)
-                                                                                               .arg(symbolProperties[3]->valueAsString())
+                                                                                               .arg(symbolProperties[3]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::FillColor)
-                                                                                               .arg(symbolProperties[4]->valueAsString()))).toStdString());
+                                                                                               .arg(symbolProperties[4]->stringValue()))).toStdString());
         }
     }
 
