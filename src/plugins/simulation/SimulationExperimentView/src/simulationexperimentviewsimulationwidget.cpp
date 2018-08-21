@@ -2991,7 +2991,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
                                     if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
-                                        lineStyle = Qt::PenStyle(SEDMLSupport::integerLineStyle(linePropertyNodeValue));
+                                        lineStyle = Qt::PenStyle(SEDMLSupport::indexLineStyle(linePropertyNodeValue));
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
                                         lineWidth = linePropertyNodeValue.toInt();
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {
@@ -3005,7 +3005,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
                                     if (!symbolPropertyNodeName.compare(SEDMLSupport::Style)) {
-                                        int symbolStyleValue = SEDMLSupport::integerSymbolStyle(symbolPropertyNodeValue);
+                                        int symbolStyleValue = SEDMLSupport::indexSymbolStyle(symbolPropertyNodeValue);
 
                                         symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
                                     } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size)) {

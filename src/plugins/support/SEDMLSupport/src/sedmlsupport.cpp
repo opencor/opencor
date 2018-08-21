@@ -48,32 +48,30 @@ QStringList lineStyles()
 
 //==============================================================================
 
-int integerLineStyle(const QString &pLineStyleValue)
+int indexLineStyle(const QString &pStringLineStyle)
 {
-    // Return the index of the given line style value
+    // Return the given string line style as an index line style
 
-    return lineStyles().indexOf(pLineStyleValue);
+    return lineStyles().indexOf(pStringLineStyle);
 }
 
 //==============================================================================
 
-QString stringLineStyle(int pLineStyleValueIndex)
+QString stringLineStyle(int pIndexLineStyle)
 {
-    // Return the line style value for the given index
+    // Return the given index line style as a string line style
 
-    if (   (pLineStyleValueIndex >= 0)
-        && (pLineStyleValueIndex < lineStyles().count())) {
-        return lineStyles()[pLineStyleValueIndex];
-    } else {
-        return QString();
-    }
+    return lineStyles()[(   (pIndexLineStyle >= 0)
+                         && (pIndexLineStyle < lineStyles().count()))?
+                            pIndexLineStyle:
+                            0];
 }
 
 //==============================================================================
 
 QString stringLineStyle(Qt::PenStyle pLineStyle)
 {
-    // Return the line style value for the given line style
+    // Return the given line style as a string line style
 
     return lineStyles()[int((pLineStyle > Qt::DashDotDotLine)?
                                 Qt::SolidLine:
@@ -101,32 +99,30 @@ QStringList symbolStyles()
 
 //==============================================================================
 
-int integerSymbolStyle(const QString &pSymbolStyleValue)
+int indexSymbolStyle(const QString &pStringSymbolStyle)
 {
-    // Return the index of the given symbol style value
+    // Return the given string symbol style as an index symbol style
 
-    return symbolStyles().indexOf(pSymbolStyleValue);
+    return symbolStyles().indexOf(pStringSymbolStyle);
 }
 
 //==============================================================================
 
-QString stringSymbolStyle(int pSymbolStyleValueIndex)
+QString stringSymbolStyle(int pIndexSymbolStyle)
 {
-    // Return the symbol style value for the given index
+    // Return the given index symbol style as a string symbol style
 
-    if (   (pSymbolStyleValueIndex >= 0)
-        && (pSymbolStyleValueIndex < symbolStyles().count())) {
-        return symbolStyles()[pSymbolStyleValueIndex];
-    } else {
-        return QString();
-    }
+    return symbolStyles()[(   (pIndexSymbolStyle >= 0)
+                           && (pIndexSymbolStyle < symbolStyles().count()))?
+                              pIndexSymbolStyle:
+                              0];
 }
 
 //==============================================================================
 
 QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle)
 {
-    // Return the symbol style value for the given symbol style
+    // Return the given symbol style as a string symbol style
 
     return symbolStyles()[int((pSymbolStyle <= QwtSymbol::DTriangle)?
                                   pSymbolStyle+1:
