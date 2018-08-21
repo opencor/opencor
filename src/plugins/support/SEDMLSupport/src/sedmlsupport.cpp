@@ -57,6 +57,20 @@ int lineStyleValueIndex(const QString &pLineStyleValue)
 
 //==============================================================================
 
+QString lineStyleValue(int pLineStyleValueIndex)
+{
+    // Return the line style value for the given index
+
+    if (   (pLineStyleValueIndex >= 0)
+        && (pLineStyleValueIndex < lineStyles().count())) {
+        return lineStyles()[pLineStyleValueIndex];
+    } else {
+        return QString();
+    }
+}
+
+//==============================================================================
+
 QString lineStyleValue(Qt::PenStyle pLineStyle)
 {
     // Return the line style value for the given line style
@@ -96,9 +110,23 @@ int symbolStyleValueIndex(const QString &pSymbolStyleValue)
 
 //==============================================================================
 
-QString symbolStyleValue(QwtSymbol::Style pSymbolStyle)
+QString symbolStyleValue(int pSymbolStyleValueIndex)
 {
     // Return the symbol style value for the given index
+
+    if (   (pSymbolStyleValueIndex >= 0)
+        && (pSymbolStyleValueIndex < symbolStyles().count())) {
+        return symbolStyles()[pSymbolStyleValueIndex];
+    } else {
+        return QString();
+    }
+}
+
+//==============================================================================
+
+QString symbolStyleValue(QwtSymbol::Style pSymbolStyle)
+{
+    // Return the symbol style value for the given symbol style
 
     return symbolStyles()[int((pSymbolStyle <= QwtSymbol::DTriangle)?
                                   pSymbolStyle+1:
