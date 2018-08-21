@@ -99,9 +99,6 @@ public:
                                            const QColor &pSymbolColor = DefaultGraphSymbolColor,
                                            bool pSymbolFilled = DefaultGraphSymbolFilled,
                                            const QColor &pSymbolFillColor = DefaultGraphSymbolFillColor);
-    explicit GraphPanelPlotGraphProperties(const QString &pTitle,
-                                           const QColor &pColor);
-    explicit GraphPanelPlotGraphProperties(const QColor &pColor);
 
     bool isSelected() const;
 

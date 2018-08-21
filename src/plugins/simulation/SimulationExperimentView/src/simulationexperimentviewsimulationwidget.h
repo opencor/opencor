@@ -144,6 +144,12 @@ public:
 
     SimulationSupport::Simulation * simulation() const;
 
+    GraphPanelWidget::GraphPanelWidgetProperties defaultGraphPanelProperties() const;
+
+    GraphPanelWidget::GraphPanelPlotGraphProperties defaultGraphProperties(const QString &pTitle,
+                                                                           const QColor &pColor) const;
+    GraphPanelWidget::GraphPanelPlotGraphProperties defaultGraphProperties(const QColor &pColor) const;
+
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
@@ -270,8 +276,6 @@ private:
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
                                                                  QString &pCellmlComponent,
                                                                  QString &pCellmlVariable);
-
-    GraphPanelWidget::GraphPanelWidgetProperties defaultGraphPanelProperties() const;
 
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);

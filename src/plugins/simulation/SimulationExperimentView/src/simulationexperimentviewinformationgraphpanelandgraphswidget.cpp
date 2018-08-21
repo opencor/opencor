@@ -639,7 +639,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph()
     GraphPanelWidget::GraphPanelWidget * graphPanel = mGraphPanels.value(mGraphsPropertyEditor);
     GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(graphPanel);
 
-    graphPanel->addGraph(graph, GraphPanelWidget::GraphPanelPlotGraphProperties(graph->color()));
+    graphPanel->addGraph(graph, mSimulationWidget->defaultGraphProperties(graph->color()));
 }
 
 //==============================================================================

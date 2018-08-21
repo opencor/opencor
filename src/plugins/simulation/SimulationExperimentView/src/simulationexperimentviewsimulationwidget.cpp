@@ -2505,6 +2505,44 @@ GraphPanelWidget::GraphPanelWidgetProperties SimulationExperimentViewSimulationW
 
 //==============================================================================
 
+GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulationWidget::defaultGraphProperties(const QString &pTitle,
+                                                                                                                 const QColor &pColor) const
+{
+    // Return our default graph properties
+
+    return GraphPanelWidget::GraphPanelPlotGraphProperties(true,
+                                                           pTitle,
+                                                           SEDMLSupport::lineStyle(PreferencesInterface::preference(PluginName,
+                                                                                                                    SettingsPreferencesGraphLineStyle,
+                                                                                                                    SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString()),
+                                                           PreferencesInterface::preference(PluginName,
+                                                                                            SettingsPreferencesGraphLineWidth,
+                                                                                            SettingsPreferencesGraphLineWidthDefault).toInt(),
+                                                           pColor,
+                                                           SEDMLSupport::symbolStyle(PreferencesInterface::preference(PluginName,
+                                                                                                                      SettingsPreferencesGraphSymbolStyle,
+                                                                                                                      SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString()),
+                                                           PreferencesInterface::preference(PluginName,
+                                                                                            SettingsPreferencesGraphSymbolSize,
+                                                                                            SettingsPreferencesGraphSymbolSizeDefault).toInt(),
+                                                           pColor,
+                                                           PreferencesInterface::preference(PluginName,
+                                                                                            SettingsPreferencesGraphSymbolFilled,
+                                                                                            SettingsPreferencesGraphSymbolFilledDefault).toBool(),
+                                                           GraphPanelWidget::DefaultGraphSymbolFillColor);
+}
+
+//==============================================================================
+
+GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulationWidget::defaultGraphProperties(const QColor &pColor) const
+{
+    // Return our default graph properties
+
+    return defaultGraphProperties(QString(), pColor);
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 {
     // Customise our simulation widget
@@ -3429,7 +3467,7 @@ void SimulationExperimentViewSimulationWidget::addGraph(CellMLSupport::CellmlFil
 
     GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(pParameterX, pParameterY, graphPanel);
 
-    graphPanel->addGraph(graph, GraphPanelWidget::GraphPanelPlotGraphProperties(pParameterY->formattedName(), graph->color()));
+    graphPanel->addGraph(graph, defaultGraphProperties(pParameterY->formattedName(), graph->color()));
 }
 
 //==============================================================================
