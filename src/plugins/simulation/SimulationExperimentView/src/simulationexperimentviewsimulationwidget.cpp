@@ -2991,7 +2991,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
                                     if (!linePropertyNodeName.compare(SEDMLSupport::Style)) {
-                                        lineStyle = Qt::PenStyle(SEDMLSupport::indexLineStyle(linePropertyNodeValue));
+                                        lineStyle = SEDMLSupport::lineStyle(linePropertyNodeValue);
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Width)) {
                                         lineWidth = linePropertyNodeValue.toInt();
                                     } else if (!linePropertyNodeName.compare(SEDMLSupport::Color)) {

@@ -1351,7 +1351,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     QPen linePen = oldLinePen;
     Core::Properties lineProperties = properties[4]->properties();
 
-    linePen.setStyle(Qt::PenStyle(lineProperties[0]->listValues().indexOf(lineProperties[0]->listValue())));
+    linePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValue()));
     linePen.setWidth(lineProperties[1]->integerValue());
     linePen.setColor(lineProperties[2]->colorValue());
 
@@ -1445,7 +1445,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties gridLinesProperties = properties[3]->properties();
 
-        graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesProperties[0]->listValues().indexOf(gridLinesProperties[0]->listValue())));
+        graphPanelPlot->setGridLinesStyle(SEDMLSupport::lineStyle(gridLinesProperties[0]->listValue()));
         graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
         graphPanelPlot->setGridLinesColor(gridLinesProperties[2]->colorValue());
 
@@ -1457,7 +1457,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties pointCoordinatesProperties = properties[5]->properties();
 
-        graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesProperties[0]->listValues().indexOf(pointCoordinatesProperties[0]->listValue())));
+        graphPanelPlot->setPointCoordinatesStyle(SEDMLSupport::lineStyle(pointCoordinatesProperties[0]->listValue()));
         graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
         graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
         graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
@@ -1491,7 +1491,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties zoomRegionProperties = properties[10]->properties();
 
-        graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionProperties[0]->listValues().indexOf(zoomRegionProperties[0]->listValue())));
+        graphPanelPlot->setZoomRegionStyle(SEDMLSupport::lineStyle(zoomRegionProperties[0]->listValue()));
         graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());
         graphPanelPlot->setZoomRegionColor(zoomRegionProperties[2]->colorValue());
         graphPanelPlot->setZoomRegionFontColor(zoomRegionProperties[3]->colorValue());
