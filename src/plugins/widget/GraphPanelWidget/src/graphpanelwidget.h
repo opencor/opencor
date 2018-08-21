@@ -43,7 +43,6 @@ namespace GraphPanelWidget {
 static const bool DefaultGraphPanelActive                = true;
 static const QColor DefaultGraphPanelBackgroundColor     = Qt::white;
 static const QColor DefaultGraphPanelForegroundColor     = Qt::black;
-static const auto DefaultGraphPanelTitle                 = QStringLiteral("");
 
 //==============================================================================
 
@@ -51,19 +50,14 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelWidgetProperties
 {
 public:
     explicit GraphPanelWidgetProperties(const QColor &pBackgroundColor = DefaultGraphPanelBackgroundColor,
-                                        const QColor &pForegroundColor = DefaultGraphPanelForegroundColor,
-                                        const QString &pTitle = DefaultGraphPanelTitle);
+                                        const QColor &pForegroundColor = DefaultGraphPanelForegroundColor);
 
     QColor backgroundColor() const;
     QColor foregroundColor() const;
 
-    QString title() const;
-
 private:
     QColor mBackgroundColor;
     QColor mForegroundColor;
-
-    QString mTitle;
 };
 
 //==============================================================================

@@ -320,7 +320,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
             graphPanelPlot->setBackgroundColor(pGraphPanelWidgetProperties.backgroundColor());
             graphPanelPlot->setForegroundColor(pGraphPanelWidgetProperties.foregroundColor());
-            graphPanelPlot->setTitle(pGraphPanelWidgetProperties.title());
         }
 
         // Populate our graph panel property editor
@@ -942,10 +941,7 @@ GraphPanelWidget::GraphPanelWidgetProperties SimulationExperimentViewInformation
                                                                                          SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>(),
                                                         PreferencesInterface::preference(PluginName,
                                                                                          SettingsPreferencesGraphPanelForegroundColor,
-                                                                                         SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>(),
-                                                        PreferencesInterface::preference(PluginName,
-                                                                                         SettingsPreferencesGraphPanelTitle,
-                                                                                         SettingsPreferencesGraphPanelTitleDefault).toString());
+                                                                                         SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>());
 }
 
 //==============================================================================

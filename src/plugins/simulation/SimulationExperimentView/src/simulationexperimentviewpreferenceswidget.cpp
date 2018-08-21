@@ -85,9 +85,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphPanelBackgroundColor = mSettings->value(SettingsPreferencesGraphPanelBackgroundColor, SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>();
     mGraphPanelForegroundColor = mSettings->value(SettingsPreferencesGraphPanelForegroundColor, SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>();
-    mGraphPanelTitle = mSettings->value(SettingsPreferencesGraphPanelTitle, SettingsPreferencesGraphPanelTitleDefault).toString();
 
-    mGraphTitle = mSettings->value(SettingsPreferencesGraphTitle, SettingsPreferencesGraphTitleDefault).toString();
     mGraphLineStyle = SEDMLSupport::lineStyle(mSettings->value(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString());
     mGraphLineWidth = mSettings->value(SettingsPreferencesGraphLineWidth, SettingsPreferencesGraphLineWidthDefault).toInt();
     mGraphSymbolStyle = SEDMLSupport::symbolStyle(mSettings->value(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString());
@@ -100,7 +98,6 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphPanelProperties->addColorProperty(mGraphPanelBackgroundColor)->setName(tr("Background colour"));
     mGraphPanelProperties->addColorProperty(mGraphPanelForegroundColor)->setName(tr("Foreground colour"));
-    mGraphPanelProperties->addStringProperty(mGraphPanelTitle)->setName(tr("Title"));
 
     int propertiesWidth = mSettings->value(SettingsPropertiesWidth, int(0.42*width())).toInt();
 
@@ -112,8 +109,6 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     // Create and customise our graph property editor
 
     mGraphProperties = new Core::PropertyEditorWidget(false, false, this);
-
-    mGraphProperties->addStringProperty(mGraphTitle)->setName(tr("Title"));
 
     Core::Property *lineProperty = mGraphProperties->addSectionProperty(tr("Line"));
 
@@ -189,15 +184,12 @@ bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
 
     Core::Properties graphPanelProperties = mGraphPanelProperties->properties();
     Core::Properties graphProperties = mGraphProperties->properties();
-    Core::Properties graphLineProperties = graphProperties[1]->properties();
-    Core::Properties graphSymbolProperties = graphProperties[2]->properties();
+    Core::Properties graphLineProperties = graphProperties[0]->properties();
+    Core::Properties graphSymbolProperties = graphProperties[1]->properties();
 
     return    // Graph panel preferences
               (graphPanelProperties[0]->colorValue() != mGraphPanelBackgroundColor)
            || (graphPanelProperties[1]->colorValue() != mGraphPanelForegroundColor)
-           ||  graphPanelProperties[2]->stringValue().compare(mGraphPanelTitle)
-              // Graph preferences
-           ||  graphProperties[0]->stringValue().compare(mGraphTitle)
               // Graph line preferences
            ||  (graphLineProperties[0]->listValueIndex() != SEDMLSupport::indexLineStyle(mGraphLineStyle))
            ||  (graphLineProperties[1]->integerValue() != mGraphLineWidth)
@@ -217,18 +209,14 @@ void SimulationExperimentViewPreferencesWidget::resetPreferences()
 
     graphPanelProperties[0]->setColorValue(SettingsPreferencesGraphPanelBackgroundColorDefault);
     graphPanelProperties[1]->setColorValue(SettingsPreferencesGraphPanelForegroundColorDefault);
-    graphPanelProperties[2]->setValue(SettingsPreferencesGraphPanelTitleDefault);
 
     Core::Properties graphProperties = mGraphProperties->properties();
-
-    graphProperties[0]->setValue(SettingsPreferencesGraphTitleDefault);
-
-    Core::Properties graphLineProperties = graphProperties[1]->properties();
+    Core::Properties graphLineProperties = graphProperties[0]->properties();
 
     graphLineProperties[0]->setValue(SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault));
     graphLineProperties[1]->setIntegerValue(SettingsPreferencesGraphLineWidthDefault);
 
-    Core::Properties graphSymbolProperties = graphProperties[2]->properties();
+    Core::Properties graphSymbolProperties = graphProperties[1]->properties();
 
     graphSymbolProperties[0]->setValue(SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault));
     graphSymbolProperties[1]->setIntegerValue(SettingsPreferencesGraphSymbolSizeDefault);
@@ -245,18 +233,14 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
 
     mSettings->setValue(SettingsPreferencesGraphPanelBackgroundColor, graphPanelProperties[0]->colorValue());
     mSettings->setValue(SettingsPreferencesGraphPanelForegroundColor, graphPanelProperties[1]->colorValue());
-    mSettings->setValue(SettingsPreferencesGraphPanelTitle, graphPanelProperties[2]->stringValue());
 
     Core::Properties graphProperties = mGraphProperties->properties();
-
-    mSettings->setValue(SettingsPreferencesGraphTitle, graphProperties[0]->stringValue());
-
-    Core::Properties graphLineProperties = graphProperties[1]->properties();
+    Core::Properties graphLineProperties = graphProperties[0]->properties();
 
     mSettings->setValue(SettingsPreferencesGraphLineStyle, graphLineProperties[0]->listValue());
     mSettings->setValue(SettingsPreferencesGraphLineWidth, graphLineProperties[1]->integerValue());
 
-    Core::Properties graphSymbolProperties = graphProperties[2]->properties();
+    Core::Properties graphSymbolProperties = graphProperties[1]->properties();
 
     mSettings->setValue(SettingsPreferencesGraphSymbolStyle, graphSymbolProperties[0]->listValue());
     mSettings->setValue(SettingsPreferencesGraphSymbolSize, graphSymbolProperties[1]->integerValue());

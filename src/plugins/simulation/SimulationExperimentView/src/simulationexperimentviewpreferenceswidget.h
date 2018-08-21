@@ -63,17 +63,14 @@ static const auto PluginName = QStringLiteral("SimulationExperimentView");
 
 static const auto SettingsPreferencesGraphPanelBackgroundColor = QStringLiteral("GraphPanelBackgroundColor");
 static const auto SettingsPreferencesGraphPanelForegroundColor = QStringLiteral("GraphPanelForegroundColor");
-static const auto SettingsPreferencesGraphPanelTitle           = QStringLiteral("GraphPanelTitle");
 
 //==============================================================================
 
 static const QColor SettingsPreferencesGraphPanelBackgroundColorDefault = Qt::white;
 static const QColor SettingsPreferencesGraphPanelForegroundColorDefault = Qt::black;
-static const auto SettingsPreferencesGraphPanelTitleDefault             = QStringLiteral("");
 
 //==============================================================================
 
-static const auto SettingsPreferencesGraphTitle        = QStringLiteral("GraphTitle");
 static const auto SettingsPreferencesGraphLineStyle    = QStringLiteral("GraphLineStyle");
 static const auto SettingsPreferencesGraphLineWidth    = QStringLiteral("GraphLineWidth");
 static const auto SettingsPreferencesGraphSymbolStyle  = QStringLiteral("GraphSymbolStyle");
@@ -82,7 +79,6 @@ static const auto SettingsPreferencesGraphSymbolFilled = QStringLiteral("GraphSy
 
 //==============================================================================
 
-static const auto SettingsPreferencesGraphTitleDefault                   = QStringLiteral("");
 static const Qt::PenStyle SettingsPreferencesGraphLineStyleDefault       = Qt::SolidLine;
 static const int SettingsPreferencesGraphLineWidthDefault                = 3;
 static const QwtSymbol::Style SettingsPreferencesGraphSymbolStyleDefault = QwtSymbol::NoSymbol;
@@ -116,9 +112,7 @@ private:
 
     QColor mGraphPanelBackgroundColor;
     QColor mGraphPanelForegroundColor;
-    QString mGraphPanelTitle;
 
-    QString mGraphTitle;
     Qt::PenStyle mGraphLineStyle;
     int mGraphLineWidth;
     QwtSymbol::Style mGraphSymbolStyle;

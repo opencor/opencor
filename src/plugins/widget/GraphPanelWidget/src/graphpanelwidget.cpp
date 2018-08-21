@@ -37,11 +37,9 @@ namespace GraphPanelWidget {
 //==============================================================================
 
 GraphPanelWidgetProperties::GraphPanelWidgetProperties(const QColor &pBackgroundColor,
-                                                       const QColor &pForegroundColor,
-                                                       const QString &pTitle) :
+                                                       const QColor &pForegroundColor) :
     mBackgroundColor(pBackgroundColor),
-    mForegroundColor(pForegroundColor),
-    mTitle(pTitle)
+    mForegroundColor(pForegroundColor)
 {
 }
 
@@ -61,15 +59,6 @@ QColor GraphPanelWidgetProperties::foregroundColor() const
     // Return our foreground colour
 
     return mForegroundColor;
-}
-
-//==============================================================================
-
-QString GraphPanelWidgetProperties::title() const
-{
-    // Return our title
-
-    return mTitle;
 }
 
 //==============================================================================
