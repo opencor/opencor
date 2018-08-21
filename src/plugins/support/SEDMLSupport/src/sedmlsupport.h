@@ -47,14 +47,18 @@ namespace SEDMLSupport {
 QStringList SEDMLSUPPORT_EXPORT lineStyles();
 
 int SEDMLSUPPORT_EXPORT indexLineStyle(const QString &pStringLineStyle);
+int SEDMLSUPPORT_EXPORT indexLineStyle(Qt::PenStyle pLineStyle);
 QString SEDMLSUPPORT_EXPORT stringLineStyle(int pIndexLineStyle);
 QString SEDMLSUPPORT_EXPORT stringLineStyle(Qt::PenStyle pLineStyle);
+Qt::PenStyle SEDMLSUPPORT_EXPORT lineStyle(const QString &pStringLineStyle);
 
 QStringList SEDMLSUPPORT_EXPORT symbolStyles();
 
 int SEDMLSUPPORT_EXPORT indexSymbolStyle(const QString &pStringSymbolStyle);
+int SEDMLSUPPORT_EXPORT indexSymbolStyle(QwtSymbol::Style pSymbolStyle);
 QString SEDMLSUPPORT_EXPORT stringSymbolStyle(int pIndexSymbolStyle);
 QString SEDMLSUPPORT_EXPORT stringSymbolStyle(QwtSymbol::Style pSymbolStyle);
+QwtSymbol::Style SEDMLSUPPORT_EXPORT symbolStyle(const QString &pStringSymbolStyle);
 
 //==============================================================================
 
