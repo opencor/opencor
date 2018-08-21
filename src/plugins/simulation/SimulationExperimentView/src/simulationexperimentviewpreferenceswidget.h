@@ -61,9 +61,9 @@ static const auto SettingsPreferencesGraphPanelTitle           = QStringLiteral(
 
 //==============================================================================
 
-static const auto SettingsPreferencesGraphPanelBackgroundColorDefault = QColor(Qt::white);
-static const auto SettingsPreferencesGraphPanelForegroundColorDefault = QColor(Qt::black);
-static const auto SettingsPreferencesGraphPanelTitleDefault           = QStringLiteral("");
+static const QColor SettingsPreferencesGraphPanelBackgroundColorDefault = Qt::white;
+static const QColor SettingsPreferencesGraphPanelForegroundColorDefault = Qt::black;
+static const auto SettingsPreferencesGraphPanelTitleDefault             = QStringLiteral("");
 
 //==============================================================================
 
