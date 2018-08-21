@@ -1577,7 +1577,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
             modelListValues << modelListValue(fileNameOrUrl);
         }
 
-        modelListValues.sort();
+        modelListValues.sort(Qt::CaseInsensitive);
 
         modelListValues.prepend(QString());
         modelListValues.prepend(tr("Current"));

@@ -291,7 +291,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
         // We have a solvers list property, which means that we have at least
         // one solver, so sort our list
 
-        solversNames.sort();
+        solversNames.sort(Qt::CaseInsensitive);
 
         // Assign the list of solvers to our list property
 

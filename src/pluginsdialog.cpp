@@ -350,7 +350,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
             if (dependencies.isEmpty()) {
                 mGui->fieldTwoValue->setText(tr("none"));
             } else {
-                dependencies.sort();
+                dependencies.sort(Qt::CaseInsensitive);
 
                 mGui->fieldTwoValue->setText("- "+dependencies.join("\n- "));
             }
