@@ -40,9 +40,8 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
-static const bool DefaultGraphPanelActive                = true;
-static const QColor DefaultGraphPanelBackgroundColor     = Qt::white;
-static const QColor DefaultGraphPanelForegroundColor     = Qt::black;
+static const QColor DefaultGraphPanelBackgroundColor = Qt::white;
+static const QColor DefaultGraphPanelForegroundColor = Qt::black;
 
 //==============================================================================
 
