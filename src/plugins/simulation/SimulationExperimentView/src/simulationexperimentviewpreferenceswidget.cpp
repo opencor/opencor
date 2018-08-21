@@ -42,7 +42,14 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
+static const auto SettingsCategory        = QStringLiteral("Category");
 static const auto SettingsPropertiesWidth = QStringLiteral("PropertiesWidth");
+
+//==============================================================================
+
+static const auto SettingsCategoryDefault    = QStringLiteral("Graph Panel");
+static const auto SettingsCategoryGraphPanel = SettingsCategoryDefault;
+static const auto SettingsCategoryGraph      = QStringLiteral("Graph");
 
 //==============================================================================
 
@@ -62,6 +69,12 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     int graphPanelIndex = mCategoryTabs->addTab(tr("Graph Panel"));
     int graphIndex = mCategoryTabs->addTab(tr("Graph"));
+
+    QString category = mSettings->value(SettingsCategory, SettingsCategoryDefault).toString();
+
+    mCategoryTabs->setCurrentIndex(!category.compare(SettingsCategoryGraphPanel)?
+                                       0:
+                                       1);
 
     mGui->layout->addWidget(mCategoryTabs);
 
@@ -147,6 +160,12 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
 SimulationExperimentViewPreferencesWidget::~SimulationExperimentViewPreferencesWidget()
 {
+    // Keep track of which category is selected
+
+    mSettings->setValue(SettingsCategory, (mCategoryTabs->currentIndex() == 0)?
+                                              SettingsCategoryGraphPanel:
+                                              SettingsCategoryGraph);
+
     // Keep track of the width of our property editors (using that of our graph
     // panel property editor since they all have the same width)
 
