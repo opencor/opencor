@@ -96,16 +96,15 @@ int symbolStyleValueIndex(const QString &pSymbolStyleValue)
 
 //==============================================================================
 
-QString symbolStyleValue(int pSymbolStyleValueIndex)
+QString symbolStyleValue(QwtSymbol::Style pSymbolStyle)
 {
     // Return the symbol style value for the given index
 
-    if (   (pSymbolStyleValueIndex >= 0)
-        && (pSymbolStyleValueIndex < symbolStyles().count())) {
-        return symbolStyles()[pSymbolStyleValueIndex];
-    } else {
-        return QString();
-    }
+    return symbolStyles()[int((pSymbolStyle <= QwtSymbol::DTriangle)?
+                                  pSymbolStyle+1:
+                                  ((pSymbolStyle >= QwtSymbol::Cross) && (pSymbolStyle <= QwtSymbol::Star1))?
+                                      pSymbolStyle-2:
+                                      QwtSymbol::NoSymbol)];
 }
 
 //==============================================================================

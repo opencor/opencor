@@ -518,11 +518,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *symbolProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::symbolStyles(),
-                                          SEDMLSupport::symbolStyleValue((pGraphProperties.symbolStyle() <= QwtSymbol::DTriangle)?
-                                                                             pGraphProperties.symbolStyle()+1:
-                                                                             ((pGraphProperties.symbolStyle() >= QwtSymbol::Cross) && (pGraphProperties.symbolStyle() <= QwtSymbol::Star1))?
-                                                                                 pGraphProperties.symbolStyle()-2:
-                                                                                 QwtSymbol::NoSymbol),
+                                          SEDMLSupport::symbolStyleValue(pGraphProperties.symbolStyle()),
                                           symbolProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.symbolSize(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolColor(), symbolProperty);

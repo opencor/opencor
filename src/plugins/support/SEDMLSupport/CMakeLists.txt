@@ -24,4 +24,5 @@ add_plugin(SEDMLSupport
         CellMLSupport
         libSBML
         libSEDML
+        Qwt
 )

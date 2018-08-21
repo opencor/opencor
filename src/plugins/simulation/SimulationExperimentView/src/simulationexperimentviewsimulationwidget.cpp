@@ -2004,7 +2004,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                                                .arg(lineProperties[2]->stringValue()))
                                                               +SedmlProperty.arg(SEDMLSupport::Symbol)
                                                                             .arg( SedmlProperty.arg(SEDMLSupport::Style)
-                                                                                               .arg(SEDMLSupport::symbolStyleValue(symbolProperties[0]->listValueIndex()))
+                                                                                               .arg(SEDMLSupport::symbolStyleValue(QwtSymbol::Style(symbolProperties[0]->listValueIndex())))
                                                                                  +SedmlProperty.arg(SEDMLSupport::Size)
                                                                                                .arg(symbolProperties[1]->stringValue())
                                                                                  +SedmlProperty.arg(SEDMLSupport::Color)

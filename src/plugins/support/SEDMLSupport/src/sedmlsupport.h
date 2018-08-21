@@ -33,6 +33,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "qwtbegin.h"
+    #include "qwt_symbol.h"
+#include "qwtend.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SEDMLSupport {
 
@@ -46,7 +52,7 @@ QString SEDMLSUPPORT_EXPORT lineStyleValue(Qt::PenStyle pLineStyle);
 QStringList SEDMLSUPPORT_EXPORT symbolStyles();
 
 int SEDMLSUPPORT_EXPORT symbolStyleValueIndex(const QString &pSymbolStyleValue);
-QString SEDMLSUPPORT_EXPORT symbolStyleValue(int pSymbolStyleValueIndex);
+QString SEDMLSUPPORT_EXPORT symbolStyleValue(QwtSymbol::Style pSymbolStyle);
 
 //==============================================================================
 
