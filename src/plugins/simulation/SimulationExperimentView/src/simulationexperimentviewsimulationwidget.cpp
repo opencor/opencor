@@ -3004,19 +3004,16 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                     QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
                                     QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
-                                    if (!symbolPropertyNodeName.compare(SEDMLSupport::Style)) {
-                                        int symbolStyleValue = SEDMLSupport::indexSymbolStyle(symbolPropertyNodeValue);
-
-                                        symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
-                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size)) {
+                                    if (!symbolPropertyNodeName.compare(SEDMLSupport::Style))
+                                        symbolStyle = SEDMLSupport::symbolStyle(symbolPropertyNodeValue);
+                                    else if (!symbolPropertyNodeName.compare(SEDMLSupport::Size))
                                         symbolSize = symbolPropertyNodeValue.toInt();
-                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Color)) {
+                                    else if (!symbolPropertyNodeName.compare(SEDMLSupport::Color))
                                         symbolColor.setNamedColor(symbolPropertyNodeValue);
-                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::Filled)) {
+                                    else if (!symbolPropertyNodeName.compare(SEDMLSupport::Filled))
                                         symbolFilled = !symbolPropertyNodeValue.compare(TrueValue);
-                                    } else if (!symbolPropertyNodeName.compare(SEDMLSupport::FillColor)) {
+                                    else if (!symbolPropertyNodeName.compare(SEDMLSupport::FillColor))
                                         symbolFillColor.setNamedColor(symbolPropertyNodeValue);
-                                    }
                                 }
                             }
                         }

@@ -1351,7 +1351,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     QPen linePen = oldLinePen;
     Core::Properties lineProperties = properties[4]->properties();
 
-    linePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValue()));
+    linePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValueIndex()));
     linePen.setWidth(lineProperties[1]->integerValue());
     linePen.setColor(lineProperties[2]->colorValue());
 
@@ -1362,8 +1362,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     const QwtSymbol *oldGraphSymbol = graph->symbol();
     bool graphSymbolUpdated = !oldGraphSymbol;
     Core::Properties symbolProperties = properties[5]->properties();
-    int symbolStyleValue = symbolProperties[0]->listValues().indexOf(symbolProperties[0]->listValue());
-    QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
+    QwtSymbol::Style symbolStyle = SEDMLSupport::symbolStyle(symbolProperties[0]->listValueIndex());
     int symbolSize = symbolProperties[1]->integerValue();
     QPen symbolColor = QPen(symbolProperties[2]->colorValue());
     bool symbolFill = symbolProperties[3]->booleanValue();
@@ -1445,7 +1444,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties gridLinesProperties = properties[3]->properties();
 
-        graphPanelPlot->setGridLinesStyle(SEDMLSupport::lineStyle(gridLinesProperties[0]->listValue()));
+        graphPanelPlot->setGridLinesStyle(SEDMLSupport::lineStyle(gridLinesProperties[0]->listValueIndex()));
         graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
         graphPanelPlot->setGridLinesColor(gridLinesProperties[2]->colorValue());
 
@@ -1457,7 +1456,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties pointCoordinatesProperties = properties[5]->properties();
 
-        graphPanelPlot->setPointCoordinatesStyle(SEDMLSupport::lineStyle(pointCoordinatesProperties[0]->listValue()));
+        graphPanelPlot->setPointCoordinatesStyle(SEDMLSupport::lineStyle(pointCoordinatesProperties[0]->listValueIndex()));
         graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
         graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
         graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
@@ -1491,7 +1490,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties zoomRegionProperties = properties[10]->properties();
 
-        graphPanelPlot->setZoomRegionStyle(SEDMLSupport::lineStyle(zoomRegionProperties[0]->listValue()));
+        graphPanelPlot->setZoomRegionStyle(SEDMLSupport::lineStyle(zoomRegionProperties[0]->listValueIndex()));
         graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());
         graphPanelPlot->setZoomRegionColor(zoomRegionProperties[2]->colorValue());
         graphPanelPlot->setZoomRegionFontColor(zoomRegionProperties[3]->colorValue());

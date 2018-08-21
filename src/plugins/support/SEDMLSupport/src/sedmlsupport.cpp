@@ -99,6 +99,20 @@ QString stringLineStyle(Qt::PenStyle pLineStyle)
 
 //==============================================================================
 
+Qt::PenStyle lineStyle(int pIndexLineStyle)
+{
+    // Return the given index line style as a line style
+    // Note: if the given index line style is invalid then we return the line
+    //       style for a solid line...
+
+    return Qt::PenStyle((   (pIndexLineStyle >= 0)
+                         && (pIndexLineStyle < lineStyles().count()))?
+                            pIndexLineStyle:
+                            1);
+}
+
+//==============================================================================
+
 Qt::PenStyle lineStyle(const QString &pStringLineStyle)
 {
     // Return the given string line style as a line style
@@ -176,6 +190,24 @@ QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle)
                                   ((pSymbolStyle >= QwtSymbol::Cross) && (pSymbolStyle <= QwtSymbol::Star1))?
                                       pSymbolStyle-2:
                                       QwtSymbol::NoSymbol)];
+}
+
+//==============================================================================
+
+QwtSymbol::Style symbolStyle(int pIndexSymbolStyle)
+{
+    // Return the given index symbol style as a string symbol style
+    // Note #1: if the given index symbol style is invalid then we return the
+    //          string symbol style for a "none" symbol...
+    // Note #2: the shifting is because indices in our list of symbols don't
+    //          match those of QwtSymbol::Style...
+
+    return QwtSymbol::Style(   (   (pIndexSymbolStyle >= 0)
+                            && (pIndexSymbolStyle < symbolStyles().count()))?
+                                (pIndexSymbolStyle <= 5)?
+                                    pIndexSymbolStyle-1:
+                                    pIndexSymbolStyle+2:
+                                -1);
 }
 
 //==============================================================================
