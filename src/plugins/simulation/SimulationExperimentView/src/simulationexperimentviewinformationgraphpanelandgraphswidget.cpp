@@ -43,7 +43,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "qwt_symbol.h"
+#include "qwtbegin.h"
+    #include "qwt_symbol.h"
+#include "qwtend.h"
 
 //==============================================================================
 
