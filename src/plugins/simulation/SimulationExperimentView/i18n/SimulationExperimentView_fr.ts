@@ -152,72 +152,8 @@
         <translation>Ligne</translation>
     </message>
     <message>
-        <source>None</source>
-        <translation>Aucun</translation>
-    </message>
-    <message>
-        <source>Solid</source>
-        <translation>Solide</translation>
-    </message>
-    <message>
-        <source>Dash</source>
-        <translation>Tiret</translation>
-    </message>
-    <message>
-        <source>Dot</source>
-        <translation>Point</translation>
-    </message>
-    <message>
-        <source>DashDot</source>
-        <translation>TiretPoint</translation>
-    </message>
-    <message>
-        <source>DashDotDot</source>
-        <translation>TiretPointPoint</translation>
-    </message>
-    <message>
         <source>Symbol</source>
         <translation>Symbole</translation>
-    </message>
-    <message>
-        <source>Circle</source>
-        <translation>Cercle</translation>
-    </message>
-    <message>
-        <source>Square</source>
-        <translation>Carré</translation>
-    </message>
-    <message>
-        <source>Diamond</source>
-        <translation>Diamant</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Down Triangle</source>
-        <translation>Triangle Bas</translation>
-    </message>
-    <message>
-        <source>Cross</source>
-        <translation>Croix</translation>
-    </message>
-    <message>
-        <source>X Cross</source>
-        <translation>Croix en X</translation>
-    </message>
-    <message>
-        <source>Horizontal Line</source>
-        <translation>Ligne Horizontale</translation>
-    </message>
-    <message>
-        <source>Vertical Line</source>
-        <translation>Ligne Verticale</translation>
-    </message>
-    <message>
-        <source>Star</source>
-        <translation>Étoile</translation>
     </message>
     <message>
         <source>Size</source>
@@ -348,10 +284,6 @@
     <message>
         <source>Foreground colour</source>
         <translation>Couleur de premier plan</translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation>Titre</translation>
     </message>
     <message>
         <source>Line</source>

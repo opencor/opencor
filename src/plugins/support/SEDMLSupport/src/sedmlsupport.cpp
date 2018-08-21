@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QObject>
 #include <QStringList>
 
 //==============================================================================
@@ -44,6 +45,20 @@ QStringList lineStyles()
                                                         << "dashdotdot";
 
     return LineStyles;
+}
+
+//==============================================================================
+
+QStringList formattedLineStyles()
+{
+    // Return our list of formatted line styles
+
+    return QStringList() << QObject::tr("None")
+                         << QObject::tr("Solid")
+                         << QObject::tr("Dash")
+                         << QObject::tr("Dot")
+                         << QObject::tr("DashDot")
+                         << QObject::tr("DashDotDot");
 }
 
 //==============================================================================
@@ -72,29 +87,33 @@ int indexLineStyle(Qt::PenStyle pLineStyle)
 
 //==============================================================================
 
-QString stringLineStyle(int pIndexLineStyle)
+QString stringLineStyle(int pIndexLineStyle, bool pFormatted)
 {
     // Return the given index line style as a string line style
     // Note: if the given index line style is invalid then we return the string
     //       line style for a solid line...
 
-    return lineStyles()[(   (pIndexLineStyle >= 0)
-                         && (pIndexLineStyle < lineStyles().count()))?
-                            pIndexLineStyle:
-                            1];
+    QStringList res = pFormatted?formattedLineStyles():lineStyles();
+
+    return res[(   (pIndexLineStyle >= 0)
+                && (pIndexLineStyle < res.count()))?
+                   pIndexLineStyle:
+                   1];
 }
 
 //==============================================================================
 
-QString stringLineStyle(Qt::PenStyle pLineStyle)
+QString stringLineStyle(Qt::PenStyle pLineStyle, bool pFormatted)
 {
     // Return the given line style as a string line style
     // Note: if the given line style is invalid then we return the string line
     //       style for a solid line...
 
-    return lineStyles()[int((pLineStyle > Qt::DashDotDotLine)?
-                                Qt::SolidLine:
-                                pLineStyle)];
+    QStringList res = pFormatted?formattedLineStyles():lineStyles();
+
+    return res[int((pLineStyle > Qt::DashDotDotLine)?
+                       Qt::SolidLine:
+                       pLineStyle)];
 }
 
 //==============================================================================
@@ -141,6 +160,25 @@ QStringList symbolStyles()
 
 //==============================================================================
 
+QStringList formattedSymbolStyles()
+{
+    // Return our list of formatted symbol styles
+
+    return QStringList() << QObject::tr("None")
+                         << QObject::tr("Circle")
+                         << QObject::tr("Square")
+                         << QObject::tr("Diamond")
+                         << QObject::tr("Triangle")
+                         << QObject::tr("Down Triangle")
+                         << QObject::tr("Cross")
+                         << QObject::tr("X Cross")
+                         << QObject::tr("Horizontal Line")
+                         << QObject::tr("Vertical Line")
+                         << QObject::tr("Star");
+}
+
+//==============================================================================
+
 int indexSymbolStyle(const QString &pStringSymbolStyle)
 {
     // Return the given string symbol style as an index symbol style
@@ -165,31 +203,35 @@ int indexSymbolStyle(QwtSymbol::Style pSymbolStyle)
 
 //==============================================================================
 
-QString stringSymbolStyle(int pIndexSymbolStyle)
+QString stringSymbolStyle(int pIndexSymbolStyle, bool pFormatted)
 {
     // Return the given index symbol style as a string symbol style
     // Note: if the given index symbol style is invalid then we return the
     //       string symbol style for a "none" symbol...
 
-    return symbolStyles()[(   (pIndexSymbolStyle >= 0)
-                           && (pIndexSymbolStyle < symbolStyles().count()))?
-                              pIndexSymbolStyle:
-                              0];
+    QStringList res = pFormatted?formattedSymbolStyles():symbolStyles();
+
+    return res[(   (pIndexSymbolStyle >= 0)
+                && (pIndexSymbolStyle < res.count()))?
+                   pIndexSymbolStyle:
+                   0];
 }
 
 //==============================================================================
 
-QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle)
+QString stringSymbolStyle(QwtSymbol::Style pSymbolStyle, bool pFormatted)
 {
     // Return the given symbol style as a string symbol style
     // Note: if the given symbol style is invalid then we return the string
     //       symbol style for a "none" symbol...
 
-    return symbolStyles()[int((pSymbolStyle <= QwtSymbol::DTriangle)?
-                                  pSymbolStyle+1:
-                                  ((pSymbolStyle >= QwtSymbol::Cross) && (pSymbolStyle <= QwtSymbol::Star1))?
-                                      pSymbolStyle-2:
-                                      QwtSymbol::NoSymbol)];
+    QStringList res = pFormatted?formattedSymbolStyles():symbolStyles();
+
+    return res[int((pSymbolStyle <= QwtSymbol::DTriangle)?
+                   pSymbolStyle+1:
+                   ((pSymbolStyle >= QwtSymbol::Cross) && (pSymbolStyle <= QwtSymbol::Star1))?
+                       pSymbolStyle-2:
+                       QwtSymbol::NoSymbol)];
 }
 
 //==============================================================================

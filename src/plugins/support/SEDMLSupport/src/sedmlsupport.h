@@ -45,20 +45,26 @@ namespace SEDMLSupport {
 //==============================================================================
 
 QStringList SEDMLSUPPORT_EXPORT lineStyles();
+QStringList SEDMLSUPPORT_EXPORT formattedLineStyles();
 
 int SEDMLSUPPORT_EXPORT indexLineStyle(const QString &pStringLineStyle);
 int SEDMLSUPPORT_EXPORT indexLineStyle(Qt::PenStyle pLineStyle);
-QString SEDMLSUPPORT_EXPORT stringLineStyle(int pIndexLineStyle);
-QString SEDMLSUPPORT_EXPORT stringLineStyle(Qt::PenStyle pLineStyle);
+QString SEDMLSUPPORT_EXPORT stringLineStyle(int pIndexLineStyle,
+                                            bool pFormatted = false);
+QString SEDMLSUPPORT_EXPORT stringLineStyle(Qt::PenStyle pLineStyle,
+                                            bool pFormatted = false);
 Qt::PenStyle SEDMLSUPPORT_EXPORT lineStyle(int pIndexLineStyle);
 Qt::PenStyle SEDMLSUPPORT_EXPORT lineStyle(const QString &pStringLineStyle);
 
 QStringList SEDMLSUPPORT_EXPORT symbolStyles();
+QStringList SEDMLSUPPORT_EXPORT formattedSymbolStyles();
 
 int SEDMLSUPPORT_EXPORT indexSymbolStyle(const QString &pStringSymbolStyle);
 int SEDMLSUPPORT_EXPORT indexSymbolStyle(QwtSymbol::Style pSymbolStyle);
-QString SEDMLSUPPORT_EXPORT stringSymbolStyle(int pIndexSymbolStyle);
-QString SEDMLSUPPORT_EXPORT stringSymbolStyle(QwtSymbol::Style pSymbolStyle);
+QString SEDMLSUPPORT_EXPORT stringSymbolStyle(int pIndexSymbolStyle,
+                                              bool pFormatted = false);
+QString SEDMLSUPPORT_EXPORT stringSymbolStyle(QwtSymbol::Style pSymbolStyle,
+                                              bool pFormatted = false);
 QwtSymbol::Style SEDMLSUPPORT_EXPORT symbolStyle(int pIndexSymbolStyle);
 QwtSymbol::Style SEDMLSUPPORT_EXPORT symbolStyle(const QString &pStringSymbolStyle);
 

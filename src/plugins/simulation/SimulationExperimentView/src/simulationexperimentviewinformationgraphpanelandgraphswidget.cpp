@@ -1596,13 +1596,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
         graphProperties[4]->setName(tr("Line"));
 
         lineProperties[0]->setName(tr("Style"));
-        lineProperties[0]->setListValues(QStringList() << tr("None")
-                                                       << tr("Solid")
-                                                       << tr("Dash")
-                                                       << tr("Dot")
-                                                       << tr("DashDot")
-                                                       << tr("DashDotDot"),
-                                         false);
+        lineProperties[0]->setListValues(SEDMLSupport::formattedLineStyles(), false);
         lineProperties[1]->setName(tr("Width"));
         lineProperties[2]->setName(tr("Colour"));
 
@@ -1613,18 +1607,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
         graphProperties[5]->setName(tr("Symbol"));
 
         symbolProperties[0]->setName(tr("Style"));
-        symbolProperties[0]->setListValues(QStringList() << tr("None")
-                                                         << tr("Circle")
-                                                         << tr("Square")
-                                                         << tr("Diamond")
-                                                         << tr("Triangle")
-                                                         << tr("Down Triangle")
-                                                         << tr("Cross")
-                                                         << tr("X Cross")
-                                                         << tr("Horizontal Line")
-                                                         << tr("Vertical Line")
-                                                         << tr("Star"),
-                                           false);
+        symbolProperties[0]->setListValues(SEDMLSupport::formattedSymbolStyles(), false);
         symbolProperties[1]->setName(tr("Size"));
         symbolProperties[2]->setName(tr("Colour"));
         symbolProperties[3]->setName(tr("Filled"));
