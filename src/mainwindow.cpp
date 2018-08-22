@@ -892,7 +892,7 @@ void MainWindow::reorderViewWindowsMenu()
 
         // Sort the menu items
 
-        menuItemTitles.sort();
+        menuItemTitles.sort(Qt::CaseInsensitive);
 
         // Add the menu items actions in the new order
         // Note: to use addAction will effectively 'move' the menu items to the

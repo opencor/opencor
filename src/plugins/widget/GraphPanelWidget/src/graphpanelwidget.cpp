@@ -36,6 +36,44 @@ namespace GraphPanelWidget {
 
 //==============================================================================
 
+GraphPanelWidgetProperties::GraphPanelWidgetProperties(const QColor &pBackgroundColor,
+                                                       const QColor &pForegroundColor,
+                                                       bool pLegend) :
+    mBackgroundColor(pBackgroundColor),
+    mForegroundColor(pForegroundColor),
+    mLegend(pLegend)
+{
+}
+
+//==============================================================================
+
+QColor GraphPanelWidgetProperties::backgroundColor() const
+{
+    // Return our background colour
+
+    return mBackgroundColor;
+}
+
+//==============================================================================
+
+QColor GraphPanelWidgetProperties::foregroundColor() const
+{
+    // Return our foreground colour
+
+    return mForegroundColor;
+}
+
+//==============================================================================
+
+bool GraphPanelWidgetProperties::legend() const
+{
+    // Return our legend
+
+    return mLegend;
+}
+
+//==============================================================================
+
 GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                                    QAction *pSynchronizeXAxisAction,
                                    QAction *pSynchronizeYAxisAction,

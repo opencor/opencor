@@ -296,8 +296,8 @@ bool PmrWorkspace::commit(const char *pMessage, const size_t &pParentCount,
     // Commit everything that is staged
 
     git_signature *author = nullptr;
-    QByteArray name = PreferencesInterface::preference(PluginName, SettingsPreferencesName).toByteArray();
-    QByteArray email = PreferencesInterface::preference(PluginName, SettingsPreferencesEmail).toByteArray();
+    QByteArray name = PreferencesInterface::preference(PluginName, SettingsPreferencesName, SettingsPreferencesNameDefault).toByteArray();
+    QByteArray email = PreferencesInterface::preference(PluginName, SettingsPreferencesEmail, SettingsPreferencesEmailDefault).toByteArray();
     git_index *index = nullptr;
     git_oid treeId;
     git_tree *tree = nullptr;

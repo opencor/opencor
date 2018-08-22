@@ -152,72 +152,8 @@
         <translation>Ligne</translation>
     </message>
     <message>
-        <source>None</source>
-        <translation>Aucun</translation>
-    </message>
-    <message>
-        <source>Solid</source>
-        <translation>Solide</translation>
-    </message>
-    <message>
-        <source>Dash</source>
-        <translation>Tiret</translation>
-    </message>
-    <message>
-        <source>Dot</source>
-        <translation>Point</translation>
-    </message>
-    <message>
-        <source>DashDot</source>
-        <translation>TiretPoint</translation>
-    </message>
-    <message>
-        <source>DashDotDot</source>
-        <translation>TiretPointPoint</translation>
-    </message>
-    <message>
         <source>Symbol</source>
         <translation>Symbole</translation>
-    </message>
-    <message>
-        <source>Circle</source>
-        <translation>Cercle</translation>
-    </message>
-    <message>
-        <source>Square</source>
-        <translation>Carré</translation>
-    </message>
-    <message>
-        <source>Diamond</source>
-        <translation>Diamant</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Down Triangle</source>
-        <translation>Triangle Bas</translation>
-    </message>
-    <message>
-        <source>Cross</source>
-        <translation>Croix</translation>
-    </message>
-    <message>
-        <source>X Cross</source>
-        <translation>Croix en X</translation>
-    </message>
-    <message>
-        <source>Horizontal Line</source>
-        <translation>Ligne Horizontale</translation>
-    </message>
-    <message>
-        <source>Vertical Line</source>
-        <translation>Ligne Verticale</translation>
-    </message>
-    <message>
-        <source>Star</source>
-        <translation>Étoile</translation>
     </message>
     <message>
         <source>Size</source>
@@ -332,6 +268,57 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewPreferencesWidget</name>
+    <message>
+        <source>Graph Panel</source>
+        <translation>Panneau Graphique</translation>
+    </message>
+    <message>
+        <source>Graph</source>
+        <translation>Graphe</translation>
+    </message>
+    <message>
+        <source>Background colour</source>
+        <translation>Couleur d&apos;arrière-plan</translation>
+    </message>
+    <message>
+        <source>Foreground colour</source>
+        <translation>Couleur de premier plan</translation>
+    </message>
+    <message>
+        <source>Legend</source>
+        <translation>Légende</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>Ligne</translation>
+    </message>
+    <message>
+        <source>Style</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation>Largeur</translation>
+    </message>
+    <message>
+        <source>Symbol</source>
+        <translation>Symbole</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>Taille</translation>
+    </message>
+    <message>
+        <source>Filled</source>
+        <translation>Rempli</translation>
+    </message>
+    <message>
+        <source>Fill colour</source>
+        <translation>Couleur de remplissage</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationWidget</name>
     <message>
         <source>Run Simulation</source>
@@ -420,6 +407,14 @@
     <message>
         <source>Export the simulation to SED-ML</source>
         <translation>Exporter la simulation vers SED-ML</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Préférences</translation>
+    </message>
+    <message>
+        <source>Preferences for the Simulation Experiment view</source>
+        <translation>Préférences pour la vue Expérience De Simulation</translation>
     </message>
     <message>
         <source>SED-ML File...</source>

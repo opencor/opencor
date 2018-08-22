@@ -46,15 +46,16 @@ public:
 
     void retranslateUi() override;
 
-    void initialize();
+    void initialize(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties = GraphPanelWidgetProperties());
 
     GraphPanelWidgets graphPanels() const;
     GraphPanelWidget * activeGraphPanel() const;
 
-    GraphPanelWidget * addGraphPanel(bool pActive = true);
+    GraphPanelWidget * addGraphPanel(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties = GraphPanelWidgetProperties(),
+                                     bool pActive = true);
 
-    bool removeCurrentGraphPanel();
-    void removeAllGraphPanels();
+    bool removeCurrentGraphPanel(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties = GraphPanelWidgetProperties());
+    void removeAllGraphPanels(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties = GraphPanelWidgetProperties());
 
     void setActiveGraphPanel(GraphPanelWidget *pGraphPanel);
 
@@ -76,6 +77,7 @@ private:
 
 signals:
     void graphPanelAdded(GraphPanelWidget *pGraphPanel,
+                         const GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
                          bool pActive);
     void graphPanelRemoved(GraphPanelWidget *pGraphPanel);
 

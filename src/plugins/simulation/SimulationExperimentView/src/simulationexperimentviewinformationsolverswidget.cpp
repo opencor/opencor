@@ -291,7 +291,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
         // We have a solvers list property, which means that we have at least
         // one solver, so sort our list
 
-        solversNames.sort();
+        solversNames.sort(Qt::CaseInsensitive);
 
         // Assign the list of solvers to our list property
 
@@ -358,7 +358,7 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
 
         foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName())) {
             pSimulation->data()->addNlaSolverProperty(property->id(),
-                                                      property->valueAsVariant(),
+                                                      property->variantValue(),
                                                       false);
         }
     }

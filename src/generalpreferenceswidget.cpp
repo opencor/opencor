@@ -49,7 +49,7 @@ GeneralPreferencesWidget::GeneralPreferencesWidget(QWidget *pParent) :
 
     QStringList styles = QStyleFactory::keys();
 
-    styles.sort();
+    styles.sort(Qt::CaseInsensitive);
 
     mGui->styleValue->addItems(styles);
 
