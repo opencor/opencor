@@ -9,7 +9,7 @@ BEGIN
     BEGIN
         BLOCK "040904E4"
         BEGIN
-            VALUE "FileDescription", "${PROJECT_DESCRIPTION}"
+            VALUE "FileDescription", "${CMAKE_PROJECT_NAME}"
             VALUE "ProductName", "${CMAKE_PROJECT_NAME}"
             VALUE "ProductVersion", "${PRODUCT_VERSION}"
             VALUE "LegalCopyright", "Copyright 2011-${YEAR}"
