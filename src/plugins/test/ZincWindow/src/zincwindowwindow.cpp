@@ -215,6 +215,10 @@ void ZincWindowWindow::createAndSetZincContext()
         isosurfaces.setMaterial(materialModule.findMaterialByName("gold"));
         isosurfaces.setTessellation(fineTessellation);
     scene.endChange();
+
+    // Update our scene using our initial devide pixel ratio
+
+    devicePixelRatioChanged(mZincWidget->devicePixelRatio());
 }
 
 //==============================================================================
