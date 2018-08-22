@@ -111,7 +111,7 @@ SplashScreenWindow::SplashScreenWindow() :
     // our screen
 
     adjustSize();
-    move(qApp->desktop()->screenGeometry().center()-rect().center());
+    move(QApplication::desktop()->screenGeometry().center()-rect().center());
 }
 
 //==============================================================================
