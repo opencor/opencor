@@ -63,11 +63,13 @@ static const auto PluginName = QStringLiteral("SimulationExperimentView");
 
 static const auto SettingsPreferencesGraphPanelBackgroundColor = QStringLiteral("GraphPanelBackgroundColor");
 static const auto SettingsPreferencesGraphPanelForegroundColor = QStringLiteral("GraphPanelForegroundColor");
+static const auto SettingsPreferencesGraphPanelLegend          = QStringLiteral("GraphPanelLegend");
 
 //==============================================================================
 
 static const QColor SettingsPreferencesGraphPanelBackgroundColorDefault = Qt::white;
 static const QColor SettingsPreferencesGraphPanelForegroundColorDefault = Qt::black;
+static const bool SettingsPreferencesGraphPanelLegendDefault            = true;
 
 //==============================================================================
 
@@ -114,6 +116,7 @@ private:
 
     QColor mGraphPanelBackgroundColor;
     QColor mGraphPanelForegroundColor;
+    bool mGraphPanelLegend;
 
     Qt::PenStyle mGraphLineStyle;
     int mGraphLineWidth;

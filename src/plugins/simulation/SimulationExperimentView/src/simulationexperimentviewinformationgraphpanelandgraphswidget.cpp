@@ -319,6 +319,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
             graphPanelPlot->setBackgroundColor(pGraphPanelWidgetProperties.backgroundColor());
             graphPanelPlot->setForegroundColor(pGraphPanelWidgetProperties.foregroundColor());
+            graphPanelPlot->setLegendActive(pGraphPanelWidgetProperties.legend());
         }
 
         // Populate our graph panel property editor

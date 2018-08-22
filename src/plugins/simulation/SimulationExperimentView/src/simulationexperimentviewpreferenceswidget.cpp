@@ -85,6 +85,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphPanelBackgroundColor = mSettings->value(SettingsPreferencesGraphPanelBackgroundColor, SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>();
     mGraphPanelForegroundColor = mSettings->value(SettingsPreferencesGraphPanelForegroundColor, SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>();
+    mGraphPanelLegend = mSettings->value(SettingsPreferencesGraphPanelLegend, SettingsPreferencesGraphPanelLegendDefault).toBool();
 
     mGraphLineStyle = SEDMLSupport::lineStyle(mSettings->value(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString());
     mGraphLineWidth = mSettings->value(SettingsPreferencesGraphLineWidth, SettingsPreferencesGraphLineWidthDefault).toInt();
@@ -99,6 +100,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     mGraphPanelProperties->addColorProperty(mGraphPanelBackgroundColor)->setName(tr("Background colour"));
     mGraphPanelProperties->addColorProperty(mGraphPanelForegroundColor)->setName(tr("Foreground colour"));
+    mGraphPanelProperties->addBooleanProperty(mGraphPanelLegend)->setName(tr("Legend"));
 
     int propertiesWidth = mSettings->value(SettingsPropertiesWidth, int(0.42*width())).toInt();
 
@@ -192,6 +194,7 @@ bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
     return    // Graph panel preferences
               (graphPanelProperties[0]->colorValue() != mGraphPanelBackgroundColor)
            || (graphPanelProperties[1]->colorValue() != mGraphPanelForegroundColor)
+           || (graphPanelProperties[2]->booleanValue() != mGraphPanelLegend)
               // Graph line preferences
            ||  (graphLineProperties[0]->listValueIndex() != SEDMLSupport::indexLineStyle(mGraphLineStyle))
            ||  (graphLineProperties[1]->integerValue() != mGraphLineWidth)
@@ -212,6 +215,7 @@ void SimulationExperimentViewPreferencesWidget::resetPreferences()
 
     graphPanelProperties[0]->setColorValue(SettingsPreferencesGraphPanelBackgroundColorDefault);
     graphPanelProperties[1]->setColorValue(SettingsPreferencesGraphPanelForegroundColorDefault);
+    graphPanelProperties[2]->setBooleanValue(SettingsPreferencesGraphPanelLegendDefault);
 
     Core::Properties graphProperties = mGraphProperties->properties();
     Core::Properties graphLineProperties = graphProperties[0]->properties();
@@ -237,6 +241,7 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
 
     mSettings->setValue(SettingsPreferencesGraphPanelBackgroundColor, graphPanelProperties[0]->colorValue());
     mSettings->setValue(SettingsPreferencesGraphPanelForegroundColor, graphPanelProperties[1]->colorValue());
+    mSettings->setValue(SettingsPreferencesGraphPanelLegend, graphPanelProperties[2]->booleanValue());
 
     Core::Properties graphProperties = mGraphProperties->properties();
     Core::Properties graphLineProperties = graphProperties[0]->properties();

@@ -313,6 +313,10 @@
         <source>Fill colour</source>
         <translation>Couleur de remplissage</translation>
     </message>
+    <message>
+        <source>Legend</source>
+        <translation>Légende</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewSimulationWidget</name>

@@ -2500,7 +2500,10 @@ GraphPanelWidget::GraphPanelWidgetProperties SimulationExperimentViewSimulationW
                                                                                          SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>(),
                                                         PreferencesInterface::preference(PluginName,
                                                                                          SettingsPreferencesGraphPanelForegroundColor,
-                                                                                         SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>());
+                                                                                         SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>(),
+                                                        PreferencesInterface::preference(PluginName,
+                                                                                         SettingsPreferencesGraphPanelLegend,
+                                                                                         SettingsPreferencesGraphPanelLegendDefault).toBool());
 }
 
 //==============================================================================
