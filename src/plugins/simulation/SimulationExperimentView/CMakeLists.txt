@@ -10,6 +10,7 @@ add_plugin(SimulationExperimentView
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../plugininterface.cpp
+        ../../preferencesinterface.cpp
         ../../pluginmanager.cpp
         ../../solverinterface.cpp
         ../../viewinterface.cpp
@@ -21,12 +22,14 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewinformationsolverswidget.cpp
         src/simulationexperimentviewinformationwidget.cpp
         src/simulationexperimentviewplugin.cpp
+        src/simulationexperimentviewpreferenceswidget.cpp
         src/simulationexperimentviewsimulationwidget.cpp
         src/simulationexperimentviewwidget.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
         ../../plugin.h
         ../../pluginmanager.h
+        ../../preferencesinterface.h
         ../../solverinterface.h
 
         src/simulationexperimentviewcontentswidget.h
@@ -36,8 +39,11 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewinformationsolverswidget.h
         src/simulationexperimentviewinformationwidget.h
         src/simulationexperimentviewplugin.h
+        src/simulationexperimentviewpreferenceswidget.h
         src/simulationexperimentviewsimulationwidget.h
         src/simulationexperimentviewwidget.h
+    UIS
+        src/simulationexperimentviewpreferenceswidget.ui
     PLUGINS
         GraphPanelWidget
         SimulationSupport

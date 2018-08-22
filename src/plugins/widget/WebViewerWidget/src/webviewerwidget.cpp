@@ -185,7 +185,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
 
     layout->addWidget(mWebView);

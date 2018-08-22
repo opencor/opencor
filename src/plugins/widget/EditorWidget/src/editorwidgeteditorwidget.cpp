@@ -91,7 +91,7 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Hide our corresponding find/replace widget, if needed
 
-    if (    mFindReplace->isVisible()
+    if (     mFindReplace->isVisible()
         && !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)

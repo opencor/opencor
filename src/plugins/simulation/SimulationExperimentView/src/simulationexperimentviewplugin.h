@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "preferencesinterface.h"
 #include "viewinterface.h"
 
 //==============================================================================
@@ -50,6 +51,7 @@ class SimulationExperimentViewPlugin : public QObject,
                                        public FileHandlingInterface,
                                        public I18nInterface,
                                        public PluginInterface,
+                                       public PreferencesInterface,
                                        public ViewInterface
 {
     Q_OBJECT
@@ -59,12 +61,14 @@ class SimulationExperimentViewPlugin : public QObject,
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::PreferencesInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
+#include "preferencesinterface.inl"
 #include "viewinterface.inl"
 
 private:

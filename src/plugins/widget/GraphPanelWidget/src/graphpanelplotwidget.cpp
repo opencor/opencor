@@ -89,27 +89,6 @@ GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(bool pSelected,
 
 //==============================================================================
 
-GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QString &pTitle,
-                                                             const QColor &pColor) :
-    GraphPanelPlotGraphProperties(DefaultSelected, pTitle, DefaultLineStyle,
-                                  DefaultLineWidth, pColor, DefaultSymbolStyle,
-                                  DefaultSymbolSize, pColor,
-                                  DefaultSymbolFilled, DefaultSymbolFillColor)
-{
-}
-
-//==============================================================================
-
-GraphPanelPlotGraphProperties::GraphPanelPlotGraphProperties(const QColor &pColor) :
-    GraphPanelPlotGraphProperties(DefaultSelected, DefaultTitle,
-                                  DefaultLineStyle, DefaultLineWidth, pColor,
-                                  DefaultSymbolStyle, DefaultSymbolSize, pColor,
-                                  DefaultSymbolFilled, DefaultSymbolFillColor)
-{
-}
-
-//==============================================================================
-
 bool GraphPanelPlotGraphProperties::isSelected() const
 {
     // Return our selected state
@@ -208,7 +187,7 @@ GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
 
     setLegendAttribute(LegendShowLine);
     setLegendAttribute(LegendShowSymbol);
-    setPen(QPen(pOwner->color(), DefaultLineWidth, DefaultLineStyle, Qt::RoundCap, Qt::RoundJoin));
+    setPen(QPen(pOwner->color(), DefaultGraphLineWidth, DefaultGraphLineStyle, Qt::RoundCap, Qt::RoundJoin));
     setRenderHint(RenderAntialiased);
 }
 

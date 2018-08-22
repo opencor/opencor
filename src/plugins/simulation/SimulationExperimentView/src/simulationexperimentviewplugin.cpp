@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewpreferenceswidget.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
@@ -255,6 +256,26 @@ void SimulationExperimentViewPlugin::saveSettings(QSettings *pSettings) const
 void SimulationExperimentViewPlugin::handleUrl(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// Preferences interface
+//==============================================================================
+
+Preferences::PreferencesWidget * SimulationExperimentViewPlugin::preferencesWidget()
+{
+    // Return our preferences widget
+
+    return new SimulationExperimentViewPreferencesWidget(Core::mainWindow());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewPlugin::preferencesChanged(const QStringList &pPluginNames)
+{
+    Q_UNUSED(pPluginNames);
 
     // We don't handle this interface...
 }
