@@ -286,6 +286,10 @@
         <translation>Couleur de premier plan</translation>
     </message>
     <message>
+        <source>Legend</source>
+        <translation>Légende</translation>
+    </message>
+    <message>
         <source>Line</source>
         <translation>Ligne</translation>
     </message>
@@ -312,10 +316,6 @@
     <message>
         <source>Fill colour</source>
         <translation>Couleur de remplissage</translation>
-    </message>
-    <message>
-        <source>Legend</source>
-        <translation>Légende</translation>
     </message>
 </context>
 <context>
