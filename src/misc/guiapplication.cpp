@@ -51,6 +51,7 @@ GuiApplication::GuiApplication(int &pArgC, char **pArgV) :
     // Add support for HiDPI screens
 
     setAttribute(Qt::AA_EnableHighDpiScaling);
+    setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     // Filter out OpenSSL warning messages
 
