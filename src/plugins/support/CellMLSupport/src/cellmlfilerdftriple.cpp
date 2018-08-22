@@ -688,7 +688,7 @@ QStringList CellmlFileRdfTriples::asStringList() const
                                        rdfTriple->object()->asString());
     }
 
-    res.sort();
+    res.sort(Qt::CaseInsensitive);
 
     return res;
 }

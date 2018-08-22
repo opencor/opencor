@@ -73,35 +73,32 @@ static const QColor Red       = QColor::fromRgb(162, 20, 47);
 
 //==============================================================================
 
-static const bool DefaultSelected                = true;
-static const auto DefaultTitle                   = QStringLiteral("");
-static const Qt::PenStyle DefaultLineStyle       = Qt::SolidLine;
-static const int DefaultLineWidth                = 2;
-static const QColor DefaultLineColor             = DarkBlue;
-static const QwtSymbol::Style DefaultSymbolStyle = QwtSymbol::NoSymbol;
-static const int DefaultSymbolSize               = 8;
-static const QColor DefaultSymbolColor           = DarkBlue;
-static const bool DefaultSymbolFilled            = true;
-static const QColor DefaultSymbolFillColor       = Qt::white;
+static const bool DefaultGraphSelected                = true;
+static const auto DefaultGraphTitle                   = QStringLiteral("");
+static const Qt::PenStyle DefaultGraphLineStyle       = Qt::SolidLine;
+static const int DefaultGraphLineWidth                = 2;
+static const QColor DefaultGraphLineColor             = DarkBlue;
+static const QwtSymbol::Style DefaultGraphSymbolStyle = QwtSymbol::NoSymbol;
+static const int DefaultGraphSymbolSize               = 8;
+static const QColor DefaultGraphSymbolColor           = DarkBlue;
+static const bool DefaultGraphSymbolFilled            = true;
+static const QColor DefaultGraphSymbolFillColor       = Qt::white;
 
 //==============================================================================
 
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
-    explicit GraphPanelPlotGraphProperties(bool pSelected = DefaultSelected,
-                                           const QString &pTitle = DefaultTitle,
-                                           const Qt::PenStyle &pLineStyle = DefaultLineStyle,
-                                           int pLineWidth = DefaultLineWidth,
-                                           const QColor &pLineColor = DefaultLineColor,
-                                           const QwtSymbol::Style &pSymbolStyle = DefaultSymbolStyle,
-                                           int pSymbolSize = DefaultSymbolSize,
-                                           const QColor &pSymbolColor = DefaultSymbolColor,
-                                           bool pSymbolFilled = DefaultSymbolFilled,
-                                           const QColor &pSymbolFillColor = DefaultSymbolFillColor);
-    explicit GraphPanelPlotGraphProperties(const QString &pTitle,
-                                           const QColor &pColor);
-    explicit GraphPanelPlotGraphProperties(const QColor &pColor);
+    explicit GraphPanelPlotGraphProperties(bool pSelected = DefaultGraphSelected,
+                                           const QString &pTitle = DefaultGraphTitle,
+                                           const Qt::PenStyle &pLineStyle = DefaultGraphLineStyle,
+                                           int pLineWidth = DefaultGraphLineWidth,
+                                           const QColor &pLineColor = DefaultGraphLineColor,
+                                           const QwtSymbol::Style &pSymbolStyle = DefaultGraphSymbolStyle,
+                                           int pSymbolSize = DefaultGraphSymbolSize,
+                                           const QColor &pSymbolColor = DefaultGraphSymbolColor,
+                                           bool pSymbolFilled = DefaultGraphSymbolFilled,
+                                           const QColor &pSymbolFillColor = DefaultGraphSymbolFillColor);
 
     bool isSelected() const;
 

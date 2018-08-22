@@ -90,7 +90,7 @@ QString allFilters(const QStringList &pFilters)
 {
     QStringList filters = pFilters;
 
-    filters.sort();
+    filters.sort(Qt::CaseInsensitive);
 
     return  QObject::tr("All Files")
            +" (*"

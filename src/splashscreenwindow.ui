@@ -31,6 +31,9 @@
      <property name="pixmap">
       <pixmap resource="../res/ui.qrc">:/app_splashscreen</pixmap>
      </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
    </item>
    <item>

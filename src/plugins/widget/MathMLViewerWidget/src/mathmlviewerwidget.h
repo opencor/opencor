@@ -34,7 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "qwt_mml_document.h"
+#include "qwtbegin.h"
+    #include "qwt_mml_document.h"
+#include "qwtend.h"
 
 //==============================================================================
 

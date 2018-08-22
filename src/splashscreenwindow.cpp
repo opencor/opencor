@@ -31,15 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QApplication>
-#include <QCoreApplication>
+#include <QCloseEvent>
 #include <QDesktopWidget>
 #include <QElapsedTimer>
-#include <QEvent>
-#include <QEventLoop>
-#include <QFont>
-#include <QLabel>
-#include <QMouseEvent>
 #include <QTimer>
 #include <QWindow>
 

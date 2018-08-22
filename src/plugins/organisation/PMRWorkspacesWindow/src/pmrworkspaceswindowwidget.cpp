@@ -276,7 +276,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(QMargins());
 
     setLayout(layout);
 
@@ -1535,8 +1535,8 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
 {
     // Make sure that the user provided both a user name and email address
 
-    bool hasName = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesName).toByteArray().isEmpty();
-    bool hasEmail = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesEmail).toByteArray().isEmpty();
+    bool hasName = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesName, PMRSupport::SettingsPreferencesNameDefault).toString().isEmpty();
+    bool hasEmail = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesEmail, PMRSupport::SettingsPreferencesEmailDefault).toString().isEmpty();
 
     if (!hasName) {
         if (!hasEmail) {

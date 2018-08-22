@@ -814,7 +814,7 @@ void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
 
 //==============================================================================
 
-QVariant Property::valueAsVariant() const
+QVariant Property::variantValue() const
 {
     // Return our property value as a variant
 
@@ -843,7 +843,7 @@ QVariant Property::valueAsVariant() const
 
 //==============================================================================
 
-QString Property::valueAsString() const
+QString Property::stringValue() const
 {
     // Return our property value as a string
 
@@ -872,7 +872,7 @@ QString Property::valueAsString() const
 
 int Property::integerValue() const
 {
-    // Return our value as an integer, if it is of that type
+    // Return our value as an integer
 
     return value().toInt();
 }
@@ -895,7 +895,7 @@ void Property::setIntegerValue(int pIntegerValue, bool pEmitSignal)
 
 double Property::doubleValue() const
 {
-    // Return our value as a double, if it is of that type
+    // Return our value as a double
 
     return value().toDouble();
 }
@@ -1030,7 +1030,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
 
 bool Property::booleanValue() const
 {
-    // Return our value as a boolean, if it is of that type
+    // Return our value as a boolean
 
     return !value().compare(TrueValue);
 }
@@ -1049,7 +1049,7 @@ void Property::setBooleanValue(bool pBooleanValue)
 
 QColor Property::colorValue() const
 {
-    // Return our value as a color, if it is of that type
+    // Return our value as a color
 
     QColor res;
 
@@ -1815,7 +1815,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         &&  (pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
-        && (pEvent->key() == Qt::Key_A)) {
+        &&  (pEvent->key() == Qt::Key_A)) {
         // The user wants to select everything, which we don't want to allow,
         // so just accept the event...
 
@@ -1830,8 +1830,8 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             editProperty(currentProperty());
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
-        // The user wants to cancel the editing
+    } else if (isEditing() && noModifiers && (pEvent->key() == Qt::Key_Escape)) {
+        // The user is editing and wants to cancel it
 
         finishEditing(false);
 

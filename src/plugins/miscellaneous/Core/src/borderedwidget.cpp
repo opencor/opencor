@@ -50,7 +50,7 @@ BorderedWidget::BorderedWidget(QWidget *pWidget, bool pTop, bool pLeft,
 
     QGridLayout *gridLayout = new QGridLayout(this);
 
-    gridLayout->setContentsMargins(0, 0, 0, 0);
+    gridLayout->setContentsMargins(QMargins());
     gridLayout->setSpacing(0);
 
     setLayout(gridLayout);

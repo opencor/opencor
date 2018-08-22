@@ -381,7 +381,8 @@ void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Some key combinations from our find/replace widget
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+    if (     mOwner->isFindReplaceVisible()
+        && !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)

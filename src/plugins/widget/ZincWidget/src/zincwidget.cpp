@@ -280,10 +280,18 @@ void ZincWidget::updateSceneViewerViewerportSize(int pWidth, int pHeight,
     int newDevicePixelRatio = devicePixelRatio();
 
     if (pCheckDevicePixelRatio) {
-        if (newDevicePixelRatio == mDevicePixelRatio)
+        if (newDevicePixelRatio == mDevicePixelRatio) {
             return;
-        else
+        } else {
+            // Small hack to force ourselves to resize
+
+            resize(pWidth+1, pHeight+1);
+            resize(pWidth, pHeight);
+
+            // Let people know that our device pixel ratio has changed
+
             emit devicePixelRatioChanged(newDevicePixelRatio);
+        }
     }
 
     mDevicePixelRatio = newDevicePixelRatio;

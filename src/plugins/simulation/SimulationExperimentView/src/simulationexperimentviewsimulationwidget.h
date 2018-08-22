@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -143,6 +144,12 @@ public:
 
     SimulationSupport::Simulation * simulation() const;
 
+    GraphPanelWidget::GraphPanelWidgetProperties defaultGraphPanelProperties() const;
+
+    GraphPanelWidget::GraphPanelPlotGraphProperties defaultGraphProperties(const QString &pTitle,
+                                                                           const QColor &pColor) const;
+    GraphPanelWidget::GraphPanelPlotGraphProperties defaultGraphProperties(const QColor &pColor) const;
+
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
                                  quint64 pSimulationResultsSize,
@@ -195,6 +202,7 @@ private:
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
     QAction *mSimulationResultsExportAction;
+    QAction *mPreferencesAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
@@ -319,6 +327,7 @@ private slots:
     void clearSimulationResults();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
+    void preferences();
 
     void emitSplitterMoved();
 

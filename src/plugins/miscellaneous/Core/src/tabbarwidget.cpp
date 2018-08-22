@@ -266,6 +266,23 @@ TabBarWidget::TabBarWidget(QWidget *pParent) :
     // Note: this ensures that our icons have a decent size on HiDPI screens...
 
     setIconSize(QSize(16, 16));
+
+    // Prevent our tabs from expanding
+    // Note: if we didn't do this and had many tabs, our widget would widen,
+    //       which in turn would reduce the size of any adjacent widget,
+    //       something that we don't want (indeed, if OpenCOR had many files
+    //       opened, then our central widget would widen and the width of any
+    //       docked window would be reduced)...
+
+    setExpanding(false);
+
+    // Enable the scrolling of tabs
+    // Note: this is style dependent and, by default, not enabled on macOS, but
+    //       we want to be consistent throughout, so set it in all cases, even
+    //       though it's already set on Windows and Linux (better be safe than
+    //       sorry)...
+
+    setUsesScrollButtons(true);
 }
 
 //==============================================================================

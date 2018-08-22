@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "commonwidget.h"
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidget.h"
 #include "propertyeditorwidget.h"
 
 //==============================================================================
@@ -44,12 +45,6 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
-
-//==============================================================================
-
-namespace GraphPanelWidget {
-    class GraphPanelWidget;
-}   // namespace GraphPanelWidget
 
 //==============================================================================
 
@@ -166,6 +161,10 @@ private:
 
     bool rootProperty(Core::Property *pProperty) const;
 
+    void initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    const GraphPanelWidget::GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
+                    bool pActive, bool pCustomize);
+
 signals:
     void graphPanelGraphsModeChanged(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode pMode);
 
@@ -179,6 +178,7 @@ signals:
 
 public slots:
     void initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                    const GraphPanelWidget::GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
                     bool pActive);
     void initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);
     void finalize(GraphPanelWidget::GraphPanelWidget *pGraphPanel);

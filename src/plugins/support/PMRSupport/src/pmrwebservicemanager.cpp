@@ -161,7 +161,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
         QVBoxLayout *layout = new QVBoxLayout(mWebViewerDialog);
 
-        layout->setContentsMargins(0, 0, 0, 0);
+        layout->setContentsMargins(QMargins());
 
         layout->addWidget(mWebViewer);
 

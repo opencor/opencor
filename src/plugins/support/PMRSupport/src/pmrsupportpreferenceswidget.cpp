@@ -64,8 +64,8 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
 #endif
 
     mPmrUrl = mSettings->value(SettingsPreferencesPmrUrl, SettingsPreferencesPmrUrlDefault).toString();
-    mName = mSettings->value(SettingsPreferencesName).toString();
-    mEmail = mSettings->value(SettingsPreferencesEmail).toString();
+    mName = mSettings->value(SettingsPreferencesName, SettingsPreferencesNameDefault).toString();
+    mEmail = mSettings->value(SettingsPreferencesEmail, SettingsPreferencesEmailDefault).toString();
 
     mGui->pmrUrlValue->setCurrentText(mPmrUrl);
     mGui->nameValue->setText(mName);
