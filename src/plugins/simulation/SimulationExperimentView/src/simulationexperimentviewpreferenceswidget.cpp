@@ -199,7 +199,7 @@ bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
            ||  (graphSymbolProperties[0]->listValueIndex() != SEDMLSupport::indexSymbolStyle(mGraphSymbolStyle))
            ||  (graphSymbolProperties[1]->integerValue() != mGraphSymbolSize)
            ||  (graphSymbolProperties[2]->booleanValue() != mGraphSymbolFilled)
-           ||  (graphSymbolProperties[2]->colorValue() != mGraphSymbolFillColor);
+           ||  (graphSymbolProperties[3]->colorValue() != mGraphSymbolFillColor);
 }
 
 //==============================================================================
