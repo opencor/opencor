@@ -91,6 +91,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     mGraphSymbolStyle = SEDMLSupport::symbolStyle(mSettings->value(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString());
     mGraphSymbolSize = mSettings->value(SettingsPreferencesGraphSymbolSize, SettingsPreferencesGraphSymbolSizeDefault).toInt();
     mGraphSymbolFilled = mSettings->value(SettingsPreferencesGraphSymbolFilled, SettingsPreferencesGraphSymbolFilledDefault).toBool();
+    mGraphSymbolFillColor = mSettings->value(SettingsPreferencesGraphSymbolFillColor, SettingsPreferencesGraphSymbolFillColorDefault).value<QColor>();
 
     // Create and customise our graph panel property editor
 
@@ -124,6 +125,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
                                       symbolProperty)->setName(tr("Style"));
     mGraphProperties->addIntegerGt0Property(mGraphSymbolSize, symbolProperty)->setName(tr("Size"));
     mGraphProperties->addBooleanProperty(mGraphSymbolFilled, symbolProperty)->setName(tr("Filled"));
+    mGraphProperties->addColorProperty(mGraphSymbolFillColor, symbolProperty)->setName(tr("Fill colour"));
 
     mGraphProperties->setColumnWidth(0, propertiesWidth);
     mGraphProperties->expandAll();
@@ -196,7 +198,8 @@ bool SimulationExperimentViewPreferencesWidget::preferencesChanged() const
               // Graph line preferences
            ||  (graphSymbolProperties[0]->listValueIndex() != SEDMLSupport::indexSymbolStyle(mGraphSymbolStyle))
            ||  (graphSymbolProperties[1]->integerValue() != mGraphSymbolSize)
-           ||  (graphSymbolProperties[2]->booleanValue() != mGraphSymbolFilled);
+           ||  (graphSymbolProperties[2]->booleanValue() != mGraphSymbolFilled)
+           ||  (graphSymbolProperties[2]->colorValue() != mGraphSymbolFillColor);
 }
 
 //==============================================================================
@@ -221,6 +224,7 @@ void SimulationExperimentViewPreferencesWidget::resetPreferences()
     graphSymbolProperties[0]->setValue(SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault, true));
     graphSymbolProperties[1]->setIntegerValue(SettingsPreferencesGraphSymbolSizeDefault);
     graphSymbolProperties[2]->setBooleanValue(SettingsPreferencesGraphSymbolFilledDefault);
+    graphSymbolProperties[3]->setColorValue(SettingsPreferencesGraphSymbolFillColorDefault);
 }
 
 //==============================================================================
@@ -245,6 +249,7 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
     mSettings->setValue(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(graphSymbolProperties[0]->listValueIndex()));
     mSettings->setValue(SettingsPreferencesGraphSymbolSize, graphSymbolProperties[1]->integerValue());
     mSettings->setValue(SettingsPreferencesGraphSymbolFilled, graphSymbolProperties[2]->booleanValue());
+    mSettings->setValue(SettingsPreferencesGraphSymbolFillColor, graphSymbolProperties[3]->colorValue());
 }
 
 //==============================================================================

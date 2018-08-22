@@ -71,11 +71,12 @@ static const QColor SettingsPreferencesGraphPanelForegroundColorDefault = Qt::bl
 
 //==============================================================================
 
-static const auto SettingsPreferencesGraphLineStyle    = QStringLiteral("GraphLineStyle");
-static const auto SettingsPreferencesGraphLineWidth    = QStringLiteral("GraphLineWidth");
-static const auto SettingsPreferencesGraphSymbolStyle  = QStringLiteral("GraphSymbolStyle");
-static const auto SettingsPreferencesGraphSymbolSize   = QStringLiteral("GraphSymbolSize");
-static const auto SettingsPreferencesGraphSymbolFilled = QStringLiteral("GraphSymbolFilled");
+static const auto SettingsPreferencesGraphLineStyle       = QStringLiteral("GraphLineStyle");
+static const auto SettingsPreferencesGraphLineWidth       = QStringLiteral("GraphLineWidth");
+static const auto SettingsPreferencesGraphSymbolStyle     = QStringLiteral("GraphSymbolStyle");
+static const auto SettingsPreferencesGraphSymbolSize      = QStringLiteral("GraphSymbolSize");
+static const auto SettingsPreferencesGraphSymbolFilled    = QStringLiteral("GraphSymbolFilled");
+static const auto SettingsPreferencesGraphSymbolFillColor = QStringLiteral("GraphSymbolFillColor");
 
 //==============================================================================
 
@@ -84,6 +85,7 @@ static const int SettingsPreferencesGraphLineWidthDefault                = 3;
 static const QwtSymbol::Style SettingsPreferencesGraphSymbolStyleDefault = QwtSymbol::NoSymbol;
 static const int SettingsPreferencesGraphSymbolSizeDefault               = 8;
 static const bool SettingsPreferencesGraphSymbolFilledDefault            = true;
+static const QColor SettingsPreferencesGraphSymbolFillColorDefault       = Qt::white;
 
 //==============================================================================
 
@@ -118,6 +120,7 @@ private:
     QwtSymbol::Style mGraphSymbolStyle;
     int mGraphSymbolSize;
     bool mGraphSymbolFilled;
+    QColor mGraphSymbolFillColor;
 
 private slots:
     void updateGui();

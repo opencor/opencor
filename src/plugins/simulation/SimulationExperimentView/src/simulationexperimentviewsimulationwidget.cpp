@@ -2529,7 +2529,9 @@ GraphPanelWidget::GraphPanelPlotGraphProperties SimulationExperimentViewSimulati
                                                            PreferencesInterface::preference(PluginName,
                                                                                             SettingsPreferencesGraphSymbolFilled,
                                                                                             SettingsPreferencesGraphSymbolFilledDefault).toBool(),
-                                                           GraphPanelWidget::DefaultGraphSymbolFillColor);
+                                                           PreferencesInterface::preference(PluginName,
+                                                                                            SettingsPreferencesGraphSymbolFillColor,
+                                                                                            SettingsPreferencesGraphSymbolFillColorDefault).value<QColor>());
 }
 
 //==============================================================================
