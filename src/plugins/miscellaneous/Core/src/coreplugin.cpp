@@ -138,9 +138,11 @@ void CorePlugin::fileOpened(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    mRecentFiles.removeOne(fileManagerInstance->isRemote(pFileName)?
-                               fileManagerInstance->url(pFileName):
-                               pFileName);
+    if (mRecentFiles.removeOne(fileManagerInstance->isRemote(pFileName)?
+                                   fileManagerInstance->url(pFileName):
+                                   pFileName)) {
+        updateFileReopenMenu();
+    }
 }
 
 //==============================================================================
@@ -191,7 +193,8 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
     //       done in that case (thus avoiding us from having to test for its
     //       presence)...
 
-    mRecentFiles.removeOne(pNewFileName);
+    if (mRecentFiles.removeOne(pNewFileName))
+        updateFileReopenMenu();
 
     // A file has been created or saved under a new name, so we want the old
     // file name to be added to our list of recent files, i.e. as if it had been
@@ -219,6 +222,8 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
         while (mRecentFiles.count() > 10)
             mRecentFiles.removeLast();
+
+        updateFileReopenMenu();
     }
 }
 
@@ -620,6 +625,8 @@ void CorePlugin::loadSettings(QSettings *pSettings)
 
     mRecentFiles = pSettings->value(SettingsRecentFiles).toStringList();
 
+    updateFileReopenMenu();
+
     // Retrieve the central widget settings
 
     pSettings->beginGroup(mCentralWidget->objectName());
@@ -770,7 +777,8 @@ void CorePlugin::reopenFile(const QString &pFileName)
 {
     // Remove the file from our list of recent files
 
-    mRecentFiles.removeOne(pFileName);
+    if (mRecentFiles.removeOne(pFileName))
+        updateFileReopenMenu();
 
     // Open the recent file after checking that it still exists, if needed
 
@@ -820,6 +828,8 @@ void CorePlugin::clearReopenSubMenu()
     // Indirectly clear our Reopen sub-menu
 
     mRecentFiles.clear();
+
+    updateFileReopenMenu();
 }
 
 //==============================================================================
