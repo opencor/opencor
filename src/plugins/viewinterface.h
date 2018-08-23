@@ -50,8 +50,7 @@ public:
         TestMode,
 #endif
         EditingMode,
-        SimulationMode,
-        AnalysisMode
+        SimulationMode
     };
 
     virtual ~ViewInterface();

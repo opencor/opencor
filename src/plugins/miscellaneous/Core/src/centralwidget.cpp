@@ -169,7 +169,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mModes.insert(ViewInterface::EditingMode, new CentralWidgetMode(this));
     mModes.insert(ViewInterface::SimulationMode, new CentralWidgetMode(this));
-    mModes.insert(ViewInterface::AnalysisMode, new CentralWidgetMode(this));
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModes.insert(ViewInterface::SampleMode, new CentralWidgetMode(this));
 #endif
@@ -624,8 +623,6 @@ void CentralWidget::retranslateUi()
                           tr("Editing"));
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SimulationMode, -1),
                           tr("Simulation"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::AnalysisMode, -1),
-                          tr("Analysis"));
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SampleMode, -1),
                           tr("Sample"));
@@ -1807,7 +1804,6 @@ void CentralWidget::updateGui()
 
     mModes.value(ViewInterface::EditingMode)->viewTabs()->hide();
     mModes.value(ViewInterface::SimulationMode)->viewTabs()->hide();
-    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->hide();
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModes.value(ViewInterface::SampleMode)->viewTabs()->hide();
 #endif
@@ -1819,8 +1815,6 @@ void CentralWidget::updateGui()
         mModes.value(ViewInterface::EditingMode)->viewTabs()->show();
     else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode))
         mModes.value(ViewInterface::SimulationMode)->viewTabs()->show();
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode))
-        mModes.value(ViewInterface::AnalysisMode)->viewTabs()->show();
 #ifdef ENABLE_SAMPLE_PLUGINS
     else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode))
         mModes.value(ViewInterface::SampleMode)->viewTabs()->show();
