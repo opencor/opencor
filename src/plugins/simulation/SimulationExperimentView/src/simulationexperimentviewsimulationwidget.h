@@ -257,7 +257,8 @@ private:
 
     void removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot);
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                    bool pCanSetAxes = true, bool pForceReplot = false);
+                    bool pCanSetAxes, bool pForceAxesSetting,
+                    bool pForceReplot);
 
     double * data(SimulationSupport::Simulation *pSimulation,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter,

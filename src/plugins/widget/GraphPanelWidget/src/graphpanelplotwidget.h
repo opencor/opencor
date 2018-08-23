@@ -482,9 +482,8 @@ public:
                               double pDefaultMinLogY, double pDefaultMaxLogY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 bool pSynchronizeAxes = true, bool pCanReplot = true,
-                 bool pEmitSignal = true, bool pForceXAxisSetting = false,
-                 bool pForceYAxisSetting = false);
+                 bool pSynchronizeAxes, bool pCanReplot, bool pEmitSignal,
+                 bool pForceAxesSetting);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
 
@@ -601,6 +600,8 @@ private:
     double mDefaultMaxLogY;
 
     GraphPanelPlotWidgets mNeighbors;
+
+    bool mDirtyAxes;
 
     void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 
