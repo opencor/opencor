@@ -2549,8 +2549,8 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
 QRectF GraphPanelPlotWidget::realDataRect() const
 {
-    // Return an optimised version of dataRect() or a default rectangle, if no
-    // dataRect() exists
+    // Return an optimised version of dataRect()/dataLogRect() or a default
+    // rectangle, if no dataRect()/dataLogRect() exists
 
     QRectF dRect = QRectF();
     QRectF dLogRect = QRectF();
