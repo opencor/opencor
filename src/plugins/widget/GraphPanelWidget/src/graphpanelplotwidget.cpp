@@ -1677,10 +1677,10 @@ void GraphPanelPlotWidget::updateActions()
     double crtRangeY = crtMaxY-crtMinY;
 
     mCanZoomInX = crtRangeX > MinAxisRange;
-    mCanZoomOutX = crtRangeX < (logAxisX()?MaxLogAxisRange:MaxAxisRange);
+    mCanZoomOutX = crtRangeX < (mLogAxisX?MaxLogAxisRange:MaxAxisRange);
 
     mCanZoomInY = crtRangeY > MinAxisRange;
-    mCanZoomOutY = crtRangeY < (logAxisY()?MaxLogAxisRange:MaxAxisRange);
+    mCanZoomOutY = crtRangeY < (mLogAxisY?MaxLogAxisRange:MaxAxisRange);
 
     // Update the enabled status of our actions
 
@@ -2558,20 +2558,20 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     if (dataRect(dRect) && dataLogRect(dLogRect)) {
         // Optimise our axes' values
 
-        double minX = logAxisX()?dLogRect.left():dRect.left();
-        double maxX = minX+(logAxisX()?dLogRect.width():dRect.width());
-        double minY = logAxisY()?dLogRect.top():dRect.top();
-        double maxY = minY+(logAxisY()?dLogRect.height():dRect.height());
+        double minX = mLogAxisX?dLogRect.left():dRect.left();
+        double maxX = minX+(mLogAxisX?dLogRect.width():dRect.width());
+        double minY = mLogAxisY?dLogRect.top():dRect.top();
+        double maxY = minY+(mLogAxisY?dLogRect.height():dRect.height());
 
         optimiseAxis(minX, maxX);
         optimiseAxis(minY, maxY);
 
         return QRectF(minX, minY, maxX-minX, maxY-minY);
     } else {
-        double minX = logAxisX()?mDefaultMinLogX:mDefaultMinX;
-        double maxX = logAxisX()?mDefaultMaxLogX:mDefaultMaxX;
-        double minY = logAxisY()?mDefaultMinLogY:mDefaultMinY;
-        double maxY = logAxisY()?mDefaultMaxLogY:mDefaultMaxY;
+        double minX = mLogAxisX?mDefaultMinLogX:mDefaultMinX;
+        double maxX = mLogAxisX?mDefaultMaxLogX:mDefaultMaxX;
+        double minY = mLogAxisY?mDefaultMinLogY:mDefaultMinY;
+        double maxY = mLogAxisY?mDefaultMaxLogY:mDefaultMaxY;
 
         return QRectF(minX, minY, maxX-minX, maxY-minY);
     }
@@ -2636,8 +2636,8 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
 
     // Make sure that the given axes' values are fine
 
-    checkAxisValues(logAxisX(), pMinX, pMaxX);
-    checkAxisValues(logAxisY(), pMinY, pMaxY);
+    checkAxisValues(mLogAxisX, pMinX, pMaxX);
+    checkAxisValues(mLogAxisY, pMinY, pMaxY);
 
     // Update our axes' values, if needed
 
