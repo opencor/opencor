@@ -20,10 +20,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Analysis</source>
-        <translation>Analyse</translation>
-    </message>
-    <message>
         <source>Open Remote File</source>
         <translation>Ouvrir Fichier À Distance</translation>
     </message>
