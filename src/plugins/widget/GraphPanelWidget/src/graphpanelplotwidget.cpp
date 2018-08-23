@@ -1470,13 +1470,16 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     plotCanvas->setFrameShape(QFrame::NoFrame);
     plotCanvas->setPaintAttribute(QwtPlotCanvas::ImmediatePaint);
 
-    // Add some axes to ourselves
+    // Add some axes to ourselves and prevent them from auto-scaling
 
     mAxisX = new GraphPanelPlotScaleDraw();
     mAxisY = new GraphPanelPlotScaleDraw();
 
     setAxisScaleDraw(QwtPlot::xBottom, mAxisX);
     setAxisScaleDraw(QwtPlot::yLeft, mAxisY);
+
+    setAxisAutoScale(QwtPlot::xBottom, false);
+    setAxisAutoScale(QwtPlot::yLeft, false);
 
     // Attach a grid to ourselves
 
