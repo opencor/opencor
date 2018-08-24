@@ -2954,7 +2954,6 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         mPoint = pEvent->pos();
 
         // Rescale ourselves
-        // Note: this will automatically replot ourselves...
 
         scaleAxes(mOriginPoint,
                   deltaX?(deltaX > 0)?ScalingIn:ScalingOut:NoScaling,
