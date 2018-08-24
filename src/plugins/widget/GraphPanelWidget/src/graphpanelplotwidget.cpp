@@ -1644,7 +1644,7 @@ bool GraphPanelPlotWidget::event(QEvent *pEvent)
             if (pinchGesture->changeFlags() & QPinchGesture::ScaleFactorChanged) {
                 scaleAxes(pinchGesture->centerPoint().toPoint(),
                           CustomScaling, CustomScaling,
-                          1.0/pinchGesture->lastScaleFactor());
+                          1.0/pinchGesture->scaleFactor());
 
                 return true;
             }
@@ -3377,7 +3377,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
         int newMinBorderDistStartX = 0;
         int newMinBorderDistEndX = 0;
         double oldMinExtentY = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
-        double newMinExtentY = 0;
+        double newMinExtentY = 0.0;
 
         axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
@@ -3425,7 +3425,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
             double minExtentY =  yScaleDraw->extent(yScaleWidget->font())
                                 +(plot->titleAxisY().isEmpty()?
-                                      0:
+                                      0.0:
                                       yScaleWidget->spacing()+yScaleWidget->title().textSize().height());
 
             newMinExtentY = qMax(newMinExtentY, minExtentY);
@@ -3440,7 +3440,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
             yScaleWidget->scaleDraw()->setMinimumExtent( newMinExtentY
                                                         -(plot->titleAxisY().isEmpty()?
-                                                              0:
+                                                              0.0:
                                                               yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
 
             if (pCanReplot) {
