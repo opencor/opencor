@@ -3335,7 +3335,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
         // Note: normally, we would initialise minBorderDistStartX and
         //       minBorderDistEndX with a call to
         //       xScaleWidget->getBorderDistHint(), but for that call to work as
-        //       expected it would have to preceded by a call to
+        //       expected it would have to be preceded by a call to
         //       xScaleWidget->setMinBorderDist(0, 0). Yet, that call may result
         //       in one or several graph panels to be refreshed, yielding the X
         //       axis to be temporarily rendered too far to the left. So, to
