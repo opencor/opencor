@@ -3752,7 +3752,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     if (   pCanSetAxes
         && pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
                           logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
-                          true, true, false, pForceAxesSetting)) {
+                          true, true, false, pForceAxesSetting, false, false)) {
         return true;
     } else if (pForceReplot) {
         pPlot->replot();
