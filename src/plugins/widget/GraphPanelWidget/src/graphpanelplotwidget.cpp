@@ -3318,96 +3318,103 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     // Align ourselves with our neighbours by taking into account the size it
     // takes to draw the Y axis and, if any, its corresponding title (including
     // the gap between the Y axis and its corresponding title)
+    // Note: no idea why this is the case, but we need to do the following at
+    //       least twice. Indeed, if we were to run our noble_1962_local.sedml
+    //       file, pan the first graph panel and double click on it (to reset
+    //       its axes), then we would expect the two other graph panels to be
+    //       right aligned, but they are not if we do the following only once...
 
-    GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
-    int oldMinBorderDistStartX = 0;
-    int oldMinBorderDistEndX = 0;
-    int newMinBorderDistStartX = 0;
-    int newMinBorderDistEndX = 0;
-    double oldMinExtentY = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
-    double newMinExtentY = 0;
+    for (int i = 0; i < 1; ++i) {
+        GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
+        int oldMinBorderDistStartX = 0;
+        int oldMinBorderDistEndX = 0;
+        int newMinBorderDistStartX = 0;
+        int newMinBorderDistEndX = 0;
+        double oldMinExtentY = axisWidget(QwtPlot::yLeft)->scaleDraw()->minimumExtent();
+        double newMinExtentY = 0;
 
-    axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
+        axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        // Determine how much space we should have directly to the left and
-        // right of the X axis
-        // Note: normally, we would initialise minBorderDistStartX and
-        //       minBorderDistEndX with a call to
-        //       xScaleWidget->getBorderDistHint(), but for that call to work as
-        //       expected it would have to be preceded by a call to
-        //       xScaleWidget->setMinBorderDist(0, 0). Yet, that call may result
-        //       in one or several graph panels to be refreshed, yielding the X
-        //       axis to be temporarily rendered too far to the left. So, to
-        //       avoid this problem, we initialise minBorderDistStartX and
-        //       minBorderDistEndX with a call to
-        //       xScaleWidget->scaleDraw()->getBorderDistHint() and then
-        //       "manually" check the values of minBorderDistStartX and
-        //       minBorderDistEndX against zero...
+        foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+            // Determine how much space we should have directly to the left and
+            // right of the X axis
+            // Note: normally, we would initialise minBorderDistStartX and
+            //       minBorderDistEndX with a call to
+            //       xScaleWidget->getBorderDistHint(), but for that call to
+            //       work as expected it would have to be preceded by a call to
+            //       xScaleWidget->setMinBorderDist(0, 0). Yet, that call may
+            //       result in one or several graph panels to be refreshed,
+            //       yielding the X axis to be temporarily rendered too far to
+            //       the left. So, to prevent this problem, we initialise
+            //       minBorderDistStartX and minBorderDistEndX with a call to
+            //       xScaleWidget->scaleDraw()->getBorderDistHint() and then
+            //       "manually" check the values of minBorderDistStartX and
+            //       minBorderDistEndX against zero...
 
-        QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
-        int minBorderDistStartX;
-        int minBorderDistEndX;
+            QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
+            int minBorderDistStartX;
+            int minBorderDistEndX;
 
-        xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), minBorderDistStartX, minBorderDistEndX);
+            xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), minBorderDistStartX, minBorderDistEndX);
 
-        if (minBorderDistStartX < 0)
-            minBorderDistStartX = 0;
+            if (minBorderDistStartX < 0)
+                minBorderDistStartX = 0;
 
-        if (minBorderDistEndX < 0)
-            minBorderDistEndX = 0;
+            if (minBorderDistEndX < 0)
+                minBorderDistEndX = 0;
 
-        newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
-        newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
+            newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
+            newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
 
-        // Determine how much space we should have to the left of the Y axis
+            // Determine how much space we should have to the left of the Y axis
 
-        QwtScaleWidget *yScaleWidget = plot->axisWidget(QwtPlot::yLeft);
-        QwtScaleDraw *yScaleDraw = yScaleWidget->scaleDraw();
+            QwtScaleWidget *yScaleWidget = plot->axisWidget(QwtPlot::yLeft);
+            QwtScaleDraw *yScaleDraw = yScaleWidget->scaleDraw();
 
-        yScaleDraw->setMinimumExtent(0.0);
+            yScaleDraw->setMinimumExtent(0.0);
 
-        plot->updateAxes();
-        // Note: this ensures that our major ticks (which are used to compute
-        //       the extent) are up to date...
+            plot->updateAxes();
+            // Note: this ensures that our major ticks (which are used to
+            //       compute the extent) are up to date...
 
-        double minExtentY =  yScaleDraw->extent(yScaleWidget->font())
-                            +(plot->titleAxisY().isEmpty()?
-                                  0:
-                                  yScaleWidget->spacing()+yScaleWidget->title().textSize().height());
+            double minExtentY =  yScaleDraw->extent(yScaleWidget->font())
+                                +(plot->titleAxisY().isEmpty()?
+                                      0:
+                                      yScaleWidget->spacing()+yScaleWidget->title().textSize().height());
 
-        newMinExtentY = qMax(newMinExtentY, minExtentY);
-    }
+            newMinExtentY = qMax(newMinExtentY, minExtentY);
+        }
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        GraphPanelPlotScaleWidget *xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
+        foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+            GraphPanelPlotScaleWidget *xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
 
-        xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
+            xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
 
-        GraphPanelPlotScaleWidget *yScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
+            GraphPanelPlotScaleWidget *yScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
 
-        yScaleWidget->scaleDraw()->setMinimumExtent( newMinExtentY
-                                                    -(plot->titleAxisY().isEmpty()?
-                                                          0:
-                                                          yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
+            yScaleWidget->scaleDraw()->setMinimumExtent( newMinExtentY
+                                                        -(plot->titleAxisY().isEmpty()?
+                                                              0:
+                                                              yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
 
-        if (pCanReplot) {
-            if (     pForceAlignment
-                ||  (newMinBorderDistStartX != oldMinBorderDistStartX)
-                ||  (newMinBorderDistEndX != oldMinBorderDistEndX)
-                || !qIsNull(newMinExtentY-oldMinExtentY)) {
-                if (    pForceAlignment
-                    || (newMinBorderDistStartX != oldMinBorderDistStartX)
-                    || (newMinBorderDistEndX != oldMinBorderDistEndX)) {
-                    xScaleWidget->updateLayout();
+            if (pCanReplot) {
+                if (     pForceAlignment
+                    ||  (newMinBorderDistStartX != oldMinBorderDistStartX)
+                    ||  (newMinBorderDistEndX != oldMinBorderDistEndX)
+                    || !qIsNull(newMinExtentY-oldMinExtentY)) {
+                    if (    pForceAlignment
+                        || (newMinBorderDistStartX != oldMinBorderDistStartX)
+                        || (newMinBorderDistEndX != oldMinBorderDistEndX)) {
+                        xScaleWidget->updateLayout();
+                    }
+
+                    if (pForceAlignment || !qIsNull(newMinExtentY-oldMinExtentY))
+                        yScaleWidget->updateLayout();
+
+                    plot->replot();
+                } else if (plot == this) {
+                    replot();
                 }
-
-                if (pForceAlignment || !qIsNull(newMinExtentY-oldMinExtentY))
-                    yScaleWidget->updateLayout();
-
-                plot->replot();
-            } else if (plot == this) {
-                replot();
             }
         }
     }
