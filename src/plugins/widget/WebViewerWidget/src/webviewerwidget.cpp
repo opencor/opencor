@@ -250,8 +250,8 @@ bool WebViewerWidget::event(QEvent *pEvent)
     if (mOverridingCursor) {
         return true;
     } else if (    mOverrideCursor && !mOverridingCursor
-               &&  (pEvent->type() == QEvent::CursorChange)
-               &&  (cursor().shape() == Qt::IBeamCursor)) {
+               && (pEvent->type() == QEvent::CursorChange)
+               && (cursor().shape() == Qt::IBeamCursor)) {
         mOverridingCursor = true;
 
         setCursor(Qt::ArrowCursor);
