@@ -2718,7 +2718,7 @@ bool GraphPanelPlotWidget::resetAxes()
 
     bool res= setAxes(dRect.left(), dRect.left()+dRect.width(),
                       dRect.top(), dRect.top()+dRect.height(),
-                      true, true, true, false, false, false);
+                      true, true, true, true, false, false);
 
     mDirtyAxes = false;
 
