@@ -3977,7 +3977,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       to be drawn straightaway (e.g. when we start a
                 //       simulation)...
 
-                updatePlot(plot, needFullUpdatePlot, true, true);
+                updatePlot(plot, needFullUpdatePlot, false, true);
 
                 needProcessingEvents = true;
             }
