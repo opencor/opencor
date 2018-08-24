@@ -2744,8 +2744,12 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
 
-    if (   ((pScaling < NoScaling) && pCanZoomIn)
-        || ((pScaling > NoScaling) && pCanZoomOut)) {
+    if (   (   (   (pScaling == ScalingIn)
+                || (pScaling == BigScalingIn))
+            && pCanZoomIn)
+        || (   (   (pScaling == ScalingOut)
+                || (pScaling == BigScalingOut))
+            && pCanZoomOut)) {
         static const double ScalingInFactor     = 0.9;
         static const double ScalingOutFactor    = 1.0/ScalingInFactor;
         static const double BigScalingInFactor  = 0.5*ScalingInFactor;
@@ -2760,15 +2764,15 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
         //       sure that it is clamped within the [0; 1] range...
 
         switch (pScaling) {
-        case BigScalingIn:
-            range *= BigScalingInFactor;
-
+        case NoScaling:
             break;
         case ScalingIn:
             range *= ScalingInFactor;
 
             break;
-        case NoScaling:
+        case BigScalingIn:
+            range *= BigScalingInFactor;
+
             break;
         case ScalingOut:
             range *= ScalingOutFactor;

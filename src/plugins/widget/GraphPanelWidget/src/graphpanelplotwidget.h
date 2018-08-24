@@ -515,9 +515,9 @@ protected:
 
 private:
     enum Scaling {
-        BigScalingIn,
-        ScalingIn,
         NoScaling,
+        ScalingIn,
+        BigScalingIn,
         ScalingOut,
         BigScalingOut
     };
