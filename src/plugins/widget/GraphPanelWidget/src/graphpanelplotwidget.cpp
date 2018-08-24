@@ -2721,11 +2721,15 @@ bool GraphPanelPlotWidget::resetAxes()
 {
     // Reset our axes by setting their values to either default ones or to some
     // that allow us to see all the graphs
+    // Note: mDirtyAxes gets set to true as a result of our call to setAxes(),
+    //       yet it should be false once our axes have been reset...
 
     QRectF dRect = realDataRect();
     bool res = setAxes(dRect.left(), dRect.left()+dRect.width(),
                        dRect.top(), dRect.top()+dRect.height(),
                        true, true, true, true, false, false);
+
+    mDirtyAxes = false;
 
     return res;
 }
