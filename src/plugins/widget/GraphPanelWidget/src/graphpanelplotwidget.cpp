@@ -3324,7 +3324,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     //       its axes), then we would expect the two other graph panels to be
     //       right aligned, but they are not if we do the following only once...
 
-    for (int i = 0; i < 1; ++i) {
+    for (int i = 0; i < 2; ++i) {
         GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
         int oldMinBorderDistStartX = 0;
         int oldMinBorderDistEndX = 0;
