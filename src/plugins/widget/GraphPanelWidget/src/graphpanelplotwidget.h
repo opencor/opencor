@@ -483,7 +483,8 @@ public:
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
                  bool pSynchronizeAxes, bool pCanReplot, bool pEmitSignal,
-                 bool pForceAxesSetting);
+                 bool pForceAxesSetting, bool pSynchronizeXAxis,
+                 bool pSynchronizeYAxis);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
 

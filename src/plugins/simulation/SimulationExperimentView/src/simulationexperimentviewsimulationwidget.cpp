@@ -3373,7 +3373,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
     //       updated at once...
 
     foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
-        if (updatePlot(plot, true, false, false))
+        if (updatePlot(plot, true, false))
             needProcessingEvents = true;
     }
 
@@ -3500,7 +3500,7 @@ void SimulationExperimentViewSimulationWidget::graphAdded(GraphPanelWidget::Grap
     for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
         updateGraphData(pGraph, mSimulation->results()->size(i), i);
 
-    if (   updatePlot(plot, true, false, false)
+    if (   updatePlot(plot, true, false)
         || plot->drawGraphFrom(pGraph, 0)) {
         processEvents();
         // Note: this ensures that our plot is updated at once...
@@ -3531,7 +3531,7 @@ void SimulationExperimentViewSimulationWidget::graphsRemoved(GraphPanelWidget::G
 
     GraphPanelWidget::GraphPanelPlotWidget *plot = pGraphPanel->plot();
 
-    updatePlot(plot, true, false, true);
+    updatePlot(plot, true, true);
 
     processEvents();
     // Note: this ensures that our plot is updated at once...
@@ -3585,7 +3585,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, plots) {
-            updatePlot(plot, true, false, true);
+            updatePlot(plot, true, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
@@ -3620,7 +3620,6 @@ void SimulationExperimentViewSimulationWidget::removePlot(GraphPanelWidget::Grap
 
 bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
                                                           bool pCanSetAxes,
-                                                          bool pForceAxesSetting,
                                                           bool pForceReplot)
 {
     // Retrieve the current axes' linear and log values or use some default
@@ -3752,7 +3751,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     if (   pCanSetAxes
         && pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
                           logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
-                          true, true, false, pForceAxesSetting)) {
+                          true, true, false, false, false, false)) {
         return true;
     } else if (pForceReplot) {
         pPlot->replot();
@@ -3833,7 +3832,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
         mNeedUpdatePlots = false;
 
         foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
-            updatePlot(plot, true, false, true);
+            updatePlot(plot, true, true);
 
         processEvents();
         // Note: this ensures that our plots are all updated at once...
@@ -3977,7 +3976,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                 //       to be drawn straightaway (e.g. when we start a
                 //       simulation)...
 
-                updatePlot(plot, needFullUpdatePlot, true, true);
+                updatePlot(plot, needFullUpdatePlot, true);
 
                 needProcessingEvents = true;
             }

@@ -201,7 +201,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
                                   activeGraphPanelPlot->maxX(),
                                   activeGraphPanelPlot->minY(),
                                   activeGraphPanelPlot->maxY(),
-                                  true, true, true, true);
+                                  true, true, true, false, true, true);
 
     // Make sure that our graph panel is visible
     // Note: indeed, for some reasons, this may not always be the case when
@@ -404,7 +404,7 @@ void GraphPanelsWidget::synchronizeXAxis()
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),
                                       activeGraphPanelPlot->maxY(),
-                                      true, true, true, true);
+                                      true, true, true, false, true, false);
     }
 }
 
@@ -422,7 +422,7 @@ void GraphPanelsWidget::synchronizeYAxis()
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),
                                       activeGraphPanelPlot->maxY(),
-                                      true, true, true, true);
+                                      true, true, true, false, false, true);
     }
 }
 
