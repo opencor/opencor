@@ -3502,7 +3502,7 @@ void GraphPanelPlotWidget::customAxes()
         if (   !qIsNull(newMinX-oldMinX) || !qIsNull(newMaxX-oldMaxX)
             || !qIsNull(newMinY-oldMinY) || !qIsNull(newMaxY-oldMaxY)) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
-                    true, true, true, false, false, false);
+                    true, true, true, true, false, false);
         }
     }
 }
