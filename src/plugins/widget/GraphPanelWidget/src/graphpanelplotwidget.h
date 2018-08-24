@@ -505,6 +505,7 @@ public:
     void updateGui(bool pSingleShot = false);
 
 protected:
+    bool event(QEvent *pEvent) override;
     bool eventFilter(QObject *pObject, QEvent *pEvent) override;
     void mouseMoveEvent(QMouseEvent *pEvent) override;
     void mousePressEvent(QMouseEvent *pEvent) override;
@@ -515,11 +516,12 @@ protected:
 
 private:
     enum Scaling {
-        BigScalingIn,
-        ScalingIn,
         NoScaling,
+        ScalingIn,
+        BigScalingIn,
         ScalingOut,
-        BigScalingOut
+        BigScalingOut,
+        CustomScaling
     };
 
     GraphPanelWidget *mOwner;
@@ -618,8 +620,9 @@ private:
 
     bool scaleAxis(Scaling pScaling, bool pCanZoomIn, bool pCanZoomOut,
                    const QwtScaleMap &pCanvasMap, double pPoint,
-                   double &pMin, double &pMax);
-    void scaleAxes(const QPoint &pPoint, Scaling pScalingX, Scaling pScalingY);
+                   double &pMin, double &pMax, double pCustomScaling);
+    void scaleAxes(const QPoint &pPoint, Scaling pScalingX, Scaling pScalingY,
+                   double pCustomScaling = 0.0);
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 

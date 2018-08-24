@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QClipboard>
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QGestureEvent>
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
@@ -1462,6 +1463,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     setZoomRegionColor(zoomRegionColor);
     setZoomRegionFillColor(zoomRegionFillColor);
 
+    grabGesture(Qt::PinchGesture);
+
     // Customise our canvas a bit
     // Note: to use immediate paint prevents our canvas from becoming black in
     //       some cases (e.g. when running a long simulation)...
@@ -1624,6 +1627,31 @@ void GraphPanelPlotWidget::retranslateUi()
 
     mAxisX->retranslateUi();
     mAxisY->retranslateUi();
+}
+
+//==============================================================================
+
+bool GraphPanelPlotWidget::event(QEvent *pEvent)
+{
+    // Handle pinch gestures to zoom in/out
+
+    if (pEvent->type() == QEvent::Gesture) {
+        QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(pEvent);
+
+        if (QGesture *pinch = gestureEvent->gesture(Qt::PinchGesture)) {
+            QPinchGesture *pinchGesture = static_cast<QPinchGesture *>(pinch);
+
+            if (pinchGesture->changeFlags() & QPinchGesture::ScaleFactorChanged) {
+                scaleAxes(pinchGesture->centerPoint().toPoint(),
+                          CustomScaling, CustomScaling,
+                          1.0/pinchGesture->lastScaleFactor());
+
+                return true;
+            }
+        }
+    }
+
+    return QWidget::event(pEvent);
 }
 
 //==============================================================================
@@ -2739,13 +2767,20 @@ bool GraphPanelPlotWidget::resetAxes()
 bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
                                      bool pCanZoomOut,
                                      const QwtScaleMap &pCanvasMap,
-                                     double pPoint, double &pMin, double &pMax)
+                                     double pPoint, double &pMin, double &pMax,
+                                     double pCustomScaling)
 {
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
 
-    if (   ((pScaling < NoScaling) && pCanZoomIn)
-        || ((pScaling > NoScaling) && pCanZoomOut)) {
+    if (   (   (    (pScaling == ScalingIn)
+                ||  (pScaling == BigScalingIn)
+                || ((pScaling == CustomScaling) && (pCustomScaling < 1.0)))
+            && pCanZoomIn)
+        || (   (    (pScaling == ScalingOut)
+                ||  (pScaling == BigScalingOut)
+                || ((pScaling == CustomScaling) && (pCustomScaling > 1.0)))
+            && pCanZoomOut)) {
         static const double ScalingInFactor     = 0.9;
         static const double ScalingOutFactor    = 1.0/ScalingInFactor;
         static const double BigScalingInFactor  = 0.5*ScalingInFactor;
@@ -2760,15 +2795,15 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
         //       sure that it is clamped within the [0; 1] range...
 
         switch (pScaling) {
-        case BigScalingIn:
-            range *= BigScalingInFactor;
-
+        case NoScaling:
             break;
         case ScalingIn:
             range *= ScalingInFactor;
 
             break;
-        case NoScaling:
+        case BigScalingIn:
+            range *= BigScalingInFactor;
+
             break;
         case ScalingOut:
             range *= ScalingOutFactor;
@@ -2776,6 +2811,10 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
             break;
         case BigScalingOut:
             range *= BigScalingOutFactor;
+
+            break;
+        case CustomScaling:
+            range *= pCustomScaling;
 
             break;
         }
@@ -2795,7 +2834,7 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
 //==============================================================================
 
 void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
-                                     Scaling pScalingY)
+                                     Scaling pScalingY, double pCustomScaling)
 {
     // Rescale our X axis, but only if zooming in/out is possible on that axis
 
@@ -2808,10 +2847,10 @@ void GraphPanelPlotWidget::scaleAxes(const QPoint &pPoint, Scaling pScalingX,
 
     bool scaledAxisX = scaleAxis(pScalingX, mCanZoomInX, mCanZoomOutX,
                                  canvasMap(QwtPlot::xBottom), point.x(),
-                                 newMinX, newMaxX);
+                                 newMinX, newMaxX, pCustomScaling);
     bool scaledAxisY = scaleAxis(pScalingY, mCanZoomInY, mCanZoomOutY,
                                  canvasMap(QwtPlot::yLeft), point.y(),
-                                 newMinY, newMaxY);
+                                 newMinY, newMaxY, pCustomScaling);
     // Note: we want to make both calls to scaleAxis(), hence they are not part
     //       of the if() statement below...
 
@@ -2954,11 +2993,18 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         mPoint = pEvent->pos();
 
         // Rescale ourselves
-        // Note: this will automatically replot ourselves...
 
         scaleAxes(mOriginPoint,
-                  deltaX?(deltaX > 0)?ScalingIn:ScalingOut:NoScaling,
-                  deltaY?(deltaY < 0)?ScalingIn:ScalingOut:NoScaling);
+                  deltaX?
+                      (deltaX > 0)?
+                          ScalingIn:
+                          ScalingOut:
+                      NoScaling,
+                  deltaY?
+                      (deltaY < 0)?
+                          ScalingIn:
+                          ScalingOut:
+                      NoScaling);
 
         break;
     }
