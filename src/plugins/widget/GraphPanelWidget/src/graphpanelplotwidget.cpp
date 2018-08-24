@@ -2715,12 +2715,9 @@ bool GraphPanelPlotWidget::resetAxes()
     // that allow us to see all the graphs
 
     QRectF dRect = realDataRect();
-
-    bool res= setAxes(dRect.left(), dRect.left()+dRect.width(),
-                      dRect.top(), dRect.top()+dRect.height(),
-                      true, true, true, true, false, false);
-
-    mDirtyAxes = false;
+    bool res = setAxes(dRect.left(), dRect.left()+dRect.width(),
+                       dRect.top(), dRect.top()+dRect.height(),
+                       true, true, true, true, false, false);
 
     return res;
 }
