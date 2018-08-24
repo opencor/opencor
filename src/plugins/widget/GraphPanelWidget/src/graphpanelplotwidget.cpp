@@ -3075,7 +3075,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         if (!qIsNull(zoomRegion.width()) && !qIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
                     zoomRegion.top()+zoomRegion.height(), zoomRegion.top(),
-                    true, true, true, false, false, false);
+                    true, true, true, true, false, false);
         }
 
         break;
