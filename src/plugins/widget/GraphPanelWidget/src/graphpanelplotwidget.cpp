@@ -2956,8 +2956,16 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         // Rescale ourselves
 
         scaleAxes(mOriginPoint,
-                  deltaX?(deltaX > 0)?ScalingIn:ScalingOut:NoScaling,
-                  deltaY?(deltaY < 0)?ScalingIn:ScalingOut:NoScaling);
+                  deltaX?
+                      (deltaX > 0)?
+                          ScalingIn:
+                          ScalingOut:
+                      NoScaling,
+                  deltaY?
+                      (deltaY < 0)?
+                          ScalingIn:
+                          ScalingOut:
+                      NoScaling);
 
         break;
     }
