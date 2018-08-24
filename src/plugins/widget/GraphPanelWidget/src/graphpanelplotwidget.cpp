@@ -2556,10 +2556,18 @@ QRectF GraphPanelPlotWidget::realDataRect() const
     if (dataRect(dRect) && dataLogRect(dLogRect)) {
         // Optimise our axes' values
 
-        double minX = mLogAxisX?dLogRect.left():dRect.left();
-        double maxX = minX+(mLogAxisX?dLogRect.width():dRect.width());
-        double minY = mLogAxisY?dLogRect.top():dRect.top();
-        double maxY = minY+(mLogAxisY?dLogRect.height():dRect.height());
+        double minX = mLogAxisX?
+                          qMin(mDefaultMinLogX, dLogRect.left()):
+                          qMin(mDefaultMinX, dRect.left());
+        double maxX = mLogAxisX?
+                          qMax(mDefaultMaxLogX, dLogRect.left()+dLogRect.width()):
+                          qMax(mDefaultMaxX, dRect.left()+dRect.width());
+        double minY = mLogAxisY?
+                          qMin(mDefaultMinLogY, dLogRect.top()):
+                          qMin(mDefaultMinY, dRect.top());
+        double maxY = mLogAxisY?
+                          qMax(mDefaultMaxLogY, dLogRect.top()+dLogRect.height()):
+                          qMax(mDefaultMaxY, dRect.top()+dRect.height());
 
         optimiseAxis(minX, maxX);
         optimiseAxis(minY, maxY);
