@@ -641,10 +641,9 @@ signals:
     void logarithmicXAxisToggled();
     void logarithmicYAxisToggled();
 
-public slots:
+private slots:
     void doUpdateGui();
 
-private slots:
     void cannotUpdateActions();
 
     void exportTo();
