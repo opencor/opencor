@@ -1570,6 +1570,15 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu->addSeparator();
     mContextMenu->addAction(mResetZoomAction);
 
+    // Set our axes' values
+    // Note: we are not all initialised yet, so we don't want setAxes() to
+    //       replot ourselves...
+
+    setAxes(DefaultMinAxis, DefaultMaxAxis, DefaultMinAxis, DefaultMaxAxis,
+            false, false, false, true, false, false);
+
+    mDirtyAxes = false;
+
     // We want our legend to be active by default
 
     setLegendActive(true);
