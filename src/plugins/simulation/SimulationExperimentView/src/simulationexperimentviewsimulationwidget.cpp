@@ -3098,7 +3098,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
-    // Initialise our trackers, so we know if a SED-ML file or COMBINE archive
+    // Initialise our trackers, so we know if a SED-ML file or a COMBINE archive
     // has been modified
 
     initializeTrackers();
