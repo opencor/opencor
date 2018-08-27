@@ -2931,11 +2931,13 @@ void GraphPanelPlotWidget::doUpdateGui()
     // Small hack to force ourselves (and our neighbours) to resize
 
     foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        int plotWidth = plot->width();
-        int plotHeight = plot->height();
+        plot->setUpdatesEnabled(false);
+            int plotWidth = plot->width();
+            int plotHeight = plot->height();
 
-        plot->resize(plotWidth+1, plotHeight+1);
-        plot->resize(plotWidth, plotHeight);
+            plot->resize(plotWidth+1, plotHeight+1);
+            plot->resize(plotWidth, plotHeight);
+        plot->setUpdatesEnabled(true);
     }
 
     canUpdateGui = true;
