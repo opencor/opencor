@@ -1068,12 +1068,11 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     setUpdatesEnabled(true);
 
     // Keep track of the initial size of our different graph panels
-    // Note: we do this through a single shot (and after short delay) to be
+    // Note: we do this through a single shot (and after a short delay) to be
     //       certain that the GUI is ready and that the size of our different
-    //       graph panels is therefore final. Not to do this might, on Windows
-    //       at least, result in a file being considered modified (e.g. when
-    //       you use the N62 SED-ML file, then switch to another file and
-    //       back)...
+    //       graph panels is final. Not to do this might, on Windows at least,
+    //       result in a file being considered modified (e.g. when you use the
+    //       N62 SED-ML file, then switch to another file and back)...
 
     QTimer::singleShot(500, this, &SimulationExperimentViewSimulationWidget::finalFurtherInitialize);
 }
@@ -3098,7 +3097,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     graphPanelsWidget->setActiveGraphPanel(graphPanelsWidget->graphPanels().first());
 
-    // Initialise our trackers, so we know if a SED-ML file or COMBINE archive
+    // Initialise our trackers, so we know if a SED-ML file or a COMBINE archive
     // has been modified
 
     initializeTrackers();
