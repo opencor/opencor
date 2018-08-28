@@ -1660,7 +1660,9 @@ bool GraphPanelPlotWidget::event(QEvent *pEvent)
         }
     }
 
-    return QWidget::event(pEvent);
+    // Default handling of the event
+
+    return QwtPlot::event(pEvent);
 }
 
 //==============================================================================
