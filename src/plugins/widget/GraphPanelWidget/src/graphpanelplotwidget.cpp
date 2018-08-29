@@ -3414,12 +3414,6 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
             xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), minBorderDistStartX, minBorderDistEndX);
 
-            if (minBorderDistStartX < 0)
-                minBorderDistStartX = 0;
-
-            if (minBorderDistEndX < 0)
-                minBorderDistEndX = 0;
-
             newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
             newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
 
