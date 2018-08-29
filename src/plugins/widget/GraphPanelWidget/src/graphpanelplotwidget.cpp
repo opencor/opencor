@@ -2896,16 +2896,6 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 
 void GraphPanelPlotWidget::doUpdateGui()
 {
-    // Only update our GUI, if we (or one of our neighbours) are not already
-    // updating it
-
-    static bool canUpdateGui = true;
-
-    if (!canUpdateGui)
-        return;
-
-    canUpdateGui = false;
-
     // Resize our legend and that of our neighbours
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
@@ -2929,20 +2919,6 @@ void GraphPanelPlotWidget::doUpdateGui()
                                      legendWidth-legend->scrollExtent(Qt::Vertical):
                                      legendWidth);
     }
-
-    // Small hack to force ourselves (and our neighbours) to resize
-
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        plot->setUpdatesEnabled(false);
-            int plotWidth = plot->width();
-            int plotHeight = plot->height();
-
-            plot->resize(plotWidth+1, plotHeight+1);
-            plot->resize(plotWidth, plotHeight);
-        plot->setUpdatesEnabled(true);
-    }
-
-    canUpdateGui = true;
 
     // Reenable updates for our legend
     // Note: see addGraph() for the reasoning behind it...
