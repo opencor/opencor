@@ -626,7 +626,7 @@ private:
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment);
 
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
