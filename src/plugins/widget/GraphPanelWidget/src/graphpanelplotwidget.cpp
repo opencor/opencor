@@ -3477,13 +3477,20 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
             // right of the X axis
 
             QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
-            int minBorderDistStartX;
-            int minBorderDistEndX;
+            int defaultMinBorderDistStartX;
+            int defaultMinBorderDistEndX;
+            int customMinBorderDistStartX;
+            int customMinBorderDistEndX;
 
-            getBorderDistances(xScaleWidget->scaleDraw(), canvasMap(QwtPlot::xBottom), xScaleWidget->font(), minBorderDistStartX, minBorderDistEndX);
+            getBorderDistances(xScaleWidget->scaleDraw(), canvasMap(QwtPlot::xBottom), xScaleWidget->font(), defaultMinBorderDistStartX, defaultMinBorderDistEndX);
+            xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), customMinBorderDistStartX, customMinBorderDistEndX);
 
-            newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
-            newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
+            newMinBorderDistStartX = qMax(newMinBorderDistStartX,
+                                          qMax(defaultMinBorderDistStartX,
+                                               customMinBorderDistStartX));
+            newMinBorderDistEndX = qMax(newMinBorderDistEndX,
+                                        qMax(defaultMinBorderDistEndX,
+                                             customMinBorderDistEndX));
 
             // Determine how much space we should have to the left of the Y axis
 
