@@ -3395,30 +3395,12 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
         foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
             // Determine how much space we should have directly to the left and
             // right of the X axis
-            // Note: normally, we would initialise minBorderDistStartX and
-            //       minBorderDistEndX with a call to
-            //       xScaleWidget->getBorderDistHint(), but for that call to
-            //       work as expected it would have to be preceded by a call to
-            //       xScaleWidget->setMinBorderDist(0, 0). Yet, that call may
-            //       result in one or several graph panels to be refreshed,
-            //       yielding the X axis to be temporarily rendered too far to
-            //       the left. So, to prevent this problem, we initialise
-            //       minBorderDistStartX and minBorderDistEndX with a call to
-            //       xScaleWidget->scaleDraw()->getBorderDistHint() and then
-            //       "manually" check the values of minBorderDistStartX and
-            //       minBorderDistEndX against zero...
 
             QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
             int minBorderDistStartX;
             int minBorderDistEndX;
 
             xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), minBorderDistStartX, minBorderDistEndX);
-
-            if (minBorderDistStartX < 0)
-                minBorderDistStartX = 0;
-
-            if (minBorderDistEndX < 0)
-                minBorderDistEndX = 0;
 
             newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
             newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
