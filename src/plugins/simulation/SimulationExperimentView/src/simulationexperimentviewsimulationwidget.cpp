@@ -738,7 +738,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     //       updates (e.g. when reloading a SED-ML file that references a remote
     //       CellML file)...
 
-    setUpdatesEnabled(false);
+    mContentsWidget->setUpdatesEnabled(false);
         // Stop keeping track of certain things (so that updatePlot() doesn't
         // get called unnecessarily)
         // Note: see the corresponding code towards the end of this method...
@@ -1065,7 +1065,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             if (mValidSimulationEnvironment)
                 initializeSimulation();
         }
-    setUpdatesEnabled(true);
+    mContentsWidget->setUpdatesEnabled(true);
 
     // Keep track of the initial size of our different graph panels
     // Note: we do this through a single shot (and after a short delay) to be
@@ -2781,20 +2781,22 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
-    // Start afresh by removing all the graph panels
+    // Add/remove some graph panels, so that our final number of graph panels
+    // corresponds to the number of 2D outputs mentioned in the SED-ML file
+    // Note: no need to pass defaultGraphPanelProperties() to our
+    //       removeCurrentGraphPanel() and addGraphPanel() methods since all the
+    //       graph panels get fully customised afterwards...
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
-
-    graphPanelsWidget->removeAllGraphPanels(defaultGraphPanelProperties());
-
-    // Add some graph panels, so that their number corresponds to the number of
-    // 2D outputs mentioned in the SED-ML file
-
+    int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
     int newNbOfGraphPanels = int(sedmlDocument->getNumOutputs());
 
-    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels) {
-        graphPanelsWidget->addGraphPanel(defaultGraphPanelProperties(),
-                                         false);
+    if (oldNbOfGraphPanels < newNbOfGraphPanels) {
+        for (int i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->addGraphPanel();
+    } else if (oldNbOfGraphPanels > newNbOfGraphPanels) {
+        for (int i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->removeCurrentGraphPanel();
     }
 
     // Customise our graph panel and graphs

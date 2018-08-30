@@ -626,7 +626,10 @@ private:
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
+    void getBorderDistances(QwtScaleDraw *pScaleDraw, QwtScaleMap pScaleMap,
+                            const QFont &pFont, int &pStart, int &pEnd);
+
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment);
 
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
