@@ -738,7 +738,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     //       updates (e.g. when reloading a SED-ML file that references a remote
     //       CellML file)...
 
-    setUpdatesEnabled(false);
+    mContentsWidget->setUpdatesEnabled(false);
         // Stop keeping track of certain things (so that updatePlot() doesn't
         // get called unnecessarily)
         // Note: see the corresponding code towards the end of this method...
@@ -1065,7 +1065,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             if (mValidSimulationEnvironment)
                 initializeSimulation();
         }
-    setUpdatesEnabled(true);
+    mContentsWidget->setUpdatesEnabled(true);
 
     // Keep track of the initial size of our different graph panels
     // Note: we do this through a single shot (and after a short delay) to be
