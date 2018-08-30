@@ -2781,20 +2781,22 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         }
     }
 
-    // Start afresh by removing all the graph panels
+    // Add/remove some graph panels, so that our final number of graph panels
+    // corresponds to the number of 2D outputs mentioned in the SED-ML file
+    // Note: no need to pass defaultGraphPanelProperties() to our
+    //       removeCurrentGraphPanel() and addGraphPanel() methods since all the
+    //       graph panels get fully customised afterwards...
 
     GraphPanelWidget::GraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
-
-    graphPanelsWidget->removeAllGraphPanels(defaultGraphPanelProperties());
-
-    // Add some graph panels, so that their number corresponds to the number of
-    // 2D outputs mentioned in the SED-ML file
-
+    int oldNbOfGraphPanels = graphPanelsWidget->graphPanels().count();
     int newNbOfGraphPanels = int(sedmlDocument->getNumOutputs());
 
-    while (graphPanelsWidget->graphPanels().count() != newNbOfGraphPanels) {
-        graphPanelsWidget->addGraphPanel(defaultGraphPanelProperties(),
-                                         false);
+    if (oldNbOfGraphPanels < newNbOfGraphPanels) {
+        for (int i = 0, iMax = newNbOfGraphPanels-oldNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->addGraphPanel();
+    } else if (oldNbOfGraphPanels > newNbOfGraphPanels) {
+        for (int i = 0, iMax = oldNbOfGraphPanels-newNbOfGraphPanels; i < iMax; ++i)
+            graphPanelsWidget->removeCurrentGraphPanel();
     }
 
     // Customise our graph panel and graphs
