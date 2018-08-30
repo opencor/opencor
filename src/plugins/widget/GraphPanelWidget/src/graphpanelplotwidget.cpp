@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Graph panel plot widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "graphpanelplotwidget.h"
 #include "graphpanelwidget.h"
@@ -1660,7 +1661,9 @@ bool GraphPanelPlotWidget::event(QEvent *pEvent)
         }
     }
 
-    return QWidget::event(pEvent);
+    // Default handling of the event
+
+    return QwtPlot::event(pEvent);
 }
 
 //==============================================================================
@@ -2894,16 +2897,6 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 
 void GraphPanelPlotWidget::doUpdateGui()
 {
-    // Only update our GUI, if we (or one of our neighbours) are not already
-    // updating it
-
-    static bool canUpdateGui = true;
-
-    if (!canUpdateGui)
-        return;
-
-    canUpdateGui = false;
-
     // Resize our legend and that of our neighbours
 
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
@@ -2927,20 +2920,6 @@ void GraphPanelPlotWidget::doUpdateGui()
                                      legendWidth-legend->scrollExtent(Qt::Vertical):
                                      legendWidth);
     }
-
-    // Small hack to force ourselves (and our neighbours) to resize
-
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
-        plot->setUpdatesEnabled(false);
-            int plotWidth = plot->width();
-            int plotHeight = plot->height();
-
-            plot->resize(plotWidth+1, plotHeight+1);
-            plot->resize(plotWidth, plotHeight);
-        plot->setUpdatesEnabled(true);
-    }
-
-    canUpdateGui = true;
 
     // Reenable updates for our legend
     // Note: see addGraph() for the reasoning behind it...
@@ -3391,19 +3370,98 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 
 //==============================================================================
 
+void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
+                                              QwtScaleMap pScaleMap,
+                                              const QFont &pFont, int &pStart,
+                                              int &pEnd)
+{
+    // Note: this is based on QwtScaleDraw::getBorderDistHint(), except that we
+    //       don't on pScaleDraw's scale map, but use the one provided by
+    //       pScaleMap...
+
+    pStart = 0;
+    pEnd = 1;
+
+    if (!pScaleDraw->hasComponent(QwtAbstractScaleDraw::Labels))
+        return;
+
+    QDoubleList ticks = pScaleDraw->scaleDiv().ticks(QwtScaleDiv::MajorTick);
+
+    if (ticks.isEmpty())
+        return;
+
+    // Find the ticks, that are mapped to the borders (minTick is the tick that
+    // is mapped to the top/left-most position in widget coordinates)
+
+    double minTick = ticks[0];
+    double maxTick = minTick;
+    double minPos = pScaleMap.transform(minTick);
+    double maxPos = minPos;
+
+    for (int i = 1, iMax = ticks.count(); i < iMax; ++i) {
+        double tickPos = pScaleMap.transform(ticks[i]);
+
+        if (tickPos < minPos) {
+            minTick = ticks[i];
+            minPos = tickPos;
+        }
+
+        if (tickPos > pScaleMap.transform(maxTick)) {
+            maxTick = ticks[i];
+            maxPos = tickPos;
+        }
+    }
+
+    double start = 0.0;
+    double end = 0.0;
+
+    if (pScaleDraw->orientation() == Qt::Horizontal) {
+        start = -pScaleDraw->labelRect(pFont, minTick).left();
+        start -= qAbs(minPos-pScaleMap.p1());
+
+        end = pScaleDraw->labelRect(pFont, maxTick).right();
+        end -= qAbs(maxPos-pScaleMap.p2());
+    } else {
+        start = -pScaleDraw->labelRect(pFont, minTick).top();
+        start -= qAbs(minPos-qRound(pScaleMap.p2()));
+
+        end = pScaleDraw->labelRect(pFont, maxTick).bottom();
+        end -= qAbs(maxPos-pScaleMap.p1());
+    }
+
+    if (start < 0.0)
+        start = 0.0;
+
+    if (end < 0.0)
+        end = 0.0;
+
+    pStart = qCeil(start);
+    pEnd = qCeil(end);
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                                               bool pForceAlignment)
 {
     // Align ourselves with our neighbours by taking into account the size it
     // takes to draw the Y axis and, if any, its corresponding title (including
     // the gap between the Y axis and its corresponding title)
-    // Note: no idea why this is the case, but we need to do the following at
-    //       least twice. Indeed, if we were to run our noble_1962_local.sedml
-    //       file, pan the first graph panel and double click on it (to reset
-    //       its axes), then we would expect the two other graph panels to be
-    //       right aligned, but they are not if we do the following only once...
+    // Note: we need to do the following twice if the view is visible and only
+    //       once if it's not. Not quite sure why this is the case, but if we
+    //       were not to do that then to have our noble_1962_local.sedml file as
+    //       the default file being loaded upon starting OpenCOR (this, using
+    //       the Simulation Experiment view) would result in the contents of the
+    //       first graph panel being slightly expanded in the Y direction (that
+    //       is, if we were to do the following twice). On the other hand, the
+    //       two other graph panels would have their X axis shortened after
+    //       OpenCOR has become visible, or if we were to pan the first graph
+    //       panel and then reset it (by double clicking on it), the two other
+    //       graph panels might not have their X axis aligned with that of the
+    //       first grpah panel (that is, if we were to do the following only
+    //       once)...
 
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0, iMax = isVisible()?2:1; i < iMax; ++i) {
         GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
         int oldMinBorderDistStartX = 0;
         int oldMinBorderDistEndX = 0;
@@ -3417,33 +3475,22 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
         foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
             // Determine how much space we should have directly to the left and
             // right of the X axis
-            // Note: normally, we would initialise minBorderDistStartX and
-            //       minBorderDistEndX with a call to
-            //       xScaleWidget->getBorderDistHint(), but for that call to
-            //       work as expected it would have to be preceded by a call to
-            //       xScaleWidget->setMinBorderDist(0, 0). Yet, that call may
-            //       result in one or several graph panels to be refreshed,
-            //       yielding the X axis to be temporarily rendered too far to
-            //       the left. So, to prevent this problem, we initialise
-            //       minBorderDistStartX and minBorderDistEndX with a call to
-            //       xScaleWidget->scaleDraw()->getBorderDistHint() and then
-            //       "manually" check the values of minBorderDistStartX and
-            //       minBorderDistEndX against zero...
 
             QwtScaleWidget *xScaleWidget = plot->axisWidget(QwtPlot::xBottom);
-            int minBorderDistStartX;
-            int minBorderDistEndX;
+            int defaultMinBorderDistStartX;
+            int defaultMinBorderDistEndX;
+            int customMinBorderDistStartX;
+            int customMinBorderDistEndX;
 
-            xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), minBorderDistStartX, minBorderDistEndX);
+            getBorderDistances(xScaleWidget->scaleDraw(), canvasMap(QwtPlot::xBottom), xScaleWidget->font(), defaultMinBorderDistStartX, defaultMinBorderDistEndX);
+            xScaleWidget->scaleDraw()->getBorderDistHint(xScaleWidget->font(), customMinBorderDistStartX, customMinBorderDistEndX);
 
-            if (minBorderDistStartX < 0)
-                minBorderDistStartX = 0;
-
-            if (minBorderDistEndX < 0)
-                minBorderDistEndX = 0;
-
-            newMinBorderDistStartX = qMax(newMinBorderDistStartX, minBorderDistStartX);
-            newMinBorderDistEndX = qMax(newMinBorderDistEndX, minBorderDistEndX);
+            newMinBorderDistStartX = qMax(newMinBorderDistStartX,
+                                          qMax(defaultMinBorderDistStartX,
+                                               customMinBorderDistStartX));
+            newMinBorderDistEndX = qMax(newMinBorderDistEndX,
+                                        qMax(defaultMinBorderDistEndX,
+                                             customMinBorderDistEndX));
 
             // Determine how much space we should have to the left of the Y axis
 
