@@ -912,8 +912,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                            .arg(removeLineNumber)
                            .arg(addLineNumber)
                            .arg(QString())
-                           .arg(diff.toHtmlEscaped()
-                                               .replace(' ', "&nbsp;"));
+                           .arg(diff.toHtmlEscaped().replace(' ', "&nbsp;"));
             }
         }
     }
