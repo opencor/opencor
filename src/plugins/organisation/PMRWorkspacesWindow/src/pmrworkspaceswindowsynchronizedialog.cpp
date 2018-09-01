@@ -753,8 +753,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
 
         for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
              diffIterator != endDiffIterator; ++diffIterator) {
-            QString text = QString::fromStdWString((*diffIterator).text).toHtmlEscaped()
-                                                                        .replace(' ', "&nbsp;");
+            QString text = toCleanHtmlEscaped(QString::fromStdWString((*diffIterator).text));
 
             switch ((*diffIterator).operation) {
             case DiffMatchPatch::EQUAL:
@@ -912,7 +911,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                            .arg(removeLineNumber)
                            .arg(addLineNumber)
                            .arg(QString())
-                           .arg(diff.toHtmlEscaped().replace(' ', "&nbsp;"));
+                           .arg(toCleanHtmlEscaped(diff));
             }
         }
     }
@@ -1019,6 +1018,16 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     QFile::remove(oldFileName);
 
     return res;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::toCleanHtmlEscaped(const QString &pString)
+{
+    // Return a "clean" HTML-escaped version of the given string
+
+    return pString.toHtmlEscaped()
+                  .replace(' ', "&nbsp;");
 }
 
 //==============================================================================
