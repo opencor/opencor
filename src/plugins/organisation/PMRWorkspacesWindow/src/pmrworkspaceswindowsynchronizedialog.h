@@ -166,7 +166,7 @@ private:
     QString diffHtml(const QString &pOld, const QString &pNew);
     QString diffHtml(const QString &pFileName);
 
-    QString toCleanHtmlEscaped(const QString &pString);
+    QString cleanHtmlEscaped(const QString &pString);
 
 private slots:
     void refreshChanges();
