@@ -731,14 +731,19 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         // Highlight the differences within our differences data' difference
         // field
 
+        static const QChar Separator = QChar(7);
+        // Note: strings, for which we want to show the difference, should never
+        //       contain the Bell character, so it should be safe to use that
+        //       character as our separator...
+
         QString oldString = QString();
         QString newString = QString();
 
         foreach (const DifferenceData &differenceData, pDifferencesData) {
             if (differenceData.tag == '+')
-                newString += differenceData.difference+"\n";
+                newString += differenceData.difference+Separator;
             else
-                oldString += differenceData.difference+"\n";
+                oldString += differenceData.difference+Separator;
         }
 
         typedef diff_match_patch<std::wstring> DiffMatchPatch;
@@ -766,8 +771,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
                                      text:
                                      text.contains('\n')?
                                          text.endsWith('\n')?
-                                             QString("<span class=\"add\">%1</span>\n").arg(text.remove('\n')):
-                                             QString("<span class=\"add\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"add\">")):
+                                             QString("<span class=\"add\">%1</span>\n").arg(text.remove(Separator)):
+                                             QString("<span class=\"add\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"add\">")):
                                          QString("<span class=\"add\">%1</span>").arg(text);
 
                 break;
@@ -776,8 +781,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
                                      text:
                                      text.contains('\n')?
                                          text.endsWith('\n')?
-                                             QString("<span class=\"remove\">%1</span>\n").arg(text.remove('\n')):
-                                             QString("<span class=\"remove\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"remove\">")):
+                                             QString("<span class=\"remove\">%1</span>\n").arg(text.remove(Separator)):
+                                             QString("<span class=\"remove\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"remove\">")):
                                          QString("<span class=\"remove\">%1</span>").arg(text);
 
                 break;
@@ -788,8 +793,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         // given
 
         QString html = QString();
-        QStringList oldDiffStrings = oldDiffString.split('\n');
-        QStringList newDiffStrings = newDiffString.split('\n');
+        QStringList oldDiffStrings = oldDiffString.split(Separator);
+        QStringList newDiffStrings = newDiffString.split(Separator);
         int addLineNumber = -1;
         int removeLineNumber = -1;
 
