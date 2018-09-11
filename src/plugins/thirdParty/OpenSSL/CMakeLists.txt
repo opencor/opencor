@@ -90,18 +90,18 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7fbbe21b5d497e85218cbe4efd606141b93af6c2
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c32726124bd54886962b47b1226736da483cc9b3
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e4b667fe9c5eade1c55fc9ec2dca07a1a9708f46
-                                          8eee654b73b65f50bf8429e853ac4e3da0109510)
+                              SHA1_VALUES 7873740c97e60bd7e657b204fffd258a73952c9f
+                                          918c2cbec9d145aa9b18a301df095095d2d573a9)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c718cf481591ef541f8da0a8853585fc4170a518
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 89054e68ef4bd78ceb554ed762c1b262443cdcce
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2e29c351ffff64f61c43c6faf938156d3552efb4
-                                          84ce502947a0838996bd99b648bea0b850f348f4)
+                              SHA1_VALUES ae22f839b73e2b96a99a550fe2ddeaa09685c1e9
+                                          fd546ccab2319621e4ac0c7647927cb0dd41a407)
     endif()
 else()
     # We require Perl to build OpenSSL
