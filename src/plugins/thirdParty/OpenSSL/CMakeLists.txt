@@ -3,19 +3,19 @@ project(OpenSSLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME OpenSSL)
-set(PACKAGE_VERSION 1.0.2p)
+set(PACKAGE_VERSION 1.1.1)
 
 # Version of our library
 
-set(LIBRARY_VERSION 1.0.0)
+set(LIBRARY_VERSION 1.1)
 
 # Git tag for our library
 
-set(GIT_TAG OpenSSL_1_0_2p)
+set(GIT_TAG OpenSSL_1_1_1)
 
 # Release tag
 
-set(RELEASE_TAG OpenSSL_1_0_2p)
+set(RELEASE_TAG OpenSSL_1_1_1)
 
 # Specify where our local package will be installed
 
