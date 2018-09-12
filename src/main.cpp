@@ -27,10 +27,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "guiapplication.h"
 #include "guiutils.h"
 #include "mainwindow.h"
-#include "splashscreenwindow.h"
 
 #ifdef Q_OS_MAC
     #include "macos.h"
+#endif
+
+#ifndef QT_DEBUG
+    #include "splashscreenwindow.h"
 #endif
 
 //==============================================================================

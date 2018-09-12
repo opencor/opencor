@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> only handle a URL when OpenCOR is visible and no modal dialog is active (see issue <a href=\"https://github.com/opencor/opencor/issues/1802\">#1802</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1799\">#1799</a>)." }
                      ]
                    },
