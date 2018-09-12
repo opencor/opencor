@@ -1041,6 +1041,11 @@ void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl)
 
 void MainWindow::doHandleUrl(const QUrl &pUrl)
 {
+    // Make sure that no modal dialog is active
+
+    if (qApp->activeModalWidget())
+        return;
+
     // Handle the action that was passed to OpenCOR
 
     QString actionName = pUrl.authority();
