@@ -78,36 +78,36 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} fba9fda0727c803efe0df4a376fff0644264399c
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} b3d450f6373e5cf6cfa8c001fe3b393a9cd11e95
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 85c5aa8ce1eda4d2618311237284a963ff86225b
-                                              f6cdcffb9c4ab0bd333dadca271b379a1eb14a7d
-                                              4ad542700d87ec983676ebf841f4b182da5b3017
-                                              1e2d6bba3b40d163835194e70f4806dd388b8828)
+                                  SHA1_VALUES 9c21dbf65fbfc2e65e590d58b768c17ef18f3e30
+                                              98d9ce4b57c17bf816b7ef6aa5053fcafe38f16c
+                                              64a1624019f1275d7f773321c52f0db55d8f60b5
+                                              aefe059839761fc7227150036bf6f95507922591)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 86fa98b18b6ec10e98309a92cdecd8a7cfa8fbfb
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 020ecbd2cf0a2fc9171faf142bfab379a3077e81
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 4762bd22ad7a82650b55c98e29fe5bed4d596f02
-                                              5501820a30ce36c8434ed4f76e91e9048f2b8b2c
-                                              5345acc21eb20d7cdc2c2a3b0b4e608017c18418
-                                              e23e8edd7b3586749bf455b92882c077b1b6e12a)
+                                  SHA1_VALUES 6ca77df1a3480cdec3d0d152eec749c8b6291059
+                                              b2adf20d029bced5e0baf4cf62bd0a9bc0ef6866
+                                              b52f4c6a440aeafddcbabdf73fba358d395781e5
+                                              48d44460836f133c6f194d032700b43279551765)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c32726124bd54886962b47b1226736da483cc9b3
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 571aca7c2bb00098443ae79578dba89b0b13338e
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 7873740c97e60bd7e657b204fffd258a73952c9f
+                              SHA1_VALUES 452c723c35a7544aa7800b85eb81f6ecc622d765
                                           918c2cbec9d145aa9b18a301df095095d2d573a9)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 89054e68ef4bd78ceb554ed762c1b262443cdcce
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7d5e8c454ff15e47f81a34dcb5dcc5c37b292f28
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES ae22f839b73e2b96a99a550fe2ddeaa09685c1e9
+                              SHA1_VALUES 01b912d18593492513be13cf348afc7234166ba9
                                           fd546ccab2319621e4ac0c7647927cb0dd41a407)
     endif()
 else()
