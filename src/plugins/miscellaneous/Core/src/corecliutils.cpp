@@ -274,10 +274,11 @@ QString formatTime(qint64 pTime)
 
     QString res = QString();
     qint64 time = pTime;
-    int  d = int(double(time)/86400000.0); time -= 86400000*d;
-    int  h = int(double(time)/3600000.0);  time -= 3600000*h;
-    int  m = int(double(time)/60000.0);    time -= 60000*m;
-    int  s = int(double(time)/1000.0);     time -= 1000*s;
+    int  d = int(time/86400000.0); time -= 86400000*d;
+qDebug("%lli ---> %f ---> %d", time, time/3600000.0, int(time/3600000.0));
+    int  h = int(time/3600000.0);  time -= 3600000*h;
+    int  m = int(time/60000.0);    time -= 60000*m;
+    int  s = int(time/1000.0);     time -= 1000*s;
     int ms = int(time);
 
     if (d || ((h || m || s || ms) && !res.isEmpty()))
