@@ -261,6 +261,44 @@ QString sizeAsString(quint64 pSize, int pPrecision)
 
 //==============================================================================
 
+QString formatTime(qint64 pTime)
+{
+    // Convert the given time (in milliseconds) to a string and return it
+    // Note: normally, we would for example have something like
+    //          int h = int(msToH*pTime) % 24;
+    //       with msToH being
+    //          static double msToH = 1.0/3600000.0;
+    //       However, with pTime=3600000, h equals 0 due, I imagine, to the
+    //       internal representation of the floating point number prior to its
+    //       conversion to an int. So, instead, we explicitly divide things...
+
+    QString res = QString();
+    int ms = pTime % 1000;
+    int s = int(pTime/1000.0) % 60;
+    int m = int(pTime/60000.0) % 60;
+    int h = int(pTime/3600000.0) % 24;
+    int d = int(pTime/86400000.0);
+
+    if (d || ((h || m || s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(d)+QObject::tr("d");
+
+    if (h || ((m || s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(h)+QObject::tr("h");
+
+    if (m || ((s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(m)+QObject::tr("m");
+
+    if (s || (ms && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(s)+QObject::tr("s");
+
+    if (ms || res.isEmpty())
+        res += (res.isEmpty()?QString():" ")+QString::number(ms)+QObject::tr("ms");
+
+    return res;
+}
+
+//==============================================================================
+
 QString sha1(const QByteArray &pByteArray)
 {
     // Return the SHA-1 value of the given byte array

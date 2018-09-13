@@ -3258,8 +3258,8 @@ void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsed
         if (!mSimulation->data()->nlaSolverName().isEmpty())
             solversInformation += "+"+mSimulation->data()->nlaSolverName();
 
-        output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3))
-                                                                                                                       .arg(solversInformation)+"</span>."+OutputBrLn));
+        output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 using %2").arg(Core::formatTime(pElapsedTime))
+                                                                                                                     .arg(solversInformation)+"</span>."+OutputBrLn));
     }
 
     // Update our parameters and simulation mode
