@@ -617,8 +617,8 @@
         <translation>Temps de simulation :</translation>
     </message>
     <message>
-        <source>%1 s using %2</source>
-        <translation>%1 s avec %2</translation>
+        <source>%1 using %2</source>
+        <translation>%1 avec %2</translation>
     </message>
 </context>
 </TS>

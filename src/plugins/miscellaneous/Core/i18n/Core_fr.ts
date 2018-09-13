@@ -467,5 +467,25 @@
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
     </message>
+    <message>
+        <source>d</source>
+        <translation>j</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>s</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>ms</source>
+        <translation></translation>
+    </message>
 </context>
 </TS>
