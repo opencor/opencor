@@ -272,6 +272,7 @@ QString formatTime(qint64 pTime)
     //       internal representation of the floating point number prior to its
     //       conversion to an int. So, instead, we explicitly divide things...
 
+qDebug("%d", int(3600000ll/3600000.0));
     QString res = QString();
     qint64 time = pTime;
     int ms = time % 1000; time = (time-ms)/1000;
