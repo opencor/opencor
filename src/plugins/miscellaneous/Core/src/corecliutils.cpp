@@ -265,7 +265,7 @@ QString formatTime(qint64 pTime)
 {
     // Convert the given time (in milliseconds) to a string and return it
     // Note: normally, we would for example have something like
-    //          int h = int(msToH*pTime) % 24;
+    //          int h = int(msToH*time);
     //       with msToH being
     //          static double msToH = 1.0/3600000.0;
     //       However, with pTime=3600000, h equals 0 due, I imagine, to the
@@ -273,11 +273,12 @@ QString formatTime(qint64 pTime)
     //       conversion to an int. So, instead, we explicitly divide things...
 
     QString res = QString();
-    int ms = pTime % 1000;
-    int s = int(pTime/1000.0) % 60;
-    int m = int(pTime/60000.0) % 60;
-    int h = int(pTime/3600000.0) % 24;
-    int d = int(pTime/86400000.0);
+    qint64 time = pTime;
+    int  d = int(time/86400000.0); time -= 86400000*d;
+    int  h = int(time/3600000.0);  time -= 3600000*h;
+    int  m = int(time/60000.0);    time -= 60000*m;
+    int  s = int(time/1000.0);     time -= 1000*s;
+    int ms = int(time);
 
     if (d || ((h || m || s || ms) && !res.isEmpty()))
         res += (res.isEmpty()?QString():" ")+QString::number(d)+QObject::tr("d");
