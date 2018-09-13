@@ -157,6 +157,17 @@ elseif(CCACHE)
     set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
 endif()
 
+# Prevent long command lines on Windows
+
+if(WIN32)
+    set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS TRUE)
+    set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS TRUE)
+
+    if("${CMAKE_GENERATOR}" STREQUAL "Ninja")
+        set(CMAKE_NINJA_FORCE_RESPONSE_FILE TRUE)
+    endif()
+endif()
+
 # Keep track of some basic information about Qt, after making sure that we have
 # the version of Qt that we need
 

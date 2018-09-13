@@ -57,6 +57,32 @@ void GeneralTests::sizeAsStringTests()
 
 //==============================================================================
 
+void GeneralTests::formatTimeTests()
+{
+    // Test the formatTime() method
+
+    QCOMPARE(OpenCOR::Core::formatTime(0), QString("0ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(999), QString("999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(1000), QString("1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(59999), QString("59s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(60000), QString("1m"));
+    QCOMPARE(OpenCOR::Core::formatTime(60999), QString("1m 0s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(61000), QString("1m 1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(3599999), QString("59m 59s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(3600000), QString("1h"));
+    QCOMPARE(OpenCOR::Core::formatTime(3600999), QString("1h 0m 0s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(3601000), QString("1h 0m 1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(3660000), QString("1h 1m"));
+    QCOMPARE(OpenCOR::Core::formatTime(86399999), QString("23h 59m 59s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(86400000), QString("1d"));
+    QCOMPARE(OpenCOR::Core::formatTime(86400999), QString("1d 0h 0m 0s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(86401000), QString("1d 0h 0m 1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(86460000), QString("1d 0h 1m"));
+    QCOMPARE(OpenCOR::Core::formatTime(90000000), QString("1d 1h"));
+}
+
+//==============================================================================
+
 void GeneralTests::sha1Tests()
 {
     // Test the sha1() method
