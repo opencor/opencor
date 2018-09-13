@@ -264,15 +264,14 @@ QString sizeAsString(quint64 pSize, int pPrecision)
 QString formatTime(qint64 pTime)
 {
     // Convert the given time (in milliseconds) to a string and return it
-    // Note: normally, we would for example have something like
-    //          int h = int(msToH*time) % 24;
-    //       with msToH being
-    //          static double msToH = 1.0/3600000.0;
-    //       However, with pTime=3600000, h equals 0 due, I imagine, to the
-    //       internal representation of the floating point number prior to its
-    //       conversion to an int. So, instead, we explicitly divide things...
+    // Note: we must avoid floating point divisions as it may yield some
+    //       unexpected results (not sure whether it's on some machines or with
+    //       some compilers). For example to compute the number of hours, we
+    //       might want to do something like
+    //          int(pTime/3600000.0) % 24
+    //       but this can yield 0 for pTime=3600000 while it should clearly
+    //       yield 1...
 
-qDebug("%d", int(3600000ll/3600000.0));
     QString res = QString();
     qint64 time = pTime;
     int ms = time % 1000; time = (time-ms)/1000;
