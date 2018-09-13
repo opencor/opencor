@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 *******************************************************************************/
-#include <iostream>
 
 //==============================================================================
 // CLI utilities
@@ -280,9 +279,6 @@ QString formatTime(qint64 pTime)
     int m  = time %   60; time = (time-m)/60;
     int h  = time %   24; time = (time-h)/24;
     int d  = int(time);
-long long v = 3600000;
-int r = int(v/3600000.0);
-std::cout << r << std::endl;
 
     if (d || ((h || m || s || ms) && !res.isEmpty()))
         res += (res.isEmpty()?QString():" ")+QString::number(d)+QObject::tr("d");
