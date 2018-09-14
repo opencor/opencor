@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "graphpanelwidget.h"
 #include "preferencesinterface.h"
 
 //==============================================================================
@@ -67,9 +68,9 @@ static const auto SettingsPreferencesGraphPanelLegend          = QStringLiteral(
 
 //==============================================================================
 
-static const QColor SettingsPreferencesGraphPanelBackgroundColorDefault = Qt::white;
-static const QColor SettingsPreferencesGraphPanelForegroundColorDefault = Qt::black;
-static const bool SettingsPreferencesGraphPanelLegendDefault            = true;
+static const QColor SettingsPreferencesGraphPanelBackgroundColorDefault = GraphPanelWidget::DefaultGraphPanelBackgroundColor;
+static const QColor SettingsPreferencesGraphPanelForegroundColorDefault = GraphPanelWidget::DefaultGraphPanelForegroundColor;
+static const bool SettingsPreferencesGraphPanelLegendDefault            = GraphPanelWidget::DefaultGraphPanelLegend;
 
 //==============================================================================
 
@@ -82,12 +83,12 @@ static const auto SettingsPreferencesGraphSymbolFillColor = QStringLiteral("Grap
 
 //==============================================================================
 
-static const Qt::PenStyle SettingsPreferencesGraphLineStyleDefault       = Qt::SolidLine;
-static const int SettingsPreferencesGraphLineWidthDefault                = 3;
-static const QwtSymbol::Style SettingsPreferencesGraphSymbolStyleDefault = QwtSymbol::NoSymbol;
-static const int SettingsPreferencesGraphSymbolSizeDefault               = 8;
-static const bool SettingsPreferencesGraphSymbolFilledDefault            = true;
-static const QColor SettingsPreferencesGraphSymbolFillColorDefault       = Qt::white;
+static const Qt::PenStyle SettingsPreferencesGraphLineStyleDefault       = GraphPanelWidget::DefaultGraphLineStyle;
+static const int SettingsPreferencesGraphLineWidthDefault                = GraphPanelWidget::DefaultGraphLineWidth;
+static const QwtSymbol::Style SettingsPreferencesGraphSymbolStyleDefault = GraphPanelWidget::DefaultGraphSymbolStyle;
+static const int SettingsPreferencesGraphSymbolSizeDefault               = GraphPanelWidget::DefaultGraphSymbolSize;
+static const bool SettingsPreferencesGraphSymbolFilledDefault            = GraphPanelWidget::DefaultGraphSymbolFilled;
+static const QColor SettingsPreferencesGraphSymbolFillColorDefault       = GraphPanelWidget::DefaultGraphSymbolFillColor;
 
 //==============================================================================
 
