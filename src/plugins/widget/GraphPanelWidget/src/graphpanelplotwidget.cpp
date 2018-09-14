@@ -2741,9 +2741,7 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                 }
             }
 
-            alignWithNeighbors(pCanReplot,
-                                  mSynchronizeXAxisAction->isChecked()
-                               || mSynchronizeYAxisAction->isChecked());
+            alignWithNeighbors(pCanReplot);
         }
 
         if (pEmitSignal)
@@ -2895,7 +2893,7 @@ void GraphPanelPlotWidget::setTitleAxis(int pAxisId, const QString &pTitleAxis)
 
 //==============================================================================
 
-void GraphPanelPlotWidget::doUpdateGui()
+void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
 {
     // Resize our legend and that of our neighbours
 
@@ -2928,19 +2926,21 @@ void GraphPanelPlotWidget::doUpdateGui()
 
     // Make sure that we are still properly aligned with our neighbours
 
-    alignWithNeighbors(true, true);
+    alignWithNeighbors(true, pForceAlignment);
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::updateGui(bool pSingleShot)
+void GraphPanelPlotWidget::updateGui(bool pSingleShot, bool pForceAlignment)
 {
     // Update our GUI, either through a single shot or directly
 
-    if (pSingleShot)
-        QTimer::singleShot(0, this, &GraphPanelPlotWidget::doUpdateGui);
-    else
-        doUpdateGui();
+    if (pSingleShot) {
+        QTimer::singleShot(0, this, std::bind(&GraphPanelPlotWidget::doUpdateGui,
+                                              this, pForceAlignment));
+    } else {
+        doUpdateGui(pForceAlignment);
+    }
 }
 
 //==============================================================================
@@ -3265,7 +3265,7 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
     //       width (e.g. after having added a graph that would result in the
     //       legend's vertical scroll bar to appear)...
 
-    updateGui(true);
+    updateGui(true, true);
 
     return true;
 }
@@ -3461,6 +3461,10 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     //       first graph panel (that is, if we were to do the following only
     //       once)...
 
+    bool forceAlignment =    pForceAlignment
+                          || mSynchronizeXAxisAction->isChecked()
+                          || mSynchronizeYAxisAction->isChecked();
+
     for (int i = 0, iMax = isVisible()?2:1; i < iMax; ++i) {
         GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
         int oldMinBorderDistStartX = 0;
@@ -3511,10 +3515,10 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
             newMinExtentY = qMax(newMinExtentY, minExtentY);
         }
 
-        bool xAlignmentChanged =     pForceAlignment
+        bool xAlignmentChanged =     forceAlignment
                                  || (newMinBorderDistStartX != oldMinBorderDistStartX)
                                  || (newMinBorderDistEndX != oldMinBorderDistEndX);
-        bool yAlignmentChanged =     pForceAlignment
+        bool yAlignmentChanged =     forceAlignment
                                  || !qIsNull(newMinExtentY-oldMinExtentY);
         bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 

@@ -502,7 +502,7 @@ public:
 
     QPointF canvasPoint(const QPoint &pPoint) const;
 
-    void updateGui(bool pSingleShot = false);
+    void updateGui(bool pSingleShot = false, bool pForceAlignment = false);
 
 protected:
     bool event(QEvent *pEvent) override;
@@ -629,7 +629,7 @@ private:
     void getBorderDistances(QwtScaleDraw *pScaleDraw, QwtScaleMap pScaleMap,
                             const QFont &pFont, int &pStart, int &pEnd);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment);
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
 
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
@@ -645,7 +645,7 @@ signals:
     void logarithmicYAxisToggled();
 
 private slots:
-    void doUpdateGui();
+    void doUpdateGui(bool pForceAlignment);
 
     void cannotUpdateActions();
 
