@@ -2729,12 +2729,14 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
                     plot->setAxes(pMinX, pMaxX, pMinY, pMaxY,
                                   false, false, false, true, false, false);
                 }
-            } else if (xAxisValuesChanged && mSynchronizeXAxisAction->isChecked()) {
+            } else if (   xAxisValuesChanged
+                       && mSynchronizeXAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *plot, mNeighbors) {
                     plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(),
                                   false, false, false, true, false, false);
                 }
-            } else if (yAxisValuesChanged && mSynchronizeYAxisAction->isChecked()) {
+            } else if (   yAxisValuesChanged
+                       && mSynchronizeYAxisAction->isChecked()) {
                 foreach (GraphPanelPlotWidget *plot, mNeighbors) {
                     plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY,
                                   false, false, false, true, false, false);
