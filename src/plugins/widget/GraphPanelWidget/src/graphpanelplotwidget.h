@@ -76,7 +76,7 @@ static const QColor Red       = QColor::fromRgb(162, 20, 47);
 static const bool DefaultGraphSelected                = true;
 static const auto DefaultGraphTitle                   = QStringLiteral("");
 static const Qt::PenStyle DefaultGraphLineStyle       = Qt::SolidLine;
-static const int DefaultGraphLineWidth                = 2;
+static const int DefaultGraphLineWidth                = 1;
 static const QColor DefaultGraphLineColor             = DarkBlue;
 static const QwtSymbol::Style DefaultGraphSymbolStyle = QwtSymbol::NoSymbol;
 static const int DefaultGraphSymbolSize               = 8;
@@ -396,7 +396,8 @@ public:
     bool dataRect(QRectF &pDataRect) const;
     bool dataLogRect(QRectF &pDataLogRect) const;
 
-    void optimiseAxis(double &pMin, double &pMax) const;
+    void optimiseAxisX(double &pMin, double &pMax) const;
+    void optimiseAxisY(double &pMin, double &pMax) const;
 
     double minX() const;
     double maxX() const;
@@ -502,7 +503,7 @@ public:
 
     QPointF canvasPoint(const QPoint &pPoint) const;
 
-    void updateGui(bool pSingleShot = false);
+    void updateGui(bool pSingleShot = false, bool pForceAlignment = false);
 
 protected:
     bool event(QEvent *pEvent) override;
@@ -614,6 +615,8 @@ private:
 
     QRectF realDataRect() const;
 
+    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
+
     void setAxis(int pAxisId, double pMin, double pMax);
 
     bool resetAxes();
@@ -629,7 +632,7 @@ private:
     void getBorderDistances(QwtScaleDraw *pScaleDraw, QwtScaleMap pScaleMap,
                             const QFont &pFont, int &pStart, int &pEnd);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment);
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
 
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
@@ -645,7 +648,7 @@ signals:
     void logarithmicYAxisToggled();
 
 private slots:
-    void doUpdateGui();
+    void doUpdateGui(bool pForceAlignment);
 
     void cannotUpdateActions();
 
