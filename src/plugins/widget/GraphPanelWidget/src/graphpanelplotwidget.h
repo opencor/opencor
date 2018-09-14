@@ -396,7 +396,8 @@ public:
     bool dataRect(QRectF &pDataRect) const;
     bool dataLogRect(QRectF &pDataLogRect) const;
 
-    void optimiseAxis(double &pMin, double &pMax) const;
+    void optimiseAxisX(double &pMin, double &pMax) const;
+    void optimiseAxisY(double &pMin, double &pMax) const;
 
     double minX() const;
     double maxX() const;
@@ -613,6 +614,8 @@ private:
     void resetAction();
 
     QRectF realDataRect() const;
+
+    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
 
     void setAxis(int pAxisId, double pMin, double pMax);
 

@@ -2509,7 +2509,8 @@ GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxis(double &pMin, double &pMax) const
+void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
+                                        double &pMax) const
 {
     // Make sure that the given values are different
 
@@ -2522,6 +2523,41 @@ void GraphPanelPlotWidget::optimiseAxis(double &pMin, double &pMax) const
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
     }
+
+    // Optimise the axis' values so that they fall onto a factor of the axis'
+    // minor step, but only if we are not dealing with a logarithmic axis
+
+    if (   ((pAxisId == QwtPlot::xBottom) && !mLogAxisX)
+        || ((pAxisId == QwtPlot::yLeft) && !mLogAxisY)) {
+        uint base = axisScaleEngine(pAxisId)->base();
+        double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
+                                                              axisMaxMajor(pAxisId),
+                                                              base);
+        double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
+                                                              axisMaxMinor(pAxisId),
+                                                              base);
+
+        pMin = qFloor(pMin/minorStep)*minorStep;
+        pMax = qCeil(pMax/minorStep)*minorStep;
+    }
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
+{
+    // Optimise our X axis' values
+
+    optimiseAxis(QwtPlot::xBottom, pMin, pMax);
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
+{
+    // Optimise our Y axis' values
+
+    optimiseAxis(QwtPlot::yLeft, pMin, pMax);
 }
 
 //==============================================================================
@@ -2609,8 +2645,8 @@ QRectF GraphPanelPlotWidget::realDataRect() const
                           qMax(mDefaultMaxLogY, dLogRect.top()+dLogRect.height()):
                           qMax(mDefaultMaxY, dRect.top()+dRect.height());
 
-        optimiseAxis(minX, maxX);
-        optimiseAxis(minY, maxY);
+        optimiseAxisX(minX, maxX);
+        optimiseAxisY(minY, maxY);
 
         return QRectF(minX, minY, maxX-minX, maxY-minY);
     } else {
