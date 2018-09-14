@@ -3511,6 +3511,13 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
             newMinExtentY = qMax(newMinExtentY, minExtentY);
         }
 
+        bool xAlignmentChanged =     pForceAlignment
+                                 || (newMinBorderDistStartX != oldMinBorderDistStartX)
+                                 || (newMinBorderDistEndX != oldMinBorderDistEndX);
+        bool yAlignmentChanged =     pForceAlignment
+                                 || !qIsNull(newMinExtentY-oldMinExtentY);
+        bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
+
         foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
             GraphPanelPlotScaleWidget *xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
 
@@ -3524,17 +3531,11 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                                                               yScaleWidget->spacing()+yScaleWidget->title().textSize().height()));
 
             if (pCanReplot) {
-                if (     pForceAlignment
-                    ||  (newMinBorderDistStartX != oldMinBorderDistStartX)
-                    ||  (newMinBorderDistEndX != oldMinBorderDistEndX)
-                    || !qIsNull(newMinExtentY-oldMinExtentY)) {
-                    if (    pForceAlignment
-                        || (newMinBorderDistStartX != oldMinBorderDistStartX)
-                        || (newMinBorderDistEndX != oldMinBorderDistEndX)) {
+                if (alignmentChanged) {
+                    if (xAlignmentChanged)
                         xScaleWidget->updateLayout();
-                    }
 
-                    if (pForceAlignment || !qIsNull(newMinExtentY-oldMinExtentY))
+                    if (yAlignmentChanged)
                         yScaleWidget->updateLayout();
 
                     plot->replot();
