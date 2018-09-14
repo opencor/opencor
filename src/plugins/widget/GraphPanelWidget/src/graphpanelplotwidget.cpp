@@ -3458,7 +3458,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     //       OpenCOR has become visible, or if we were to pan the first graph
     //       panel and then reset it (by double clicking on it), the two other
     //       graph panels might not have their X axis aligned with that of the
-    //       first grpah panel (that is, if we were to do the following only
+    //       first graph panel (that is, if we were to do the following only
     //       once)...
 
     for (int i = 0, iMax = isVisible()?2:1; i < iMax; ++i) {
