@@ -374,6 +374,12 @@ public:
         ZoomRegion
     };
 
+    enum Optimization {
+        Default,
+        Linear,
+        Logarithmic
+    };
+
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
@@ -396,8 +402,10 @@ public:
     bool dataRect(QRectF &pDataRect) const;
     bool dataLogRect(QRectF &pDataLogRect) const;
 
-    void optimiseAxisX(double &pMin, double &pMax) const;
-    void optimiseAxisY(double &pMin, double &pMax) const;
+    void optimiseAxisX(double &pMin, double &pMax,
+                       Optimization pOptimization = Default) const;
+    void optimiseAxisY(double &pMin, double &pMax,
+                       Optimization pOptimization = Default) const;
 
     double minX() const;
     double maxX() const;
@@ -615,7 +623,8 @@ private:
 
     QRectF realDataRect() const;
 
-    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax) const;
+    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax,
+                      Optimization pOptimization) const;
 
     void setAxis(int pAxisId, double pMin, double pMax);
 
