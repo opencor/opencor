@@ -2510,7 +2510,8 @@ GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 //==============================================================================
 
 void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
-                                        double &pMax) const
+                                        double &pMax,
+                                        Optimization pOptimization) const
 {
     // Make sure that the given values are different
 
@@ -2524,11 +2525,12 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
         pMax = pMax+pow(10.0, powerValue);
     }
 
-    // Optimise the axis' values so that they fall onto a factor of the axis'
-    // minor step, but only if we are not dealing with a logarithmic axis
+    // Optimise the axis' values, using either a linear or logarithmic approach
 
-    if (   ((pAxisId == QwtPlot::xBottom) && !mLogAxisX)
-        || ((pAxisId == QwtPlot::yLeft) && !mLogAxisY)) {
+    if (   (   (pOptimization == Default)
+            && (   ((pAxisId == QwtPlot::xBottom) && !mLogAxisX)
+                || ((pAxisId == QwtPlot::yLeft) && !mLogAxisY)))
+        || (pOptimization == Linear)) {
         uint base = axisScaleEngine(pAxisId)->base();
         double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
                                                               axisMaxMajor(pAxisId),
@@ -2539,25 +2541,33 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
 
         pMin = qFloor(pMin/minorStep)*minorStep;
         pMax = qCeil(pMax/minorStep)*minorStep;
+    } else {
+        double minStep = pow(10.0, qFloor(log10(pMin))-1);
+        double maxStep = pow(10.0, qCeil(log10(pMax))-1);
+
+        pMin = qFloor(pMin/minStep)*minStep;
+        pMax = qCeil(pMax/maxStep)*maxStep;
     }
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax) const
+void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax,
+                                         Optimization pOptimization) const
 {
     // Optimise our X axis' values
 
-    optimiseAxis(QwtPlot::xBottom, pMin, pMax);
+    optimiseAxis(QwtPlot::xBottom, pMin, pMax, pOptimization);
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax) const
+void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax,
+                                         Optimization pOptimization) const
 {
     // Optimise our Y axis' values
 
-    optimiseAxis(QwtPlot::yLeft, pMin, pMax);
+    optimiseAxis(QwtPlot::yLeft, pMin, pMax, pOptimization);
 }
 
 //==============================================================================
