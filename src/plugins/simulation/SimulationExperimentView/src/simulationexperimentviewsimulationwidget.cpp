@@ -3737,11 +3737,11 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     // Optimise our axes' values before setting them and replotting our plot, if
     // needed
 
-    pPlot->optimiseAxisX(minX, maxX);
-    pPlot->optimiseAxisY(minY, maxY);
+    pPlot->optimiseAxisX(minX, maxX, GraphPanelWidget::GraphPanelPlotWidget::Linear);
+    pPlot->optimiseAxisY(minY, maxY, GraphPanelWidget::GraphPanelPlotWidget::Linear);
 
-    pPlot->optimiseAxisX(minLogX, maxLogX);
-    pPlot->optimiseAxisY(minLogY, maxLogY);
+    pPlot->optimiseAxisX(minLogX, maxLogX, GraphPanelWidget::GraphPanelPlotWidget::Logarithmic);
+    pPlot->optimiseAxisY(minLogY, maxLogY, GraphPanelWidget::GraphPanelPlotWidget::Logarithmic);
 
     pPlot->setDefaultAxesValues(minX, maxX, minLogX, maxLogX,
                                 minY, maxY, minLogY, maxLogY);
