@@ -39,6 +39,7 @@ var jsonData = { "versions": [
                      "changes": [
                        { "change": "<strong>General:</strong> improved HiDPI support on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1776\">#1776</a>)." },
                        { "change": "<strong>Editor widget:</strong> properly highlight/replace text that was found using a regular expression (see issue <a href=\"https://github.com/opencor/opencor/issues/1816\">#1816</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1814\">#1814</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
