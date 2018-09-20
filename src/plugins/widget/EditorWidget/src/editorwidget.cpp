@@ -181,7 +181,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
     // Show/hide our find/replace widget
 
-    setFindReplaceVisible(pEditorWidget->isFindReplaceVisible());
+    setFindReplaceVisible(pEditorWidget->isFindReplaceVisible(), false);
 
     // Update the find/replace widget itself
     // Note: we must inactivate (and then reactivate) our find/replace widget
@@ -587,7 +587,7 @@ bool EditorWidget::isFindReplaceVisible() const
 
 //==============================================================================
 
-void EditorWidget::setFindReplaceVisible(bool pVisible)
+void EditorWidget::setFindReplaceVisible(bool pVisible, bool pSelectWord)
 {
     // Set our find text and highlight all its occurrences, if we are to show
     // our find/replace widget
@@ -598,11 +598,11 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
     //       reactivate our find/replace widget...
 
     if (pVisible) {
-        QString selText;
+        QString selText = QString();
 
         if (hasSelectedText()) {
             selText = selectedText();
-        } else {
+        } else if (pSelectWord) {
             int line;
             int column;
 

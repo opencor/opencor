@@ -137,7 +137,7 @@ public:
     void setZoomLevel(int pZoomLevel);
 
     bool isFindReplaceVisible() const;
-    void setFindReplaceVisible(bool pVisible);
+    void setFindReplaceVisible(bool pVisible, bool pSelectWord = true);
 
     int styleAt(int pPosition) const;
 
