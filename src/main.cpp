@@ -50,6 +50,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+    #include <Windows.h>
+#endif
+
+//==============================================================================
+
 int main(int pArgC, char *pArgV[])
 {
     // Initialise Qt's message pattern
@@ -145,7 +151,12 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initPluginsPath(pArgC, pArgV);
 
-    // Create the GUI version of OpenCOR
+    // Create the GUI version of OpenCOR, after making that on Windows OpenCOR
+    // can handle scaled HiDPI screens
+
+#ifdef Q_OS_WIN
+    SetProcessDPIAware();
+#endif
 
     OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
 
