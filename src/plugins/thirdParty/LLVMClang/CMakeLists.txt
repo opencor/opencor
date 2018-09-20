@@ -59,16 +59,16 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0f2fc28cb03237dcd06bc8fc67af643b76e62b82
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 44e119d0e0021de9517b153b0ee38a4b4a3054f8
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES abcb040e9586e80f3e1ee49bcf4cd24f54230a99
-                                              0e98a97b96581e315733dfba3a65806845970355)
+                                  SHA1_VALUES 76b8b632c6268ed2c953f03b5a4a0b1717302910
+                                              ee9b3a3e46814d7a2cc83a7f5622595f01216429)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 44b49bd5e22b84cae60a1b3638747f13e6ca4687
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} db3deb8515602898d7ac46a63b3c818efad44202
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 4761b1af7457212cc71beec83db08e36eaedd542
-                                              807283416f3607635aed395f93b7bf449c6bcdec)
+                                  SHA1_VALUES 353a1291938b6786ffd1cd1285d8e22eaab757fd
+                                              b88ec6f390197566752093a1bacefeb564df94db)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -77,9 +77,9 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
                               SHA1_VALUES 4c81e951615baad69c5ff4e3d5a2a77d8a19b6b4)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f2bb9922022c0b5150e8d906b1956ade6cbdb62e
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 8fea76a8a224a7cd2f5f36bb5517ccf2f5fff40c
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 9f0f574fb53141c3fa04000d4849fea08c99f0c0)
+                              SHA1_VALUES b5120a9808e0ed1eb7fd98857fead75012b4eb2a)
     endif()
 else()
     # Allow for big objects and ignore some warnings
