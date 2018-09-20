@@ -495,6 +495,15 @@ void EditorWidget::selectAll()
 
 //==============================================================================
 
+void EditorWidget::highlightAll()
+{
+    // Highlight all the occurences of the text, if any, in our editor
+
+    mEditor->highlightAll();
+}
+
+//==============================================================================
+
 bool EditorWidget::wordWrap() const
 {
     // Return whether we word wrap the text

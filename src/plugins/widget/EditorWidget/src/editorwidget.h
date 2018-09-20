@@ -121,6 +121,8 @@ public:
 
     void selectAll();
 
+    void highlightAll();
+
     bool wordWrap() const;
     void setWordWrap(bool pWordWrap);
 
