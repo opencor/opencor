@@ -306,7 +306,7 @@ int QScintillaWidget::findTextInRange(int pStartRange, int pEndRange,
     int crtTargetStart = int(SendScintilla(SCI_GETTARGETSTART));
     int crtTargetEnd = int(SendScintilla(SCI_GETTARGETEND));
 
-    // Find and return the position, if any, of the given text within the given
+    // Find and return the position, if any, of the given text in the given
     // range
 
     SendScintilla(SCI_SETSEARCHFLAGS,
