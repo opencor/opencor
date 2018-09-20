@@ -404,7 +404,6 @@ void SimulationData::reset(bool pInitialize)
 
     // Let people know whether our data is 'cleaned', i.e. not modified, and ask
     // our simulation worker to reset itself
-    // Note: no point in checking if we are initialising...
 
     if (!pInitialize) {
         emit modified(isModified());
