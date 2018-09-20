@@ -1399,7 +1399,7 @@ void SimulationExperimentViewSimulationWidget::resetStateRateModelParameters()
 {
     // Reset our state/rate model parameters
 
-    mSimulation->reset();
+    mSimulation->reset(false);
 }
 
 //==============================================================================

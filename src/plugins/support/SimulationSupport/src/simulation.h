@@ -113,7 +113,7 @@ public:
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               bool pReset = true);
 
-    void reset(bool pInitialize = true);
+    void reset(bool pInitialize = true, bool pAll = true);
 
     void recomputeComputedConstantsAndVariables(double pCurrentPoint,
                                                 bool pInitialize);
@@ -264,7 +264,7 @@ public:
     bool resume();
     bool stop();
 
-    bool reset();
+    bool reset(bool pAll = true);
 
 private:
     QString mFileName;
