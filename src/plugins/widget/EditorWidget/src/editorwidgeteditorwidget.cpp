@@ -308,7 +308,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
     QByteArray replaceText = mFindReplace->replaceText().toUtf8();
     const char *rawReplaceText = replaceText.constData();
     ulong rawReplaceTextLen = ulong(strlen(rawReplaceText));
-    int textLenDiff = replaceText.length()-findTextLen;
+    int selFoundTextLen = 0;
 
     forever {
         // Find the first occurrence of the given text, going backward from the
@@ -343,7 +343,9 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
                 mHighlightedLines << line;
             } else {
                 if (findTextPos < selectionStart)
-                    selectionShift += textLenDiff;
+                    selectionShift += replaceText.length()-foundTextLen;
+                else if (findTextPos == selectionStart)
+                    selFoundTextLen = foundTextLen;
 
                 SendScintilla(SCI_SETTARGETSTART, findTextPos);
                 SendScintilla(SCI_SETTARGETEND, findTextPos+foundTextLen);
@@ -369,7 +371,10 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         endUndoAction();
 
         SendScintilla(SCI_SETSELECTIONSTART, selectionStart+selectionShift);
-        SendScintilla(SCI_SETSELECTIONEND, selectionEnd+selectionShift+textLenDiff);
+        SendScintilla(SCI_SETSELECTIONEND,   selectionEnd+selectionShift
+                                           +(selFoundTextLen?
+                                                replaceText.length()-selFoundTextLen:
+                                                0));
 
         setHandleChanges(true);
     }
