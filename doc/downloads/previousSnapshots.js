@@ -1,4 +1,29 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 18, "month": 9, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> only handle a URL when OpenCOR is visible and no modal dialog is active (see issue <a href=\"https://github.com/opencor/opencor/issues/1802\">#1802</a>). Don't force the use of 96 DPI anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1810\">#1810</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> improved the plotting speed of simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1806\">#1806</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> provide more user-friendly simulation time information (see issue <a href=\"https://github.com/opencor/opencor/issues/1804\">#1804</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1799\">#1799</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 9, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",

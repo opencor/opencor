@@ -341,6 +341,22 @@
         <translation>Réinitialiser Paramètres Modèle</translation>
     </message>
     <message>
+        <source>Reset the state/rate model parameters or all the model parameters</source>
+        <translation>Réinitialiser les paramètres état/taux du modèle ou tous les paramètres du modèle</translation>
+    </message>
+    <message>
+        <source>States/Rates</source>
+        <translation>États/Taux</translation>
+    </message>
+    <message>
+        <source>Reset the state/rate model parameters</source>
+        <translation>Réinitialiser les paramètres état/taux du modèle</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>Tous</translation>
+    </message>
+    <message>
         <source>Reset all the model parameters</source>
         <translation>Réinitialiser tous les paramètres du modèle</translation>
     </message>
@@ -383,10 +399,6 @@
     <message>
         <source>Remove the current graph panel</source>
         <translation>Supprimer le panneau graphique actuel</translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation>Tous</translation>
     </message>
     <message>
         <source>Remove all the graph panels</source>

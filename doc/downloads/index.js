@@ -37,10 +37,10 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> only handle a URL when OpenCOR is visible and no modal dialog is active (see issue <a href=\"https://github.com/opencor/opencor/issues/1802\">#1802</a>). Don't force the use of 96 DPI anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1810\">#1810</a>)." },
-                       { "change": "<strong>Graph Panel widget:</strong> improved the plotting speed of simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1806\">#1806</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> provide more user-friendly simulation time information (see issue <a href=\"https://github.com/opencor/opencor/issues/1804\">#1804</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1799\">#1799</a>)." }
+                       { "change": "<strong>General:</strong> improved HiDPI support on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1776\">#1776</a>)." },
+                       { "change": "<strong>Editor widget:</strong> properly highlight/replace text that was found using a regular expression (see issue <a href=\"https://github.com/opencor/opencor/issues/1816\">#1816</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> the resetting of model parameters is now more specific (see issue <a href=\"https://github.com/opencor/opencor/issues/1815\">#1815</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1814\">#1814</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

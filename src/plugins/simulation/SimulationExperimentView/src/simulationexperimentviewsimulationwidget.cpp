@@ -157,6 +157,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                             QKeySequence(Qt::ControlModifier|Qt::Key_F2), mToolBarWidget);
     mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
                                                   mToolBarWidget);
+    mResetStateRateModelParametersAction = Core::newAction(mToolBarWidget);
+    mResetAllModelParametersAction = Core::newAction(mToolBarWidget);
     mClearSimulationResultsAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
                                                     mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
@@ -191,6 +193,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::stopSimulation);
     connect(mResetModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
+    connect(mResetStateRateModelParametersAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::resetStateRateModelParameters);
+    connect(mResetAllModelParametersAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::resetAllModelParameters);
     connect(mClearSimulationResultsAction, &QAction::triggered,
             this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::clearSimulationResults));
     connect(mDevelopmentModeAction, &QAction::triggered,
@@ -255,6 +261,16 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDelayWidget->setValue(0.0);
 
     // Create various tool buttons
+
+    QToolButton *resetModelParametersToolButton = new QToolButton(mToolBarWidget);
+    QMenu *resetModelParametersDropDownMenu = new QMenu(resetModelParametersToolButton);
+
+    resetModelParametersDropDownMenu->addAction(mResetStateRateModelParametersAction);
+    resetModelParametersDropDownMenu->addAction(mResetAllModelParametersAction);
+
+    resetModelParametersToolButton->setDefaultAction(mResetModelParametersAction);
+    resetModelParametersToolButton->setMenu(resetModelParametersDropDownMenu);
+    resetModelParametersToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
     QToolButton *removeGraphPanelToolButton = new QToolButton(mToolBarWidget);
     QMenu *removeGraphPanelDropDownMenu = new QMenu(removeGraphPanelToolButton);
@@ -335,7 +351,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addAction(mRunPauseResumeSimulationAction);
     mToolBarWidget->addAction(mStopSimulationAction);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mResetModelParametersAction);
+    mToolBarWidget->addWidget(resetModelParametersToolButton);
     mToolBarWidget->addAction(mClearSimulationResultsAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
@@ -533,6 +549,10 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
     I18nInterface::retranslateAction(mStopSimulationAction, tr("Stop Simulation"),
                                      tr("Stop the simulation"));
     I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
+                                     tr("Reset the state/rate model parameters or all the model parameters"));
+    I18nInterface::retranslateAction(mResetStateRateModelParametersAction, tr("States/Rates"),
+                                     tr("Reset the state/rate model parameters"));
+    I18nInterface::retranslateAction(mResetAllModelParametersAction, tr("All"),
                                      tr("Reset all the model parameters"));
     I18nInterface::retranslateAction(mClearSimulationResultsAction, tr("Clear Simulation Results"),
                                      tr("Clear the simulation results"));
@@ -1367,7 +1387,26 @@ void SimulationExperimentViewSimulationWidget::stopSimulation()
 
 void SimulationExperimentViewSimulationWidget::resetModelParameters()
 {
-    // Reset our model parameters
+    // Default action for our resetting of model parameters, i.e. reset all our
+    // model parameters
+
+    resetAllModelParameters();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::resetStateRateModelParameters()
+{
+    // Reset our state/rate model parameters
+
+    mSimulation->reset(false);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
+{
+    // Reset all our model parameters
 
     mSimulation->reset();
 }

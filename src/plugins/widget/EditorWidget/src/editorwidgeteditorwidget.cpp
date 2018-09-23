@@ -308,7 +308,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
     QByteArray replaceText = mFindReplace->replaceText().toUtf8();
     const char *rawReplaceText = replaceText.constData();
     ulong rawReplaceTextLen = ulong(strlen(rawReplaceText));
-    int textLenDiff = replaceText.length()-findTextLen;
+    int selFoundTextLen = 0;
 
     forever {
         // Find the first occurrence of the given text, going backward from the
@@ -326,21 +326,29 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
             break;
         } else {
-            // Either highlight or replace the found text
+            // Determine the length of our found text
+            // Note: we cannot and must not use findTextLen since we may be
+            //       finding text using a regular expression...
+
+            int foundTextLen = int(SendScintilla(SCI_GETTARGETEND))-findTextPos;
+
+            // Either highlight or replace our found text
 
             if (pAction == HighlightAll) {
                 SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
-                SendScintilla(SCI_INDICATORFILLRANGE, ulong(findTextPos), findTextLen);
+                SendScintilla(SCI_INDICATORFILLRANGE, ulong(findTextPos), foundTextLen);
 
                 int line = int(SendScintilla(SCI_LINEFROMPOSITION, findTextPos));
 
                 mHighlightedLines << line;
             } else {
                 if (findTextPos < selectionStart)
-                    selectionShift += textLenDiff;
+                    selectionShift += replaceText.length()-foundTextLen;
+                else if (findTextPos == selectionStart)
+                    selFoundTextLen = foundTextLen;
 
                 SendScintilla(SCI_SETTARGETSTART, findTextPos);
-                SendScintilla(SCI_SETTARGETEND, findTextPos+findTextLen);
+                SendScintilla(SCI_SETTARGETEND, findTextPos+foundTextLen);
 
                 SendScintilla(replaceCommand, rawReplaceTextLen, rawReplaceText);
             }
@@ -363,7 +371,10 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         endUndoAction();
 
         SendScintilla(SCI_SETSELECTIONSTART, selectionStart+selectionShift);
-        SendScintilla(SCI_SETSELECTIONEND, selectionEnd+selectionShift+textLenDiff);
+        SendScintilla(SCI_SETSELECTIONEND,   selectionEnd+selectionShift
+                                           +(selFoundTextLen?
+                                                replaceText.length()-selFoundTextLen:
+                                                0));
 
         setHandleChanges(true);
     }

@@ -314,6 +314,17 @@ void EditorWidgetFindReplaceWidget::updateFrom(EditorWidgetFindReplaceWidget *pF
 
     mGui->findEdit->setText(pFindReplace->findText());
     mGui->replaceEdit->setText(pFindReplace->replaceText());
+
+    // Update our find options from the given find/replace widget
+
+    mCaseSensitiveAction->setChecked(pFindReplace->isCaseSensitive());
+    mWholeWordsOnlyAction->setChecked(pFindReplace->searchWholeWordsOnly());
+    mRegularExpressionAction->setChecked(pFindReplace->useRegularExpression());
+
+    // (Re)highlight all our occurrences of our owner since our find text may
+    // have changed as a result of our find/replace widget having been updated
+
+    mOwner->highlightAll();
 }
 
 //==============================================================================
