@@ -96,9 +96,9 @@ void SimulationExperimentViewPlugin::filePermissionsChanged(const QString &pFile
 
 void SimulationExperimentViewPlugin::fileModified(const QString &pFileName)
 {
-    // Let our view widget know that a file has been modified
+    Q_UNUSED(pFileName);
 
-    mViewWidget->fileModified(pFileName);
+    // We don't handle this interface...
 }
 
 //==============================================================================
