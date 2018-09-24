@@ -465,10 +465,10 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 
 //==============================================================================
 
-bool SimulationData::isModified() const
+bool SimulationData::doIsModified(bool pCheckConstants) const
 {
-    // Check whether any of our constants or states has been modified, if
-    // possible
+    // Check whether any of our constants (if requested) or states has been
+    // modified, if possible
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
@@ -480,13 +480,33 @@ bool SimulationData::isModified() const
                 return true;
         }
 
-        for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
-            if (!qIsNull(mConstants[i]-mInitialConstants[i]))
-                return true;
+        if (pCheckConstants) {
+            for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
+                if (!qIsNull(mConstants[i]-mInitialConstants[i]))
+                    return true;
+            }
         }
     }
 
     return false;
+}
+
+//==============================================================================
+
+bool SimulationData::isStatesModified() const
+{
+    // Check whether any of our states has been modified
+
+    return doIsModified(false);
+}
+
+//==============================================================================
+
+bool SimulationData::isModified() const
+{
+    // Check whether any of our constants or states has been modified
+
+    return doIsModified(true);
 }
 
 //==============================================================================

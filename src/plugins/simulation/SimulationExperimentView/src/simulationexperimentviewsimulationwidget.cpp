@@ -3382,12 +3382,15 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
 void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsModified)
 {
-    // Update our modified state
+    // Update some of our actions based on whether we are modified
 
-    if (mDevelopmentModeAction->isChecked())
+    if (mDevelopmentModeAction->isChecked()) {
         Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
-    else
+    } else {
         mResetModelParametersAction->setEnabled(pIsModified);
+
+        mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
+    }
 }
 
 //==============================================================================
