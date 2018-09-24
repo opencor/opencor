@@ -392,6 +392,10 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         runtime->initializeConstants()(mConstants, mRates, mStates);
     }
 
+    // Recompute our computed constants and variables
+
+    recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
+
     // Keep track of our various initial values
 
     if (pInitialize) {
@@ -406,9 +410,11 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     delete[] currentConstants;
 
-    // Recompute our computed constants and variables
+    // Recompute our computed constants and variables, if we are using our
+    // "current" constants
 
-    recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
+    if (!pAll)
+        recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
 
     // Delete our NLA solver, if any
 
