@@ -324,19 +324,6 @@ void SimulationExperimentViewWidget::filePermissionsChanged(const QString &pFile
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::fileModified(const QString &pFileName)
-{
-    // Let the simulation widget, if any, associated with the given file name
-    // know that a file has been modified
-
-    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
-
-    if (simulationWidget)
-        simulationWidget->fileModified();
-}
-
-//==============================================================================
-
 void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 {
     // The given file has been saved, so reload its simulation and consider the

@@ -341,16 +341,16 @@
         <translation>Réinitialiser Paramètres Modèle</translation>
     </message>
     <message>
-        <source>Reset the state/rate model parameters or all the model parameters</source>
-        <translation>Réinitialiser les paramètres état/taux du modèle ou tous les paramètres du modèle</translation>
+        <source>Reset the state model parameters or all the model parameters</source>
+        <translation>Réinitialiser les paramètres état du modèle ou tous les paramètres du modèle</translation>
     </message>
     <message>
-        <source>States/Rates</source>
-        <translation>États/Taux</translation>
+        <source>States</source>
+        <translation>États</translation>
     </message>
     <message>
-        <source>Reset the state/rate model parameters</source>
-        <translation>Réinitialiser les paramètres état/taux du modèle</translation>
+        <source>Reset the state model parameters</source>
+        <translation>Réinitialiser les paramètres état du modèle</translation>
     </message>
     <message>
         <source>All</source>

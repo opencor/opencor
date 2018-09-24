@@ -119,6 +119,7 @@ public:
                                                 bool pInitialize);
     void recomputeVariables(double pCurrentPoint);
 
+    bool isStatesModified() const;
     bool isModified() const;
     void checkForModifications();
 
@@ -153,6 +154,8 @@ private:
     void deleteArrays();
 
     SolverInterface * solverInterface(const QString &pSolverName) const;
+
+    bool doIsModified(bool pCheckConstants) const;
 
 signals:
     void updated(double pCurrentPoint);
