@@ -190,7 +190,7 @@ private:
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
     QAction *mResetModelParametersAction;
-    QAction *mResetStateRateModelParametersAction;
+    QAction *mResetStateModelParametersAction;
     QAction *mResetAllModelParametersAction;
     QAction *mClearSimulationResultsAction;
     QAction *mDevelopmentModeAction;
@@ -325,7 +325,7 @@ private slots:
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
     void resetModelParameters();
-    void resetStateRateModelParameters();
+    void resetStateModelParameters();
     void resetAllModelParameters();
     void clearSimulationResults();
     void sedmlExportSedmlFile();
