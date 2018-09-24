@@ -960,7 +960,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             //       simulation mode, so we are fine...
 
             if (pReloadingView)
-                clearSimulationResults(false);
+                clearSimulationResults();
             else
                 updateSimulationMode();
 
@@ -1403,7 +1403,7 @@ void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pCheckSimulationResults)
+void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 {
     setUpdatesEnabled(false);
         // Clear our simulation results
@@ -1414,22 +1414,12 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pChec
 
         mSimulation->results()->reset();
 
-        // Update our simulation mode and check for results, if requested
+        // Update our simulation mode and check for results
 
         updateSimulationMode();
 
-        if (pCheckSimulationResults)
-            mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
     setUpdatesEnabled(true);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::clearSimulationResults()
-{
-    // Clear our simulation results
-
-    clearSimulationResults(true);
 }
 
 //==============================================================================
