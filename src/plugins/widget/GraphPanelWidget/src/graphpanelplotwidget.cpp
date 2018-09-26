@@ -745,7 +745,7 @@ GraphPanelPlotOverlayWidget::GraphPanelPlotOverlayWidget(GraphPanelPlotWidget *p
 
 //==============================================================================
 
-QPoint GraphPanelPlotOverlayWidget::optimisedPoint(const QPoint &pPoint) const
+QPoint GraphPanelPlotOverlayWidget::optimizedPoint(const QPoint &pPoint) const
 {
     // Optimise the given point so that it fits within our owner's ranges
 
@@ -795,7 +795,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         painter.setPen(pen);
 
-        QPoint point = optimisedPoint(mPoint);
+        QPoint point = optimizedPoint(mPoint);
         // Note: see drawCoordinates() as why we use QPoint rather than
         //       QPointF...
 
@@ -900,8 +900,8 @@ QRect GraphPanelPlotOverlayWidget::zoomRegion() const
     int maxY = int(canvasMapY.transform(mOwner->minY()));
 
     if (mOwner->canZoomInX() || mOwner->canZoomInY()) {
-        QPoint originPoint = optimisedPoint(mOriginPoint);
-        QPoint point = optimisedPoint(mPoint);
+        QPoint originPoint = optimizedPoint(mOriginPoint);
+        QPoint point = optimizedPoint(mPoint);
 
         if (mOwner->canZoomInX()) {
             minX = qMin(originPoint.x(), point.x());
@@ -1404,6 +1404,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCanUpdateActions(true),
     mSynchronizeXAxisAction(pSynchronizeXAxisAction),
     mSynchronizeYAxisAction(pSynchronizeYAxisAction),
+    mOptimizedAxisX(true),
+    mOptimizedAxisY(true),
     mDefaultMinX(DefaultMinAxis),
     mDefaultMaxX(DefaultMaxAxis),
     mDefaultMinY(DefaultMinAxis),
@@ -2509,11 +2511,21 @@ GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
-                                        double &pMax,
-                                        Optimization pOptimization) const
+bool GraphPanelPlotWidget::isOptimizedAxes() const
 {
-    // Make sure that the given values are different
+    // Return whether both of our axes are optimised
+
+    return mOptimizedAxisX && mOptimizedAxisY;
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
+                                        double &pMax,
+                                        Optimization pOptimization)
+{
+    // Make sure that the given values are different (and therefore optimisable
+    // as such)
 
     if (qIsNull(pMin-pMax)) {
         // The given values are the same, so update them so that we can properly
@@ -2523,6 +2535,16 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
 
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
+
+        if (pAxisId == QwtPlot::xBottom)
+            mOptimizedAxisX = false;
+        else
+            mOptimizedAxisY = false;
+    } else {
+        if (pAxisId == QwtPlot::xBottom)
+            mOptimizedAxisX = true;
+        else
+            mOptimizedAxisY = true;
     }
 
     // Optimise the axis' values, using either a linear or logarithmic approach
@@ -2538,36 +2560,48 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
         double minorStep = QwtScaleArithmetic::divideInterval(majorStep,
                                                               axisMaxMinor(pAxisId),
                                                               base);
+        double minOverMinorStep = pMin/minorStep;
+        double maxOverMinorStep = pMax/minorStep;
 
-        pMin = qFloor(pMin/minorStep)*minorStep;
-        pMax = qCeil(pMax/minorStep)*minorStep;
+        pMin = qFuzzyIsNull(minOverMinorStep-int(minOverMinorStep))?
+                    minOverMinorStep*minorStep:
+                    qFloor(minOverMinorStep)*minorStep;
+        pMax = qFuzzyIsNull(maxOverMinorStep-int(maxOverMinorStep))?
+                    maxOverMinorStep*minorStep:
+                    qCeil(maxOverMinorStep)*minorStep;
     } else {
         double minStep = pow(10.0, qFloor(log10(pMin))-1);
         double maxStep = pow(10.0, qCeil(log10(pMax))-1);
+        double minOverMinStep = pMin/minStep;
+        double maxOverMaxStep = pMax/maxStep;
 
-        pMin = qFloor(pMin/minStep)*minStep;
-        pMax = qCeil(pMax/maxStep)*maxStep;
+        pMin = qFuzzyIsNull(minOverMinStep-int(minOverMinStep))?
+                    minOverMinStep*minStep:
+                    qFloor(minOverMinStep)*minStep;
+        pMax = qFuzzyIsNull(maxOverMaxStep-int(maxOverMaxStep))?
+                    maxOverMaxStep*maxStep:
+                    qCeil(maxOverMaxStep)*maxStep;
     }
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax,
-                                         Optimization pOptimization) const
+void GraphPanelPlotWidget::optimizeAxisX(double &pMin, double &pMax,
+                                         Optimization pOptimization)
 {
     // Optimise our X axis' values
 
-    optimiseAxis(QwtPlot::xBottom, pMin, pMax, pOptimization);
+    optimizeAxis(QwtPlot::xBottom, pMin, pMax, pOptimization);
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax,
-                                         Optimization pOptimization) const
+void GraphPanelPlotWidget::optimizeAxisY(double &pMin, double &pMax,
+                                         Optimization pOptimization)
 {
     // Optimise our Y axis' values
 
-    optimiseAxis(QwtPlot::yLeft, pMin, pMax, pOptimization);
+    optimizeAxis(QwtPlot::yLeft, pMin, pMax, pOptimization);
 }
 
 //==============================================================================
@@ -2631,7 +2665,7 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
 //==============================================================================
 
-QRectF GraphPanelPlotWidget::realDataRect() const
+QRectF GraphPanelPlotWidget::realDataRect()
 {
     // Return an optimised version of dataRect()/dataLogRect() or a default
     // rectangle, if no dataRect()/dataLogRect() exists
@@ -2643,20 +2677,36 @@ QRectF GraphPanelPlotWidget::realDataRect() const
         // Optimise our axes' values
 
         double minX = mLogAxisX?
-                          qMin(mDefaultMinLogX, dLogRect.left()):
-                          qMin(mDefaultMinX, dRect.left());
+                          mOptimizedAxisX?
+                              qMin(mDefaultMinLogX, dLogRect.left()):
+                              dLogRect.left():
+                          mOptimizedAxisX?
+                              qMin(mDefaultMinX, dRect.left()):
+                              dRect.left();
         double maxX = mLogAxisX?
-                          qMax(mDefaultMaxLogX, dLogRect.left()+dLogRect.width()):
-                          qMax(mDefaultMaxX, dRect.left()+dRect.width());
+                          mOptimizedAxisX?
+                              qMax(mDefaultMaxLogX, dLogRect.right()):
+                              dLogRect.right():
+                          mOptimizedAxisX?
+                              qMax(mDefaultMaxX, dRect.right()):
+                              dRect.right();
         double minY = mLogAxisY?
-                          qMin(mDefaultMinLogY, dLogRect.top()):
-                          qMin(mDefaultMinY, dRect.top());
+                          mOptimizedAxisY?
+                              qMin(mDefaultMinLogY, dLogRect.top()):
+                              dLogRect.top():
+                          mOptimizedAxisY?
+                              qMin(mDefaultMinY, dRect.top()):
+                              dRect.top();
         double maxY = mLogAxisY?
-                          qMax(mDefaultMaxLogY, dLogRect.top()+dLogRect.height()):
-                          qMax(mDefaultMaxY, dRect.top()+dRect.height());
+                          mOptimizedAxisY?
+                              qMax(mDefaultMaxLogY, dLogRect.bottom()):
+                              dLogRect.bottom():
+                          mOptimizedAxisY?
+                              qMax(mDefaultMaxY, dRect.bottom()):
+                              dRect.bottom();
 
-        optimiseAxisX(minX, maxX);
-        optimiseAxisY(minY, maxY);
+        optimizeAxisX(minX, maxX);
+        optimizeAxisY(minY, maxY);
 
         return QRectF(minX, minY, maxX-minX, maxY-minY);
     } else {
@@ -2811,8 +2861,7 @@ bool GraphPanelPlotWidget::resetAxes()
     //       yet it should be false once our axes have been reset...
 
     QRectF dRect = realDataRect();
-    bool res = setAxes(dRect.left(), dRect.left()+dRect.width(),
-                       dRect.top(), dRect.top()+dRect.height(),
+    bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
                        true, true, true, true, false, false);
 
     mDirtyAxes = false;
@@ -3188,8 +3237,8 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height())));
 
         if (!qIsNull(zoomRegion.width()) && !qIsNull(zoomRegion.height())) {
-            setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
-                    zoomRegion.top()+zoomRegion.height(), zoomRegion.top(),
+            setAxes(zoomRegion.left(), zoomRegion.right(),
+                    zoomRegion.bottom(), zoomRegion.top(),
                     true, true, true, true, false, false);
         }
 
