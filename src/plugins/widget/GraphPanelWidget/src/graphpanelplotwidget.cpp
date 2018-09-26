@@ -745,7 +745,7 @@ GraphPanelPlotOverlayWidget::GraphPanelPlotOverlayWidget(GraphPanelPlotWidget *p
 
 //==============================================================================
 
-QPoint GraphPanelPlotOverlayWidget::optimisedPoint(const QPoint &pPoint) const
+QPoint GraphPanelPlotOverlayWidget::optimizedPoint(const QPoint &pPoint) const
 {
     // Optimise the given point so that it fits within our owner's ranges
 
@@ -795,7 +795,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
         painter.setPen(pen);
 
-        QPoint point = optimisedPoint(mPoint);
+        QPoint point = optimizedPoint(mPoint);
         // Note: see drawCoordinates() as why we use QPoint rather than
         //       QPointF...
 
@@ -900,8 +900,8 @@ QRect GraphPanelPlotOverlayWidget::zoomRegion() const
     int maxY = int(canvasMapY.transform(mOwner->minY()));
 
     if (mOwner->canZoomInX() || mOwner->canZoomInY()) {
-        QPoint originPoint = optimisedPoint(mOriginPoint);
-        QPoint point = optimisedPoint(mPoint);
+        QPoint originPoint = optimizedPoint(mOriginPoint);
+        QPoint point = optimizedPoint(mPoint);
 
         if (mOwner->canZoomInX()) {
             minX = qMin(originPoint.x(), point.x());
@@ -2509,7 +2509,7 @@ GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
+void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
                                         double &pMax,
                                         Optimization pOptimization) const
 {
@@ -2564,22 +2564,22 @@ void GraphPanelPlotWidget::optimiseAxis(const int &pAxisId, double &pMin,
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisX(double &pMin, double &pMax,
+void GraphPanelPlotWidget::optimizeAxisX(double &pMin, double &pMax,
                                          Optimization pOptimization) const
 {
     // Optimise our X axis' values
 
-    optimiseAxis(QwtPlot::xBottom, pMin, pMax, pOptimization);
+    optimizeAxis(QwtPlot::xBottom, pMin, pMax, pOptimization);
 }
 
 //==============================================================================
 
-void GraphPanelPlotWidget::optimiseAxisY(double &pMin, double &pMax,
+void GraphPanelPlotWidget::optimizeAxisY(double &pMin, double &pMax,
                                          Optimization pOptimization) const
 {
     // Optimise our Y axis' values
 
-    optimiseAxis(QwtPlot::yLeft, pMin, pMax, pOptimization);
+    optimizeAxis(QwtPlot::yLeft, pMin, pMax, pOptimization);
 }
 
 //==============================================================================
@@ -2667,8 +2667,8 @@ QRectF GraphPanelPlotWidget::realDataRect() const
                           qMax(mDefaultMaxLogY, dLogRect.bottom()):
                           qMax(mDefaultMaxY, dRect.bottom());
 
-        optimiseAxisX(minX, maxX);
-        optimiseAxisY(minY, maxY);
+        optimizeAxisX(minX, maxX);
+        optimizeAxisY(minY, maxY);
 
         return QRectF(minX, minY, maxX-minX, maxY-minY);
     } else {

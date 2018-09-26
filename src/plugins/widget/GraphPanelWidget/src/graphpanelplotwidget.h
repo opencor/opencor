@@ -268,7 +268,7 @@ private:
     QPoint mOriginPoint;
     QPoint mPoint;
 
-    QPoint optimisedPoint(const QPoint &pPoint) const;
+    QPoint optimizedPoint(const QPoint &pPoint) const;
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
@@ -402,9 +402,9 @@ public:
     bool dataRect(QRectF &pDataRect) const;
     bool dataLogRect(QRectF &pDataLogRect) const;
 
-    void optimiseAxisX(double &pMin, double &pMax,
+    void optimizeAxisX(double &pMin, double &pMax,
                        Optimization pOptimization = Default) const;
-    void optimiseAxisY(double &pMin, double &pMax,
+    void optimizeAxisY(double &pMin, double &pMax,
                        Optimization pOptimization = Default) const;
 
     double minX() const;
@@ -623,7 +623,7 @@ private:
 
     QRectF realDataRect() const;
 
-    void optimiseAxis(const int &pAxisId, double &pMin, double &pMax,
+    void optimizeAxis(const int &pAxisId, double &pMin, double &pMax,
                       Optimization pOptimization) const;
 
     void setAxis(int pAxisId, double pMin, double pMax);
