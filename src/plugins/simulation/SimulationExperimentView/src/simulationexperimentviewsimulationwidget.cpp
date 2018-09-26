@@ -3768,12 +3768,11 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     pPlot->setDefaultAxesValues(minX, maxX, minLogX, maxLogX,
                                 minY, maxY, minLogY, maxLogY);
 
-    bool logAxisX = pPlot->logAxisX();
-    bool logAxisY = pPlot->logAxisY();
-
     if (   pCanSetAxes
-        && pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
-                          logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
+        && pPlot->setAxes(pPlot->logAxisX()?minLogX:minX,
+                          pPlot->logAxisX()?maxLogX:maxX,
+                          pPlot->logAxisY()?minLogY:minY,
+                          pPlot->logAxisY()?maxLogY:maxY,
                           true, true, false, false, false, false)) {
         return true;
     } else if (pForceReplot) {
