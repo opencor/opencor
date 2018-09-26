@@ -64,7 +64,7 @@ void TabBarStyle::drawControl(ControlElement pElement,
 
                 if (   (tab->shape == QTabBar::RoundedEast)
                     || (tab->shape == QTabBar::TriangularEast)) {
-                    newX = tabRect.width()+tabRect.x();
+                    newX = tabRect.x()+tabRect.width();
                     newY = tabRect.y();
 
                     newRot = 90;
