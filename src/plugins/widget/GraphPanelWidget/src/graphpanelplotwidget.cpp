@@ -1404,6 +1404,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mCanUpdateActions(true),
     mSynchronizeXAxisAction(pSynchronizeXAxisAction),
     mSynchronizeYAxisAction(pSynchronizeYAxisAction),
+    mOptimizedAxisX(true),
+    mOptimizedAxisY(true),
     mDefaultMinX(DefaultMinAxis),
     mDefaultMaxX(DefaultMaxAxis),
     mDefaultMinY(DefaultMinAxis),
@@ -2509,11 +2511,21 @@ GraphPanelPlotGraphs GraphPanelPlotWidget::graphs() const
 
 //==============================================================================
 
+bool GraphPanelPlotWidget::isOptimizedAxes() const
+{
+    // Return whether both of our axes are optimised
+
+    return mOptimizedAxisX && mOptimizedAxisY;
+}
+
+//==============================================================================
+
 void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
                                         double &pMax,
-                                        Optimization pOptimization) const
+                                        Optimization pOptimization)
 {
-    // Make sure that the given values are different
+    // Make sure that the given values are different (and therefore optimisable
+    // as such)
 
     if (qIsNull(pMin-pMax)) {
         // The given values are the same, so update them so that we can properly
@@ -2523,6 +2535,16 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
 
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
+
+        if (pAxisId == QwtPlot::xBottom)
+            mOptimizedAxisX = false;
+        else
+            mOptimizedAxisY = false;
+    } else {
+        if (pAxisId == QwtPlot::xBottom)
+            mOptimizedAxisX = true;
+        else
+            mOptimizedAxisY = true;
     }
 
     // Optimise the axis' values, using either a linear or logarithmic approach
@@ -2565,7 +2587,7 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
 //==============================================================================
 
 void GraphPanelPlotWidget::optimizeAxisX(double &pMin, double &pMax,
-                                         Optimization pOptimization) const
+                                         Optimization pOptimization)
 {
     // Optimise our X axis' values
 
@@ -2575,7 +2597,7 @@ void GraphPanelPlotWidget::optimizeAxisX(double &pMin, double &pMax,
 //==============================================================================
 
 void GraphPanelPlotWidget::optimizeAxisY(double &pMin, double &pMax,
-                                         Optimization pOptimization) const
+                                         Optimization pOptimization)
 {
     // Optimise our Y axis' values
 
@@ -2643,7 +2665,7 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
 //==============================================================================
 
-QRectF GraphPanelPlotWidget::realDataRect() const
+QRectF GraphPanelPlotWidget::realDataRect()
 {
     // Return an optimised version of dataRect()/dataLogRect() or a default
     // rectangle, if no dataRect()/dataLogRect() exists
@@ -2655,17 +2677,33 @@ QRectF GraphPanelPlotWidget::realDataRect() const
         // Optimise our axes' values
 
         double minX = mLogAxisX?
-                          qMin(mDefaultMinLogX, dLogRect.left()):
-                          qMin(mDefaultMinX, dRect.left());
+                          mOptimizedAxisX?
+                              qMin(mDefaultMinLogX, dLogRect.left()):
+                              dLogRect.left():
+                          mOptimizedAxisX?
+                              qMin(mDefaultMinX, dRect.left()):
+                              dRect.left();
         double maxX = mLogAxisX?
-                          qMax(mDefaultMaxLogX, dLogRect.right()):
-                          qMax(mDefaultMaxX, dRect.right());
+                          mOptimizedAxisX?
+                              qMax(mDefaultMaxLogX, dLogRect.right()):
+                              dLogRect.right():
+                          mOptimizedAxisX?
+                              qMax(mDefaultMaxX, dRect.right()):
+                              dRect.right();
         double minY = mLogAxisY?
-                          qMin(mDefaultMinLogY, dLogRect.top()):
-                          qMin(mDefaultMinY, dRect.top());
+                          mOptimizedAxisY?
+                              qMin(mDefaultMinLogY, dLogRect.top()):
+                              dLogRect.top():
+                          mOptimizedAxisY?
+                              qMin(mDefaultMinY, dRect.top()):
+                              dRect.top();
         double maxY = mLogAxisY?
-                          qMax(mDefaultMaxLogY, dLogRect.bottom()):
-                          qMax(mDefaultMaxY, dRect.bottom());
+                          mOptimizedAxisY?
+                              qMax(mDefaultMaxLogY, dLogRect.bottom()):
+                              dLogRect.bottom():
+                          mOptimizedAxisY?
+                              qMax(mDefaultMaxY, dRect.bottom()):
+                              dRect.bottom();
 
         optimizeAxisX(minX, maxX);
         optimizeAxisY(minY, maxY);

@@ -3897,8 +3897,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         // Now we are ready to actually update all the graphs of all our plots
 
-        bool needFullUpdatePlot = false;
-
+        bool needFullUpdatePlot = !plot->isOptimizedAxes();
         double plotMinX = plot->minX();
         double plotMaxX = plot->maxX();
         double plotMinY = plot->minY();

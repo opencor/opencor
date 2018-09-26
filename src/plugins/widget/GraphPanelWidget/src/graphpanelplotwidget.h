@@ -402,10 +402,12 @@ public:
     bool dataRect(QRectF &pDataRect) const;
     bool dataLogRect(QRectF &pDataLogRect) const;
 
+    bool isOptimizedAxes() const;
+
     void optimizeAxisX(double &pMin, double &pMax,
-                       Optimization pOptimization = Default) const;
+                       Optimization pOptimization = Default);
     void optimizeAxisY(double &pMin, double &pMax,
-                       Optimization pOptimization = Default) const;
+                       Optimization pOptimization = Default);
 
     double minX() const;
     double maxX() const;
@@ -601,6 +603,9 @@ private:
 
     QwtPlotGrid *mGrid;
 
+    bool mOptimizedAxisX;
+    bool mOptimizedAxisY;
+
     double mDefaultMinX;
     double mDefaultMaxX;
     double mDefaultMinY;
@@ -621,10 +626,10 @@ private:
 
     void resetAction();
 
-    QRectF realDataRect() const;
+    QRectF realDataRect();
 
     void optimizeAxis(const int &pAxisId, double &pMin, double &pMax,
-                      Optimization pOptimization) const;
+                      Optimization pOptimization);
 
     void setAxis(int pAxisId, double pMin, double pMax);
 
