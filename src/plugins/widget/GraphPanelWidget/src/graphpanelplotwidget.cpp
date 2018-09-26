@@ -2646,14 +2646,14 @@ QRectF GraphPanelPlotWidget::realDataRect() const
                           qMin(mDefaultMinLogX, dLogRect.left()):
                           qMin(mDefaultMinX, dRect.left());
         double maxX = mLogAxisX?
-                          qMax(mDefaultMaxLogX, dLogRect.left()+dLogRect.width()):
-                          qMax(mDefaultMaxX, dRect.left()+dRect.width());
+                          qMax(mDefaultMaxLogX, dLogRect.right()):
+                          qMax(mDefaultMaxX, dRect.right());
         double minY = mLogAxisY?
                           qMin(mDefaultMinLogY, dLogRect.top()):
                           qMin(mDefaultMinY, dRect.top());
         double maxY = mLogAxisY?
-                          qMax(mDefaultMaxLogY, dLogRect.top()+dLogRect.height()):
-                          qMax(mDefaultMaxY, dRect.top()+dRect.height());
+                          qMax(mDefaultMaxLogY, dLogRect.bottom()):
+                          qMax(mDefaultMaxY, dRect.bottom());
 
         optimiseAxisX(minX, maxX);
         optimiseAxisY(minY, maxY);
@@ -2811,8 +2811,7 @@ bool GraphPanelPlotWidget::resetAxes()
     //       yet it should be false once our axes have been reset...
 
     QRectF dRect = realDataRect();
-    bool res = setAxes(dRect.left(), dRect.left()+dRect.width(),
-                       dRect.top(), dRect.top()+dRect.height(),
+    bool res = setAxes(dRect.left(), dRect.right(), dRect.top(), dRect.bottom(),
                        true, true, true, true, false, false);
 
     mDirtyAxes = false;
@@ -3188,8 +3187,8 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height())));
 
         if (!qIsNull(zoomRegion.width()) && !qIsNull(zoomRegion.height())) {
-            setAxes(zoomRegion.left(), zoomRegion.left()+zoomRegion.width(),
-                    zoomRegion.top()+zoomRegion.height(), zoomRegion.top(),
+            setAxes(zoomRegion.left(), zoomRegion.right(),
+                    zoomRegion.bottom(), zoomRegion.top(),
                     true, true, true, true, false, false);
         }
 
