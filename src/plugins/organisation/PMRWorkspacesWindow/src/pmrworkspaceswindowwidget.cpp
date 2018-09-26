@@ -1541,14 +1541,14 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
     if (!hasName) {
         if (!hasEmail) {
             Core::warningMessageBox(tr("Synchronise With PMR"),
-                                    tr("Both a <a href=\"opencor://openPreferencesDialog/PMRSupport\">name</a> and an <a href=\"opencor://openPreferencesDialog/PMRSupport\">email</a> must be set before you can synchronise with PMR."));
+                                    tr("Both a <strong>name</strong> and an <strong>email</strong> must be set before you can synchronise with PMR."));
         } else {
             Core::warningMessageBox(tr("Synchronise With PMR"),
-                                    tr("A <a href=\"opencor://openPreferencesDialog/PMRSupport\">name</a> must be set before you can synchronise with PMR."));
+                                    tr("A <strong>name</strong> must be set before you can synchronise with PMR."));
         }
     } else if (!hasEmail) {
         Core::warningMessageBox(tr("Synchronise With PMR"),
-                                tr("An <a href=\"opencor://openPreferencesDialog/PMRSupport\">email</a> must be set before you can synchronise with PMR."));
+                                tr("An <strong>email</strong> must be set before you can synchronise with PMR."));
     } else {
         // Synchronise the current workspace, which involves letting the user
         // decide which files should be staged (if they are not already staged),
