@@ -136,7 +136,11 @@ if(WIN32)
         message(FATAL_ERROR "silentrun could not be built...")
     endif()
 else()
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+    if(APPLE)
+        set(INCLUDE_ARGUMENT -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include)
+    endif()
+
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
     if(NOT RESULT EQUAL 0)
