@@ -1440,6 +1440,12 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
     }
+
+    // Make sure that our GUI is up to date
+    // Note: in case, for example, where we started OpenCOR with no workspaces
+    //       and then cloned one...
+
+    updateGui();
 }
 
 //==============================================================================
