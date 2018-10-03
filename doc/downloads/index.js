@@ -37,10 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> improved HiDPI support on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1776\">#1776</a>)." },
-                       { "change": "<strong>Editor widget:</strong> properly highlight/replace text that was found using a regular expression (see issue <a href=\"https://github.com/opencor/opencor/issues/1816\">#1816</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> the resetting of model parameters is now more specific (see issue <a href=\"https://github.com/opencor/opencor/issues/1815\">#1815</a>). Fixed a small problem with graph panels not always autoscaling properly (see issue <a href=\"https://github.com/opencor/opencor/issues/1824\">#1824</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1814\">#1814</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1829\">#1829</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1833\">#1833</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
