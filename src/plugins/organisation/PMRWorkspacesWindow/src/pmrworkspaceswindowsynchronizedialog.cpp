@@ -425,9 +425,9 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 
             QChar iStatus = fileNode->status().first;
             QChar wStatus = fileNode->status().second;
-            bool stagedFile =    ((iStatus != '\0') && (iStatus != ' '))
-                              && ((wStatus == '\0') || (wStatus == ' '));
-            bool unstagedFile = (wStatus != '\0') && (wStatus != ' ');
+            bool stagedFile =    ((iStatus != nullptr) && (iStatus != ' '))
+                              && ((wStatus == nullptr) || (wStatus == ' '));
+            bool unstagedFile = (wStatus != nullptr) && (wStatus != ' ');
 
             if (stagedFile || unstagedFile) {
                 // This is a un/staged file, so check whether we already know
