@@ -1086,13 +1086,13 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             // corresponding icon for it, if needed
             // Note: it may happen (e.g. when deleting a folder) that the Git
             //       status is not up to date, hence we need to check for the
-            //       I and W values not to be '\0' (which would be the case for
+            //       I and W values not to be nullptr (which would be the case for
             //       a folder that doesn't contain any files anymore)...
 
             QChar iStatus = fileNode->status().first;
             QChar wStatus = fileNode->status().second;
 
-            if ((iStatus == '\0') && (wStatus == '\0'))
+            if ((iStatus == nullptr) && (wStatus == nullptr))
                 continue;
 
             QIcon icon = mFileIcon;
@@ -1127,10 +1127,10 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
                 icon = mWtFileIcon;
 
             pIsStaged =    pIsStaged
-                        || (    (iStatus != '\0') && (iStatus != ' ')
-                            && ((wStatus == '\0') || (wStatus == ' ')));
+                        || (    (iStatus != nullptr) && (iStatus != ' ')
+                            && ((wStatus == nullptr) || (wStatus == ' ')));
             pIsUnstaged =    pIsUnstaged
-                          || ((wStatus != '\0') && (wStatus != ' ') && (wStatus != 'C'));
+                          || ((wStatus != nullptr) && (wStatus != ' ') && (wStatus != 'C'));
             pHasConflicts = pHasConflicts || (wStatus == 'C');
 
             if (newItem) {
