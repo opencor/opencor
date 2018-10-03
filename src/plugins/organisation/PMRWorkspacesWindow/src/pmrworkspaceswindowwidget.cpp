@@ -1176,7 +1176,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
 {
     // Sort the contents of our tree view widget and make sure that all of its
-    // the contents is visible
+    // contents is visible
 
     mProxyModel->sort(0);
 
