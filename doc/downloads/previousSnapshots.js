@@ -1,4 +1,29 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 10, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> improved HiDPI support on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1776\">#1776</a>)." },
+                       { "change": "<strong>Editor widget:</strong> properly highlight/replace text that was found using a regular expression (see issue <a href=\"https://github.com/opencor/opencor/issues/1816\">#1816</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> the resetting of model parameters is now more specific (see issue <a href=\"https://github.com/opencor/opencor/issues/1815\">#1815</a>). Fixed a small problem with graph panels not always autoscaling properly (see issue <a href=\"https://github.com/opencor/opencor/issues/1824\">#1824</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1814\">#1814</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1829\">#1829</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 18, "month": 9, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
