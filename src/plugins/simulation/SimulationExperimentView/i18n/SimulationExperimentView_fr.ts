@@ -337,24 +337,16 @@
         <translation>Arrêter la simulation</translation>
     </message>
     <message>
-        <source>Reset Model Parameters</source>
-        <translation>Réinitialiser Paramètres Modèle</translation>
+        <source>Reset State Model Parameters</source>
+        <translation>Réinitialiser Paramètres État Modèle</translation>
     </message>
     <message>
-        <source>Reset the state model parameters or all the model parameters</source>
-        <translation>Réinitialiser les paramètres état du modèle ou tous les paramètres du modèle</translation>
-    </message>
-    <message>
-        <source>States</source>
-        <translation>États</translation>
+        <source>Reset All Model Parameters</source>
+        <translation>Réinitialiser Tous Paramètres Modèle</translation>
     </message>
     <message>
         <source>Reset the state model parameters</source>
         <translation>Réinitialiser les paramètres état du modèle</translation>
-    </message>
-    <message>
-        <source>All</source>
-        <translation>Tous</translation>
     </message>
     <message>
         <source>Reset all the model parameters</source>
@@ -399,6 +391,10 @@
     <message>
         <source>Remove the current graph panel</source>
         <translation>Supprimer le panneau graphique actuel</translation>
+    </message>
+    <message>
+        <source>All</source>
+        <translation>Tous</translation>
     </message>
     <message>
         <source>Remove all the graph panels</source>

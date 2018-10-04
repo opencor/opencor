@@ -151,14 +151,19 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Create, customise and handle various actions
 
+    static const QIcon ResetIcon = QIcon(":/oxygen/actions/view-refresh.png");
+
+    static const int ResetIconWidth = ResetIcon.availableSizes().first().width();
+    static const int ResetIconHeight = ResetIcon.availableSizes().first().height();
+
+
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
                                             QKeySequence(Qt::ControlModifier|Qt::Key_F2), mToolBarWidget);
-    mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                                  mToolBarWidget);
-    mResetStateModelParametersAction = Core::newAction(mToolBarWidget);
-    mResetAllModelParametersAction = Core::newAction(mToolBarWidget);
+    mResetStateModelParametersAction = Core::newAction(Core::tintedIcon(ResetIcon, ResetIconWidth, ResetIconHeight, Qt::darkBlue),
+                                                        mToolBarWidget);
+    mResetAllModelParametersAction = Core::newAction(ResetIcon, mToolBarWidget);
     mClearSimulationResultsAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
                                                     mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
@@ -191,8 +196,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::runPauseResumeSimulation);
     connect(mStopSimulationAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::stopSimulation);
-    connect(mResetModelParametersAction, &QAction::triggered,
-            this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
     connect(mResetStateModelParametersAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::resetStateModelParameters);
     connect(mResetAllModelParametersAction, &QAction::triggered,
@@ -261,16 +264,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDelayWidget->setValue(0.0);
 
     // Create various tool buttons
-
-    QToolButton *resetModelParametersToolButton = new QToolButton(mToolBarWidget);
-    QMenu *resetModelParametersDropDownMenu = new QMenu(resetModelParametersToolButton);
-
-    resetModelParametersDropDownMenu->addAction(mResetStateModelParametersAction);
-    resetModelParametersDropDownMenu->addAction(mResetAllModelParametersAction);
-
-    resetModelParametersToolButton->setDefaultAction(mResetModelParametersAction);
-    resetModelParametersToolButton->setMenu(resetModelParametersDropDownMenu);
-    resetModelParametersToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
     QToolButton *removeGraphPanelToolButton = new QToolButton(mToolBarWidget);
     QMenu *removeGraphPanelDropDownMenu = new QMenu(removeGraphPanelToolButton);
@@ -351,7 +344,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addAction(mRunPauseResumeSimulationAction);
     mToolBarWidget->addAction(mStopSimulationAction);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addWidget(resetModelParametersToolButton);
+    mToolBarWidget->addAction(mResetStateModelParametersAction);
+    mToolBarWidget->addAction(mResetAllModelParametersAction);
+    mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mClearSimulationResultsAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
@@ -548,11 +543,9 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                      tr("Run the simulation"));
     I18nInterface::retranslateAction(mStopSimulationAction, tr("Stop Simulation"),
                                      tr("Stop the simulation"));
-    I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
-                                     tr("Reset the state model parameters or all the model parameters"));
-    I18nInterface::retranslateAction(mResetStateModelParametersAction, tr("States"),
+    I18nInterface::retranslateAction(mResetStateModelParametersAction, tr("Reset State Model Parameters"),
                                      tr("Reset the state model parameters"));
-    I18nInterface::retranslateAction(mResetAllModelParametersAction, tr("All"),
+    I18nInterface::retranslateAction(mResetAllModelParametersAction, tr("Reset All Model Parameters"),
                                      tr("Reset all the model parameters"));
     I18nInterface::retranslateAction(mClearSimulationResultsAction, tr("Clear Simulation Results"),
                                      tr("Clear the simulation results"));
@@ -1371,16 +1364,6 @@ void SimulationExperimentViewSimulationWidget::stopSimulation()
     // Stop our simulation
 
     mSimulation->stop();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::resetModelParameters()
-{
-    // Default action for our resetting of model parameters, i.e. reset all our
-    // model parameters
-
-    resetAllModelParameters();
 }
 
 //==============================================================================
@@ -3377,9 +3360,8 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsMo
     if (mDevelopmentModeAction->isChecked()) {
         Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
     } else {
-        mResetModelParametersAction->setEnabled(pIsModified);
-
         mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
+        mResetAllModelParametersAction->setEnabled(pIsModified);
     }
 }
 
