@@ -189,7 +189,6 @@ private:
 
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
-    QAction *mResetModelParametersAction;
     QAction *mResetStateModelParametersAction;
     QAction *mResetAllModelParametersAction;
     QAction *mClearSimulationResultsAction;
@@ -322,7 +321,6 @@ private slots:
     void removeGraphPanel();
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
-    void resetModelParameters();
     void resetStateModelParameters();
     void resetAllModelParameters();
     void clearSimulationResults();
