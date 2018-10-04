@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>Simulation Experiment view:</strong> now have two reset buttons rather than one with a drop-down menu (see issue <a href=\"https://github.com/opencor/opencor/issues/1835\">#1835</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1833\">#1833</a>)." }
                      ]
                    },
