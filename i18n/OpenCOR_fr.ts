@@ -34,28 +34,24 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>&amp;File</source>
-        <translation>&amp;Fichier</translation>
+        <source>File</source>
+        <translation>Fichier</translation>
     </message>
     <message>
-        <source>&amp;Tools</source>
-        <translation>Ou&amp;tils</translation>
+        <source>Tools</source>
+        <translation>Outils</translation>
     </message>
     <message>
-        <source>&amp;Language</source>
-        <translation>&amp;Langage</translation>
+        <source>Language</source>
+        <translation>Langage</translation>
     </message>
     <message>
-        <source>&amp;Help</source>
-        <translation>&amp;?</translation>
+        <source>Help</source>
+        <translation>?</translation>
     </message>
     <message>
-        <source>&amp;View</source>
-        <translation>&amp;Voir</translation>
-    </message>
-    <message>
-        <source>&amp;Quit</source>
-        <translation>&amp;Quitter</translation>
+        <source>View</source>
+        <translation>Voir</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -66,80 +62,76 @@
         <translation>Quitter OpenCOR</translation>
     </message>
     <message>
-        <source>&amp;English</source>
-        <translation>&amp;Anglais</translation>
+        <source>English</source>
+        <translation>Anglais</translation>
     </message>
     <message>
         <source>Select English as the language to be used by OpenCOR</source>
         <translation>Sélectionner l&apos;anglais comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
-        <source>&amp;French</source>
-        <translation>&amp;Français</translation>
+        <source>French</source>
+        <translation>Français</translation>
     </message>
     <message>
         <source>Select French as the language to be used by OpenCOR</source>
         <translation>Sélectionner le français comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
-        <source>Home &amp;Page</source>
-        <translation>&amp;Page D&apos;Accueil</translation>
+        <source>Home Page</source>
+        <translation>Page D&apos;Accueil</translation>
     </message>
     <message>
         <source>Open the OpenCOR home page</source>
         <translation>Ouvrir la page d&apos;accueil d&apos;OpenCOR</translation>
     </message>
     <message>
-        <source>&amp;About...</source>
-        <translation>&amp;À Propos...</translation>
+        <source>About...</source>
+        <translation>À Propos...</translation>
     </message>
     <message>
         <source>Some general information about OpenCOR</source>
         <translation>Quelques informations générales sur OpenCOR</translation>
     </message>
     <message>
-        <source>&amp;Reset All</source>
-        <translation>Tout &amp;Réinitialiser</translation>
+        <source>Reset All</source>
+        <translation>Tout Réinitialiser</translation>
     </message>
     <message>
         <source>Reset all your settings</source>
         <translation>Réinitialiser tous vos paramètres</translation>
     </message>
     <message>
-        <source>&amp;System</source>
-        <translation>&amp;Système</translation>
+        <source>System</source>
+        <translation>Système</translation>
     </message>
     <message>
         <source>Select your system&apos;s language as the language to be used by OpenCOR</source>
         <translation>Sélectionner la langue de votre système comme langue à être utilisée par OpenCOR</translation>
     </message>
     <message>
-        <source>&amp;Full Screen</source>
-        <translation>&amp;Plein Ecran</translation>
+        <source>Full Screen</source>
+        <translation>Plein Ecran</translation>
     </message>
     <message>
         <source>Switch to / back from full screen mode</source>
         <translation>Passer au / revenir du mode plein écran</translation>
     </message>
     <message>
-        <source>Status &amp;Bar</source>
-        <translation>&amp;Barre D&apos;État</translation>
+        <source>Status Bar</source>
+        <translation>Barre D&apos;État</translation>
     </message>
     <message>
         <source>Show/hide the status bar</source>
         <translation>Montrer/cacher la barre d&apos;état</translation>
     </message>
     <message>
-        <source>Plu&amp;gins...</source>
-        <translation>E&amp;xtensions...</translation>
+        <source>Plugins...</source>
+        <translation>Extensions...</translation>
     </message>
     <message>
         <source>Un/select plugins</source>
         <translation>Dé/sélectionner des extensions</translation>
-    </message>
-    <message>
-        <source>&amp;Docked Windows</source>
-        <translation>&amp;Fenêtres Ancrées</translation>
     </message>
     <message>
         <source>Docked Windows</source>
@@ -150,8 +142,8 @@
         <translation>Montrer/cacher toutes les fenêtres ancrées récentes/actuelles</translation>
     </message>
     <message>
-        <source>&amp;Preferences...</source>
-        <translation>&amp;Préférences...</translation>
+        <source>Preferences...</source>
+        <translation>Préférences...</translation>
     </message>
     <message>
         <source>Preferences</source>
