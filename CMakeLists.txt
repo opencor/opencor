@@ -1007,8 +1007,8 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
 configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
                ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
-build_documentation(user)
-build_documentation(developer)
+build_documentation(user 54 96 146)
+build_documentation(developer 49 133 155)
 
 # Build the GUI version of OpenCOR
 

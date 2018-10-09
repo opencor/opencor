@@ -60,16 +60,15 @@ endmacro()
 
 #===============================================================================
 
-macro(build_documentation DOCUMENTATION_NAME)
-    # Build the given documentation
-    # Note: we add a depency so that we are certain that the Sphinx script uses
-    #       our copy of Python (see the Python and PythonPacakges plugins)...
+macro(build_documentation DOCUMENTATION_NAME R G B)
+    # Build the given documentation and have it use the given RGB-based colour
 
     add_custom_command(TARGET ${PROJECT_BUILD_TARGET}
                        COMMAND ${SPHINX_BUILD_EXECUTABLE} -q -b html
                                                           -c "${DOCUMENTATION_SOURCE_DIR}"
                                                           "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
                                                           "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}"
+                       COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/stringreplace.py "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}/_static/theme.css" "103, 103, 103" "${R}, ${G}, ${B}"
                        COMMENT "Building the ${DOCUMENTATION_NAME} documentation")
 endmacro()
 
