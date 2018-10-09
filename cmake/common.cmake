@@ -45,34 +45,21 @@ endmacro()
 
 #===============================================================================
 
-macro(fetch_repository REPOSITORY_NAME REPOSITORY_SOURCE_DIR)
-    # Specify where our repository comes from
+macro(build_documentation DOCUMENTATION_NAME)
+    # Build the given documentation as an external project and have it copied to
+    # our final documentation directory
 
-    FetchContent_Declare(${REPOSITORY_NAME}
-        GIT_REPOSITORY https://github.com/opencor/${REPOSITORY_NAME}
-        SOURCE_DIR ${REPOSITORY_SOURCE_DIR}
+    set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
+
+    ExternalProject_Add(${DOCUMENTATION_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
+        GIT_REPOSITORY
+            https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
+        INSTALL_COMMAND
+            ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/${DOCUMENTATION_BUILD}/html
+                                               ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
     )
-
-    # Retrieve the contents of our repository
-
-    FetchContent_Populate(${REPOSITORY_NAME})
-endmacro()
-
-#===============================================================================
-
-macro(build_documentation DOCUMENTATION_NAME R G B)
-    # Build the given documentation and have it use the given RGB-based colour
-
-    add_custom_command(TARGET ${PROJECT_BUILD_TARGET}
-                       COMMAND ${SPHINX_BUILD_EXECUTABLE} -q -b html
-                                                          -c "${DOCUMENTATION_SOURCE_DIR}"
-                                                          "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
-                                                          "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}"
-                       COMMAND ${PYTHON_EXECUTABLE} "${DOCUMENTATION_SOURCE_DIR}/theme/cmake/stringreplace.py"
-                                                    "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}/_static/theme.css"
-                                                    "103, 103, 103"
-                                                    "${R}, ${G}, ${B}"
-                       COMMENT "Building the ${DOCUMENTATION_NAME} documentation")
 endmacro()
 
 #===============================================================================

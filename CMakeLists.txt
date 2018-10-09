@@ -987,28 +987,14 @@ endforeach()
 
 # Fetch parts of our documentation and build it
 
-include(FetchContent)
-
-set(DOCUMENTATION_SOURCE_DIR ${PROJECT_BUILD_DIR}/doc-src)
-
-fetch_repository(user-documentation ${DOCUMENTATION_SOURCE_DIR}/user)
-fetch_repository(developer-documentation ${DOCUMENTATION_SOURCE_DIR}/developer)
-fetch_repository(sphinx-theme ${DOCUMENTATION_SOURCE_DIR}/theme)
-
-string(TIMESTAMP SPHINX_YEAR "%Y")
-
-configure_file("${CMAKE_SOURCE_DIR}/doc/conf.py.in"
-               "${DOCUMENTATION_SOURCE_DIR}/conf.py"
-               @ONLY)
-
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
-                        ${CMAKE_SOURCE_DIR}/doc ${PROJECT_BUILD_DIR}/doc)
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+                                                           ${PROJECT_BUILD_DIR}/doc)
 
 configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
                ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
-build_documentation(user 54 96 146)
-build_documentation(developer 49 133 155)
+build_documentation(user)
+build_documentation(developer)
 
 # Build the GUI version of OpenCOR
 
