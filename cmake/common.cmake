@@ -68,7 +68,10 @@ macro(build_documentation DOCUMENTATION_NAME R G B)
                                                           -c "${DOCUMENTATION_SOURCE_DIR}"
                                                           "${DOCUMENTATION_SOURCE_DIR}/${DOCUMENTATION_NAME}/src"
                                                           "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}"
-                       COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/cmake/stringreplace.py "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}/_static/theme.css" "103, 103, 103" "${R}, ${G}, ${B}"
+                       COMMAND ${PYTHON_EXECUTABLE} "${DOCUMENTATION_SOURCE_DIR}/theme/cmake/stringreplace.py"
+                                                    "${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}/_static/theme.css"
+                                                    "103, 103, 103"
+                                                    "${R}, ${G}, ${B}"
                        COMMENT "Building the ${DOCUMENTATION_NAME} documentation")
 endmacro()
 
