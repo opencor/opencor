@@ -138,14 +138,14 @@ endif()
 # Allow other packages to use our scripts
 
 if(WIN32)
-    set(SPHINX_BUILD_EXECUTABLE sphinx-build.exe)
+    set(SPHINX_EXECUTABLE sphinx-build.exe)
 else()
-    set(SPHINX_BUILD_EXECUTABLE sphinx-build)
+    set(SPHINX_EXECUTABLE sphinx-build)
 endif()
 
-set(SPHINX_BUILD_EXECUTABLE
-    ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE
+set(SPHINX_EXECUTABLE
+    ${CMAKE_COMMAND} -E env PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR} ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_EXECUTABLE}
+    PARENT_SCOPE
 )
 
 # We are not relying on add_plugin() to build our Python site packages, so we

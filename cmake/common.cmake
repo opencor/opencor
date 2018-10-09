@@ -51,6 +51,9 @@ macro(build_documentation DOCUMENTATION_NAME)
 
     set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
 
+    string(REPLACE ";" "|"
+           DOCUMENTATION_SPHINX_EXECUTABLE "${SPHINX_EXECUTABLE}")
+
     ExternalProject_Add(${DOCUMENTATION_BUILD}
         SOURCE_DIR
             ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
@@ -58,6 +61,9 @@ macro(build_documentation DOCUMENTATION_NAME)
             https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
         CMAKE_ARGS
             -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
+            -DSPHINX_EXECUTABLE=${DOCUMENTATION_SPHINX_EXECUTABLE}
+        LIST_SEPARATOR
+            |
         INSTALL_COMMAND
             ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/${DOCUMENTATION_BUILD}/html
                                                ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
