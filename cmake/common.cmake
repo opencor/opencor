@@ -69,9 +69,9 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
     )
 
-    # Add our external project as a dependency to our project build target
-    # Note: this is so that our Help window plugin can generate the help files
-    #       that will be embedded in OpenCOR as a resource...
+    # Add our external project as a dependency to our project build target, so
+    # that our Help window plugin can generate the help files that will be
+    # embedded in OpenCOR as a resource
 
     add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
 endmacro()
