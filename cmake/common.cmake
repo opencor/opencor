@@ -68,6 +68,12 @@ macro(build_documentation DOCUMENTATION_NAME)
             ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/${DOCUMENTATION_BUILD}/html
                                                ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
     )
+
+    # Add our external project as a dependency to our project build target
+    # Note: this is so that our Help window plugin can generate the help files
+    #       that will be embedded in OpenCOR as a resource...
+
+    add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
 endmacro()
 
 #===============================================================================

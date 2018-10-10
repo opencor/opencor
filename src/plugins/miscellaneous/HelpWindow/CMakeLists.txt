@@ -1,6 +1,6 @@
 project(HelpWindowPlugin)
 
-# Generate the help files which will be embedded in the executable as a resource
+# Generate the help files that will be embedded in OpenCOR as a resource
 
 add_custom_target(GenerateQtHelpFiles)
 
