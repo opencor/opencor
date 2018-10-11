@@ -586,11 +586,6 @@ file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
 track_files(${VERSION_DATE_FILENAME})
 
-# Configure our help file
-
-configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
-
 # Configure our QRC files
 
 set(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
@@ -965,6 +960,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
+
+# Configure our help file
+
+configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
 # Build the GUI version of OpenCOR
 
