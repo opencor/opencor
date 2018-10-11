@@ -153,7 +153,7 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
     case PluginInfo::Solver:
         return QObject::tr("Plugins to access various solvers.");
     case PluginInfo::Support:
-        return QObject::tr("Plugins to support various third-party libraries and APIs.");
+        return QObject::tr("Plugins to support various third-party libraries.");
     case PluginInfo::ThirdParty:
         return QObject::tr("Plugins to access various third-party libraries.");
     case PluginInfo::Tools:
