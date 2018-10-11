@@ -38,7 +38,7 @@ var jsonData = { "versions": [
                      ],
                      "changes": [
                        { "change": "<strong>Simulation Experiment view:</strong> now have two reset buttons rather than one with a drop-down menu (see issue <a href=\"https://github.com/opencor/opencor/issues/1835\">#1835</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1833\">#1833</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1833\">#1833</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/1838\">#1838</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
