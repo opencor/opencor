@@ -7,7 +7,8 @@ add_custom_target(GenerateQtHelpFiles)
 add_dependencies(GenerateQtHelpFiles ${PROJECT_BUILD_TARGET})
 
 add_custom_command(TARGET GenerateQtHelpFiles
-                   COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
+                   COMMAND ${SILENTRUN}
+                           ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
                                                               -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
 track_files(
