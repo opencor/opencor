@@ -884,7 +884,8 @@ if(EXISTS ${COMPRESSED_FILENAME})
 
     file(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
-    string(REPLACE \"\;\" \"\\n                                  \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    string(REPLACE \"\;\" \"\\n                                  \"
+           SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     message(\"To retrieve the '${PACKAGE_NAME}' package, use:
 retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}
