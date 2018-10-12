@@ -109,7 +109,7 @@ void Tests::runtimeTests()
     //    child model; and
     //  - A somewhat comprehensive model (Faville 2008).
 
-    runtimeTest(OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
+    runtimeTest(OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml"),
                 "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/periodic-stimulus.out")));
     runtimeTest(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.cellml"),
                 "1.1", OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/CellMLSupport/tests/data/bond_graph_model_old.out")));
