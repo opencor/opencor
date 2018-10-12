@@ -20,7 +20,7 @@
         </uniformTimeCourse>
     </listOfSimulations>
     <listOfModels>
-        <model id="model" language="urn:sedml:language:cellml.1_0" source="../../../../../models/noble_model_1962.cellml"/>
+        <model id="model" language="urn:sedml:language:cellml.1_0" source="../../noble_model_1962.cellml"/>
     </listOfModels>
     <listOfTasks>
         <repeatedTask id="repeatedTask" range="once" resetModel="true">
