@@ -124,6 +124,30 @@ else()
     message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
 endif()
 
+# Try to build our silent program
+
+set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
+
+if(WIN32)
+    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "silentrun could not be built...")
+    endif()
+else()
+    if(APPLE)
+        set(INCLUDE_ARGUMENT -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include)
+    endif()
+
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "silentrun could not be built...")
+    endif()
+endif()
+
 # Try to build our runpath2rpath program, if we are on Linux
 
 if(NOT WIN32 AND NOT APPLE)
@@ -586,11 +610,6 @@ file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
 track_files(${VERSION_DATE_FILENAME})
 
-# Configure our help file
-
-configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
-
 # Configure our QRC files
 
 set(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
@@ -965,6 +984,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
+
+# Configure our help file
+
+configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
 # Build the GUI version of OpenCOR
 

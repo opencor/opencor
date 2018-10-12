@@ -18,34 +18,52 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CellML API plugin
+// Silent run
 //==============================================================================
 
-#include "cellmlapiplugin.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace CellMLAPI {
+#include <stdio.h>
+#include <stdlib.h>
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLAPIPluginInfo()
+int main(int pArgC, char *pArgV[])
 {
-    Descriptions descriptions;
+    // Execute the given program, silencing its output
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML API</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder l'<a href=\"https://github.com/cellmlapi/cellml-api/\">API CellML</a>."));
+#ifdef _WIN32
+    freopen("NUL:", "w", stdout);
+    freopen("NUL:", "w", stderr);
+#else
+    freopen("/dev/null", "w", stdout);
+    freopen("/dev/null", "w", stderr);
+#endif
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
-                          QStringList(),
-                          descriptions);
+    #define STRING_SIZE 32768
+
+    char command[STRING_SIZE];
+    int k = -1;
+
+    for (int i = 1; i < pArgC; ++i) {
+        if (i != 1)
+            command[++k] = ' ';
+
+        for (int j = 0; pArgV[i][j]; ++j) {
+            if (pArgV[i][j] == '\\') {
+                command[++k] = '\\';
+                command[++k] = '\\';
+            } else if (pArgV[i][j] == '"') {
+                command[++k] = '\\';
+                command[++k] = '"';
+            } else {
+                command[++k] = pArgV[i][j];
+            }
+        }
+    }
+
+    command[++k] = '\0';
+
+    return system(command);
 }
-
-//==============================================================================
-
-}   // namespace CellMLAPI
-}   // namespace OpenCOR
 
 //==============================================================================
 // End of file
