@@ -604,6 +604,25 @@ QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
 
 //==============================================================================
 
+QIcon standardIcon(QStyle::StandardPixmap pStandardIcon,
+                   const QStyleOption *pOption, const QWidget *pWidget)
+{
+    // Retrieve the given standard icon and scale it to 48x48 pixels since this
+    // is the size of the Oxygen icons that we use
+    // Note: the scaling is needed if we, for instance, need to create an
+    //       overlay icon. Indeed, the resolution of the overlay is dependent on
+    //       that of the icon...
+
+    static const QSize IconSize = QSize(48, 48);
+
+    QIcon icon = qApp->style()->standardIcon(pStandardIcon, pOption, pWidget);
+    QPixmap pixmap = icon.pixmap(icon.availableSizes().first());
+
+    return pixmap.scaled(IconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
+
+//==============================================================================
+
 QIcon tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                  const QColor &pColor)
 {

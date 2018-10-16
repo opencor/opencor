@@ -166,6 +166,10 @@ QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 QString CORE_EXPORT iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                                 QIcon::Mode pMode = QIcon::Normal);
 
+QIcon CORE_EXPORT standardIcon(QStyle::StandardPixmap pStandardIcon,
+                               const QStyleOption *pOption = nullptr,
+                               const QWidget *pWidget = nullptr);
+
 QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                              const QColor &pColor);
 QIcon CORE_EXPORT tintedIcon(const QString &pIcon, int pWidth, int pHeight,

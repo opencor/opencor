@@ -131,7 +131,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     static const QIcon ArrowDownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
-    QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
     int overlayIconSize = int(0.57*folderIconSize);
 
