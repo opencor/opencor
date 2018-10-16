@@ -151,8 +151,8 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initPluginsPath(pArgC, pArgV);
 
-    // Create the GUI version of OpenCOR, after making that on Windows OpenCOR
-    // can handle scaled HiDPI screens
+    // Create the GUI version of OpenCOR, after making sure that on Windows
+    // OpenCOR can handle scaled HiDPI screens
 
 #ifdef Q_OS_WIN
     SetProcessDPIAware();
