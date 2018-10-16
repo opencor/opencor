@@ -295,8 +295,8 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     static const QIcon UnstagedIcon = QIcon(":/PMRWorkspacesWindow/wQ.png");
     static const QIcon ConflictIcon = QIcon(":/PMRWorkspacesWindow/wE.png");
 
-    mCollapsedWorkspaceIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-    mExpandedWorkspaceIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
+    mCollapsedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
+    mExpandedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirOpenIcon);
 
     int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
     int overlayIconSize = int(0.57*folderIconSize);
