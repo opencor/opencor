@@ -1177,6 +1177,36 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
 
         fileManagerInstance->save(newFileName);
 
+        // Ask our file manager to unmanage and then (re)manage the file, if it
+        // was new
+        // Note: indeed, when creating a new file, our different standard file
+        //       managers automatically manage it (since it's empty and
+        //       therefore considered to be of any standard). So, now that the
+        //       file has been successfully saved (and is, therefore, not
+        //       considered to be new anymore), it is of a specific, hence we
+        //       must unmanage it and (re)manage it, so that only one of our
+        //       standard file manager manages it in the end...
+
+        if (hasNewFileName) {
+#ifdef QT_DEBUG
+            FileManager::Status status =
+#endif
+            fileManagerInstance->unmanage(newFileName);
+
+#ifdef QT_DEBUG
+            if (status != FileManager::Removed)
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get unmanaged.", __FILE__, __LINE__, qPrintable(newFileName));
+
+            status =
+#endif
+            fileManagerInstance->manage(newFileName);
+
+#ifdef QT_DEBUG
+            if (status != FileManager::Added)
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get managed.", __FILE__, __LINE__, qPrintable(newFileName));
+#endif
+        }
+
         return true;
     } else {
         return false;
