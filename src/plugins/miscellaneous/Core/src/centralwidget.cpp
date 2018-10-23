@@ -872,14 +872,12 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             // our file manager to create a new remote file
 
 #ifdef QT_DEBUG
-            FileManager::Status createStatus =
+            FileManager::Status status =
 #endif
             fileManagerInstance->create(fileNameOrUrl, fileContents);
 
 #ifdef QT_DEBUG
-            // Make sure that the file has indeed been created
-
-            if (createStatus != FileManager::Created)
+            if (status != FileManager::Created)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
         } else {
@@ -1029,14 +1027,12 @@ void CentralWidget::duplicateFile()
     // Ask our file manager to duplicate the current file
 
 #ifdef QT_DEBUG
-    FileManager::Status duplicateStatus =
+    FileManager::Status status =
 #endif
     fileManagerInstance->duplicate(fileName);
 
 #ifdef QT_DEBUG
-    // Make sure that the file has indeed been duplicated
-
-    if (duplicateStatus != FileManager::Duplicated)
+    if (status != FileManager::Duplicated)
         qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated.", __FILE__, __LINE__, qPrintable(fileName));
 #endif
 }
@@ -1167,14 +1163,12 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
             // Ask our file manager to rename the file
 
 #ifdef QT_DEBUG
-            FileManager::Status renameStatus =
+            FileManager::Status status =
 #endif
             fileManagerInstance->rename(oldFileName, newFileName);
 
 #ifdef QT_DEBUG
-            // Make sure that the file has indeed been renamed
-
-            if (renameStatus != FileManager::Renamed)
+            if (status != FileManager::Renamed)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'.", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
         }
@@ -1182,6 +1176,36 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         // The file has been saved, so ask our file manager to 'save' it too
 
         fileManagerInstance->save(newFileName);
+
+        // Ask our file manager to unmanage and then (re)manage the file, if it
+        // was new
+        // Note: indeed, when creating a new file, our different standard file
+        //       managers automatically manage it (since it's empty and
+        //       therefore considered to be of any standard). So, now that the
+        //       file has been successfully saved (and is, therefore, not
+        //       considered to be new anymore), it is of a specific, hence we
+        //       must unmanage it and (re)manage it, so that only one of our
+        //       standard file manager manages it in the end...
+
+        if (hasNewFileName) {
+#ifdef QT_DEBUG
+            FileManager::Status status =
+#endif
+            fileManagerInstance->unmanage(newFileName);
+
+#ifdef QT_DEBUG
+            if (status != FileManager::Removed)
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get unmanaged.", __FILE__, __LINE__, qPrintable(newFileName));
+
+            status =
+#endif
+            fileManagerInstance->manage(newFileName);
+
+#ifdef QT_DEBUG
+            if (status != FileManager::Added)
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get managed.", __FILE__, __LINE__, qPrintable(newFileName));
+#endif
+        }
 
         return true;
     } else {
