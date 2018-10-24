@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> unmanage and (re)manage a new file that has been saved (see issue <a href=\"https://github.com/opencor/opencor/issues/1846\">#1846</a>)." },
+                       { "change": "<strong>General:</strong> unmanage and (re)manage a new file that has been saved (see issue <a href=\"https://github.com/opencor/opencor/issues/1846\">#1846</a>). Recognise macOS Mojave (10.14) (see issue <a href=\"https://github.com/opencor/opencor/issues/1851\">#1851</a>)." },
                        { "change": "<strong>Simulation Experiment view:</strong> now have two reset buttons rather than one with a drop-down menu (see issue <a href=\"https://github.com/opencor/opencor/issues/1835\">#1835</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1833\">#1833</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/1838\">#1838</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1847\">#1847</a>)." }
                      ]
