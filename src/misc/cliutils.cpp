@@ -192,6 +192,21 @@ QString applicationDescription(bool pGuiMode)
 
 //==============================================================================
 
+QString prettyProductName()
+{
+    // Return a pretty version of the product name
+    // Note: Qt 5.9.7 LTS doesn't recognise macOS Mojave (10.14), so we need to
+    //       handle that particular case...
+
+    QString res = QSysInfo::prettyProductName();
+
+    return res.compare("macOS 10.14")?
+                res:
+                "macOS Mojave (10.14)";
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================
