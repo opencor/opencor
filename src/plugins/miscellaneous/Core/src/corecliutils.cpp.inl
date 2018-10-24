@@ -353,6 +353,8 @@ QString noInternetConnectionAvailableMessage()
 
 QString copyright()
 {
+    // Return our copyright
+
     return QObject::tr("Copyright")+" 2011-"+QString::number(QDate::currentDate().year());
 }
 
