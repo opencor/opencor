@@ -78,6 +78,8 @@ void initApplication(QString *pAppDate = nullptr);
 
 QString applicationDescription(bool pGuiMode = true);
 
+QString prettyProductName();
+
 //==============================================================================
 
 }   // namespace OpenCOR
