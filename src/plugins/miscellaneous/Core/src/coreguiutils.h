@@ -196,6 +196,13 @@ QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 int pOverlayLeft, int pOverlayTop,
                                 int pOverlayWidth, int pOverlayHeight);
 
+QIcon CORE_EXPORT scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                             Qt::AspectRatioMode pAspectMode = Qt::IgnoreAspectRatio,
+                             Qt::TransformationMode pMode = Qt::FastTransformation);
+QIcon CORE_EXPORT scaledIcon(const QString &pIcon, int pWidth, int pHeight,
+                             Qt::AspectRatioMode pAspectMode = Qt::IgnoreAspectRatio,
+                             Qt::TransformationMode pMode = Qt::FastTransformation);
+
 void CORE_EXPORT showEnableWidget(QWidget *pWidget, bool pVisible,
                                   bool pEnabled = true);
 

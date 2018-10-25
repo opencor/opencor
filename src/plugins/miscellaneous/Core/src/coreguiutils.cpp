@@ -607,18 +607,9 @@ QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
 QIcon standardIcon(QStyle::StandardPixmap pStandardIcon,
                    const QStyleOption *pOption, const QWidget *pWidget)
 {
-    // Retrieve the given standard icon and scale it to 48x48 pixels since this
-    // is the size of the Oxygen icons that we use
-    // Note: the scaling is needed if we, for instance, need to create an
-    //       overlay icon. Indeed, the resolution of the overlay is dependent on
-    //       that of the icon...
+    // Retrieve the given standard icon
 
-    static const QSize IconSize = QSize(48, 48);
-
-    QIcon icon = qApp->style()->standardIcon(pStandardIcon, pOption, pWidget);
-    QPixmap pixmap = icon.pixmap(icon.availableSizes().first());
-
-    return pixmap.scaled(IconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return qApp->style()->standardIcon(pStandardIcon, pOption, pWidget);
 }
 
 //==============================================================================
@@ -668,20 +659,24 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
+    // Note: we must, in our conversiono of our icons to a pixmap, account for
+    //       the fact that the user may be using a HiDPI screen, hence the
+    //       scaling factor...
 
     QImage image(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&image);
+    double scalingFactor = 1.0/qApp->devicePixelRatio();
 
     painter.setCompositionMode(QPainter::CompositionMode_Source);
     painter.fillRect(image.rect(), Qt::transparent);
 
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     painter.drawPixmap(0, 0, pBaseWidth, pBaseWidth,
-                       pBaseIcon.pixmap(pBaseWidth, pBaseWidth));
-
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+                       pBaseIcon.pixmap(int(scalingFactor*pBaseWidth),
+                                        int(scalingFactor*pBaseWidth)));
     painter.drawPixmap(pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight,
-                       pOverlayIcon.pixmap(pOverlayWidth, pOverlayHeight));
+                       pOverlayIcon.pixmap(int(scalingFactor*pOverlayWidth),
+                                           int(scalingFactor*pOverlayHeight)));
 
     return QPixmap::fromImage(image);
 }
@@ -723,6 +718,28 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 
     return overlayedIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
+}
+
+//==============================================================================
+
+QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                 Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
+{
+    // Create and return a scaled version of the given icon
+
+    return pIcon.pixmap(pIcon.availableSizes().first()).scaled(pWidth, pHeight,
+                                                               pAspectMode,
+                                                               pMode);
+}
+
+//==============================================================================
+
+QIcon scaledIcon(const QString &pIcon, int pWidth, int pHeight,
+                 Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
+{
+    // Create and return a scaled version of the given icon
+
+    return scaledIcon(QIcon(pIcon), pWidth, pHeight, pAspectMode, pMode);
 }
 
 //==============================================================================
