@@ -724,12 +724,9 @@ QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
 {
     // Create and return a scaled version of the given icon
 
-    int iconSize = pIcon.availableSizes().first().width();
-    double devicePixelRatio = qApp->devicePixelRatio();
-
-    return pIcon.pixmap(iconSize, iconSize).scaled(int(devicePixelRatio*pWidth),
-                                                   int(devicePixelRatio*pHeight),
-                                                   pAspectMode, pMode);
+    return pIcon.pixmap(pIcon.availableSizes().first()).scaled(pWidth, pHeight,
+                                                               pAspectMode,
+                                                               pMode);
 }
 
 //==============================================================================
