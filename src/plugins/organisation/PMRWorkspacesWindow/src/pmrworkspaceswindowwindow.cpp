@@ -105,7 +105,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
                                                                   folderIconSize-plusIconSize, 0,
                                                                   plusIconSize, plusIconSize),
                                               scaledIconSize, scaledIconSize,
-                                              Qt::IgnoreAspectRatio,
+                                              Qt::KeepAspectRatio,
                                               Qt::SmoothTransformation));
 
     toolBarWidget->addAction(mGui->actionNew);
