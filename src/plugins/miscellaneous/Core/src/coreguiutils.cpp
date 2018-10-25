@@ -662,17 +662,18 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 
     QImage image(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&image);
+    double scalingFactor = 1.0/qApp->devicePixelRatio();
 
     painter.setCompositionMode(QPainter::CompositionMode_Source);
     painter.fillRect(image.rect(), Qt::transparent);
 
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     painter.drawPixmap(0, 0, pBaseWidth, pBaseWidth,
-                       pBaseIcon.pixmap(pBaseWidth, pBaseWidth));
-
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+                       pBaseIcon.pixmap(int(scalingFactor*pBaseWidth),
+                                        int(scalingFactor*pBaseWidth)));
     painter.drawPixmap(pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight,
-                       pOverlayIcon.pixmap(pOverlayWidth, pOverlayHeight));
+                       pOverlayIcon.pixmap(int(scalingFactor*pOverlayWidth),
+                                           int(scalingFactor*pOverlayHeight)));
 
     return QPixmap::fromImage(image);
 }
