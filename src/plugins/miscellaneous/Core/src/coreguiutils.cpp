@@ -719,6 +719,31 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 
 //==============================================================================
 
+QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                 Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
+{
+    // Create and return a scaled version of the given icon
+
+    int iconSize = pIcon.availableSizes().first().width();
+    double devicePixelRatio = qApp->devicePixelRatio();
+
+    return pIcon.pixmap(iconSize, iconSize).scaled(int(devicePixelRatio*pWidth),
+                                                   int(devicePixelRatio*pHeight),
+                                                   pAspectMode, pMode);
+}
+
+//==============================================================================
+
+QIcon scaledIcon(const QString &pIcon, int pWidth, int pHeight,
+                 Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
+{
+    // Create and return a scaled version of the given icon
+
+    return scaledIcon(QIcon(pIcon), pWidth, pHeight, pAspectMode, pMode);
+}
+
+//==============================================================================
+
 void showEnableWidget(QWidget *pWidget, bool pVisible, bool pEnabled)
 {
     // Show/enable or hide/disable the given widget
