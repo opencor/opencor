@@ -186,7 +186,9 @@ QColor GraphPanelPlotGraphProperties::symbolFillColor() const
 
 GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
     QwtPlotCurve(),
-    mOwner(pOwner)
+    mOwner(pOwner),
+    mSize(0),
+    mValidData(QList<QPair<int, int>>())
 {
     // Customise ourselves a bit
 
@@ -207,60 +209,71 @@ GraphPanelPlotGraph * GraphPanelPlotGraphRun::owner() const
 
 //==============================================================================
 
+void GraphPanelPlotGraphRun::setRawSamples(const double *pDataX,
+                                           const double *pDataY,
+                                           int pSize)
+{
+    // Set the given raw samples and keep track of those that are valid
+
+    static const QPair<int, int> EmptyValidData = QPair<int, int>();
+
+    QPair<int, int> validData = EmptyValidData;
+
+    if (!mValidData.isEmpty()) {
+        validData = mValidData.last();
+
+        mValidData.removeLast();
+    }
+
+    for (int i = mSize; i < pSize; ++i) {
+        if (   !qIsInf(pDataX[i]) && !qIsNaN(pDataX[i])
+            && !qIsInf(pDataY[i]) && !qIsNaN(pDataY[i])) {
+            if (validData == EmptyValidData) {
+                validData.first = i;
+                validData.second = i;
+            } else if (validData.second == i-1) {
+                validData.second = i;
+            } else {
+                mValidData << validData;
+
+                validData.first = i;
+                validData.second = i;
+            }
+        }
+    }
+
+    if (validData != EmptyValidData)
+        mValidData << validData;
+
+    mSize = pSize;
+
+    QwtPlotCurve::setRawSamples(pDataX, pDataY, pSize);
+}
+
+//==============================================================================
+
 void GraphPanelPlotGraphRun::drawLines(QPainter *pPainter,
                                        const QwtScaleMap &pMapX,
                                        const QwtScaleMap &pMapY,
                                        const QRectF &pCanvasRect,
-                                       int pFrom, int pTo)
+                                       int pFrom, int pTo) const
 {
-    // Based on QwtPlotCurve::drawLines()
+    // Draw our lines
 
-    if (pFrom > pTo)
-        return;
+    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
+        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
+            int from = (   (pFrom >= mValidData[i].first)
+                        && (pFrom <= mValidData[i].second))?
+                           pFrom:
+                           mValidData[i].first;
+            int to = (   (pTo >= mValidData[i].first)
+                      && (pTo <= mValidData[i].second))?
+                         pTo:
+                         mValidData[i].second;
 
-    QRectF clipRect = QRectF();
-
-    if (testPaintAttribute(QwtPlotCurve::ClipPolygons)) {
-        double penWidth = qMax(1.0, pPainter->pen().widthF());
-
-        clipRect = pCanvasRect.adjusted(-penWidth, -penWidth,
-                                         penWidth,  penWidth);
-    }
-
-    QwtPointMapper mapper = QwtPointMapper();
-
-    mapper.setFlag(QwtPointMapper::RoundPoints,
-                   QwtPainter::roundingAlignment(pPainter));
-    mapper.setFlag(QwtPointMapper::WeedOutPoints,
-                   testPaintAttribute(QwtPlotCurve::FilterPoints));
-
-    mapper.setBoundingRect(pCanvasRect);
-
-    QPolygonF polyline = mapper.toPolygonF(pMapX, pMapY, data(), pFrom, pTo);
-
-    if (testCurveAttribute(QwtPlotCurve::Fitted) && (curveFitter() != nullptr))
-        polyline = curveFitter()->fitCurve(polyline);
-
-    if ((brush().style() != Qt::NoBrush) && (brush().color().alpha() > 0)) {
-        if (pPainter->pen().style() != Qt::NoPen) {
-            QPolygonF filledPolyline = polyline;
-
-            fillCurve(pPainter, pMapX, pMapY, pCanvasRect, filledPolyline);
-
-            filledPolyline.clear();
-
-            if (testPaintAttribute(QwtPlotCurve::ClipPolygons))
-                polyline = QwtClipper::clipPolygonF(clipRect, polyline, false);
-
-            QwtPainter::drawPolyline(pPainter, polyline);
-        } else {
-            fillCurve(pPainter, pMapX, pMapY, pCanvasRect, polyline);
+            QwtPlotCurve::drawLines(pPainter, pMapX, pMapY,
+                                    pCanvasRect, from, to);
         }
-    } else {
-        if (testPaintAttribute(QwtPlotCurve::ClipPolygons))
-            polyline = QwtClipper::clipPolygonF(clipRect, polyline, false);
-
-        QwtPainter::drawPolyline(pPainter, polyline);
     }
 }
 
@@ -271,25 +284,24 @@ void GraphPanelPlotGraphRun::drawSymbols(QPainter *pPainter,
                                          const QwtScaleMap &pMapX,
                                          const QwtScaleMap &pMapY,
                                          const QRectF &pCanvasRect,
-                                         int pFrom, int pTo)
+                                         int pFrom, int pTo) const
 {
-    // Based on QwtPlotCurve::drawSymbols()
+    // Draw our symbols
 
-    QwtPointMapper mapper = QwtPointMapper();
+    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
+        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
+            int from = (   (pFrom >= mValidData[i].first)
+                        && (pFrom <= mValidData[i].second))?
+                           pFrom:
+                           mValidData[i].first;
+            int to = (   (pTo >= mValidData[i].first)
+                      && (pTo <= mValidData[i].second))?
+                         pTo:
+                         mValidData[i].second;
 
-    mapper.setFlag(QwtPointMapper::RoundPoints, QwtPainter::roundingAlignment(pPainter));
-    mapper.setFlag(QwtPointMapper::WeedOutPoints, testPaintAttribute(QwtPlotCurve::FilterPoints));
-
-    mapper.setBoundingRect(pCanvasRect);
-
-    static const int ChunkSize = 500;
-
-    for (int i = pFrom; i <= pTo; i += ChunkSize) {
-        int n = qMin(ChunkSize, pTo-i+1);
-        QPolygonF points = mapper.toPointsF(pMapX, pMapY, data(), i, i+n-1);
-
-        if (!points.isEmpty())
-            pSymbol.drawSymbols( pPainter, points );
+            QwtPlotCurve::drawSymbols(pPainter, pSymbol, pMapX, pMapY,
+                                      pCanvasRect, from, to);
+        }
     }
 }
 

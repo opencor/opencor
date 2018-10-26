@@ -143,19 +143,21 @@ public:
 
     GraphPanelPlotGraph * owner() const;
 
+    void setRawSamples(const double *pDataX, const double *pDataY, int pSize);
+
 protected:
     void drawLines(QPainter *pPainter, const QwtScaleMap &pMapX,
                    const QwtScaleMap &pMapY, const QRectF &pCanvasRect,
-                   int pFrom, int pTo);
+                   int pFrom, int pTo) const override;
     void drawSymbols(QPainter *pPainter, const QwtSymbol &pSymbol,
                      const QwtScaleMap &pMapX, const QwtScaleMap &pMapY,
-                     const QRectF &pCanvasRect, int pFrom, int pTo);
-
-    using QwtPlotCurve::drawLines;
-    using QwtPlotCurve::drawSymbols;
+                     const QRectF &pCanvasRect, int pFrom, int pTo) const override;
 
 private:
     GraphPanelPlotGraph *mOwner;
+
+    int mSize;
+    QList<QPair<int, int>> mValidData;
 };
 
 //==============================================================================
