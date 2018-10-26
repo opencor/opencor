@@ -739,9 +739,60 @@ QRectF GraphPanelPlotGraph::boundingRect()
                 QRectF boundingRect = mBoundingRects.value(run, InvalidRect);
 
                 if (boundingRect == InvalidRect) {
-                    boundingRect = run->boundingRect();
+                    bool needInitMinX = true;
+                    bool needInitMaxX = true;
+                    bool needInitMinY = true;
+                    bool needInitMaxY = true;
+                    double minX = 1.0;
+                    double maxX = 1.0;
+                    double minY = 1.0;
+                    double maxY = 1.0;
 
-                    mBoundingRects.insert(run, boundingRect);
+                    for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
+                        QPointF sample = run->data()->sample(i);
+
+                        if (!qIsInf(sample.x()) && !qIsNaN(sample.x())) {
+                            if (needInitMinX) {
+                                minX = sample.x();
+
+                                needInitMinX = false;
+                            } else if (sample.x() < minX) {
+                                minX = sample.x();
+                            }
+
+                            if (needInitMaxX) {
+                                maxX = sample.x();
+
+                                needInitMaxX = false;
+                            } else if (sample.x() > maxX) {
+                                maxX = sample.x();
+                            }
+                        }
+
+                        if (!qIsInf(sample.y()) && !qIsNaN(sample.y())) {
+                            if (needInitMinY) {
+                                minY = sample.y();
+
+                                needInitMinY = false;
+                            } else if (sample.y() < minY) {
+                                minY = sample.y();
+                            }
+
+                            if (needInitMaxY) {
+                                maxY = sample.y();
+
+                                needInitMaxY = false;
+                            } else if (sample.y() > maxY) {
+                                maxY = sample.y();
+                            }
+                        }
+                    }
+
+                    if (!needInitMinX && !needInitMaxX && !needInitMinY && !needInitMaxY) {
+                        boundingRect = QRectF(minX, minY, maxX-minX, maxY-minY);
+
+                        mBoundingRects.insert(run, boundingRect);
+                    }
                 }
 
                 mBoundingRect |= boundingRect;
@@ -779,7 +830,8 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                     for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
                         QPointF sample = run->data()->sample(i);
 
-                        if (sample.x() > 0.0) {
+                        if (   !qIsInf(sample.x()) && !qIsNaN(sample.x())
+                            &&  (sample.x() > 0.0)) {
                             if (needInitMinX) {
                                 minX = sample.x();
 
@@ -797,7 +849,8 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                             }
                         }
 
-                        if (sample.y() > 0.0) {
+                        if (   !qIsInf(sample.y()) && !qIsNaN(sample.y())
+                            &&  (sample.y() > 0.0)) {
                             if (needInitMinY) {
                                 minY = sample.y();
 
