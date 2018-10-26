@@ -47,6 +47,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
+    #include "qwt_clipper.h"
+    #include "qwt_curve_fitter.h"
     #include "qwt_dyngrid_layout.h"
     #include "qwt_legend_label.h"
     #include "qwt_painter.h"
@@ -55,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_grid.h"
     #include "qwt_plot_layout.h"
     #include "qwt_plot_renderer.h"
+    #include "qwt_point_mapper.h"
     #include "qwt_scale_engine.h"
     #include "qwt_text_label.h"
 #include "qwtend.h"
@@ -183,7 +186,9 @@ QColor GraphPanelPlotGraphProperties::symbolFillColor() const
 
 GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
     QwtPlotCurve(),
-    mOwner(pOwner)
+    mOwner(pOwner),
+    mSize(0),
+    mValidData(QList<QPair<int, int>>())
 {
     // Customise ourselves a bit
 
@@ -200,6 +205,104 @@ GraphPanelPlotGraph * GraphPanelPlotGraphRun::owner() const
     // Return our owner
 
     return mOwner;
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraphRun::setRawSamples(const double *pDataX,
+                                           const double *pDataY,
+                                           int pSize)
+{
+    // Set the given raw samples and keep track of those that are valid
+
+    static const QPair<int, int> EmptyValidData = QPair<int, int>();
+
+    QPair<int, int> validData = EmptyValidData;
+
+    if (!mValidData.isEmpty()) {
+        validData = mValidData.last();
+
+        mValidData.removeLast();
+    }
+
+    for (int i = mSize; i < pSize; ++i) {
+        if (   !qIsInf(pDataX[i]) && !qIsNaN(pDataX[i])
+            && !qIsInf(pDataY[i]) && !qIsNaN(pDataY[i])) {
+            if (validData == EmptyValidData) {
+                validData.first = i;
+                validData.second = i;
+            } else if (validData.second == i-1) {
+                validData.second = i;
+            } else {
+                mValidData << validData;
+
+                validData.first = i;
+                validData.second = i;
+            }
+        }
+    }
+
+    if (validData != EmptyValidData)
+        mValidData << validData;
+
+    mSize = pSize;
+
+    QwtPlotCurve::setRawSamples(pDataX, pDataY, pSize);
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraphRun::drawLines(QPainter *pPainter,
+                                       const QwtScaleMap &pMapX,
+                                       const QwtScaleMap &pMapY,
+                                       const QRectF &pCanvasRect,
+                                       int pFrom, int pTo) const
+{
+    // Draw our lines
+
+    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
+        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
+            int from = (   (pFrom >= mValidData[i].first)
+                        && (pFrom <= mValidData[i].second))?
+                           pFrom:
+                           mValidData[i].first;
+            int to = (   (pTo >= mValidData[i].first)
+                      && (pTo <= mValidData[i].second))?
+                         pTo:
+                         mValidData[i].second;
+
+            QwtPlotCurve::drawLines(pPainter, pMapX, pMapY,
+                                    pCanvasRect, from, to);
+        }
+    }
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraphRun::drawSymbols(QPainter *pPainter,
+                                         const QwtSymbol &pSymbol,
+                                         const QwtScaleMap &pMapX,
+                                         const QwtScaleMap &pMapY,
+                                         const QRectF &pCanvasRect,
+                                         int pFrom, int pTo) const
+{
+    // Draw our symbols
+
+    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
+        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
+            int from = (   (pFrom >= mValidData[i].first)
+                        && (pFrom <= mValidData[i].second))?
+                           pFrom:
+                           mValidData[i].first;
+            int to = (   (pTo >= mValidData[i].first)
+                      && (pTo <= mValidData[i].second))?
+                         pTo:
+                         mValidData[i].second;
+
+            QwtPlotCurve::drawSymbols(pPainter, pSymbol, pMapX, pMapY,
+                                      pCanvasRect, from, to);
+        }
+    }
 }
 
 //==============================================================================
@@ -636,9 +739,60 @@ QRectF GraphPanelPlotGraph::boundingRect()
                 QRectF boundingRect = mBoundingRects.value(run, InvalidRect);
 
                 if (boundingRect == InvalidRect) {
-                    boundingRect = run->boundingRect();
+                    bool needInitMinX = true;
+                    bool needInitMaxX = true;
+                    bool needInitMinY = true;
+                    bool needInitMaxY = true;
+                    double minX = 1.0;
+                    double maxX = 1.0;
+                    double minY = 1.0;
+                    double maxY = 1.0;
 
-                    mBoundingRects.insert(run, boundingRect);
+                    for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
+                        QPointF sample = run->data()->sample(i);
+
+                        if (!qIsInf(sample.x()) && !qIsNaN(sample.x())) {
+                            if (needInitMinX) {
+                                minX = sample.x();
+
+                                needInitMinX = false;
+                            } else if (sample.x() < minX) {
+                                minX = sample.x();
+                            }
+
+                            if (needInitMaxX) {
+                                maxX = sample.x();
+
+                                needInitMaxX = false;
+                            } else if (sample.x() > maxX) {
+                                maxX = sample.x();
+                            }
+                        }
+
+                        if (!qIsInf(sample.y()) && !qIsNaN(sample.y())) {
+                            if (needInitMinY) {
+                                minY = sample.y();
+
+                                needInitMinY = false;
+                            } else if (sample.y() < minY) {
+                                minY = sample.y();
+                            }
+
+                            if (needInitMaxY) {
+                                maxY = sample.y();
+
+                                needInitMaxY = false;
+                            } else if (sample.y() > maxY) {
+                                maxY = sample.y();
+                            }
+                        }
+                    }
+
+                    if (!needInitMinX && !needInitMaxX && !needInitMinY && !needInitMaxY) {
+                        boundingRect = QRectF(minX, minY, maxX-minX, maxY-minY);
+
+                        mBoundingRects.insert(run, boundingRect);
+                    }
                 }
 
                 mBoundingRect |= boundingRect;
@@ -676,7 +830,8 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                     for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
                         QPointF sample = run->data()->sample(i);
 
-                        if (sample.x() > 0.0) {
+                        if (   !qIsInf(sample.x()) && !qIsNaN(sample.x())
+                            &&  (sample.x() > 0.0)) {
                             if (needInitMinX) {
                                 minX = sample.x();
 
@@ -694,7 +849,8 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                             }
                         }
 
-                        if (sample.y() > 0.0) {
+                        if (   !qIsInf(sample.y()) && !qIsNaN(sample.y())
+                            &&  (sample.y() > 0.0)) {
                             if (needInitMinY) {
                                 minY = sample.y();
 
