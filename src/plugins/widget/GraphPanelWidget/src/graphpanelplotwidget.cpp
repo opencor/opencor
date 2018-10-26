@@ -47,6 +47,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "qwtbegin.h"
+    #include "qwt_clipper.h"
+    #include "qwt_curve_fitter.h"
     #include "qwt_dyngrid_layout.h"
     #include "qwt_legend_label.h"
     #include "qwt_painter.h"
@@ -55,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #include "qwt_plot_grid.h"
     #include "qwt_plot_layout.h"
     #include "qwt_plot_renderer.h"
+    #include "qwt_point_mapper.h"
     #include "qwt_scale_engine.h"
     #include "qwt_text_label.h"
 #include "qwtend.h"
@@ -200,6 +203,94 @@ GraphPanelPlotGraph * GraphPanelPlotGraphRun::owner() const
     // Return our owner
 
     return mOwner;
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraphRun::drawLines(QPainter *pPainter,
+                                       const QwtScaleMap &pMapX,
+                                       const QwtScaleMap &pMapY,
+                                       const QRectF &pCanvasRect,
+                                       int pFrom, int pTo)
+{
+    // Based on QwtPlotCurve::drawLines()
+
+    if (pFrom > pTo)
+        return;
+
+    QRectF clipRect = QRectF();
+
+    if (testPaintAttribute(QwtPlotCurve::ClipPolygons)) {
+        double penWidth = qMax(1.0, pPainter->pen().widthF());
+
+        clipRect = pCanvasRect.adjusted(-penWidth, -penWidth,
+                                         penWidth,  penWidth);
+    }
+
+    QwtPointMapper mapper = QwtPointMapper();
+
+    mapper.setFlag(QwtPointMapper::RoundPoints,
+                   QwtPainter::roundingAlignment(pPainter));
+    mapper.setFlag(QwtPointMapper::WeedOutPoints,
+                   testPaintAttribute(QwtPlotCurve::FilterPoints));
+
+    mapper.setBoundingRect(pCanvasRect);
+
+    QPolygonF polyline = mapper.toPolygonF(pMapX, pMapY, data(), pFrom, pTo);
+
+    if (testCurveAttribute(QwtPlotCurve::Fitted) && (curveFitter() != nullptr))
+        polyline = curveFitter()->fitCurve(polyline);
+
+    if ((brush().style() != Qt::NoBrush) && (brush().color().alpha() > 0)) {
+        if (pPainter->pen().style() != Qt::NoPen) {
+            QPolygonF filledPolyline = polyline;
+
+            fillCurve(pPainter, pMapX, pMapY, pCanvasRect, filledPolyline);
+
+            filledPolyline.clear();
+
+            if (testPaintAttribute(QwtPlotCurve::ClipPolygons))
+                polyline = QwtClipper::clipPolygonF(clipRect, polyline, false);
+
+            QwtPainter::drawPolyline(pPainter, polyline);
+        } else {
+            fillCurve(pPainter, pMapX, pMapY, pCanvasRect, polyline);
+        }
+    } else {
+        if (testPaintAttribute(QwtPlotCurve::ClipPolygons))
+            polyline = QwtClipper::clipPolygonF(clipRect, polyline, false);
+
+        QwtPainter::drawPolyline(pPainter, polyline);
+    }
+}
+
+//==============================================================================
+
+void GraphPanelPlotGraphRun::drawSymbols(QPainter *pPainter,
+                                         const QwtSymbol &pSymbol,
+                                         const QwtScaleMap &pMapX,
+                                         const QwtScaleMap &pMapY,
+                                         const QRectF &pCanvasRect,
+                                         int pFrom, int pTo)
+{
+    // Based on QwtPlotCurve::drawSymbols()
+
+    QwtPointMapper mapper = QwtPointMapper();
+
+    mapper.setFlag(QwtPointMapper::RoundPoints, QwtPainter::roundingAlignment(pPainter));
+    mapper.setFlag(QwtPointMapper::WeedOutPoints, testPaintAttribute(QwtPlotCurve::FilterPoints));
+
+    mapper.setBoundingRect(pCanvasRect);
+
+    static const int ChunkSize = 500;
+
+    for (int i = pFrom; i <= pTo; i += ChunkSize) {
+        int n = qMin(ChunkSize, pTo-i+1);
+        QPolygonF points = mapper.toPointsF(pMapX, pMapY, data(), i, i+n-1);
+
+        if (!points.isEmpty())
+            pSymbol.drawSymbols( pPainter, points );
+    }
 }
 
 //==============================================================================

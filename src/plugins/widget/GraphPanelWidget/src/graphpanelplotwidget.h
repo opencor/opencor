@@ -143,6 +143,17 @@ public:
 
     GraphPanelPlotGraph * owner() const;
 
+protected:
+    void drawLines(QPainter *pPainter, const QwtScaleMap &pMapX,
+                   const QwtScaleMap &pMapY, const QRectF &pCanvasRect,
+                   int pFrom, int pTo);
+    void drawSymbols(QPainter *pPainter, const QwtSymbol &pSymbol,
+                     const QwtScaleMap &pMapX, const QwtScaleMap &pMapY,
+                     const QRectF &pCanvasRect, int pFrom, int pTo);
+
+    using QwtPlotCurve::drawLines;
+    using QwtPlotCurve::drawSymbols;
+
 private:
     GraphPanelPlotGraph *mOwner;
 };
