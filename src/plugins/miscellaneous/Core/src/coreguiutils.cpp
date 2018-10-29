@@ -659,9 +659,9 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
-    // Note: we must, in our conversiono of our icons to a pixmap, account for
-    //       the fact that the user may be using a HiDPI screen, hence the
-    //       scaling factor...
+    // Note: there is a bug in QIcon::pixmap() when it comes to HiDPI screens 
+    //       (see https://bugreports.qt.io/browse/QTBUG-71333), hence we need to
+    //       scale things...
 
     QImage image(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&image);
