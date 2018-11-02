@@ -752,7 +752,7 @@ int SimulationData::gradientsSize() const
 
 int * SimulationData::gradientIndices()
 {
-    // Return our gradients array
+    // Return an integer array of our gradient indices
 
     return mGradientIndices.data();
 }
