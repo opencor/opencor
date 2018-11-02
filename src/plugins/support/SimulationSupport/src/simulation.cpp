@@ -587,6 +587,12 @@ void SimulationData::checkForModifications()
 
 void SimulationData::updateParameters(SimulationData *pSimulationData)
 {
+    // Recompute our 'computed constants' and 'variables'
+
+    pSimulationData->reset(false);
+
+    // Let the simultaion view know parameters have changed
+
     emit pSimulationData->updatedParameters(pSimulationData->mStartingPoint);
 }
 
