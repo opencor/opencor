@@ -49,10 +49,13 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QtMessageHandler defaultMessageHandler;
+#ifdef QT_DEBUG
+static QtMessageHandler gDefaultMessageHandler;
+#endif
 
 //==============================================================================
 
+#ifdef QT_DEBUG
 void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
                      const QString &pMessage)
 {
@@ -63,8 +66,9 @@ void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
     //       hence our filtering it out...
 
     if (pMessage.compare("libpng warning: iCCP: known incorrect sRGB profile"))
-        defaultMessageHandler(pType, pContext, pMessage);
+        gDefaultMessageHandler(pType, pContext, pMessage);
 }
+#endif
 
 //==============================================================================
 
@@ -75,7 +79,7 @@ void initQtMessagePattern()
     // we want to filter out
 
 #ifdef QT_DEBUG
-    defaultMessageHandler = qInstallMessageHandler(messageHandler);
+    gDefaultMessageHandler = qInstallMessageHandler(messageHandler);
 #else
     qSetMessagePattern("%{if-debug}%{endif}"
                        "%{if-warning}%{endif}"
@@ -179,9 +183,26 @@ void initApplication(QString *pAppDate)
 
 QString applicationDescription(bool pGuiMode)
 {
+    // Return the application description
+
     QString res = QObject::tr("%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>");
 
     return pGuiMode?res:plainString(res);
+}
+
+//==============================================================================
+
+QString prettyProductName()
+{
+    // Return a pretty version of the product name
+    // Note: Qt 5.9.7 LTS doesn't recognise macOS Mojave (10.14), so we need to
+    //       handle that particular case...
+
+    QString res = QSysInfo::prettyProductName();
+
+    return res.compare("macOS 10.14")?
+                res:
+                "macOS Mojave (10.14)";
 }
 
 //==============================================================================

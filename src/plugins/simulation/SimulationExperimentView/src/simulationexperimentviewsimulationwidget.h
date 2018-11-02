@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "graphpanelplotwidget.h"
+#include "graphpanelwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -136,12 +137,17 @@ public:
     bool save(const QString &pFileName);
 
     void filePermissionsChanged();
-    void fileModified();
     void fileReloaded();
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     SimulationSupport::Simulation * simulation() const;
+
+    GraphPanelWidget::GraphPanelWidgetProperties defaultGraphPanelProperties() const;
+
+    GraphPanelWidget::GraphPanelPlotGraphProperties defaultGraphProperties(const QString &pTitle,
+                                                                           const QColor &pColor) const;
+    GraphPanelWidget::GraphPanelPlotGraphProperties defaultGraphProperties(const QColor &pColor) const;
 
     void updateGui(bool pCheckVisibility = false);
     void updateSimulationResults(SimulationExperimentViewSimulationWidget *pSimulationWidget,
@@ -183,7 +189,8 @@ private:
 
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
-    QAction *mResetModelParametersAction;
+    QAction *mResetStateModelParametersAction;
+    QAction *mResetAllModelParametersAction;
     QAction *mClearSimulationResultsAction;
     QAction *mDevelopmentModeAction;
     QAction *mAddGraphPanelAction;
@@ -195,6 +202,7 @@ private:
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
     QAction *mSimulationResultsExportAction;
+    QAction *mPreferencesAction;
 
     QwtWheel *mDelayWidget;
     QLabel *mDelayValueWidget;
@@ -249,7 +257,7 @@ private:
 
     void removePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot);
     bool updatePlot(GraphPanelWidget::GraphPanelPlotWidget *pPlot,
-                    bool pCanSetAxes = true, bool pForceReplot = false);
+                    bool pCanSetAxes, bool pForceReplot);
 
     double * data(SimulationSupport::Simulation *pSimulation,
                   CellMLSupport::CellmlFileRuntimeParameter *pParameter,
@@ -258,7 +266,7 @@ private:
     void updateGraphData(GraphPanelWidget::GraphPanelPlotGraph *pGraph,
                          quint64 pSize, int pRun = -1);
 
-    void updateSimulationProperties(Core::Property *pProperty = 0);
+    void updateSimulationProperties(Core::Property *pProperty = nullptr);
     void updateSolversProperties(Core::Property *pProperty,
                                  bool pResetNlaSolver);
     void updateSolversProperties(Core::Property *pProperty);
@@ -299,8 +307,6 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
-    void clearSimulationResults(bool pCheckSimulationResults);
-
 signals:
     void splitterMoved(const QIntList &pSizes);
 
@@ -318,9 +324,12 @@ private slots:
     void removeGraphPanel();
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
-    void resetModelParameters();
+    void resetStateModelParameters();
+    void resetAllModelParameters();
+    void clearSimulationResults();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
+    void preferences();
 
     void emitSplitterMoved();
 

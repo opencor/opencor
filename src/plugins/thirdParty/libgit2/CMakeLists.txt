@@ -3,17 +3,21 @@ project(libgit2Plugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libgit2)
-set(PACKAGE_VERSION 0.27.1)
+set(PACKAGE_VERSION 0.27.7)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 0)
 set(MINOR_LIBRARY_VERSION 27)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.1)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.7)
 
 # Git tag for our library
 
-set(GIT_TAG opencor)
+set(GIT_TAG v0.27.7-opencor)
+
+# Release tag
+
+set(RELEASE_TAG v0.27.7-opencor)
 
 # Specify where our local package will be installed
 
@@ -25,7 +29,7 @@ if(WIN32)
     set(SHARED_LIBRARY git2${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY git2${CMAKE_IMPORT_LIBRARY_SUFFIX})
 elseif(APPLE)
-    set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2.${MAJOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2.${MINOR_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(IMPORT_LIBRARY ${SHARED_LIBRARY})
 else()
     set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}git2${CMAKE_SHARED_LIBRARY_SUFFIX}.${MINOR_LIBRARY_VERSION})
@@ -63,27 +67,31 @@ if(USE_PREBUILT_LIBGIT2_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 0ee4190b7d1a32c56bacdf0c365a370898ddef81
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 57fbb0b509fd4bdaf3f0c9b395cc328c6f33d668
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6680a5f3e71ebcf25a37867ed968561151d251e8
-                                              bf2f39128f5502451534ba8faf3c05c62cb3a645)
+                                  SHA1_VALUES c6958a9ee21ca4ca21fe015ee7e90aeb13b13790
+                                              72c013b089458d05292d410661336687ed0dd19b)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 9b95575ab293b0a1d5876819d99b974f181edfde
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} a739cae9c5b25d13e75d1621c93df14e468f8986
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a21574d0254680255f2bc591ec82afb51602542f
-                                              25fb6b2b91dfd7085ba89c722b34b24f19c1b63e)
+                                  SHA1_VALUES aae2eb4f9a0eb67994881bab3d2bdecca68bbc4a
+                                              140c1cf315e4949dd3cdb4896e67035fba4a1d63)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1f055abfcf424b7fd96faa778c445e703baf7e68
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 64477fdee83db9c1c7ad28a61a18395a1cefc5f1
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 2f6137301fd92736653c164cb7662bb8715a4ef0)
+                              SHA1_VALUES 3c77f84f875e83deeb0f20a972b89815ab454b6c)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 4eb954317338589498c972a03783bb97d4d0030c
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 712f964c2e42377e5e63900dc3cc76369f868571
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 23441e7c027431382b95764b8da49bcb8dd2c7eb)
+                              SHA1_VALUES 274f6a5b8e75bf4d3209afb4ecb60d8bc191fd6c)
     endif()
 else()
     # Ignore some warnings
@@ -161,6 +169,7 @@ else()
 
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})

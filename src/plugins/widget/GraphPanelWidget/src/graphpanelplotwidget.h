@@ -73,34 +73,32 @@ static const QColor Red       = QColor::fromRgb(162, 20, 47);
 
 //==============================================================================
 
-static const bool DefaultSelected                = true;
-static const auto DefaultTitle                   = QStringLiteral("");
-static const Qt::PenStyle DefaultLineStyle       = Qt::SolidLine;
-static const int DefaultLineWidth                = 2;
-static const QColor DefaultLineColor             = DarkBlue;
-static const QwtSymbol::Style DefaultSymbolStyle = QwtSymbol::NoSymbol;
-static const int DefaultSymbolSize               = 8;
-static const QColor DefaultSymbolColor           = DarkBlue;
-static const bool DefaultSymbolFilled            = true;
-static const QColor DefaultSymbolFillColor       = Qt::white;
+static const bool DefaultGraphSelected                = true;
+static const auto DefaultGraphTitle                   = QStringLiteral("");
+static const Qt::PenStyle DefaultGraphLineStyle       = Qt::SolidLine;
+static const int DefaultGraphLineWidth                = 2;
+static const QColor DefaultGraphLineColor             = DarkBlue;
+static const QwtSymbol::Style DefaultGraphSymbolStyle = QwtSymbol::NoSymbol;
+static const int DefaultGraphSymbolSize               = 8;
+static const QColor DefaultGraphSymbolColor           = DarkBlue;
+static const bool DefaultGraphSymbolFilled            = true;
+static const QColor DefaultGraphSymbolFillColor       = Qt::white;
 
 //==============================================================================
 
 class GRAPHPANELWIDGET_EXPORT GraphPanelPlotGraphProperties
 {
 public:
-    explicit GraphPanelPlotGraphProperties(bool pSelected = DefaultSelected,
-                                           const QString &pTitle = DefaultTitle,
-                                           const Qt::PenStyle &pLineStyle = DefaultLineStyle,
-                                           int pLineWidth = DefaultLineWidth,
-                                           const QColor &pLineColor = DefaultLineColor,
-                                           const QwtSymbol::Style &pSymbolStyle = DefaultSymbolStyle,
-                                           int pSymbolSize = DefaultSymbolSize,
-                                           const QColor &pSymbolColor = DefaultSymbolColor,
-                                           bool pSymbolFilled = DefaultSymbolFilled,
-                                           const QColor &pSymbolFillColor = DefaultSymbolFillColor);
-    explicit GraphPanelPlotGraphProperties(const QString &pTitle,
-                                           const QColor &pColor);
+    explicit GraphPanelPlotGraphProperties(bool pSelected = DefaultGraphSelected,
+                                           const QString &pTitle = DefaultGraphTitle,
+                                           const Qt::PenStyle &pLineStyle = DefaultGraphLineStyle,
+                                           int pLineWidth = DefaultGraphLineWidth,
+                                           const QColor &pLineColor = DefaultGraphLineColor,
+                                           const QwtSymbol::Style &pSymbolStyle = DefaultGraphSymbolStyle,
+                                           int pSymbolSize = DefaultGraphSymbolSize,
+                                           const QColor &pSymbolColor = DefaultGraphSymbolColor,
+                                           bool pSymbolFilled = DefaultGraphSymbolFilled,
+                                           const QColor &pSymbolFillColor = DefaultGraphSymbolFillColor);
 
     bool isSelected() const;
 
@@ -145,8 +143,21 @@ public:
 
     GraphPanelPlotGraph * owner() const;
 
+    void setRawSamples(const double *pDataX, const double *pDataY, int pSize);
+
+protected:
+    void drawLines(QPainter *pPainter, const QwtScaleMap &pMapX,
+                   const QwtScaleMap &pMapY, const QRectF &pCanvasRect,
+                   int pFrom, int pTo) const override;
+    void drawSymbols(QPainter *pPainter, const QwtSymbol &pSymbol,
+                     const QwtScaleMap &pMapX, const QwtScaleMap &pMapY,
+                     const QRectF &pCanvasRect, int pFrom, int pTo) const override;
+
 private:
     GraphPanelPlotGraph *mOwner;
+
+    int mSize;
+    QList<QPair<int, int>> mValidData;
 };
 
 //==============================================================================
@@ -211,7 +222,7 @@ public:
     quint64 dataSize() const;
 
     QwtSeriesData<QPointF> *data(int pRun = -1) const;
-    void setData(double *pDataX, double *pDataY, int pSize, int pRun = -1);
+    void setData(double *pDataX, double *pDataY, quint64 pSize, int pRun = -1);
 
     QRectF boundingRect();
     QRectF boundingLogRect();
@@ -270,7 +281,7 @@ private:
     QPoint mOriginPoint;
     QPoint mPoint;
 
-    QPoint optimisedPoint(const QPoint &pPoint) const;
+    QPoint optimizedPoint(const QPoint &pPoint) const;
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
@@ -376,6 +387,12 @@ public:
         ZoomRegion
     };
 
+    enum Optimization {
+        Default,
+        Linear,
+        Logarithmic
+    };
+
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
@@ -398,7 +415,12 @@ public:
     bool dataRect(QRectF &pDataRect) const;
     bool dataLogRect(QRectF &pDataLogRect) const;
 
-    void optimiseAxis(double &pMin, double &pMax) const;
+    bool isOptimizedAxes() const;
+
+    void optimizeAxisX(double &pMin, double &pMax,
+                       Optimization pOptimization = Default);
+    void optimizeAxisY(double &pMin, double &pMax,
+                       Optimization pOptimization = Default);
 
     double minX() const;
     double maxX() const;
@@ -484,9 +506,9 @@ public:
                               double pDefaultMinLogY, double pDefaultMaxLogY);
 
     bool setAxes(double pMinX, double pMaxX, double pMinY, double pMaxY,
-                 bool pSynchronizeAxes = true, bool pCanReplot = true,
-                 bool pEmitSignal = true, bool pForceXAxisSetting = false,
-                 bool pForceYAxisSetting = false);
+                 bool pSynchronizeAxes, bool pCanReplot, bool pEmitSignal,
+                 bool pForceAxesSetting, bool pSynchronizeXAxis,
+                 bool pSynchronizeYAxis);
 
     bool drawGraphFrom(GraphPanelPlotGraph *pGraph, quint64 pFrom);
 
@@ -504,9 +526,10 @@ public:
 
     QPointF canvasPoint(const QPoint &pPoint) const;
 
-    void updateGui(bool pSingleShot = false);
+    void updateGui(bool pSingleShot = false, bool pForceAlignment = false);
 
 protected:
+    bool event(QEvent *pEvent) override;
     bool eventFilter(QObject *pObject, QEvent *pEvent) override;
     void mouseMoveEvent(QMouseEvent *pEvent) override;
     void mousePressEvent(QMouseEvent *pEvent) override;
@@ -517,11 +540,12 @@ protected:
 
 private:
     enum Scaling {
-        BigScalingIn,
-        ScalingIn,
         NoScaling,
+        ScalingIn,
+        BigScalingIn,
         ScalingOut,
-        BigScalingOut
+        BigScalingOut,
+        CustomScaling
     };
 
     GraphPanelWidget *mOwner;
@@ -592,6 +616,9 @@ private:
 
     QwtPlotGrid *mGrid;
 
+    bool mOptimizedAxisX;
+    bool mOptimizedAxisY;
+
     double mDefaultMinX;
     double mDefaultMaxX;
     double mDefaultMinY;
@@ -604,13 +631,18 @@ private:
 
     GraphPanelPlotWidgets mNeighbors;
 
+    bool mDirtyAxes;
+
     void checkAxisValues(bool pLogAxis, double &pMin, double &pMax);
 
     void updateActions();
 
     void resetAction();
 
-    QRectF realDataRect() const;
+    QRectF realDataRect();
+
+    void optimizeAxis(const int &pAxisId, double &pMin, double &pMax,
+                      Optimization pOptimization);
 
     void setAxis(int pAxisId, double pMin, double pMax);
 
@@ -618,10 +650,14 @@ private:
 
     bool scaleAxis(Scaling pScaling, bool pCanZoomIn, bool pCanZoomOut,
                    const QwtScaleMap &pCanvasMap, double pPoint,
-                   double &pMin, double &pMax);
-    void scaleAxes(const QPoint &pPoint, Scaling pScalingX, Scaling pScalingY);
+                   double &pMin, double &pMax, double pCustomScaling);
+    void scaleAxes(const QPoint &pPoint, Scaling pScalingX, Scaling pScalingY,
+                   double pCustomScaling = 0.0);
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
+
+    void getBorderDistances(QwtScaleDraw *pScaleDraw, QwtScaleMap pScaleMap,
+                            const QFont &pFont, int &pStart, int &pEnd);
 
     void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
 
@@ -638,10 +674,9 @@ signals:
     void logarithmicXAxisToggled();
     void logarithmicYAxisToggled();
 
-public slots:
-    void doUpdateGui();
-
 private slots:
+    void doUpdateGui(bool pForceAlignment);
+
     void cannotUpdateActions();
 
     void exportTo();

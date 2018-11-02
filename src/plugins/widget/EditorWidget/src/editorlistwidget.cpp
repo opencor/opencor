@@ -71,13 +71,13 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
 
     switch (pType) {
     case Unknown:
-#ifdef QT_DEBUG
         // We should never come here...
 
+#ifdef QT_DEBUG
         qFatal("FATAL ERROR | %s:%d: a list item cannot be of unknown type.", __FILE__, __LINE__);
-#endif
-
+#else
         break;
+#endif
     case Error:
         setIcon(ErrorIcon);
 

@@ -62,13 +62,45 @@ else()
     endif()
 endif()
 
+# Determine the effective build directory
+
+set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+if(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+    # With Xcode, we have a configuration directory, but it messes up our build
+    # system, so ask for all the binaries to be generated in our build folder
+
+    set(XCODE TRUE)
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+else()
+    # Check whether there is a configuration directory (the case with MSVC) and,
+    # if so, make use of it
+
+    set(XCODE FALSE)
+
+    if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+        set(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+    endif()
+endif()
+
 # Make sure that we are building OpenCOR on a supported architecture
 # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in some
 #       cases it may not be set (e.g. when generating an Xcode project file), so
 #       we determine and retrieve that value ourselves...
 
 try_run(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-        ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+        ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
         RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
 if(NOT ARCHITECTURE_COMPILE)
@@ -93,10 +125,34 @@ else()
     message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
 endif()
 
+# Try to build our silent program
+
+set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
+
+if(WIN32)
+    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "silentrun could not be built...")
+    endif()
+else()
+    if(APPLE)
+        set(INCLUDE_ARGUMENT -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include)
+    endif()
+
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "silentrun could not be built...")
+    endif()
+endif()
+
 # Try to build our runpath2rpath program, if we are on Linux
 
 if(NOT WIN32 AND NOT APPLE)
-    set(RUNPATH2RPATH ${CMAKE_BINARY_DIR}/runpath2rpath)
+    set(RUNPATH2RPATH ${PROJECT_BUILD_DIR}/runpath2rpath)
 
     execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 -o ${RUNPATH2RPATH} ${PROJECT_SOURCE_DIR}/cmake/runpath2rpath.c
                     RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
@@ -108,22 +164,38 @@ endif()
 
 # Make sure that clcache/ccache gets used, if available
 
-find_program(CLCACHE clcache)
-find_program(CCACHE ccache)
+if(WIN32)
+    find_program(CLCACHE clcache)
 
-if(CLCACHE)
-    set(CLCACHEWRAPPER ${CMAKE_BINARY_DIR}/clcachewrapper)
+    if(CLCACHE)
+        set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
 
-    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
-                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+        execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+                        RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
-    if(RESULT EQUAL 0)
-        set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
-        set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+        if(RESULT EQUAL 0)
+            set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+            set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+        endif()
     endif()
-elseif(CCACHE)
-    set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
-    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+else()
+    find_program(CCACHE ccache)
+
+    if(CCACHE)
+        set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
+        set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+    endif()
+endif()
+
+# Prevent long command lines on Windows
+
+if(WIN32)
+    set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS TRUE)
+    set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS TRUE)
+
+    if("${CMAKE_GENERATOR}" STREQUAL "Ninja")
+        set(CMAKE_NINJA_FORCE_RESPONSE_FILE TRUE)
+    endif()
 endif()
 
 # Keep track of some basic information about Qt, after making sure that we have
@@ -168,38 +240,6 @@ else()
 endif()
 
 set(PLATFORM_DIR ${PLATFORM})
-
-# Determine the effective build directory
-
-set(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-if(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
-    # With Xcode, we have a configuration directory, but it messes up our build
-    # system, so ask for all the binaries to be generated in our build folder
-
-    set(XCODE TRUE)
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-else()
-    # Check whether there is a configuration directory (the case with MSVC) and,
-    # if so, make use of it
-
-    set(XCODE FALSE)
-
-    if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        set(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-    endif()
-endif()
 
 # Default location of external binaries and packages
 
@@ -256,7 +296,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 include(ExternalProject)
 
-set(EXTERNAL_PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR}/ext)
+set(EXTERNAL_PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/ext)
 
 set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
@@ -545,8 +585,10 @@ set(BUILD_DIRECTORY_FILENAME ${PROJECT_BUILD_DIR}/builddirectory.txt)
 file(WRITE ${SOURCE_DIRECTORY_FILENAME} "${CMAKE_SOURCE_DIR}")
 file(WRITE ${BUILD_DIRECTORY_FILENAME} "${PROJECT_BUILD_DIR}")
 
-keep_track_of_file(${SOURCE_DIRECTORY_FILENAME})
-keep_track_of_file(${BUILD_DIRECTORY_FILENAME})
+track_files(
+    ${SOURCE_DIRECTORY_FILENAME}
+    ${BUILD_DIRECTORY_FILENAME}
+)
 
 # Version/snapshot of OpenCOR
 
@@ -568,12 +610,7 @@ set(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
 
 file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
-keep_track_of_file(${VERSION_DATE_FILENAME})
-
-# Configure our help file
-
-configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+track_files(${VERSION_DATE_FILENAME})
 
 # Configure our QRC files
 
@@ -589,6 +626,7 @@ configure_file(${CMAKE_SOURCE_DIR}/res/i18n.qrc.in
 
 set(SOURCES
     src/checkforupdatesdialog.cpp
+    src/generalpreferenceswidget.cpp
     src/main.cpp
     src/mainwindow.cpp
     src/pluginsdialog.cpp
@@ -620,6 +658,7 @@ set(SOURCES
 
 set(HEADERS_MOC
     src/checkforupdatesdialog.h
+    src/generalpreferenceswidget.h
     src/mainwindow.h
     src/pluginsdialog.h
     src/preferencesdialog.h
@@ -638,6 +677,7 @@ set(HEADERS_MOC
 
 set(UIS
     src/checkforupdatesdialog.ui
+    src/generalpreferenceswidget.ui
     src/mainwindow.ui
     src/pluginsdialog.ui
     src/preferencesdialog.ui
@@ -693,6 +733,7 @@ endif()
 #       Core CLI/GUI utilities)...
 
 include_directories(
+    src
     src/misc
     src/plugins
     src/plugins/miscellaneous/Core/src
@@ -754,7 +795,7 @@ if(ENABLE_TESTS)
 
     file(WRITE ${TESTS_LIST_FILENAME})
 
-    keep_track_of_file(${TESTS_LIST_FILENAME})
+    track_files(${TESTS_LIST_FILENAME})
 
     # Destination tests directory
     # Note: DEST_TESTS_DIR isn't only used here, but also in our add_plugin()
@@ -808,6 +849,12 @@ if(ENABLE_TESTS)
         macos_clean_up_file_with_qt_dependencies(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
     endif()
 endif()
+
+# Specify a target to help us build certain plugins (e.g. the Python plugin)
+
+set(PROJECT_BUILD_TARGET ${PROJECT_NAME}Build)
+
+add_custom_target(${PROJECT_BUILD_TARGET} ALL)
 
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
@@ -894,8 +941,8 @@ set(PLUGINS
     support/StandardSupport
     support/ZIPSupport
 
-    thirdParty/BioSignalML
     thirdParty/CellMLAPI
+    thirdParty/libBioSignalML
     thirdParty/libgit2
     thirdParty/libNuML
     thirdParty/libSEDML
@@ -954,6 +1001,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
+
+# Configure our help file
+
+configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
 
 # Build the GUI version of OpenCOR
 

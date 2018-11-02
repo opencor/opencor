@@ -39,12 +39,20 @@ namespace Preferences {
 
 //==============================================================================
 
+static const auto SettingsPreferences = QStringLiteral("Preferences");
+
+//==============================================================================
+
+static const auto GeneralPreferences = QStringLiteral("General");
+
+//==============================================================================
+
 class PreferencesWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PreferencesWidget(const QString &pPluginName, QWidget *pParent);
+    explicit PreferencesWidget(const QString &pName, QWidget *pParent);
     ~PreferencesWidget() override;
 
     virtual bool preferencesChanged() const = 0;
@@ -69,11 +77,13 @@ extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion();
 class PreferencesInterface
 {
 public:
+    virtual ~PreferencesInterface();
+
 #define INTERFACE_DEFINITION
     #include "preferencesinterface.inl"
 #undef INTERFACE_DEFINITION
 
-    static QVariant preference(const QString &pPluginName, const QString &pKey,
+    static QVariant preference(const QString &pName, const QString &pKey,
                                const QVariant &pDefaultValue = QVariant());
 };
 

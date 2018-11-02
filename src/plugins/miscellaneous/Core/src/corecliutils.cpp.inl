@@ -96,10 +96,8 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
 #endif
     case PluginInfo::Invalid:
         return QObject::tr("Invalid");
-    case PluginInfo::Analysis:
-        return QObject::tr("Analysis");
     case PluginInfo::DataStore:
-        return QObject::tr("Data Store");
+        return QObject::tr("Data store");
     case PluginInfo::Editing:
         return QObject::tr("Editing");
     case PluginInfo::Miscellaneous:
@@ -142,8 +140,6 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
 #endif
     case PluginInfo::Invalid:
         return QObject::tr("Plugins that are not valid.");
-    case PluginInfo::Analysis:
-        return QObject::tr("Plugins to analyse files.");
     case PluginInfo::DataStore:
         return QObject::tr("Plugins to store and manipulate data.");
     case PluginInfo::Editing:
@@ -157,7 +153,7 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
     case PluginInfo::Solver:
         return QObject::tr("Plugins to access various solvers.");
     case PluginInfo::Support:
-        return QObject::tr("Plugins to support various third-party libraries and APIs.");
+        return QObject::tr("Plugins to support various third-party libraries.");
     case PluginInfo::ThirdParty:
         return QObject::tr("Plugins to access various third-party libraries.");
     case PluginInfo::Tools:
@@ -357,6 +353,8 @@ QString noInternetConnectionAvailableMessage()
 
 QString copyright()
 {
+    // Return our copyright
+
     return QObject::tr("Copyright")+" 2011-"+QString::number(QDate::currentDate().year());
 }
 
@@ -407,13 +405,13 @@ QByteArray resource(const QString &pResource)
         if (resource.isCompressed()) {
             // The resource is compressed, so uncompress it before returning it
 
-            return qUncompress(resource.data(), resource.size());
+            return qUncompress(resource.data(), int(resource.size()));
         } else {
             // The resource is not compressed, so just return it after doing the
             // right conversion
 
             return QByteArray(reinterpret_cast<const char *>(resource.data()),
-                              resource.size());
+                              int(resource.size()));
         }
     } else {
         return QByteArray();

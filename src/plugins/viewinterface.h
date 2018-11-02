@@ -50,9 +50,10 @@ public:
         TestMode,
 #endif
         EditingMode,
-        SimulationMode,
-        AnalysisMode
+        SimulationMode
     };
+
+    virtual ~ViewInterface();
 
 #define INTERFACE_DEFINITION
     #include "viewinterface.inl"

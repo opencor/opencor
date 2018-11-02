@@ -130,7 +130,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
     QVBoxLayout *messageLayout = new QVBoxLayout(messageWidget);
     int margin;
 
-    messageLayout->getContentsMargins(0, 0, 0, &margin);
+    messageLayout->getContentsMargins(nullptr, nullptr, nullptr, &margin);
 
     int halfMargin = margin >> 1;
 
@@ -425,16 +425,16 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 
             QChar iStatus = fileNode->status().first;
             QChar wStatus = fileNode->status().second;
-            bool stagedFile =    ((iStatus != '\0') && (iStatus != ' '))
-                              && ((wStatus == '\0') || (wStatus == ' '));
-            bool unstagedFile = (wStatus != '\0') && (wStatus != ' ');
+            bool stagedFile =    ((iStatus != nullptr) && (iStatus != ' '))
+                              && ((wStatus == nullptr) || (wStatus == ' '));
+            bool unstagedFile = (wStatus != nullptr) && (wStatus != ' ');
 
             if (stagedFile || unstagedFile) {
                 // This is a un/staged file, so check whether we already know
                 // about it and, if so, whether its SHA-1 is still the same and
                 // if that's not the case then reset a few things
 
-                PmrWorkspacesWindowSynchronizeDialogItem *fileItem = 0;
+                PmrWorkspacesWindowSynchronizeDialogItem *fileItem = nullptr;
                 QString fileName = fileNode->path();
                 QString sha1 = Core::File::sha1(fileName);
 
@@ -678,7 +678,7 @@ int xdiffCallback(void *data, mmbuffer_t *pBuffer, int pBufferSize)
     // Add the given buffer to the given data
 
     for (int i = 0; i < pBufferSize; ++i)
-        *static_cast<QString *>(data) += QString(pBuffer[i].ptr).left(pBuffer[i].size);
+        *static_cast<QString *>(data) += QString(pBuffer[i].ptr).left(int(pBuffer[i].size));
 
     return 0;
 }
@@ -731,14 +731,19 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         // Highlight the differences within our differences data' difference
         // field
 
+        static const QChar Separator = QChar(7);
+        // Note: strings, for which we want to show the difference, should never
+        //       contain the Bell character, so it should be safe to use that
+        //       character as our separator...
+
         QString oldString = QString();
         QString newString = QString();
 
         foreach (const DifferenceData &differenceData, pDifferencesData) {
             if (differenceData.tag == '+')
-                newString += differenceData.difference+"\n";
+                newString += differenceData.difference+Separator;
             else
-                oldString += differenceData.difference+"\n";
+                oldString += differenceData.difference+Separator;
         }
 
         typedef diff_match_patch<std::wstring> DiffMatchPatch;
@@ -753,8 +758,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
 
         for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
              diffIterator != endDiffIterator; ++diffIterator) {
-            QString text = QString::fromStdWString((*diffIterator).text).toHtmlEscaped()
-                                                                        .replace(' ', "&nbsp;");
+            QString text = cleanHtmlEscaped(QString::fromStdWString((*diffIterator).text));
 
             switch ((*diffIterator).operation) {
             case DiffMatchPatch::EQUAL:
@@ -767,8 +771,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
                                      text:
                                      text.contains('\n')?
                                          text.endsWith('\n')?
-                                             QString("<span class=\"add\">%1</span>\n").arg(text.remove('\n')):
-                                             QString("<span class=\"add\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"add\">")):
+                                             QString("<span class=\"add\">%1</span>\n").arg(text.remove(Separator)):
+                                             QString("<span class=\"add\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"add\">")):
                                          QString("<span class=\"add\">%1</span>").arg(text);
 
                 break;
@@ -777,8 +781,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
                                      text:
                                      text.contains('\n')?
                                          text.endsWith('\n')?
-                                             QString("<span class=\"remove\">%1</span>\n").arg(text.remove('\n')):
-                                             QString("<span class=\"remove\">%1</span>").arg(text.replace('\n', "</span>\n<span class=\"remove\">")):
+                                             QString("<span class=\"remove\">%1</span>\n").arg(text.remove(Separator)):
+                                             QString("<span class=\"remove\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"remove\">")):
                                          QString("<span class=\"remove\">%1</span>").arg(text);
 
                 break;
@@ -789,8 +793,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         // given
 
         QString html = QString();
-        QStringList oldDiffStrings = oldDiffString.split('\n');
-        QStringList newDiffStrings = newDiffString.split('\n');
+        QStringList oldDiffStrings = oldDiffString.split(Separator);
+        QStringList newDiffStrings = newDiffString.split(Separator);
         int addLineNumber = -1;
         int removeLineNumber = -1;
 
@@ -826,9 +830,9 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC);
 
     memcpy(xdl_mmfile_writeallocate(&oldBlock, oldByteArray.size()),
-           oldByteArray.constData(), oldByteArray.size());
+           oldByteArray.constData(), size_t(oldByteArray.size()));
     memcpy(xdl_mmfile_writeallocate(&newBlock, newByteArray.size()),
-           newByteArray.constData(), newByteArray.size());
+           newByteArray.constData(), size_t(newByteArray.size()));
 
     xpparam_t parameters;
     xdemitconf_t context;
@@ -912,8 +916,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                            .arg(removeLineNumber)
                            .arg(addLineNumber)
                            .arg(QString())
-                           .arg(diff.toHtmlEscaped()
-                                               .replace(' ', "&nbsp;"));
+                           .arg(cleanHtmlEscaped(diff));
             }
         }
     }
@@ -1020,6 +1023,16 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     QFile::remove(oldFileName);
 
     return res;
+}
+
+//==============================================================================
+
+QString PmrWorkspacesWindowSynchronizeDialog::cleanHtmlEscaped(const QString &pString)
+{
+    // Return a "clean" HTML-escaped version of the given string
+
+    return pString.toHtmlEscaped()
+                  .replace(' ', "&nbsp;");
 }
 
 //==============================================================================

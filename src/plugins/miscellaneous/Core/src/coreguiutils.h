@@ -106,26 +106,19 @@ public:
 
 CentralWidget CORE_EXPORT * centralWidget();
 
-bool CORE_EXPORT readFileWithBusyWidget(const QString &pUrl,
-                                        QByteArray &pFileContents,
-                                        QString *pErrorMessage = 0);
-bool CORE_EXPORT readFileWithBusyWidget(const QString &pUrl,
-                                        QString &pFileContents,
-                                        QString *pErrorMessage = 0);
-
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
-                                    QString *pSelectedFilter = 0);
+                                    QString *pSelectedFilter = nullptr);
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
                                          const QStringList &pFilters = QStringList(),
-                                         QString *pSelectedFilter = 0);
+                                         QString *pSelectedFilter = nullptr);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
                                     const QStringList &pFilters = QStringList(),
-                                    QString *pSelectedFilter = 0);
+                                    QString *pSelectedFilter = nullptr);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
-                                    QString *pSelectedFilter = 0);
+                                    QString *pSelectedFilter = nullptr);
 
 QString CORE_EXPORT getDirectory(const QString &pCaption,
                                  const QString &pDirName = QString(),
@@ -173,6 +166,10 @@ QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 QString CORE_EXPORT iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                                 QIcon::Mode pMode = QIcon::Normal);
 
+QIcon CORE_EXPORT standardIcon(QStyle::StandardPixmap pStandardIcon,
+                               const QStyleOption *pOption = nullptr,
+                               const QWidget *pWidget = nullptr);
+
 QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                              const QColor &pColor);
 QIcon CORE_EXPORT tintedIcon(const QString &pIcon, int pWidth, int pHeight,
@@ -198,6 +195,13 @@ QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 int pBaseWidth, int pBaseHeight,
                                 int pOverlayLeft, int pOverlayTop,
                                 int pOverlayWidth, int pOverlayHeight);
+
+QIcon CORE_EXPORT scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                             Qt::AspectRatioMode pAspectMode = Qt::IgnoreAspectRatio,
+                             Qt::TransformationMode pMode = Qt::FastTransformation);
+QIcon CORE_EXPORT scaledIcon(const QString &pIcon, int pWidth, int pHeight,
+                             Qt::AspectRatioMode pAspectMode = Qt::IgnoreAspectRatio,
+                             Qt::TransformationMode pMode = Qt::FastTransformation);
 
 void CORE_EXPORT showEnableWidget(QWidget *pWidget, bool pVisible,
                                   bool pEnabled = true);

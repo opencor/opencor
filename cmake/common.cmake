@@ -1,12 +1,14 @@
-macro(keep_track_of_file FILE_NAME)
-    # Keep track of the given file
+macro(track_files)
+    # Keep track of the given files
     # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
     #       and then used to build other files. Now, the 'problem' is that
     #       Ninja needs to know about those files (see CMake policy CMP0058),
     #       which we ensure it does through the below...
 
-    add_custom_command(OUTPUT ${FILE_NAME}
-                       COMMAND ${CMAKE_COMMAND} -E sleep 0)
+    foreach(FILENAME ${ARGN})
+        add_custom_command(OUTPUT ${FILENAME}
+                           COMMAND ${CMAKE_COMMAND} -E sleep 0)
+    endforeach()
 endmacro()
 
 #===============================================================================
@@ -36,7 +38,7 @@ macro(update_language_files TARGET_NAME)
                                                           -qm ${QM_FILE}
                             OUTPUT_QUIET)
 
-            keep_track_of_file(${QM_FILE})
+            track_files(${QM_FILE})
         endif()
     endforeach()
 endmacro()
@@ -312,7 +314,7 @@ macro(add_plugin PLUGIN_NAME)
         string(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" ""
                PLUGIN_BUILD_DIR "${PROJECT_SOURCE_DIR}")
 
-        set(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
+        set(PLUGIN_BUILD_DIR ${PROJECT_BUILD_DIR}/${PLUGIN_BUILD_DIR})
 
         if(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
             set(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
@@ -889,7 +891,8 @@ if(EXISTS ${COMPRESSED_FILENAME})
 
     file(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
-    string(REPLACE \"\;\" \"\\n                                  \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    string(REPLACE \"\;\" \"\\n                                  \"
+           SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     message(\"To retrieve the '${PACKAGE_NAME}' package, use:
 retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}

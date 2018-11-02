@@ -60,13 +60,11 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     Core::readFile(":/CellMLAnnotationView/qualifierInformation.html", mQualifierInformationTemplate);
 
-    // Retrieve and load, in case it's necessary, the requested CellML file
+    // Retrieve the requested CellML file
 
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
 
-    mCellmlFile->load();
-
-    // Customise our GUI which consists of two main parts:
+    // Customise our GUI, which consists of two main parts:
     //
     //  1) A couple of lists (for CellML elements and metadata, resp.); and
     //  2) Some details (for a CellML element or metadata).
@@ -77,7 +75,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     // Create our two main parts
 
     mCellmlList = new CellmlAnnotationViewCellmlListWidget(this);
-    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pAnnotationWidget, this, mCellmlFile, this);
+    mMetadataDetails = new CellmlAnnotationViewMetadataDetailsWidget(pPlugin, pAnnotationWidget, this);
 
     // Populate ourselves
 

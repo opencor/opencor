@@ -334,16 +334,16 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
     // Create and return an editor for our item, based on its type
 
-    QWidget *editor = 0;
-    TextEditorWidget *textEditor = 0;
-    ListEditorWidget *listEditor = 0;
+    QWidget *editor = nullptr;
+    TextEditorWidget *textEditor = nullptr;
+    ListEditorWidget *listEditor = nullptr;
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
     case Property::Section:
         // A section, so no editor
 
-        return 0;
+        return nullptr;
     case Property::String:
         editor = textEditor = new TextEditorWidget(pParent);
 
@@ -517,11 +517,11 @@ Property::Property(Type pType, PropertyEditorWidget *pParent) :
     mId(QString()),
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
-    mUnit(pParent->showUnits()?new PropertyItem(this):0),
+    mUnit(pParent->showUnits()?new PropertyItem(this):nullptr),
     mListValues(QStringList()),
     mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
-    mParentProperty(0),
+    mParentProperty(nullptr),
     mProperties(Properties())
 {
     // Note: mName, mValue and mUnit get owned by our property editor widget, so
@@ -814,7 +814,7 @@ void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
 
 //==============================================================================
 
-QVariant Property::valueAsVariant() const
+QVariant Property::variantValue() const
 {
     // Return our property value as a variant
 
@@ -843,7 +843,7 @@ QVariant Property::valueAsVariant() const
 
 //==============================================================================
 
-QString Property::valueAsString() const
+QString Property::stringValue() const
 {
     // Return our property value as a string
 
@@ -872,7 +872,7 @@ QString Property::valueAsString() const
 
 int Property::integerValue() const
 {
-    // Return our value as an integer, if it is of that type
+    // Return our value as an integer
 
     return value().toInt();
 }
@@ -895,7 +895,7 @@ void Property::setIntegerValue(int pIntegerValue, bool pEmitSignal)
 
 double Property::doubleValue() const
 {
-    // Return our value as a double, if it is of that type
+    // Return our value as a double
 
     return value().toDouble();
 }
@@ -1030,7 +1030,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
 
 bool Property::booleanValue() const
 {
-    // Return our value as a boolean, if it is of that type
+    // Return our value as a boolean
 
     return !value().compare(TrueValue);
 }
@@ -1049,7 +1049,7 @@ void Property::setBooleanValue(bool pBooleanValue)
 
 QColor Property::colorValue() const
 {
-    // Return our value as a color, if it is of that type
+    // Return our value as a color
 
     QColor res;
 
@@ -1266,8 +1266,8 @@ PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
     mAutoUpdateHeight(pAutoUpdateHeight),
     mProperties(Properties()),
     mAllProperties(Properties()),
-    mProperty(0),
-    mPropertyEditor(0),
+    mProperty(nullptr),
+    mPropertyEditor(nullptr),
     mRightClicking(false),
     mPropertyChecked(QMap<Property *, bool>())
 {
@@ -1815,7 +1815,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         &&  (pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
-        && (pEvent->key() == Qt::Key_A)) {
+        &&  (pEvent->key() == Qt::Key_A)) {
         // The user wants to select everything, which we don't want to allow,
         // so just accept the event...
 
@@ -1825,13 +1825,13 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
         // The user wants to start/stop editing the property
 
         if (mPropertyEditor)
-            editProperty(0);
+            editProperty(nullptr);
         else
             editProperty(currentProperty());
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Escape)) {
-        // The user wants to cancel the editing
+    } else if (isEditing() && noModifiers && (pEvent->key() == Qt::Key_Escape)) {
+        // The user is editing and wants to cancel it
 
         finishEditing(false);
 
@@ -2078,13 +2078,13 @@ void PropertyEditorWidget::editorClosed()
     // Reset our focus proxy and make sure that we get the focus (see
     // editorOpened() above for the reason)
 
-    setFocusProxy(0);
+    setFocusProxy(nullptr);
     setFocus();
 
     // Reset some information about the property
 
-    mProperty = 0;
-    mPropertyEditor = 0;
+    mProperty = nullptr;
+    mPropertyEditor = nullptr;
 }
 
 //==============================================================================
@@ -2240,7 +2240,7 @@ void PropertyEditorWidget::finishEditing(bool pCommitData)
 {
     // The user wants to finish the editing
 
-    editProperty(0, pCommitData);
+    editProperty(nullptr, pCommitData);
 }
 
 //==============================================================================
@@ -2309,7 +2309,7 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
     // Don't waste time if the given index isn't valid
 
     if (!pIndex.isValid())
-        return 0;
+        return nullptr;
 
     // Return our information about the property at the given index
 
@@ -2318,7 +2318,7 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
             return property;
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================

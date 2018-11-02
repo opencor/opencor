@@ -35,8 +35,8 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that implements the fourth-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta method</a> to solve ODEs."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">méthode Runge-Kutta</a> du quatrième ordre pour résoudre des EDOs."));
+    descriptions.insert("en", QString::fromUtf8("a plugin that implements the fourth-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta method</a> to solve <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">ODEs</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">méthode Runge-Kutta</a> du quatrième ordre pour résoudre des <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">EDOs</a>."));
 
     return new PluginInfo(PluginInfo::Solver, true, false,
                           QStringList(),

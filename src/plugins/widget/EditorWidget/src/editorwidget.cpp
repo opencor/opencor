@@ -181,7 +181,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
     // Show/hide our find/replace widget
 
-    setFindReplaceVisible(pEditorWidget->isFindReplaceVisible());
+    setFindReplaceVisible(pEditorWidget->isFindReplaceVisible(), false);
 
     // Update the find/replace widget itself
     // Note: we must inactivate (and then reactivate) our find/replace widget
@@ -317,11 +317,11 @@ QString EditorWidget::contents() const
 
 //==============================================================================
 
-void EditorWidget::setContents(const QString &pContents, bool pKeepHistory)
+void EditorWidget::setContents(const QString &pContents, bool pEmptyUndoBuffer)
 {
     // Set the contents of our editor
 
-    mEditor->setContents(pContents, pKeepHistory);
+    mEditor->setContents(pContents, pEmptyUndoBuffer);
 }
 
 //==============================================================================
@@ -495,6 +495,15 @@ void EditorWidget::selectAll()
 
 //==============================================================================
 
+void EditorWidget::highlightAll()
+{
+    // Highlight all the occurences of the text, if any, in our editor
+
+    mEditor->highlightAll();
+}
+
+//==============================================================================
+
 bool EditorWidget::wordWrap() const
 {
     // Return whether we word wrap the text
@@ -578,7 +587,7 @@ bool EditorWidget::isFindReplaceVisible() const
 
 //==============================================================================
 
-void EditorWidget::setFindReplaceVisible(bool pVisible)
+void EditorWidget::setFindReplaceVisible(bool pVisible, bool pSelectWord)
 {
     // Set our find text and highlight all its occurrences, if we are to show
     // our find/replace widget
@@ -589,11 +598,11 @@ void EditorWidget::setFindReplaceVisible(bool pVisible)
     //       reactivate our find/replace widget...
 
     if (pVisible) {
-        QString selText;
+        QString selText = QString();
 
         if (hasSelectedText()) {
             selText = selectedText();
-        } else {
+        } else if (pSelectWord) {
             int line;
             int column;
 
@@ -635,8 +644,8 @@ int EditorWidget::styleAt(int pPosition) const
 {
     // Return the style used at the given position
 
-    return mEditor->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
-                                  mEditor->text().left(pPosition).toUtf8().length());
+    return int(mEditor->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
+                                      mEditor->text().left(pPosition).toUtf8().length()));
 }
 
 //==============================================================================
@@ -673,7 +682,7 @@ void EditorWidget::removeText(int pPosition, int pLength)
     // Select the text at the given position, and for the given length, and
     // remove it
 
-    mEditor->SendScintilla(QsciScintilla::SCI_SETSEL, pPosition, pPosition+pLength);
+    mEditor->SendScintilla(QsciScintilla::SCI_SETSEL, ulong(pPosition), pPosition+pLength);
     mEditor->removeSelectedText();
 }
 

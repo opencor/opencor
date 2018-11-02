@@ -58,7 +58,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     Core::Widget(pParent),
     mCellmlFile(pCellmlFile),
     mItemsCount(0),
-    mElement(0),
+    mElement(nullptr),
     mRdfTripleInformation(QString()),
     mInformationType(None),
     mLookUpRdfTripleInformation(First),

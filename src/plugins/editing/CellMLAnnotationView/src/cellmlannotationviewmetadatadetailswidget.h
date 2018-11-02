@@ -68,9 +68,7 @@ class CellmlAnnotationViewMetadataDetailsWidget : public Core::Widget
 public:
     explicit CellmlAnnotationViewMetadataDetailsWidget(CellMLAnnotationViewPlugin *pPlugin,
                                                        CellmlAnnotationViewWidget *pAnnotationWidget,
-                                                       CellmlAnnotationViewEditingWidget *pEditingWidget,
-                                                       CellMLSupport::CellmlFile *pCellmlFile,
-                                                       QWidget *pParent);
+                                                       CellmlAnnotationViewEditingWidget *pParent);
 
     void retranslateUi() override;
 

@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QAction>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
@@ -46,6 +47,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QLineEdit>
 #include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
 #include <QMimeData>
 #include <QPushButton>
 #include <QRect>
@@ -132,7 +135,7 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mState(Starting),
-    mSettings(0),
+    mSettings(nullptr),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -166,7 +169,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     mModes.insert(ViewInterface::EditingMode, new CentralWidgetMode(this));
     mModes.insert(ViewInterface::SimulationMode, new CentralWidgetMode(this));
-    mModes.insert(ViewInterface::AnalysisMode, new CentralWidgetMode(this));
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModes.insert(ViewInterface::SampleMode, new CentralWidgetMode(this));
 #endif
@@ -544,12 +546,12 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QString crtFileNameOrUrl = QString();
 
     if (fileNames.count()) {
-        QString crtFileName = mFileNames[mFileTabs->currentIndex()];
+        QString fileName = mFileNames[mFileTabs->currentIndex()];
 
-        if (fileNames.contains(crtFileName)) {
-            crtFileNameOrUrl = fileManagerInstance->isRemote(crtFileName)?
-                                   fileManagerInstance->url(crtFileName):
-                                   crtFileName;
+        if (fileNames.contains(fileName)) {
+            crtFileNameOrUrl = fileManagerInstance->isRemote(fileName)?
+                                   fileManagerInstance->url(fileName):
+                                   fileName;
         }
     }
 
@@ -621,8 +623,6 @@ void CentralWidget::retranslateUi()
                           tr("Editing"));
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SimulationMode, -1),
                           tr("Simulation"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::AnalysisMode, -1),
-                          tr("Analysis"));
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SampleMode, -1),
                           tr("Sample"));
@@ -863,15 +863,13 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         QString errorMessage;
 
         showBusyWidget();
-        // Note: our call to readFileWithBusyWidget() will also show a busy
-        //       widget, but it will also hide it while we want to keep it
-        //       visible in case we are loading a SED-ML file / COMBINE archive.
-        //       Indeed, such files may require further initialisation (in the
-        //       case of the Simulation Experiment view, for example). So, we
-        //       rely on nested calls to our busy widget to have it remain
-        //       visible until it gets hidden in updateGui()...
+        // Note: we don't subsequently hide our busy widget in case we are
+        //       loading a SED-ML file / COMBINE archive. Indeed, such files may
+        //       require further initialisation (in the case of the Simulation
+        //       Experiment view, for example). So, instead, our busy widget
+        //       will get hidden in updateGui()...
 
-        if (readFileWithBusyWidget(fileNameOrUrl, fileContents, &errorMessage)) {
+        if (readFile(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -990,19 +988,14 @@ void CentralWidget::reloadFile(int pIndex, bool pForce)
                     QString errorMessage;
 
                     showBusyWidget();
-                    // Note: our call to readFileWithBusyWidget() will also show
-                    //       a busy widget, but it will also hide it while we
-                    //       want to keep it visible in case we are reloading a
-                    //       SED-ML file / COMBINE archive. Indeed, such files
-                    //       may require further initialisation (in the case of
-                    //       the Simulation Experiment view, for example). So,
-                    //       we rely on nested calls to our busy widget to have
-                    //       it remain visible until it gets hidden in
-                    //       updateGui()...
+                    // Note: we don't subsequently hide our busy widget in case
+                    //       we are loading a SED-ML file / COMBINE archive.
+                    //       Indeed, such files may require further
+                    //       initialisation (in the case of the Simulation
+                    //       Experiment view, for example). So, instead, our
+                    //       busy widget will get hidden in updateGui()...
 
-                    bool res = readFileWithBusyWidget(url, fileContents, &errorMessage);
-
-                    if (res) {
+                    if (readFile(url, fileContents, &errorMessage)) {
                         writeFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
@@ -1043,14 +1036,12 @@ void CentralWidget::duplicateFile()
     // Ask our file manager to duplicate the current file
 
 #ifdef QT_DEBUG
-    FileManager::Status duplicateStatus =
+    FileManager::Status status =
 #endif
     fileManagerInstance->duplicate(fileName);
 
 #ifdef QT_DEBUG
-    // Make sure that the file has indeed been duplicated
-
-    if (duplicateStatus != FileManager::Duplicated)
+    if (status != FileManager::Duplicated)
         qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated.", __FILE__, __LINE__, qPrintable(fileName));
 #endif
 }
@@ -1181,14 +1172,12 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
             // Ask our file manager to rename the file
 
 #ifdef QT_DEBUG
-            FileManager::Status renameStatus =
+            FileManager::Status status =
 #endif
             fileManagerInstance->rename(oldFileName, newFileName);
 
 #ifdef QT_DEBUG
-            // Make sure that the file has indeed been renamed
-
-            if (renameStatus != FileManager::Renamed)
+            if (status != FileManager::Renamed)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'.", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
         }
@@ -1196,6 +1185,36 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         // The file has been saved, so ask our file manager to 'save' it too
 
         fileManagerInstance->save(newFileName);
+
+        // Ask our file manager to unmanage and then (re)manage the file, if it
+        // was new
+        // Note: indeed, when creating a new file, our different standard file
+        //       managers automatically manage it (since it's empty and
+        //       therefore considered to be of any standard). So, now that the
+        //       file has been successfully saved (and is, therefore, not
+        //       considered to be new anymore), it is of a specific, hence we
+        //       must unmanage it and (re)manage it, so that only one of our
+        //       standard file manager manages it in the end...
+
+        if (hasNewFileName) {
+#ifdef QT_DEBUG
+            FileManager::Status status =
+#endif
+            fileManagerInstance->unmanage(newFileName);
+
+#ifdef QT_DEBUG
+            if (status != FileManager::Removed)
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get unmanaged.", __FILE__, __LINE__, qPrintable(newFileName));
+
+            status =
+#endif
+            fileManagerInstance->manage(newFileName);
+
+#ifdef QT_DEBUG
+            if (status != FileManager::Added)
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get managed.", __FILE__, __LINE__, qPrintable(newFileName));
+#endif
+        }
 
         return true;
     } else {
@@ -1606,9 +1625,9 @@ Plugin * CentralWidget::viewPlugin(int pIndex) const
         int modeTabIndex = mFileModeTabIndexes.value(mFileNames[pIndex]);
         CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(modeTabIndex));
 
-        return mode?mode->viewPlugins()[mFileModeViewTabIndexes.value(mFileNames[pIndex]).value(modeTabIndex)]:0;
+        return mode?mode->viewPlugins()[mFileModeViewTabIndexes.value(mFileNames[pIndex]).value(modeTabIndex)]:nullptr;
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
@@ -1623,7 +1642,7 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
             return viewPlugin(i);
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================
@@ -1686,6 +1705,38 @@ void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
     if (mState == UpdatingGui) {
         connect(pTabBar, &TabBarWidget::currentChanged,
                 this, &CentralWidget::updateGui);
+    }
+}
+
+//==============================================================================
+
+void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
+{
+    // Show/enable or hide/disable the given actions, depending on whether they
+    // correspond to a menu with visible/enabled or hidden/disabled actions,
+    // respectively
+
+    foreach (QAction *action, pActions) {
+        QMenu *actionMenu = action->menu();
+
+        if (actionMenu) {
+            QList<QAction *> actionMenuActions = actionMenu->actions();
+
+            showEnableActions(actionMenuActions);
+
+            bool showEnable = false;
+
+            foreach (QAction *actionMenuAction, actionMenuActions) {
+                if (   !actionMenuAction->isSeparator()
+                    &&  actionMenuAction->isVisible()) {
+                    showEnable = true;
+
+                    break;
+                }
+            }
+
+            showEnableAction(action, showEnable);
+        }
     }
 }
 
@@ -1803,7 +1854,6 @@ void CentralWidget::updateGui()
 
     mModes.value(ViewInterface::EditingMode)->viewTabs()->hide();
     mModes.value(ViewInterface::SimulationMode)->viewTabs()->hide();
-    mModes.value(ViewInterface::AnalysisMode)->viewTabs()->hide();
 #ifdef ENABLE_SAMPLE_PLUGINS
     mModes.value(ViewInterface::SampleMode)->viewTabs()->hide();
 #endif
@@ -1815,8 +1865,6 @@ void CentralWidget::updateGui()
         mModes.value(ViewInterface::EditingMode)->viewTabs()->show();
     else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode))
         mModes.value(ViewInterface::SimulationMode)->viewTabs()->show();
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::AnalysisMode))
-        mModes.value(ViewInterface::AnalysisMode)->viewTabs()->show();
 #ifdef ENABLE_SAMPLE_PLUGINS
     else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode))
         mModes.value(ViewInterface::SampleMode)->viewTabs()->show();
@@ -1830,8 +1878,8 @@ void CentralWidget::updateGui()
     // there be one)
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
-    Plugin *viewPlugin = mode?mode->viewPlugins()[mode->viewTabs()->currentIndex()]:0;
-    ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):0;
+    Plugin *viewPlugin = mode?mode->viewPlugins()[mode->viewTabs()->currentIndex()]:nullptr;
+    ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):nullptr;
     QWidget *newView;
 
     if (fileName.isEmpty()) {
@@ -1841,7 +1889,7 @@ void CentralWidget::updateGui()
 
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
 
-        newView = viewInterface?viewInterface->viewWidget(fileName):0;
+        newView = viewInterface?viewInterface->viewWidget(fileName):nullptr;
 
         if (newView) {
             // We could get a view for the current file, so keep track of it
@@ -1865,7 +1913,7 @@ void CentralWidget::updateGui()
     //       don't end up with several identical connections (something that
     //       might happen if we were to switch views and back)...
 
-    ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
+    ViewWidget *newViewWidget = qobject_cast<ViewWidget *>(newView);
 
     if (newViewWidget) {
         connect(newViewWidget, &ViewWidget::updateFileTabIcon,
@@ -1878,10 +1926,6 @@ void CentralWidget::updateGui()
     } else {
         updateStatusBarWidgets(QList<QWidget *>());
     }
-
-    // Let people know that we are about to update the GUI
-
-    emit guiUpdated(viewPlugin, fileName);
 
     // Replace the current view with the new one, if needed
     // Note: we have to do various things depending on the platform on which we
@@ -1921,11 +1965,21 @@ void CentralWidget::updateGui()
 
     // Force the hiding of our busy widget (useful in some cases, e.g. when we
     // open/reload a remote file)
-    // Note: we need to force the hiding in case we are starting OpenCOR with a
-    //       remote SED-ML file / COMBINE archive, which result in more calls to
-    //       showBusyWidget() than to hideBusyWidget()...
 
-    hideBusyWidget(true);
+    hideBusyWidget();
+
+    // Let our different plugins know that the GUI has been updated
+    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
+    //       tools that may need to be enabled/disabled and shown/hidden,
+    //       depending on which view plugin and/or file are currently active...
+
+    foreach (Plugin *plugin, mLoadedGuiPlugins)
+        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
+
+    // Go through our different menus and show/hide them, depending on whether
+    // they have visible items
+
+    showEnableActions(mainWindow()->menuBar()->actions());
 
     // Give the focus to the new view after first checking that it has a focused
     // widget
@@ -1968,18 +2022,10 @@ TabBarWidget *CentralWidget::newTabBarWidget(QTabBar::Shape pShape,
 
     TabBarWidget *res = new TabBarWidget(this);
 
-    res->setExpanding(false);
-    // Note: if the above property is not enabled and many files are opened,
-    //       then the central widget will widen, reducing the width of any
-    //       docked window, which is clearly not what we want...
     res->setFocusPolicy(Qt::NoFocus);
     res->setMovable(pFileTabs);
     res->setShape(pShape);
     res->setTabsClosable(pFileTabs);
-    res->setUsesScrollButtons(true);
-    // Note: the above property is style dependent and it happens that it's not
-    //       enabled on macOS, so set it in all cases, even though it's already
-    //       set on Windows and Linux (but better be safe than sorry)...
 
     return res;
 }
@@ -1991,10 +2037,17 @@ void CentralWidget::updateNoViewMsg()
     // Customise, if possible, our no view widget so that it shows a relevant
     // warning message
 
-    Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+    int fileTabIndex = mFileTabs->currentIndex();
+    Plugin *fileViewPlugin = viewPlugin(fileTabIndex);
 
-    if (fileViewPlugin)
-        mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
+    if (fileViewPlugin) {
+        if (Core::FileManager::instance()->isNew(mFileNames[fileTabIndex]))
+            mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support new files...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
+        else
+            mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
+    } else {
+        mNoViewMsg->resetMessage();
+    }
 }
 
 //==============================================================================

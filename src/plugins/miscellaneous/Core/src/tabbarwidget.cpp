@@ -60,24 +60,24 @@ void TabBarStyle::drawControl(ControlElement pElement,
             if (verticalTab) {
                 pPainter->save();
 
-                int newX, newY, newRot;
+                int x, y, rotation;
 
                 if (   (tab->shape == QTabBar::RoundedEast)
                     || (tab->shape == QTabBar::TriangularEast)) {
-                    newX = tabRect.width()+tabRect.x();
-                    newY = tabRect.y();
+                    x = tabRect.x()+tabRect.width();
+                    y = tabRect.y();
 
-                    newRot = 90;
+                    rotation = 90;
                 } else {
-                    newX = tabRect.x();
-                    newY = tabRect.y()+tabRect.height();
+                    x = tabRect.x();
+                    y = tabRect.y()+tabRect.height();
 
-                    newRot = -90;
+                    rotation = -90;
                 }
 
-                QTransform transform = QTransform::fromTranslate(newX, newY);
+                QTransform transform = QTransform::fromTranslate(x, y);
 
-                transform.rotate(newRot);
+                transform.rotate(rotation);
 
                 pPainter->setTransform(transform, true);
             }
@@ -90,7 +90,7 @@ void TabBarStyle::drawControl(ControlElement pElement,
                 pPainter->drawPixmap(iconRect.x(), iconRect.y(),
                                      tab->icon.pixmap(pWidget?
                                                           pWidget->window()->windowHandle():
-                                                          0,
+                                                          nullptr,
                                                       tab->iconSize,
                                                       (tab->state & State_Enabled)?
                                                           QIcon::Normal:
@@ -181,8 +181,8 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
 
     int horizontalShift = pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, pOption, pWidget);
     int verticalShift = pixelMetric(QStyle::PM_TabBarTabShiftVertical, pOption, pWidget);
-    int horizontalPadding = 0.5*pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget);
-    int verticalPadding = 0.5*pixelMetric(QStyle::PM_TabBarTabVSpace, pOption, pWidget);
+    int horizontalPadding = pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget) >> 1;
+    int verticalPadding = pixelMetric(QStyle::PM_TabBarTabVSpace, pOption, pWidget) >> 1;
 
     if (   (pOption->shape == QTabBar::RoundedSouth)
         || (pOption->shape == QTabBar::TriangularSouth)) {
@@ -231,7 +231,7 @@ void TabBarStyle::tabLayout(const QStyleOptionTab *pOption,
         tabIconSize = QSize(qMin(tabIconSize.width(), iconSize.width()),
                             qMin(tabIconSize.height(), iconSize.height()));
 
-        *pIconRect = QRect(textRect.left(), textRect.center().y()-0.5*tabIconSize.height(),
+        *pIconRect = QRect(textRect.left(), textRect.center().y()-(tabIconSize.height() >> 1),
                            tabIconSize.width(), tabIconSize.height());
 
         if (!verticalTab)
@@ -261,6 +261,28 @@ TabBarWidget::TabBarWidget(QWidget *pParent) :
 #ifdef Q_OS_MAC
     setStyle(new TabBarStyle());
 #endif
+
+    // Force the size of the icons to be 16 by 16 pixels
+    // Note: this ensures that our icons have a decent size on HiDPI screens...
+
+    setIconSize(QSize(16, 16));
+
+    // Prevent our tabs from expanding
+    // Note: if we didn't do this and had many tabs, our widget would widen,
+    //       which in turn would reduce the size of any adjacent widget,
+    //       something that we don't want (indeed, if OpenCOR had many files
+    //       opened, then our central widget would widen and the width of any
+    //       docked window would be reduced)...
+
+    setExpanding(false);
+
+    // Enable the scrolling of tabs
+    // Note: this is style dependent and, by default, not enabled on macOS, but
+    //       we want to be consistent throughout, so set it in all cases, even
+    //       though it's already set on Windows and Linux (better be safe than
+    //       sorry)...
+
+    setUsesScrollButtons(true);
 }
 
 //==============================================================================

@@ -44,18 +44,41 @@ void GeneralTests::sizeAsStringTests()
 {
     // Test the sizeAsString() method
 
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 0)), QString("256 B"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 1)), QString("256 KB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 2)), QString("256 MB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 3)), QString("256 GB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 4)), QString("256 TB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 5)), QString("256 PB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 6)), QString("256 EB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 7)), QString("256 ZB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 8)), QString("256 YB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256*qPow(1024, 0))), QString("256 B"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256*qPow(1024, 1))), QString("256 KB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256*qPow(1024, 2))), QString("256 MB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256*qPow(1024, 3))), QString("256 GB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256*qPow(1024, 4))), QString("256 TB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256*qPow(1024, 5))), QString("256 PB"));
 
-    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2)), QLocale().toString(256.3)+" MB");
-    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2), 3), QLocale().toString(256.256)+" MB");
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256.256*qPow(1024, 2))), QLocale().toString(256.3)+" MB");
+    QCOMPARE(OpenCOR::Core::sizeAsString(quint64(256.256*qPow(1024, 2)), 3), QLocale().toString(256.256)+" MB");
+}
+
+//==============================================================================
+
+void GeneralTests::formatTimeTests()
+{
+    // Test the formatTime() method
+
+    QCOMPARE(OpenCOR::Core::formatTime(0), QString("0ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(999), QString("999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(1000), QString("1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(59999), QString("59s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(60000), QString("1m"));
+    QCOMPARE(OpenCOR::Core::formatTime(60999), QString("1m 0s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(61000), QString("1m 1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(3599999), QString("59m 59s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(3600000), QString("1h"));
+    QCOMPARE(OpenCOR::Core::formatTime(3600999), QString("1h 0m 0s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(3601000), QString("1h 0m 1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(3660000), QString("1h 1m"));
+    QCOMPARE(OpenCOR::Core::formatTime(86399999), QString("23h 59m 59s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(86400000), QString("1d"));
+    QCOMPARE(OpenCOR::Core::formatTime(86400999), QString("1d 0h 0m 0s 999ms"));
+    QCOMPARE(OpenCOR::Core::formatTime(86401000), QString("1d 0h 0m 1s"));
+    QCOMPARE(OpenCOR::Core::formatTime(86460000), QString("1d 0h 1m"));
+    QCOMPARE(OpenCOR::Core::formatTime(90000000), QString("1d 1h"));
 }
 
 //==============================================================================

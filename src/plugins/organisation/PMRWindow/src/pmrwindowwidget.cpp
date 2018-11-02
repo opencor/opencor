@@ -115,7 +115,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(QMargins());
 
     setLayout(layout);
 
@@ -131,9 +131,9 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     static const QIcon ArrowDownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
-    QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
-    int overlayIconSize = 0.57*folderIconSize;
+    int overlayIconSize = int(0.57*folderIconSize);
 
     mContextMenu = new QMenu(this);
 
@@ -335,7 +335,7 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
 
     // Retrieve the item which URL is given
 
-    PmrWindowItem *item = 0;
+    PmrWindowItem *item = nullptr;
 
     for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         item = static_cast<PmrWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));

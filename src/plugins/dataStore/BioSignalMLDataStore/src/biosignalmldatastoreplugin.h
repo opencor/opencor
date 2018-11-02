@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "biosignalmldatastoreexporter.h"
 #include "datastoreinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -41,19 +40,19 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo();
 
 //==============================================================================
 
-class BioSignalMLDataStorePlugin : public QObject, public I18nInterface,
-                                   public DataStoreInterface
+class BioSignalMLDataStorePlugin : public QObject, public DataStoreInterface,
+                                   public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.BioSignalMLDataStorePlugin" FILE "biosignalmldatastoreplugin.json")
 
-    Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::DataStoreInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
-#include "i18ninterface.inl"
 #include "datastoreinterface.inl"
+#include "i18ninterface.inl"
 };
 
 //==============================================================================

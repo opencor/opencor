@@ -45,8 +45,8 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an <a href=\"https://www.w3.org/XML/\">XML</a> editor."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur <a href=\"https://www.w3.org/XML/\">XML</a>."));
 
     return new PluginInfo(PluginInfo::Editing, true, false,
                           QStringList() << "CellMLEditingView",
@@ -335,13 +335,15 @@ QString RawCellMLViewPlugin::viewDefaultFileExtension() const
 
 QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML 1.0/1.1 file
+    // Make sure that we are dealing with either a new file or a CellML 1.0/1.1
+    // file
 
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
-        return 0;
+    if (   !Core::FileManager::instance()->isNew(pFileName)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+        return nullptr;
     }
 
     // Update and return our Raw CellML view widget using the given CellML file

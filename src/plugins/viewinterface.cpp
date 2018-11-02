@@ -38,10 +38,15 @@ extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
 
 //==============================================================================
 
+ViewInterface::~ViewInterface()
+{
+}
+
+//==============================================================================
+
 static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
 static const auto ViewModeEditing    = QStringLiteral("EditingMode");
 static const auto ViewModeSimulation = QStringLiteral("SimulationMode");
-static const auto ViewModeAnalysis   = QStringLiteral("AnalysisMode");
 #ifdef ENABLE_SAMPLE_PLUGINS
 static const auto ViewModeSample     = QStringLiteral("SampleMode");
 #endif
@@ -62,8 +67,6 @@ QString ViewInterface::modeAsString(Mode pMode)
         return ViewModeEditing;
     case SimulationMode:
         return ViewModeSimulation;
-    case AnalysisMode:
-        return ViewModeAnalysis;
 #ifdef ENABLE_SAMPLE_PLUGINS
     case SampleMode:
         return ViewModeSample;
@@ -89,8 +92,6 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
         return EditingMode;
     else if (!pMode.compare(ViewModeSimulation))
         return SimulationMode;
-    else if (!pMode.compare(ViewModeAnalysis))
-        return AnalysisMode;
 #ifdef ENABLE_SAMPLE_PLUGINS
     else if (!pMode.compare(ViewModeSample))
         return SampleMode;

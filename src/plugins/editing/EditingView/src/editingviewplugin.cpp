@@ -56,8 +56,8 @@ PLUGININFO_FUNC EditingViewPluginInfo()
 //==============================================================================
 
 EditingViewPlugin::EditingViewPlugin() :
-    mEditingViewInterface(0),
-    mEditor(0),
+    mEditingViewInterface(nullptr),
+    mEditor(nullptr),
     mFileName(QString())
 {
 }
@@ -153,7 +153,7 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Reset our previous editor and set up our new one, should the current
     // plugin handle the editing view interface
 
-    mEditingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
+    mEditingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
     if (mEditingViewInterface) {
         // Retrieve our new editor widget
@@ -185,7 +185,7 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             mEditWordWrapAction->setChecked(mEditor->wordWrap());
         }
     } else {
-        mEditor = 0;
+        mEditor = nullptr;
         mFileName = QString();
     }
 

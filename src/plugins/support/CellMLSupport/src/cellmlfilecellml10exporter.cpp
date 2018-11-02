@@ -57,7 +57,7 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
     mModel(pModel),
     mCopiedUnits(QSet<QPair<QString, QString>>()),
     mComponentNames(QSet<QString>()),
-    mRootGroup(0)
+    mRootGroup(nullptr)
 {
     // Create an empty CellML 1.0 model
 
@@ -328,7 +328,7 @@ iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Ele
     ObjRef<iface::dom::Document> document = res->ownerDocument();
     ObjRef<iface::dom::NamedNodeMap> attributes = pDomElement->attributes();
 
-    for (uint32_t i = 0, iMax = attributes->length(); i < iMax; ++i) {
+    for (uint i = 0, iMax = attributes->length(); i < iMax; ++i) {
         ObjRef<iface::dom::Attr> attr = QueryInterface(attributes->item(i));
         iface::dom::Attr *newAttr = document->createAttributeNS(Cellml_1_0_Namespace.toStdWString(), attr->name());
 
@@ -343,7 +343,7 @@ iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Ele
 
     ObjRef<iface::dom::NodeList> childNodes = pDomElement->childNodes();
 
-    for (uint32_t i = 0, iMax = childNodes->length(); i < iMax; ++i) {
+    for (uint i = 0, iMax = childNodes->length(); i < iMax; ++i) {
         ObjRef<iface::dom::Node> childNode = childNodes->item(i);
 
         switch (childNode->nodeType()) {
@@ -388,7 +388,7 @@ void CellmlFileCellml10Exporter::copyExtensionElements(iface::cellml_api::CellML
     ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
     ObjRef<iface::dom::Document> document = domElement->ownerDocument();
 
-    for (uint32_t i = 0, iMax = elements->length(); i < iMax; ++i) {
+    for (uint i = 0, iMax = elements->length(); i < iMax; ++i) {
         ObjRef<iface::dom::Element> element = elements->getAt(i);
 
         ObjRef<iface::dom::Node> node = document->importNode(element, true);

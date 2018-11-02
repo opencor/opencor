@@ -46,7 +46,7 @@ namespace GraphPanelWidget {
 GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     Core::SplitterWidget(pParent),
     mGraphPanels(GraphPanelWidgets()),
-    mActiveGraphPanel(0),
+    mActiveGraphPanel(nullptr),
     mInternalSizes(QIntList()),
     mUseInternalSizes(true)
 {
@@ -90,12 +90,12 @@ void GraphPanelsWidget::retranslateUi()
 
 //==============================================================================
 
-void GraphPanelsWidget::initialize()
+void GraphPanelsWidget::initialize(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties)
 {
     // Create a default graph panel, if none exists
 
     if (mGraphPanels.isEmpty())
-        addGraphPanel();
+        addGraphPanel(pGraphPanelWidgetProperties);
 }
 
 //==============================================================================
@@ -118,7 +118,8 @@ GraphPanelWidget * GraphPanelsWidget::activeGraphPanel() const
 
 //==============================================================================
 
-GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
+GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
+                                                    bool pActive)
 {
     // Create a new graph panel, add it to ourselves and keep track of it
 
@@ -157,7 +158,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
         double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalHeight/oldTotalHeight;
 
         for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i)
-            newSizes << round(scalingFactor*oldSizes[i]);
+            newSizes << qRound(scalingFactor*oldSizes[i]);
 
         setSizes(newSizes << newTotalHeight-std::accumulate(newSizes.begin(), newSizes.end(), 0));
     }
@@ -177,13 +178,13 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
     connect(res, &GraphPanelWidget::graphsRemoved,
             this, &GraphPanelsWidget::graphsRemoved);
 
+    // Let people know that we have added a graph panel
+
+    emit graphPanelAdded(res, pGraphPanelWidgetProperties, pActive);
+
     // In/activate the graph panel
 
     res->setActive(pActive);
-
-    // Let people know that we have added a graph panel
-
-    emit graphPanelAdded(res, pActive);
 
     // Synchronise the axes of our graph panels, if needed, and ensure that they
     // are all aligned with one another by forcing the setting of the axes of
@@ -191,7 +192,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
     // Note: at startup, activeGraphPanelPlot is (obviously) null, hence we use
     //       our newly created graph panel's plot instead...
 
-    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():0;
+    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():nullptr;
 
     if (!activeGraphPanelPlot)
         activeGraphPanelPlot = mActiveGraphPanel->plot();
@@ -200,7 +201,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(bool pActive)
                                   activeGraphPanelPlot->maxX(),
                                   activeGraphPanelPlot->minY(),
                                   activeGraphPanelPlot->maxY(),
-                                  true, true, true, true, true);
+                                  true, true, true, false, true, true);
 
     // Make sure that our graph panel is visible
     // Note: indeed, for some reasons, this may not always be the case when
@@ -275,7 +276,7 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 
 //==============================================================================
 
-bool GraphPanelsWidget::removeCurrentGraphPanel()
+bool GraphPanelsWidget::removeCurrentGraphPanel(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties)
 {
     // Remove the current graph panel
 
@@ -284,7 +285,7 @@ bool GraphPanelsWidget::removeCurrentGraphPanel()
         // graph panel
 
         setUpdatesEnabled(false);
-            addGraphPanel();
+            addGraphPanel(pGraphPanelWidgetProperties);
 
             bool res = removeGraphPanel(mGraphPanels.first());
         setUpdatesEnabled(true);
@@ -297,13 +298,13 @@ bool GraphPanelsWidget::removeCurrentGraphPanel()
 
 //==============================================================================
 
-void GraphPanelsWidget::removeAllGraphPanels()
+void GraphPanelsWidget::removeAllGraphPanels(const GraphPanelWidgetProperties &pGraphPanelWidgetProperties)
 {
     // Remove all the graph panels, after having created an 'empty' one (since
     // we want at least one graph panel at any given point in time)
 
     setUpdatesEnabled(false);
-        addGraphPanel();
+        addGraphPanel(pGraphPanelWidgetProperties);
 
         while (mGraphPanels.count() > 1)
             removeGraphPanel(mGraphPanels.first());
@@ -403,7 +404,7 @@ void GraphPanelsWidget::synchronizeXAxis()
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),
                                       activeGraphPanelPlot->maxY(),
-                                      true, true, true, true, false);
+                                      true, true, true, false, true, false);
     }
 }
 
@@ -421,7 +422,7 @@ void GraphPanelsWidget::synchronizeYAxis()
                                       activeGraphPanelPlot->maxX(),
                                       activeGraphPanelPlot->minY(),
                                       activeGraphPanelPlot->maxY(),
-                                      true, true, true, false, true);
+                                      true, true, true, false, false, true);
     }
 }
 

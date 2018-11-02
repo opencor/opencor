@@ -1,4 +1,106 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 10, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> improved HiDPI support on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1776\">#1776</a>)." },
+                       { "change": "<strong>Editor widget:</strong> properly highlight/replace text that was found using a regular expression (see issue <a href=\"https://github.com/opencor/opencor/issues/1816\">#1816</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> the resetting of model parameters is now more specific (see issue <a href=\"https://github.com/opencor/opencor/issues/1815\">#1815</a>). Fixed a small problem with graph panels not always autoscaling properly (see issue <a href=\"https://github.com/opencor/opencor/issues/1824\">#1824</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1814\">#1814</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1829\">#1829</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 18, "month": 9, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> only handle a URL when OpenCOR is visible and no modal dialog is active (see issue <a href=\"https://github.com/opencor/opencor/issues/1802\">#1802</a>). Don't force the use of 96 DPI anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1810\">#1810</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> improved the plotting speed of simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1806\">#1806</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> provide more user-friendly simulation time information (see issue <a href=\"https://github.com/opencor/opencor/issues/1804\">#1804</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1799\">#1799</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 9, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> Clang code model related cleaning up (see issue <a href=\"https://github.com/opencor/opencor/issues/1747\">#1747</a>). Allow the use of another Qt style (see issue <a href=\"https://github.com/opencor/opencor/issues/1761\">#1761</a>). Improved HiDPI support (see issue <a href=\"https://github.com/opencor/opencor/issues/1763\">#1763</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> only reset axes when needed (see issue <a href=\"https://github.com/opencor/opencor/issues/1777\">#1777</a>). Added support for pinch gestures (see issue <a href=\"https://github.com/opencor/opencor/issues/1783\">#1783</a>). Fixed an issue with some graph panels potentially aligning only after a short delay (see issue <a href=\"https://github.com/opencor/opencor/issues/1790\">#1790</a>). Fixed an issue with some graph panels not getting aligned on resetting another graph panel (see issue <a href=\"https://github.com/opencor/opencor/issues/1794\">#1794</a>)." },
+                       { "change": "<strong>Core plugin:</strong> fixed a problem with the menu items for recently opened files potentially appearing as disabled on macOS (see issue <a href=\"https://github.com/opencor/opencor/issues/1633\">#1633</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> added some basic preferences for graph panels and graphs (see issue <a href=\"https://github.com/opencor/opencor/issues/1772\">#1772</a>). Fixed an issue with reloading a SED-ML file / COMBINE archive not looking smooth on Windows and Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/1793\">#1793</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1743\">#1743</a>). Renamed our BioSignalML plugin to libBioSignalML (see issue <a href=\"https://github.com/opencor/opencor/issues/1754\">#1754</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2p (see issue <a href=\"https://github.com/opencor/opencor/issues/1767\">#1767</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 7, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> various minor GUI improvements here and there." },
+                       { "change": "<strong>Solvers:</strong> reference <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> rather than <a href=\"https://computation.llnl.gov/projects/sundials/cvodes\">CVODES</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1711\">#1711</a>)." },
+                       { "change": "<strong>CellML-based views:</strong> fixed an issue that prevented some views from showing a CellML file that cannot be fully instantiated (see issue <a href=\"https://github.com/opencor/opencor/issues/1725\">#1725</a>)." },
+                       { "change": "<strong>Simualtion Experiment view:</strong> fixed some issues with manually added graphs and graphs associated with another file (see issue <a href=\"https://github.com/opencor/opencor/issues/1716\">#1716</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 6.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1729\">#1729</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.7 (see issue <a href=\"https://github.com/opencor/opencor/issues/1731\">#1731</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1736\">#1736</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 27, "month": 6, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
@@ -748,6 +850,6 @@ var jsonData = { "versions": [
                        { "change": "<strong>Data store:</strong> made it possible to select a group of data (see issue <a href=\"https://github.com/opencor/opencor/issues/1143\">#1143</a>)." },
                        { "change": "<strong>Web Browser window:</strong> added a Web browser like window (see issue <a href=\"https://github.com/opencor/opencor/issues/1115\">#1115</a>)." }
                      ]
-                   },
+                   }
                  ]
                };

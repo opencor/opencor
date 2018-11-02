@@ -97,8 +97,8 @@ PmrWorkspacesWindowItem::PmrWorkspacesWindowItem(Type pType,
                                                  const QIcon &pCollapsedIcon,
                                                  const QIcon &pExpandedIcon) :
     PmrWorkspacesWindowItem(pType, pTreeViewWidget, pTreeViewProxyModel,
-                            pWorkspace, 0, pCollapsedIcon, pWorkspace->name(),
-                            pCollapsedIcon, pExpandedIcon)
+                            pWorkspace, nullptr, pCollapsedIcon,
+                            pWorkspace->name(), pCollapsedIcon, pExpandedIcon)
 {
 }
 
@@ -276,7 +276,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(QMargins());
 
     setLayout(layout);
 
@@ -295,11 +295,11 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     static const QIcon UnstagedIcon = QIcon(":/PMRWorkspacesWindow/wQ.png");
     static const QIcon ConflictIcon = QIcon(":/PMRWorkspacesWindow/wE.png");
 
-    mCollapsedWorkspaceIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
-    mExpandedWorkspaceIcon = QApplication::style()->standardIcon(QStyle::SP_DirOpenIcon);
+    mCollapsedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
+    mExpandedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirOpenIcon);
 
     int folderIconSize = mCollapsedWorkspaceIcon.availableSizes().first().width();
-    int overlayIconSize = 0.57*folderIconSize;
+    int overlayIconSize = int(0.57*folderIconSize);
 
     mStagedCollapsedWorkspaceIcon = Core::overlayedIcon(mCollapsedWorkspaceIcon, StagedIcon,
                                                         folderIconSize, folderIconSize,
@@ -364,7 +364,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     int fileIconSize = mFileIcon.availableSizes().first().width();
 
-    overlayIconSize = 0.57*fileIconSize;
+    overlayIconSize = int(0.57*fileIconSize);
 
     mIaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
                                       fileIconSize, fileIconSize,
@@ -558,7 +558,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
         // folder
 
         QString clonedWorkspaceUrl = QString();
-        git_repository *gitRepository = 0;
+        git_repository *gitRepository = nullptr;
 
         if (!git_repository_open(&gitRepository,
                                  clonedWorkspaceFolder.toUtf8().constData())) {
@@ -569,7 +569,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
                     char *name = remotes.strings[i];
 
                     if (!strcmp(name, "origin")) {
-                        git_remote *remote = 0;
+                        git_remote *remote = nullptr;
 
                         if (!git_remote_lookup(&remote, gitRepository, name)) {
                             const char *remoteUrl = git_remote_url(remote);
@@ -893,7 +893,7 @@ PmrWorkspacesWindowItem * PmrWorkspacesWindowWidget::workspaceItem(PMRSupport::P
             return item;
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================
@@ -1029,7 +1029,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
         // Check whether we already know about the file node
 
-        PmrWorkspacesWindowItem *newItem = 0;
+        PmrWorkspacesWindowItem *newItem = nullptr;
 
         for (int i = 0, iMax = pFolderItem->rowCount(); i < iMax; ++i) {
             PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(pFolderItem->child(i));
@@ -1086,13 +1086,13 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             // corresponding icon for it, if needed
             // Note: it may happen (e.g. when deleting a folder) that the Git
             //       status is not up to date, hence we need to check for the
-            //       I and W values not to be '\0' (which would be the case for
+            //       I and W values not to be nullptr (which would be the case for
             //       a folder that doesn't contain any files anymore)...
 
             QChar iStatus = fileNode->status().first;
             QChar wStatus = fileNode->status().second;
 
-            if ((iStatus == '\0') && (wStatus == '\0'))
+            if ((iStatus == nullptr) && (wStatus == nullptr))
                 continue;
 
             QIcon icon = mFileIcon;
@@ -1127,10 +1127,10 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
                 icon = mWtFileIcon;
 
             pIsStaged =    pIsStaged
-                        || (    (iStatus != '\0') && (iStatus != ' ')
-                            && ((wStatus == '\0') || (wStatus == ' ')));
+                        || (    (iStatus != nullptr) && (iStatus != ' ')
+                            && ((wStatus == nullptr) || (wStatus == ' ')));
             pIsUnstaged =    pIsUnstaged
-                          || ((wStatus != '\0') && (wStatus != ' ') && (wStatus != 'C'));
+                          || ((wStatus != nullptr) && (wStatus != ' ') && (wStatus != 'C'));
             pHasConflicts = pHasConflicts || (wStatus == 'C');
 
             if (newItem) {
@@ -1176,7 +1176,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 void PmrWorkspacesWindowWidget::sortAndResizeTreeViewToContents()
 {
     // Sort the contents of our tree view widget and make sure that all of its
-    // the contents is visible
+    // contents is visible
 
     mProxyModel->sort(0);
 
@@ -1314,7 +1314,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
                                          tr("View the current workspace on the computer"):
                                          tr("View the current workspaces on the computer"));
 
-    PMRSupport::PmrWorkspace *workspace = currentItem()?currentItem()->workspace():0;
+    PMRSupport::PmrWorkspace *workspace = currentItem()?currentItem()->workspace():nullptr;
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspace?
                                                   workspace->gitWorkspaceStatus():
                                                   PMRSupport::PmrWorkspace::StatusUnknown;
@@ -1440,6 +1440,12 @@ void PmrWorkspacesWindowWidget::workspaceCloned(PMRSupport::PmrWorkspace *pWorks
 
         duplicateCloneMessage(url, folderOwned.first, pWorkspace->path());
     }
+
+    // Make sure that our GUI is up to date
+    // Note: in case, for example, where we started OpenCOR with no workspaces
+    //       and then cloned one...
+
+    updateGui();
 }
 
 //==============================================================================
@@ -1535,20 +1541,20 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
 {
     // Make sure that the user provided both a user name and email address
 
-    bool hasName = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesName).toByteArray().isEmpty();
-    bool hasEmail = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesEmail).toByteArray().isEmpty();
+    bool hasName = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesName, PMRSupport::SettingsPreferencesNameDefault).toString().isEmpty();
+    bool hasEmail = !PreferencesInterface::preference(PMRSupport::PluginName, PMRSupport::SettingsPreferencesEmail, PMRSupport::SettingsPreferencesEmailDefault).toString().isEmpty();
 
     if (!hasName) {
         if (!hasEmail) {
             Core::warningMessageBox(tr("Synchronise With PMR"),
-                                    tr("Both a <a href=\"opencor://openPreferencesDialog/PMRSupport\">name</a> and an <a href=\"opencor://openPreferencesDialog/PMRSupport\">email</a> must be set before you can synchronise with PMR."));
+                                    tr("Both a <strong>name</strong> and an <strong>email</strong> must be set before you can synchronise with PMR."));
         } else {
             Core::warningMessageBox(tr("Synchronise With PMR"),
-                                    tr("A <a href=\"opencor://openPreferencesDialog/PMRSupport\">name</a> must be set before you can synchronise with PMR."));
+                                    tr("A <strong>name</strong> must be set before you can synchronise with PMR."));
         }
     } else if (!hasEmail) {
         Core::warningMessageBox(tr("Synchronise With PMR"),
-                                tr("An <a href=\"opencor://openPreferencesDialog/PMRSupport\">email</a> must be set before you can synchronise with PMR."));
+                                tr("An <strong>email</strong> must be set before you can synchronise with PMR."));
     } else {
         // Synchronise the current workspace, which involves letting the user
         // decide which files should be staged (if they are not already staged),

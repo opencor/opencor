@@ -24,9 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
-#include "coreinterface.h"
 #include "guiapplication.h"
-#include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
@@ -35,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pluginsdialog.h"
 #include "preferencesdialog.h"
 #include "preferencesinterface.h"
-#include "viewinterface.h"
 #include "windowinterface.h"
 #include "windowwidget.h"
 
@@ -51,16 +48,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QLocale>
-#include <QMenu>
-#include <QMenuBar>
 #include <QRect>
 #include <QSettings>
 #include <QShortcut>
+#include <QTimer>
 #include <QUrl>
 #include <QWindow>
 
@@ -96,13 +91,12 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mLoadedGuiPlugins(Plugins()),
     mLoadedPreferencesPlugins(Plugins()),
     mLoadedWindowPlugins(Plugins()),
-    mCoreInterface(0),
+    mCoreInterface(nullptr),
     mRawLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
-    mFileNewMenu(0),
-    mViewWindowsMenu(0),
-    mViewSeparator(0),
-    mViewPlugin(0),
+    mFileNewMenu(nullptr),
+    mViewWindowsMenu(nullptr),
+    mViewSeparator(nullptr),
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
@@ -499,8 +493,11 @@ void MainWindow::registerOpencorUrlScheme()
         exec("xdg-mime", QStringList() << "default" << "opencor.desktop" << "x-scheme-handler/opencor");
     }
 #elif defined(Q_OS_MAC)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
     LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
                                     CFBundleGetIdentifier(CFBundleGetMainBundle()));
+#pragma clang diagnostic pop
 #else
     #error Unsupported platform
 #endif
@@ -563,7 +560,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         for (int i = guiMenuActions.count()-1; i >= 0; --i) {
             // Insert the action/separator to the right menu, if any
 
-            QMenu *menu = 0;
+            QMenu *menu = nullptr;
 
             if (guiMenuActions[i].type() == Gui::MenuAction::File)
                 menu = mGui->menuFile;
@@ -632,14 +629,6 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         setCentralWidget(qobject_cast<CoreInterface *>(pPlugin->instance())->centralWidget());
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
-
-        // Also keep track of GUI updates in our central widget
-        // Note: we cannot use the new connect() syntax since the signal is
-        //       located in our Core plugin and that we don't know anything
-        //       about it...
-
-        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(OpenCOR::Plugin *, const QString &)),
-                this, SLOT(updateGui(OpenCOR::Plugin *, const QString &)));
     }
 
     // Add the plugin's window, in case we are dealing with a window plugin
@@ -904,7 +893,7 @@ void MainWindow::reorderViewWindowsMenu()
 
         // Sort the menu items
 
-        menuItemTitles.sort();
+        menuItemTitles.sort(Qt::CaseInsensitive);
 
         // Add the menu items actions in the new order
         // Note: to use addAction will effectively 'move' the menu items to the
@@ -1050,8 +1039,13 @@ void MainWindow::openFileOrHandleUrl(const QString &pFileNameOrOpencorUrl)
 
 //==============================================================================
 
-void MainWindow::handleUrl(const QUrl &pUrl)
+void MainWindow::doHandleUrl(const QUrl &pUrl)
 {
+    // Make sure that no modal dialog is active
+
+    if (qApp->activeModalWidget())
+        return;
+
     // Handle the action that was passed to OpenCOR
 
     QString actionName = pUrl.authority();
@@ -1104,6 +1098,26 @@ void MainWindow::handleUrl(const QUrl &pUrl)
             }
         }
     }
+}
+
+//==============================================================================
+
+void MainWindow::handleUrl(const QUrl &pUrl)
+{
+    // Handle the action that was passed to OpenCOR
+    // Note: we want to make sure that we are visible before handling a URL,
+    //       hence we do this through a single shot. Indeed, otherwise to start
+    //       OpenCOR through our URL scheme (e.g. opencor://openAboutDialog)
+    //       will result in the dialog appearing before we become visible, which
+    //       doesn't look neat. Not only that, but it might in some cases (e.g.
+    //       opencor://openPreferencesDialog) result in some GUI problems (see
+    //       issue #1802). When it comes to opening a file / files through our
+    //       URL scheme, it's kind of the same in the sense that without a
+    //       single shot, the file/s will get opened in the "background", which
+    //       is not neat either...
+
+    QTimer::singleShot(0, this, std::bind(&MainWindow::doHandleUrl,
+                                          this, pUrl));
 }
 
 //==============================================================================
@@ -1260,7 +1274,7 @@ void MainWindow::actionAboutTriggered()
 
     aboutMessageBox(tr("About"),
                     "<h1 align=center><strong>"+version()+"</strong></h1>"
-                    "<h3 align=center><em>"+QSysInfo::prettyProductName()+"</em></h3>"
+                    "<h3 align=center><em>"+prettyProductName()+"</em></h3>"
                     "<p align=center><em>"+copyright()+"</em></p>"
                     "<p>"+applicationDescription()+"</p>");
 }
@@ -1278,65 +1292,6 @@ void MainWindow::restart(bool pSaveSettings) const
         saveSettings();
 
     qApp->exit(pSaveSettings?NormalRestart:CleanRestart);
-}
-
-//==============================================================================
-
-void MainWindow::showEnableActions(const QList<QAction *> &pActions)
-{
-    // Show/enable or hide/disable the given actions, depending on whether they
-    // correspond to a menu with visible/enabled or hidden/disabled actions,
-    // respectively
-
-    foreach (QAction *action, pActions) {
-        QMenu *actionMenu = action->menu();
-
-        if (actionMenu) {
-            QList<QAction *> actionMenuActions = actionMenu->actions();
-
-            showEnableActions(actionMenuActions);
-
-            bool showEnable = false;
-
-            foreach (QAction *actionMenuAction, actionMenuActions) {
-                if (   !actionMenuAction->isSeparator()
-                    &&  actionMenuAction->isVisible()) {
-                    showEnable = true;
-
-                    break;
-                }
-            }
-
-            showEnableAction(action, showEnable);
-        }
-    }
-}
-
-//==============================================================================
-
-void MainWindow::updateGui(OpenCOR::Plugin *pViewPlugin,
-                           const QString &pFileName)
-{
-    // We come here as a result of our central widget having updated its GUI,
-    // meaning that a new view or file has been selected, so we may need to
-    // enable/disable and/or show/hide some menus/actions/etc.
-
-    // Keep track of our view plugin
-
-    mViewPlugin = pViewPlugin;
-
-    // Let our different plugins know that the GUI has been updated
-    // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
-    //       tools that may need to be enabled/disabled and shown/hidden,
-    //       depending on which view plugin and/or file are currently active...
-
-    foreach (Plugin *plugin, mLoadedGuiPlugins)
-        qobject_cast<GuiInterface *>(plugin->instance())->updateGui(mViewPlugin, pFileName);
-
-    // Go through our different menus and show/hide them, depending on whether
-    // they have visible items
-
-    showEnableActions(mGui->menuBar->actions());
 }
 
 //==============================================================================

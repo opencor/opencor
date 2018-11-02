@@ -163,12 +163,13 @@ public slots:
     QString nlaSolverName() const;
     void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
-    void reset(bool pInitialize = true);
+    void reset(bool pInitialize = true, bool pAll = true);
 
     void recomputeComputedConstantsAndVariables(double pCurrentPoint,
                                                 bool pInitialize);
     void recomputeVariables(double pCurrentPoint);
 
+    bool isStatesModified() const;
     bool isModified() const;
     void checkForModifications();
 
@@ -217,6 +218,8 @@ private:
     void deleteArrays();
 
     SolverInterface * solverInterface(const QString &pSolverName) const;
+
+    bool doIsModified(bool pCheckConstants) const;
 
 signals:
     void updatedParameters(double pCurrentPoint);
@@ -326,7 +329,7 @@ public:
     bool resume();
     bool stop();
 
-    bool reset();
+    bool reset(bool pAll = true);
 
 public slots:
     QString fileName() const;
@@ -348,7 +351,7 @@ public slots:
     int delay() const;
     void setDelay(int pDelay);
 
-    double size();
+    quint64 size();
 
 private:
     QString mFileName;

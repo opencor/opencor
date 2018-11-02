@@ -55,7 +55,7 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
     //       solver is badly set up (e.g. Forward Euler with an integration step
     //       that is too big)...
 
-    for (int i = 0, iMax = NV_LENGTH_S(pF); i < iMax; ++i) {
+    for (long i = 0, iMax = static_cast<N_VectorContent_Serial>(pF->content)->length; i < iMax; ++i) {
         if (!qIsFinite(f[i]))
             return 1;
     }
@@ -206,7 +206,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 {
     // Check whether we need to initialise or update ourselves
 
-    KinsolSolverData *data = mData.value((void *) pComputeSystem);
+    KinsolSolverData *data = mData.value(reinterpret_cast<void *>(pComputeSystem));
 
     if (!data) {
         // Retrieve our properties
@@ -327,7 +327,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
         data = new KinsolSolverData(solver, parametersVector, onesVector,
                                     matrix, linearSolver, userData);
 
-        mData.insert((void *) pComputeSystem, data);
+        mData.insert(reinterpret_cast<void *>(pComputeSystem), data);
     } else {
         // We are already initiliased, so simply update our user data
 

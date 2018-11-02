@@ -34,7 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "qwt_mml_document.h"
+#include "qwtbegin.h"
+    #include "qwt_mml_document.h"
+#include "qwtend.h"
 
 //==============================================================================
 
@@ -67,8 +69,8 @@ public:
     bool error() const;
     void setError(bool pError);
 
-    bool optimiseFontSize() const;
-    void setOptimiseFontSize(bool pOptimiseFontSize);
+    bool optimizeFontSize() const;
+    void setOptimizeFontSize(bool pOptimizeFontSize);
 
     bool subscripts() const;
     void setSubscripts(bool pSubscripts);
@@ -94,7 +96,7 @@ private:
 
     QMenu *mContextMenu;
 
-    QAction *mOptimiseFontSizeAction;
+    QAction *mOptimizeFontSizeAction;
     QAction *mSubscriptsAction;
     QAction *mGreekSymbolsAction;
     QAction *mDigitGroupingAction;

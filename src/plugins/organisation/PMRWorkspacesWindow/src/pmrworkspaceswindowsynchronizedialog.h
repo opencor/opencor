@@ -166,10 +166,12 @@ private:
     QString diffHtml(const QString &pOld, const QString &pNew);
     QString diffHtml(const QString &pFileName);
 
+    QString cleanHtmlEscaped(const QString &pString);
+
 private slots:
     void refreshChanges();
 
-    void updateSelectAllChangesCheckBox(QStandardItem *pItem = 0);
+    void updateSelectAllChangesCheckBox(QStandardItem *pItem = nullptr);
     void selectAllChangesCheckBoxClicked();
 
     void updateOkButton();

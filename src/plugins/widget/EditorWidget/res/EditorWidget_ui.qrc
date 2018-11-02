@@ -1,9 +1,8 @@
 <RCC>
     <qresource prefix="/EditorWidget">
-        <file>qtCreator/src/plugins/coreplugin/find/images/casesensitively.png</file>
-        <file>qtCreator/src/plugins/coreplugin/find/images/regexp.png</file>
-        <file>qtCreator/src/plugins/coreplugin/find/images/wholewords.png</file>
-        <file>qtCreator/src/plugins/coreplugin/images/editclear.png</file>
-        <file>qtCreator/src/plugins/coreplugin/images/magnifier.png</file>
+        <file>casesensitively.png</file>
+        <file>magnifier.png</file>
+        <file>regexp.png</file>
+        <file>wholewords.png</file>
     </qresource>
 </RCC>

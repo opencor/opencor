@@ -90,7 +90,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                                   SHA1_VALUES bd2befaf0efacb2d4ee4957ab58a4315290ec804)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c5d302fda38d1f94a29a7eb8ca5211e6067c59c8
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 077f8f0f162fe54d1d4743b4ad43869d3683b8c7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
@@ -267,14 +267,15 @@ endif()
 # Allow other packages to use our scripts
 
 if(WIN32)
-    set(SPHINX_BUILD_EXECUTABLE sphinx-build.exe)
+    set(SPHINX_EXECUTABLE sphinx-build.exe)
 else()
-    set(SPHINX_BUILD_EXECUTABLE sphinx-build)
+    set(SPHINX_EXECUTABLE sphinx-build)
 endif()
 
-set(SPHINX_BUILD_EXECUTABLE
+set(SPHINX_EXECUTABLE
     ${CMAKE_COMMAND} -E env "PYTHONPATH=${FULL_LOCAL_SITE_PACKAGES_DIR}"
-    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_BUILD_EXECUTABLE} PARENT_SCOPE
+    ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}/${SPHINX_EXECUTABLE}
+    PARENT_SCOPE
 )
 
 # Add the plugin
@@ -296,8 +297,15 @@ add_plugin(PythonPackages
         ${DEPENDS_ON}
 )
 
+add_dependencies(${PROJECT_BUILD_TARGET} ${PROJECT_NAME})
+
+if(NOT "${DEPENDS_ON}" STREQUAL "")
+    add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
+endif()
+
 # Update the Python path in newly copied scripts
 
-add_custom_command(TARGET PythonPackagesPlugin POST_BUILD
-    COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py ${PYTHON_ROOT_DIR} -s
-    )
+add_custom_command(TARGET ${PROJECT_NAME}
+                   COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_SCRIPT_DIR}/set_python_path.py
+                                                --update-path ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_RELATIVE_SCRIPT_DIR}
+                                                ${PYTHON_ROOT_DIR} -s)

@@ -39,10 +39,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "guiapplication.h"
 #include "guiutils.h"
 #include "mainwindow.h"
-#include "splashscreenwindow.h"
 
 #ifdef Q_OS_MAC
     #include "macos.h"
+#endif
+
+#ifndef QT_DEBUG
+    #include "splashscreenwindow.h"
 #endif
 
 //==============================================================================
@@ -55,6 +58,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     #include <QWebSettings>
+#endif
+
+//==============================================================================
+
+#ifdef Q_OS_WIN
+    #include <Windows.h>
 #endif
 
 //==============================================================================
@@ -165,12 +174,14 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initPluginsPath(pArgC, pArgV);
 
-    // Create the GUI version of OpenCOR and make sure that it supports high DPI
+    // Create the GUI version of OpenCOR, after making sure that on Windows
+    // OpenCOR can handle scaled HiDPI screens
+
+#ifdef Q_OS_WIN
+    SetProcessDPIAware();
+#endif
 
     OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
-
-    guiApp->setAttribute(Qt::AA_EnableHighDpiScaling);
-    guiApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR minus the first one since it corresponds to the full

@@ -181,7 +181,7 @@ quint64 totalMemory()
 
     size_t len = sizeof(res);
 
-    sysctl(mib, 2, &res, &len, 0, 0);
+    sysctl(mib, 2, &res, &len, nullptr, 0);
 #else
     #error Unsupported platform
 #endif
@@ -209,7 +209,10 @@ quint64 freeMemory()
     res = quint64(sysconf(_SC_AVPHYS_PAGES))*quint64(sysconf(_SC_PAGESIZE));
 #elif defined(Q_OS_MAC)
     vm_statistics_data_t vmStats;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
     mach_msg_type_number_t infoCount = HOST_VM_INFO_COUNT;
+#pragma clang diagnostic pop
 
     host_statistics(mach_host_self(), HOST_VM_INFO,
                     host_info_t(&vmStats), &infoCount);
@@ -242,14 +245,10 @@ QString digitGroupNumber(const QString &pNumber)
 
 //==============================================================================
 
-QString sizeAsString(double pSize, int pPrecision)
+QString sizeAsString(quint64 pSize, int pPrecision)
 {
-    // Note: pSize is a double rather than a quint64, in case we need to convert
-    //       an insane size...
-
     QString units[9] = { QObject::tr("B"), QObject::tr("KB"), QObject::tr("MB"),
-                         QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB"),
-                         QObject::tr("EB"), QObject::tr("ZB"), QObject::tr("YB") };
+                         QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB") };
 
     int i = qFloor(log(pSize)/log(1024.0));
     double size = pSize/qPow(1024.0, i);
@@ -258,6 +257,45 @@ QString sizeAsString(double pSize, int pPrecision)
     size = qRound(scaling*size)/scaling;
 
     return QLocale().toString(size)+" "+units[i];
+}
+
+//==============================================================================
+
+QString formatTime(qint64 pTime)
+{
+    // Convert the given time (in milliseconds) to a string and return it
+    // Note: we must not use floating point divisions as it may yield some
+    //       unexpected results (not sure whether it's on some machines, with
+    //       some compilers and/or with a release/debug mode). For example, to
+    //       compute the number of hours, we might want to do something like
+    //          int h = int(pTime/3600000.0) % 24;
+    //       but in some cases this will give 0 for pTime=3600000 while it
+    //       should clearly give 1, hence the approach used below...
+
+    QString res = QString();
+    qint64 time = pTime;
+    int ms = time % 1000; time = (time-ms)/1000;
+    int s  = time %   60; time = (time-s)/60;
+    int m  = time %   60; time = (time-m)/60;
+    int h  = time %   24; time = (time-h)/24;
+    int d  = int(time);
+
+    if (d || ((h || m || s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(d)+QObject::tr("d");
+
+    if (h || ((m || s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(h)+QObject::tr("h");
+
+    if (m || ((s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(m)+QObject::tr("m");
+
+    if (s || (ms && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(s)+QObject::tr("s");
+
+    if (ms || res.isEmpty())
+        res += (res.isEmpty()?QString():" ")+QString::number(ms)+QObject::tr("ms");
+
+    return res;
 }
 
 //==============================================================================
@@ -369,7 +407,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
         qApp->setProperty(objectName, res);
     }
 
-    return (void *) res.toULongLong();
+    return reinterpret_cast<void *>(res.toULongLong());
 }
 
 //==============================================================================
@@ -742,8 +780,6 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
         else
             return fileCanonicalPath+fileBaseName+separator+extra+fileCompleteSuffix;
     }
-
-    return fileName;
 }
 
 //==============================================================================
@@ -818,9 +854,9 @@ void cleanDomElement(QDomElement &pDomElement,
     // before removing them from the element and adding a new attribute that
     // will later on be used for string replacement
 
-    static const int AttributeNumberWidth = ceil(log(ULLONG_MAX));
+    static const int AttributeNumberWidth = int(ceil(log(ULLONG_MAX)));
 
-    static quint64 attributeNumber = 0;
+    static int attributeNumber = 0;
 
     if (pDomElement.hasAttributes()) {
         QStringList serialisedAttributes = QStringList();

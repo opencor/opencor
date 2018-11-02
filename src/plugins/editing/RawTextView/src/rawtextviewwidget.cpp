@@ -43,7 +43,7 @@ RawTextViewWidget::RawTextViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
-    mEditor(0),
+    mEditor(nullptr),
     mEditors(QMap<QString, EditorWidget::EditorWidget *>())
 {
 }
@@ -105,7 +105,7 @@ void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         newEditor = new EditorWidget::EditorWidget(fileContents,
                                                    !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                   0, parentWidget());
+                                                   nullptr, parentWidget());
 
         // Keep track of our editor
 
@@ -171,7 +171,7 @@ void RawTextViewWidget::finalize(const QString &pFileName)
             settings.endGroup();
 
             mNeedLoadingSettings = true;
-            mEditor = 0;
+            mEditor = nullptr;
         }
 
         // Delete the editor and remove it from our list

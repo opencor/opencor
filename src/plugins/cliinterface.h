@@ -40,6 +40,8 @@ extern "C" Q_DECL_EXPORT int cliInterfaceVersion();
 class CliInterface
 {
 public:
+    virtual ~CliInterface();
+
 #define INTERFACE_DEFINITION
     #include "cliinterface.inl"
 #undef INTERFACE_DEFINITION

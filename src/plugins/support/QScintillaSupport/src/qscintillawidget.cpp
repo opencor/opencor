@@ -192,7 +192,7 @@ void QScintillaWidget::setCursorPosition(int pLine, int pColumn)
 
     // Center ourselves around the given line
 
-    SendScintilla(SCI_LINESCROLL, 0, pLine-firstVisibleLine()-0.5*SendScintilla(SCI_LINESONSCREEN));
+    SendScintilla(SCI_LINESCROLL, 0, pLine-firstVisibleLine()-(SendScintilla(SCI_LINESONSCREEN) >> 1));
 
     // Set our cursor position
 
@@ -217,7 +217,7 @@ int QScintillaWidget::currentPosition() const
 {
     // Return our current position
 
-    return SendScintilla(SCI_GETCURRENTPOS);
+    return int(SendScintilla(SCI_GETCURRENTPOS));
 }
 
 //==============================================================================
@@ -240,22 +240,22 @@ QString QScintillaWidget::contents() const
 
 //==============================================================================
 
-void QScintillaWidget::setContents(const QString &pContents, bool pKeepHistory)
+void QScintillaWidget::setContents(const QString &pContents,
+                                   bool pEmptyUndoBuffer)
 {
-    // Set our contents and keep our history, if required
+    // Set our contents and empty our undo buffer, if required
 
-    if (pKeepHistory) {
-        bool readOnly = isReadOnly();
+    bool readOnly = isReadOnly();
 
-        if (readOnly)
-            setReadOnly(false);
+    if (readOnly)
+        setReadOnly(false);
 
-        SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
+    SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
 
-        setReadOnly(readOnly);
-    } else {
-        setText(pContents);
-    }
+    if (pEmptyUndoBuffer)
+        SendScintilla(SCI_EMPTYUNDOBUFFER);
+
+    setReadOnly(readOnly);
 }
 
 //==============================================================================
@@ -264,7 +264,7 @@ int QScintillaWidget::contentsSize() const
 {
     // Return the size of our contents
 
-    return SendScintilla(SCI_GETLENGTH);
+    return int(SendScintilla(SCI_GETLENGTH));
 }
 
 //==============================================================================
@@ -303,10 +303,10 @@ int QScintillaWidget::findTextInRange(int pStartRange, int pEndRange,
 {
     // Keep track of the start and end of the current target
 
-    int crtTargetStart = SendScintilla(SCI_GETTARGETSTART);
-    int crtTargetEnd = SendScintilla(SCI_GETTARGETEND);
+    int crtTargetStart = int(SendScintilla(SCI_GETTARGETSTART));
+    int crtTargetEnd = int(SendScintilla(SCI_GETTARGETEND));
 
-    // Find and return the position, if any, of the given text within the given
+    // Find and return the position, if any, of the given text in the given
     // range
 
     SendScintilla(SCI_SETSEARCHFLAGS,
@@ -319,7 +319,7 @@ int QScintillaWidget::findTextInRange(int pStartRange, int pEndRange,
 
     QByteArray byteArray = pText.toUtf8();
 
-    int res = SendScintilla(SCI_SEARCHINTARGET, byteArray.length(), byteArray.constData());
+    int res = int(SendScintilla(SCI_SEARCHINTARGET, ulong(byteArray.length()), byteArray.constData()));
 
     // Retrieve the start and end of the current target
 
@@ -344,13 +344,13 @@ void QScintillaWidget::selectWordAt(int pLine, int pColumn)
 {
     // Select the word, if any, at the given line/column
 
-    int position = positionFromLineIndex(pLine, pColumn);
+    ulong position = ulong(positionFromLineIndex(pLine, pColumn));
 
-    int startPosition = SendScintilla(SCI_WORDSTARTPOSITION, position, true);
-    int endPosition = SendScintilla(SCI_WORDENDPOSITION, position, true);
+    int startPosition = int(SendScintilla(SCI_WORDSTARTPOSITION, position, true));
+    int endPosition = int(SendScintilla(SCI_WORDENDPOSITION, position, true));
 
     if (endPosition-startPosition > 0)
-        SendScintilla(SCI_SETSEL, startPosition, endPosition);
+        SendScintilla(SCI_SETSEL, ulong(startPosition), endPosition);
 }
 
 //==============================================================================
@@ -424,7 +424,7 @@ QColor QScintillaWidget::backgroundColor(int pStyle)
 {
     // Return the background color for the given style
 
-    return SendScintilla(SCI_STYLEGETBACK, pStyle);
+    return QRgb(SendScintilla(SCI_STYLEGETBACK, pStyle));
 }
 
 //==============================================================================
@@ -434,7 +434,7 @@ void QScintillaWidget::setBackgroundColor(int pStyle,
 {
     // Set the background color for the given style
 
-    SendScintilla(SCI_STYLESETBACK, pStyle, pBackgroundColor);
+    SendScintilla(SCI_STYLESETBACK, ulong(pStyle), pBackgroundColor);
 }
 
 //==============================================================================
@@ -443,7 +443,7 @@ QColor QScintillaWidget::foregroundColor(int pStyle)
 {
     // Return the foreground color for the given style
 
-    return SendScintilla(SCI_STYLEGETFORE, pStyle);
+    return QRgb(SendScintilla(SCI_STYLEGETFORE, pStyle));
 }
 
 //==============================================================================
@@ -453,7 +453,7 @@ void QScintillaWidget::setForegroundColor(int pStyle,
 {
     // Set the foreground color for the given style
 
-    SendScintilla(SCI_STYLESETFORE, pStyle, pForegroundColor);
+    SendScintilla(SCI_STYLESETFORE, ulong(pStyle), pForegroundColor);
 }
 
 //==============================================================================
@@ -462,7 +462,7 @@ int QScintillaWidget::zoomLevel() const
 {
     // Return our zoom level
 
-    return SendScintilla(SCI_GETZOOM);
+    return int(SendScintilla(SCI_GETZOOM));
 }
 
 //==============================================================================
@@ -745,8 +745,8 @@ void QScintillaWidget::updateMarginLineNumbersWidth()
     //       by Scintilla)...
 
     setMarginWidth(SC_MARGIN_NUMBER,
-                   SendScintilla(SCI_TEXTWIDTH, STYLE_LINENUMBER,
-                                 ScintillaBytesConstData(textAsBytes(QString::number(lines()))))+6);
+                   int(SendScintilla(SCI_TEXTWIDTH, STYLE_LINENUMBER,
+                                     ScintillaBytesConstData(textAsBytes(QString::number(lines()))))+6));
 }
 
 //==============================================================================
@@ -789,7 +789,8 @@ void QScintillaWidget::updateColors()
         blue = 0.5*(blue+1.0);
     }
 
-    setCaretLineBackgroundColor(qRgba(red*255, green*255, blue*255, caretLineBackgroundColor.alpha()));
+    setCaretLineBackgroundColor(qRgba(int(red*255), int(green*255), int(blue*255),
+                                      caretLineBackgroundColor.alpha()));
 }
 
 //==============================================================================

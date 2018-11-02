@@ -20,10 +20,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Analysis</source>
-        <translation>Analyse</translation>
-    </message>
-    <message>
         <source>Open Remote File</source>
         <translation>Ouvrir Fichier À Distance</translation>
     </message>
@@ -118,6 +114,10 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to save it before closing it?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+    </message>
+    <message>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support new files...</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas les nouveaux fichiers...</translation>
     </message>
     <message>
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
@@ -328,12 +328,8 @@
         <translation>Invalide</translation>
     </message>
     <message>
-        <source>Analysis</source>
-        <translation>Analyse</translation>
-    </message>
-    <message>
-        <source>Data Store</source>
-        <translation>Magasin de Données</translation>
+        <source>Data store</source>
+        <translation>Magasin de données</translation>
     </message>
     <message>
         <source>Editing</source>
@@ -384,10 +380,6 @@
         <translation>Extensions qui ne sont pas valides.</translation>
     </message>
     <message>
-        <source>Plugins to analyse files.</source>
-        <translation>Extensions pour analyser des fichiers.</translation>
-    </message>
-    <message>
         <source>Plugins to store and manipulate data.</source>
         <translation>Extensions pour stocker et manipuler des données.</translation>
     </message>
@@ -412,8 +404,8 @@
         <translation>Extensions pour accéder différents solveurs.</translation>
     </message>
     <message>
-        <source>Plugins to support various third-party libraries and APIs.</source>
-        <translation>Extensions pour supporter différentes librairies externes et APIs.</translation>
+        <source>Plugins to support various third-party libraries.</source>
+        <translation>Extensions pour supporter différentes librairies externes.</translation>
     </message>
     <message>
         <source>Plugins to access various third-party libraries.</source>
@@ -460,18 +452,6 @@
         <translation>Po</translation>
     </message>
     <message>
-        <source>EB</source>
-        <translation>Eo</translation>
-    </message>
-    <message>
-        <source>ZB</source>
-        <translation>Zo</translation>
-    </message>
-    <message>
-        <source>YB</source>
-        <translation>Yo</translation>
-    </message>
-    <message>
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
@@ -486,6 +466,26 @@
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
+    </message>
+    <message>
+        <source>d</source>
+        <translation>j</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>s</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>ms</source>
+        <translation></translation>
     </message>
 </context>
 </TS>

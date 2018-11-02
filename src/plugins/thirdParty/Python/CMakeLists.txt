@@ -157,13 +157,13 @@ if(USE_PREBUILT_PYTHON_PACKAGE)
                                               981012b78a22e0470f2d5acc349ac6745cc986c0)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1d8c126dc5cc4c17b0a487f1b5bc899340fbd954
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 1651cf41ba9aca0767eecdea908d34217ec653ce
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 71cba1a8dedb5533daa303b2f796d840f7fbc764
-                                              2763cb98d5b09e623d1c3dfa060eec8720883ecf
-                                              8ad14e1441b92c84b27d6b3f469e284653fe0b91
+                                  SHA1_VALUES eaec9798ba6c5a1bf4b1cc161b6c7dfc59d1ea80
+                                              6e79fbfa322c9c56189932c9d6007b9e1f55d3af
+                                              c0d0bd4c50ad3f0760b95696d50abe9336ecfe6c
                                               3f54413d619bdc17271c9dc6b9cf0b2ed5df4e17
-                                              164b0decaac36ba4fba601023b0669f2443f9e7b)
+                                              41e1905467d98d2f0ddfdb273795dfac9e3402f7)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
@@ -412,7 +412,7 @@ else()
         #  - Add RPATH to the Python executable, so that it can use libraries
         #    when installed (into Frameworks/Python/bin);
         #  - Use a relative path to the Python library; and
-        #  - set RPATH in the Python library to enable linking independent of
+        #  - Set RPATH in the Python library to enable linking independent of
         #    location.
 
         ExternalProject_Add_Step(${PACKAGE_BUILD} setRpath
@@ -449,13 +449,12 @@ else()
         set(BUILT_PYTHON "LD_LIBRARY_PATH=${FULL_DEST_EXTERNAL_BINARIES_DIR}" ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin/python)
     endif()
 
-    # Install the Python package manager and dependencies
+    # Install the Python package manager and its dependencies
 
     if(WIN32)
-        # On Windows, we use our version of pip that is modified to
-        # create `*-script.py` files when installing packaages with
-        # console scripts, so that they can then be updated to
-        # reference OpenCOR's Python executable.
+        # On Windows, we use our version of pip that is modified to create
+        # *-script.py files when installing packages with console scripts, so
+        # that they can then be updated to reference OpenCOR's Python executable
 
         # Install the Python setuptools package
 
@@ -577,6 +576,12 @@ add_plugin(Python
         ${ROOT_DIR}/${LIBRARY_DIR}/${IMPORT_LIBRARY}
 )
 
+add_dependencies(${PROJECT_BUILD_TARGET} ${PROJECT_NAME})
+
+if(NOT "${DEPENDS_ON}" STREQUAL "")
+    add_dependencies(${PROJECT_NAME} ${DEPENDS_ON})
+endif()
+
 # Copy a script to update the Python path in copied scripts
 
 file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
@@ -584,9 +589,7 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
 
 # And run it
 
-add_custom_command(TARGET PythonPlugin POST_BUILD
-    COMMAND ${ROOT_DIR}/${PYTHON_EXECUTABLE} ${ROOT_DIR}/${SCRIPT_DIR}/set_python_path.py ${ROOT_DIR} -s)
-
-# Update our list of Python dependencies for other plugins
-
-set(PYTHON_DEPENDENCIES ${PYTHON_DEPENDENCIES} ${INSTALL_EXTERNAL_FILES_TARGET} PARENT_SCOPE)
+add_custom_command(TARGET ${PROJECT_NAME}
+                   COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
+                           ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)

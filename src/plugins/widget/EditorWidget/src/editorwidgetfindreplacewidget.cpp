@@ -104,17 +104,6 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(EditorWidget *pPare
     connect(mRegularExpressionAction, &QAction::toggled,
             this, &EditorWidgetFindReplaceWidget::searchOptionChanged);
 
-    // Create and handle our clear find and replace text actions
-
-    mClearFindTextAction = Core::newAction(QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
-    mClearReplaceTextAction = Core::newAction(QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
-
-    connect(mClearFindTextAction, &QAction::triggered,
-            mGui->findEdit, &QLineEdit::clear);
-
-    connect(mClearReplaceTextAction, &QAction::triggered,
-            mGui->replaceEdit, &QLineEdit::clear);
-
     // Make our find edit widget our focus proxy
 
     setFocusProxy(mGui->findEdit);
@@ -122,7 +111,7 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(EditorWidget *pPare
     // Some connections for our find-related widgets
 
     connect(mGui->findEdit, &QLineEdit::textChanged,
-            this, &EditorWidgetFindReplaceWidget::updateClearFindTextAction);
+            this, &EditorWidgetFindReplaceWidget::emitCanFindReplace);
 
     connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
             mGui->findPreviousButton, &QToolButton::setEnabled);
@@ -135,11 +124,6 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(EditorWidget *pPare
             mGui->replaceAndFindButton, &QToolButton::setEnabled);
     connect(this, &EditorWidgetFindReplaceWidget::canFindReplace,
             mGui->replaceAllButton, &QToolButton::setEnabled);
-
-    // A connection for our replace widget
-
-    connect(mGui->replaceEdit, &QLineEdit::textChanged,
-            this, &EditorWidgetFindReplaceWidget::updateClearReplaceTextAction);
 
     // A few more things , so that we are properly initialised
 
@@ -187,11 +171,6 @@ void EditorWidgetFindReplaceWidget::retranslateUi()
                                      tr("The search is done on whole words only"));
     I18nInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"),
                                      tr("The search uses a regular expression"));
-
-    I18nInterface::retranslateAction(mClearFindTextAction, tr("Clear Text"),
-                                     tr("Clear the text"));
-    I18nInterface::retranslateAction(mClearReplaceTextAction, tr("Clear Text"),
-                                     tr("Clear the text"));
 }
 
 //==============================================================================
@@ -335,6 +314,17 @@ void EditorWidgetFindReplaceWidget::updateFrom(EditorWidgetFindReplaceWidget *pF
 
     mGui->findEdit->setText(pFindReplace->findText());
     mGui->replaceEdit->setText(pFindReplace->replaceText());
+
+    // Update our find options from the given find/replace widget
+
+    mCaseSensitiveAction->setChecked(pFindReplace->isCaseSensitive());
+    mWholeWordsOnlyAction->setChecked(pFindReplace->searchWholeWordsOnly());
+    mRegularExpressionAction->setChecked(pFindReplace->useRegularExpression());
+
+    // (Re)highlight all our occurrences of our owner since our find text may
+    // have changed as a result of our find/replace widget having been updated
+
+    mOwner->highlightAll();
 }
 
 //==============================================================================
@@ -402,7 +392,8 @@ void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Some key combinations from our find/replace widget
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+    if (     mOwner->isFindReplaceVisible()
+        && !(pEvent->modifiers() & Qt::ShiftModifier)
         && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
@@ -501,74 +492,68 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
 {
     // Update the icon used for the leading position of our find widget
 
-    static const QIcon MagnifierIcon         = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/images/magnifier.png");
-    static const QIcon CaseSensitiveIcon     = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
-    static const QIcon WholeWordsOnlyIcon    = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
-    static const QIcon RegularExpressionIcon = QIcon(":/EditorWidget/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
-
     enum {
-        IconSize                = 16,
-        MagnifierIconWidth      = 17,
-        MagnifierIconHeight     = 11,
-        CaseSensitiveIconShift  =  6,
-        WholeWordsOnlyIconShift =  6,
-        RegularExpressionShift  =  7,
-        CaseSensitiveIconWidth  =  5,
-        WholeWordsOnlyIconWidth =  5,
-        RegularExpressionWidth  =  4
+        IconSize = 16
     };
 
-    int nbOfOptions =  mCaseSensitiveAction->isChecked()
-                      +mWholeWordsOnlyAction->isChecked()
-                      +mRegularExpressionAction->isChecked();
     QPixmap dropDownPixmap = QPixmap(IconSize, IconSize);
 
     dropDownPixmap.fill(Qt::transparent);
 
     QPainter dropDownPixmapPainter(&dropDownPixmap);
 
+    int nbOfOptions =  mCaseSensitiveAction->isChecked()
+                      +mWholeWordsOnlyAction->isChecked()
+                      +mRegularExpressionAction->isChecked();
+
     if (nbOfOptions) {
-        int left = ( IconSize-nbOfOptions+1
-                    -mCaseSensitiveAction->isChecked()*CaseSensitiveIconWidth
-                    -mWholeWordsOnlyAction->isChecked()*WholeWordsOnlyIconWidth
-                    -mRegularExpressionAction->isChecked()*RegularExpressionWidth) >> 1;
+        static const QIcon CaseSensitiveIcon     = QIcon(":/EditorWidget/casesensitively.png");
+        static const QIcon WholeWordsOnlyIcon    = QIcon(":/EditorWidget/wholewords.png");
+        static const QIcon RegularExpressionIcon = QIcon(":/EditorWidget/regexp.png");
+
+        enum {
+            CaseSensitiveIconWidth     = 5,
+            WholeWordsOnlyIconWidth    = 5,
+            RegularExpressionWidth = 4
+        };
+
+        int left =  ( IconSize
+                     -nbOfOptions+1
+                     -mCaseSensitiveAction->isChecked()*CaseSensitiveIconWidth
+                     -mWholeWordsOnlyAction->isChecked()*WholeWordsOnlyIconWidth
+                     -mRegularExpressionAction->isChecked()*RegularExpressionWidth) >> 1;
 
         if (mCaseSensitiveAction->isChecked()) {
             CaseSensitiveIcon.paint(&dropDownPixmapPainter,
-                                    left-CaseSensitiveIconShift, 0,
-                                    IconSize, IconSize);
+                                    left, 0, CaseSensitiveIconWidth, IconSize);
 
             left += CaseSensitiveIconWidth+1;
         }
 
         if (mWholeWordsOnlyAction->isChecked()) {
             WholeWordsOnlyIcon.paint(&dropDownPixmapPainter,
-                                     left-WholeWordsOnlyIconShift, 0,
-                                     IconSize, IconSize);
+                                     left, 0, WholeWordsOnlyIconWidth, IconSize);
 
             left += WholeWordsOnlyIconWidth+1;
         }
 
         if (mRegularExpressionAction->isChecked()) {
             RegularExpressionIcon.paint(&dropDownPixmapPainter,
-                                        left-RegularExpressionShift, 0,
-                                        IconSize, IconSize);
+                                        left, 0, RegularExpressionWidth, IconSize);
         }
     } else {
         // We hack of magnifier icon away so that it ends up looking the way we
         // want it (since it's wider than 16 pixels)
 
+        static const QIcon MagnifierIcon = QIcon(":/EditorWidget/magnifier.png");
+
+        enum {
+            MagnifierIconHeight = 10
+        };
+
         MagnifierIcon.paint(&dropDownPixmapPainter,
-                            -1, ((IconSize-MagnifierIconHeight) >> 1)+1,
-                            MagnifierIconWidth, MagnifierIconHeight);
-
-        QPen pen = dropDownPixmapPainter.pen();
-
-        pen.setColor(Qt::white);
-
-        dropDownPixmapPainter.setPen(pen);
-
-        dropDownPixmapPainter.drawPoint(0, 13);
+                            0, (IconSize-MagnifierIconHeight) >> 1,
+                            IconSize, MagnifierIconHeight);
     }
 
     mDropDownAction->setIcon(dropDownPixmap);
@@ -580,32 +565,11 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
 
 //==============================================================================
 
-void EditorWidgetFindReplaceWidget::updateClearFindTextAction(const QString &pText)
+void EditorWidgetFindReplaceWidget::emitCanFindReplace()
 {
-    // Show/hide our clear text action, based on whether our find widget
-    // contains some text
-
-    if (pText.isEmpty())
-        mGui->findEdit->removeAction(mClearFindTextAction);
-    else
-        mGui->findEdit->addAction(mClearFindTextAction, QLineEdit::TrailingPosition);
-
     // Let people know whether we can find/replace
 
     emit canFindReplace(!findText().isEmpty());
-}
-
-//==============================================================================
-
-void EditorWidgetFindReplaceWidget::updateClearReplaceTextAction(const QString &pText)
-{
-    // Show/hide our clear text action, based on whether our replace widget
-    // contains some text
-
-    if (pText.isEmpty())
-        mGui->replaceEdit->removeAction(mClearReplaceTextAction);
-    else
-        mGui->replaceEdit->addAction(mClearReplaceTextAction, QLineEdit::TrailingPosition);
 }
 
 //==============================================================================

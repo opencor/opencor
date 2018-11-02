@@ -45,7 +45,7 @@ namespace OpenCOR {
 //==============================================================================
 
 CliApplication::CliApplication(int &pArgC, char **pArgV) :
-    mPluginManager(0),
+    mPluginManager(nullptr),
     mLoadedPluginPlugins(Plugins()),
     mLoadedSolverPlugins(Plugins()),
     mLoadedCliPlugins(Plugins())
@@ -189,7 +189,7 @@ void CliApplication::about() const
 
     version();
 
-    std::cout << QSysInfo::prettyProductName().toStdString() << std::endl;
+    std::cout << prettyProductName().toStdString() << std::endl;
     std::cout << copyright().toStdString() << std::endl;
     std::cout << std::endl;
     std::cout << applicationDescription(false).toStdString() << std::endl;

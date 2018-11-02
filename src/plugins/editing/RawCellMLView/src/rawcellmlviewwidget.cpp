@@ -57,7 +57,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
-    mEditingWidget(0),
+    mEditingWidget(nullptr),
     mEditingWidgets(QMap<QString, CellMLEditingView::CellmlEditingViewWidget *>()),
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
@@ -205,7 +205,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
             settings.endGroup();
 
             mNeedLoadingSettings = true;
-            mEditingWidget = 0;
+            mEditingWidget = nullptr;
         }
 
         // Delete the editor and remove it from our list
@@ -271,7 +271,7 @@ EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pF
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editorWidget():0;
+    return editingWidget?editingWidget->editorWidget():nullptr;
 }
 
 //==============================================================================
@@ -315,7 +315,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 
         domDocument.setContent(editingWidget->editorWidget()->contents());
 
-        editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), true);
+        editingWidget->editorWidget()->setContents(Core::serialiseDomDocument(domDocument), false);
         editingWidget->editorWidget()->setCursorPosition(line, column);
     }
 }
@@ -391,7 +391,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         if (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
             || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)) {
-            pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
+            pExtra = tr("the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
         }
 
         return res;

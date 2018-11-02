@@ -46,8 +46,14 @@ namespace Core {
 
 CommonWidget::CommonWidget(QWidget *pParent) :
     mParent(pParent),
-    mBusyWidget(0),
+    mBusyWidget(nullptr),
     mCounter(0)
+{
+}
+
+//==============================================================================
+
+CommonWidget::~CommonWidget()
 {
 }
 
@@ -59,8 +65,8 @@ QSize CommonWidget::defaultSize(double pRatio) const
 
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
 
-    return QSize(pRatio*desktopGeometry.width(),
-                 pRatio*desktopGeometry.height());
+    return QSize(int(pRatio*desktopGeometry.width()),
+                 int(pRatio*desktopGeometry.height()));
 }
 
 //==============================================================================
@@ -101,9 +107,10 @@ bool CommonWidget::isBusyWidgetVisible() const
 
 void CommonWidget::showBusyWidget(double pProgress)
 {
-    // Create and show our new busy widget resized, and then disable our parent
+    // Create and show our new busy widget resized, and then disable our parent,
+    // but only if we are visible (i.e. our parent is visible)
 
-    if (++mCounter == 1) {
+    if (mParent->isVisible() && (++mCounter == 1)) {
         mBusyWidget = new BusyWidget(mParent, pProgress);
 
         resizeBusyWidget();
@@ -166,7 +173,7 @@ void CommonWidget::hideBusyWidget(bool pForceHiding)
 
         delete mBusyWidget;
 
-        mBusyWidget = 0;
+        mBusyWidget = nullptr;
     }
 }
 

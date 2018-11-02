@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfileruntime.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
-#include "graphpanelwidget.h"
 #include "i18ninterface.h"
+#include "preferencesinterface.h"
 #include "sedmlsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
@@ -42,7 +42,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "qwt_symbol.h"
+#include "qwtbegin.h"
+    #include "qwt_symbol.h"
+#include "qwtend.h"
 
 //==============================================================================
 
@@ -62,8 +64,8 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
     mGraphPanelPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mGraphsPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
-    mGraphPanelPropertyEditor(0),
-    mGraphsPropertyEditor(0),
+    mGraphPanelPropertyEditor(nullptr),
+    mGraphsPropertyEditor(nullptr),
     mGraphs(QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *>()),
     mGraphProperties(QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
@@ -280,7 +282,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 //==============================================================================
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
-                                                                              bool pActive)
+                                                                              const GraphPanelWidget::GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
+                                                                              bool pActive,
+                                                                              bool pCustomize)
 {
     // Retrieve the graph panel and graphs property editors for the given file
     // name or create some, if none exists
@@ -306,6 +310,17 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
         mGraphPanelPropertyEditors.insert(pGraphPanel, mGraphPanelPropertyEditor);
         mGraphsPropertyEditors.insert(pGraphPanel, mGraphsPropertyEditor);
+
+        // Customise our corresponding graph panel with our preferences, if
+        // required
+
+        if (pCustomize) {
+            GraphPanelWidget::GraphPanelPlotWidget *graphPanelPlot = pGraphPanel->plot();
+
+            graphPanelPlot->setBackgroundColor(pGraphPanelWidgetProperties.backgroundColor());
+            graphPanelPlot->setForegroundColor(pGraphPanelWidgetProperties.foregroundColor());
+            graphPanelPlot->setLegendActive(pGraphPanelWidgetProperties.legend());
+        }
 
         // Populate our graph panel property editor
 
@@ -384,11 +399,22 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
+                                                                              const GraphPanelWidget::GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
+                                                                              bool pActive)
+{
+    // Initialise the given graph panel
+
+    initialize(pGraphPanel, pGraphPanelWidgetProperties, pActive, true);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel)
 {
     // Initialise the given graph panel
 
-    initialize(pGraphPanel, true);
+    initialize(pGraphPanel, GraphPanelWidget::GraphPanelWidgetProperties(), true, false);
 }
 
 //==============================================================================
@@ -407,8 +433,8 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize(Grap
 
     if (   (graphPanelPropertyEditor == mGraphPanelPropertyEditor)
         && (graphsPropertyEditor == mGraphsPropertyEditor)) {
-        mGraphPanelPropertyEditor = 0;
-        mGraphsPropertyEditor = 0;
+        mGraphPanelPropertyEditor = nullptr;
+        mGraphsPropertyEditor = nullptr;
     }
 
     mGraphPanels.remove(graphPanelPropertyEditor);
@@ -483,9 +509,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *lineProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                          SEDMLSupport::lineStyleValue((pGraphProperties.lineStyle() > Qt::DashDotDotLine)?
-                                                                           Qt::SolidLine:
-                                                                           pGraphProperties.lineStyle()),
+                                          SEDMLSupport::stringLineStyle(pGraphProperties.lineStyle()),
                                           lineProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.lineWidth(), lineProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.lineColor(), lineProperty);
@@ -495,11 +519,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph(Grap
     Core::Property *symbolProperty = graphsPropertyEditor->addSectionProperty(graphProperty);
 
     graphsPropertyEditor->addListProperty(SEDMLSupport::symbolStyles(),
-                                          SEDMLSupport::symbolStyleValue((pGraphProperties.symbolStyle() <= QwtSymbol::DTriangle)?
-                                                                             pGraphProperties.symbolStyle()+1:
-                                                                             ((pGraphProperties.symbolStyle() >= QwtSymbol::Cross) && (pGraphProperties.symbolStyle() <= QwtSymbol::Star1))?
-                                                                                 pGraphProperties.symbolStyle()-2:
-                                                                                 QwtSymbol::NoSymbol),
+                                          SEDMLSupport::stringSymbolStyle(pGraphProperties.symbolStyle()),
                                           symbolProperty);
     graphsPropertyEditor->addIntegerGt0Property(pGraphProperties.symbolSize(), symbolProperty);
     graphsPropertyEditor->addColorProperty(pGraphProperties.symbolColor(), symbolProperty);
@@ -618,8 +638,9 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::addGraph()
     // add an 'empty' graph
 
     GraphPanelWidget::GraphPanelWidget * graphPanel = mGraphPanels.value(mGraphsPropertyEditor);
+    GraphPanelWidget::GraphPanelPlotGraph *graph = new GraphPanelWidget::GraphPanelPlotGraph(graphPanel);
 
-    graphPanel->addGraph(new GraphPanelWidget::GraphPanelPlotGraph(graphPanel));
+    graphPanel->addGraph(graph, mSimulationWidget->defaultGraphProperties(graph->color()));
 }
 
 //==============================================================================
@@ -994,9 +1015,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *gridLinesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleValue((graphPanelPlot->gridLinesStyle() > Qt::DashDotDotLine)?
-                                                                                 Qt::SolidLine:
-                                                                                 graphPanelPlot->gridLinesStyle()),
+                                               SEDMLSupport::stringLineStyle(graphPanelPlot->gridLinesStyle()),
                                                gridLinesProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->gridLinesWidth(), gridLinesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->gridLinesColor(), gridLinesProperty);
@@ -1010,9 +1029,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *pointCoordinatesProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleValue((graphPanelPlot->pointCoordinatesStyle() > Qt::DashDotDotLine)?
-                                                                                 Qt::SolidLine:
-                                                                                 graphPanelPlot->pointCoordinatesStyle()),
+                                               SEDMLSupport::stringLineStyle(graphPanelPlot->pointCoordinatesStyle()),
                                                pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->pointCoordinatesWidth(), pointCoordinatesProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->pointCoordinatesColor(), pointCoordinatesProperty);
@@ -1027,7 +1044,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
 
     // Title
 
-    mGraphPanelPropertyEditor->addStringProperty();
+    mGraphPanelPropertyEditor->addStringProperty(graphPanelPlot->title().text());
 
     // X axis
 
@@ -1048,9 +1065,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     Core::Property *zoomRegionProperty = mGraphPanelPropertyEditor->addSectionProperty();
 
     mGraphPanelPropertyEditor->addListProperty(SEDMLSupport::lineStyles(),
-                                               SEDMLSupport::lineStyleValue((graphPanelPlot->zoomRegionStyle() > Qt::DashDotDotLine)?
-                                                                                 Qt::SolidLine:
-                                                                                 graphPanelPlot->zoomRegionStyle()),
+                                               SEDMLSupport::stringLineStyle(graphPanelPlot->zoomRegionStyle()),
                                                zoomRegionProperty);
     mGraphPanelPropertyEditor->addIntegerGt0Property(graphPanelPlot->zoomRegionWidth(), zoomRegionProperty);
     mGraphPanelPropertyEditor->addColorProperty(graphPanelPlot->zoomRegionColor(), zoomRegionProperty);
@@ -1076,7 +1091,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
     // Now, add our model parameters to it
 
     QString componentHierarchy = QString();
-    QMenu *componentMenu = 0;
+    QMenu *componentMenu = nullptr;
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
         // Check whether the current parameter is in the same component
@@ -1095,7 +1110,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
                 // Check whether we already have a menu for our current
                 // component
 
-                componentMenu = 0;
+                componentMenu = nullptr;
 
                 foreach (QObject *object, parentComponentMenu->children()) {
                     QMenu *subMenu = qobject_cast<QMenu *>(object);
@@ -1159,7 +1174,7 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::checkParamete
     // Check that the information held by the given property corresponds to
     // an existing parameter in our runtime
 
-    CellMLSupport::CellmlFileRuntimeParameter *res = 0;
+    CellMLSupport::CellmlFileRuntimeParameter *res = nullptr;
 
     if (pRuntime) {
         // Retrieve the component and parameter of the property
@@ -1253,12 +1268,6 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
         fileName = propertyFileName.split(PropertySeparator).last();
     }
 
-    // Update the graph's title
-
-    QString oldTitle = graph->title();
-
-    graph->setTitle(properties[1]->value());
-
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
     // Note: we absolutely want to check the parameter (so that an icon can be
@@ -1282,6 +1291,31 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
                        +PropertySeparator
                        +properties[3]->value());
 
+    // Update the graph's title
+
+    QString oldTitle = graph->title();
+    QString newTitle = properties[1]->value();
+    CellMLSupport::CellmlFileRuntimeParameter *newParameterY = static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY());
+
+    if (   newParameterY && (newParameterY != oldParameterY)
+        && oldTitle.isEmpty() && newTitle.isEmpty()) {
+        // The graph didn't and still doesn't have a title, and we have a valid
+        // (and different) Y property, so use its formatted name as a default
+        // value for our graph's title
+
+        newTitle = newParameterY->formattedName();
+
+        disconnect(pProperty->owner(), &Core::PropertyEditorWidget::propertyChanged,
+                   this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
+
+        properties[1]->setValue(newTitle);
+
+        connect(pProperty->owner(), &Core::PropertyEditorWidget::propertyChanged,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphsPropertyChanged);
+    }
+
+    graph->setTitle(newTitle);
+
     // Update the status (i.e. icon) of our (section) property
 
     static const QIcon BlankIcon   = QIcon(":/SimulationExperimentView/blank.png");
@@ -1299,7 +1333,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     QPen linePen = oldLinePen;
     Core::Properties lineProperties = properties[4]->properties();
 
-    linePen.setStyle(Qt::PenStyle(lineProperties[0]->listValues().indexOf(lineProperties[0]->listValue())));
+    linePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValueIndex()));
     linePen.setWidth(lineProperties[1]->integerValue());
     linePen.setColor(lineProperties[2]->colorValue());
 
@@ -1310,8 +1344,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     const QwtSymbol *oldGraphSymbol = graph->symbol();
     bool graphSymbolUpdated = !oldGraphSymbol;
     Core::Properties symbolProperties = properties[5]->properties();
-    int symbolStyleValue = symbolProperties[0]->listValues().indexOf(symbolProperties[0]->listValue());
-    QwtSymbol::Style symbolStyle = QwtSymbol::Style((symbolStyleValue > QwtSymbol::DTriangle+1)?symbolStyleValue+2:symbolStyleValue-1);
+    QwtSymbol::Style symbolStyle = SEDMLSupport::symbolStyle(symbolProperties[0]->listValueIndex());
     int symbolSize = symbolProperties[1]->integerValue();
     QPen symbolColor = QPen(symbolProperties[2]->colorValue());
     bool symbolFill = symbolProperties[3]->booleanValue();
@@ -1326,17 +1359,23 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
 
     graph->setSymbol(symbolStyle, symbolFillColor, symbolColor, symbolSize);
 
-    // Update our graph's GUI if the title of our graph is different (which may
-    // result in our legend's width being updated), let people know if the X
-    // and/or Y parameters of our graph have changed, or replot it if its
-    // settings have changed
+    // Update our graph's GUI if the title of our graph or its symbol is
+    // different (both of which may result in our legend's width being updated),
+    // let people know if the X and/or Y parameters of our graph have changed,
+    // or replot it if its settings have changed
+    // Note: we want several if statements rather than if...elseif...elseif...
+    //       Indeed, to change the Y property may, for example, result in the
+    //       title being also changed...
 
-    if (oldTitle != graph->title()) {
+    if ((oldTitle != graph->title()) || graphSymbolUpdated)
         graph->plot()->updateGui();
-    } else if (   (oldParameterX != graph->parameterX())
+
+    if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
-    } else if ((oldLinePen != linePen) || graphSymbolUpdated) {
+    }
+
+    if ((oldLinePen != linePen) || graphSymbolUpdated) {
         graph->plot()->replot();
 
         processEvents();
@@ -1387,7 +1426,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties gridLinesProperties = properties[3]->properties();
 
-        graphPanelPlot->setGridLinesStyle(Qt::PenStyle(gridLinesProperties[0]->listValues().indexOf(gridLinesProperties[0]->listValue())));
+        graphPanelPlot->setGridLinesStyle(SEDMLSupport::lineStyle(gridLinesProperties[0]->listValueIndex()));
         graphPanelPlot->setGridLinesWidth(gridLinesProperties[1]->integerValue());
         graphPanelPlot->setGridLinesColor(gridLinesProperties[2]->colorValue());
 
@@ -1399,7 +1438,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties pointCoordinatesProperties = properties[5]->properties();
 
-        graphPanelPlot->setPointCoordinatesStyle(Qt::PenStyle(pointCoordinatesProperties[0]->listValues().indexOf(pointCoordinatesProperties[0]->listValue())));
+        graphPanelPlot->setPointCoordinatesStyle(SEDMLSupport::lineStyle(pointCoordinatesProperties[0]->listValueIndex()));
         graphPanelPlot->setPointCoordinatesWidth(pointCoordinatesProperties[1]->integerValue());
         graphPanelPlot->setPointCoordinatesColor(pointCoordinatesProperties[2]->colorValue());
         graphPanelPlot->setPointCoordinatesFontColor(pointCoordinatesProperties[3]->colorValue());
@@ -1433,7 +1472,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
 
         Core::Properties zoomRegionProperties = properties[10]->properties();
 
-        graphPanelPlot->setZoomRegionStyle(Qt::PenStyle(zoomRegionProperties[0]->listValues().indexOf(zoomRegionProperties[0]->listValue())));
+        graphPanelPlot->setZoomRegionStyle(SEDMLSupport::lineStyle(zoomRegionProperties[0]->listValueIndex()));
         graphPanelPlot->setZoomRegionWidth(zoomRegionProperties[1]->integerValue());
         graphPanelPlot->setZoomRegionColor(zoomRegionProperties[2]->colorValue());
         graphPanelPlot->setZoomRegionFontColor(zoomRegionProperties[3]->colorValue());
@@ -1517,7 +1556,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
             modelListValues << modelListValue(fileNameOrUrl);
         }
 
-        modelListValues.sort();
+        modelListValues.sort(Qt::CaseInsensitive);
 
         modelListValues.prepend(QString());
         modelListValues.prepend(tr("Current"));
@@ -1543,13 +1582,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
         graphProperties[4]->setName(tr("Line"));
 
         lineProperties[0]->setName(tr("Style"));
-        lineProperties[0]->setListValues(QStringList() << tr("None")
-                                                       << tr("Solid")
-                                                       << tr("Dash")
-                                                       << tr("Dot")
-                                                       << tr("DashDot")
-                                                       << tr("DashDotDot"),
-                                         false);
+        lineProperties[0]->setListValues(SEDMLSupport::formattedLineStyles(), false);
         lineProperties[1]->setName(tr("Width"));
         lineProperties[2]->setName(tr("Colour"));
 
@@ -1560,18 +1593,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphsI
         graphProperties[5]->setName(tr("Symbol"));
 
         symbolProperties[0]->setName(tr("Style"));
-        symbolProperties[0]->setListValues(QStringList() << tr("None")
-                                                         << tr("Circle")
-                                                         << tr("Square")
-                                                         << tr("Diamond")
-                                                         << tr("Triangle")
-                                                         << tr("Down Triangle")
-                                                         << tr("Cross")
-                                                         << tr("X Cross")
-                                                         << tr("Horizontal Line")
-                                                         << tr("Vertical Line")
-                                                         << tr("Star"),
-                                           false);
+        symbolProperties[0]->setListValues(SEDMLSupport::formattedSymbolStyles(), false);
         symbolProperties[1]->setName(tr("Size"));
         symbolProperties[2]->setName(tr("Colour"));
         symbolProperties[3]->setName(tr("Filled"));

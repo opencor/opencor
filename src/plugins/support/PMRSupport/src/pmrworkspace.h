@@ -133,7 +133,7 @@ private:
     bool commit(const char *pMessage, const size_t &pParentCount,
                 const git_commit **pParents);
 
-    CharPair gitStatusChars(int pFlags) const;
+    CharPair gitStatusChars(uint pFlags) const;
 
     void setGitAuthorization(git_strarray *pAuthorizationStrArray);
 
@@ -147,8 +147,8 @@ private:
                                       void *pPayload);
     static int fetchheadForeachCallback(const char *pReferenceName,
                                         const char *pRemoteUrl,
-                                        const git_oid *pId,
-                                        unsigned int pMerge, void *pPayload);
+                                        const git_oid *pId, uint pMerge,
+                                        void *pPayload);
     static int mergeheadForeachCallback(const git_oid *pOid, void *pPayload);
 
     bool fetch();
@@ -156,7 +156,7 @@ private:
     void push();
 
     PmrWorkspaceFileNode *parentFileNode(const QString &pPath,
-                                         PmrWorkspaceFileNode *pParentFileNode = 0);
+                                         PmrWorkspaceFileNode *pParentFileNode = nullptr);
 
     void deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
                          PmrWorkspaceFileNodes &pFileNodes);

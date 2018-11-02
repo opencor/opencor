@@ -51,6 +51,8 @@ static const auto SettingsPreferencesEmail  = QStringLiteral("Email");
 //==============================================================================
 
 static const auto SettingsPreferencesPmrUrlDefault = QStringLiteral("https://models.physiomeproject.org");
+static const auto SettingsPreferencesNameDefault   = QStringLiteral("");
+static const auto SettingsPreferencesEmailDefault  = QStringLiteral("");
 
 //==============================================================================
 

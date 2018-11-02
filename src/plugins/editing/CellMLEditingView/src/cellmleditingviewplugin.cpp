@@ -57,8 +57,8 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
 
 CellMLEditingViewPlugin::CellMLEditingViewPlugin() :
     mFileName(QString()),
-    mEditor(0),
-    mCellmlEditingViewInterface(0)
+    mEditor(nullptr),
+    mCellmlEditingViewInterface(nullptr)
 {
 }
 
@@ -160,10 +160,10 @@ void CellMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the CellML editing interface
 
-    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):0;
+    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
-    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):0;
-    mCellmlEditingViewInterface = pViewPlugin?qobject_cast<CellmlEditingViewInterface *>(pViewPlugin->instance()):0;
+    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):nullptr;
+    mCellmlEditingViewInterface = pViewPlugin?qobject_cast<CellmlEditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
     bool hasFileName = !pFileName.isEmpty();
     bool hasFileNameAndIsReadWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);

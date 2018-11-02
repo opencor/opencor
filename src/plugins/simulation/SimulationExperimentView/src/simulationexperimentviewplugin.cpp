@@ -26,10 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
 #include "coreguiutils.h"
+#include "filemanager.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
+#include "simulationexperimentviewpreferenceswidget.h"
 #include "simulationexperimentviewpythonwrapper.h"
 #include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
@@ -50,8 +52,8 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to run a simulation experiment."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter une expérience de simulation."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to edit and run a simulation experiment."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
 
     return new PluginInfo(PluginInfo::Simulation, true, false,
                           QStringList() << "GraphPanelWidget" << "PythonQtSupport" << "SimulationSupport",
@@ -95,9 +97,9 @@ void SimulationExperimentViewPlugin::filePermissionsChanged(const QString &pFile
 
 void SimulationExperimentViewPlugin::fileModified(const QString &pFileName)
 {
-    // Let our view widget know that a file has been modified
+    Q_UNUSED(pFileName);
 
-    mViewWidget->fileModified(pFileName);
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -264,6 +266,26 @@ void SimulationExperimentViewPlugin::handleUrl(const QUrl &pUrl)
 }
 
 //==============================================================================
+// Preferences interface
+//==============================================================================
+
+Preferences::PreferencesWidget * SimulationExperimentViewPlugin::preferencesWidget()
+{
+    // Return our preferences widget
+
+    return new SimulationExperimentViewPreferencesWidget(Core::mainWindow());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewPlugin::preferencesChanged(const QStringList &pPluginNames)
+{
+    Q_UNUSED(pPluginNames);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
 // View interface
 //==============================================================================
 
@@ -318,16 +340,17 @@ QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
 
 QWidget * SimulationExperimentViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML 1.0/1.1 file, a SED-ML file
-    // or a COMBINE archive
+    // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
+    // file, a SED-ML file or a COMBINE archive
 
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    if (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
-        && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
-        && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName)) {
-        return 0;
+    if (   Core::FileManager::instance()->isNew(pFileName)
+        || (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+            &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
+            && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
+            && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))) {
+        return nullptr;
     }
 
     // Update and return our simulation view widget using the given CellML file,

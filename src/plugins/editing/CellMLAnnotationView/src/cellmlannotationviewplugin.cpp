@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "coreguiutils.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -44,8 +45,8 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to annotate CellML files."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers CellML."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to annotate <a href=\"http://www.cellml.org/\">CellML</a> files."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers <a href=\"http://www.cellml.org/\">CellML</a>."));
 
     return new PluginInfo(PluginInfo::Editing, true, false,
                           QStringList() << "CellMLSupport" << "WebViewerWidget",
@@ -273,13 +274,15 @@ QString CellMLAnnotationViewPlugin::viewDefaultFileExtension() const
 
 QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML 1.0/1.1 file
+    // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
+    // file
 
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
-        return 0;
+    if (   Core::FileManager::instance()->isNew(pFileName)
+        || (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1))) {
+        return nullptr;
     }
 
     // Update and return our CellML Annotation view widget using the given

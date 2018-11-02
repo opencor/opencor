@@ -65,12 +65,12 @@ CentralWidget * centralWidget()
     // Retrieve and return our central widget
 
     static bool firstTime = true;
-    static CentralWidget *res = 0;
+    static CentralWidget *res = nullptr;
 
     if (firstTime) {
         foreach (QObject *object, mainWindow()->children()) {
             if (!strcmp(object->metaObject()->className(), "OpenCOR::Core::CentralWidget")) {
-                res = dynamic_cast<CentralWidget *>(object);
+                res = qobject_cast<CentralWidget *>(object);
 
                 break;
             }
@@ -86,53 +86,11 @@ CentralWidget * centralWidget()
 
 //==============================================================================
 
-bool readFileWithBusyWidget(const QString &pUrl,
-                                           QByteArray &pFileContents,
-                                           QString *pErrorMessage)
-{
-    // Read the contents of the file, which URL is given, showing our busy
-    // widget
-
-    // Showing the busy widget requires us to be in GUI mode, so don't do
-    // so if we are not in that mode
-
-    bool guiMode = Core::mainWindow() != 0;
-
-    if (guiMode)
-        centralWidget()->showBusyWidget();
-
-    bool res = readFile(pUrl, pFileContents, pErrorMessage);
-
-    if (guiMode)
-        centralWidget()->hideBusyWidget();
-
-    return res;
-}
-
-//==============================================================================
-
-bool readFileWithBusyWidget(const QString &pUrl,
-                                           QString &pFileContents,
-                                           QString *pErrorMessage)
-{
-    // Read the contents of the file, which URL is given
-
-    QByteArray fileContents = QByteArray();
-
-    bool res = readFileWithBusyWidget(pUrl, fileContents, pErrorMessage);
-
-    pFileContents = fileContents;
-
-    return res;
-}
-
-//==============================================================================
-
 QString allFilters(const QStringList &pFilters)
 {
     QStringList filters = pFilters;
 
-    filters.sort();
+    filters.sort(Qt::CaseInsensitive);
 
     return  QObject::tr("All Files")
            +" (*"
@@ -371,7 +329,7 @@ void setFocusTo(QWidget *pWidget)
 
     QWidget *focusedWidget = qApp->activeWindow()?
                                  qApp->activeWindow()->focusWidget():
-                                 0;
+                                 nullptr;
 
     if (   !focusedWidget
         || (pWidget->parentWidget() == focusedWidget->parentWidget())) {
@@ -646,6 +604,16 @@ QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
 
 //==============================================================================
 
+QIcon standardIcon(QStyle::StandardPixmap pStandardIcon,
+                   const QStyleOption *pOption, const QWidget *pWidget)
+{
+    // Retrieve the given standard icon
+
+    return qApp->style()->standardIcon(pStandardIcon, pOption, pWidget);
+}
+
+//==============================================================================
+
 QIcon tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                  const QColor &pColor)
 {
@@ -691,20 +659,24 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
+    // Note: there is a bug in QIcon::pixmap() when it comes to HiDPI screens
+    //       (see https://bugreports.qt.io/browse/QTBUG-71333), hence we need to
+    //       scale things...
 
     QImage image(pBaseWidth, pBaseHeight, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&image);
+    double scalingFactor = 1.0/qApp->devicePixelRatio();
 
     painter.setCompositionMode(QPainter::CompositionMode_Source);
     painter.fillRect(image.rect(), Qt::transparent);
 
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     painter.drawPixmap(0, 0, pBaseWidth, pBaseWidth,
-                       pBaseIcon.pixmap(pBaseWidth, pBaseWidth));
-
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+                       pBaseIcon.pixmap(int(scalingFactor*pBaseWidth),
+                                        int(scalingFactor*pBaseWidth)));
     painter.drawPixmap(pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight,
-                       pOverlayIcon.pixmap(pOverlayWidth, pOverlayHeight));
+                       pOverlayIcon.pixmap(int(scalingFactor*pOverlayWidth),
+                                           int(scalingFactor*pOverlayHeight)));
 
     return QPixmap::fromImage(image);
 }
@@ -750,6 +722,28 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 
 //==============================================================================
 
+QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                 Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
+{
+    // Create and return a scaled version of the given icon
+
+    return pIcon.pixmap(pIcon.availableSizes().first()).scaled(pWidth, pHeight,
+                                                               pAspectMode,
+                                                               pMode);
+}
+
+//==============================================================================
+
+QIcon scaledIcon(const QString &pIcon, int pWidth, int pHeight,
+                 Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
+{
+    // Create and return a scaled version of the given icon
+
+    return scaledIcon(QIcon(pIcon), pWidth, pHeight, pAspectMode, pMode);
+}
+
+//==============================================================================
+
 void showEnableWidget(QWidget *pWidget, bool pVisible, bool pEnabled)
 {
     // Show/enable or hide/disable the given widget
@@ -777,9 +771,9 @@ QColor lockedColor(const QColor &pColor)
     static const double Alpha = 0.05;
     static const double OneMinusAlpha = 1.0-Alpha;
 
-    return QColor(Alpha*lockedRed+OneMinusAlpha*red,
-                  Alpha*lockedGreen+OneMinusAlpha*green,
-                  Alpha*lockedBlue+OneMinusAlpha*blue);
+    return QColor(int(Alpha*lockedRed+OneMinusAlpha*red),
+                  int(Alpha*lockedGreen+OneMinusAlpha*green),
+                  int(Alpha*lockedBlue+OneMinusAlpha*blue));
 }
 
 //==============================================================================

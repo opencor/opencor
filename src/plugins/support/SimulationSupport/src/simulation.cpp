@@ -280,7 +280,7 @@ SolverInterface * SimulationData::solverInterface(const QString &pSolverName) co
             return solverInterface;
     }
 
-    return 0;
+    return nullptr;
 }
 
 //==============================================================================
@@ -408,7 +408,7 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
 
 //==============================================================================
 
-void SimulationData::reset(bool pInitialize)
+void SimulationData::reset(bool pInitialize, bool pAll)
 {
     // Reset our parameter values which means both initialising our 'constants'
     // and computing our 'computed constants' and 'variables'
@@ -419,7 +419,7 @@ void SimulationData::reset(bool pInitialize)
     //          that our data has changed...
 
     CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
-    Solver::NlaSolver *nlaSolver = 0;
+    Solver::NlaSolver *nlaSolver = nullptr;
 
     if (runtime->needNlaSolver()) {
         // Set our NLA solver
@@ -439,6 +439,13 @@ void SimulationData::reset(bool pInitialize)
         nlaSolver->setProperties(mNlaSolverProperties);
     }
 
+    // Keep track of our constants (in case we don't want to reset them)
+
+    double *currentConstants = new double[runtime->constantsCount()] {};
+
+    if (!pAll)
+        memcpy(currentConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+
     // Reset our parameter values
 
     if (pInitialize) {
@@ -450,7 +457,29 @@ void SimulationData::reset(bool pInitialize)
         runtime->initializeConstants()(mConstantsArray->data(), mRatesArray->data(), mStatesArray->data());
     }
 
+    // Recompute our computed constants and variables
+
     recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
+
+    // Keep track of our various initial values
+
+    if (pInitialize) {
+        memcpy(mInitialConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+        memcpy(mInitialStates, mStates, size_t(runtime->statesCount()*Solver::SizeOfDouble));
+    }
+
+    // Use our "current" constants, if needed
+
+    if (!pAll)
+        memcpy(mConstants, currentConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+
+    delete[] currentConstants;
+
+    // Recompute our computed constants and variables, if we are using our
+    // "current" constants
+
+    if (!pAll)
+        recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
 
     // Delete our NLA solver, if any
 
@@ -469,7 +498,6 @@ void SimulationData::reset(bool pInitialize)
 
     // Let people know whether our data is 'cleaned', i.e. not modified, and ask
     // our simulation worker to reset itself
-    // Note: no point in checking if we are initialising...
 
     if (!pInitialize) {
         emit modified(isModified());
@@ -513,24 +541,43 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 
 //==============================================================================
 
-bool SimulationData::isModified() const
+bool SimulationData::doIsModified(bool pCheckConstants) const
 {
-    // Check whether any of our constants or states has been modified, if
-    // possible
+    // Check whether any of our constants (if requested) or states has been
+    // modified, if possible
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
     for (int i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
-        if (mStatesArray->data(i) != mInitialStates[i])
+        if (!qIsNull(mStates[i]-mInitialStates[i]))
             return true;
     }
 
-    for (int i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
-        if (mConstantsArray->data(i) != mInitialConstants[i])
-            return true;
+    if (pCheckConstants) {
+        for (int i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
+            if (!qIsNull(mConstants[i]-mInitialConstants[i]))
+                return true;
     }
 
     return false;
+}
+
+//==============================================================================
+
+bool SimulationData::isStatesModified() const
+{
+    // Check whether any of our states has been modified
+
+    return doIsModified(false);
+}
+
+//==============================================================================
+
+bool SimulationData::isModified() const
+{
+    // Check whether any of our constants or states has been modified
+
+    return doIsModified(true);
 }
 
 //==============================================================================
@@ -578,9 +625,9 @@ void SimulationData::createArrays()
         mInitialConstants = new double[mConstantsArray->size()];
         mInitialStates = new double[mStatesArray->size()];
     } else {
-        mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = 0;
-        mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = 0;
-        mDummyStates = mInitialConstants = mInitialStates = 0;
+        mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = nullptr;
+        mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = nullptr;
+        mDummyStates = mInitialConstants = mInitialStates = nullptr;
     }
 }
 
@@ -730,8 +777,8 @@ int SimulationData::gradientsCount() const
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
     mSimulation(pSimulation),
-    mDataStore(0),
-    mPoints(0),
+    mDataStore(nullptr),
+    mPoints(nullptr),
     mConstants(DataStore::DataStoreVariables()),
     mRates(DataStore::DataStoreVariables()),
     mStates(DataStore::DataStoreVariables()),
@@ -802,8 +849,8 @@ void SimulationResults::createDataStore()
 
     for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
-        DataStore::DataStoreValue *value = 0;
-        DataStore::DataStoreVariable *variable = 0;
+        DataStore::DataStoreValue *value = nullptr;
+        DataStore::DataStoreVariable *variable = nullptr;
 
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Voi:
@@ -865,9 +912,9 @@ void SimulationResults::deleteDataStore()
     // Reset our data store and our different data store variable/s
     // Note: this is in case we are not able to recreate a data store...
 
-    mDataStore = 0;
+    mDataStore = nullptr;
 
-    mPoints = 0;
+    mPoints = nullptr;
 
     mConstants = DataStore::DataStoreVariables();
     mRates = DataStore::DataStoreVariables();
@@ -966,7 +1013,7 @@ int SimulationResults::runsCount() const
 bool SimulationResults::addRun()
 {
     // Ask our data store to add a run to itself
-    // Note: we consider things to be fine if our data store have had no problem
+    // Note: we consider things to be fine if our data store has had no problems
     //       adding a run to itself or if the simulation size is zero...
 
     quint64 simulationSize = mSimulation->size();
@@ -1015,7 +1062,7 @@ double * SimulationResults::points(int pRun) const
 {
     // Return our points for the given run
 
-    return mPoints?mPoints->values(pRun):0;
+    return mPoints?mPoints->values(pRun):nullptr;
 }
 
 //==============================================================================
@@ -1024,7 +1071,7 @@ double * SimulationResults::constants(int pIndex, int pRun) const
 {
     // Return our constants data at the given index and for the given run
 
-    return mConstants.isEmpty()?0:mConstants[pIndex]->values(pRun);
+    return mConstants.isEmpty()?nullptr:mConstants[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1033,7 +1080,7 @@ double * SimulationResults::rates(int pIndex, int pRun) const
 {
     // Return our rates data at the given index and for the given run
 
-    return mRates.isEmpty()?0:mRates[pIndex]->values(pRun);
+    return mRates.isEmpty()?nullptr:mRates[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1042,7 +1089,7 @@ double * SimulationResults::states(int pIndex, int pRun) const
 {
     // Return our states data at the given index and for the given run
 
-    return mStates.isEmpty()?0:mStates[pIndex]->values(pRun);
+    return mStates.isEmpty()?nullptr:mStates[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1051,7 +1098,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 {
     // Return our algebraic data at the given index and for the given run
 
-    return mAlgebraic.isEmpty()?0:mAlgebraic[pIndex]->values(pRun);
+    return mAlgebraic.isEmpty()?nullptr:mAlgebraic[pIndex]->values(pRun);
 }
 
 //==============================================================================
@@ -1094,8 +1141,8 @@ DataStore::DataStoreVariables SimulationResults::algebraicVariables() const
 
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
-    mRuntime(0),
-    mWorker(0),
+    mRuntime(nullptr),
+    mWorker(nullptr),
     mWorkerFinishedEventLoop(new QEventLoop())
 {
     // Retrieve our file details
@@ -1269,8 +1316,8 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     // Retrieve our CellML and SED-ML files, as well as COMBINE archive
 
     mCellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-    mSedmlFile = mCellmlFile?0:SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName);
-    mCombineArchive = mSedmlFile?0:COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
+    mSedmlFile = mCellmlFile?nullptr:SEDMLSupport::SedmlFileManager::instance()->sedmlFile(mFileName);
+    mCombineArchive = mSedmlFile?nullptr:COMBINESupport::CombineFileManager::instance()->combineArchive(mFileName);
 
     // Determine the type of our file
 
@@ -1293,7 +1340,7 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     if (pRecreateRuntime) {
         delete mRuntime;
 
-        mRuntime = mCellmlFile?mCellmlFile->runtime(true):0;
+        mRuntime = mCellmlFile?mCellmlFile->runtime(true):nullptr;
     }
 }
 
@@ -1497,7 +1544,7 @@ bool Simulation::simulationSettingsOk(bool pEmitSignal)
 {
     // Check and return whether our simulation settings are sound
 
-    if (mData->startingPoint() == mData->endingPoint()) {
+    if (qIsNull(mData->startingPoint()-mData->endingPoint())) {
         if (pEmitSignal)
             emit error(tr("the starting and ending points cannot have the same value"));
 
@@ -1514,17 +1561,15 @@ bool Simulation::simulationSettingsOk(bool pEmitSignal)
 
 //==============================================================================
 
-double Simulation::size()
+quint64 Simulation::size()
 {
     // Return the size of our simulation (i.e. the number of data points that
     // should be generated), if possible
-    // Note: we return a double rather than a quint64 in case the simulation
-    //       requires an insane amount of memory...
 
     if (simulationSettingsOk(false))
-        return ceil((mData->endingPoint()-mData->startingPoint())/mData->pointInterval())+1.0;
+        return quint64(ceil((mData->endingPoint()-mData->startingPoint())/mData->pointInterval())+1.0);
     else
-        return 0.0;
+        return 0;
 }
 
 //==============================================================================
@@ -1618,11 +1663,11 @@ bool Simulation::stop()
 
 //==============================================================================
 
-bool Simulation::reset()
+bool Simulation::reset(bool pAll)
 {
     // Reset our data
 
-    mData->reset();
+    mData->reset(true, pAll);
 
     // Reset our worker
 

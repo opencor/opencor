@@ -67,7 +67,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mGraphsColumnWidths(QIntList()),
     mParametersColumnWidths(QIntList()),
     mGraphPanelSectionsExpanded(QMap<int, bool>()),
-    mSimulationWidget(0),
+    mSimulationWidget(nullptr),
     mSimulationWidgets(QMap<QString, SimulationExperimentViewSimulationWidget *>()),
     mFileNames(QStringList()),
     mSimulationResultsSizes(QMap<QString, quint64>())
@@ -259,7 +259,7 @@ void SimulationExperimentViewWidget::finalize(const QString &pFileName)
         // Next, we reset our memory of the simulation widget, if needed
 
         if (simulationWidget == mSimulationWidget)
-            mSimulationWidget = 0;
+            mSimulationWidget = nullptr;
     }
 }
 
@@ -320,19 +320,6 @@ void SimulationExperimentViewWidget::filePermissionsChanged(const QString &pFile
 
     if (simulationWidget)
         simulationWidget->filePermissionsChanged();
-}
-
-//==============================================================================
-
-void SimulationExperimentViewWidget::fileModified(const QString &pFileName)
-{
-    // Let the simulation widget, if any, associated with the given file name
-    // know that a file has been modified
-
-    SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
-
-    if (simulationWidget)
-        simulationWidget->fileModified();
 }
 
 //==============================================================================
@@ -474,7 +461,7 @@ SimulationSupport::Simulation * SimulationExperimentViewWidget::simulation(const
     if (simulationWidget)
         return simulationWidget->simulation();
     else
-        return 0;
+        return nullptr;
 }
 
 //==============================================================================
@@ -488,7 +475,7 @@ CellMLSupport::CellmlFileRuntime * SimulationExperimentViewWidget::runtime(const
     if (simulationWidget)
         return simulationWidget->simulation()->runtime();
     else
-        return 0;
+        return nullptr;
 }
 
 //==============================================================================

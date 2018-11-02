@@ -64,7 +64,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
     mName(name(pFileName)),
     mInfo(pInfo),
     mErrorMessage(pErrorMessage),
-    mInstance(0)
+    mInstance(nullptr)
 {
     if (pInfo) {
         // We are dealing with a plugin, so try to load it, but only if the user
@@ -235,7 +235,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                     if (unloadPlugin) {
                         pluginLoader.unload();
 
-                        mInstance = 0;
+                        mInstance = nullptr;
                     }
                 } else {
                     mStatus = NotLoaded;
@@ -401,9 +401,7 @@ int Plugin::pluginInfoVersion(const QString &pFileName)
     QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
-    QLibrary plugin(pFileName);
-
-    PluginInfoVersionFunc function = (PluginInfoVersionFunc) plugin.resolve("pluginInfoVersion");
+    PluginInfoVersionFunc function = reinterpret_cast<PluginInfoVersionFunc>(QLibrary::resolve(pFileName, "pluginInfoVersion"));
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
@@ -427,9 +425,7 @@ int Plugin::interfaceVersion(const QString &pFileName,
     QDir::setCurrent(QFileInfo(pFileName).canonicalPath());
 #endif
 
-    QLibrary plugin(pFileName);
-
-    InterfaceVersionFunc function = (InterfaceVersionFunc) plugin.resolve(qPrintable(pFunctionName));
+    InterfaceVersionFunc function = reinterpret_cast<InterfaceVersionFunc>(QLibrary::resolve(pFileName, qPrintable(pFunctionName)));
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
@@ -460,7 +456,7 @@ PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
 
     QLibrary plugin(pFileName);
 
-    PluginInfoFunc function = (PluginInfoFunc) plugin.resolve(qPrintable(name(pFileName)+"PluginInfo"));
+    PluginInfoFunc function = reinterpret_cast<PluginInfoFunc>(plugin.resolve(qPrintable(name(pFileName)+"PluginInfo")));
 
 #ifdef Q_OS_WIN
     QDir::setCurrent(origPath);
@@ -500,7 +496,7 @@ PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
             }
         }
 
-        return 0;
+        return nullptr;
     }
 }
 
