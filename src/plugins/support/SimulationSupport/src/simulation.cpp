@@ -441,10 +441,10 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     // Keep track of our constants (in case we don't want to reset them)
 
-    double *currentConstants = new double[runtime->constantsCount()] {};
+    double *currentConstants = new double[mConstantsArray->size()] {};
 
     if (!pAll)
-        memcpy(currentConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+        memcpy(currentConstants, mConstantsArray->data(), size_t(mConstantsArray->size()*Solver::SizeOfDouble));
 
     // Reset our parameter values
 
@@ -464,14 +464,14 @@ void SimulationData::reset(bool pInitialize, bool pAll)
     // Keep track of our various initial values
 
     if (pInitialize) {
-        memcpy(mInitialConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
-        memcpy(mInitialStates, mStates, size_t(runtime->statesCount()*Solver::SizeOfDouble));
+        memcpy(mInitialConstants, mConstantsArray->data(), size_t(mConstantsArray->size()*Solver::SizeOfDouble));
+        memcpy(mInitialStates, mStatesArray->data(), size_t(mStatesArray->size()*Solver::SizeOfDouble));
     }
 
     // Use our "current" constants, if needed
 
     if (!pAll)
-        memcpy(mConstants, currentConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+        memcpy(mConstantsArray->data(), currentConstants, size_t(mConstantsArray->size()*Solver::SizeOfDouble));
 
     delete[] currentConstants;
 
@@ -487,13 +487,6 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         delete nlaSolver;
 
         Solver::unsetNlaSolver(runtime->address());
-    }
-
-    // Keep track of our various initial values
-
-    if (pInitialize) {
-        memcpy(mInitialConstants, mConstantsArray->data(), mConstantsArray->size()*Solver::SizeOfDouble);
-        memcpy(mInitialStates, mStatesArray->data(), mStatesArray->size()*Solver::SizeOfDouble);
     }
 
     // Let people know whether our data is 'cleaned', i.e. not modified, and ask
@@ -549,14 +542,15 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
     //       than our constants...
 
     for (int i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
-        if (!qIsNull(mStates[i]-mInitialStates[i]))
+        if (!qIsNull(mStatesArray->data(i)-mInitialStates[i]))
             return true;
     }
 
     if (pCheckConstants) {
         for (int i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
-            if (!qIsNull(mConstants[i]-mInitialConstants[i]))
+            if (!qIsNull(mConstantsArray->data(i)-mInitialConstants[i]))
                 return true;
+        }
     }
 
     return false;

@@ -326,7 +326,6 @@ private slots:
     void removeAllGraphPanels();
     void resetStateModelParameters();
     void resetAllModelParameters();
-    void clearSimulationResults();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();
     void preferences();

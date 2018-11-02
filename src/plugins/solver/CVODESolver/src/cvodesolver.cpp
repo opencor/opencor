@@ -117,7 +117,7 @@ CvodeSolver::CvodeSolver() :
     mLinearSolver(nullptr),
     mUserData(nullptr),
     mSensitivityVectors(nullptr),
-    mSensitivityVectorsSize(nullptr),
+    mSensitivityVectorsSize(0),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
