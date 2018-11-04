@@ -215,9 +215,9 @@ void GraphPanelPlotGraphRun::setRawSamples(const double *pDataX,
 {
     // Set the given raw samples and keep track of those that are valid
 
-    static const QPair<int, int> EmptyValidData = QPair<int, int>();
+    static const QPair<int, int> EmptyData = QPair<int, int>(-1, -1);
 
-    QPair<int, int> validData = EmptyValidData;
+    QPair<int, int> validData = EmptyData;
 
     if (!mValidData.isEmpty()) {
         validData = mValidData.last();
@@ -228,7 +228,7 @@ void GraphPanelPlotGraphRun::setRawSamples(const double *pDataX,
     for (int i = mSize; i < pSize; ++i) {
         if (   !qIsInf(pDataX[i]) && !qIsNaN(pDataX[i])
             && !qIsInf(pDataY[i]) && !qIsNaN(pDataY[i])) {
-            if (validData == EmptyValidData) {
+            if (validData == EmptyData) {
                 validData.first = i;
                 validData.second = i;
             } else if (validData.second == i-1) {
@@ -242,7 +242,7 @@ void GraphPanelPlotGraphRun::setRawSamples(const double *pDataX,
         }
     }
 
-    if (validData != EmptyValidData)
+    if (validData != EmptyData)
         mValidData << validData;
 
     mSize = pSize;
