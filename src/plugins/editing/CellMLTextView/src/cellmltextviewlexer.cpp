@@ -441,7 +441,7 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
                 "init|pub|priv"
             ")\\b");
 
-        static const QRegularExpression ParameterValueKeywordsRegEx = QRegularExpression(
+        static const QRegularExpression ParameterCellmlKeywordsRegEx = QRegularExpression(
             "\\b("
                 // Unit prefixes
 
@@ -465,7 +465,7 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
 
         if (pParameterBlock) {
             styleTextRegEx(pBytesStart, pText, ParameterKeywordsRegEx, ParameterKeyword);
-            styleTextRegEx(pBytesStart, pText, ParameterValueKeywordsRegEx, ParameterCellmlKeyword);
+            styleTextRegEx(pBytesStart, pText, ParameterCellmlKeywordsRegEx, ParameterCellmlKeyword);
         } else {
             styleTextRegEx(pBytesStart, pText, KeywordsRegEx, Keyword);
             styleTextRegEx(pBytesStart, pText, CellmlKeywordsRegEx, CellmlKeyword);
