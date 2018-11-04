@@ -215,7 +215,7 @@ void GraphPanelPlotGraphRun::setRawSamples(const double *pDataX,
 {
     // Set the given raw samples and keep track of those that are valid
 
-    static const QPair<int, int> EmptyData = QPair<int, int>();
+    static const QPair<int, int> EmptyData = QPair<int, int>(-1, -1);
 
     QPair<int, int> validData = EmptyData;
 
