@@ -78,6 +78,7 @@ private:
 
 private slots:
     void pmrUrlValueCurrentTextChanged(const QString &pCurrentText);
+    void noteValueLinkActivated(const QString &pLink);
 };
 
 //==============================================================================

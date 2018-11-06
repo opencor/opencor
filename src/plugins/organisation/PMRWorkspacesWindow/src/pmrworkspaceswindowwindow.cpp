@@ -175,7 +175,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Some connections to process responses from our PMR web service
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, &PmrWorkspacesWindowWindow::busy);
+            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWorkspacesWindowWindow::showInformation);
@@ -292,10 +292,16 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
     // Update both our PMR web service and workspaces widget, and then update
     // our GUI (which will, as a result, also update our workspaces widget), if
     // needed
+    // Note: we make sure that no busy widget is visible. Indeed, this is in
+    //       case an instance wasn't working and we decided to switch to another
+    //       that does (in which case the busy widget of the first instance
+    //       would still have been visible)...
 
     if (pPmrUrl.compare(mPmrUrl)) {
         if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
             mPmrWorkspacesWindowWidget->initialize();
+
+        busy(false, true);
 
         mPmrUrl = pPmrUrl;
 
@@ -310,7 +316,7 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::busy(bool pBusy)
+void PmrWorkspacesWindowWindow::busy(bool pBusy, bool pResetCounter)
 {
     // Show ourselves as busy or not busy anymore
 
@@ -319,7 +325,10 @@ void PmrWorkspacesWindowWindow::busy(bool pBusy)
     if (!pBusy && !counter)
         return;
 
-    counter += pBusy?1:-1;
+    if (pResetCounter)
+        counter = 0;
+    else
+        counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
         mGui->dockWidgetContents->setEnabled(false);
@@ -332,6 +341,15 @@ void PmrWorkspacesWindowWindow::busy(bool pBusy)
 
         mPmrWorkspacesWindowWidget->hideBusyWidget();
     }
+}
+
+//==============================================================================
+
+void PmrWorkspacesWindowWindow::busy(bool pBusy)
+{
+    // Show ourselves as busy or not busy anymore
+
+    busy(pBusy, false);
 }
 
 //==============================================================================

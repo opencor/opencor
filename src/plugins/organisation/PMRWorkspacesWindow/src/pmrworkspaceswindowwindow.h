@@ -105,6 +105,8 @@ private:
 
     void retranslateActionPmr();
 
+    void busy(bool pBusy, bool pResetCounter);
+
 private slots:
     void actionNewTriggered();
     void actionReloadTriggered();
