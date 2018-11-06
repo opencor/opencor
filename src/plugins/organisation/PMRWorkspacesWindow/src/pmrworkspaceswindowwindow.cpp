@@ -459,7 +459,7 @@ void PmrWorkspacesWindowWindow::retranslateActionPmr()
                                          tr("Log Off"):
                                          tr("Log On"),
                                      mAuthenticated?
-                                         tr("Log off PMR"):
+                                         tr("Log off from PMR"):
                                          tr("Log on to PMR"));
 }
 
