@@ -94,6 +94,8 @@ private:
 
     void retrieveExposures(bool pVisible, bool pForceRetrieval);
 
+    void busy(bool pBusy, bool pResetCounter);
+
 private slots:
     void actionReloadTriggered();
 

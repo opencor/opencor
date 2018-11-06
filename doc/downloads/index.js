@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Graph Panel widget:</strong> don't skip the first data point (see issue <a href=\"https://github.com/opencor/opencor/issues/1860\">#1860</a>)." }
+                       { "change": "<strong>Graph Panel widget:</strong> don't skip the first data point (see issue <a href=\"https://github.com/opencor/opencor/issues/1860\">#1860</a>)." },
+                       { "change": "<strong>PMR-based windows:</strong> make sure that the spinning wheel is hidden when changing instances of PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1862\">#1862</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,

@@ -12,8 +12,8 @@
         <translation>le site de transit est sélectionné. Il est utilisé pour publiquement tester/prévisualiser les développements de PMR. Les données sur ce site sont effacées périodiquement chaque fois qu&apos;un nouveau test/aperçu public de la suite logicielle PMR est publié pour l&apos;exercice de test requis.</translation>
     </message>
     <message>
-        <source>the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the cellml-discussion mailing list.</source>
-        <translation>le site d&apos;enseignement est sélectionné. Les fonctionnalités de ce site devraient correspondre à celles du site principal, mais sans les garanties de persistance des données. Bien que les données sur ce site ne soient pas non plus permanentes, tout effacement des données stockées sera annoncé sur la liste de discussion cellml-discussion.</translation>
+        <source>the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;cellml-discussion mailing list&lt;/a&gt;.</source>
+        <translation>le site d&apos;enseignement est sélectionné. Les fonctionnalités de ce site devraient correspondre à celles du site principal, mais sans les garanties de persistance des données. Bien que les données sur ce site ne soient pas non plus permanentes, tout effacement des données stockées sera annoncé sur la &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;liste de discussion cellml-discussion&lt;/a&gt;.</translation>
     </message>
 </context>
 <context>
