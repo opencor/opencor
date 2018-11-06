@@ -29,7 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QSettings>
+#include <QUrl>
 
 //==============================================================================
 
@@ -53,6 +55,8 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
 
     connect(mGui->pmrUrlValue, &QComboBox::currentTextChanged,
             this, &PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged);
+    connect(mGui->noteValue, &QLabel::linkActivated,
+            this, &PmrSupportPreferencesWidget::noteValueLinkActivated);
 
     mGui->pmrUrlValue->addItems(QStringList() << SettingsPreferencesPmrUrlDefault
                                               << StagingInstance
@@ -127,11 +131,20 @@ void PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged(const QString &p
     else if (!pCurrentText.compare(StagingInstance))
         mGui->noteValue->setText(tr("the staging site is selected. It is used for public testing/preview of PMR developments. Data on this site is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise."));
     else if (!pCurrentText.compare(TeachingInstance))
-        mGui->noteValue->setText(tr("the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the cellml-discussion mailing list."));
+        mGui->noteValue->setText(tr("the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the <a href=\"https://lists.cellml.org/sympa/info/cellml-discussion\">cellml-discussion mailing list</a>."));
     else
         mGui->noteValue->setText(QString());
 
     mGui->noteLabel->setVisible(!mGui->noteValue->text().isEmpty());
+}
+
+//==============================================================================
+
+void PmrSupportPreferencesWidget::noteValueLinkActivated(const QString &pLink)
+{
+    // Open the link in the user's browser
+
+    QDesktopServices::openUrl(pLink);
 }
 
 //==============================================================================
