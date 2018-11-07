@@ -94,6 +94,8 @@ private:
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mPmrWorkspacesWindowWidget;
 
+    bool mFirstTimeRetrievingWorkspaces;
+
     QString mPmrUrl;
 
     bool mAuthenticated;
