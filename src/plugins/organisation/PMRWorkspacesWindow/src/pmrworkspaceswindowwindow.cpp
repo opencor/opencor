@@ -61,6 +61,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mInitialized(false),
     mSettingsGroup(QString()),
+    mFirstTimeRetrievingWorkspaces(true),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
 {
@@ -303,6 +304,8 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
         busy(false, true);
 
+        mFirstTimeRetrievingWorkspaces = true;
+
         mPmrUrl = pPmrUrl;
 
         mPmrWebService->update(pPmrUrl);
@@ -412,10 +415,8 @@ void PmrWorkspacesWindowWindow::retrieveWorkspaces(bool pVisible)
     // Note: this will result in the workspace list being populated if we are
     //       authenticated with PMR...
 
-    static bool firstTime = true;
-
-    if (pVisible && firstTime) {
-        firstTime = false;
+    if (pVisible && mFirstTimeRetrievingWorkspaces) {
+        mFirstTimeRetrievingWorkspaces = false;
 
         QTimer::singleShot(0, this, &PmrWorkspacesWindowWindow::updateGui);
     }

@@ -84,6 +84,8 @@ private:
 
     QLabel *mPmrInstanceLabel;
 
+    bool mFirstTimeRetrievingExposures;
+
     QString mPmrUrl;
 
     PMRSupport::PmrWebService *mPmrWebService;
