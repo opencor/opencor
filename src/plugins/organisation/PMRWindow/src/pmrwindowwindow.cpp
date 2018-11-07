@@ -52,6 +52,7 @@ namespace PMRWindow {
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWindowWindow),
+    mFirstTimeRetrievingExposures(true),
     mItemDoubleClicked(false)
 {
     // Set up the GUI
@@ -234,6 +235,8 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
 
         busy(false, true);
 
+        mFirstTimeRetrievingExposures = true;
+
         mPmrUrl = pPmrUrl;
 
         mPmrWebService->update(pPmrUrl);
@@ -384,10 +387,8 @@ void PmrWindowWindow::retrieveExposures(bool pVisible, bool pForceRetrieval)
     // to allow other events, such as the one asking OpenCOR's main window to
     // resize itself, to be handled properly)
 
-    static bool firstTime = true;
-
-    if (pVisible && (firstTime || pForceRetrieval)) {
-        firstTime = false;
+    if (pVisible && (mFirstTimeRetrievingExposures || pForceRetrieval)) {
+        mFirstTimeRetrievingExposures = false;
 
         QTimer::singleShot(0, this, &PmrWindowWindow::actionReloadTriggered);
     }
