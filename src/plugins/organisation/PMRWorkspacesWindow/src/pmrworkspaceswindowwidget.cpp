@@ -804,8 +804,6 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
                     // The workspace is not known, so forget about it
 
                     mClonedWorkspaceFolderUrls.remove(urlsIterator.value().first);
-
-                    urlsIterator.remove();
                 }
             }
         }
