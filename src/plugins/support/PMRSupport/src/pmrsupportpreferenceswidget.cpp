@@ -127,11 +127,11 @@ void PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged(const QString &p
     // Update our PMR URL note based on the PMR URL that is currently selected
 
     if (!pCurrentText.compare(SettingsPreferencesPmrUrlDefault))
-        mGui->noteValue->setText(tr("the primary site is selected. Everything on this site is permanent and persistent. It is always up and always stable."));
+        mGui->noteValue->setText(tr("the primary instance is selected. Everything on this instance is permanent and persistent. It is always up and always stable."));
     else if (!pCurrentText.compare(StagingInstance))
-        mGui->noteValue->setText(tr("the staging site is selected. It is used for public testing/preview of PMR developments. Data on this site is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise."));
+        mGui->noteValue->setText(tr("the staging instance is selected. It is used for public testing/preview of PMR developments. Data on this instance is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise."));
     else if (!pCurrentText.compare(TeachingInstance))
-        mGui->noteValue->setText(tr("the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the <a href=\"https://lists.cellml.org/sympa/info/cellml-discussion\">cellml-discussion mailing list</a>."));
+        mGui->noteValue->setText(tr("the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the <a href=\"https://lists.cellml.org/sympa/info/cellml-discussion\">cellml-discussion mailing list</a>."));
     else
         mGui->noteValue->setText(QString());
 
