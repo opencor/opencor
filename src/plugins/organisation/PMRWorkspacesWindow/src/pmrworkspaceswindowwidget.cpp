@@ -293,7 +293,7 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     static const QIcon StagedIcon = QIcon(":/PMRWorkspacesWindow/iQ.png");
     static const QIcon UnstagedIcon = QIcon(":/PMRWorkspacesWindow/wQ.png");
-    static const QIcon ConflictIcon = QIcon(":/PMRWorkspacesWindow/wE.png");
+    static const QIcon ConflictIcon = QIcon(":/PMRWorkspacesWindow/gC.png");
 
     mCollapsedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     mExpandedWorkspaceIcon = Core::standardIcon(QStyle::SP_DirOpenIcon);
@@ -366,6 +366,13 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
 
     overlayIconSize = int(0.57*fileIconSize);
 
+    mGcFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/gC.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mGiFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/gI.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+
     mIaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iA.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
@@ -373,9 +380,6 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
     mImFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iM.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mIqFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iQ.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
     mIrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/iR.png"),
@@ -388,25 +392,19 @@ PmrWorkspacesWindowWidget::PmrWorkspacesWindowWidget(const QString &pPmrUrl,
     mWaFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wA.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
-    mWcFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wC.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
     mWdFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wD.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
-    mWeFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wE.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
     mWmFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wM.png"),
-                                      fileIconSize, fileIconSize,
-                                      0, 0, overlayIconSize, overlayIconSize);
-    mWqFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wQ.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
     mWrFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wR.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
     mWtFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wT.png"),
+                                      fileIconSize, fileIconSize,
+                                      0, 0, overlayIconSize, overlayIconSize);
+    mWuFileIcon = Core::overlayedIcon(mFileIcon, QIcon(":/PMRWorkspacesWindow/wU.png"),
                                       fileIconSize, fileIconSize,
                                       0, 0, overlayIconSize, overlayIconSize);
 
@@ -1097,34 +1095,40 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
 
             QIcon icon = mFileIcon;
 
-            if (iStatus == 'A')
+            // Git status
+
+            if (wStatus == 'C')
+                icon = mGcFileIcon;
+            else if (wStatus == 'I')
+                icon = mGiFileIcon;
+
+            // iStatus
+
+            else if (iStatus == 'A')
                 icon = mIaFileIcon;
             else if (iStatus == 'D')
                 icon = mIdFileIcon;
             else if (iStatus == 'M')
                 icon = mImFileIcon;
-            else if (iStatus == 'Q')
-                icon = mIqFileIcon;
             else if (iStatus == 'R')
                 icon = mIrFileIcon;
             else if (iStatus == 'T')
                 icon = mItFileIcon;
+
+            // wStatus
+
             else if (wStatus == 'A')
                 icon = mWaFileIcon;
-            else if (wStatus == 'C')
-                icon = mWcFileIcon;
             else if (wStatus == 'D')
                 icon = mWdFileIcon;
-            else if (wStatus == 'E')
-                icon = mWeFileIcon;
             else if (wStatus == 'M')
                 icon = mWmFileIcon;
-            else if (wStatus == 'Q')
-                icon = mWqFileIcon;
             else if (wStatus == 'R')
                 icon = mWrFileIcon;
             else if (wStatus == 'T')
                 icon = mWtFileIcon;
+            else if (wStatus == 'U')
+                icon = mWuFileIcon;
 
             pIsStaged =    pIsStaged
                         || (    (iStatus != nullptr) && (iStatus != ' ')

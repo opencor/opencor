@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/PMRWorkspacesWindow">
         <file>diff.html</file>
+        <file>gC.png</file>
+        <file>gI.png</file>
         <file>iA.png</file>
         <file>iD.png</file>
         <file>iM.png</file>
@@ -10,12 +12,11 @@
         <file>pull.png</file>
         <file>synchronize.png</file>
         <file>wA.png</file>
-        <file>wC.png</file>
         <file>wD.png</file>
-        <file>wE.png</file>
         <file>wM.png</file>
         <file>wQ.png</file>
         <file>wR.png</file>
         <file>wT.png</file>
+        <file>wU.png</file>
     </qresource>
 </RCC>

@@ -502,7 +502,7 @@ CharPair PmrWorkspace::gitStatusChars(uint pFlags) const
         return CharPair(' ', 'C');
 
     if (pFlags & GIT_STATUS_IGNORED)
-        return CharPair(' ', '!');
+        return CharPair(' ', 'I');
 
     // iStatus
 
@@ -533,6 +533,8 @@ CharPair PmrWorkspace::gitStatusChars(uint pFlags) const
         wStatus = 'M';
     else if (pFlags & GIT_STATUS_WT_NEW)
         wStatus = 'A';
+    else if (pFlags & GIT_STATUS_WT_UNREADABLE)
+        wStatus = 'U';
 
     return CharPair(iStatus, wStatus);
 }

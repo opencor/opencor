@@ -248,21 +248,21 @@ private:
 
     QIcon mFileIcon;
 
+    QIcon mGcFileIcon;
+    QIcon mGiFileIcon;
+
     QIcon mIaFileIcon;
     QIcon mIdFileIcon;
     QIcon mImFileIcon;
-    QIcon mIqFileIcon;
     QIcon mIrFileIcon;
     QIcon mItFileIcon;
 
     QIcon mWaFileIcon;
-    QIcon mWcFileIcon;
     QIcon mWdFileIcon;
-    QIcon mWeFileIcon;
     QIcon mWmFileIcon;
-    QIcon mWqFileIcon;
     QIcon mWrFileIcon;
     QIcon mWtFileIcon;
+    QIcon mWuFileIcon;
 
     void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
                     MessageType pMessageType, const QString &pMessage,
