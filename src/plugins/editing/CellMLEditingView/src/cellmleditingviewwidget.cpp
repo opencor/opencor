@@ -75,7 +75,7 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, &QSplitter::splitterMoved,
+    connect(this, &Core::SplitterWidget::splitterMoved,
             this, &CellmlEditingViewWidget::splitterMoved);
 
     // Create our MathML viewer, editor and editor list widgets
