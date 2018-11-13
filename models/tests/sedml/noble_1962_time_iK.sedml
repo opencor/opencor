@@ -148,11 +148,12 @@
                 <curve id="curve1_1" logX="false" logY="false" xDataReference="xDataGenerator1_1" yDataReference="yDataGenerator1_1">
                     <annotation>
                         <properties xmlns="http://www.opencor.ws/">
+                            <selected>true</selected>
                             <title/>
                             <line>
                                 <style>solid</style>
-                                <width>1</width>
-                                <color>#000080</color>
+                                <width>2</width>
+                                <color>#0072bd</color>
                             </line>
                             <symbol>
                                 <style>none</style>
@@ -212,11 +213,12 @@
                 <curve id="curve2_1" logX="true" logY="false" xDataReference="xDataGenerator2_1" yDataReference="yDataGenerator2_1">
                     <annotation>
                         <properties xmlns="http://www.opencor.ws/">
+                            <selected>true</selected>
                             <title/>
                             <line>
                                 <style>solid</style>
-                                <width>1</width>
-                                <color>#000080</color>
+                                <width>2</width>
+                                <color>#0072bd</color>
                             </line>
                             <symbol>
                                 <style>none</style>
@@ -276,11 +278,12 @@
                 <curve id="curve3_1" logX="false" logY="true" xDataReference="xDataGenerator3_1" yDataReference="yDataGenerator3_1">
                     <annotation>
                         <properties xmlns="http://www.opencor.ws/">
+                            <selected>true</selected>
                             <title/>
                             <line>
                                 <style>solid</style>
-                                <width>1</width>
-                                <color>#000080</color>
+                                <width>2</width>
+                                <color>#0072bd</color>
                             </line>
                             <symbol>
                                 <style>none</style>
@@ -340,11 +343,12 @@
                 <curve id="curve4_1" logX="true" logY="true" xDataReference="xDataGenerator4_1" yDataReference="yDataGenerator4_1">
                     <annotation>
                         <properties xmlns="http://www.opencor.ws/">
+                            <selected>true</selected>
                             <title/>
                             <line>
                                 <style>solid</style>
-                                <width>1</width>
-                                <color>#000080</color>
+                                <width>2</width>
+                                <color>#0072bd</color>
                             </line>
                             <symbol>
                                 <style>none</style>
