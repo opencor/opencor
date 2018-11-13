@@ -156,7 +156,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     static const int ResetIconWidth = ResetIcon.availableSizes().first().width();
     static const int ResetIconHeight = ResetIcon.availableSizes().first().height();
 
-
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
