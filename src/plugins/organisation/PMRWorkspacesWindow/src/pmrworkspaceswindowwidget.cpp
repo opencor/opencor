@@ -1063,6 +1063,10 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
                 << populateWorkspace(pWorkspace, folderItem, fileNode,
                                      isStaged, isUnstaged, hasConflicts);
 
+            pIsStaged = pIsStaged || isStaged;
+            pIsUnstaged = pIsUnstaged || isUnstaged;
+            pHasConflicts = pHasConflicts || hasConflicts;
+
             folderItem->setCollapsedIcon(hasConflicts?
                                              mConflictCollapsedWorkspaceIcon:
                                              isUnstaged?
@@ -1568,10 +1572,12 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
         //       current state...
 
         PMRSupport::PmrWorkspace *workspace = currentItem()->workspace();
+        PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspace->gitWorkspaceStatus();
         bool needRequestWorkspaceSynchronize = false;
 
-        if (   (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusStaged)
-            || (workspace->gitWorkspaceStatus() & PMRSupport::PmrWorkspace::StatusUnstaged)) {
+        if (   (    workspace->isOwned()
+                && (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged))
+            || (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)) {
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
@@ -1592,6 +1598,12 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
                     }
                 settings.endGroup();
             settings.endGroup();
+        } else if (    workspace->isOwned()
+                   && (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)) {
+            // Something went wrong during a previous synchronisation (and the
+            // Git push didn't work), so try again
+
+            needRequestWorkspaceSynchronize = true;
         }
 
         if (needRequestWorkspaceSynchronize)
