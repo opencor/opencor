@@ -1063,6 +1063,10 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
                 << populateWorkspace(pWorkspace, folderItem, fileNode,
                                      isStaged, isUnstaged, hasConflicts);
 
+            pIsStaged = pIsStaged || isStaged;
+            pIsUnstaged = pIsUnstaged || isUnstaged;
+            pHasConflicts = pHasConflicts || hasConflicts;
+
             folderItem->setCollapsedIcon(hasConflicts?
                                              mConflictCollapsedWorkspaceIcon:
                                              isUnstaged?
