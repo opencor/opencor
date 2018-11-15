@@ -502,7 +502,7 @@ CharPair PmrWorkspace::gitStatusChars(uint pFlags) const
         return CharPair(' ', 'C');
 
     if (pFlags & GIT_STATUS_IGNORED)
-        return CharPair(' ', '!');
+        return CharPair(' ', 'I');
 
     // iStatus
 
@@ -533,6 +533,8 @@ CharPair PmrWorkspace::gitStatusChars(uint pFlags) const
         wStatus = 'M';
     else if (pFlags & GIT_STATUS_WT_NEW)
         wStatus = 'A';
+    else if (pFlags & GIT_STATUS_WT_UNREADABLE)
+        wStatus = 'U';
 
     return CharPair(iStatus, wStatus);
 }
@@ -620,7 +622,7 @@ void PmrWorkspace::refreshStatus()
                                                nullptr;
 
                 if (filePath) {
-                    CharPair statusChars = gitStatusChars(status->status);
+                    CharPair statusChars = gitStatusChars(uint(status->status));
 
                     if (statusChars.first != ' ')
                         ++mStagedCount;
@@ -910,7 +912,7 @@ void PmrWorkspace::stageFile(const QString &pPath, bool pStage)
                             memset(&indexEntry, '\0', sizeof(git_index_entry));
 
                             indexEntry.id = *git_tree_entry_id(headEntry);
-                            indexEntry.mode = git_tree_entry_filemode(headEntry);
+                            indexEntry.mode = uint32_t(git_tree_entry_filemode(headEntry));
                             indexEntry.path = relativePath;
 
                             git_index_add(index, &indexEntry);

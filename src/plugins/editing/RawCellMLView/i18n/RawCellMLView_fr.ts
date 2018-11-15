@@ -19,8 +19,8 @@
         <translation>Les problèmes mentionnés ci-dessous peuvent être en rapport avec ce fichier CellML et/ou avec un ou plusieurs de ses fichiers CellML qui ont été (in)directement importés.</translation>
     </message>
     <message>
-        <source>the &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;CellML validation service&lt;/a&gt; is known to have limitations and may therefore incorrectly (in)validate certain CellML files.</source>
-        <translation>le &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;service de validation CellML&lt;/a&gt; est connu pour avoir des problèmes et peut donc incorrectement (in)valider certains fichiers CellML.</translation>
+        <source>the &lt;a href=&quot;https://github.com/cellmlapi/cellml-api/&quot;&gt;CellML validation service&lt;/a&gt; is known to have limitations and may therefore incorrectly (in)validate certain CellML files.</source>
+        <translation>le &lt;a href=&quot;https://github.com/cellmlapi/cellml-api/&quot;&gt;service de validation CellML&lt;/a&gt; est connu pour avoir des problèmes et peut donc incorrectement (in)valider certains fichiers CellML.</translation>
     </message>
 </context>
 </TS>

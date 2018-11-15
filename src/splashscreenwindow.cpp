@@ -129,38 +129,33 @@ void SplashScreenWindow::closeAndDeleteAfter(QWidget *pWindow)
 {
     // Wait for our window to expose itself
 
-    if (pWindow) {
-        QWindow *window = pWindow->windowHandle();
+    enum {
+        TimeOut = 1000,
+        ShortDelay = 10
+    };
 
-        if (window) {
-            enum {
-                TimeOut = 1000,
-                ShortDelay = 10
-            };
-
-            QElapsedTimer timer;
+    QWindow *window = pWindow->windowHandle();
+    QElapsedTimer timer;
 #ifndef Q_OS_WIN
-            struct timespec shortDelaySpec = { ShortDelay/1000, 1000000*(ShortDelay%1000) };
+    struct timespec shortDelaySpec = { ShortDelay/1000, 1000000*(ShortDelay%1000) };
 #endif
 
-            timer.start();
+    timer.start();
 
-            while (!window->isExposed()) {
-                int remaining = int(TimeOut-timer.elapsed());
+    while (!window->isExposed()) {
+        int remaining = int(TimeOut-timer.elapsed());
 
-                if (remaining <= 0)
-                    break;
+        if (remaining <= 0)
+            break;
 
-                QCoreApplication::processEvents(QEventLoop::AllEvents, remaining);
-                QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, remaining);
+        QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
 
 #ifdef Q_OS_WIN
-                Sleep(ShortDelay);
+        Sleep(ShortDelay);
 #else
-                nanosleep(&shortDelaySpec, nullptr);
+        nanosleep(&shortDelaySpec, nullptr);
 #endif
-            }
-        }
     }
 
     // Close ourselves with a bit of a delay

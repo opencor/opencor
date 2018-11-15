@@ -84,6 +84,8 @@ private:
 
     QLabel *mPmrInstanceLabel;
 
+    bool mFirstTimeRetrievingExposures;
+
     QString mPmrUrl;
 
     PMRSupport::PmrWebService *mPmrWebService;
@@ -93,6 +95,8 @@ private:
     bool mItemDoubleClicked;
 
     void retrieveExposures(bool pVisible, bool pForceRetrieval);
+
+    void busy(bool pBusy, bool pResetCounter);
 
 private slots:
     void actionReloadTriggered();

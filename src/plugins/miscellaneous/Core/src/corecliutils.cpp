@@ -261,6 +261,45 @@ QString sizeAsString(quint64 pSize, int pPrecision)
 
 //==============================================================================
 
+QString formatTime(qint64 pTime)
+{
+    // Convert the given time (in milliseconds) to a string and return it
+    // Note: we must not use floating point divisions as it may yield some
+    //       unexpected results (not sure whether it's on some machines, with
+    //       some compilers and/or with a release/debug mode). For example, to
+    //       compute the number of hours, we might want to do something like
+    //          int h = int(pTime/3600000.0) % 24;
+    //       but in some cases this will give 0 for pTime=3600000 while it
+    //       should clearly give 1, hence the approach used below...
+
+    QString res = QString();
+    qint64 time = pTime;
+    int ms = time % 1000; time = (time-ms)/1000;
+    int s  = time %   60; time = (time-s)/60;
+    int m  = time %   60; time = (time-m)/60;
+    int h  = time %   24; time = (time-h)/24;
+    int d  = int(time);
+
+    if (d || ((h || m || s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(d)+QObject::tr("d");
+
+    if (h || ((m || s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(h)+QObject::tr("h");
+
+    if (m || ((s || ms) && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(m)+QObject::tr("m");
+
+    if (s || (ms && !res.isEmpty()))
+        res += (res.isEmpty()?QString():" ")+QString::number(s)+QObject::tr("s");
+
+    if (ms || res.isEmpty())
+        res += (res.isEmpty()?QString():" ")+QString::number(ms)+QObject::tr("ms");
+
+    return res;
+}
+
+//==============================================================================
+
 QString sha1(const QByteArray &pByteArray)
 {
     // Return the SHA-1 value of the given byte array

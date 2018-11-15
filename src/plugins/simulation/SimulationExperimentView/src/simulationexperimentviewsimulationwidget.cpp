@@ -151,12 +151,18 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     // Create, customise and handle various actions
 
+    static const QIcon ResetIcon = QIcon(":/oxygen/actions/view-refresh.png");
+
+    static const int ResetIconWidth = ResetIcon.availableSizes().first().width();
+    static const int ResetIconHeight = ResetIcon.availableSizes().first().height();
+
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
                                             QKeySequence(Qt::ControlModifier|Qt::Key_F2), mToolBarWidget);
-    mResetModelParametersAction = Core::newAction(QIcon(":/oxygen/actions/view-refresh.png"),
-                                                  mToolBarWidget);
+    mResetStateModelParametersAction = Core::newAction(Core::tintedIcon(ResetIcon, ResetIconWidth, ResetIconHeight, Qt::darkBlue),
+                                                        mToolBarWidget);
+    mResetAllModelParametersAction = Core::newAction(ResetIcon, mToolBarWidget);
     mClearSimulationResultsAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
                                                     mToolBarWidget);
     mDevelopmentModeAction = Core::newAction(true, QIcon(":/oxygen/actions/run-build-configure.png"),
@@ -189,8 +195,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::runPauseResumeSimulation);
     connect(mStopSimulationAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::stopSimulation);
-    connect(mResetModelParametersAction, &QAction::triggered,
-            this, &SimulationExperimentViewSimulationWidget::resetModelParameters);
+    connect(mResetStateModelParametersAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::resetStateModelParameters);
+    connect(mResetAllModelParametersAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::resetAllModelParameters);
     connect(mClearSimulationResultsAction, &QAction::triggered,
             this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::clearSimulationResults));
     connect(mDevelopmentModeAction, &QAction::triggered,
@@ -335,7 +343,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addAction(mRunPauseResumeSimulationAction);
     mToolBarWidget->addAction(mStopSimulationAction);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mResetModelParametersAction);
+    mToolBarWidget->addAction(mResetStateModelParametersAction);
+    mToolBarWidget->addAction(mResetAllModelParametersAction);
+    mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mClearSimulationResultsAction);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(mDelayWidget);
@@ -532,7 +542,9 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                      tr("Run the simulation"));
     I18nInterface::retranslateAction(mStopSimulationAction, tr("Stop Simulation"),
                                      tr("Stop the simulation"));
-    I18nInterface::retranslateAction(mResetModelParametersAction, tr("Reset Model Parameters"),
+    I18nInterface::retranslateAction(mResetStateModelParametersAction, tr("Reset State Model Parameters"),
+                                     tr("Reset the state model parameters"));
+    I18nInterface::retranslateAction(mResetAllModelParametersAction, tr("Reset All Model Parameters"),
                                      tr("Reset all the model parameters"));
     I18nInterface::retranslateAction(mClearSimulationResultsAction, tr("Clear Simulation Results"),
                                      tr("Clear the simulation results"));
@@ -940,7 +952,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             //       simulation mode, so we are fine...
 
             if (pReloadingView)
-                clearSimulationResults(false);
+                clearSimulationResults();
             else
                 updateSimulationMode();
 
@@ -1252,16 +1264,6 @@ void SimulationExperimentViewSimulationWidget::filePermissionsChanged()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::fileModified()
-{
-    // Update our reset action, but only if we are dealing with a CellML file
-
-    if (mSimulation->fileType() == SimulationSupport::Simulation::CellmlFile)
-        mResetModelParametersAction->setEnabled(Core::FileManager::instance()->isModified(mSimulation->fileName()));
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::fileReloaded()
 {
     // The given file has been reloaded, so reload ourselves, i.e. finalise and
@@ -1365,16 +1367,25 @@ void SimulationExperimentViewSimulationWidget::stopSimulation()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::resetModelParameters()
+void SimulationExperimentViewSimulationWidget::resetStateModelParameters()
 {
-    // Reset our model parameters
+    // Reset our state model parameters
+
+    mSimulation->reset(false);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::resetAllModelParameters()
+{
+    // Reset all our model parameters
 
     mSimulation->reset();
 }
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pCheckSimulationResults)
+void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 {
     setUpdatesEnabled(false);
         // Clear our simulation results
@@ -1385,22 +1396,12 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults(bool pChec
 
         mSimulation->results()->reset();
 
-        // Update our simulation mode and check for results, if requested
+        // Update our simulation mode and check for results
 
         updateSimulationMode();
 
-        if (pCheckSimulationResults)
-            mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
     setUpdatesEnabled(true);
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::clearSimulationResults()
-{
-    // Clear our simulation results
-
-    clearSimulationResults(true);
 }
 
 //==============================================================================
@@ -3258,8 +3259,8 @@ void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsed
         if (!mSimulation->data()->nlaSolverName().isEmpty())
             solversInformation += "+"+mSimulation->data()->nlaSolverName();
 
-        output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3))
-                                                                                                                       .arg(solversInformation)+"</span>."+OutputBrLn));
+        output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 using %2").arg(Core::formatTime(pElapsedTime))
+                                                                                                                     .arg(solversInformation)+"</span>."+OutputBrLn));
     }
 
     // Update our parameters and simulation mode
@@ -3353,12 +3354,14 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 
 void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsModified)
 {
-    // Update our modified state
+    // Update some of our actions based on whether we are modified
 
-    if (mDevelopmentModeAction->isChecked())
+    if (mDevelopmentModeAction->isChecked()) {
         Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
-    else
-        mResetModelParametersAction->setEnabled(pIsModified);
+    } else {
+        mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
+        mResetAllModelParametersAction->setEnabled(pIsModified);
+    }
 }
 
 //==============================================================================
@@ -3737,21 +3740,20 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     // Optimise our axes' values before setting them and replotting our plot, if
     // needed
 
-    pPlot->optimiseAxis(minX, maxX);
-    pPlot->optimiseAxis(minY, maxY);
+    pPlot->optimizeAxisX(minX, maxX, GraphPanelWidget::GraphPanelPlotWidget::Linear);
+    pPlot->optimizeAxisY(minY, maxY, GraphPanelWidget::GraphPanelPlotWidget::Linear);
 
-    pPlot->optimiseAxis(minLogX, maxLogX);
-    pPlot->optimiseAxis(minLogY, maxLogY);
+    pPlot->optimizeAxisX(minLogX, maxLogX, GraphPanelWidget::GraphPanelPlotWidget::Logarithmic);
+    pPlot->optimizeAxisY(minLogY, maxLogY, GraphPanelWidget::GraphPanelPlotWidget::Logarithmic);
 
     pPlot->setDefaultAxesValues(minX, maxX, minLogX, maxLogX,
                                 minY, maxY, minLogY, maxLogY);
 
-    bool logAxisX = pPlot->logAxisX();
-    bool logAxisY = pPlot->logAxisY();
-
     if (   pCanSetAxes
-        && pPlot->setAxes(logAxisX?minLogX:minX, logAxisX?maxLogX:maxX,
-                          logAxisY?minLogY:minY, logAxisY?maxLogY:maxY,
+        && pPlot->setAxes(pPlot->logAxisX()?minLogX:minX,
+                          pPlot->logAxisX()?maxLogX:maxX,
+                          pPlot->logAxisY()?minLogY:minY,
+                          pPlot->logAxisY()?maxLogY:maxY,
                           true, true, false, false, false, false)) {
         return true;
     } else if (pForceReplot) {
@@ -3876,8 +3878,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         // Now we are ready to actually update all the graphs of all our plots
 
-        bool needFullUpdatePlot = false;
-
+        bool needFullUpdatePlot = !plot->isOptimizedAxes();
         double plotMinX = plot->minX();
         double plotMaxX = plot->maxX();
         double plotMinY = plot->minY();

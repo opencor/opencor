@@ -137,7 +137,6 @@ public:
     bool save(const QString &pFileName);
 
     void filePermissionsChanged();
-    void fileModified();
     void fileReloaded();
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
@@ -190,7 +189,8 @@ private:
 
     QAction *mRunPauseResumeSimulationAction;
     QAction *mStopSimulationAction;
-    QAction *mResetModelParametersAction;
+    QAction *mResetStateModelParametersAction;
+    QAction *mResetAllModelParametersAction;
     QAction *mClearSimulationResultsAction;
     QAction *mDevelopmentModeAction;
     QAction *mAddGraphPanelAction;
@@ -307,8 +307,6 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
-    void clearSimulationResults(bool pCheckSimulationResults);
-
 signals:
     void splitterMoved(const QIntList &pSizes);
 
@@ -323,7 +321,8 @@ private slots:
     void removeGraphPanel();
     void removeCurrentGraphPanel();
     void removeAllGraphPanels();
-    void resetModelParameters();
+    void resetStateModelParameters();
+    void resetAllModelParameters();
     void clearSimulationResults();
     void sedmlExportSedmlFile();
     void sedmlExportCombineArchive();

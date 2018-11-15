@@ -52,6 +52,7 @@ namespace PMRWindow {
 PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWindowWindow),
+    mFirstTimeRetrievingExposures(true),
     mItemDoubleClicked(false)
 {
     // Set up the GUI
@@ -145,7 +146,7 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // Some connections to process responses from our PMR web service
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, &PmrWindowWindow::busy);
+            this, QOverload<bool>::of(&PmrWindowWindow::busy));
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWindowWindow::showInformation);
@@ -223,10 +224,18 @@ void PmrWindowWindow::resizeEvent(QResizeEvent *pEvent)
 void PmrWindowWindow::update(const QString &pPmrUrl)
 {
     // Update our PMR web service and then reload ourselves, if needed
+    // Note: we make sure that no busy widget is visible. Indeed, this is in
+    //       case an instance wasn't working and we decided to switch to another
+    //       that does (in which case the busy widget of the first instance
+    //       would still have been visible)...
 
     if (pPmrUrl.compare(mPmrUrl)) {
         if (mPmrWindowWidget->hasExposures())
             mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), QString());
+
+        busy(false, true);
+
+        mFirstTimeRetrievingExposures = true;
 
         mPmrUrl = pPmrUrl;
 
@@ -250,7 +259,7 @@ void PmrWindowWindow::filterValueChanged(const QString &pText)
 
 //==============================================================================
 
-void PmrWindowWindow::busy(bool pBusy)
+void PmrWindowWindow::busy(bool pBusy, bool pResetCounter)
 {
     // Show ourselves as busy or not busy anymore
 
@@ -259,7 +268,10 @@ void PmrWindowWindow::busy(bool pBusy)
     if (!pBusy && !counter)
         return;
 
-    counter += pBusy?1:-1;
+    if (pResetCounter)
+        counter = 0;
+    else
+        counter += pBusy?1:-1;
 
     if (pBusy && (counter == 1)) {
         mGui->dockWidgetContents->setEnabled(false);
@@ -282,6 +294,15 @@ void PmrWindowWindow::busy(bool pBusy)
 
         mPmrWindowWidget->hideBusyWidget();
     }
+}
+
+//==============================================================================
+
+void PmrWindowWindow::busy(bool pBusy)
+{
+    // Show ourselves as busy or not busy anymore
+
+    busy(pBusy, false);
 }
 
 //==============================================================================
@@ -366,10 +387,8 @@ void PmrWindowWindow::retrieveExposures(bool pVisible, bool pForceRetrieval)
     // to allow other events, such as the one asking OpenCOR's main window to
     // resize itself, to be handled properly)
 
-    static bool firstTime = true;
-
-    if (pVisible && (firstTime || pForceRetrieval)) {
-        firstTime = false;
+    if (pVisible && (mFirstTimeRetrievingExposures || pForceRetrieval)) {
+        mFirstTimeRetrievingExposures = false;
 
         QTimer::singleShot(0, this, &PmrWindowWindow::actionReloadTriggered);
     }

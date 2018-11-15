@@ -66,14 +66,21 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
 
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
-    QIcon folderIcon = QApplication::style()->standardIcon(QStyle::SP_DirClosedIcon);
+    QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
     int plusIconSize = int(0.57*folderIconSize);
+    int scaledIconSize = devicePixelRatio()*toolBarWidget->iconSize().width();
+    // Note: we scale the icon in case we are on a non-HiDPI screen, in which
+    //       case the icon would be smaller than the what we need for our tool
+    //       bar widget...
 
-    mGui->actionNew->setIcon(Core::overlayedIcon(folderIcon, PlusIcon,
-                                                 folderIconSize, folderIconSize,
-                                                 folderIconSize-plusIconSize, 0,
-                                                 plusIconSize, plusIconSize));
+    mGui->actionNew->setIcon(Core::scaledIcon(Core::overlayedIcon(folderIcon, PlusIcon,
+                                                                  folderIconSize, folderIconSize,
+                                                                  folderIconSize-plusIconSize, 0,
+                                                                  plusIconSize, plusIconSize),
+                                              scaledIconSize, scaledIconSize,
+                                              Qt::KeepAspectRatio,
+                                              Qt::SmoothTransformation));
 
     toolBarWidget->addAction(mGui->actionNew);
     toolBarWidget->addAction(mGui->actionDelete);

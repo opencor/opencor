@@ -16,6 +16,7 @@ SET CurrentPath=%CD%
 
 CD %CurrentPath%\build
 
+FOR    %%I IN (*.*) DO ATTRIB -R "%%I"
 FOR /D %%I IN (*.*) DO RMDIR /S /Q "%%I"
 FOR    %%I IN (*.*) DO DEL /Q "%%I"
 

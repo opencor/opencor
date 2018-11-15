@@ -404,8 +404,8 @@
         <translation>Extensions pour accéder différents solveurs.</translation>
     </message>
     <message>
-        <source>Plugins to support various third-party libraries and APIs.</source>
-        <translation>Extensions pour supporter différentes librairies externes et APIs.</translation>
+        <source>Plugins to support various third-party libraries.</source>
+        <translation>Extensions pour supporter différentes librairies externes.</translation>
     </message>
     <message>
         <source>Plugins to access various third-party libraries.</source>
@@ -466,6 +466,26 @@
     <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
+    </message>
+    <message>
+        <source>d</source>
+        <translation>j</translation>
+    </message>
+    <message>
+        <source>h</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>s</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>ms</source>
+        <translation></translation>
     </message>
 </context>
 </TS>

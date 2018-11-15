@@ -157,6 +157,7 @@ private slots:
 
     void resetAll();
 
+    void doHandleUrl(const QUrl &pUrl);
     void handleUrl(const QUrl &pUrl);
 };
 

@@ -129,13 +129,13 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mOptimiseFontSizeAction = newAction();
+    mOptimizeFontSizeAction = newAction();
     mSubscriptsAction = newAction();
     mGreekSymbolsAction = newAction();
     mDigitGroupingAction = newAction();
     mCopyToClipboardAction = Core::newAction(this);
 
-    connect(mOptimiseFontSizeAction, &QAction::toggled,
+    connect(mOptimizeFontSizeAction, &QAction::toggled,
             this, QOverload<>::of(&MathmlViewerWidget::update));
 
     connect(mSubscriptsAction, &QAction::toggled,
@@ -148,7 +148,7 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
     connect(mCopyToClipboardAction, &QAction::triggered,
             this, &MathmlViewerWidget::copyToClipboard);
 
-    mContextMenu->addAction(mOptimiseFontSizeAction);
+    mContextMenu->addAction(mOptimizeFontSizeAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mSubscriptsAction);
     mContextMenu->addAction(mGreekSymbolsAction);
@@ -163,7 +163,7 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const auto SettingsMathmlViewerWidgetOptimiseFontSizeEnabled = QStringLiteral("MathmlViewerWidgetOptimiseFontSizeEnabled");
+static const auto SettingsMathmlViewerWidgetOptimizeFontSizeEnabled = QStringLiteral("MathmlViewerWidgetOptimizeFontSizeEnabled");
 static const auto SettingsMathmlViewerWidgetSubscriptsEnabled       = QStringLiteral("MathmlViewerWidgetSubscriptsEnabled");
 static const auto SettingsMathmlViewerWidgetGreekSymbolsEnabled     = QStringLiteral("MathmlViewerWidgetGreekSymbolsEnabled");
 static const auto SettingsMathmlViewerWidgetDigitGroupingEnabled    = QStringLiteral("MathmlViewerWidgetDigitGroupingEnabled");
@@ -174,7 +174,7 @@ void MathmlViewerWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our settings
 
-    setOptimiseFontSize(pSettings->value(SettingsMathmlViewerWidgetOptimiseFontSizeEnabled, true).toBool());
+    setOptimizeFontSize(pSettings->value(SettingsMathmlViewerWidgetOptimizeFontSizeEnabled, true).toBool());
     setSubscripts(pSettings->value(SettingsMathmlViewerWidgetSubscriptsEnabled, true).toBool());
     setGreekSymbols(pSettings->value(SettingsMathmlViewerWidgetGreekSymbolsEnabled, true).toBool());
     setDigitGrouping(pSettings->value(SettingsMathmlViewerWidgetDigitGroupingEnabled, true).toBool());
@@ -186,7 +186,7 @@ void MathmlViewerWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our settings
 
-    pSettings->setValue(SettingsMathmlViewerWidgetOptimiseFontSizeEnabled, optimiseFontSize());
+    pSettings->setValue(SettingsMathmlViewerWidgetOptimizeFontSizeEnabled, optimizeFontSize());
     pSettings->setValue(SettingsMathmlViewerWidgetSubscriptsEnabled, subscripts());
     pSettings->setValue(SettingsMathmlViewerWidgetGreekSymbolsEnabled, greekSymbols());
     pSettings->setValue(SettingsMathmlViewerWidgetDigitGroupingEnabled, digitGrouping());
@@ -198,7 +198,7 @@ void MathmlViewerWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"),
+    I18nInterface::retranslateAction(mOptimizeFontSizeAction, tr("Optimise Font Size"),
                                      tr("Optimise the font size to get the best fit possible"));
     I18nInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"),
                                      tr("Use '_' to specify a subscript"));
@@ -227,7 +227,7 @@ void MathmlViewerWidget::updateSettings(MathmlViewerWidget *pMathmlViewerWidget)
 
     // Update our MathML viewer settings
 
-    setOptimiseFontSize(pMathmlViewerWidget->optimiseFontSize());
+    setOptimizeFontSize(pMathmlViewerWidget->optimizeFontSize());
     setSubscripts(pMathmlViewerWidget->subscripts());
     setGreekSymbols(pMathmlViewerWidget->greekSymbols());
     setDigitGrouping(pMathmlViewerWidget->digitGrouping());
@@ -330,23 +330,23 @@ void MathmlViewerWidget::setError(bool pError)
 
 //==============================================================================
 
-bool MathmlViewerWidget::optimiseFontSize() const
+bool MathmlViewerWidget::optimizeFontSize() const
 {
     // Return whether we optimise our font size
 
-    return mOptimiseFontSizeAction->isChecked();
+    return mOptimizeFontSizeAction->isChecked();
 }
 
 //==============================================================================
 
-void MathmlViewerWidget::setOptimiseFontSize(bool pOptimiseFontSize)
+void MathmlViewerWidget::setOptimizeFontSize(bool pOptimizeFontSize)
 {
     // Keep track of whether we should optimise our font size
 
-    if (pOptimiseFontSize == optimiseFontSize())
+    if (pOptimizeFontSize == optimizeFontSize())
         return;
 
-    mOptimiseFontSizeAction->setChecked(pOptimiseFontSize);
+    mOptimizeFontSizeAction->setChecked(pOptimizeFontSize);
 }
 
 //==============================================================================
@@ -486,7 +486,7 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
         mMathmlDocument.setBackgroundColor(backgroundColor);
         mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));
 
-        mMathmlDocument.setBaseFontPointSize(optimiseFontSize()?
+        mMathmlDocument.setBaseFontPointSize(optimizeFontSize()?
                                                  qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
                                                                   mOneOverMathmlDocumentHeight*height())):
                                                  font().pointSize());
