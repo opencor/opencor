@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> properly keep track of the sizes of some splitters (see issue <a href=\"https://github.com/opencor/opencor/issues/1871\">#1871</a>)." },
+                       { "change": "<strong>General:</strong> converted (and updated) the documentation to reStructuredText (see issue <a href=\"https://github.com/opencor/opencor/issues/1544\">#1544</a>). Properly keep track of the sizes of some splitters (see issue <a href=\"https://github.com/opencor/opencor/issues/1871\">#1871</a>)." },
                        { "change": "<strong>Graph Panel widget:</strong> don't skip the first data point (see issue <a href=\"https://github.com/opencor/opencor/issues/1860\">#1860</a>)." },
                        { "change": "<strong>PMR-based windows:</strong> make sure that the spinning wheel is hidden when changing instances of PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1862\">#1862</a>). Make sure they get populated when being shown after having changed instances of PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1865\">#1865</a>)." }
                      ]
