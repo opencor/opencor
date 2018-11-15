@@ -351,15 +351,14 @@ endif()
 # Note #2: on Linux, Mesa is needed so that we can run OpenCOR on machines that
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
+# Note #3: on Linux, even if OpenCOR doesn't need OpenGL as such, we still need
+#          it because well... we are on Linux...
 
 if(WIN32)
     set(ICU_VERSION 57)
 elseif(NOT APPLE)
     add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/icu)
-
-    if(ENABLE_OPENGL)
-        add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
-    endif()
+    add_subdirectory(${CMAKE_SOURCE_DIR}/distrib/linux/mesa)
 endif()
 
 # Retrieve or build our copy of QtWebKit
@@ -375,10 +374,6 @@ endif()
 if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     set(WEBKIT WebKit)
     set(WEBKITWIDGETS WebKitWidgets)
-endif()
-
-if(ENABLE_OPENGL)
-    set(OPENGL OpenGL)
 endif()
 
 set(REQUIRED_QT_MODULES
@@ -1259,6 +1254,10 @@ if(WIN32)
 
     # Qt libraries required by OpenCOR
 
+    if(ENABLE_OPENGL)
+        set(OPENGL OpenGL)
+    endif()
+
     foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network ${OPENGL} Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
@@ -1372,7 +1371,7 @@ else()
     #       unnecessarily cumbersome to use, it's better to deploy one Qt
     #       library at a time...
 
-    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network ${OPENGL} Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
+    foreach(QT_LIBRARY Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets XcbQpa Xml XmlPatterns)
         if(   "${QT_LIBRARY}" STREQUAL "${WEBKIT}"
            OR "${QT_LIBRARY}" STREQUAL "${WEBKITWIDGETS}")
             set(REAL_QT_LIBRARY_DIR ${QTWEBKIT_LIBRARIES_DIR})
