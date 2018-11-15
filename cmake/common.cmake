@@ -156,21 +156,15 @@ macro(add_plugin PLUGIN_NAME)
 
     # Generate and add the different files needed by the plugin
 
-    if("${ARG_HEADERS_MOC}" STREQUAL "")
-        set(SOURCES_MOC)
-    else()
+    if(NOT "${ARG_HEADERS_MOC}" STREQUAL "")
         qt5_wrap_cpp(SOURCES_MOC ${ARG_HEADERS_MOC})
     endif()
 
-    if("${ARG_UIS}" STREQUAL "")
-        set(SOURCES_UIS)
-    else()
+    if(NOT "${ARG_UIS}" STREQUAL "")
         qt5_wrap_ui(SOURCES_UIS ${ARG_UIS})
     endif()
 
-    if("${RESOURCES}" STREQUAL "")
-        set(SOURCES_RCS)
-    else()
+    if(NOT "${RESOURCES}" STREQUAL "")
         qt5_add_resources(SOURCES_RCS ${RESOURCES})
     endif()
 

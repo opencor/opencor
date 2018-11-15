@@ -303,8 +303,6 @@ set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
 if(CCACHE)
     set(CMAKE_ARGS -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE})
-else()
-    set(CMAKE_ARGS)
 endif()
 
 if(APPLE)
@@ -333,11 +331,9 @@ endif()
 # simply use libz${PRE}.1${POST})
 
 if(APPLE)
-    set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
 elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 endif()
 
 # On Windows, specify the version of ICU that we are using while on Linux, add
@@ -363,16 +359,11 @@ add_subdirectory(src/3rdparty/QtWebKit)
 
 if(ENABLE_TESTS)
     set(TEST Test)
-else()
-    set(TEST)
 endif()
 
 if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     set(WEBKIT WebKit)
     set(WEBKITWIDGETS WebKitWidgets)
-else()
-    set(WEBKIT)
-    set(WEBKITWIDGETS)
 endif()
 
 set(REQUIRED_QT_MODULES
@@ -398,16 +389,11 @@ include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
 if(APPLE)
     if(ENABLE_TESTS)
         set(QTTEST QtTest)
-    else()
-        set(QTTEST)
     endif()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         set(QTWEBKIT QtWebKit)
         set(QTWEBKITWIDGETS QtWebKitWidgets)
-    else()
-        set(QTWEBKIT)
-        set(QTWEBKITWIDGETS)
     endif()
 
     set(MACOS_QT_LIBRARIES
@@ -461,8 +447,6 @@ else()
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
         set(LINK_FLAGS_PROPERTIES "-stdlib=libc++")
-    else()
-        set(LINK_FLAGS_PROPERTIES)
     endif()
 endif()
 
@@ -867,16 +851,12 @@ if(ENABLE_SAMPLE_PLUGINS)
         sample/SampleView
         sample/SampleWindow
     )
-else()
-    set(SAMPLE_PLUGINS)
 endif()
 
 if(ENABLE_TEST_PLUGINS)
     set(TEST_PLUGINS
         test/ZincWindow
     )
-else()
-    set(TEST_PLUGINS)
 endif()
 
 set(PLUGINS
@@ -1226,7 +1206,6 @@ if(WIN32)
         set(NSIS_GENERATOR NSIS)
     else()
         set(NSIS_FOUND FALSE)
-        set(NSIS_GENERATOR)
     endif()
 
     set(CPACK_GENERATOR ${NSIS_GENERATOR} ZIP)
