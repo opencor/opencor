@@ -346,9 +346,9 @@ endif()
 
 # On Windows, specify the version of ICU that we are using while on Linux, add
 # our copy of the ICU and Mesa libraries
-# Note #1: On Linux, ICU is needed so that our external projects that need ICU
+# Note #1: on Linux, ICU is needed so that our external projects that need ICU
 #          (e.g. QtWebKit) can rely on the ICU version that we want to use...
-# Note #2: On Linux, Mesa is needed so that we can run OpenCOR on machines that
+# Note #2: on Linux, Mesa is needed so that we can run OpenCOR on machines that
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
 
