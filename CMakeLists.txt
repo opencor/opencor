@@ -592,8 +592,6 @@ track_files(
 
 if("${PROJECT_VERSION}" STREQUAL "")
     set(SNAPSHOT ON)
-else()
-    set(SNAPSHOT OFF)
 endif()
 
 string(TIMESTAMP DATE "%Y-%m-%d")
