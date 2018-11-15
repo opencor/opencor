@@ -67,7 +67,7 @@ GraphPanelsWidget::GraphPanelsWidget(QWidget *pParent) :
     // Check whether one of our splitters has move and, therefore, whether our
     // sizes have changed
 
-    connect(this, &GraphPanelsWidget::splitterMoved,
+    connect(this, &Core::SplitterWidget::splitterMoved,
             this, &GraphPanelsWidget::stopUsingInternalSizes);
 }
 

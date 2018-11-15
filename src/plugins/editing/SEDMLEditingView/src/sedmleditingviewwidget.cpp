@@ -54,7 +54,7 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
     // Keep track of our movement
 
-    connect(this, &QSplitter::splitterMoved,
+    connect(this, &Core::SplitterWidget::splitterMoved,
             this, &SedmlEditingViewWidget::splitterMoved);
 
     // Create our editor and editor list widgets

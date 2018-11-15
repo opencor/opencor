@@ -121,6 +121,8 @@ public:
 
     void selectAll();
 
+    void highlightAll();
+
     bool wordWrap() const;
     void setWordWrap(bool pWordWrap);
 
@@ -135,7 +137,7 @@ public:
     void setZoomLevel(int pZoomLevel);
 
     bool isFindReplaceVisible() const;
-    void setFindReplaceVisible(bool pVisible);
+    void setFindReplaceVisible(bool pVisible, bool pSelectWord = true);
 
     int styleAt(int pPosition) const;
 

@@ -45,6 +45,39 @@ endmacro()
 
 #===============================================================================
 
+macro(build_documentation DOCUMENTATION_NAME)
+    # Build the given documentation as an external project and have it copied to
+    # our final documentation directory
+
+    set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
+
+    string(REPLACE ";" "|"
+           DOCUMENTATION_SPHINX_EXECUTABLE "${SPHINX_EXECUTABLE}")
+
+    ExternalProject_Add(${DOCUMENTATION_BUILD}
+        SOURCE_DIR
+            ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
+        GIT_REPOSITORY
+            https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
+        CMAKE_ARGS
+            -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
+            -DSPHINX_EXECUTABLE=${DOCUMENTATION_SPHINX_EXECUTABLE}
+        LIST_SEPARATOR
+            |
+        INSTALL_COMMAND
+            ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/${DOCUMENTATION_BUILD}/html
+                                               ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
+    )
+
+    # Add our external project as a dependency to our project build target, so
+    # that our Help window plugin can generate the help files that will be
+    # embedded in OpenCOR as a resource
+
+    add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+endmacro()
+
+#===============================================================================
+
 macro(add_plugin PLUGIN_NAME)
     # Various initialisations
 
@@ -884,7 +917,8 @@ if(EXISTS ${COMPRESSED_FILENAME})
 
     file(SHA1 ${COMPRESSED_FILENAME} SHA1_VALUE)
 
-    string(REPLACE \"\;\" \"\\n                                  \" SHA1_VALUES \"\$\{SHA1_VALUES\}\")
+    string(REPLACE \"\;\" \"\\n                                  \"
+           SHA1_VALUES \"\$\{SHA1_VALUES\}\")
 
     message(\"To retrieve the '${PACKAGE_NAME}' package, use:
 retrieve_package_file(\\$\\{PACKAGE_NAME\\} \\$\\{PACKAGE_VERSION\\}

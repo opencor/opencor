@@ -143,8 +143,21 @@ public:
 
     GraphPanelPlotGraph * owner() const;
 
+    void setRawSamples(const double *pDataX, const double *pDataY, int pSize);
+
+protected:
+    void drawLines(QPainter *pPainter, const QwtScaleMap &pMapX,
+                   const QwtScaleMap &pMapY, const QRectF &pCanvasRect,
+                   int pFrom, int pTo) const override;
+    void drawSymbols(QPainter *pPainter, const QwtSymbol &pSymbol,
+                     const QwtScaleMap &pMapX, const QwtScaleMap &pMapY,
+                     const QRectF &pCanvasRect, int pFrom, int pTo) const override;
+
 private:
     GraphPanelPlotGraph *mOwner;
+
+    int mSize;
+    QList<QPair<int, int>> mValidData;
 };
 
 //==============================================================================
@@ -268,7 +281,7 @@ private:
     QPoint mOriginPoint;
     QPoint mPoint;
 
-    QPoint optimisedPoint(const QPoint &pPoint) const;
+    QPoint optimizedPoint(const QPoint &pPoint) const;
 
     void drawCoordinates(QPainter *pPainter, const QPoint &pPoint,
                          const QColor &pBackgroundColor,
@@ -374,6 +387,12 @@ public:
         ZoomRegion
     };
 
+    enum Optimization {
+        Default,
+        Linear,
+        Logarithmic
+    };
+
     explicit GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbors,
                                   QAction *pSynchronizeXAxisAction,
                                   QAction *pSynchronizeYAxisAction,
@@ -396,7 +415,12 @@ public:
     bool dataRect(QRectF &pDataRect) const;
     bool dataLogRect(QRectF &pDataLogRect) const;
 
-    void optimiseAxis(double &pMin, double &pMax) const;
+    bool isOptimizedAxes() const;
+
+    void optimizeAxisX(double &pMin, double &pMax,
+                       Optimization pOptimization = Default);
+    void optimizeAxisY(double &pMin, double &pMax,
+                       Optimization pOptimization = Default);
 
     double minX() const;
     double maxX() const;
@@ -502,7 +526,7 @@ public:
 
     QPointF canvasPoint(const QPoint &pPoint) const;
 
-    void updateGui(bool pSingleShot = false);
+    void updateGui(bool pSingleShot = false, bool pForceAlignment = false);
 
 protected:
     bool event(QEvent *pEvent) override;
@@ -592,6 +616,9 @@ private:
 
     QwtPlotGrid *mGrid;
 
+    bool mOptimizedAxisX;
+    bool mOptimizedAxisY;
+
     double mDefaultMinX;
     double mDefaultMaxX;
     double mDefaultMinY;
@@ -612,7 +639,10 @@ private:
 
     void resetAction();
 
-    QRectF realDataRect() const;
+    QRectF realDataRect();
+
+    void optimizeAxis(const int &pAxisId, double &pMin, double &pMax,
+                      Optimization pOptimization);
 
     void setAxis(int pAxisId, double pMin, double pMax);
 
@@ -629,7 +659,7 @@ private:
     void getBorderDistances(QwtScaleDraw *pScaleDraw, QwtScaleMap pScaleMap,
                             const QFont &pFont, int &pStart, int &pEnd);
 
-    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment);
+    void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
 
 signals:
     void axesChanged(double pMinX, double pMaxX, double pMinY, double pMaxY);
@@ -645,7 +675,7 @@ signals:
     void logarithmicYAxisToggled();
 
 private slots:
-    void doUpdateGui();
+    void doUpdateGui(bool pForceAlignment);
 
     void cannotUpdateActions();
 

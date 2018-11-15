@@ -166,6 +166,10 @@ QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 QString CORE_EXPORT iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                                 QIcon::Mode pMode = QIcon::Normal);
 
+QIcon CORE_EXPORT standardIcon(QStyle::StandardPixmap pStandardIcon,
+                               const QStyleOption *pOption = nullptr,
+                               const QWidget *pWidget = nullptr);
+
 QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
                              const QColor &pColor);
 QIcon CORE_EXPORT tintedIcon(const QString &pIcon, int pWidth, int pHeight,
@@ -191,6 +195,13 @@ QIcon CORE_EXPORT overlayedIcon(const QString &pBaseIcon,
                                 int pBaseWidth, int pBaseHeight,
                                 int pOverlayLeft, int pOverlayTop,
                                 int pOverlayWidth, int pOverlayHeight);
+
+QIcon CORE_EXPORT scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
+                             Qt::AspectRatioMode pAspectMode = Qt::IgnoreAspectRatio,
+                             Qt::TransformationMode pMode = Qt::FastTransformation);
+QIcon CORE_EXPORT scaledIcon(const QString &pIcon, int pWidth, int pHeight,
+                             Qt::AspectRatioMode pAspectMode = Qt::IgnoreAspectRatio,
+                             Qt::TransformationMode pMode = Qt::FastTransformation);
 
 void CORE_EXPORT showEnableWidget(QWidget *pWidget, bool pVisible,
                                   bool pEnabled = true);

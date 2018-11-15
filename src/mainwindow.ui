@@ -22,17 +22,17 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>&amp;File</string>
+     <string>File</string>
     </property>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>&amp;Tools</string>
+     <string>Tools</string>
     </property>
     <widget class="QMenu" name="menuLanguage">
      <property name="title">
-      <string>&amp;Language</string>
+      <string>Language</string>
      </property>
      <property name="icon">
       <iconset resource="../res/ui.qrc">
@@ -53,7 +53,7 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>&amp;Help</string>
+     <string>Help</string>
     </property>
     <addaction name="actionHomePage"/>
     <addaction name="separator"/>
@@ -63,7 +63,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>&amp;View</string>
+     <string>View</string>
     </property>
     <addaction name="actionDockedWindows"/>
     <addaction name="separator"/>
@@ -83,7 +83,7 @@
      <normaloff>:/oxygen/actions/application-exit.png</normaloff>:/oxygen/actions/application-exit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quit</string>
+    <string>Quit</string>
    </property>
    <property name="toolTip">
     <string>Quit</string>
@@ -104,7 +104,7 @@
      <normaloff>:/flags/gb.png</normaloff>:/flags/gb.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;English</string>
+    <string>English</string>
    </property>
    <property name="statusTip">
     <string>Select English as the language to be used by OpenCOR</string>
@@ -122,7 +122,7 @@
      <normaloff>:/flags/fr.png</normaloff>:/flags/fr.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;French</string>
+    <string>French</string>
    </property>
    <property name="statusTip">
     <string>Select French as the language to be used by OpenCOR</string>
@@ -137,7 +137,7 @@
      <normaloff>:/oxygen/categories/applications-internet.png</normaloff>:/oxygen/categories/applications-internet.png</iconset>
    </property>
    <property name="text">
-    <string>Home &amp;Page</string>
+    <string>Home Page</string>
    </property>
    <property name="statusTip">
     <string>Open the OpenCOR home page</string>
@@ -152,7 +152,7 @@
      <normaloff>:/oxygen/actions/help-about.png</normaloff>:/oxygen/actions/help-about.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;About...</string>
+    <string>About...</string>
    </property>
    <property name="statusTip">
     <string>Some general information about OpenCOR</string>
@@ -167,7 +167,7 @@
      <normaloff>:/oxygen/actions/system-reboot.png</normaloff>:/oxygen/actions/system-reboot.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Reset All</string>
+    <string>Reset All</string>
    </property>
    <property name="statusTip">
     <string>Reset all your settings</string>
@@ -181,7 +181,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;System</string>
+    <string>System</string>
    </property>
    <property name="statusTip">
     <string>Select your system's language as the language to be used by OpenCOR</string>
@@ -196,7 +196,7 @@
      <normaloff>:/oxygen/actions/view-fullscreen.png</normaloff>:/oxygen/actions/view-fullscreen.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Full Screen</string>
+    <string>Full Screen</string>
    </property>
    <property name="statusTip">
     <string>Switch to / back from full screen mode</string>
@@ -207,7 +207,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Status &amp;Bar</string>
+    <string>Status Bar</string>
    </property>
    <property name="statusTip">
     <string>Show/hide the status bar</string>
@@ -219,7 +219,7 @@
      <normaloff>:/oxygen/apps/preferences-plugin.png</normaloff>:/oxygen/apps/preferences-plugin.png</iconset>
    </property>
    <property name="text">
-    <string>Plu&amp;gins...</string>
+    <string>Plugins...</string>
    </property>
    <property name="statusTip">
     <string>Un/select plugins</string>
@@ -230,7 +230,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Docked Windows</string>
+    <string>Docked Windows</string>
    </property>
    <property name="iconText">
     <string>Docked Windows</string>
@@ -248,7 +248,7 @@
      <normaloff>:/oxygen/categories/preferences-system.png</normaloff>:/oxygen/categories/preferences-system.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Preferences...</string>
+    <string>Preferences...</string>
    </property>
    <property name="toolTip">
     <string>Preferences</string>

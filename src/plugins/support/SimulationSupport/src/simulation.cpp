@@ -343,7 +343,7 @@ void SimulationData::addNlaSolverProperty(const QString &pName,
 
 //==============================================================================
 
-void SimulationData::reset(bool pInitialize)
+void SimulationData::reset(bool pInitialize, bool pAll)
 {
     // Reset our parameter values which means both initialising our 'constants'
     // and computing our 'computed constants' and 'variables'
@@ -374,6 +374,13 @@ void SimulationData::reset(bool pInitialize)
         nlaSolver->setProperties(mNlaSolverProperties);
     }
 
+    // Keep track of our constants (in case we don't want to reset them)
+
+    double *currentConstants = new double[runtime->constantsCount()] {};
+
+    if (!pAll)
+        memcpy(currentConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+
     // Reset our parameter values
 
     if (pInitialize) {
@@ -385,7 +392,29 @@ void SimulationData::reset(bool pInitialize)
         runtime->initializeConstants()(mConstants, mRates, mStates);
     }
 
+    // Recompute our computed constants and variables
+
     recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
+
+    // Keep track of our various initial values
+
+    if (pInitialize) {
+        memcpy(mInitialConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+        memcpy(mInitialStates, mStates, size_t(runtime->statesCount()*Solver::SizeOfDouble));
+    }
+
+    // Use our "current" constants, if needed
+
+    if (!pAll)
+        memcpy(mConstants, currentConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
+
+    delete[] currentConstants;
+
+    // Recompute our computed constants and variables, if we are using our
+    // "current" constants
+
+    if (!pAll)
+        recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
 
     // Delete our NLA solver, if any
 
@@ -395,16 +424,8 @@ void SimulationData::reset(bool pInitialize)
         Solver::unsetNlaSolver(runtime->address());
     }
 
-    // Keep track of our various initial values
-
-    if (pInitialize) {
-        memcpy(mInitialConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
-        memcpy(mInitialStates, mStates, size_t(runtime->statesCount()*Solver::SizeOfDouble));
-    }
-
     // Let people know whether our data is 'cleaned', i.e. not modified, and ask
     // our simulation worker to reset itself
-    // Note: no point in checking if we are initialising...
 
     if (!pInitialize) {
         emit modified(isModified());
@@ -444,10 +465,10 @@ void SimulationData::recomputeVariables(double pCurrentPoint)
 
 //==============================================================================
 
-bool SimulationData::isModified() const
+bool SimulationData::doIsModified(bool pCheckConstants) const
 {
-    // Check whether any of our constants or states has been modified, if
-    // possible
+    // Check whether any of our constants (if requested) or states has been
+    // modified, if possible
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
@@ -459,13 +480,33 @@ bool SimulationData::isModified() const
                 return true;
         }
 
-        for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
-            if (!qIsNull(mConstants[i]-mInitialConstants[i]))
-                return true;
+        if (pCheckConstants) {
+            for (int i = 0, iMax = runtime->constantsCount(); i < iMax; ++i) {
+                if (!qIsNull(mConstants[i]-mInitialConstants[i]))
+                    return true;
+            }
         }
     }
 
     return false;
+}
+
+//==============================================================================
+
+bool SimulationData::isStatesModified() const
+{
+    // Check whether any of our states has been modified
+
+    return doIsModified(false);
+}
+
+//==============================================================================
+
+bool SimulationData::isModified() const
+{
+    // Check whether any of our constants or states has been modified
+
+    return doIsModified(true);
 }
 
 //==============================================================================
@@ -1154,11 +1195,11 @@ bool Simulation::stop()
 
 //==============================================================================
 
-bool Simulation::reset()
+bool Simulation::reset(bool pAll)
 {
     // Reset our data
 
-    mData->reset();
+    mData->reset(true, pAll);
 
     // Reset our worker
 

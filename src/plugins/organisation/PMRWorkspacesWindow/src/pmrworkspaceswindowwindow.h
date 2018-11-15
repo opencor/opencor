@@ -94,6 +94,8 @@ private:
     PMRSupport::PmrWebService *mPmrWebService;
     PmrWorkspacesWindowWidget *mPmrWorkspacesWindowWidget;
 
+    bool mFirstTimeRetrievingWorkspaces;
+
     QString mPmrUrl;
 
     bool mAuthenticated;
@@ -104,6 +106,8 @@ private:
     bool mWaitingForPmrWebService;
 
     void retranslateActionPmr();
+
+    void busy(bool pBusy, bool pResetCounter);
 
 private slots:
     void actionNewTriggered();

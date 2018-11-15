@@ -45,17 +45,13 @@ namespace HelpWindow {
 //==============================================================================
 
 HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
-                                               const QByteArray &pData,
-                                               const QString &pMimeType) :
+                                               const QByteArray &pData) :
     mData(pData)
 {
     // Set a few things for the network reply
 
     setRequest(pRequest);
     setOpenMode(QIODevice::ReadOnly);
-    setHeader(QNetworkRequest::ContentTypeHeader, pMimeType);
-    setHeader(QNetworkRequest::ContentLengthHeader,
-              QByteArray::number(pData.length()));
 
     // Let ourselves know immediately that data is available for reading
 
@@ -138,7 +134,7 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
 
     // Return the requested document or an error message
 
-    return new HelpWindowNetworkReply(pRequest, data, "text/html");
+    return new HelpWindowNetworkReply(pRequest, data);
 }
 
 //==============================================================================
@@ -169,7 +165,7 @@ HelpWindowWidget::HelpWindowWidget(QWidget *pParent) :
     // Note: we call setUrl() rather than goToHomePage() because we want and
     //       need our home page to be loaded straightaway (otherwise if our home
     //       page is wrong and OpenCOR is in a non-English locale then our
-    //       contents will empty upon starting OpenCOR)...
+    //       contents will be empty upon starting OpenCOR)...
 
     setHomePage("qthelp://opencor/doc/user/index.html");
 

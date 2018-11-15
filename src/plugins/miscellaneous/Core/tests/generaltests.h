@@ -41,6 +41,7 @@ private slots:
     void initTestCase();
 
     void sizeAsStringTests();
+    void formatTimeTests();
     void sha1Tests();
     void stringPositionAsLineColumnTests();
     void stringLineColumnAsPositionTests();

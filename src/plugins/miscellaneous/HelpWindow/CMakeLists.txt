@@ -1,10 +1,15 @@
 project(HelpWindowPlugin)
 
-# Generate the help files which will be embedded in the executable as a resource
+# Generate the help files that will be embedded in OpenCOR as a resource
 
-execute_process(COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
-                                                           -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc
-                OUTPUT_QUIET)
+add_custom_target(GenerateQtHelpFiles)
+
+add_dependencies(GenerateQtHelpFiles ${PROJECT_BUILD_TARGET})
+
+add_custom_command(TARGET GenerateQtHelpFiles
+                   COMMAND ${SILENTRUN}
+                           ${QT_BINARY_DIR}/qcollectiongenerator ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
+                                                              -o ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
 track_files(
     ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.qch
@@ -35,4 +40,6 @@ add_plugin(HelpWindow
     QT_MODULES
         Help
         PrintSupport
+    DEPENDS_ON
+        GenerateQtHelpFiles
 )

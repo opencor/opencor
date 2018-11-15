@@ -1,4 +1,79 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 10, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> unmanage and (re)manage a new file that has been saved (see issue <a href=\"https://github.com/opencor/opencor/issues/1846\">#1846</a>). Overlayed icons now have the same resolution as standard icons on HiDPI screens (see issue <a href=\"https://github.com/opencor/opencor/issues/1850\">#1850</a>). Recognise macOS Mojave (10.14) (see issue <a href=\"https://github.com/opencor/opencor/issues/1851\">#1851</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> prevent OpenCOR from potentially freezing when plotting invalid data (see issue <a href=\"https://github.com/opencor/opencor/issues/1853\">#1853</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> now have two reset buttons rather than one with a drop-down menu (see issue <a href=\"https://github.com/opencor/opencor/issues/1835\">#1835</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1833\">#1833</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1847\">#1847</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.7 (see issue <a href=\"https://github.com/opencor/opencor/issues/1857\">#1857</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 10, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> improved HiDPI support on Windows (see issue <a href=\"https://github.com/opencor/opencor/issues/1776\">#1776</a>)." },
+                       { "change": "<strong>Editor widget:</strong> properly highlight/replace text that was found using a regular expression (see issue <a href=\"https://github.com/opencor/opencor/issues/1816\">#1816</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> the resetting of model parameters is now more specific (see issue <a href=\"https://github.com/opencor/opencor/issues/1815\">#1815</a>). Fixed a small problem with graph panels not always autoscaling properly (see issue <a href=\"https://github.com/opencor/opencor/issues/1824\">#1824</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1814\">#1814</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1829\">#1829</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 18, "month": 9, "year": 2018, "type": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> only handle a URL when OpenCOR is visible and no modal dialog is active (see issue <a href=\"https://github.com/opencor/opencor/issues/1802\">#1802</a>). Don't force the use of 96 DPI anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/1810\">#1810</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> improved the plotting speed of simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1806\">#1806</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> provide more user-friendly simulation time information (see issue <a href=\"https://github.com/opencor/opencor/issues/1804\">#1804</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1799\">#1799</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 9, "year": 2018, "type": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",

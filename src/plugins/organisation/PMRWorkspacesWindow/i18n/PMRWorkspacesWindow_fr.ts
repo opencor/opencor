@@ -174,16 +174,16 @@
         <translation>Synchroniser Avec PMR</translation>
     </message>
     <message>
-        <source>Both a &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;name&lt;/a&gt; and an &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; must be set before you can synchronise with PMR.</source>
-        <translation>À la fois un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;nom&lt;/a&gt; et un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; doivent être spécifiés avant de pouvoir synchroniser avec PMR.</translation>
+        <source>Both a &lt;strong&gt;name&lt;/strong&gt; and an &lt;strong&gt;email&lt;/strong&gt; must be set before you can synchronise with PMR.</source>
+        <translation>À la fois un &lt;strong&gt;nom&lt;/strong&gt; et un &lt;strong&gt;email&lt;/strong&gt; doivent être spécifiés avant de pouvoir synchroniser avec PMR.</translation>
     </message>
     <message>
-        <source>A &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;name&lt;/a&gt; must be set before you can synchronise with PMR.</source>
-        <translation>Un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;nom&lt;/a&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
+        <source>A &lt;strong&gt;name&lt;/strong&gt; must be set before you can synchronise with PMR.</source>
+        <translation>Un &lt;strong&gt;nom&lt;/strong&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
     </message>
     <message>
-        <source>An &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; must be set before you can synchronise with PMR.</source>
-        <translation>Un &lt;a href=&quot;opencor://openPreferencesDialog/PMRSupport&quot;&gt;email&lt;/a&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
+        <source>An &lt;strong&gt;email&lt;/strong&gt; must be set before you can synchronise with PMR.</source>
+        <translation>Un &lt;strong&gt;email&lt;/strong&gt; doit être spécifié avant de pouvoir synchroniser avec PMR.</translation>
     </message>
     <message>
         <source>Owner:</source>
@@ -209,7 +209,7 @@
         <translation>Se Connecter</translation>
     </message>
     <message>
-        <source>Log off PMR</source>
+        <source>Log off from PMR</source>
         <translation>Se déconnecter de PMR</translation>
     </message>
     <message>

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.11)
 
 # Project definition
 
@@ -126,6 +126,30 @@ else()
     message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built in release or debug mode...")
 endif()
 
+# Try to build our silent program
+
+set(SILENTRUN ${PROJECT_BUILD_DIR}/silentrun)
+
+if(WIN32)
+    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "silentrun could not be built...")
+    endif()
+else()
+    if(APPLE)
+        set(INCLUDE_ARGUMENT -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include)
+    endif()
+
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -O3 ${INCLUDE_ARGUMENT} -o ${SILENTRUN} ${PROJECT_SOURCE_DIR}/cmake/silentrun.c
+                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "silentrun could not be built...")
+    endif()
+endif()
+
 # Try to build our runpath2rpath program, if we are on Linux
 
 if(NOT WIN32 AND NOT APPLE)
@@ -141,22 +165,38 @@ endif()
 
 # Make sure that clcache/ccache gets used, if available
 
-find_program(CLCACHE clcache)
-find_program(CCACHE ccache)
+if(WIN32)
+    find_program(CLCACHE clcache)
 
-if(CLCACHE)
-    set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
+    if(CLCACHE)
+        set(CLCACHEWRAPPER ${PROJECT_BUILD_DIR}/clcachewrapper)
 
-    execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
-                    RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
+        execute_process(COMMAND ${CMAKE_C_COMPILER} /O2 /Fe${CLCACHEWRAPPER} ${PROJECT_SOURCE_DIR}/cmake/clcachewrapper.c
+                        RESULT_VARIABLE RESULT OUTPUT_QUIET ERROR_QUIET)
 
-    if(RESULT EQUAL 0)
-        set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
-        set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+        if(RESULT EQUAL 0)
+            set(CMAKE_C_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+            set(CMAKE_CXX_COMPILER_LAUNCHER ${CLCACHEWRAPPER})
+        endif()
     endif()
-elseif(CCACHE)
-    set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
-    set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+else()
+    find_program(CCACHE ccache)
+
+    if(CCACHE)
+        set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
+        set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+    endif()
+endif()
+
+# Prevent long command lines on Windows
+
+if(WIN32)
+    set(CMAKE_C_USE_RESPONSE_FILE_FOR_OBJECTS TRUE)
+    set(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS TRUE)
+
+    if("${CMAKE_GENERATOR}" STREQUAL "Ninja")
+        set(CMAKE_NINJA_FORCE_RESPONSE_FILE TRUE)
+    endif()
 endif()
 
 # Keep track of some basic information about Qt, after making sure that we have
@@ -572,11 +612,6 @@ file(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
 
 track_files(${VERSION_DATE_FILENAME})
 
-# Configure our help file
-
-configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
-               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
-
 # Configure our QRC files
 
 set(COMMON_QRC_FILENAME ${PROJECT_BUILD_DIR}/res/common.qrc)
@@ -957,6 +992,17 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
+
+# Fetch parts of our documentation and build it
+
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+                                                           ${PROJECT_BUILD_DIR}/doc)
+
+configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+               ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+build_documentation(user)
+build_documentation(developer)
 
 # Build the GUI version of OpenCOR
 

@@ -337,8 +337,16 @@
         <translation>Arrêter la simulation</translation>
     </message>
     <message>
-        <source>Reset Model Parameters</source>
-        <translation>Réinitialiser Paramètres Modèle</translation>
+        <source>Reset State Model Parameters</source>
+        <translation>Réinitialiser Paramètres État Modèle</translation>
+    </message>
+    <message>
+        <source>Reset All Model Parameters</source>
+        <translation>Réinitialiser Tous Paramètres Modèle</translation>
+    </message>
+    <message>
+        <source>Reset the state model parameters</source>
+        <translation>Réinitialiser les paramètres état du modèle</translation>
     </message>
     <message>
         <source>Reset all the model parameters</source>
@@ -617,8 +625,8 @@
         <translation>Temps de simulation :</translation>
     </message>
     <message>
-        <source>%1 s using %2</source>
-        <translation>%1 s avec %2</translation>
+        <source>%1 using %2</source>
+        <translation>%1 avec %2</translation>
     </message>
 </context>
 </TS>

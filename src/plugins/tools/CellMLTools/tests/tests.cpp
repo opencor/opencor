@@ -58,7 +58,7 @@ void Tests::exportToUserDefinedFormatTests()
     // Try to export to a user-defined format, which file description doesn't
     // exist
 
-    QString fileName = OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
+    QString fileName = OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "non_existing_user_defined_format_file"),
              QStringList() << "The user-defined format file could not be found." << QString());
@@ -90,7 +90,7 @@ void Tests::exportToCellml10Tests()
 
     // Export a CellML 1.1 file to CellML 1.0
 
-    fileName = OpenCOR::fileName("doc/developer/functionalTests/res/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
+    fileName = OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());

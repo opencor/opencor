@@ -60,24 +60,24 @@ void TabBarStyle::drawControl(ControlElement pElement,
             if (verticalTab) {
                 pPainter->save();
 
-                int newX, newY, newRot;
+                int x, y, rotation;
 
                 if (   (tab->shape == QTabBar::RoundedEast)
                     || (tab->shape == QTabBar::TriangularEast)) {
-                    newX = tabRect.width()+tabRect.x();
-                    newY = tabRect.y();
+                    x = tabRect.x()+tabRect.width();
+                    y = tabRect.y();
 
-                    newRot = 90;
+                    rotation = 90;
                 } else {
-                    newX = tabRect.x();
-                    newY = tabRect.y()+tabRect.height();
+                    x = tabRect.x();
+                    y = tabRect.y()+tabRect.height();
 
-                    newRot = -90;
+                    rotation = -90;
                 }
 
-                QTransform transform = QTransform::fromTranslate(newX, newY);
+                QTransform transform = QTransform::fromTranslate(x, y);
 
-                transform.rotate(newRot);
+                transform.rotate(rotation);
 
                 pPainter->setTransform(transform, true);
             }

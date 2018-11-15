@@ -85,7 +85,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     // Keep track of our splitter being moved
 
-    connect(this, &CellmlAnnotationViewEditingWidget::splitterMoved,
+    connect(this, &Core::SplitterWidget::splitterMoved,
             this, &CellmlAnnotationViewEditingWidget::emitSplitterMoved);
 
     // A connection to let our details widget know that we want to see the
