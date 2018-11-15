@@ -1251,9 +1251,11 @@ if(WIN32)
     install(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
 
-    install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
-            DESTINATION bin
-            RENAME ${DEST_MESA_FILENAME})
+    if(ENABLE_OPENGL)
+        install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
+                DESTINATION bin
+                RENAME ${DEST_MESA_FILENAME})
+    endif()
 
     # Qt libraries required by OpenCOR
 
