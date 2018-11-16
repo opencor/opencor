@@ -5,11 +5,6 @@ project(Mesa)
 set(PACKAGE_NAME Mesa)
 set(PACKAGE_VERSION 18.2.5)
 
-# Version of our library
-
-set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.5)
-
 # Git tag for our library
 
 set(GIT_TAG v18.2.5)
@@ -20,7 +15,7 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 # Name of our package's shared library
 
-set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}GL${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
+set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}GL${CMAKE_SHARED_LIBRARY_SUFFIX}.1)
 
 # Specify the files that need to have their SHA-1 value checked
 
