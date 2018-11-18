@@ -303,8 +303,6 @@ set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
 if(CCACHE)
     set(CMAKE_ARGS -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE})
-else()
-    set(CMAKE_ARGS)
 endif()
 
 if(APPLE)
@@ -333,20 +331,28 @@ endif()
 # simply use libz${PRE}.1${POST})
 
 if(APPLE)
-    set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
 elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
+endif()
+
+# Determine whether we need OpenGL support
+# Note: at this stage, only our Zinc-related plugins need OpenGL support and
+#       they are only accessible through our test plugins...
+
+if(ENABLE_TEST_PLUGINS)
+    set(ENABLE_OPENGL ON)
 endif()
 
 # On Windows, specify the version of ICU that we are using while on Linux, add
 # our copy of the ICU and Mesa libraries
-# Note #1: On Linux, ICU is needed so that our external projects that need ICU
+# Note #1: on Linux, ICU is needed so that our external projects that need ICU
 #          (e.g. QtWebKit) can rely on the ICU version that we want to use...
-# Note #2: On Linux, Mesa is needed so that we can run OpenCOR on machines that
+# Note #2: on Linux, Mesa is needed so that we can run OpenCOR on machines that
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
+# Note #3: on Linux, even if OpenCOR doesn't need OpenGL as such, we still need
+#          it because well... we are on Linux...
 
 if(WIN32)
     set(ICU_VERSION 57)
@@ -363,16 +369,11 @@ add_subdirectory(src/3rdparty/QtWebKit)
 
 if(ENABLE_TESTS)
     set(TEST Test)
-else()
-    set(TEST)
 endif()
 
 if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     set(WEBKIT WebKit)
     set(WEBKITWIDGETS WebKitWidgets)
-else()
-    set(WEBKIT)
-    set(WEBKITWIDGETS)
 endif()
 
 set(REQUIRED_QT_MODULES
@@ -398,16 +399,15 @@ include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
 if(APPLE)
     if(ENABLE_TESTS)
         set(QTTEST QtTest)
-    else()
-        set(QTTEST)
     endif()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         set(QTWEBKIT QtWebKit)
         set(QTWEBKITWIDGETS QtWebKitWidgets)
-    else()
-        set(QTWEBKIT)
-        set(QTWEBKITWIDGETS)
+    endif()
+
+    if(ENABLE_OPENGL)
+        set(QTOPENGL QtOpenGL)
     endif()
 
     set(MACOS_QT_LIBRARIES
@@ -419,7 +419,7 @@ if(APPLE)
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
-        QtOpenGL
+        ${QTOPENGL}
         QtPositioning
         QtPrintSupport
         QtQml
@@ -461,8 +461,6 @@ else()
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
         set(LINK_FLAGS_PROPERTIES "-stdlib=libc++")
-    else()
-        set(LINK_FLAGS_PROPERTIES)
     endif()
 endif()
 
@@ -592,8 +590,6 @@ track_files(
 
 if("${PROJECT_VERSION}" STREQUAL "")
     set(SNAPSHOT ON)
-else()
-    set(SNAPSHOT OFF)
 endif()
 
 string(TIMESTAMP DATE "%Y-%m-%d")
@@ -869,16 +865,12 @@ if(ENABLE_SAMPLE_PLUGINS)
         sample/SampleView
         sample/SampleWindow
     )
-else()
-    set(SAMPLE_PLUGINS)
 endif()
 
 if(ENABLE_TEST_PLUGINS)
     set(TEST_PLUGINS
         test/ZincWindow
     )
-else()
-    set(TEST_PLUGINS)
 endif()
 
 set(PLUGINS
@@ -1190,11 +1182,13 @@ else()
         # OpenCOR on machines that don't have 'proper' OpenGL support (e.g. on a
         # Windows virtual machine in VirtualBox)
 
-        set(ORIG_MESA_FILENAME opengl32sw.dll)
-        set(DEST_MESA_FILENAME opengl32.dll)
+        if(ENABLE_OPENGL)
+            set(ORIG_MESA_FILENAME opengl32sw.dll)
+            set(DEST_MESA_FILENAME opengl32.dll)
 
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+            copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+            copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        endif()
     else()
         # Make sure that OpenCOR uses RPATH rather than RUNPATH
 
@@ -1228,7 +1222,6 @@ if(WIN32)
         set(NSIS_GENERATOR NSIS)
     else()
         set(NSIS_FOUND FALSE)
-        set(NSIS_GENERATOR)
     endif()
 
     set(CPACK_GENERATOR ${NSIS_GENERATOR} ZIP)
@@ -1253,13 +1246,19 @@ if(WIN32)
     install(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
 
-    install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
-            DESTINATION bin
-            RENAME ${DEST_MESA_FILENAME})
+    if(ENABLE_OPENGL)
+        install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
+                DESTINATION bin
+                RENAME ${DEST_MESA_FILENAME})
+    endif()
 
     # Qt libraries required by OpenCOR
 
-    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
+    if(ENABLE_OPENGL)
+        set(OPENGL OpenGL)
+    endif()
+
+    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network ${OPENGL} Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
