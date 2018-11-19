@@ -5,6 +5,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "added", "description": "Preferences dialog." },
                            { "type": "added", "description": "include/exclude plugins from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                           { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." },
                            { "type": "improved", "description": "Plugins dialog." },
@@ -16,12 +17,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "API",
                          "entries": [
-                           { "type": "added", "description": "<a href=\"https://github.com/NuML/NuML/\">NuML</a> API (via <a href=\"https://github.com/NuML/NuML/\">libNuML</a>)." },
-                           { "type": "subCategory", "name": "CellML API",
-                             "entries": [
-                               { "type": "fixed", "description": "Memory access in the CUSES service." }
-                             ]
-                           }
+                           { "type": "added", "description": "<a href=\"https://github.com/NuML/NuML/\">NuML</a> API (via <a href=\"https://github.com/NuML/NuML/\">libNuML</a>)." }
                          ]
                        },
                        { "name": "Data store",
@@ -50,9 +46,8 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "improved", "description": "Conversion of <a href=\"https://www.cellml.org/\">CellML</a> files to the <a href=\"http://www.opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a>." },
-                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
-                               { "type": "fixed", "description": "Saving of a new file." }
+                               { "type": "improved", "description": "Conversion of <a href=\"https://www.cellml.org/\">CellML</a> files to the <a href=\"http://www.opencor.ws/user/plugins/editing/cellmlTextView.html#plugins-editing-cellmltextview-cellmltextformat\">CellML Text format</a>." },
+                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
                              ]
                            }
                          ]
@@ -77,18 +72,21 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
                              "entries": [
-                               { "type": "added", "description": "Support for log scales." },
                                { "type": "added", "description": "Support for multiple runs." },
                                { "type": "added", "description": "Ability to customise a graph." },
+                               { "type": "added", "description": "Support for logarithmic scales." },
                                { "type": "added", "description": "Ability to customise a graph panel." },
                                { "type": "added", "description": "Ability to show the legend of a graph panel." },
+                               { "type": "added", "description": "Support for pinch gestures to zoom in/out a graph panel." },
                                { "type": "added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
                                { "type": "improved", "description": "Colour for a new graph." },
+                               { "type": "improved", "description": "Simulation time information." },
                                { "type": "improved", "description": "Running of long simulations." },
+                               { "type": "improved", "description": "Resetting of model parameters." },
                                { "type": "improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
-                               { "type": "fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
+                               { "type": "fixed", "description": "<a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver issue when modifying a model parameter." }
                              ]
                            }
                          ]
@@ -100,7 +98,7 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Parametrisation of the solver." }
                              ]
                            },
-                           { "type": "comment", "description": "The <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver was removed." }
+                           { "type": "comment", "description": "The <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver was removed (in favour of <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a>+<a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a>)." }
                          ]
                        },
                        { "name": "Support",
@@ -186,7 +184,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "added", "description": "Import/export of the <a href=\"http://www.opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> from/to <a href=\"https://www.cellml.org/\">CellML</a>." },
+                               { "type": "added", "description": "Import/export of the <a href=\"http://www.opencor.ws/user/plugins/editing/cellmlTextView.html#plugins-editing-cellmltextview-cellmltextformat\">CellML Text format</a> from/to <a href=\"https://www.cellml.org/\">CellML</a>." },
                                { "type": "added", "description": "Support for the <code>min()</code>/<code>max()</code> and <code>gcd()</code>/<code>lcm()</code> functions." },
                                { "type": "added", "description": "Offer to save the contents of the view to a text file if it cannot be saved as a <a href=\"https://www.cellml.org/\">CellML</a> file." },
                                { "type": "improved", "description": "Syntax highlighting." },
@@ -420,10 +418,10 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Examples of <a href=\"http://www.opencor.ws/developer/develop/plugins/\">how to write plugins</a>",
                              "entries": [
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/Sample.html\">Sample</a> plugin." },
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/SampleTools.html\">SampleTools</a> plugin." },
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/SampleView.html\">SampleView</a> plugin." },
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/SampleWindow.html\">SampleWindow</a> plugin." }
+                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/sample.html\">Sample</a> plugin." },
+                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/sampleTools.html\">Sample tools</a> plugin." },
+                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/sampleView.html\">Sample view</a> plugin." },
+                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/sampleWindow.html\">Sample window</a> plugin." }
                              ]
                            }
                          ]
