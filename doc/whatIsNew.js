@@ -86,7 +86,7 @@ var jsonData = { "versions": [
                                { "type": "improved", "description": "Running of long simulations." },
                                { "type": "improved", "description": "Resetting of model parameters." },
                                { "type": "improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
-                               { "type": "fixed", "description": "<a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver issue when modifying a model parameter." }
+                               { "type": "fixed", "description": "<a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver issue when modifying a model state." }
                              ]
                            }
                          ]

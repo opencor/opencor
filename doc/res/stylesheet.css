@@ -161,6 +161,10 @@ img.downloads:hover {
     background: rgba(103, 103, 103, 0.13);
 }
 
+img.vcenter {
+    vertical-align: -3px;
+}
+
 span.anchor {
     display: block;
     height: 23px;
