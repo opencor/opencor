@@ -336,14 +336,6 @@ elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
 endif()
 
-# Determine whether we need OpenGL support
-# Note: at this stage, only our Zinc-related plugins need OpenGL support and
-#       they are only accessible through our test plugins...
-
-if(ENABLE_TEST_PLUGINS)
-    set(ENABLE_OPENGL ON)
-endif()
-
 # On Windows, specify the version of ICU that we are using while on Linux, add
 # our copy of the ICU and Mesa libraries
 # Note #1: on Linux, ICU is needed so that our external projects that need ICU
@@ -351,8 +343,6 @@ endif()
 # Note #2: on Linux, Mesa is needed so that we can run OpenCOR on machines that
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
-# Note #3: on Linux, even if OpenCOR doesn't need OpenGL as such, we still need
-#          it because well... we are on Linux...
 
 if(WIN32)
     set(ICU_VERSION 57)
@@ -406,10 +396,6 @@ if(APPLE)
         set(QTWEBKITWIDGETS QtWebKitWidgets)
     endif()
 
-    if(ENABLE_OPENGL)
-        set(QTOPENGL QtOpenGL)
-    endif()
-
     set(MACOS_QT_LIBRARIES
         QtConcurrent
         QtCore
@@ -419,7 +405,7 @@ if(APPLE)
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
-        ${QTOPENGL}
+        QtOpenGL
         QtPositioning
         QtPrintSupport
         QtQml
@@ -1182,13 +1168,11 @@ else()
         # OpenCOR on machines that don't have 'proper' OpenGL support (e.g. on a
         # Windows virtual machine in VirtualBox)
 
-        if(ENABLE_OPENGL)
-            set(ORIG_MESA_FILENAME opengl32sw.dll)
-            set(DEST_MESA_FILENAME opengl32.dll)
+        set(ORIG_MESA_FILENAME opengl32sw.dll)
+        set(DEST_MESA_FILENAME opengl32.dll)
 
-            copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-            copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-        endif()
+        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
+        copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
     else()
         # Make sure that OpenCOR uses RPATH rather than RUNPATH
 
@@ -1245,20 +1229,13 @@ if(WIN32)
 
     install(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
-
-    if(ENABLE_OPENGL)
-        install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
-                DESTINATION bin
-                RENAME ${DEST_MESA_FILENAME})
-    endif()
+    install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
+            DESTINATION bin
+            RENAME ${DEST_MESA_FILENAME})
 
     # Qt libraries required by OpenCOR
 
-    if(ENABLE_OPENGL)
-        set(OPENGL OpenGL)
-    endif()
-
-    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network ${OPENGL} Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
+    foreach(QT_LIBRARY Core Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel ${WEBKIT} ${WEBKITWIDGETS} Widgets Xml XmlPatterns)
         windows_deploy_qt_library(Qt5${QT_LIBRARY})
     endforeach()
 
