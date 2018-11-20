@@ -104,6 +104,55 @@ DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(Dat
 }
 
 //==============================================================================
+// File interface
+//==============================================================================
+
+bool CSVDataStorePlugin::isFile(const QString &pFileName) const
+{
+    // Return whether the given file is of the type that we support
+//---ISSUE1845--- TO BE DONE...
+Q_UNUSED(pFileName);
+
+    return false;
+}
+
+//==============================================================================
+
+QString CSVDataStorePlugin::mimeType() const
+{
+    // Return the MIME type we support
+
+    return CsvMimeType;
+}
+
+//==============================================================================
+
+QString CSVDataStorePlugin::fileExtension() const
+{
+    // Return the extension of the type of file we support
+
+    return CsvFileExtension;
+}
+
+//==============================================================================
+
+QString CSVDataStorePlugin::fileTypeDescription() const
+{
+    // Return the description of the type of file we support
+
+    return tr("CSV File");
+}
+
+//==============================================================================
+
+QStringList CSVDataStorePlugin::fileTypeDefaultViews() const
+{
+    // Return the default views to use for the type of file we support
+
+    return QStringList();
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 

@@ -5,6 +5,7 @@ project(CSVDataStorePlugin)
 add_plugin(CSVDataStore
     SOURCES
         ../../datastoreinterface.cpp
+        ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 

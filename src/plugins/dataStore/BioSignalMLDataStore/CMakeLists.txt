@@ -5,6 +5,7 @@ project(BioSignalMLDataStorePlugin)
 add_plugin(BioSignalMLDataStore
     SOURCES
         ../../datastoreinterface.cpp
+        ../../filetypeinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 

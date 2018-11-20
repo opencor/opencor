@@ -108,6 +108,55 @@ DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::dataStoreExporterInst
 }
 
 //==============================================================================
+// File interface
+//==============================================================================
+
+bool BioSignalMLDataStorePlugin::isFile(const QString &pFileName) const
+{
+    // Return whether the given file is of the type that we support
+//---ISSUE1845--- TO BE DONE...
+Q_UNUSED(pFileName);
+
+    return false;
+}
+
+//==============================================================================
+
+QString BioSignalMLDataStorePlugin::mimeType() const
+{
+    // Return the MIME type we support
+
+    return BiosignalmlMimeType;
+}
+
+//==============================================================================
+
+QString BioSignalMLDataStorePlugin::fileExtension() const
+{
+    // Return the extension of the type of file we support
+
+    return BiosignalmlFileExtension;
+}
+
+//==============================================================================
+
+QString BioSignalMLDataStorePlugin::fileTypeDescription() const
+{
+    // Return the description of the type of file we support
+
+    return tr("BioSignalML File");
+}
+
+//==============================================================================
+
+QStringList BioSignalMLDataStorePlugin::fileTypeDefaultViews() const
+{
+    // Return the default views to use for the type of file we support
+
+    return QStringList();
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 
