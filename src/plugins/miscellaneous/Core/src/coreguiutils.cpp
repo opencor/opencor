@@ -659,7 +659,7 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
-    // Note: there is a bug in QIcon::pixmap() when it comes to HiDPI screens 
+    // Note: there is a bug in QIcon::pixmap() when it comes to HiDPI screens
     //       (see https://bugreports.qt.io/browse/QTBUG-71333), hence we need to
     //       scale things...
 
@@ -778,26 +778,28 @@ QColor lockedColor(const QColor &pColor)
 
 //==============================================================================
 
-QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    bool pCheckMimeTypes, const QString &pMimeType)
+bool opencorActive()
 {
-    // Convert and return as a list of strings the filters corresponding to the
-    // given file type interfaces, using the given MIME types, if any
+    // Return whether OpenCOR is active
+    // Note: we only consider OpenCOR to be active if the main window or one of
+    //       its dockable windows is active. In other words, if a dialog is
+    //       opened, then we don't consider OpenCOR active since it could
+    //       disturb our user's workflow...
 
-    QStringList res = QStringList();
-
-    foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
-        if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
-            res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
-    }
-
-    return res;
+    return     qApp->activeWindow()
+           && !qApp->activeModalWidget()
+           && !qApp->activePopupWidget();
 }
 
 //==============================================================================
 
-QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
-{
+}   // namespace Core
+}   // namespace OpenCOR
+
+//==============================================================================
+// End of file
+//==============================================================================
+
     // Convert and return as a list of strings the filters corresponding to the
     // given file type interfaces
 

@@ -887,6 +887,45 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
 //==============================================================================
 
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    bool pCheckMimeTypes, const QString &pMimeType)
+{
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types, if any
+
+    QStringList res = QStringList();
+
+    foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
+        if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
+            res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
+{
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces
+
+    return filters(pFileTypeInterfaces, false, QString());
+}
+
+//==============================================================================
+
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    const QString &pMimeType)
+{
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types
+
+    return filters(pFileTypeInterfaces, true, pMimeType);
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

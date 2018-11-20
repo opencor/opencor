@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreglobal.h"
+#include "filetypeinterface.h"
 #include "plugin.h"
 #include "plugininfo.h"
 
@@ -162,6 +163,10 @@ bool CORE_EXPORT validXmlFile(const QString &pXmlFileName,
                               const QString &pSchemaFileName);
 
 QByteArray CORE_EXPORT serialiseDomDocument(const QDomDocument &pDomDocument);
+
+QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces);
+QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                                const QString &pMimeType);
 
 //==============================================================================
 
