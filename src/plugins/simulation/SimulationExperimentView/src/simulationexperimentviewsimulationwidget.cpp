@@ -184,7 +184,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                            Core::newAction(mToolBarWidget):
                                            nullptr;
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
-                                                  mToolBarWidget);
+                                                     mToolBarWidget);
     mPreferencesAction = Core::newAction(QIcon(":/oxygen/categories/preferences-system.png"),
                                          mToolBarWidget);
 
