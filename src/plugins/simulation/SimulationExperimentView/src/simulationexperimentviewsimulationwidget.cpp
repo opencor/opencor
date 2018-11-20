@@ -184,7 +184,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                            Core::newAction(mToolBarWidget):
                                            nullptr;
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
-                                                  mToolBarWidget);
+                                                     mToolBarWidget);
     mPreferencesAction = Core::newAction(QIcon(":/oxygen/categories/preferences-system.png"),
                                          mToolBarWidget);
 
@@ -671,8 +671,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
     mClearSimulationResultsAction->setEnabled(    mSimulation->results()->size()
                                               && !simulationModeEnabled);
     mSimulationResultsExportAction->setEnabled(    mSimulationResultsExportDropDownMenu->actions().count()
-                                            &&  mSimulation->results()->size()
-                                            && !simulationModeEnabled);
+                                               &&  mSimulation->results()->size()
+                                               && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
