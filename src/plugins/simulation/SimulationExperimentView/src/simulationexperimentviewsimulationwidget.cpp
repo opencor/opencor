@@ -183,6 +183,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSedmlExportCombineArchiveAction = (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)?
                                            Core::newAction(mToolBarWidget):
                                            nullptr;
+    mDataImportAction = Core::newAction(QIcon(":/oxygen/actions/document-import.png"),
+                                        mToolBarWidget);
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                   mToolBarWidget);
     mPreferencesAction = Core::newAction(QIcon(":/oxygen/categories/preferences-system.png"),
@@ -228,6 +230,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                 this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive));
     }
 
+    connect(mDataImportAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::dataImport);
     connect(mPreferencesAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::preferences);
 
@@ -363,6 +367,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mDataImportAction);
     mToolBarWidget->addWidget(simulationResultsExportToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mPreferencesAction);
@@ -575,6 +580,8 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                          tr("Export the simulation to SED-ML using a COMBINE archive"));
     }
 
+    I18nInterface::retranslateAction(mDataImportAction, tr("Data Import"),
+                                     tr("Import some data"));
     I18nInterface::retranslateAction(mSimulationResultsExportAction, tr("Simulation Results Export"),
                                      tr("Export the simulation results"));
 
@@ -3163,6 +3170,15 @@ void SimulationExperimentViewSimulationWidget::emitSplitterMoved()
     // Let people know that our splitter has been moved
 
     emit splitterMoved(mSplitterWidget->sizes());
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dataImport()
+{
+//---ISSUE1845--- TO BE DONE...
+
+    Core::informationMessageBox("OpenCOR", "Data import is coming soon...");
 }
 
 //==============================================================================

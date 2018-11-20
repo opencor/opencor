@@ -628,5 +628,13 @@
         <source>%1 using %2</source>
         <translation>%1 avec %2</translation>
     </message>
+    <message>
+        <source>Data Import</source>
+        <translation>Import Données</translation>
+    </message>
+    <message>
+        <source>Import some data</source>
+        <translation>Importer des données</translation>
+    </message>
 </context>
 </TS>

@@ -201,6 +201,7 @@ private:
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
+    QAction *mDataImportAction;
     QAction *mSimulationResultsExportAction;
     QAction *mPreferencesAction;
 
@@ -330,6 +331,7 @@ private slots:
 
     void emitSplitterMoved();
 
+    void dataImport();
     void simulationResultsExport();
 
     void updateDelayValue(double pDelayValue);
