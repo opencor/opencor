@@ -32,9 +32,11 @@ namespace Core {
 //==============================================================================
 
 InterfacesData::InterfacesData(const FileTypeInterfaces &pFileTypeInterfaces,
+                               const FileTypeInterfaces &pDataStoreFileTypeInterfaces,
                                const SolverInterfaces &pSolverInterfaces,
                                const DataStoreInterfaces &pDataStoreInterfaces) :
     mFileTypeInterfaces(pFileTypeInterfaces),
+    mDataStoreFileTypeInterfaces(pDataStoreFileTypeInterfaces),
     mSolverInterfaces(pSolverInterfaces),
     mDataStoreInterfaces(pDataStoreInterfaces)
 {
@@ -47,6 +49,15 @@ FileTypeInterfaces InterfacesData::fileTypeInterfaces() const
     // Return our file type interfaces
 
     return mFileTypeInterfaces;
+}
+
+//==============================================================================
+
+FileTypeInterfaces InterfacesData::dataStoreFileTypeInterfaces() const
+{
+    // Return our data store file type interfaces
+
+    return mDataStoreFileTypeInterfaces;
 }
 
 //==============================================================================
@@ -74,6 +85,15 @@ FileTypeInterfaces fileTypeInterfaces()
     // Return our file type interfaces
 
     return static_cast<InterfacesData *>(globalInstance(InterfacesDataSignature))->fileTypeInterfaces();
+}
+
+//==============================================================================
+
+FileTypeInterfaces dataStoreFileTypeInterfaces()
+{
+    // Return our data store file type interfaces
+
+    return static_cast<InterfacesData *>(globalInstance(InterfacesDataSignature))->dataStoreFileTypeInterfaces();
 }
 
 //==============================================================================

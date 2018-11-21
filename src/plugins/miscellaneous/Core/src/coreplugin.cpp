@@ -550,27 +550,31 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // are available to us
 
     FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
+    FileTypeInterfaces dataStoreFileTypeInterfaces = FileTypeInterfaces();
     SolverInterfaces solverInterfaces = SolverInterfaces();
     DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
-        // Look for a file type
-
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
-
-        if (fileTypeInterface)
-            fileTypeInterfaces << fileTypeInterface;
-
-        // Look for a solver
-
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
+        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
+
+        // Keep track of file types, but disinguish between those that are also
+        // a data store and those that are not
+
+        if (fileTypeInterface) {
+            if (dataStoreInterface)
+                dataStoreFileTypeInterfaces << fileTypeInterface;
+            else
+                fileTypeInterfaces << fileTypeInterface;
+        }
+
+        // Keep track of solvers
 
         if (solverInterface)
             solverInterfaces << solverInterface;
 
-        // Look for a data store
-
-        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
+        // Keep track of data stores
 
         if (dataStoreInterface)
             dataStoreInterfaces << dataStoreInterface;
@@ -578,8 +582,8 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
     // Keep track of our various interfaces
 
-    static InterfacesData data(fileTypeInterfaces, solverInterfaces,
-                               dataStoreInterfaces);
+    static InterfacesData data(fileTypeInterfaces, dataStoreFileTypeInterfaces,
+                               solverInterfaces, dataStoreInterfaces);
 
     globalInstance(InterfacesDataSignature, &data);
 
