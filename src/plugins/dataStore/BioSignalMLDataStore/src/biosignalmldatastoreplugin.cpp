@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "biosignalmldatastoredialog.h"
 #include "biosignalmldatastoreexporter.h"
 #include "biosignalmldatastoreplugin.h"
+#include "biosignalmlinterface.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 
@@ -49,6 +50,17 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo()
     return new PluginInfo(PluginInfo::DataStore, true, false,
                           QStringList() << "DataStore" << "libBioSignalML",
                           descriptions);
+}
+
+//==============================================================================
+
+BioSignalMLDataStorePlugin::BioSignalMLDataStorePlugin()
+{
+    // Keep track of our file type interface
+
+    static BiosignalmlInterfaceData data(qobject_cast<FileTypeInterface *>(this));
+
+    Core::globalInstance(BiosignalmlInterfaceDataSignature, &data);
 }
 
 //==============================================================================

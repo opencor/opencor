@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
 #include "csvdatastoreplugin.h"
+#include "csvinterface.h"
 #include "datastoredialog.h"
 
 //==============================================================================
@@ -49,6 +50,17 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
     return new PluginInfo(PluginInfo::DataStore, true, false,
                           QStringList() << "DataStore",
                           descriptions);
+}
+
+//==============================================================================
+
+CSVDataStorePlugin::CSVDataStorePlugin()
+{
+    // Keep track of our file type interface
+
+    static CsvInterfaceData data(qobject_cast<FileTypeInterface *>(this));
+
+    Core::globalInstance(CsvInterfaceDataSignature, &data);
 }
 
 //==============================================================================

@@ -11,6 +11,7 @@ add_plugin(CSVDataStore
 
         src/csvdatastoreexporter.cpp
         src/csvdatastoreplugin.cpp
+        src/csvinterface.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
 

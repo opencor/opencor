@@ -13,6 +13,7 @@ add_plugin(BioSignalMLDataStore
         src/biosignalmldatastoredialog.cpp
         src/biosignalmldatastoreexporter.cpp
         src/biosignalmldatastoreplugin.cpp
+        src/biosignalmlinterface.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
 
