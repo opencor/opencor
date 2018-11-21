@@ -659,7 +659,7 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QIcon &pOverlayIcon,
 {
     // Create and return an overlayed icon using the given base and overlay
     // icons
-    // Note: there is a bug in QIcon::pixmap() when it comes to HiDPI screens 
+    // Note: there is a bug in QIcon::pixmap() when it comes to HiDPI screens
     //       (see https://bugreports.qt.io/browse/QTBUG-71333), hence we need to
     //       scale things...
 
@@ -774,45 +774,6 @@ QColor lockedColor(const QColor &pColor)
     return QColor(int(Alpha*lockedRed+OneMinusAlpha*red),
                   int(Alpha*lockedGreen+OneMinusAlpha*green),
                   int(Alpha*lockedBlue+OneMinusAlpha*blue));
-}
-
-//==============================================================================
-
-QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    bool pCheckMimeTypes, const QString &pMimeType)
-{
-    // Convert and return as a list of strings the filters corresponding to the
-    // given file type interfaces, using the given MIME types, if any
-
-    QStringList res = QStringList();
-
-    foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
-        if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
-            res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
-    }
-
-    return res;
-}
-
-//==============================================================================
-
-QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
-{
-    // Convert and return as a list of strings the filters corresponding to the
-    // given file type interfaces
-
-    return filters(pFileTypeInterfaces, false, QString());
-}
-
-//==============================================================================
-
-QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                    const QString &pMimeType)
-{
-    // Convert and return as a list of strings the filters corresponding to the
-    // given file type interfaces, using the given MIME types
-
-    return filters(pFileTypeInterfaces, true, pMimeType);
 }
 
 //==============================================================================
