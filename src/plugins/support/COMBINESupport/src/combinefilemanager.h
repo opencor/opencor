@@ -43,7 +43,7 @@ class COMBINESUPPORT_EXPORT CombineFileManager : public StandardSupport::Standar
 public:
     static CombineFileManager * instance();
 
-    bool isCombineArchive(const QString &pFileName) const;
+    bool isCombineArchive(const QString &pFileName);
 
     CombineArchive * combineArchive(const QString &pFileName);
 
