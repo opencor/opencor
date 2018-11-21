@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "filetypeinterface.h"
 #include "combinesupportglobal.h"
+#include "filetypeinterface.h"
 
 //==============================================================================
 
