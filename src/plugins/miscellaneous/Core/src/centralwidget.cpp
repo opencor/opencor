@@ -1521,9 +1521,9 @@ void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Accept the proposed action for the event, but only if at least one mode
     // is available and if we are dropping URIs or items from our file organiser
 
-    if (   mModeTabs->count()
-        && (pEvent->mimeData()->hasFormat(FileSystemMimeType))
-        && (!pEvent->mimeData()->urls().isEmpty())) {
+    if (    mModeTabs->count()
+        &&  pEvent->mimeData()->hasFormat(FileSystemMimeType)
+        && !pEvent->mimeData()->urls().isEmpty()) {
         // Note: we test the list of URLs in case we are trying to drop one or
         //       several folders (and no file) from the file organiser, in which
         //       case the list of URLs will be empty...
