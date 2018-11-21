@@ -45,11 +45,11 @@ CombineFileManager * CombineFileManager::instance()
 
 //==============================================================================
 
-bool CombineFileManager::isCombineArchive(const QString &pFileName) const
+bool CombineFileManager::isCombineArchive(const QString &pFileName)
 {
     // Return whether the given file is a COMBINE archive
 
-    return instance()->isFile(pFileName);
+    return isFile(pFileName);
 }
 
 //==============================================================================
