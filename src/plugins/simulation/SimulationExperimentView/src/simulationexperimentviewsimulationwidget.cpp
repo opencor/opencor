@@ -484,7 +484,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mOutputWidget = new QTextEdit(this);
 
-    mOutputWidget->setAcceptDrops(false);
     mOutputWidget->setFrameStyle(QFrame::NoFrame);
     mOutputWidget->setReadOnly(true);
 

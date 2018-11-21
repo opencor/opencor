@@ -138,7 +138,6 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 {
     // Customise ourselves
 
-    setAcceptDrops(false);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Create our web view object and customise it
