@@ -75,14 +75,10 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         //          is much faster than preventing ourselves from adding
         //          duplicates in the first place...
 
-        QStringList variablesUri = QStringList();
         QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
 
-        foreach (DataStore::DataStoreVariable *variable, variables) {
-            variablesUri << variable->uri();
-
+        for (int i = 0, iMax = variables.count(); i < iMax; ++i)
             variablesRuns << DataStore::DataStoreVariables();
-        }
 
         int nbOfRuns = dataStore->runsCount();
         QList<quint64> runsIndex = QList<quint64>();
@@ -100,15 +96,10 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
             // Variables
 
-            int j = 0;
+            int j = -1;
 
-            foreach (DataStore::DataStoreVariable *variable, dataStore->variables()) {
-                if (variablesUri.contains(variable->uri())) {
-                    variablesRuns[j] << variable;
-
-                    ++j;
-                }
-            }
+            foreach (DataStore::DataStoreVariable *variable, variables)
+                variablesRuns[++j] << variable;
         }
 
         voiValues = voiValues.toSet().toList();
