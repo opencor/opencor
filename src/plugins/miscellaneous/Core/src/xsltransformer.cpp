@@ -75,6 +75,8 @@ void XslTransformerWorker::run()
 
 void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 {
+    // Create and move our worker to a thread
+
     QThread *thread = new QThread();
     XslTransformerWorker *worker = new XslTransformerWorker(pInput, pXsl);
 
@@ -92,6 +94,8 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 
     connect(thread, &QThread::finished,
             thread, &QThread::deleteLater);
+
+    // Start our worker by starting the thread in which it is
 
     thread->start();
 }

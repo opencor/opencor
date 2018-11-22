@@ -52,7 +52,7 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation,
 {
     // Create our thread
 
-    mThread = new QThread();
+    mThread = new MyThread();
 
     // Move ourselves to our thread
 

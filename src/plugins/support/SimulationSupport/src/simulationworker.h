@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QWaitCondition>
 
+#include <QThread>
 //==============================================================================
 
 namespace OpenCOR {
@@ -47,6 +48,12 @@ namespace SimulationSupport {
 class Simulation;
 
 //==============================================================================
+class MyThread : public QThread
+{
+public:
+    explicit MyThread() { qDebug("[%p] MyThread CONSTRUCTOR...", this); }
+    ~MyThread() override { qDebug("[%p] MyThread DESTRUCTOR...", this); }
+};
 
 class SimulationWorker : public QObject
 {
@@ -69,7 +76,7 @@ public:
     bool reset();
 
 private:
-    QThread *mThread;
+    MyThread *mThread;
 
     Simulation *mSimulation;
 
