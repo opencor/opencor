@@ -51,12 +51,12 @@ public:
 
     void run();
 
-signals:
-    void done(const QString &pInput, const QString &pOutput);
-
 private:
     QString mInput;
     QString mXsl;
+
+signals:
+    void done(const QString &pInput, const QString &pOutput);
 };
 
 //==============================================================================
