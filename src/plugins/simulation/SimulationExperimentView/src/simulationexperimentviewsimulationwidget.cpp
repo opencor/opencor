@@ -53,10 +53,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDir>
+#include <QDragEnterEvent>
 #include <QLabel>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
+#include <QMimeData>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
@@ -144,6 +146,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     connect(mSimulation->data(), &SimulationSupport::SimulationData::modified,
             this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
+
+    // Allow for things to be dropped on us
+
+    setAcceptDrops(true);
 
     // Create a tool bar
 
@@ -622,6 +628,63 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
     // Retranslate our contents widget
 
     mContentsWidget->retranslateUi();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+{
+    // Accept the proposed action for the event, but only if it refers to one or
+    // several data store files
+
+    bool acceptEvent = false;
+
+    foreach (const QString &fileName, Core::droppedFileNames(pEvent)) {
+        foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                acceptEvent = true;
+
+                break;
+            }
+        }
+
+        if (acceptEvent)
+            break;
+    }
+
+    if (acceptEvent)
+        pEvent->acceptProposedAction();
+    else
+        pEvent->ignore();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+{
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
+{
+    // Import the one or several data store files
+
+    foreach (const QString &fileName, Core::droppedFileNames(pEvent)) {
+        foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+//---ISSUE1845--- DO THE ACTUAL IMPORT...
+qDebug(">>> Import %s...", qPrintable(fileName));
+            }
+        }
+    }
+
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
 }
 
 //==============================================================================

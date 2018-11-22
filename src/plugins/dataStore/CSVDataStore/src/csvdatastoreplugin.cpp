@@ -30,8 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QFile>
 #include <QMainWindow>
 #include <QSettings>
+#include <QTextStream>
 
 //==============================================================================
 
@@ -122,10 +124,56 @@ DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(Dat
 bool CSVDataStorePlugin::isFile(const QString &pFileName) const
 {
     // Return whether the given file is of the type that we support
-//---ISSUE1845--- TO BE DONE...
-Q_UNUSED(pFileName);
 
-    return false;
+    QFile file(pFileName);
+
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        QTextStream in(&file);
+        bool emptyLine = false;
+        bool needNbOfFields = true;
+        int nbOfFields = 0;
+
+        while (!in.atEnd()) {
+            QString line = in.readLine().trimmed();
+
+            if (line.isEmpty()) {
+                // The line is empty, which is fine, but only if it is the last
+                // line of the file
+
+                if (emptyLine)
+                    return false;
+                else
+                    emptyLine = true;
+            } else if (line.endsWith(",")) {
+                // The line ends with a comma, which is not allowed
+
+                return false;
+            } else {
+                // Make sure that the line has the same number of fields (and at
+                // least two of them) as the other lines (with the fields being
+                // separated by commas)
+
+                int crtNbOfFields = line.split(",").count();
+
+                if (needNbOfFields) {
+                    nbOfFields = crtNbOfFields;
+
+                    if (nbOfFields == 1)
+                        return false;
+
+                    needNbOfFields = false;
+                } else if (crtNbOfFields != nbOfFields) {
+                    return false;
+                }
+            }
+        }
+
+        file.close();
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================

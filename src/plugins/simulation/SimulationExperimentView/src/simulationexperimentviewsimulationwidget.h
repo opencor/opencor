@@ -158,6 +158,11 @@ public:
 
     void resetSimulationProgress();
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
+
 private:
     enum ErrorType {
         General,
