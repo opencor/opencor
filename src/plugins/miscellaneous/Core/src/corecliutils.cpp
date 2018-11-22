@@ -33,9 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QChar>
 #include <QCryptographicHash>
 #include <QDir>
+#include <QDropEvent>
 #include <QIODevice>
 #include <QLocale>
 #include <QMap>
+#include <QMimeData>
 #include <QNetworkAccessManager>
 #include <QNetworkInterface>
 #include <QNetworkReply>
@@ -922,6 +924,45 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
     // given file type interfaces, using the given MIME types
 
     return filters(pFileTypeInterfaces, true, pMimeType);
+}
+
+//==============================================================================
+
+QStringList droppedFileNames(QDropEvent *pEvent)
+{
+    // Retrieve the name of the various files that have been dropped
+
+    QStringList res = QStringList();
+    QList<QUrl> urls = pEvent->mimeData()->urls();
+
+    for (int i = 0, iMax = urls.count(); i < iMax; ++i)
+    {
+        QString fileName = urls[i].toLocalFile();
+        QFileInfo fileInfo = fileName;
+
+        if (fileInfo.isFile()) {
+            if (fileInfo.isSymLink()) {
+                // We are dropping a symbolic link, so retrieve its target and
+                // check that it exists, and if it does then add it
+
+                fileName = fileInfo.symLinkTarget();
+
+                if (QFile::exists(fileName))
+                    res << fileName;
+            } else {
+                // We are dropping a file, so we can just add it
+
+                res << fileName;
+            }
+        }
+    }
+
+    // There may be duplicates (in case we dropped some symbolic links), so
+    // remove them
+
+    res.removeDuplicates();
+
+    return res;
 }
 
 //==============================================================================

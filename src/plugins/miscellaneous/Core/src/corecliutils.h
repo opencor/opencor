@@ -77,6 +77,7 @@ QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
 
 //==============================================================================
 
+class QDropEvent;
 class QNetworkReply;
 
 //==============================================================================
@@ -167,6 +168,8 @@ QByteArray CORE_EXPORT serialiseDomDocument(const QDomDocument &pDomDocument);
 QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces);
 QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces,
                                 const QString &pMimeType);
+
+QStringList CORE_EXPORT droppedFileNames(QDropEvent *pEvent);
 
 //==============================================================================
 
