@@ -935,8 +935,7 @@ QStringList droppedFileNames(QDropEvent *pEvent)
     QStringList res = QStringList();
     QList<QUrl> urls = pEvent->mimeData()->urls();
 
-    for (int i = 0, iMax = urls.count(); i < iMax; ++i)
-    {
+    for (int i = 0, iMax = urls.count(); i < iMax; ++i) {
         QString fileName = urls[i].toLocalFile();
         QFileInfo fileInfo = fileName;
 
