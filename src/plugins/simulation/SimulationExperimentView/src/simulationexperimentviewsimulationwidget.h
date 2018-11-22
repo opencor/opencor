@@ -366,8 +366,8 @@ private slots:
 
     void plotAxesChanged();
 
-    void dataStoreExportDone(const QString &pErrorMessage);
     void dataStoreExportProgress(double pProgress);
+    void dataStoreExportDone(const QString &pErrorMessage);
 
     void checkSimulationProperties();
     void checkSolversProperties();

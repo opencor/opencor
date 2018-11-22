@@ -188,8 +188,8 @@ protected:
     DataStoreData *mDataStoreData;
 
 signals:
+    void progress(double pProgress);
     void done(const QString &pErrorMessage);
-    void progress(double pProgress) const;
 
 private slots:
     void started();

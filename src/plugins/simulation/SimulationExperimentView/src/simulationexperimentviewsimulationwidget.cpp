@@ -3183,10 +3183,10 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
 
-        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
 
         dataStoreExporter->start();
     }
@@ -4074,6 +4074,15 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
+{
+    // There has been some progress with our export, so update our busy widget
+
+    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
 {
     // We are done with the export, so hide our busy widget
@@ -4086,15 +4095,6 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString
         Core::warningMessageBox(tr("Simulation Results Export"),
                                 pErrorMessage);
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
-{
-    // There has been some progress with our export, so update our busy widget
-
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
