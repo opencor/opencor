@@ -169,20 +169,12 @@ private:
 
 //==============================================================================
 
-class DataStoreExporter : public QObject
+class DataStoreExporterWorker : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreExporter(DataStoreData *pDataStoreData);
-    ~DataStoreExporter() override;
-
-    void start();
-
-    virtual void execute(QString &pErrorMessage) const = 0;
-
-private:
-    QThread *mThread;
+    explicit DataStoreExporterWorker(DataStoreData *pDataStoreData);
 
 protected:
     DataStoreData *mDataStoreData;
@@ -191,8 +183,25 @@ signals:
     void progress(double pProgress);
     void done(const QString &pErrorMessage);
 
-private slots:
-    void started();
+public slots:
+   virtual void run() = 0;
+};
+
+//==============================================================================
+
+class DataStoreExporter : public QObject
+{
+    Q_OBJECT
+
+public:
+    void exportData(DataStoreData *pDataStoreData);
+
+protected:
+    virtual DataStoreExporterWorker * workerInstance(DataStoreData *pDataStoreData) = 0;
+
+signals:
+    void progress(double pProgress);
+    void done(const QString &pErrorMessage);
 };
 
 //==============================================================================

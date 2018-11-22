@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 3;
+    return 4;
 }
 
 //==============================================================================
@@ -551,61 +551,44 @@ void DataStore::addValues(double pVoiValue)
 
 //==============================================================================
 
-DataStoreExporter::DataStoreExporter(DataStoreData *pDataStoreData) :
+DataStoreExporterWorker::DataStoreExporterWorker(DataStoreData *pDataStoreData) :
     mDataStoreData(pDataStoreData)
 {
-    // Create our thread
-
-    mThread = new QThread();
-
-    // Move ourselves to our thread
-
-    moveToThread(mThread);
-
-    // Create a few connections
-
-    connect(mThread, &QThread::started,
-            this, &DataStoreExporter::started);
-
-    connect(mThread, &QThread::finished,
-            mThread, &QThread::deleteLater);
-    connect(mThread, &QThread::finished,
-            this, &DataStoreExporter::deleteLater);
 }
 
 //==============================================================================
 
-DataStoreExporter::~DataStoreExporter()
+void DataStoreExporter::exportData(DataStoreData *pDataStoreData)
 {
-    // Delete some internal objects
-    // Note: no need to delete mDataStore since it will be automatically
-    //       deleted through our threaded mechanism...
+    // Create and move our worker to a thread
+    // Note: we cannot use the new connect() syntax with our worker's signals
+    //       since it's an instance of a derived class located in another
+    //       plugin...
 
-    delete mDataStoreData;
-}
+    QThread *thread = new QThread();
+    DataStoreExporterWorker *worker = workerInstance(pDataStoreData);
 
-//==============================================================================
+    worker->moveToThread(thread);
 
-void DataStoreExporter::start()
-{
-    // Start the export
+    connect(thread, &QThread::started,
+            worker, &DataStoreExporterWorker::run);
 
-    mThread->start();
-}
+    connect(worker, SIGNAL(progress(double)),
+            this, SIGNAL(progress(double)));
 
-//==============================================================================
+    connect(worker, SIGNAL(done(const QString &)),
+            this, SIGNAL(done(const QString &)));
+    connect(worker, SIGNAL(done(const QString &)),
+            thread, SLOT(quit()));
+    connect(worker, SIGNAL(done(const QString &)),
+            worker, SLOT(deleteLater()));
 
-void DataStoreExporter::started()
-{
-    // Do the export itself
+    connect(thread, &QThread::finished,
+            thread, &QThread::deleteLater);
 
-    QString errorMessage = QString();
+    // Start our worker by starting the thread in which it is
 
-    execute(errorMessage);
-
-    // Let people know that we are done with the export
-
-    emit done(errorMessage);
+    thread->start();
 }
 
 //==============================================================================

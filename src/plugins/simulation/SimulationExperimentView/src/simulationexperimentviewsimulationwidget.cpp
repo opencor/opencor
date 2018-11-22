@@ -3181,14 +3181,14 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
         Core::centralWidget()->showProgressBusyWidget();
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
 
-        dataStoreExporter->start();
+        dataStoreExporter->exportData(dataStoreData);
     }
 }
 
