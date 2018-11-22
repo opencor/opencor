@@ -313,6 +313,8 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
+    void importDataFile(const QString &pFileName);
+
 signals:
     void splitterMoved(const QIntList &pSizes);
 

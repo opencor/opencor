@@ -675,10 +675,8 @@ void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
 
     foreach (const QString &fileName, Core::droppedFileNames(pEvent)) {
         foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
-            if (fileTypeInterface->isFile(fileName)) {
-//---ISSUE1845--- DO THE ACTUAL IMPORT...
-qDebug(">>> Import %s...", qPrintable(fileName));
-            }
+            if (fileTypeInterface->isFile(fileName))
+                importDataFile(fileName);
         }
     }
 
@@ -3238,9 +3236,38 @@ void SimulationExperimentViewSimulationWidget::emitSplitterMoved()
 
 void SimulationExperimentViewSimulationWidget::dataImport()
 {
-//---ISSUE1845--- TO BE DONE...
+    // Ask for the data file to be imported
 
-    Core::informationMessageBox("OpenCOR", "Data import is coming soon...");
+    QString fileName = Core::getOpenFileName(tr("Import Data File"),
+                                             Core::filters(Core::dataStoreFileTypeInterfaces()));
+qDebug(">>> File name: >%s<", qPrintable(fileName));
+
+    // Make sure that the data file exists (in case it's a non-valid symbolic
+    // link for example)
+
+    bool dataFileImported = false;
+
+    if (QFile::exists(fileName)) {
+        // Import the data file, if possible
+
+        foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                importDataFile(fileName);
+
+                dataFileImported = true;
+
+                break;
+            }
+        }
+    }
+
+    if (!dataFileImported) {
+        // The data file could not be imported for some reason or another, so
+        // let the user know about it
+
+        Core::warningMessageBox(tr("Import Data File"),
+                                tr("<strong>%1</strong> could not be imported.").arg(fileName));
+    }
 }
 
 //==============================================================================
@@ -4306,6 +4333,14 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
                                                    || graphPanelPropertiesModified
                                                    || graphsPropertiesModified
                                                    || mGraphPanelsWidgetSizesModified));
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::importDataFile(const QString &pFileName)
+{
+//---ISSUE1845--- DO THE ACTUAL IMPORT...
+qDebug(">>> Import %s...", qPrintable(pFileName));
 }
 
 //==============================================================================

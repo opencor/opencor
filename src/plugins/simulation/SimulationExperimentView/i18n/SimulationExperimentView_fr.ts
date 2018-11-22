@@ -636,5 +636,13 @@
         <source>Import some data</source>
         <translation>Importer des données</translation>
     </message>
+    <message>
+        <source>Import Data File</source>
+        <translation>Importer Fichier Données</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé.</translation>
+    </message>
 </context>
 </TS>
