@@ -42,17 +42,17 @@ namespace Core {
 
 //==============================================================================
 
-class DummyMessageHandler;
-
-//==============================================================================
-
-class XslTransformerJob
+class XslTransformerWorker : public QObject
 {
-public:
-    explicit XslTransformerJob(const QString &pInput, const QString &pXsl);
+    Q_OBJECT
 
-    QString input() const;
-    QString xsl() const;
+public:
+    explicit XslTransformerWorker(const QString &pInput, const QString &pXsl);
+
+    void run();
+
+signals:
+    void done(const QString &pInput, const QString &pOutput);
 
 private:
     QString mInput;
@@ -66,29 +66,10 @@ class CORE_EXPORT XslTransformer : public QObject
     Q_OBJECT
 
 public:
-    explicit XslTransformer();
-
     void transform(const QString &pInput, const QString &pXsl);
-
-    void stop();
-
-private:
-    QThread *mThread;
-
-    bool mPaused;
-    bool mStopped;
-
-    QMutex mJobsMutex;
-
-    QWaitCondition mPausedCondition;
-
-    QList<XslTransformerJob> mJobs;
 
 signals:
     void done(const QString &pInput, const QString &pOutput);
-
-private slots:
-    void started();
 };
 
 //==============================================================================
