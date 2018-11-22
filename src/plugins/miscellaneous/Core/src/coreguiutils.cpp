@@ -177,6 +177,11 @@ QStringList getOpenFileNames(const QString &pCaption,
             setActiveDirectory(QFileInfo(res.last()).path());
         }
 
+        // There may be duplicates (in case we selected some symbolic links), so
+        // remove them
+
+        res.removeDuplicates();
+
         return res;
     } else {
         return QStringList();
