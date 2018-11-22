@@ -70,6 +70,11 @@ DataStoreInterfaces CORE_EXPORT dataStoreInterfaces();
 
 //==============================================================================
 
+FileTypeInterface CORE_EXPORT * fileTypeInterface(DataStoreInterface *pDataStoreInterface);
+DataStoreInterface CORE_EXPORT * dataStoreInterface(FileTypeInterface *pFileTypeInterface);
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

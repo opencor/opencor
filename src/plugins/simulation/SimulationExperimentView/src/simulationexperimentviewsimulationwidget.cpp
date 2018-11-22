@@ -676,7 +676,7 @@ void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
     foreach (const QString &fileName, Core::droppedFileNames(pEvent)) {
         foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName))
-                importDataFile(fileName);
+                importDataFile(fileName, Core::dataStoreInterface(fileTypeInterface));
         }
     }
 
@@ -3240,7 +3240,6 @@ void SimulationExperimentViewSimulationWidget::dataImport()
 
     QString fileName = Core::getOpenFileName(tr("Import Data File"),
                                              Core::filters(Core::dataStoreFileTypeInterfaces()));
-qDebug(">>> File name: >%s<", qPrintable(fileName));
 
     // Make sure that the data file exists (in case it's a non-valid symbolic
     // link for example)
@@ -3252,7 +3251,7 @@ qDebug(">>> File name: >%s<", qPrintable(fileName));
 
         foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
-                importDataFile(fileName);
+                importDataFile(fileName, Core::dataStoreInterface(fileTypeInterface));
 
                 dataFileImported = true;
 
@@ -4337,9 +4336,11 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::importDataFile(const QString &pFileName)
+void SimulationExperimentViewSimulationWidget::importDataFile(const QString &pFileName,
+                                                              DataStoreInterface *pDataStoreInterface)
 {
 //---ISSUE1845--- DO THE ACTUAL IMPORT...
+Q_UNUSED(pDataStoreInterface);
 qDebug(">>> Import %s...", qPrintable(pFileName));
 }
 

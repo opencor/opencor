@@ -116,6 +116,26 @@ DataStoreInterfaces dataStoreInterfaces()
 
 //==============================================================================
 
+FileTypeInterface * fileTypeInterface(DataStoreInterface *pDataStoreInterface)
+{
+    // Return the file type interface corresponding to the given data store
+    // interface
+
+    return fileTypeInterfaces()[dataStoreInterfaces().indexOf(pDataStoreInterface)];
+}
+
+//==============================================================================
+
+DataStoreInterface * dataStoreInterface(FileTypeInterface *pFileTypeInterface)
+{
+    // Return the data store interface corresponding to the given file type
+    // interface
+
+    return dataStoreInterfaces()[fileTypeInterfaces().indexOf(pFileTypeInterface)];
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 
