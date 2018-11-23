@@ -34,8 +34,10 @@ namespace DataStore {
 
 //==============================================================================
 
-class DataStoreVariableRun
+class DataStoreVariableRun : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStoreVariableRun(quint64 pCapacity, double *pValue);
     ~DataStoreVariableRun();
@@ -62,8 +64,10 @@ typedef QList<DataStoreVariableRun *> DataStoreVariableRuns;
 
 //==============================================================================
 
-class DataStoreVariable
+class DataStoreVariable : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStoreVariable(double *pValue = nullptr);
     ~DataStoreVariable();
@@ -139,8 +143,10 @@ private:
 
 //==============================================================================
 
-class DataStore
+class DataStore : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStore(const QString &pUri);
     ~DataStore();
