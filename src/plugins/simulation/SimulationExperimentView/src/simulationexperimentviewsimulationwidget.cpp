@@ -136,8 +136,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::simulationRunning);
     connect(mSimulation, &SimulationSupport::Simulation::paused,
             this, &SimulationExperimentViewSimulationWidget::simulationPaused);
-    connect(mSimulation, &SimulationSupport::Simulation::stopped,
-            this, &SimulationExperimentViewSimulationWidget::simulationStopped);
+    connect(mSimulation, &SimulationSupport::Simulation::done,
+            this, &SimulationExperimentViewSimulationWidget::simulationDone);
 
     connect(mSimulation, &SimulationSupport::Simulation::error,
             this, QOverload<const QString &>::of(&SimulationExperimentViewSimulationWidget::simulationError));
@@ -3248,7 +3248,7 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsedTime)
+void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTime)
 {
     // Output the given elapsed time, if valid
 

@@ -63,7 +63,7 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation,
     connect(mThread, &QThread::started,
             this, &SimulationWorker::started);
 
-    connect(this, &SimulationWorker::finished,
+    connect(this, &SimulationWorker::done,
             mThread, &QThread::quit);
 
     connect(mThread, &QThread::finished,
@@ -353,7 +353,7 @@ void SimulationWorker::started()
 
     // Let people know that we are done and give them the elapsed time
 
-    emit finished(mError?-1:elapsedTime);
+    emit done(mError?-1:elapsedTime);
 }
 
 //==============================================================================

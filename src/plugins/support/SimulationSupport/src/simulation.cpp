@@ -1132,8 +1132,8 @@ void Simulation::run()
         connect(mWorker, &SimulationWorker::paused,
                 this, &Simulation::paused);
 
-        connect(mWorker, &SimulationWorker::finished,
-                this, &Simulation::stopped);
+        connect(mWorker, &SimulationWorker::done,
+                this, &Simulation::done);
 
         connect(mWorker, &SimulationWorker::error,
                 this, &Simulation::error);

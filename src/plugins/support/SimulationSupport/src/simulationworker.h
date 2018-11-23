@@ -92,7 +92,7 @@ signals:
     void running(bool pIsResuming);
     void paused();
 
-    void finished(qint64 pElapsedTime);
+    void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
 

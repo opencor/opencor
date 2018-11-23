@@ -336,7 +336,8 @@ private slots:
 
     void simulationRunning(bool pIsResuming);
     void simulationPaused();
-    void simulationStopped(qint64 pElapsedTime);
+
+    void simulationDone(qint64 pElapsedTime);
 
     void resetProgressBar();
     void resetFileTabIcon();
