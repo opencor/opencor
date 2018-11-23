@@ -136,6 +136,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::simulationRunning);
     connect(mSimulation, &SimulationSupport::Simulation::paused,
             this, &SimulationExperimentViewSimulationWidget::simulationPaused);
+
     connect(mSimulation, &SimulationSupport::Simulation::done,
             this, &SimulationExperimentViewSimulationWidget::simulationDone);
 

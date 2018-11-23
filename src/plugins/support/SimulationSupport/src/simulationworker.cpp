@@ -346,7 +346,7 @@ void SimulationWorker::started()
 
     // Reset our simulation owner's knowledge of us
     // Note: if we were to do it the Qt way, our simulation owner would have a
-    //       slot for our finished() signal, but we want our simulation owner to
+    //       slot for our done() signal, but we want our simulation owner to
     //       know as quickly as possible that we are done...
 
     mSelf = nullptr;
