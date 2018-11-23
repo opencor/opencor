@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QEventLoop>
+#include <QThread>
 
 //==============================================================================
 
@@ -1121,11 +1122,15 @@ void Simulation::run()
     // simulation settings we were given are sound
 
     if (!mWorker && simulationSettingsOk()) {
-        // Create our worker
+        // Create and move our worker to a thread
 
-        mWorker = new SimulationWorker(this, mWorker);
+        QThread *thread = new QThread();
+        mWorker = new SimulationWorker(this, thread, mWorker);
 
-        // Create a few connections
+        mWorker->moveToThread(thread);
+
+        connect(thread, &QThread::started,
+                mWorker, &SimulationWorker::run);
 
         connect(mWorker, &SimulationWorker::running,
                 this, &Simulation::running);
@@ -1134,13 +1139,20 @@ void Simulation::run()
 
         connect(mWorker, &SimulationWorker::done,
                 this, &Simulation::done);
+        connect(mWorker, &SimulationWorker::done,
+                thread, &QThread::quit);
+        connect(mWorker, &SimulationWorker::done,
+                mWorker, &SimulationWorker::deleteLater);
 
         connect(mWorker, &SimulationWorker::error,
                 this, &Simulation::error);
 
-        // Start our worker
+        connect(thread, &QThread::finished,
+                thread, &QThread::deleteLater);
 
-        mWorker->run();
+        // Start our worker by starting the thread in which it is
+
+        thread->start();
     }
 }
 

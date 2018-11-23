@@ -39,9 +39,10 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-SimulationWorker::SimulationWorker(Simulation *pSimulation,
+SimulationWorker::SimulationWorker(Simulation *pSimulation, QThread *pThread,
                                    SimulationWorker *&pSelf) :
     mSimulation(pSimulation),
+    mThread(pThread),
     mRuntime(pSimulation->runtime()),
     mCurrentPoint(0.0),
     mPaused(false),
@@ -50,26 +51,6 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation,
     mError(false),
     mSelf(pSelf)
 {
-    // Create our thread
-
-    mThread = new QThread();
-
-    // Move ourselves to our thread
-
-    moveToThread(mThread);
-
-    // Create a few connections
-
-    connect(mThread, &QThread::started,
-            this, &SimulationWorker::started);
-
-    connect(this, &SimulationWorker::done,
-            mThread, &QThread::quit);
-
-    connect(mThread, &QThread::finished,
-            mThread, &QThread::deleteLater);
-    connect(mThread, &QThread::finished,
-            this, &SimulationWorker::deleteLater);
 }
 
 //==============================================================================
@@ -103,16 +84,6 @@ double SimulationWorker::currentPoint() const
 
 //==============================================================================
 
-void SimulationWorker::run()
-{
-    // Start our thread, if we are not already running
-
-    if (!mThread->isRunning())
-        mThread->start();
-}
-
-//==============================================================================
-
 void SimulationWorker::pause()
 {
     // Pause ourselves, if we are currently running
@@ -142,11 +113,6 @@ void SimulationWorker::stop()
 
         if (isPaused())
             mPausedCondition.wakeOne();
-
-        // Ask our thread to quit and wait for it to do so
-
-        mThread->quit();
-        mThread->wait();
     }
 }
 
@@ -162,7 +128,7 @@ void SimulationWorker::reset()
 
 //==============================================================================
 
-void SimulationWorker::started()
+void SimulationWorker::run()
 {
     // Let people know that we are running
 
