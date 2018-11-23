@@ -80,8 +80,8 @@ public:
     double * states() const;
     double * algebraic() const;
 
-    int delay() const;
-    void setDelay(int pDelay);
+    quint64 delay() const;
+    void setDelay(quint64 pDelay);
 
     double startingPoint() const;
     void setStartingPoint(double pStartingPoint, bool pRecompute = true);
@@ -122,7 +122,7 @@ public:
 private:
     Simulation *mSimulation;
 
-    int mDelay;
+    quint64 mDelay;
 
     double mStartingPoint;
     double mEndingPoint;
@@ -253,8 +253,8 @@ public:
 
     double currentPoint() const;
 
-    int delay() const;
-    void setDelay(int pDelay);
+    quint64 delay() const;
+    void setDelay(quint64 pDelay);
 
     quint64 size();
 

@@ -251,7 +251,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDelayWidget->setFixedSize(int(0.07*qApp->desktop()->screenGeometry().width()),
                                mDelayWidget->height() >> 1);
     mDelayWidget->setFocusPolicy(Qt::NoFocus);
-    mDelayWidget->setRange(0.0, 55.0);
+    mDelayWidget->setRange(0.0, 82.0);
     mDelayWidget->setWheelBorderWidth(0);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -3202,9 +3202,9 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayVal
 {
     // Update our delay value widget
 
-    int delay = 0;
-    int increment = 1;
-    int multiple = 10;
+    quint64 delay = 0;
+    quint64 increment = 1;
+    quint64 multiple = 10;
 
     for (int i = 0, iMax = int(pDelayValue); i < iMax; ++i) {
         delay += increment;
