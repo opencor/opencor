@@ -215,7 +215,7 @@ void SimulationWorker::run()
                 // Delay things a bit, if needed
 
                 if (mSimulation->delay())
-                    Core::doNothing(100*mSimulation->delay());
+                    Core::doNothing(mSimulation->delay(), &mStopped);
 
                 // Pause ourselves, if needed
 

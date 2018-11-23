@@ -129,16 +129,16 @@ double * SimulationData::algebraic() const
 
 //==============================================================================
 
-int SimulationData::delay() const
+const quint64 * SimulationData::delay() const
 {
     // Return our delay
 
-    return mDelay;
+    return &mDelay;
 }
 
 //==============================================================================
 
-void SimulationData::setDelay(int pDelay)
+void SimulationData::setDelay(quint64 pDelay)
 {
     // Set our delay
 
@@ -1059,7 +1059,7 @@ double Simulation::currentPoint() const
 
 //==============================================================================
 
-int Simulation::delay() const
+const quint64 *Simulation::delay() const
 {
     // Return our delay
 
@@ -1068,7 +1068,7 @@ int Simulation::delay() const
 
 //==============================================================================
 
-void Simulation::setDelay(int pDelay)
+void Simulation::setDelay(quint64 pDelay)
 {
     // Set our delay
 
