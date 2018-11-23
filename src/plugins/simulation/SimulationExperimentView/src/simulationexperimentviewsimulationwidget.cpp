@@ -251,7 +251,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDelayWidget->setFixedSize(int(0.07*qApp->desktop()->screenGeometry().width()),
                                mDelayWidget->height() >> 1);
     mDelayWidget->setFocusPolicy(Qt::NoFocus);
-    mDelayWidget->setRange(0.0, 82.0);
+    mDelayWidget->setRange(0.0, 55.0);
     mDelayWidget->setWheelBorderWidth(0);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
