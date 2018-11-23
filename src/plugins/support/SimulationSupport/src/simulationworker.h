@@ -61,10 +61,10 @@ public:
 
     double currentPoint() const;
 
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
+    void run();
+    void pause();
+    void resume();
+    void stop();
 
     bool reset();
 

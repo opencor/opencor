@@ -103,65 +103,42 @@ double SimulationWorker::currentPoint() const
 
 //==============================================================================
 
-bool SimulationWorker::run()
+void SimulationWorker::run()
 {
-    // Start our thread, but only if we are not already running
+    // Start our thread, if we are not already running
 
-    if (!mThread->isRunning()) {
+    if (!mThread->isRunning())
         mThread->start();
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================
 
-bool SimulationWorker::pause()
+void SimulationWorker::pause()
 {
-    // Pause ourselves, but only if we are currently running
+    // Pause ourselves, if we are currently running
 
-    if (isRunning()) {
-        // Ask ourselves to pause
-
+    if (isRunning())
         mPaused = true;
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================
 
-bool SimulationWorker::resume()
+void SimulationWorker::resume()
 {
-    // Resume ourselves, but only if are currently paused
+    // Resume ourselves, if we are currently paused
 
-    if (isPaused()) {
-        // Ask ourselves to resume
-
+    if (isPaused())
         mPausedCondition.wakeOne();
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================
 
-bool SimulationWorker::stop()
+void SimulationWorker::stop()
 {
-    // Check that we are either running or paused
+    // Stop ourselves, if we are currently running or paused
 
     if (isRunning() || isPaused()) {
-        // Ask our thread to stop
-
         mStopped = true;
-
-        // Resume our thread, if needed
 
         if (isPaused())
             mPausedCondition.wakeOne();
@@ -170,10 +147,6 @@ bool SimulationWorker::stop()
 
         mThread->quit();
         mThread->wait();
-
-        return true;
-    } else {
-        return false;
     }
 }
 
