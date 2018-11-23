@@ -465,19 +465,25 @@ bool isEmptyDirectory(const QString &pDirName)
     #pragma optimize("", off)
 #endif
 
-void doNothing(quint64 pMax)
+void doNothing(quint64 pMax, bool *pStopped)
 {
     // A silly function, which aim is simply to do nothing
-    // Note: this function came about because there is no way, on Windows, to
-    //       pause a thread for less than a millisecond (and this is in the best
-    //       of cases)...
+    // Note #1: this function came about because there is no way, on Windows, to
+    //          pause a thread for less than a millisecond (and this is in the
+    //          best of cases)...
+    // Note #2: we have an optional argument that can be used to stop our loop,
+    //          in case it takes forever...
 
-    for (quint64 i = 0; i < pMax; ++i)
+    for (quint64 i = 0; i < pMax; ++i) {
+        if (pStopped && *pStopped)
+            break;
+
 #ifdef Q_OS_WIN
         ;
 #else
         asm("nop");
 #endif
+    }
 }
 
 #ifdef Q_OS_WIN
