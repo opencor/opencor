@@ -129,11 +129,11 @@ double * SimulationData::algebraic() const
 
 //==============================================================================
 
-quint64 SimulationData::delay() const
+const quint64 * SimulationData::delay() const
 {
     // Return our delay
 
-    return mDelay;
+    return &mDelay;
 }
 
 //==============================================================================
@@ -1059,7 +1059,7 @@ double Simulation::currentPoint() const
 
 //==============================================================================
 
-quint64 Simulation::delay() const
+const quint64 *Simulation::delay() const
 {
     // Return our delay
 

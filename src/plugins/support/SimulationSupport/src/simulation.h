@@ -80,7 +80,7 @@ public:
     double * states() const;
     double * algebraic() const;
 
-    quint64 delay() const;
+    const quint64 *delay() const;
     void setDelay(quint64 pDelay);
 
     double startingPoint() const;
@@ -253,7 +253,7 @@ public:
 
     double currentPoint() const;
 
-    quint64 delay() const;
+    const quint64 * delay() const;
     void setDelay(quint64 pDelay);
 
     quint64 size();
