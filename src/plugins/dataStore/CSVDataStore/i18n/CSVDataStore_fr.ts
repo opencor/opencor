@@ -17,7 +17,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CSVDataStore::CsvDataStoreExporter</name>
+    <name>OpenCOR::CSVDataStore::CsvDataStoreExporterWorker</name>
     <message>
         <source>The data could not be exported to CSV.</source>
         <translation>Les données n&apos;ont pas pu être exportées vers CSV.</translation>

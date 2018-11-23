@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                DataStore::DataStore *pDataStore,
                                                const QMap<int, QIcon> &pIcons) const PURE;
 
-    virtual DataStore::DataStoreExporter * dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const PURE;
+    virtual DataStore::DataStoreExporter * dataStoreExporterInstance() const PURE;
 
 #undef PURE
 

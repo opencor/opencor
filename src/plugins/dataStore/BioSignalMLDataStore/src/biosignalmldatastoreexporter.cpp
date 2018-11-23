@@ -44,14 +44,14 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pDataStoreData)
+BiosignalmlDataStoreExporterWorker::BiosignalmlDataStoreExporterWorker(DataStore::DataStoreData *pDataStoreData) :
+    DataStore::DataStoreExporterWorker(pDataStoreData)
 {
 }
 
 //==============================================================================
 
-void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
+void BiosignalmlDataStoreExporterWorker::run()
 {
     // Determine the number of steps to export everything
 
@@ -69,6 +69,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
     // Export the given data store to a BioSignalML file
 
     bsml::HDF5::Recording *recording = nullptr;
+    QString errorMessage = QString();
 
     try {
         // Create and populate a recording
@@ -161,7 +162,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         // Something went wrong, so retrieve the error message and delete our
         // BioSignalML file
 
-        pErrorMessage = tr("The data could not be exported to BioSignalML (%1).").arg(exception.what());
+        errorMessage = tr("The data could not be exported to BioSignalML (%1).").arg(exception.what());
 
         QFile::remove(dataStoreData->fileName());
     }
@@ -173,6 +174,19 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         delete recording;
     }
+
+    // Let people know that our XSL transformation has been performed
+
+    emit done(errorMessage);
+}
+
+//==============================================================================
+
+DataStore::DataStoreExporterWorker * BiosignalmlDataStoreExporter::workerInstance(DataStore::DataStoreData *pDataStoreData)
+{
+    // Return an instance of our worker
+
+    return new BiosignalmlDataStoreExporterWorker(pDataStoreData);
 }
 
 //==============================================================================

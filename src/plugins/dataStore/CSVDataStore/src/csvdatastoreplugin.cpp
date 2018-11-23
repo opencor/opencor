@@ -110,11 +110,14 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
 
 //==============================================================================
 
-DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const
+DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance() const
 {
-    // Return an instance of our CSV data store exporter
+    // Return the 'global' instance of our CSV data store exporter
 
-    return new CsvDataStoreExporter(pDataStoreData);
+    static CsvDataStoreExporter instance;
+
+    return static_cast<CsvDataStoreExporter *>(Core::globalInstance("OpenCOR::CSVDataStore::CsvDataStoreExporter::instance()",
+                                                                    &instance));
 }
 
 //==============================================================================

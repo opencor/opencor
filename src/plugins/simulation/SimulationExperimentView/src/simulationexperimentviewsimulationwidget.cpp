@@ -138,8 +138,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::simulationRunning);
     connect(mSimulation, &SimulationSupport::Simulation::paused,
             this, &SimulationExperimentViewSimulationWidget::simulationPaused);
-    connect(mSimulation, &SimulationSupport::Simulation::stopped,
-            this, &SimulationExperimentViewSimulationWidget::simulationStopped);
+
+    connect(mSimulation, &SimulationSupport::Simulation::done,
+            this, &SimulationExperimentViewSimulationWidget::simulationDone);
 
     connect(mSimulation, &SimulationSupport::Simulation::error,
             this, QOverload<const QString &>::of(&SimulationExperimentViewSimulationWidget::simulationError));
@@ -3286,14 +3287,17 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
         Core::centralWidget()->showProgressBusyWidget();
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
 
-        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
 
-        dataStoreExporter->start();
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
+                dataStoreData, &DataStore::DataStoreData::deleteLater);
+
+        dataStoreExporter->exportData(dataStoreData);
     }
 }
 
@@ -3353,7 +3357,7 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsedTime)
+void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTime)
 {
     // Output the given elapsed time, if valid
 
@@ -4179,6 +4183,15 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
+{
+    // There has been some progress with our export, so update our busy widget
+
+    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
 {
     // We are done with the export, so hide our busy widget
@@ -4191,15 +4204,6 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString
         Core::warningMessageBox(tr("Simulation Results Export"),
                                 pErrorMessage);
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
-{
-    // There has been some progress with our export, so update our busy widget
-
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
