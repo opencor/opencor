@@ -3307,9 +3307,9 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayVal
 {
     // Update our delay value widget
 
-    int delay = 0;
-    int increment = 1;
-    int multiple = 10;
+    quint64 delay = 0;
+    quint64 increment = 1;
+    quint64 multiple = 10;
 
     for (int i = 0, iMax = int(pDelayValue); i < iMax; ++i) {
         delay += increment;
