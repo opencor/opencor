@@ -3186,8 +3186,11 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
+
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
+                dataStoreData, &DataStore::DataStoreData::deleteLater);
 
         dataStoreExporter->exportData(dataStoreData);
     }

@@ -119,8 +119,10 @@ class DataStore;
 
 //==============================================================================
 
-class DataStoreData
+class DataStoreData : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStoreData(const QString &pFileName, DataStore *pDataStore,
                            const DataStoreVariables &pVariables);
