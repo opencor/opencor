@@ -262,12 +262,12 @@ public:
 
     quint64 size();
 
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
+    void run();
+    void pause();
+    void resume();
+    void stop();
 
-    bool reset(bool pAll = true);
+    void reset(bool pAll = true);
 
 private:
     QString mFileName;

@@ -11,9 +11,5 @@
         <source>the starting point cannot be greater than the ending point</source>
         <translation>le point de départ ne peut pas être plus grand que le point d&apos;arrivée</translation>
     </message>
-    <message>
-        <source>the simulation worker could not be created</source>
-        <translation>l&apos;agent de simulation n&apos;a pas pu être créé</translation>
-    </message>
 </context>
 </TS>

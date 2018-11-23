@@ -1111,30 +1111,20 @@ quint64 Simulation::size()
 
 //==============================================================================
 
-bool Simulation::run()
+void Simulation::run()
 {
+    // Make sure that we have a runtime
+
     if (!mRuntime)
-        return false;
+        return;
 
-    // Initialise our worker, if not active
+    // Initialise our worker, if we don't already have one and if the
+    // simulation settings we were given are sound
 
-    if (mWorker) {
-        return false;
-    } else {
-        // Make sure that the simulation settings we were given are sound
-
-        if (!simulationSettingsOk())
-            return false;
-
+    if (!mWorker && simulationSettingsOk()) {
         // Create our worker
 
         mWorker = new SimulationWorker(this, mWorker);
-
-        if (!mWorker) {
-            emit error(tr("the simulation worker could not be created"));
-
-            return false;
-        }
 
         // Create a few connections
 
@@ -1156,46 +1146,43 @@ bool Simulation::run()
 
         // Start our worker
 
-        return mWorker->run();
+        mWorker->run();
     }
 }
 
 //==============================================================================
 
-bool Simulation::pause()
+void Simulation::pause()
 {
     // Pause our worker
 
-    return mWorker?mWorker->pause():false;
+    if (mWorker)
+        mWorker->pause();
 }
 
 //==============================================================================
 
-bool Simulation::resume()
+void Simulation::resume()
 {
     // Resume our worker
 
-    return mWorker?mWorker->resume():false;
+    if (mWorker)
+        mWorker->resume();
 }
 
 //==============================================================================
 
-bool Simulation::stop()
+void Simulation::stop()
 {
     // Stop our worker, if any, and wait for it to be done
 
-    if (mWorker && mWorker->stop()) {
+    if (mWorker && mWorker->stop())
         mWorkerFinishedEventLoop->exec();
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================
 
-bool Simulation::reset(bool pAll)
+void Simulation::reset(bool pAll)
 {
     // Reset our data
 
@@ -1203,7 +1190,8 @@ bool Simulation::reset(bool pAll)
 
     // Reset our worker
 
-    return mWorker?mWorker->reset():false;
+    if (mWorker)
+        mWorker->reset();
 }
 
 //==============================================================================
