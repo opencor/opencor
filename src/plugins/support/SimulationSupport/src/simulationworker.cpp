@@ -84,50 +84,6 @@ double SimulationWorker::currentPoint() const
 
 //==============================================================================
 
-void SimulationWorker::pause()
-{
-    // Pause ourselves, if we are currently running
-
-    if (isRunning())
-        mPaused = true;
-}
-
-//==============================================================================
-
-void SimulationWorker::resume()
-{
-    // Resume ourselves, if we are currently paused
-
-    if (isPaused())
-        mPausedCondition.wakeOne();
-}
-
-//==============================================================================
-
-void SimulationWorker::stop()
-{
-    // Stop ourselves, if we are currently running or paused
-
-    if (isRunning() || isPaused()) {
-        mStopped = true;
-
-        if (isPaused())
-            mPausedCondition.wakeOne();
-    }
-}
-
-//==============================================================================
-
-void SimulationWorker::reset()
-{
-    // Stop ourselves, if we are currently running or paused
-
-    if (isRunning() || isPaused())
-        mReset = true;
-}
-
-//==============================================================================
-
 void SimulationWorker::run()
 {
     // Let people know that we are running
@@ -320,6 +276,50 @@ void SimulationWorker::run()
     // Let people know that we are done and give them the elapsed time
 
     emit done(mError?-1:elapsedTime);
+}
+
+//==============================================================================
+
+void SimulationWorker::pause()
+{
+    // Pause ourselves, if we are currently running
+
+    if (isRunning())
+        mPaused = true;
+}
+
+//==============================================================================
+
+void SimulationWorker::resume()
+{
+    // Resume ourselves, if we are currently paused
+
+    if (isPaused())
+        mPausedCondition.wakeOne();
+}
+
+//==============================================================================
+
+void SimulationWorker::stop()
+{
+    // Stop ourselves, if we are currently running or paused
+
+    if (isRunning() || isPaused()) {
+        mStopped = true;
+
+        if (isPaused())
+            mPausedCondition.wakeOne();
+    }
+}
+
+//==============================================================================
+
+void SimulationWorker::reset()
+{
+    // Stop ourselves, if we are currently running or paused
+
+    if (isRunning() || isPaused())
+        mReset = true;
 }
 
 //==============================================================================
