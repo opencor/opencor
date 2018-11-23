@@ -152,19 +152,12 @@ void SimulationWorker::stop()
 
 //==============================================================================
 
-bool SimulationWorker::reset()
+void SimulationWorker::reset()
 {
-    // Check that we are either running or paused
+    // Stop ourselves, if we are currently running or paused
 
-    if (isRunning() || isPaused()) {
-        // Ask ourselves to reinitialise our solver
-
+    if (isRunning() || isPaused())
         mReset = true;
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================

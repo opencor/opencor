@@ -66,7 +66,7 @@ public:
     void resume();
     void stop();
 
-    bool reset();
+    void reset();
 
 private:
     QThread *mThread;
