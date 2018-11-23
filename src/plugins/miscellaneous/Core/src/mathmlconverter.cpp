@@ -47,11 +47,9 @@ MathmlConverter::MathmlConverter()
 
 MathmlConverter::~MathmlConverter()
 {
-    // Stop our XSL transformer
-    // Note: we don't need to delete it since it will be done as part of its
-    //       thread being stopped...
+    // Delete our XSL transformer
 
-    mXslTransformer->stop();
+    delete mXslTransformer;
 }
 
 //==============================================================================

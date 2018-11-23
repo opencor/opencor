@@ -34,8 +34,10 @@ namespace DataStore {
 
 //==============================================================================
 
-class DataStoreVariableRun
+class DataStoreVariableRun : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStoreVariableRun(quint64 pCapacity, double *pValue);
     ~DataStoreVariableRun();
@@ -62,8 +64,10 @@ typedef QList<DataStoreVariableRun *> DataStoreVariableRuns;
 
 //==============================================================================
 
-class DataStoreVariable
+class DataStoreVariable : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStoreVariable(double *pValue = nullptr);
     ~DataStoreVariable();
@@ -119,8 +123,10 @@ class DataStore;
 
 //==============================================================================
 
-class DataStoreData
+class DataStoreData : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStoreData(const QString &pFileName, DataStore *pDataStore,
                            const DataStoreVariables &pVariables);
@@ -137,8 +143,10 @@ private:
 
 //==============================================================================
 
-class DataStore
+class DataStore : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit DataStore(const QString &pUri);
     ~DataStore();
@@ -169,30 +177,39 @@ private:
 
 //==============================================================================
 
-class DataStoreExporter : public QObject
+class DataStoreExporterWorker : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreExporter(DataStoreData *pDataStoreData);
-    ~DataStoreExporter() override;
-
-    void start();
-
-    virtual void execute(QString &pErrorMessage) const = 0;
-
-private:
-    QThread *mThread;
+    explicit DataStoreExporterWorker(DataStoreData *pDataStoreData);
 
 protected:
     DataStoreData *mDataStoreData;
 
 signals:
+    void progress(double pProgress);
     void done(const QString &pErrorMessage);
-    void progress(double pProgress) const;
 
-private slots:
-    void started();
+public slots:
+   virtual void run() = 0;
+};
+
+//==============================================================================
+
+class DataStoreExporter : public QObject
+{
+    Q_OBJECT
+
+public:
+    void exportData(DataStoreData *pDataStoreData);
+
+protected:
+    virtual DataStoreExporterWorker * workerInstance(DataStoreData *pDataStoreData) = 0;
+
+signals:
+    void progress(double pProgress);
+    void done(const QString &pErrorMessage);
 };
 
 //==============================================================================

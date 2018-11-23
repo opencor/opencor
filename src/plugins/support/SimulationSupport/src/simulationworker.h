@@ -53,7 +53,7 @@ class SimulationWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit SimulationWorker(Simulation *pSimulation,
+    explicit SimulationWorker(Simulation *pSimulation, QThread *pThread,
                               SimulationWorker *&pSelf);
 
     bool isRunning() const;
@@ -61,17 +61,16 @@ public:
 
     double currentPoint() const;
 
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
+    void pause();
+    void resume();
+    void stop();
 
-    bool reset();
+    void reset();
 
 private:
-    QThread *mThread;
-
     Simulation *mSimulation;
+
+    QThread *mThread;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
@@ -92,13 +91,14 @@ signals:
     void running(bool pIsResuming);
     void paused();
 
-    void finished(qint64 pElapsedTime);
+    void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
 
-private slots:
-    void started();
+public slots:
+    void run();
 
+private slots:
     void emitError(const QString &pMessage);
 };
 

@@ -36,14 +36,14 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-CsvDataStoreExporter::CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pDataStoreData)
+CsvDataStoreExporterWorker::CsvDataStoreExporterWorker(DataStore::DataStoreData *pDataStoreData) :
+    DataStore::DataStoreExporterWorker(pDataStoreData)
 {
 }
 
 //==============================================================================
 
-void CsvDataStoreExporter::execute(QString &pErrorMessage) const
+void CsvDataStoreExporterWorker::run()
 {
     // Do the export itself
     // Note: we would normally rely on a string to which we would append our
@@ -55,6 +55,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     //       first write our header and then our data, one row at a time...
 
     QFile file(Core::temporaryFileName());
+    QString errorMessage = QString();
 
     if (file.open(QIODevice::WriteOnly)) {
         // Determine whether we need to export the VOI and, if so, remove it
@@ -218,11 +219,24 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         if (!res) {
             file.remove();
 
-            pErrorMessage = tr("The data could not be exported to CSV.");
+            errorMessage = tr("The data could not be exported to CSV.");
         }
     } else {
-        pErrorMessage = tr("The CSV file could not be created.");
+        errorMessage = tr("The CSV file could not be created.");
     }
+
+    // Let people know that our XSL transformation has been performed
+
+    emit done(errorMessage);
+}
+
+//==============================================================================
+
+DataStore::DataStoreExporterWorker * CsvDataStoreExporter::workerInstance(DataStore::DataStoreData *pDataStoreData)
+{
+    // Return an instance of our worker
+
+    return new CsvDataStoreExporterWorker(pDataStoreData);
 }
 
 //==============================================================================

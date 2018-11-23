@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QEventLoop>
+#include <QThread>
 
 //==============================================================================
 
@@ -812,8 +813,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
     mRuntime(nullptr),
-    mWorker(nullptr),
-    mWorkerFinishedEventLoop(new QEventLoop())
+    mWorker(nullptr)
 {
     // Retrieve our file details
 
@@ -1111,91 +1111,84 @@ quint64 Simulation::size()
 
 //==============================================================================
 
-bool Simulation::run()
+void Simulation::run()
 {
+    // Make sure that we have a runtime
+
     if (!mRuntime)
-        return false;
+        return;
 
-    // Initialise our worker, if not active
+    // Initialise our worker, if we don't already have one and if the
+    // simulation settings we were given are sound
 
-    if (mWorker) {
-        return false;
-    } else {
-        // Make sure that the simulation settings we were given are sound
+    if (!mWorker && simulationSettingsOk()) {
+        // Create and move our worker to a thread
 
-        if (!simulationSettingsOk())
-            return false;
+        QThread *thread = new QThread();
+        mWorker = new SimulationWorker(this, thread, mWorker);
 
-        // Create our worker
+        mWorker->moveToThread(thread);
 
-        mWorker = new SimulationWorker(this, mWorker);
-
-        if (!mWorker) {
-            emit error(tr("the simulation worker could not be created"));
-
-            return false;
-        }
-
-        // Create a few connections
+        connect(thread, &QThread::started,
+                mWorker, &SimulationWorker::run);
 
         connect(mWorker, &SimulationWorker::running,
                 this, &Simulation::running);
         connect(mWorker, &SimulationWorker::paused,
                 this, &Simulation::paused);
 
-        connect(mWorker, &SimulationWorker::finished,
-                this, &Simulation::stopped);
+        connect(mWorker, &SimulationWorker::done,
+                this, &Simulation::done);
+        connect(mWorker, &SimulationWorker::done,
+                thread, &QThread::quit);
+        connect(mWorker, &SimulationWorker::done,
+                mWorker, &SimulationWorker::deleteLater);
 
         connect(mWorker, &SimulationWorker::error,
                 this, &Simulation::error);
 
-        // Track of when our worker is finished
+        connect(thread, &QThread::finished,
+                thread, &QThread::deleteLater);
 
-        connect(mWorker, &SimulationWorker::finished,
-                mWorkerFinishedEventLoop, &QEventLoop::quit);
+        // Start our worker by starting the thread in which it is
 
-        // Start our worker
-
-        return mWorker->run();
+        thread->start();
     }
 }
 
 //==============================================================================
 
-bool Simulation::pause()
+void Simulation::pause()
 {
     // Pause our worker
 
-    return mWorker?mWorker->pause():false;
+    if (mWorker)
+        mWorker->pause();
 }
 
 //==============================================================================
 
-bool Simulation::resume()
+void Simulation::resume()
 {
     // Resume our worker
 
-    return mWorker?mWorker->resume():false;
+    if (mWorker)
+        mWorker->resume();
 }
 
 //==============================================================================
 
-bool Simulation::stop()
+void Simulation::stop()
 {
-    // Stop our worker, if any, and wait for it to be done
+    // Stop our worker
 
-    if (mWorker && mWorker->stop()) {
-        mWorkerFinishedEventLoop->exec();
-
-        return true;
-    } else {
-        return false;
-    }
+    if (mWorker)
+        mWorker->stop();
 }
 
 //==============================================================================
 
-bool Simulation::reset(bool pAll)
+void Simulation::reset(bool pAll)
 {
     // Reset our data
 
@@ -1203,7 +1196,8 @@ bool Simulation::reset(bool pAll)
 
     // Reset our worker
 
-    return mWorker?mWorker->reset():false;
+    if (mWorker)
+        mWorker->reset();
 }
 
 //==============================================================================

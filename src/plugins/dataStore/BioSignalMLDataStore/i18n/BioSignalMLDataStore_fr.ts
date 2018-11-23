@@ -40,7 +40,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreExporter</name>
+    <name>OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreExporterWorker</name>
     <message>
         <source>The data could not be exported to BioSignalML (%1).</source>
         <translation>Les données n&apos;ont pas pu être exportées vers BioSignalML (%1).</translation>
