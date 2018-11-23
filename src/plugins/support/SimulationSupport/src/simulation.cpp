@@ -812,8 +812,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
     mRuntime(nullptr),
-    mWorker(nullptr),
-    mWorkerFinishedEventLoop(new QEventLoop())
+    mWorker(nullptr)
 {
     // Retrieve our file details
 
@@ -1139,11 +1138,6 @@ void Simulation::run()
         connect(mWorker, &SimulationWorker::error,
                 this, &Simulation::error);
 
-        // Track of when our worker is finished
-
-        connect(mWorker, &SimulationWorker::finished,
-                mWorkerFinishedEventLoop, &QEventLoop::quit);
-
         // Start our worker
 
         mWorker->run();
@@ -1174,10 +1168,10 @@ void Simulation::resume()
 
 void Simulation::stop()
 {
-    // Stop our worker, if any, and wait for it to be done
+    // Stop our worker
 
-    if (mWorker && mWorker->stop())
-        mWorkerFinishedEventLoop->exec();
+    if (mWorker)
+        mWorker->stop();
 }
 
 //==============================================================================
