@@ -172,7 +172,7 @@ void BiosignalmlDataStoreExporterWorker::run()
         delete recording;
     }
 
-    // Let people know that our XSL transformation has been performed
+    // Let people know that our export has been performed
 
     emit done(errorMessage);
 }

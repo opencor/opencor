@@ -225,7 +225,7 @@ void CsvDataStoreExporterWorker::run()
         errorMessage = tr("The CSV file could not be created.");
     }
 
-    // Let people know that our XSL transformation has been performed
+    // Let people know that our export has been performed
 
     emit done(errorMessage);
 }
