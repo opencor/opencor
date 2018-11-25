@@ -63,7 +63,20 @@ class SimulationWorker;
 
 //==============================================================================
 
-class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
+class SimulationObject : public QObject
+{
+public:
+    explicit SimulationObject(Simulation *pSimulation);
+
+    Simulation * simulation() const;
+
+protected:
+    Simulation *mSimulation;
+};
+
+//==============================================================================
+
+class SIMULATIONSUPPORT_EXPORT SimulationData : public SimulationObject
 {
     Q_OBJECT
 
@@ -72,8 +85,6 @@ public:
     ~SimulationData() override;
 
     void reload();
-
-    Simulation * simulation() const;
 
     double * constants() const;
     double * rates() const;
@@ -120,8 +131,6 @@ public:
     void checkForModifications();
 
 private:
-    Simulation *mSimulation;
-
     quint64 mDelay;
 
     double mStartingPoint;
@@ -162,7 +171,7 @@ signals:
 
 //==============================================================================
 
-class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
+class SIMULATIONSUPPORT_EXPORT SimulationResults : public SimulationObject
 {
     Q_OBJECT
 
@@ -192,8 +201,6 @@ public:
     double * algebraic(int pIndex, int pRun = -1) const;
 
 private:
-    Simulation *mSimulation;
-
     DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
