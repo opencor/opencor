@@ -465,7 +465,7 @@ bool isEmptyDirectory(const QString &pDirName)
     #pragma optimize("", off)
 #endif
 
-void doNothing(quint64 *pMax, bool *pStopped)
+void doNothing(const quint64 *pMax, bool *pStopped)
 {
     // A silly function, which aim is simply to do nothing
     // Note #1: this function came about because there is no way, on Windows, to
