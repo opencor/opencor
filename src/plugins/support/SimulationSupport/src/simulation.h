@@ -260,7 +260,7 @@ public:
 
     double currentPoint() const;
 
-    const quint64 * delay() const;
+    quint64 * delay() const;
     void setDelay(quint64 pDelay);
 
     quint64 size();

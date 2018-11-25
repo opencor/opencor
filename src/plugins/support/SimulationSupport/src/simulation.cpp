@@ -1067,7 +1067,7 @@ double Simulation::currentPoint() const
 
 //==============================================================================
 
-const quint64 *Simulation::delay() const
+quint64 * Simulation::delay() const
 {
     // Return our delay
 
