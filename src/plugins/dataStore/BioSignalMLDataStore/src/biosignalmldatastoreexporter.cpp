@@ -26,10 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QApplication>
-#include <QDateTime>
 #include <QFile>
-#include <QTextStream>
 #include <QUrl>
 
 //==============================================================================
