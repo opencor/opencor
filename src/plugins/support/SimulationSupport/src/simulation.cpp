@@ -45,8 +45,24 @@ namespace SimulationSupport {
 
 //==============================================================================
 
+SimulationObject::SimulationObject(Simulation *pSimulation) :
+    mSimulation(pSimulation)
+{
+}
+
+//==============================================================================
+
+Simulation * SimulationObject::simulation() const
+{
+    // Return our simulation
+
+    return mSimulation;
+}
+
+//==============================================================================
+
 SimulationData::SimulationData(Simulation *pSimulation) :
-    mSimulation(pSimulation),
+    SimulationObject(pSimulation),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -80,15 +96,6 @@ void SimulationData::reload()
 
     deleteArrays();
     createArrays();
-}
-
-//==============================================================================
-
-Simulation * SimulationData::simulation() const
-{
-    // Return our simulation
-
-    return mSimulation;
 }
 
 //==============================================================================
@@ -565,7 +572,7 @@ void SimulationData::deleteArrays()
 //==============================================================================
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
-    mSimulation(pSimulation),
+    SimulationObject(pSimulation),
     mDataStore(nullptr),
     mPoints(nullptr),
     mConstants(DataStore::DataStoreVariables()),
@@ -819,7 +826,8 @@ Simulation::Simulation(const QString &pFileName) :
 
     retrieveFileDetails();
 
-    // Create our data and results objects, now that we are all set
+    // Create our data, results and imported data objects, now that we are all
+    // set
 
     mData = new SimulationData(this);
     mResults = new SimulationResults(this);
@@ -1059,7 +1067,7 @@ double Simulation::currentPoint() const
 
 //==============================================================================
 
-const quint64 *Simulation::delay() const
+const quint64 * Simulation::delay() const
 {
     // Return our delay
 
