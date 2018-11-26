@@ -826,8 +826,7 @@ Simulation::Simulation(const QString &pFileName) :
 
     retrieveFileDetails();
 
-    // Create our data, results and imported data objects, now that we are all
-    // set
+    // Create our data and results objects, now that we are all set
 
     mData = new SimulationData(this);
     mResults = new SimulationResults(this);
