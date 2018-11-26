@@ -69,8 +69,8 @@ void MathmlConverter::convert(const QString &pContentMathml)
 void MathmlConverter::xslTransformationDone(const QString &pInput,
                                             const QString &pOutput)
 {
-    // Let people know that our MathML conversion has been performed (after
-    // having cleaned up its output)
+    // Let people know that our MathML conversion is done (after having cleaned
+    // up its output)
 
     emit done(pInput, cleanPresentationMathml(pOutput));
 }
