@@ -218,6 +218,21 @@ private:
 
 //==============================================================================
 
+class SIMULATIONSUPPORT_EXPORT SimulationImportedData : public SimulationObject
+{
+    Q_OBJECT
+
+public:
+    explicit SimulationImportedData(Simulation *pSimulation);
+
+    DataStore::DataStore * dataStore() const;
+
+private:
+    DataStore::DataStore *mDataStore;
+};
+
+//==============================================================================
+
 class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
 {
     Q_OBJECT
@@ -250,6 +265,7 @@ public:
 
     SimulationData * data() const;
     SimulationResults * results() const;
+    SimulationImportedData * importedData() const;
 
     int runsCount() const;
 
@@ -287,6 +303,7 @@ private:
 
     SimulationData *mData;
     SimulationResults *mResults;
+    SimulationImportedData *mImportedData;
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 

@@ -817,6 +817,25 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 //==============================================================================
 
+SimulationImportedData::SimulationImportedData(Simulation *pSimulation) :
+    SimulationObject(pSimulation)
+{
+    // Create our data store
+
+    mDataStore = new DataStore::DataStore();
+}
+
+//==============================================================================
+
+DataStore::DataStore * SimulationImportedData::dataStore() const
+{
+    // Return our data store
+
+    return mDataStore;
+}
+
+//==============================================================================
+
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
     mRuntime(nullptr),
@@ -831,6 +850,7 @@ Simulation::Simulation(const QString &pFileName) :
 
     mData = new SimulationData(this);
     mResults = new SimulationResults(this);
+    mImportedData = new SimulationImportedData(this);
 
     // Keep track of any error occurring in our data
 
@@ -1018,6 +1038,15 @@ SimulationResults * Simulation::results() const
     // Return our results
 
     return mResults;
+}
+
+//==============================================================================
+
+SimulationImportedData * Simulation::importedData() const
+{
+    // Return our imported data
+
+    return mImportedData;
 }
 
 //==============================================================================
