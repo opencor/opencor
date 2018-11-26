@@ -177,7 +177,6 @@ public:
     DataStoreVariables variables();
     DataStoreVariables voiAndVariables();
 
-    DataStoreVariable * addVariable(double *pValue = nullptr);
     DataStoreVariables addVariables(double *pValues, int pCount);
 
     void addValues(double pVoiValue);

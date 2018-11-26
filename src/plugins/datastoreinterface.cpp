@@ -503,23 +503,6 @@ DataStoreVariables DataStore::voiAndVariables()
 
 //==============================================================================
 
-DataStoreVariable * DataStore::addVariable(double *pValue)
-{
-    // Add a variable to our data store, but only if we haven't already added
-    // some runs
-
-    if (mVoi->runsCount())
-        return nullptr;
-
-    DataStoreVariable *variable = new DataStoreVariable(pValue);
-
-    mVariables << variable;
-
-    return variable;
-}
-
-//==============================================================================
-
 DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 {
     // Add some variables to our data store, but only if we haven't already
