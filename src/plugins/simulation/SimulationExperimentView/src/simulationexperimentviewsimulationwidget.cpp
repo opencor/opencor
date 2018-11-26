@@ -3185,12 +3185,15 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress,
+                Qt::UniqueConnection);
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone,
+                Qt::UniqueConnection);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                dataStoreData, &DataStore::DataStoreData::deleteLater);
+                dataStoreData, &DataStore::DataStoreData::deleteLater,
+                Qt::UniqueConnection);
 
         dataStoreExporter->exportData(dataStoreData);
     }
