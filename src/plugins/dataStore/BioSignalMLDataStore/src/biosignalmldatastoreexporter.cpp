@@ -63,7 +63,7 @@ void BiosignalmlDataStoreExporterWorker::run()
     double oneOverNbOfSteps = 1.0/nbOfSteps;
     int stepNb = 0;
 
-    // Export the given data store to a BioSignalML file
+    // Export our data store to a BioSignalML file
 
     bsml::HDF5::Recording *recording = nullptr;
     QString errorMessage = QString();
