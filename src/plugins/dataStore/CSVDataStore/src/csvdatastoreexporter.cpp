@@ -45,7 +45,7 @@ CsvDataStoreExporterWorker::CsvDataStoreExporterWorker(DataStore::DataStoreData 
 
 void CsvDataStoreExporterWorker::run()
 {
-    // Do the export itself
+    // Export our data store to a CSV file
     // Note: we would normally rely on a string to which we would append our
     //       header and then data, and then use that string as a parameter to
     //       Core::writeFile(). However, although this works fine with 'small'
