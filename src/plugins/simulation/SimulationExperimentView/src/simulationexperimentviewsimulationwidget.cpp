@@ -4183,6 +4183,24 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(double pProgress)
+{
+    // There has been some progress with our import, so update our busy widget
+
+    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dataStoreImportDone()
+{
+    // We are done with the import, so hide our busy widget
+
+    Core::centralWidget()->hideBusyWidget();
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
 {
     // There has been some progress with our export, so update our busy widget
@@ -4343,9 +4361,28 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
 void SimulationExperimentViewSimulationWidget::importDataFile(const QString &pFileName,
                                                               DataStoreInterface *pDataStoreInterface)
 {
-//---ISSUE1845--- DO THE ACTUAL IMPORT...
-Q_UNUSED(pDataStoreInterface);
-qDebug(">>> Import %s...", qPrintable(pFileName));
+    // Retrieve some imported data so that we can effectively import some data
+
+    DataStore::DataStoreImportedData *dataStoreImportedData = pDataStoreInterface->getImportedData(pFileName,
+                                                                                                   mSimulation->importedData()->dataStore());
+
+    if (dataStoreImportedData) {
+        // We have got the data we need, so do the actual import
+
+        Core::centralWidget()->showProgressBusyWidget();
+
+        DataStore::DataStoreImporter *dataStoreImporter = pDataStoreInterface->dataStoreImporterInstance();
+
+        connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress);
+
+        connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);
+        connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
+                dataStoreImportedData, &DataStore::DataStoreImportedData::deleteLater);
+
+        dataStoreImporter->importData(dataStoreImportedData);
+    }
 }
 
 //==============================================================================

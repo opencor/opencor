@@ -377,6 +377,9 @@ private slots:
 
     void plotAxesChanged();
 
+    void dataStoreImportProgress(double pProgress);
+    void dataStoreImportDone();
+
     void dataStoreExportProgress(double pProgress);
     void dataStoreExportDone(const QString &pErrorMessage);
 
