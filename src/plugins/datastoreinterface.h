@@ -148,7 +148,7 @@ class DataStore : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStore(const QString &pUri);
+    explicit DataStore(const QString &pUri = QString());
     ~DataStore();
 
     QString uri() const;
