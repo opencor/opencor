@@ -66,7 +66,7 @@ void XslTransformerWorker::run()
     if (!xmlQuery.evaluateTo(&output))
         output = QString();
 
-    // Let people know that our XSL transformation has been performed
+    // Let people know that our XSL transformation is done
 
     emit done(mInput, output);
 }
