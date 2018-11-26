@@ -4078,8 +4078,11 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
+                                                                       double pProgress)
 {
+    Q_UNUSED(pDataStoreData);
+
     // There has been some progress with our export, so update our busy widget
 
     Core::centralWidget()->setBusyWidgetProgress(pProgress);
@@ -4087,8 +4090,11 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pP
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
+void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::DataStoreData *pDataStoreData,
+                                                                   const QString &pErrorMessage)
 {
+    Q_UNUSED(pDataStoreData);
+
     // We are done with the export, so hide our busy widget
 
     Core::centralWidget()->hideBusyWidget();
