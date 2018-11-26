@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 4;
+    return 5;
 }
 
 //==============================================================================
@@ -345,17 +345,16 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
-                             const DataStoreVariables &pVariables) :
+DataStoreImportedData::DataStoreImportedData(const QString &pFileName,
+                                             DataStore *pDataStore) :
     mFileName(pFileName),
-    mDataStore(pDataStore),
-    mVariables(pVariables)
+    mDataStore(pDataStore)
 {
 }
 
 //==============================================================================
 
-QString DataStoreData::fileName() const
+QString DataStoreImportedData::fileName() const
 {
     // Return our file name
 
@@ -364,11 +363,20 @@ QString DataStoreData::fileName() const
 
 //==============================================================================
 
-DataStore * DataStoreData::dataStore() const
+DataStore * DataStoreImportedData::dataStore() const
 {
     // Return our data store
 
     return mDataStore;
+}
+
+//==============================================================================
+
+DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
+                             const DataStoreVariables &pVariables) :
+    DataStoreImportedData(pFileName, pDataStore),
+    mVariables(pVariables)
+{
 }
 
 //==============================================================================
@@ -547,6 +555,48 @@ void DataStore::addValues(double pVoiValue)
     }
 
     mVoi->addValue(pVoiValue);
+}
+
+//==============================================================================
+
+DataStoreImporterWorker::DataStoreImporterWorker(DataStoreImportedData *pDataStoreImportedData) :
+    mDataStoreImportedData(pDataStoreImportedData)
+{
+}
+
+//==============================================================================
+
+void DataStoreImporter::importData(DataStoreImportedData *pDataStoreImportedData)
+{
+    // Create and move our worker to a thread
+    // Note: we cannot use the new connect() syntax with our worker's signals
+    //       since it's an instance of a derived class located in another
+    //       plugin...
+
+    QThread *thread = new QThread();
+    DataStoreImporterWorker *worker = workerInstance(pDataStoreImportedData);
+
+    worker->moveToThread(thread);
+
+    connect(thread, &QThread::started,
+            worker, &DataStoreImporterWorker::run);
+
+    connect(worker, SIGNAL(progress(double)),
+            this, SIGNAL(progress(double)));
+
+    connect(worker, SIGNAL(done(const QString &)),
+            this, SIGNAL(done(const QString &)));
+    connect(worker, SIGNAL(done(const QString &)),
+            thread, SLOT(quit()));
+    connect(worker, SIGNAL(done(const QString &)),
+            worker, SLOT(deleteLater()));
+
+    connect(thread, &QThread::finished,
+            thread, &QThread::deleteLater);
+
+    // Start our worker by starting the thread in which it is
+
+    thread->start();
 }
 
 //==============================================================================

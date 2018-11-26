@@ -10,12 +10,14 @@ add_plugin(CSVDataStore
         ../../plugininfo.cpp
 
         src/csvdatastoreexporter.cpp
+        src/csvdatastoreimporter.cpp
         src/csvdatastoreplugin.cpp
         src/csvinterface.cpp
     HEADERS_MOC
         ../../datastoreinterface.h
 
         src/csvdatastoreexporter.h
+        src/csvdatastoreimporter.h
         src/csvdatastoreplugin.h
     PLUGINS
         DataStore

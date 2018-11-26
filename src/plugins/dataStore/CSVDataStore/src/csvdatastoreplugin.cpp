@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "csvdatastoreexporter.h"
+#include "csvdatastoreimporter.h"
 #include "csvdatastoreplugin.h"
 #include "csvinterface.h"
 #include "datastoredialog.h"
@@ -78,6 +79,16 @@ QString CSVDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
+DataStore::DataStoreImportedData * CSVDataStorePlugin::getImportedData(const QString &pFileName,
+                                                                       DataStore::DataStore *pDataStore) const
+{
+    // Return some information about the data we want to import
+
+    return new DataStore::DataStoreImportedData(pFileName, pDataStore);
+}
+
+//==============================================================================
+
 DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                                        DataStore::DataStore *pDataStore,
                                                        const QMap<int, QIcon> &pIcons) const
@@ -106,6 +117,18 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
     }
 
     return nullptr;
+}
+
+//==============================================================================
+
+DataStore::DataStoreImporter * CSVDataStorePlugin::dataStoreImporterInstance() const
+{
+    // Return the 'global' instance of our CSV data store importer
+
+    static CsvDataStoreImporter instance;
+
+    return static_cast<CsvDataStoreImporter *>(Core::globalInstance("OpenCOR::CSVDataStore::CsvDataStoreImporter::instance()",
+                                                                    &instance));
 }
 
 //==============================================================================

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "biosignalmldatastoredata.h"
 #include "biosignalmldatastoredialog.h"
 #include "biosignalmldatastoreexporter.h"
+#include "biosignalmldatastoreimporter.h"
 #include "biosignalmldatastoreplugin.h"
 #include "biosignalmlinterface.h"
 #include "corecliutils.h"
@@ -76,6 +77,16 @@ QString BioSignalMLDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
+DataStore::DataStoreImportedData * BioSignalMLDataStorePlugin::getImportedData(const QString &pFileName,
+                                                                               DataStore::DataStore *pDataStore) const
+{
+    // Return some information about the data we want to import
+
+    return new DataStore::DataStoreImportedData(pFileName, pDataStore);
+}
+
+//==============================================================================
+
 DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pFileName,
                                                                DataStore::DataStore *pDataStore,
                                                                const QMap<int, QIcon> &pIcons) const
@@ -109,6 +120,18 @@ DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pF
     }
 
     return nullptr;
+}
+
+//==============================================================================
+
+DataStore::DataStoreImporter * BioSignalMLDataStorePlugin::dataStoreImporterInstance() const
+{
+    // Return the 'global' instance of our BioSignalML data store importer
+
+    static BiosignalmlDataStoreImporter instance;
+
+    return static_cast<BiosignalmlDataStoreImporter *>(Core::globalInstance("OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreImporter::instance()",
+                                                                            &instance));
 }
 
 //==============================================================================

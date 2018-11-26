@@ -18,30 +18,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Data store interface
+// BioSignalML data store importer
 //==============================================================================
 
-#ifdef INTERFACE_DEFINITION
-    #define PURE = 0
-#else
-    #define PURE
-#endif
+#pragma once
 
-    // Note: make sure to update dataStoreInterfaceVersion() whenever you update
-    //       this interface...
+//==============================================================================
 
-    virtual QString dataStoreName() const PURE;
+#include "datastoreinterface.h"
 
-    virtual DataStore::DataStoreImportedData * getImportedData(const QString &pFileName,
-                                                               DataStore::DataStore *pDataStore) const PURE;
-    virtual DataStore::DataStoreData * getData(const QString &pFileName,
-                                               DataStore::DataStore *pDataStore,
-                                               const QMap<int, QIcon> &pIcons) const PURE;
+//==============================================================================
 
-    virtual DataStore::DataStoreImporter * dataStoreImporterInstance() const PURE;
-    virtual DataStore::DataStoreExporter * dataStoreExporterInstance() const PURE;
+namespace OpenCOR {
+namespace BioSignalMLDataStore {
 
-#undef PURE
+//==============================================================================
+
+class BiosignalmlDataStoreImporterWorker : public DataStore::DataStoreImporterWorker
+{
+    Q_OBJECT
+
+public:
+    explicit BiosignalmlDataStoreImporterWorker(DataStore::DataStoreImportedData *pDataStoreImportedData);
+
+public slots:
+    void run() override;
+};
+
+//==============================================================================
+
+class BiosignalmlDataStoreImporter : public DataStore::DataStoreImporter
+{
+    Q_OBJECT
+
+protected:
+    DataStore::DataStoreImporterWorker * workerInstance(DataStore::DataStoreImportedData *pDataStoreImportedData) override;
+};
+
+//==============================================================================
+
+}   // namespace BioSignalMLDataStore
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -123,7 +123,25 @@ class DataStore;
 
 //==============================================================================
 
-class DataStoreData : public QObject
+class DataStoreImportedData : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreImportedData(const QString &pFileName,
+                                   DataStore *pDataStore);
+
+    QString fileName() const;
+    DataStore * dataStore() const;
+
+protected:
+    QString mFileName;
+    DataStore *mDataStore;
+};
+
+//==============================================================================
+
+class DataStoreData : public DataStoreImportedData
 {
     Q_OBJECT
 
@@ -131,13 +149,9 @@ public:
     explicit DataStoreData(const QString &pFileName, DataStore *pDataStore,
                            const DataStoreVariables &pVariables);
 
-    QString fileName() const;
-    DataStore * dataStore() const;
     DataStoreVariables variables() const;
 
 private:
-    QString mFileName;
-    DataStore *mDataStore;
     DataStoreVariables mVariables;
 };
 
@@ -173,6 +187,43 @@ private:
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;
+};
+
+//==============================================================================
+
+class DataStoreImporterWorker : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreImporterWorker(DataStoreImportedData *pDataStoreImportedData);
+
+protected:
+    DataStoreImportedData *mDataStoreImportedData;
+
+signals:
+    void progress(double pProgress);
+    void done();
+
+public slots:
+   virtual void run() = 0;
+};
+
+//==============================================================================
+
+class DataStoreImporter : public QObject
+{
+    Q_OBJECT
+
+public:
+    void importData(DataStoreImportedData *pDataStoreImportedData);
+
+protected:
+    virtual DataStoreImporterWorker * workerInstance(DataStoreImportedData *pDataStoreImportedData) = 0;
+
+signals:
+    void progress(double pProgress);
+    void done(const QString &pErrorMessage);
 };
 
 //==============================================================================
