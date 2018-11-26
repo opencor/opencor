@@ -818,20 +818,23 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 //==============================================================================
 
 SimulationImportedData::SimulationImportedData(Simulation *pSimulation) :
-    SimulationObject(pSimulation)
+    SimulationObject(pSimulation),
+    mDataStores(QList<DataStore::DataStore *>())
 {
-    // Create our data store
-
-    mDataStore = new DataStore::DataStore();
 }
 
 //==============================================================================
 
-DataStore::DataStore * SimulationImportedData::dataStore() const
+DataStore::DataStore * SimulationImportedData::addDataStore()
 {
-    // Return our data store
+    // Add a data store to our list and return it
 
-    return mDataStore;
+    DataStore::DataStore *dataStore = new DataStore::DataStore();
+
+    if (dataStore)
+        mDataStores << dataStore;
+
+    return dataStore;
 }
 
 //==============================================================================

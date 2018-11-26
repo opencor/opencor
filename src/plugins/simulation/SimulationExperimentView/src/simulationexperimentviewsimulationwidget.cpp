@@ -4192,11 +4192,18 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(double pP
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreImportDone()
+void SimulationExperimentViewSimulationWidget::dataStoreImportDone(const QString &pErrorMessage)
 {
     // We are done with the import, so hide our busy widget
 
     Core::centralWidget()->hideBusyWidget();
+
+    // Display the given error message, if any
+
+    if (!pErrorMessage.isEmpty()) {
+        Core::warningMessageBox(tr("Data Import"),
+                                pErrorMessage);
+    }
 }
 
 //==============================================================================
@@ -4364,7 +4371,7 @@ void SimulationExperimentViewSimulationWidget::importDataFile(const QString &pFi
     // Retrieve some imported data so that we can effectively import some data
 
     DataStore::DataStoreImportedData *dataStoreImportedData = pDataStoreInterface->getImportedData(pFileName,
-                                                                                                   mSimulation->importedData()->dataStore());
+                                                                                                   mSimulation->importedData()->addDataStore());
 
     if (dataStoreImportedData) {
         // We have got the data we need, so do the actual import

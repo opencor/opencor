@@ -630,7 +630,7 @@
     </message>
     <message>
         <source>Data Import</source>
-        <translation>Import Données</translation>
+        <translation>Importation Données</translation>
     </message>
     <message>
         <source>Import some data</source>

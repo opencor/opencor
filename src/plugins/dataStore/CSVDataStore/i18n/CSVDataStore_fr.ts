@@ -27,4 +27,11 @@
         <translation>Le fichier CSV n&apos;a pas pu être créé.</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::CSVDataStore::CsvDataStoreImporterWorker</name>
+    <message>
+        <source>The data could not be imported.</source>
+        <translation>Les données n&apos;ont pas pu être importées.</translation>
+    </message>
+</context>
 </TS>

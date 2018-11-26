@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QDir>
-#include <QSet>
+#include <QFile>
+#include <QTextStream>
 
 //==============================================================================
 
@@ -45,10 +45,74 @@ CsvDataStoreImporterWorker::CsvDataStoreImporterWorker(DataStore::DataStoreImpor
 
 void CsvDataStoreImporterWorker::run()
 {
-//---ISSUE1845--- TO BE DONE...
+    // Import our CSV file in our data store
+    // Note: we rely on the fact that our CSV file is well-formed...
+
+    QFile file(mDataStoreImportedData->fileName());
+    QString errorMessage = QString();
+
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        // Determine the number of non-empty lines
+
+        QTextStream in(&file);
+        QString line;
+        quint64 nbOfLines = 0;
+
+        while (!in.atEnd()) {
+            line = in.readLine().trimmed();
+
+            if (!line.isEmpty())
+                ++nbOfLines;
+        }
+
+        // Read our header line and set up our data store
+
+        DataStore::DataStore *dataStore = mDataStoreImportedData->dataStore();
+
+        double oneOverNbOfLines = 1.0/nbOfLines;
+
+        in.seek(0);
+
+        line = in.readLine().trimmed();
+
+        int nbOfValues = line.split(",").count()-1;
+
+        double *values = new double[nbOfValues] {};
+
+        dataStore->addVariables(values, nbOfValues);
+
+        emit progress(oneOverNbOfLines);
+
+        // Add a run to our data store
+        // Note: of capacity nbOfLines-1 because the first line is our header...
+
+        if (dataStore->addRun(nbOfLines-1)) {
+            // Read our data lines and have them stored in our data store
+
+            for (quint64 i = 2; i <= nbOfLines; ++i) {
+                line = in.readLine().trimmed();
+
+                QStringList fields = line.split(",");
+
+                for (int i = 1, iMax = fields.count(); i < iMax; ++i)
+                    values[i-1] = fields[i].toDouble();
+
+                dataStore->addValues(fields[0].toDouble());
+
+                emit progress(i*oneOverNbOfLines);
+            }
+        } else {
+            errorMessage = tr("The data could not be imported.");
+        }
+
+        delete[] values;
+
+        file.close();
+    }
+
     // Let people know that our import is done
 
-    emit done();
+    emit done(errorMessage);
 }
 
 //==============================================================================

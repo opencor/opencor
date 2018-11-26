@@ -567,11 +567,11 @@ void DataStoreImporter::importData(DataStoreImportedData *pDataStoreImportedData
     connect(worker, SIGNAL(progress(double)),
             this, SIGNAL(progress(double)));
 
-    connect(worker, SIGNAL(done()),
-            this, SIGNAL(done()));
-    connect(worker, SIGNAL(done()),
+    connect(worker, SIGNAL(done(const QString &)),
+            this, SIGNAL(done(const QString &)));
+    connect(worker, SIGNAL(done(const QString &)),
             thread, SLOT(quit()));
-    connect(worker, SIGNAL(done()),
+    connect(worker, SIGNAL(done(const QString &)),
             worker, SLOT(deleteLater()));
 
     connect(thread, &QThread::finished,

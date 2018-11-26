@@ -225,10 +225,10 @@ class SIMULATIONSUPPORT_EXPORT SimulationImportedData : public SimulationObject
 public:
     explicit SimulationImportedData(Simulation *pSimulation);
 
-    DataStore::DataStore * dataStore() const;
+    DataStore::DataStore * addDataStore();
 
 private:
-    DataStore::DataStore *mDataStore;
+    QList<DataStore::DataStore *> mDataStores;
 };
 
 //==============================================================================

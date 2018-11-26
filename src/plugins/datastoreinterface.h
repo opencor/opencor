@@ -202,7 +202,7 @@ protected:
 
 signals:
     void progress(double pProgress);
-    void done();
+    void done(const QString &pErrorMessage);
 
 public slots:
    virtual void run() = 0;
@@ -222,7 +222,7 @@ protected:
 
 signals:
     void progress(double pProgress);
-    void done();
+    void done(const QString &pErrorMessage);
 };
 
 //==============================================================================
