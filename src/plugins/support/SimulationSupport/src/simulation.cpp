@@ -825,6 +825,16 @@ SimulationImportedData::SimulationImportedData(Simulation *pSimulation) :
 
 //==============================================================================
 
+SimulationImportedData::~SimulationImportedData()
+{
+    // Delete some internal objects
+
+    foreach (DataStore::DataStore *dataStore, mDataStores)
+        delete dataStore;
+}
+
+//==============================================================================
+
 DataStore::DataStore * SimulationImportedData::addDataStore()
 {
     // Add a data store to our list and return it
@@ -873,6 +883,7 @@ Simulation::~Simulation()
 
     delete mRuntime;
 
+    delete mImportedData;
     delete mResults;
     delete mData;
 }

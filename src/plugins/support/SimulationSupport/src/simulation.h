@@ -224,6 +224,7 @@ class SIMULATIONSUPPORT_EXPORT SimulationImportedData : public SimulationObject
 
 public:
     explicit SimulationImportedData(Simulation *pSimulation);
+    ~SimulationImportedData();
 
     DataStore::DataStore * addDataStore();
 
