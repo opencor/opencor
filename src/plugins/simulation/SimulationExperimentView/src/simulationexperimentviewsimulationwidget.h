@@ -78,6 +78,12 @@ namespace Core {
 
 //==============================================================================
 
+namespace DataStore {
+    class DataStoreData;
+}   // namespace DataStore
+
+//==============================================================================
+
 namespace GraphPanelWidget {
     class GraphPanelWidget;
 }   // namespace GraphPanelWidget
@@ -367,8 +373,10 @@ private slots:
 
     void plotAxesChanged();
 
-    void dataStoreExportProgress(double pProgress);
-    void dataStoreExportDone(const QString &pErrorMessage);
+    void dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
+                                 double pProgress);
+    void dataStoreExportDone(DataStore::DataStoreData *pDataStoreData,
+                             const QString &pErrorMessage);
 
     void checkSimulationProperties();
     void checkSolversProperties();

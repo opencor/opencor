@@ -3185,12 +3185,15 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress,
+                Qt::UniqueConnection);
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone,
+                Qt::UniqueConnection);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                dataStoreData, &DataStore::DataStoreData::deleteLater);
+                dataStoreData, &DataStore::DataStoreData::deleteLater,
+                Qt::UniqueConnection);
 
         dataStoreExporter->exportData(dataStoreData);
     }
@@ -4078,8 +4081,11 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
+                                                                       double pProgress)
 {
+    Q_UNUSED(pDataStoreData);
+
     // There has been some progress with our export, so update our busy widget
 
     Core::centralWidget()->setBusyWidgetProgress(pProgress);
@@ -4087,8 +4093,11 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pP
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
+void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::DataStoreData *pDataStoreData,
+                                                                   const QString &pErrorMessage)
 {
+    Q_UNUSED(pDataStoreData);
+
     // We are done with the export, so hide our busy widget
 
     Core::centralWidget()->hideBusyWidget();
