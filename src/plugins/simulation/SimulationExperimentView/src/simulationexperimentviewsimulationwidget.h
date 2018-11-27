@@ -256,8 +256,8 @@ private:
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
-    int mNbOfImportedDataFiles;
     QMap<QObject *, double> mImportedDataProgresses;
+    QMap<QObject *, QString> mImportedDataErrorMessages;
 
     void output(const QString &pMessage);
 
@@ -323,8 +323,7 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
-    void importDataFile(const QString &pFileName,
-                        DataStoreInterface *pDataStoreInterface);
+    void importDataFiles(const QStringList &pFileNames);
 
 signals:
     void splitterMoved(const QIntList &pSizes);

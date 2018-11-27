@@ -637,12 +637,12 @@
         <translation>Importer des données</translation>
     </message>
     <message>
-        <source>Import Data File</source>
-        <translation>Importer Fichier Données</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé.</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
