@@ -606,14 +606,14 @@ void DataStoreExporter::exportData(DataStoreData *pDataStoreData)
     connect(thread, &QThread::started,
             worker, &DataStoreExporterWorker::run);
 
-    connect(worker, SIGNAL(progress(double)),
-            this, SIGNAL(progress(double)));
+    connect(worker, SIGNAL(progress(DataStoreData *, double)),
+            this, SIGNAL(progress(DataStoreData *, double)));
 
-    connect(worker, SIGNAL(done(const QString &)),
-            this, SIGNAL(done(const QString &)));
-    connect(worker, SIGNAL(done(const QString &)),
+    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
+            this, SIGNAL(done(DataStoreData *, const QString &)));
+    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
             thread, SLOT(quit()));
-    connect(worker, SIGNAL(done(const QString &)),
+    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
             worker, SLOT(deleteLater()));
 
     connect(thread, &QThread::finished,
