@@ -147,7 +147,7 @@ void CsvDataStoreExporterWorker::run()
         // to output our header
 
         if (res) {
-            emit progress(++stepNb*oneOverNbOfSteps);
+            emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
 
             for (int i = 0, iMax = voiValues.count(); i < iMax; ++i) {
                 QString rowData = QString();
@@ -194,7 +194,7 @@ void CsvDataStoreExporterWorker::run()
                 if (!res)
                     break;
 
-                emit progress(++stepNb*oneOverNbOfSteps);
+                emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
             }
         }
 
@@ -227,7 +227,7 @@ void CsvDataStoreExporterWorker::run()
 
     // Let people know that our export is done
 
-    emit done(errorMessage);
+    emit done(mDataStoreData, errorMessage);
 }
 
 //==============================================================================

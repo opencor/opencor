@@ -148,7 +148,7 @@ void BiosignalmlDataStoreExporterWorker::run()
                     rowCount = 0;
                 }
 
-                emit progress(++stepNb*oneOverNbOfSteps);
+                emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
             }
 
             signalArray->extend(data, size_t(variables.count()*rowCount));
@@ -174,7 +174,7 @@ void BiosignalmlDataStoreExporterWorker::run()
 
     // Let people know that our export is done
 
-    emit done(errorMessage);
+    emit done(mDataStoreData, errorMessage);
 }
 
 //==============================================================================

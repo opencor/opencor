@@ -238,8 +238,8 @@ protected:
     DataStoreData *mDataStoreData;
 
 signals:
-    void progress(double pProgress);
-    void done(const QString &pErrorMessage);
+    void progress(DataStoreData *pDataStoreData, double pProgress);
+    void done(DataStoreData *pDataStoreData, const QString &pErrorMessage);
 
 public slots:
    virtual void run() = 0;
@@ -258,8 +258,8 @@ protected:
     virtual DataStoreExporterWorker * workerInstance(DataStoreData *pDataStoreData) = 0;
 
 signals:
-    void progress(double pProgress);
-    void done(const QString &pErrorMessage);
+    void progress(DataStoreData *pDataStoreData, double pProgress);
+    void done(DataStoreData *pDataStoreData, const QString &pErrorMessage);
 };
 
 //==============================================================================
