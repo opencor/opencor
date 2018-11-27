@@ -59,7 +59,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Organisation",
                          "entries": [
-                           { "type": "added", "description": "<a href=\"plugins/organisation/pmrWorkspacesWindow.html\">PMR Workspaces window</a>." },
+                           { "type": "added", "description": "<a href=\"user/plugins/organisation/pmrWorkspacesWindow.html\">PMR Workspaces window</a>." },
                            { "type": "subCategory", "name": "PMR window",
                              "entries": [
                                { "type": "improved", "description": "Initialisation." },
