@@ -564,14 +564,14 @@ void DataStoreImporter::importData(DataStoreImportedData *pDataStoreImportedData
     connect(thread, &QThread::started,
             worker, &DataStoreImporterWorker::run);
 
-    connect(worker, SIGNAL(progress(double)),
-            this, SIGNAL(progress(double)));
+    connect(worker, SIGNAL(progress(DataStoreImportedData *, double)),
+            this, SIGNAL(progress(DataStoreImportedData *, double)));
 
-    connect(worker, SIGNAL(done(const QString &)),
-            this, SIGNAL(done(const QString &)));
-    connect(worker, SIGNAL(done(const QString &)),
+    connect(worker, SIGNAL(done(DataStoreImportedData *, const QString &)),
+            this, SIGNAL(done(DataStoreImportedData *, const QString &)));
+    connect(worker, SIGNAL(done(DataStoreImportedData *, const QString &)),
             thread, SLOT(quit()));
-    connect(worker, SIGNAL(done(const QString &)),
+    connect(worker, SIGNAL(done(DataStoreImportedData *, const QString &)),
             worker, SLOT(deleteLater()));
 
     connect(thread, &QThread::finished,

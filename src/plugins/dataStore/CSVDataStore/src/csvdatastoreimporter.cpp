@@ -81,7 +81,7 @@ void CsvDataStoreImporterWorker::run()
 
         dataStore->addVariables(values, nbOfValues);
 
-        emit progress(oneOverNbOfLines);
+        emit progress(mDataStoreImportedData, oneOverNbOfLines);
 
         // Add a run to our data store
         // Note: of capacity nbOfLines-1 because the first line is our header...
@@ -99,7 +99,7 @@ void CsvDataStoreImporterWorker::run()
 
                 dataStore->addValues(fields[0].toDouble());
 
-                emit progress(i*oneOverNbOfLines);
+                emit progress(mDataStoreImportedData, i*oneOverNbOfLines);
             }
         } else {
             errorMessage = tr("The data could not be imported.");
@@ -112,7 +112,7 @@ void CsvDataStoreImporterWorker::run()
 
     // Let people know that our import is done
 
-    emit done(errorMessage);
+    emit done(mDataStoreImportedData, errorMessage);
 }
 
 //==============================================================================

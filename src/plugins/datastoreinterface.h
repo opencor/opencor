@@ -201,8 +201,10 @@ protected:
     DataStoreImportedData *mDataStoreImportedData;
 
 signals:
-    void progress(double pProgress);
-    void done(const QString &pErrorMessage);
+    void progress(DataStoreImportedData *pDataStoreImportedData,
+                  double pProgress);
+    void done(DataStoreImportedData *pDataStoreImportedData,
+              const QString &pErrorMessage);
 
 public slots:
    virtual void run() = 0;
@@ -221,8 +223,10 @@ protected:
     virtual DataStoreImporterWorker * workerInstance(DataStoreImportedData *pDataStoreImportedData) = 0;
 
 signals:
-    void progress(double pProgress);
-    void done(const QString &pErrorMessage);
+    void progress(DataStoreImportedData *pDataStoreImportedData,
+                  double pProgress);
+    void done(DataStoreImportedData *pDataStoreImportedData,
+              const QString &pErrorMessage);
 };
 
 //==============================================================================

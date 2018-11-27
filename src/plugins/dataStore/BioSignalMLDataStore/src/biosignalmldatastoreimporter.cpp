@@ -42,7 +42,7 @@ void BiosignalmlDataStoreImporterWorker::run()
 //---ISSUE1845--- TO BE DONE...
     // Let people know that our import is done
 
-    emit done(QString());
+    emit done(mDataStoreImportedData, QString());
 }
 
 //==============================================================================

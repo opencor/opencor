@@ -80,6 +80,7 @@ namespace Core {
 
 namespace DataStore {
     class DataStoreData;
+    class DataStoreImportedData;
 }   // namespace DataStore
 
 //==============================================================================
@@ -383,8 +384,10 @@ private slots:
 
     void plotAxesChanged();
 
-    void dataStoreImportProgress(double pProgress);
-    void dataStoreImportDone(const QString &pErrorMessage);
+    void dataStoreImportProgress(DataStore::DataStoreImportedData *pDataStoreImportedData,
+                                 double pProgress);
+    void dataStoreImportDone(DataStore::DataStoreImportedData *pDataStoreImportedData,
+                             const QString &pErrorMessage);
 
     void dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
                                  double pProgress);
