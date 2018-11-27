@@ -4394,12 +4394,15 @@ void SimulationExperimentViewSimulationWidget::importDataFile(const QString &pFi
         DataStore::DataStoreImporter *dataStoreImporter = pDataStoreInterface->dataStoreImporterInstance();
 
         connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress,
+                Qt::UniqueConnection);
 
         connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
+                Qt::UniqueConnection);
         connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
-                dataStoreImportedData, &DataStore::DataStoreImportedData::deleteLater);
+                dataStoreImportedData, &DataStore::DataStoreImportedData::deleteLater,
+                Qt::UniqueConnection);
 
         dataStoreImporter->importData(dataStoreImportedData);
     }
