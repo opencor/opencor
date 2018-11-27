@@ -123,7 +123,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>()),
+    mNbOfImportedDataFiles(0),
+    mImportedDataProgresses(QMap<QObject *, double>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -673,13 +675,23 @@ void SimulationExperimentViewSimulationWidget::dragMoveEvent(QDragMoveEvent *pEv
 void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
 {
     // Import the one or several data store files
+    // Note: we keep track of the number of imported data files to make sure
+    //       that our showing of the progress works smoothyl (see
+    //       dataStoreImportProgress())...
+
+    QMap<QString, FileTypeInterface *> fileTypeInterfaces = QMap<QString, FileTypeInterface *>();
 
     foreach (const QString &fileName, Core::droppedFileNames(pEvent)) {
         foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName))
-                importDataFile(fileName, Core::dataStoreInterface(fileTypeInterface));
+                fileTypeInterfaces.insert(fileName, fileTypeInterface);
         }
     }
+
+    mNbOfImportedDataFiles = fileTypeInterfaces.count();
+
+    foreach (const QString &fileName, fileTypeInterfaces.keys())
+        importDataFile(fileName, Core::dataStoreInterface(fileTypeInterfaces.value(fileName)));
 
     // Accept the proposed action for the event
 
@@ -4190,9 +4202,17 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore
                                                                        double pProgress)
 {
     // There has been some progress with our import, so update our busy widget
-Q_UNUSED(pDataStoreImportedData);
 
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+    mImportedDataProgresses.insert(pDataStoreImportedData, pProgress);
+
+    if (mImportedDataProgresses.count() == mNbOfImportedDataFiles) {
+        double progress = 1.0;
+
+        foreach (double importedDataProgress, mImportedDataProgresses.values())
+            progress = qMin(pProgress, importedDataProgress);
+
+        Core::centralWidget()->setBusyWidgetProgress(progress);
+    }
 }
 
 //==============================================================================
@@ -4200,10 +4220,13 @@ Q_UNUSED(pDataStoreImportedData);
 void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::DataStoreImportedData *pDataStoreImportedData,
                                                                    const QString &pErrorMessage)
 {
-    // We are done with the import, so hide our busy widget
-Q_UNUSED(pDataStoreImportedData);
+    // We are done with the import, so hide our busy widget, if all imports are
+    // done
 
-    Core::centralWidget()->hideBusyWidget();
+    mImportedDataProgresses.remove(pDataStoreImportedData);
+
+    if (mImportedDataProgresses.isEmpty())
+        Core::centralWidget()->hideBusyWidget();
 
     // Display the given error message, if any
 
@@ -4387,9 +4410,16 @@ void SimulationExperimentViewSimulationWidget::importDataFile(const QString &pFi
                                                                                                    mSimulation->importedData()->addDataStore());
 
     if (dataStoreImportedData) {
-        // We have got the data we need, so do the actual import
+        // We have got the data we need, so keep track of the file we must
+        // import and then do the actual import
+        // Note: this is so that our progress can look good (see
+        //       dataStoreImportProgress()) and we can report error messages, if
+        //       any, once everything is done (see dataStoreImportDone())...
 
-        Core::centralWidget()->showProgressBusyWidget();
+        if (mImportedDataProgresses.isEmpty())
+            Core::centralWidget()->showProgressBusyWidget();
+
+        mImportedDataProgresses.insert(dataStoreImportedData, 0.0);
 
         DataStore::DataStoreImporter *dataStoreImporter = pDataStoreInterface->dataStoreImporterInstance();
 

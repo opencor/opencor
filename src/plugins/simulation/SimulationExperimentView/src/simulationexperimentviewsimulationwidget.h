@@ -256,6 +256,9 @@ private:
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
+    int mNbOfImportedDataFiles;
+    QMap<QObject *, double> mImportedDataProgresses;
+
     void output(const QString &pMessage);
 
     void updateSimulationMode();
