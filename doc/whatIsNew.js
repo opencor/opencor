@@ -108,7 +108,7 @@ var jsonData = { "versions": [
                                { "type": "improved", "description": "Generation of error messages." }
                              ]
                            },
-                           { "type": "subCategory", "name": "SED-ML support",
+                           { "type": "subCategory", "name": "<a href=\"https://sed-ml.github.io/\">SED-ML</a> support",
                              "entries": [
                                { "type": "added", "description": "Customisation of graph panels." }
                              ]
@@ -196,7 +196,7 @@ var jsonData = { "versions": [
                                { "type": "fixed", "description": "Serialisation of metadata." }
                              ]
                            },
-                           { "type": "added", "description": "<a href=\"user/plugins/editing/rawSEDMLView.html\">Raw SED-ML view</a>." }
+                           { "type": "added", "description": "<a href=\"user/plugins/editing/rawSedmlView.html\">Raw SED-ML view</a>." }
                          ]
                        },
                        { "name": "Organisation",
@@ -215,7 +215,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
-                               { "type": "added", "description": "Basic <a href=\"https://sed-ml.github.io/\">SED-ML</a> support (both through a SED-ML file and a <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
+                               { "type": "added", "description": "Basic <a href=\"https://sed-ml.github.io/\">SED-ML</a> support (both through a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file and a <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
                                { "type": "added", "description": "Creation of a new <a href=\"https://www.cellml.org/\">CellML</a> file or update of an existing one based on the results of a simulation." },
                                { "type": "added", "description": "Specification of the minimum/maximum values of the axes of a graph panel." },
                                { "type": "added", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
@@ -416,7 +416,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Development",
                          "entries": [
-                           { "type": "subCategory", "name": "Examples of <a href=\"developer/develop/plugins\">how to write plugins</a>",
+                           { "type": "subCategory", "name": "Examples of <a href=\"developer/develop/plugins/index.html\">how to write plugins</a>",
                              "entries": [
                                { "type": "added", "description": "<a href=\"developer/develop/plugins/sample.html\">Sample</a> plugin." },
                                { "type": "added", "description": "<a href=\"developer/develop/plugins/sampleTools.html\">Sample tools</a> plugin." },
