@@ -219,7 +219,7 @@ void CsvDataStoreExporterWorker::run()
         if (!res) {
             file.remove();
 
-            errorMessage = tr("The data could not be exported to CSV.");
+            errorMessage = tr("The data could not be written.");
         }
     } else {
         errorMessage = tr("The CSV file could not be created.");
