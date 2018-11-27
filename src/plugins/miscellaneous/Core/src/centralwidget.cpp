@@ -817,7 +817,7 @@ void CentralWidget::openFile()
 {
     // Ask for the file(s) to be opened
 
-    QStringList fileNames = getOpenFileNames(tr("Open File"),
+    QStringList fileNames = getOpenFileNames(tr("Open"),
                                              filters(fileTypeInterfaces()));
 
     // Open the file(s)
@@ -1114,8 +1114,8 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         QString firstSupportedFilter = supportedFilters.isEmpty()?QString():supportedFilters.first();
 
         newFileName = getSaveFileName(pNeedNewFileName?
-                                          tr("Save File As"):
-                                          tr("Save File"),
+                                          tr("Save As"):
+                                          tr("Save"),
                                       fileIsNew?
                                           Core::newFileName(mFileTabs->tabToolTip(pIndex), viewInterface->viewDefaultFileExtension()):
                                           Core::newFileName(newFileName, tr("New"), true),
