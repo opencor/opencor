@@ -854,7 +854,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             if (Core::questionMessageBox(tr("Save File"),
                                          tr("<strong>%1</strong> could not be saved. Do you want to save the contents of the view to a text file?").arg(QDir::toNativeSeparators(pNewFileName))) == QMessageBox::Yes) {
-                QString fileName = Core::getSaveFileName(tr("Save File"),
+                QString fileName = Core::getSaveFileName(tr("Save"),
                                                          Core::newFileName(pNewFileName, "txt"));
 
                 if (!fileName.isEmpty())
