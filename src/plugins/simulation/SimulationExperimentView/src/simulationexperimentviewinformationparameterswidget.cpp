@@ -410,9 +410,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
-
         property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
-
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
 
