@@ -3271,8 +3271,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone,
                 Qt::UniqueConnection);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                dataStoreData, &DataStore::DataStoreData::deleteLater,
-                Qt::UniqueConnection);
+                dataStoreData, &DataStore::DataStoreData::deleteLater);
 
         dataStoreExporter->exportData(dataStoreData);
     }
