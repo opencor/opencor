@@ -169,6 +169,14 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
+void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportedData *pDataStoreImportedData)
+{
+//---ISSUE1845--- TO BE DONE...
+Q_UNUSED(pDataStoreImportedData);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationParametersWidget::updateParameters(double pCurrentPoint)
 {
     // Update our data

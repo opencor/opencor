@@ -4191,7 +4191,9 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
     if (mImportedDataProgresses.isEmpty()) {
         // Update our Parameters section with our imported data
-//---ISSUE1845--- TO BE DONE...
+
+        foreach (DataStore::DataStoreImportedData *dataStoreImportedData, mImportedDataErrorMessages.keys())
+            mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportedData);
 
         // Hide our busy widget
 

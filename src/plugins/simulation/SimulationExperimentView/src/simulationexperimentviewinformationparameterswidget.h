@@ -40,6 +40,12 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+namespace DataStore {
+    class DataStoreImportedData;
+}   // namespace DataStore
+
+//==============================================================================
+
 namespace SimulationSupport {
     class Simulation;
 }   // namespace SimulationSupport
@@ -62,6 +68,8 @@ public:
     void initialize(SimulationSupport::Simulation *pSimulation,
                     bool pReloadingView = false);
     void finalize();
+
+    void importData(DataStore::DataStoreImportedData *pDataStoreImportedData);
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
