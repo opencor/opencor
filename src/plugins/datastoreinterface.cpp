@@ -346,7 +346,7 @@ double * DataStoreVariable::values(int pRun) const
 //==============================================================================
 
 DataStoreImportData::DataStoreImportData(const QString &pFileName,
-                                             DataStore *pDataStore) :
+                                         DataStore *pDataStore) :
     mFileName(pFileName),
     mDataStore(pDataStore)
 {
