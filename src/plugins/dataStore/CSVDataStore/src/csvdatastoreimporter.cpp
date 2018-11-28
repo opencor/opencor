@@ -102,7 +102,7 @@ void CsvDataStoreImporterWorker::run()
                 emit progress(mDataStoreImportedData, i*oneOverNbOfLines);
             }
         } else {
-            errorMessage = tr("The data could not be imported.");
+            errorMessage = tr("The memory needed to store the data could not be allocated.");
         }
 
         delete[] values;

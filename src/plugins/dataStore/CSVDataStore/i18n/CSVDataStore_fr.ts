@@ -30,8 +30,8 @@
 <context>
     <name>OpenCOR::CSVDataStore::CsvDataStoreImporterWorker</name>
     <message>
-        <source>The data could not be imported.</source>
-        <translation>Les données n&apos;ont pas pu être importées.</translation>
+        <source>The memory needed to store the data could not be allocated.</source>
+        <translation>La mémoire nécessaire pour stocker les données n&apos;a pas pu être allouée.</translation>
     </message>
 </context>
 </TS>
