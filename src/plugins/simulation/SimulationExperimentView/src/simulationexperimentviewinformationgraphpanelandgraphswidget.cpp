@@ -281,6 +281,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
 //==============================================================================
 
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(DataStore::DataStoreImportData *pImportData)
+{
+//---ISSUE1845--- TO BE DONE...
+Q_UNUSED(pImportData);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(GraphPanelWidget::GraphPanelWidget *pGraphPanel,
                                                                               const GraphPanelWidget::GraphPanelWidgetProperties &pGraphPanelWidgetProperties,
                                                                               bool pActive,

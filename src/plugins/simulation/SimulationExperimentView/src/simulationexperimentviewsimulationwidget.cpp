@@ -4190,10 +4190,12 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
     // imported data, hide our busy widget and display error messages, if needed
 
     if (mDataImportProgresses.isEmpty()) {
-        // Update our Parameters section with our imported data
+        // Update our Graphs and Parameters sections with our imported data
 
-        foreach (DataStore::DataStoreImportData *dataStoreImportedData, mDataImportErrorMessages.keys())
+        foreach (DataStore::DataStoreImportData *dataStoreImportedData, mDataImportErrorMessages.keys()) {
+            mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportedData);
             mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportedData);
+        }
 
         // Hide our busy widget
 
