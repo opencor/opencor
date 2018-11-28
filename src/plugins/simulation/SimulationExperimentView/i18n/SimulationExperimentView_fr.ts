@@ -194,6 +194,10 @@
         <source>algebraic</source>
         <translation>algébrique</translation>
     </message>
+    <message>
+        <source>data</source>
+        <translation>donnée</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::SimulationExperimentView::SimulationExperimentViewInformationSimulationWidget</name>

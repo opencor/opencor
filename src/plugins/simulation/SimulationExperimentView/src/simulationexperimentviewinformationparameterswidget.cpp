@@ -44,10 +44,13 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     mPlotAgainstMenu(nullptr),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
+    mImportData(QMap<Core::Property *, DataStore::DataStoreVariable *>()),
+    mImportDataActions(QMap<QAction *, DataStore::DataStoreVariable *>()),
     mSimulation(nullptr),
     mNeedClearing(false),
     mVoiAccessible(false),
-    mImportComponent(nullptr)
+    mImportComponent(nullptr),
+    mImportMenu(nullptr)
 {
     // Create our context menu
 
@@ -159,7 +162,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 void SimulationExperimentViewInformationParametersWidget::finalize()
 {
     // Clear ourselves, as well as our context menu, parameters and parameter
-    // actions
+    // actions, import data and import data actions
 
     mNeedClearing = true;
 
@@ -167,6 +170,9 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
     mParameters.clear();
     mParameterActions.clear();
+
+    mImportData.clear();
+    mImportDataActions.clear();
 }
 
 //==============================================================================
@@ -199,18 +205,57 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
         property->setEditable(false);
         property->setIcon(DataIcon);
         property->setName(QString("data #%1").arg(i+1), false);
+
+        // Keep track of the link between our property value and imported data
+
+        mImportData.insert(property, data);
     }
+
+    // Update (well, set for imported data) the extra info of all our properties
+
+    updateExtraInfos();
 
     // Expand our import component and sub-component
 
     expand(mImportComponent->index());
     expand(importSubComponent->index());
+
+    // Create our general import menu, if needed
+
+    if (!mImportMenu) {
+        mImportMenu = new QMenu("imports", mPlotAgainstMenu);
+
+        mPlotAgainstMenu->addMenu(mImportMenu);
+    }
+
+    // Create our import sub-menu
+
+    QMenu *importSubMenu = new QMenu(QString("import #%1").arg(importNb), mImportMenu);
+
+    mImportMenu->addMenu(importSubMenu);
+
+    // Populate our import sub-menu with the given data
+
+    for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
+        QAction *dataAction = importSubMenu->addAction(DataIcon,
+                                                       QString("data #%1").arg(i+1));
+
+        // Create a connection to handle the graph requirement against our data
+
+        connect(dataAction, &QAction::triggered,
+                this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
+
+        // Keep track of the data store associated with our data action
+
+        mImportDataActions.insert(dataAction, variables[i]);
+    }
 }
 
 //==============================================================================
 
 void SimulationExperimentViewInformationParametersWidget::updateParameters(double pCurrentPoint)
 {
+//---ISSUE1845--- ALSO UPDATE OUR IMPORTED DATA...
     // Update our data
 
     foreach (Core::Property *property, allProperties()) {
@@ -542,6 +587,7 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 
     foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
+        DataStore::DataStoreVariable *dataStore = mImportData.value(property);
 
         if (parameter) {
             QString parameterType = QString();
@@ -578,6 +624,8 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
             }
 
             property->setExtraInfo(parameterType);
+        } else if (dataStore) {
+            property->setExtraInfo(tr("data"));
         }
     }
 }
@@ -586,6 +634,7 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 
 void SimulationExperimentViewInformationParametersWidget::emitGraphRequired()
 {
+//---ISSUE1845--- ALLOW FOR IMPORTED DATA TO BE PART OF A GRAPH...
     // Let people know that we want to plot the current parameter against
     // another
 
