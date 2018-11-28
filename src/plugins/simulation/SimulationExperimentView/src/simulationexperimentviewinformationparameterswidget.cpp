@@ -44,7 +44,8 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mSimulation(nullptr),
     mNeedClearing(false),
-    mVoiAccessible(false)
+    mVoiAccessible(false),
+    mImportComponent(nullptr)
 {
     // Create our context menu
 
@@ -171,8 +172,38 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
 void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportData *pImportData)
 {
-//---ISSUE1845--- TO BE DONE...
-Q_UNUSED(pImportData);
+    // Create our general import "component", if needed
+
+    if (!mImportComponent)
+        mImportComponent = addSectionProperty("imports");
+
+    // Create our import "sub-component"
+
+    static int counter = 0;
+
+    Core::Property *importSubComponent = addSectionProperty(QString("import #%1").arg(++counter), mImportComponent);
+
+    // Add the given data to our model
+
+    static const QIcon DataIcon = QIcon(":/SimulationExperimentView/data.png");
+
+    DataStore::DataStore *dataStore = pImportData->dataStore();
+    DataStore::DataStoreVariables variables = dataStore->variables();
+
+    for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
+        DataStore::DataStoreVariable *variable = variables[i];
+
+        Core::Property *property = addDoubleProperty(variable->value(0), importSubComponent);
+
+        property->setEditable(false);
+        property->setIcon(DataIcon);
+        property->setName(QString("data #%1").arg(i+1), false);
+    }
+
+    // Expand our import component and sub-component
+
+    expand(mImportComponent->index());
+    expand(importSubComponent->index());
 }
 
 //==============================================================================

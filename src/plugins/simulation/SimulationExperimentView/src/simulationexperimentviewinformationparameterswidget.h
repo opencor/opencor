@@ -87,6 +87,8 @@ private:
     bool mNeedClearing;
     bool mVoiAccessible;
 
+    Core::Property *mImportComponent;
+
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
 
