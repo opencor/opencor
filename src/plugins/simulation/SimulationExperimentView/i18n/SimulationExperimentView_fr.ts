@@ -638,11 +638,11 @@
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;est pas un fichier de données.</translation>
     </message>
 </context>
 </TS>
