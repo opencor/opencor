@@ -4168,8 +4168,8 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore
 
     double progress = 1.0;
 
-    foreach (double importedDataProgress, mDataImportProgresses.values())
-        progress = qMin(pProgress, importedDataProgress);
+    foreach (double importDataProgress, mDataImportProgresses.values())
+        progress = qMin(pProgress, importDataProgress);
 
     Core::centralWidget()->setBusyWidgetProgress(progress);
 }
@@ -4203,12 +4203,12 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
         // Let people know about any error that we came across
 
-        foreach (DataStore::DataStoreImportData *importedData, mDataImportErrorMessages.keys()) {
-            QString errorMessage = mDataImportErrorMessages.value(importedData);
+        foreach (DataStore::DataStoreImportData *importData, mDataImportErrorMessages.keys()) {
+            QString errorMessage = mDataImportErrorMessages.value(importData);
 
             if (!errorMessage.isEmpty()) {
                 Core::warningMessageBox(tr("Data Import"),
-                                        tr("<strong>%1</strong> could not be imported (%2).").arg(importedData->fileName())
+                                        tr("<strong>%1</strong> could not be imported (%2).").arg(importData->fileName())
                                                                                              .arg(Core::formatMessage(errorMessage, true)));
             }
         }
