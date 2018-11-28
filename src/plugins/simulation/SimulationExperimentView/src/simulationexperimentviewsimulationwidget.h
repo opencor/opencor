@@ -256,8 +256,8 @@ private:
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
-    QMap<QObject *, double> mImportedDataProgresses;
-    QMap<QObject *, QString> mImportedDataErrorMessages;
+    QMap<DataStore::DataStoreImportedData *, double> mImportedDataProgresses;
+    QMap<DataStore::DataStoreImportedData *, QString> mImportedDataErrorMessages;
 
     void output(const QString &pMessage);
 

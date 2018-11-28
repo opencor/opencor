@@ -124,8 +124,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>()),
-    mImportedDataProgresses(QMap<QObject *, double>()),
-    mImportedDataErrorMessages(QMap<QObject *, QString>())
+    mImportedDataProgresses(QMap<DataStore::DataStoreImportedData *, double>()),
+    mImportedDataErrorMessages(QMap<DataStore::DataStoreImportedData *, QString>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -4202,12 +4202,10 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
         // Let people know about any error that we came across
 
-        foreach (QObject *object, mImportedDataErrorMessages.keys()) {
-            DataStore::DataStoreImportedData *dataStoreImportedData = static_cast<DataStore::DataStoreImportedData *>(object);
-
+        foreach (DataStore::DataStoreImportedData *importedData, mImportedDataErrorMessages.keys()) {
             Core::warningMessageBox(tr("Data Import"),
-                                    tr("<strong>%1</strong> could not be imported (%2).").arg(dataStoreImportedData->fileName())
-                                                                                         .arg(Core::formatMessage(mImportedDataErrorMessages.value(object), true)));
+                                    tr("<strong>%1</strong> could not be imported (%2).").arg(importedData->fileName())
+                                                                                         .arg(Core::formatMessage(mImportedDataErrorMessages.value(importedData), true)));
         }
 
         mImportedDataErrorMessages.clear();
