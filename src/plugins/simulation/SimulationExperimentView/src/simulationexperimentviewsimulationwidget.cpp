@@ -4185,16 +4185,16 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
     mDataImportProgresses.remove(pImportData);
     mDataImportErrorMessages.insert(pImportData, pErrorMessage);
 
-    // If mImportedDataProgresses is empty then it means that we all our imports
+    // If mImportDataProgresses is empty then it means that we all our imports
     // are done, in which case we need to update our Parameters section with our
     // imported data, hide our busy widget and display error messages, if needed
 
     if (mDataImportProgresses.isEmpty()) {
         // Update our Graphs and Parameters sections with our imported data
 
-        foreach (DataStore::DataStoreImportData *dataStoreImportedData, mDataImportErrorMessages.keys()) {
-            mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportedData);
-            mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportedData);
+        foreach (DataStore::DataStoreImportData *dataStoreImportData, mDataImportErrorMessages.keys()) {
+            mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData);
+            mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData);
         }
 
         // Hide our busy widget
@@ -4417,27 +4417,27 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
 
     // Retrieve some imported data for our different data files
 
-    QMap<QString, DataStore::DataStoreImportData *> dataStoreImportedDatas = QMap<QString, DataStore::DataStoreImportData *>();
+    QMap<QString, DataStore::DataStoreImportData *> dataStoreImportDatas = QMap<QString, DataStore::DataStoreImportData *>();
 
     foreach (const QString &fileName, dataStoreInterfaces.keys()) {
-        DataStore::DataStoreImportData *dataStoreImportedData = dataStoreInterfaces.value(fileName)->getImportData(fileName, mSimulation->importData()->addDataStore());
+        DataStore::DataStoreImportData *dataStoreImportData = dataStoreInterfaces.value(fileName)->getImportData(fileName, mSimulation->importData()->addDataStore());
 
-        if (dataStoreImportedData) {
-            dataStoreImportedDatas.insert(fileName, dataStoreImportedData);
+        if (dataStoreImportData) {
+            dataStoreImportDatas.insert(fileName, dataStoreImportData);
 
-            mDataImportProgresses.insert(dataStoreImportedData, 0.0);
+            mDataImportProgresses.insert(dataStoreImportData, 0.0);
         }
     }
 
     // We have got the imported data we need, so now do the actual import of our
     // data files
 
-    if (!dataStoreImportedDatas.isEmpty())
+    if (!dataStoreImportDatas.isEmpty())
         Core::centralWidget()->showProgressBusyWidget();
 
-    foreach (const QString &fileName, dataStoreImportedDatas.keys()) {
+    foreach (const QString &fileName, dataStoreImportDatas.keys()) {
         DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterfaces.value(fileName)->dataStoreImporterInstance();
-        DataStore::DataStoreImportData *dataStoreImportedData = dataStoreImportedDatas.value(fileName);
+        DataStore::DataStoreImportData *dataStoreImportData = dataStoreImportDatas.value(fileName);
 
         connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress,
@@ -4447,9 +4447,9 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
                 Qt::UniqueConnection);
         connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
-                dataStoreImportedData, &DataStore::DataStoreImportData::deleteLater);
+                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
 
-        dataStoreImporter->importData(dataStoreImportedData);
+        dataStoreImporter->importData(dataStoreImportData);
     }
 }
 
