@@ -70,6 +70,8 @@ protected:
 
 private:
     QMenu *mContextMenu;
+    QAction *mPlotAgainstVoiMenuAction;
+    QMenu *mPlotAgainstMenu;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
