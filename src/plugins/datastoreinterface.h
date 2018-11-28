@@ -123,13 +123,13 @@ class DataStore;
 
 //==============================================================================
 
-class DataStoreImportedData : public QObject
+class DataStoreImportData : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreImportedData(const QString &pFileName,
-                                   DataStore *pDataStore);
+    explicit DataStoreImportData(const QString &pFileName,
+                                 DataStore *pDataStore);
 
     QString fileName() const;
     DataStore * dataStore() const;
@@ -141,7 +141,7 @@ protected:
 
 //==============================================================================
 
-class DataStoreData : public DataStoreImportedData
+class DataStoreData : public DataStoreImportData
 {
     Q_OBJECT
 
@@ -195,16 +195,14 @@ class DataStoreImporterWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStoreImporterWorker(DataStoreImportedData *pDataStoreImportedData);
+    explicit DataStoreImporterWorker(DataStoreImportData *pImportData);
 
 protected:
-    DataStoreImportedData *mDataStoreImportedData;
+    DataStoreImportData *mImportData;
 
 signals:
-    void progress(DataStoreImportedData *pDataStoreImportedData,
-                  double pProgress);
-    void done(DataStoreImportedData *pDataStoreImportedData,
-              const QString &pErrorMessage);
+    void progress(DataStoreImportData *pImportData, double pProgress);
+    void done(DataStoreImportData *pImportData, const QString &pErrorMessage);
 
 public slots:
    virtual void run() = 0;
@@ -217,16 +215,14 @@ class DataStoreImporter : public QObject
     Q_OBJECT
 
 public:
-    void importData(DataStoreImportedData *pDataStoreImportedData);
+    void importData(DataStoreImportData *pImportData);
 
 protected:
-    virtual DataStoreImporterWorker * workerInstance(DataStoreImportedData *pDataStoreImportedData) = 0;
+    virtual DataStoreImporterWorker * workerInstance(DataStoreImportData *pImportData) = 0;
 
 signals:
-    void progress(DataStoreImportedData *pDataStoreImportedData,
-                  double pProgress);
-    void done(DataStoreImportedData *pDataStoreImportedData,
-              const QString &pErrorMessage);
+    void progress(DataStoreImportData *pImportData, double pProgress);
+    void done(DataStoreImportData *pImportData, const QString &pErrorMessage);
 };
 
 //==============================================================================

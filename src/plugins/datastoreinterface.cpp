@@ -345,7 +345,7 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-DataStoreImportedData::DataStoreImportedData(const QString &pFileName,
+DataStoreImportData::DataStoreImportData(const QString &pFileName,
                                              DataStore *pDataStore) :
     mFileName(pFileName),
     mDataStore(pDataStore)
@@ -354,7 +354,7 @@ DataStoreImportedData::DataStoreImportedData(const QString &pFileName,
 
 //==============================================================================
 
-QString DataStoreImportedData::fileName() const
+QString DataStoreImportData::fileName() const
 {
     // Return our file name
 
@@ -363,7 +363,7 @@ QString DataStoreImportedData::fileName() const
 
 //==============================================================================
 
-DataStore * DataStoreImportedData::dataStore() const
+DataStore * DataStoreImportData::dataStore() const
 {
     // Return our data store
 
@@ -374,7 +374,7 @@ DataStore * DataStoreImportedData::dataStore() const
 
 DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
                              const DataStoreVariables &pVariables) :
-    DataStoreImportedData(pFileName, pDataStore),
+    DataStoreImportData(pFileName, pDataStore),
     mVariables(pVariables)
 {
 }
@@ -542,14 +542,14 @@ void DataStore::addValues(double pVoiValue)
 
 //==============================================================================
 
-DataStoreImporterWorker::DataStoreImporterWorker(DataStoreImportedData *pDataStoreImportedData) :
-    mDataStoreImportedData(pDataStoreImportedData)
+DataStoreImporterWorker::DataStoreImporterWorker(DataStoreImportData *pImportData) :
+    mImportData(pImportData)
 {
 }
 
 //==============================================================================
 
-void DataStoreImporter::importData(DataStoreImportedData *pDataStoreImportedData)
+void DataStoreImporter::importData(DataStoreImportData *pImportData)
 {
     // Create and move our worker to a thread
     // Note: we cannot use the new connect() syntax with our worker's signals
@@ -557,21 +557,21 @@ void DataStoreImporter::importData(DataStoreImportedData *pDataStoreImportedData
     //       plugin...
 
     QThread *thread = new QThread();
-    DataStoreImporterWorker *worker = workerInstance(pDataStoreImportedData);
+    DataStoreImporterWorker *worker = workerInstance(pImportData);
 
     worker->moveToThread(thread);
 
     connect(thread, &QThread::started,
             worker, &DataStoreImporterWorker::run);
 
-    connect(worker, SIGNAL(progress(DataStoreImportedData *, double)),
-            this, SIGNAL(progress(DataStoreImportedData *, double)));
+    connect(worker, SIGNAL(progress(DataStoreImportData *, double)),
+            this, SIGNAL(progress(DataStoreImportData *, double)));
 
-    connect(worker, SIGNAL(done(DataStoreImportedData *, const QString &)),
-            this, SIGNAL(done(DataStoreImportedData *, const QString &)));
-    connect(worker, SIGNAL(done(DataStoreImportedData *, const QString &)),
+    connect(worker, SIGNAL(done(DataStoreImportData *, const QString &)),
+            this, SIGNAL(done(DataStoreImportData *, const QString &)));
+    connect(worker, SIGNAL(done(DataStoreImportData *, const QString &)),
             thread, SLOT(quit()));
-    connect(worker, SIGNAL(done(DataStoreImportedData *, const QString &)),
+    connect(worker, SIGNAL(done(DataStoreImportData *, const QString &)),
             worker, SLOT(deleteLater()));
 
     connect(thread, &QThread::finished,

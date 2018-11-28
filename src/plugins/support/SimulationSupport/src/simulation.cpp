@@ -817,7 +817,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 //==============================================================================
 
-SimulationImportedData::SimulationImportedData(Simulation *pSimulation) :
+SimulationImportData::SimulationImportData(Simulation *pSimulation) :
     SimulationObject(pSimulation),
     mDataStores(QList<DataStore::DataStore *>())
 {
@@ -825,7 +825,7 @@ SimulationImportedData::SimulationImportedData(Simulation *pSimulation) :
 
 //==============================================================================
 
-SimulationImportedData::~SimulationImportedData()
+SimulationImportData::~SimulationImportData()
 {
     // Delete some internal objects
 
@@ -835,7 +835,7 @@ SimulationImportedData::~SimulationImportedData()
 
 //==============================================================================
 
-DataStore::DataStore * SimulationImportedData::addDataStore()
+DataStore::DataStore * SimulationImportData::addDataStore()
 {
     // Add a data store to our list and return it
 
@@ -862,7 +862,7 @@ Simulation::Simulation(const QString &pFileName) :
 
     mData = new SimulationData(this);
     mResults = new SimulationResults(this);
-    mImportedData = new SimulationImportedData(this);
+    mImportData = new SimulationImportData(this);
 
     // Keep track of any error occurring in our data
 
@@ -882,7 +882,7 @@ Simulation::~Simulation()
 
     delete mRuntime;
 
-    delete mImportedData;
+    delete mImportData;
     delete mResults;
     delete mData;
 }
@@ -1055,11 +1055,11 @@ SimulationResults * Simulation::results() const
 
 //==============================================================================
 
-SimulationImportedData * Simulation::importedData() const
+SimulationImportData * Simulation::importData() const
 {
     // Return our imported data
 
-    return mImportedData;
+    return mImportData;
 }
 
 //==============================================================================

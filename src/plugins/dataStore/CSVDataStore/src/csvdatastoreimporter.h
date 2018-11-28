@@ -39,7 +39,7 @@ class CsvDataStoreImporterWorker : public DataStore::DataStoreImporterWorker
     Q_OBJECT
 
 public:
-    explicit CsvDataStoreImporterWorker(DataStore::DataStoreImportedData *pDataStoreImportedData);
+    explicit CsvDataStoreImporterWorker(DataStore::DataStoreImportData *pImportData);
 
 public slots:
     void run() override;
@@ -52,7 +52,7 @@ class CsvDataStoreImporter : public DataStore::DataStoreImporter
     Q_OBJECT
 
 protected:
-    DataStore::DataStoreImporterWorker * workerInstance(DataStore::DataStoreImportedData *pDataStoreImportedData) override;
+    DataStore::DataStoreImporterWorker * workerInstance(DataStore::DataStoreImportData *pImportData) override;
 };
 
 //==============================================================================

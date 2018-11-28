@@ -77,12 +77,12 @@ QString BioSignalMLDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
-DataStore::DataStoreImportedData * BioSignalMLDataStorePlugin::getImportedData(const QString &pFileName,
-                                                                               DataStore::DataStore *pDataStore) const
+DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const QString &pFileName,
+                                                                           DataStore::DataStore *pDataStore) const
 {
     // Return some information about the data we want to import
 
-    return new DataStore::DataStoreImportedData(pFileName, pDataStore);
+    return new DataStore::DataStoreImportData(pFileName, pDataStore);
 }
 
 //==============================================================================

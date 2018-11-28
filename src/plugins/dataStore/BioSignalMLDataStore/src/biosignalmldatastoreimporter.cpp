@@ -30,8 +30,8 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BiosignalmlDataStoreImporterWorker::BiosignalmlDataStoreImporterWorker(DataStore::DataStoreImportedData *pDataStoreImportedData) :
-    DataStore::DataStoreImporterWorker(pDataStoreImportedData)
+BiosignalmlDataStoreImporterWorker::BiosignalmlDataStoreImporterWorker(DataStore::DataStoreImportData *pImportData) :
+    DataStore::DataStoreImporterWorker(pImportData)
 {
 }
 
@@ -42,16 +42,16 @@ void BiosignalmlDataStoreImporterWorker::run()
 //---ISSUE1845--- TO BE DONE...
     // Let people know that our import is done
 
-    emit done(mDataStoreImportedData, QString());
+    emit done(mImportData, QString());
 }
 
 //==============================================================================
 
-DataStore::DataStoreImporterWorker * BiosignalmlDataStoreImporter::workerInstance(DataStore::DataStoreImportedData *pDataStoreImportedData)
+DataStore::DataStoreImporterWorker * BiosignalmlDataStoreImporter::workerInstance(DataStore::DataStoreImportData *pImportData)
 {
     // Return an instance of our worker
 
-    return new BiosignalmlDataStoreImporterWorker(pDataStoreImportedData);
+    return new BiosignalmlDataStoreImporterWorker(pImportData);
 }
 
 //==============================================================================

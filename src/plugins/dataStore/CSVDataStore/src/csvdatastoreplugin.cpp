@@ -79,12 +79,12 @@ QString CSVDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
-DataStore::DataStoreImportedData * CSVDataStorePlugin::getImportedData(const QString &pFileName,
-                                                                       DataStore::DataStore *pDataStore) const
+DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString &pFileName,
+                                                                   DataStore::DataStore *pDataStore) const
 {
     // Return some information about the data we want to import
 
-    return new DataStore::DataStoreImportedData(pFileName, pDataStore);
+    return new DataStore::DataStoreImportData(pFileName, pDataStore);
 }
 
 //==============================================================================

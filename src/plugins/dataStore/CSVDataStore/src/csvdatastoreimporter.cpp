@@ -36,8 +36,8 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-CsvDataStoreImporterWorker::CsvDataStoreImporterWorker(DataStore::DataStoreImportedData *pDataStoreImportedData) :
-    DataStore::DataStoreImporterWorker(pDataStoreImportedData)
+CsvDataStoreImporterWorker::CsvDataStoreImporterWorker(DataStore::DataStoreImportData *pImportData) :
+    DataStore::DataStoreImporterWorker(pImportData)
 {
 }
 
@@ -48,7 +48,7 @@ void CsvDataStoreImporterWorker::run()
     // Import our CSV file in our data store
     // Note: we rely on the fact that our CSV file is well-formed...
 
-    QFile file(mDataStoreImportedData->fileName());
+    QFile file(mImportData->fileName());
     QString errorMessage = QString();
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
@@ -67,7 +67,7 @@ void CsvDataStoreImporterWorker::run()
 
         // Read our header line and set up our data store
 
-        DataStore::DataStore *dataStore = mDataStoreImportedData->dataStore();
+        DataStore::DataStore *dataStore = mImportData->dataStore();
 
         double oneOverNbOfLines = 1.0/nbOfLines;
 
@@ -81,7 +81,7 @@ void CsvDataStoreImporterWorker::run()
 
         dataStore->addVariables(values, nbOfValues);
 
-        emit progress(mDataStoreImportedData, oneOverNbOfLines);
+        emit progress(mImportData, oneOverNbOfLines);
 
         // Add a run to our data store
         // Note: of capacity nbOfLines-1 because the first line is our header...
@@ -99,7 +99,7 @@ void CsvDataStoreImporterWorker::run()
 
                 dataStore->addValues(fields[0].toDouble());
 
-                emit progress(mDataStoreImportedData, i*oneOverNbOfLines);
+                emit progress(mImportData, i*oneOverNbOfLines);
             }
         } else {
             errorMessage = tr("The memory needed to store the data could not be allocated.");
@@ -112,16 +112,16 @@ void CsvDataStoreImporterWorker::run()
 
     // Let people know that our import is done
 
-    emit done(mDataStoreImportedData, errorMessage);
+    emit done(mImportData, errorMessage);
 }
 
 //==============================================================================
 
-DataStore::DataStoreImporterWorker * CsvDataStoreImporter::workerInstance(DataStore::DataStoreImportedData *pDataStoreImportedData)
+DataStore::DataStoreImporterWorker * CsvDataStoreImporter::workerInstance(DataStore::DataStoreImportData *pImportData)
 {
     // Return an instance of our worker
 
-    return new CsvDataStoreImporterWorker(pDataStoreImportedData);
+    return new CsvDataStoreImporterWorker(pImportData);
 }
 
 //==============================================================================

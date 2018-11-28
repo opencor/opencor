@@ -169,10 +169,10 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportedData *pDataStoreImportedData)
+void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportData *pImportData)
 {
 //---ISSUE1845--- TO BE DONE...
-Q_UNUSED(pDataStoreImportedData);
+Q_UNUSED(pImportData);
 }
 
 //==============================================================================

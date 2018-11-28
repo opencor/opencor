@@ -39,7 +39,7 @@ class BiosignalmlDataStoreImporterWorker : public DataStore::DataStoreImporterWo
     Q_OBJECT
 
 public:
-    explicit BiosignalmlDataStoreImporterWorker(DataStore::DataStoreImportedData *pDataStoreImportedData);
+    explicit BiosignalmlDataStoreImporterWorker(DataStore::DataStoreImportData *pImportData);
 
 public slots:
     void run() override;
@@ -52,7 +52,7 @@ class BiosignalmlDataStoreImporter : public DataStore::DataStoreImporter
     Q_OBJECT
 
 protected:
-    DataStore::DataStoreImporterWorker * workerInstance(DataStore::DataStoreImportedData *pDataStoreImportedData) override;
+    DataStore::DataStoreImporterWorker * workerInstance(DataStore::DataStoreImportData *pImportData) override;
 };
 
 //==============================================================================

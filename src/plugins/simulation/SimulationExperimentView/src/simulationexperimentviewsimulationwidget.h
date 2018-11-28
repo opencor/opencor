@@ -80,7 +80,7 @@ namespace Core {
 
 namespace DataStore {
     class DataStoreData;
-    class DataStoreImportedData;
+    class DataStoreImportData;
 }   // namespace DataStore
 
 //==============================================================================
@@ -256,8 +256,8 @@ private:
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
-    QMap<DataStore::DataStoreImportedData *, double> mImportedDataProgresses;
-    QMap<DataStore::DataStoreImportedData *, QString> mImportedDataErrorMessages;
+    QMap<DataStore::DataStoreImportData *, double> mDataImportProgresses;
+    QMap<DataStore::DataStoreImportData *, QString> mDataImportErrorMessages;
 
     void output(const QString &pMessage);
 
@@ -388,9 +388,9 @@ private slots:
 
     void plotAxesChanged();
 
-    void dataStoreImportProgress(DataStore::DataStoreImportedData *pDataStoreImportedData,
+    void dataStoreImportProgress(DataStore::DataStoreImportData *pImportData,
                                  double pProgress);
-    void dataStoreImportDone(DataStore::DataStoreImportedData *pDataStoreImportedData,
+    void dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
                              const QString &pErrorMessage);
 
     void dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
