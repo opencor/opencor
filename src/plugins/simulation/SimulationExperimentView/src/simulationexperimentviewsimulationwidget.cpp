@@ -4212,6 +4212,8 @@ qDebug(">>> %s", qPrintable(importedData->fileName()));
         }
 
         mImportedDataErrorMessages.clear();
+
+        emit allImportsDone();
     }
 }
 
@@ -4442,9 +4444,8 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
         connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
                 Qt::UniqueConnection);
-        connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
-                dataStoreImportedData, &DataStore::DataStoreImportedData::deleteLater,
-                Qt::UniqueConnection);
+        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
+                dataStoreImportedData, &DataStore::DataStoreImportedData::deleteLater);
 
         dataStoreImporter->importData(dataStoreImportedData);
     }
