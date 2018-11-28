@@ -4201,7 +4201,6 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
         foreach (DataStore::DataStoreImportedData *importedData, mImportedDataErrorMessages.keys()) {
             QString errorMessage = mImportedDataErrorMessages.value(importedData);
-qDebug(">>> %s", qPrintable(importedData->fileName()));
 
             if (!errorMessage.isEmpty()) {
                 Core::warningMessageBox(tr("Data Import"),
