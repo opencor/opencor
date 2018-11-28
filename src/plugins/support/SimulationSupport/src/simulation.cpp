@@ -919,6 +919,7 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
         delete mRuntime;
 
         mRuntime = mCellmlFile?mCellmlFile->runtime(true):nullptr;
+//---ISSUE1845--- SEE WHAT NEEDS TO BE DONE WITH REGARDS TO IMPORTED DATA...
     }
 }
 
@@ -1060,6 +1061,18 @@ SimulationImportData * Simulation::importData() const
     // Return our imported data
 
     return mImportData;
+}
+
+//==============================================================================
+
+void Simulation::importData(DataStore::DataStoreImportData *pImportData)
+{
+//---ISSUE1845--- TO BE DONE...
+Q_UNUSED(pImportData);
+    // Make sure that we have a runtime
+
+    if (!mRuntime)
+        return;
 }
 
 //==============================================================================

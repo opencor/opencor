@@ -268,6 +268,8 @@ public:
     SimulationResults * results() const;
     SimulationImportData * importData() const;
 
+    void importData(DataStore::DataStoreImportData *pImportData);
+
     int runsCount() const;
 
     bool addRun();
