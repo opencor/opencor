@@ -179,9 +179,9 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Create our import "sub-component"
 
-    static int counter = 0;
+    static int importNb = 0;
 
-    Core::Property *importSubComponent = addSectionProperty(QString("import #%1").arg(++counter), mImportComponent);
+    Core::Property *importSubComponent = addSectionProperty(QString("import #%1").arg(++importNb), mImportComponent);
 
     // Add the given data to our model
 
@@ -191,9 +191,9 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
     DataStore::DataStoreVariables variables = dataStore->variables();
 
     for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
-        DataStore::DataStoreVariable *variable = variables[i];
+        DataStore::DataStoreVariable *data = variables[i];
 
-        Core::Property *property = addDoubleProperty(variable->value(0), importSubComponent);
+        Core::Property *property = addDoubleProperty(data->value(0), importSubComponent);
 
         property->setEditable(false);
         property->setIcon(DataIcon);
