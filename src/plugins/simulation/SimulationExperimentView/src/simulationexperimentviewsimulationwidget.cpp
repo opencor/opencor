@@ -4181,12 +4181,10 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
                                                                    const QString &pErrorMessage)
 {
     // We are done with an import, so don't track its progress anymore and keep
-    // track of its error message (should there be one)
+    // track of its error message
 
     mImportedDataProgresses.remove(pDataStoreImportedData);
-
-    if (!pErrorMessage.isEmpty())
-        mImportedDataErrorMessages.insert(pDataStoreImportedData, pErrorMessage);
+    mImportedDataErrorMessages.insert(pDataStoreImportedData, pErrorMessage);
 
     // If mImportedDataProgresses is empty then it means that we all our imports
     // are done, in which case we need to update our Parameters section with our
@@ -4203,9 +4201,14 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
         // Let people know about any error that we came across
 
         foreach (DataStore::DataStoreImportedData *importedData, mImportedDataErrorMessages.keys()) {
-            Core::warningMessageBox(tr("Data Import"),
-                                    tr("<strong>%1</strong> could not be imported (%2).").arg(importedData->fileName())
-                                                                                         .arg(Core::formatMessage(mImportedDataErrorMessages.value(importedData), true)));
+            QString errorMessage = mImportedDataErrorMessages.value(importedData);
+qDebug(">>> %s", qPrintable(importedData->fileName()));
+
+            if (!errorMessage.isEmpty()) {
+                Core::warningMessageBox(tr("Data Import"),
+                                        tr("<strong>%1</strong> could not be imported (%2).").arg(importedData->fileName())
+                                                                                             .arg(Core::formatMessage(errorMessage, true)));
+            }
         }
 
         mImportedDataErrorMessages.clear();
