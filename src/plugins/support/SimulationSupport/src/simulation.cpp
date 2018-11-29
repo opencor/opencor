@@ -1092,7 +1092,7 @@ Q_UNUSED(pImportData);
     if (!mRuntime)
         return;
 
-    // Ask our import data to update itself
+    // Ask our import data object to update itself
 
     mImportData->update();
 }
