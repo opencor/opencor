@@ -604,10 +604,12 @@ bool CellmlFileRuntime::needNlaSolver() const
 
 //==============================================================================
 
-void CellmlFileRuntime::importData(const QString &pName, int pIndex,
-                                   double *pArray)
+void CellmlFileRuntime::importData(const QString &pName,
+                                   const QStringList &pComponentHierarchy,
+                                   int pIndex, double *pArray)
 {
-    mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(), QStringList(),
+    mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
+                                                  pComponentHierarchy,
                                                   CellmlFileRuntimeParameter::Data,
                                                   pIndex, pArray);
 }

@@ -345,8 +345,7 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-DataStoreImportData::DataStoreImportData(const QString &pFileName,
-                                         DataStore *pDataStore) :
+DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore) :
     mFileName(pFileName),
     mDataStore(pDataStore)
 {
@@ -354,7 +353,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
 //==============================================================================
 
-QString DataStoreImportData::fileName() const
+QString DataStoreData::fileName() const
 {
     // Return our file name
 
@@ -363,7 +362,7 @@ QString DataStoreImportData::fileName() const
 
 //==============================================================================
 
-DataStore * DataStoreImportData::dataStore() const
+DataStore * DataStoreData::dataStore() const
 {
     // Return our data store
 
@@ -372,9 +371,30 @@ DataStore * DataStoreImportData::dataStore() const
 
 //==============================================================================
 
+DataStoreImportData::DataStoreImportData(const QString &pFileName, DataStore *pDataStore) :
+    DataStoreData(pFileName, pDataStore)
+{
+    // Initialise our hierarchy
+
+    static int importNb = 0;
+
+    mHierarchy = QStringList() << "imports" << QString("import_%1").arg(++importNb);
+}
+
+//==============================================================================
+
+QStringList DataStoreImportData::hierarchy() const
+{
+    // Return our hierarchy
+
+    return mHierarchy;
+}
+
+//==============================================================================
+
 DataStoreExportData::DataStoreExportData(const QString &pFileName, DataStore *pDataStore,
                                          const DataStoreVariables &pVariables) :
-    DataStoreImportData(pFileName, pDataStore),
+    DataStoreData(pFileName, pDataStore),
     mVariables(pVariables)
 {
 }

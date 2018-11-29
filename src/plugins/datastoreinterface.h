@@ -123,13 +123,12 @@ class DataStore;
 
 //==============================================================================
 
-class DataStoreImportData : public QObject
+class DataStoreData : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreImportData(const QString &pFileName,
-                                 DataStore *pDataStore);
+    explicit DataStoreData(const QString &pFileName, DataStore *pDataStore);
 
     QString fileName() const;
     DataStore * dataStore() const;
@@ -141,12 +140,29 @@ protected:
 
 //==============================================================================
 
-class DataStoreExportData : public DataStoreImportData
+class DataStoreImportData : public DataStoreData
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreExportData(const QString &pFileName, DataStore *pDataStore,
+    explicit DataStoreImportData(const QString &pFileName,
+                                 DataStore *pDataStore);
+
+    QStringList hierarchy() const;
+
+private:
+    QStringList mHierarchy;
+};
+
+//==============================================================================
+
+class DataStoreExportData : public DataStoreData
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreExportData(const QString &pFileName,
+                                 DataStore *pDataStore,
                                  const DataStoreVariables &pVariables);
 
     DataStoreVariables variables() const;

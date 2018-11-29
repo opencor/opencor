@@ -41,7 +41,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 namespace DataStore {
-    class DataStore;
+    class DataStoreImportData;
 }   // namespace DataStore
 
 //==============================================================================
@@ -69,7 +69,7 @@ public:
                     bool pReloadingView = false);
     void finalize();
 
-    void importData(DataStore::DataStore *pDataStore);
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 

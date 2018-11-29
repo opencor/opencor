@@ -146,7 +146,9 @@ public:
 
     bool needNlaSolver() const;
 
-    void importData(const QString &pName, int pIndex, double *pArray);
+    void importData(const QString &pName,
+                    const QStringList &pComponentHierarchy, int pIndex,
+                    double *pArray);
 
     int constantsCount() const;
     int statesCount() const;

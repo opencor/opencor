@@ -287,7 +287,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(DataStore::DataStore *pDataStore)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(DataStore::DataStoreImportData *pImportData)
 {
     // Create our general import menu, if needed
 
@@ -299,16 +299,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(Da
 
     // Create our import sub-menu
 
-    static int importNb = 0;
-
-    QMenu *importSubMenu = new QMenu(QString("import #%1").arg(++importNb), mImportMenu);
+    QMenu *importSubMenu = new QMenu(pImportData->hierarchy().last(), mImportMenu);
 
     mImportMenu->addMenu(importSubMenu);
 
     // Populate our import sub-menu with the given data
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter,
-             mSimulation->runtime()->dataParameters(mSimulation->data()->data(pDataStore))) {
+             mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->dataStore()))) {
         QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
                                                             parameter->formattedName());
 

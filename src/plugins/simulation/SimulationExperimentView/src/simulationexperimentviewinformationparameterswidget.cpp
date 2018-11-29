@@ -172,7 +172,7 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStore *pDataStore)
+void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportData *pImportData)
 {
     // Create our general import "component", if needed
 
@@ -181,13 +181,11 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Create our import "sub-component"
 
-    static int importNb = 0;
-
-    Core::Property *importSubComponent = addSectionProperty(QString("import #%1").arg(++importNb), mImportComponent);
+    Core::Property *importSubComponent = addSectionProperty(pImportData->hierarchy().last(), mImportComponent);
 
     // Add the given data to our model
 
-    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pDataStore));
+    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->dataStore()));
 
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, parameters) {
         Core::Property *property = addDoubleProperty(importSubComponent);
@@ -221,7 +219,7 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Create our import sub-menu
 
-    QMenu *importSubMenu = new QMenu(QString("import #%1").arg(importNb), mImportMenu);
+    QMenu *importSubMenu = new QMenu(pImportData->hierarchy().last(), mImportMenu);
 
     mImportMenu->addMenu(importSubMenu);
 
