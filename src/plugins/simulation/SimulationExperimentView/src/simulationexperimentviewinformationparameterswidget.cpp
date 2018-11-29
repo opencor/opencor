@@ -187,18 +187,18 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Add the given data to our model
 
-    CellMLSupport::CellmlFileRuntimeParameters dataParameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pDataStore));
+    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pDataStore));
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *dataParameter, dataParameters) {
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, parameters) {
         Core::Property *property = addDoubleProperty(importSubComponent);
 
         property->setEditable(false);
-        property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(dataParameter->type()));
-        property->setName(dataParameter->formattedName(), false);
+        property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
+        property->setName(parameter->formattedName(), false);
 
-        // Keep track of the link between our property value and data parameter
+        // Keep track of the link between our property value and parameter
 
-        mParameters.insert(property, dataParameter);
+        mParameters.insert(property, parameter);
     }
 
     // Update (well, set for our imported data) the extra info of all our
@@ -227,19 +227,19 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Populate our import sub-menu with the given data
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *dataParameter, dataParameters) {
-        QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(dataParameter->type()),
-                                                            dataParameter->formattedName());
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, parameters) {
+        QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
+                                                            parameter->formattedName());
 
-        // Create a connection to handle the graph requirement against our data
+        // Create a connection to handle the graph requirement against our
         // parameter
 
         connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        // Keep track of the data parameter associated with our parameter action
+        // Keep track of the parameter associated with our parameter action
 
-        mParameterActions.insert(parameterAction, dataParameter);
+        mParameterActions.insert(parameterAction, parameter);
     }
 }
 
