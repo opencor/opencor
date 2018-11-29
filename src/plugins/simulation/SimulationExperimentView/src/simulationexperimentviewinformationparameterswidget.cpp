@@ -245,7 +245,6 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
 void SimulationExperimentViewInformationParametersWidget::updateParameters(double pCurrentPoint)
 {
-//---ISSUE1845--- ALSO UPDATE OUR IMPORTED DATA...
     // Update our data
 
     foreach (Core::Property *property, allProperties()) {
@@ -624,7 +623,6 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 
 void SimulationExperimentViewInformationParametersWidget::emitGraphRequired()
 {
-//---ISSUE1845--- ALLOW FOR IMPORTED DATA TO BE PART OF A GRAPH...
     // Let people know that we want to plot the current parameter against
     // another
 
