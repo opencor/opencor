@@ -830,8 +830,10 @@ SimulationImportData::~SimulationImportData()
 {
     // Delete some internal objects
 
-    foreach (DataStore::DataStore *dataStore, mDataStores)
+    foreach (DataStore::DataStore *dataStore, mDataStores) {
+        delete[] mData.value(dataStore);
         delete dataStore;
+    }
 }
 
 //==============================================================================
