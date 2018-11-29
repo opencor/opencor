@@ -228,8 +228,11 @@ public:
 
     DataStore::DataStore * addDataStore();
 
+    void update();
+
 private:
     QList<DataStore::DataStore *> mDataStores;
+    QMap<DataStore::DataStore *, double *> mData;
 };
 
 //==============================================================================

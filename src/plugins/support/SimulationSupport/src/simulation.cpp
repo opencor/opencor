@@ -819,7 +819,8 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 SimulationImportData::SimulationImportData(Simulation *pSimulation) :
     SimulationObject(pSimulation),
-    mDataStores(QList<DataStore::DataStore *>())
+    mDataStores(QList<DataStore::DataStore *>()),
+    mData(QMap<DataStore::DataStore *, double *>())
 {
 }
 
@@ -845,6 +846,21 @@ DataStore::DataStore * SimulationImportData::addDataStore()
         mDataStores << dataStore;
 
     return dataStore;
+}
+
+//==============================================================================
+
+void SimulationImportData::update()
+{
+    // Make sure that all our data stores have an array of doubles
+
+    foreach (DataStore::DataStore *dataStore, mDataStores) {
+        if (!mData.contains(dataStore)) {
+            double *data = new double[dataStore->variables().count()] {};
+
+            mData.insert(dataStore, data);
+        }
+    }
 }
 
 //==============================================================================
@@ -1073,6 +1089,10 @@ Q_UNUSED(pImportData);
 
     if (!mRuntime)
         return;
+
+    // Ask our import data to update itself
+
+    mImportData->update();
 }
 
 //==============================================================================
