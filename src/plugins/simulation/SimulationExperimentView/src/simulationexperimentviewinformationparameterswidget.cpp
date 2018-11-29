@@ -44,8 +44,6 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     mPlotAgainstMenu(nullptr),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mImportData(QMap<Core::Property *, DataStore::DataStoreVariable *>()),
-    mImportDataActions(QMap<QAction *, DataStore::DataStoreVariable *>()),
     mSimulation(nullptr),
     mNeedClearing(false),
     mVoiAccessible(false),
@@ -162,7 +160,7 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
 void SimulationExperimentViewInformationParametersWidget::finalize()
 {
     // Clear ourselves, as well as our context menu, parameters and parameter
-    // actions, import data and import data actions
+    // actions
 
     mNeedClearing = true;
 
@@ -170,9 +168,6 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
     mParameters.clear();
     mParameterActions.clear();
-
-    mImportData.clear();
-    mImportDataActions.clear();
 }
 
 //==============================================================================
@@ -208,7 +203,8 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
         // Keep track of the link between our property value and imported data
 
-        mImportData.insert(property, data);
+//---ISSUE1845--- TO BE DONE...
+//        mParameters.insert(property, data);
     }
 
     // Update (well, set for imported data) the extra info of all our properties
@@ -247,7 +243,8 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
         // Keep track of the data store associated with our data action
 
-        mImportDataActions.insert(dataAction, variables[i]);
+//---ISSUE1845--- TO BE DONE...
+//        mParametersActions.insert(dataAction, variables[i]);
     }
 }
 
@@ -587,7 +584,6 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 
     foreach (Core::Property *property, allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
-        DataStore::DataStoreVariable *dataStore = mImportData.value(property);
 
         if (parameter) {
             QString parameterType = QString();
@@ -617,6 +613,10 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
                 parameterType = tr("algebraic");
 
                 break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Data:
+                parameterType = tr("data");
+
+                break;
             default:
                 // Not a relevant type, so do nothing
 
@@ -624,8 +624,6 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
             }
 
             property->setExtraInfo(parameterType);
-        } else if (dataStore) {
-            property->setExtraInfo(tr("data"));
         }
     }
 }

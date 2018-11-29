@@ -42,7 +42,6 @@ namespace CellMLSupport {
 
 namespace DataStore {
     class DataStoreImportData;
-    class DataStoreVariable;
 }   // namespace DataStore
 
 //==============================================================================
@@ -84,9 +83,6 @@ private:
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
-
-    QMap<Core::Property *, DataStore::DataStoreVariable *> mImportData;
-    QMap<QAction *, DataStore::DataStoreVariable *> mImportDataActions;
 
     SimulationSupport::Simulation *mSimulation;
 
