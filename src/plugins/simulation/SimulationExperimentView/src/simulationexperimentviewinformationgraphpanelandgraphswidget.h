@@ -119,6 +119,8 @@ private:
     SimulationExperimentViewWidget *mViewWidget;
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
+    SimulationSupport::Simulation *mSimulation;
+
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphPanelPropertyEditors;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
@@ -146,7 +148,7 @@ private:
 
     QMap<QString, QString> mRenamedModelListValues;
 
-    bool mCanEmitGraphsUpdatedSignal;
+    QMenu *mImportMenu;
 
     void retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor);
 

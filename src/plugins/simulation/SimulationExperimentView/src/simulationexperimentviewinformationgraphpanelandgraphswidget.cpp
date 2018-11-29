@@ -61,6 +61,7 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mMode(Graphs),
     mViewWidget(pViewWidget),
     mSimulationWidget(pSimulationWidget),
+    mSimulation(nullptr),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *>()),
     mGraphPanelPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
     mGraphsPropertyEditors(QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *>()),
@@ -69,7 +70,8 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
     mGraphs(QMap<Core::Property *, GraphPanelWidget::GraphPanelPlotGraph *>()),
     mGraphProperties(QMap<GraphPanelWidget::GraphPanelPlotGraph *, Core::Property *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mRenamedModelListValues(QMap<QString, QString>())
+    mRenamedModelListValues(QMap<QString, QString>()),
+    mImportMenu(nullptr)
 {
     // Create our graph panel context menu and populate it
 
@@ -253,6 +255,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(SimulationSupport::Simulation *pSimulation)
 {
+    // Keep track of the simulation
+
+    mSimulation = pSimulation;
+
     // Populate our graph parameters context menu
 
     populateGraphParametersContextMenu(pSimulation->runtime());
@@ -283,8 +289,38 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
 void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(DataStore::DataStore *pDataStore)
 {
-//---ISSUE1845--- TO BE DONE...
-Q_UNUSED(pDataStore);
+    // Create our general import menu, if needed
+
+    if (!mImportMenu) {
+        mImportMenu = new QMenu("imports", mGraphParametersContextMenu);
+
+        mGraphParametersContextMenu->addMenu(mImportMenu);
+    }
+
+    // Create our import sub-menu
+
+    static int importNb = 0;
+
+    QMenu *importSubMenu = new QMenu(QString("import #%1").arg(++importNb), mImportMenu);
+
+    mImportMenu->addMenu(importSubMenu);
+
+    // Populate our import sub-menu with the given data
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter,
+             mSimulation->runtime()->dataParameters(mSimulation->data()->data(pDataStore))) {
+        QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
+                                                            parameter->formattedName());
+
+        // Create a connection to handle the parameter value update
+
+        connect(parameterAction, &QAction::triggered,
+                this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateParameterValue);
+
+        // Keep track of the parameter associated with our parameter action
+
+        mParameterActions.insert(parameterAction, parameter);
+    }
 }
 
 //==============================================================================
@@ -1165,8 +1201,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
         connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateParameterValue);
 
-        // Keep track of the parameter associated with our model parameter
-        // action
+        // Keep track of the parameter associated with our parameter action
 
         mParameterActions.insert(parameterAction, parameter);
     }
