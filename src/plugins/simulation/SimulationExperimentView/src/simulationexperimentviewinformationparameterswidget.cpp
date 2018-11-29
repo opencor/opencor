@@ -187,26 +187,22 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Add the given data to our model
 
-    static const QIcon DataIcon = QIcon(":/CellMLSupport/data.png");
+    CellMLSupport::CellmlFileRuntimeParameters dataParameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pDataStore));
 
-    DataStore::DataStoreVariables variables = pDataStore->variables();
-
-    for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
-        DataStore::DataStoreVariable *data = variables[i];
-
-        Core::Property *property = addDoubleProperty(data->value(0), importSubComponent);
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *dataParameter, dataParameters) {
+        Core::Property *property = addDoubleProperty(importSubComponent);
 
         property->setEditable(false);
-        property->setIcon(DataIcon);
-        property->setName(QString("data #%1").arg(i+1), false);
+        property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(dataParameter->type()));
+        property->setName(dataParameter->formattedName(), false);
 
-        // Keep track of the link between our property value and imported data
+        // Keep track of the link between our property value and data parameter
 
-//---ISSUE1845--- TO BE DONE...
-//        mParameters.insert(property, data);
+        mParameters.insert(property, dataParameter);
     }
 
-    // Update (well, set for imported data) the extra info of all our properties
+    // Update (well, set for our imported data) the extra info of all our
+    // properties
 
     updateExtraInfos();
 
@@ -231,19 +227,19 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Populate our import sub-menu with the given data
 
-    for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
-        QAction *dataAction = importSubMenu->addAction(DataIcon,
-                                                       QString("data #%1").arg(i+1));
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *dataParameter, dataParameters) {
+        QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(dataParameter->type()),
+                                                            dataParameter->formattedName());
 
         // Create a connection to handle the graph requirement against our data
+        // parameter
 
-        connect(dataAction, &QAction::triggered,
+        connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        // Keep track of the data store associated with our data action
+        // Keep track of the data parameter associated with our parameter action
 
-//---ISSUE1845--- TO BE DONE...
-//        mParametersActions.insert(dataAction, variables[i]);
+        mParameterActions.insert(parameterAction, dataParameter);
     }
 }
 
@@ -568,8 +564,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
         connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        // Keep track of the parameter associated with our model parameter
-        // action
+        // Keep track of the parameter associated with our parameter action
 
         mParameterActions.insert(parameterAction, parameter);
     }

@@ -704,6 +704,24 @@ CellmlFileRuntimeParameters CellmlFileRuntime::parameters() const
 
 //==============================================================================
 
+CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pArray) const
+{
+    // Return the data parameter(s)
+
+    CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
+
+    foreach (CellmlFileRuntimeParameter *parameter, mParameters) {
+        if (   (parameter->type() == CellmlFileRuntimeParameter::Data)
+            && (!pArray || (parameter->array() == pArray))) {
+            res << parameter;
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void CellmlFileRuntime::resetCodeInformation()
 {
     // Reset the code information

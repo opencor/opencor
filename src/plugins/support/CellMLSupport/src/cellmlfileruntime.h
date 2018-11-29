@@ -161,6 +161,7 @@ public:
     CellmlFileIssues issues() const;
 
     CellmlFileRuntimeParameters parameters() const;
+    CellmlFileRuntimeParameters dataParameters(double *pArray = nullptr) const;
 
     CellmlFileRuntimeParameter * voi() const;
 
