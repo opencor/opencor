@@ -762,8 +762,6 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
 
     // Ask our data and results objects to import the given data
 
-    QMap<double *, DataStore::DataStoreVariables> mData;
-
     mData.insert(pArray, mDataStore->addVariables(pArray, pDataStore->variables().count()));
 
     // Customise our imported data
