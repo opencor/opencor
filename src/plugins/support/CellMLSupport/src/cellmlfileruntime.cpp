@@ -66,13 +66,15 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
                                                        ParameterType pType,
-                                                       int pIndex) :
+                                                       int pIndex,
+                                                       double *pArray) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),
     mComponentHierarchy(pComponentHierarchy),
     mType(pType),
-    mIndex(pIndex)
+    mIndex(pIndex),
+    mArray(pArray)
 {
 }
 
@@ -150,6 +152,15 @@ int CellmlFileRuntimeParameter::index() const
     // Return our index
 
     return mIndex;
+}
+
+//==============================================================================
+
+double * CellmlFileRuntimeParameter::array() const
+{
+    // Return our array
+
+    return mArray;
 }
 
 //==============================================================================
@@ -589,6 +600,16 @@ bool CellmlFileRuntime::needNlaSolver() const
     // Return whether the model needs an NLA solver
 
     return mAtLeastOneNlaSystem;
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::importData(const QString &pName, int pIndex,
+                                   double *pArray)
+{
+    mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(), QStringList(),
+                                                  CellmlFileRuntimeParameter::Data,
+                                                  pIndex, pArray);
 }
 
 //==============================================================================

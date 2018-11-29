@@ -86,7 +86,8 @@ public:
     explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        ParameterType pType, int pIndex);
+                                        ParameterType pType, int pIndex,
+                                        double *pArray = nullptr);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);
@@ -97,6 +98,7 @@ public:
     QStringList componentHierarchy() const;
     ParameterType type() const;
     int index() const;
+    double * array() const;
 
     QString formattedName() const;
     QString formattedComponentHierarchy() const;
@@ -114,6 +116,7 @@ private:
     QStringList mComponentHierarchy;
     ParameterType mType;
     int mIndex;
+    double *mArray;
 };
 
 //==============================================================================
@@ -142,6 +145,8 @@ public:
     bool isValid() const;
 
     bool needNlaSolver() const;
+
+    void importData(const QString &pName, int pIndex, double *pArray);
 
     int constantsCount() const;
     int statesCount() const;

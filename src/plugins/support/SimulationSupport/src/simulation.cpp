@@ -72,7 +72,8 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mDaeSolverName(QString()),
     mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
-    mNlaSolverProperties(Solver::Solver::Properties())
+    mNlaSolverProperties(Solver::Solver::Properties()),
+    mData(QMap<DataStore::DataStore *, double *>())
 {
     // Create our various arrays
 
@@ -132,6 +133,29 @@ double * SimulationData::algebraic() const
     // Return our algebraic array
 
     return mAlgebraic;
+}
+
+//==============================================================================
+
+double * SimulationData::data(DataStore::DataStore *pDataStore) const
+{
+    // Return our corresponding data array
+
+    return mData.value(pDataStore);
+}
+
+//==============================================================================
+
+void SimulationData::importData(DataStore::DataStore *pDataStore)
+{
+    // Make sure that all the given data store is not only already mapped and,
+    // if so, associate an array of doubles to it
+
+    if (!mData.contains(pDataStore)) {
+        double *data = new double[pDataStore->variables().count()] {};
+
+        mData.insert(pDataStore, data);
+    }
 }
 
 //==============================================================================
@@ -559,6 +583,11 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
+    foreach (double *array, mData.values())
+        delete[] array;
+
+    mData.clear();
+
     delete[] mConstants;
     delete[] mRates;
     delete[] mStates;
@@ -819,8 +848,7 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 SimulationImportData::SimulationImportData(Simulation *pSimulation) :
     SimulationObject(pSimulation),
-    mDataStores(QList<DataStore::DataStore *>()),
-    mData(QMap<DataStore::DataStore *, double *>())
+    mDataStores(QList<DataStore::DataStore *>())
 {
 }
 
@@ -830,10 +858,8 @@ SimulationImportData::~SimulationImportData()
 {
     // Delete some internal objects
 
-    foreach (DataStore::DataStore *dataStore, mDataStores) {
-        delete[] mData.value(dataStore);
+    foreach (DataStore::DataStore *dataStore, mDataStores)
         delete dataStore;
-    }
 }
 
 //==============================================================================
@@ -848,21 +874,6 @@ DataStore::DataStore * SimulationImportData::addDataStore()
         mDataStores << dataStore;
 
     return dataStore;
-}
-
-//==============================================================================
-
-void SimulationImportData::update()
-{
-    // Make sure that all our data stores have an array of doubles
-
-    foreach (DataStore::DataStore *dataStore, mDataStores) {
-        if (!mData.contains(dataStore)) {
-            double *data = new double[dataStore->variables().count()] {};
-
-            mData.insert(dataStore, data);
-        }
-    }
 }
 
 //==============================================================================
@@ -1083,18 +1094,23 @@ SimulationImportData * Simulation::importData() const
 
 //==============================================================================
 
-void Simulation::importData(DataStore::DataStoreImportData *pImportData)
+void Simulation::importData(DataStore::DataStore *pDataStore)
 {
-//---ISSUE1845--- TO BE DONE...
-Q_UNUSED(pImportData);
     // Make sure that we have a runtime
 
     if (!mRuntime)
         return;
 
-    // Ask our import data object to update itself
+    // Ask our data object to import the given data
 
-    mImportData->update();
+    mData->importData(pDataStore);
+
+    // Ask our runtime to import the given data
+
+    double *array = mData->data(pDataStore);
+
+    for (int i = 0, iMax = pDataStore->variables().count(); i < iMax; ++i)
+        mRuntime->importData(QString("data #%1").arg(i+1), i, array);
 }
 
 //==============================================================================

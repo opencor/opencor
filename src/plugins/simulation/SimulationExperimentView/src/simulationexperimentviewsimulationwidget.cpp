@@ -4193,7 +4193,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
         // Ask our simulation to account for our imported data
 
         foreach (DataStore::DataStoreImportData *dataStoreImportData, mDataImportErrorMessages.keys())
-            mSimulation->importData(dataStoreImportData);
+            mSimulation->importData(dataStoreImportData->dataStore());
 
         // Update our Graphs and Parameters sections with our imported data
 

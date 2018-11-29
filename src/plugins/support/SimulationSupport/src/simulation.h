@@ -90,6 +90,9 @@ public:
     double * rates() const;
     double * states() const;
     double * algebraic() const;
+    double * data(DataStore::DataStore *pDataStore) const;
+
+    void importData(DataStore::DataStore *pDataStore);
 
     const quint64 * delay() const;
     void setDelay(quint64 pDelay);
@@ -154,6 +157,8 @@ private:
 
     double *mInitialConstants;
     double *mInitialStates;
+
+    QMap<DataStore::DataStore *, double *> mData;
 
     void createArrays();
     void deleteArrays();
@@ -228,11 +233,8 @@ public:
 
     DataStore::DataStore * addDataStore();
 
-    void update();
-
 private:
     QList<DataStore::DataStore *> mDataStores;
-    QMap<DataStore::DataStore *, double *> mData;
 };
 
 //==============================================================================
@@ -271,7 +273,7 @@ public:
     SimulationResults * results() const;
     SimulationImportData * importData() const;
 
-    void importData(DataStore::DataStoreImportData *pImportData);
+    void importData(DataStore::DataStore *pDataStore);
 
     int runsCount() const;
 
