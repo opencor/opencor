@@ -607,7 +607,8 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mConstants(DataStore::DataStoreVariables()),
     mRates(DataStore::DataStoreVariables()),
     mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables())
+    mAlgebraic(DataStore::DataStoreVariables()),
+    mData(QMap<double *, DataStore::DataStoreVariables>())
 {
     // Create our data store
 
@@ -741,9 +742,40 @@ void SimulationResults::reload()
 void SimulationResults::reset()
 {
     // Reset our data store by deleting it and then recreating it
+//---ISSUE1845--- SEE WHAT NEEDS TO BE DONE WITH REGARDS TO IMPORTED DATA...
 
     deleteDataStore();
     createDataStore();
+}
+
+//==============================================================================
+
+void SimulationResults::importData(DataStore::DataStore *pDataStore,
+                                   double *pArray)
+{
+    // Make sure that we have a runtime and a VOI
+
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (!runtime || !runtime->voi())
+        return;
+
+    // Ask our data and results objects to import the given data
+
+    QMap<double *, DataStore::DataStoreVariables> mData;
+
+    mData.insert(pArray, mDataStore->addVariables(pArray, pDataStore->variables().count()));
+
+    // Customise our imported data
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->dataParameters(pArray)) {
+        DataStore::DataStoreVariable *variable = mData.value(parameter->array())[parameter->index()];
+
+        variable->setType(parameter->type());
+        variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
+        variable->setLabel(parameter->formattedName());
+        variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
+    }
 }
 
 //==============================================================================
@@ -1100,16 +1132,19 @@ void Simulation::importData(DataStore::DataStoreImportData *pImportData)
     if (!mRuntime)
         return;
 
-    // Ask our data object to import the given data
+    // Ask our data and results objects to import the given data
 
     DataStore::DataStore *dataStore = pImportData->dataStore();
 
     mData->importData(dataStore);
 
+    double *array = mData->data(dataStore);
+
+    mResults->importData(dataStore, array);
+
     // Ask our runtime to import the given data
 
     QStringList hierarchy = pImportData->hierarchy();
-    double *array = mData->data(dataStore);
 
     for (int i = 0, iMax = dataStore->variables().count(); i < iMax; ++i)
         mRuntime->importData(QString("data_%1").arg(i+1), hierarchy, i, array);

@@ -188,6 +188,8 @@ public:
 
     void reset();
 
+    void importData(DataStore::DataStore *pDataStore, double *pArray);
+
     int runsCount() const;
 
     bool addRun();
@@ -214,6 +216,7 @@ private:
     DataStore::DataStoreVariables mRates;
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
+    QMap<double *, DataStore::DataStoreVariables> mData;
 
     void createDataStore();
     void deleteDataStore();
