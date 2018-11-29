@@ -49,7 +49,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 namespace DataStore {
-    class DataStoreImportData;
+    class DataStore;
 }   // namespace DataStore
 
 //==============================================================================
@@ -89,7 +89,7 @@ public:
     void initialize(SimulationSupport::Simulation *pSimulation);
     void finalize();
 
-    void importData(DataStore::DataStoreImportData *pImportData);
+    void importData(DataStore::DataStore *pDataStore);
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 

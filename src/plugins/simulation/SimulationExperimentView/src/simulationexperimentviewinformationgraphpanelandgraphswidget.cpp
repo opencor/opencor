@@ -281,10 +281,10 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(DataStore::DataStoreImportData *pImportData)
+void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(DataStore::DataStore *pDataStore)
 {
 //---ISSUE1845--- TO BE DONE...
-Q_UNUSED(pImportData);
+Q_UNUSED(pDataStore);
 }
 
 //==============================================================================

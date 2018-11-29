@@ -172,7 +172,7 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
-void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportData *pImportData)
+void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStore *pDataStore)
 {
     // Create our general import "component", if needed
 
@@ -187,10 +187,9 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Add the given data to our model
 
-    static const QIcon DataIcon = QIcon(":/SimulationExperimentView/data.png");
+    static const QIcon DataIcon = QIcon(":/CellMLSupport/data.png");
 
-    DataStore::DataStore *dataStore = pImportData->dataStore();
-    DataStore::DataStoreVariables variables = dataStore->variables();
+    DataStore::DataStoreVariables variables = pDataStore->variables();
 
     for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
         DataStore::DataStoreVariable *data = variables[i];

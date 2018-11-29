@@ -4198,8 +4198,8 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
         // Update our Graphs and Parameters sections with our imported data
 
         foreach (DataStore::DataStoreImportData *dataStoreImportData, mDataImportErrorMessages.keys()) {
-            mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData);
-            mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData);
+            mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData->dataStore());
+            mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData->dataStore());
         }
 
         // Hide our busy widget
