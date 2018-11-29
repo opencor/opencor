@@ -273,6 +273,10 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
                 property->setDoubleValue(mSimulation->data()->algebraic()[parameter->index()], false);
 
                 break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Data:
+                property->setDoubleValue(parameter->array()[parameter->index()], false);
+
+                break;
             default:
                 // Not a relevant type, so do nothing
 
