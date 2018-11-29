@@ -206,6 +206,7 @@ public:
     double * rates(int pIndex, int pRun = -1) const;
     double * states(int pIndex, int pRun = -1) const;
     double * algebraic(int pIndex, int pRun = -1) const;
+    double * data(double *pArray, int pIndex, int pRun = -1) const;
 
 private:
     DataStore::DataStore *mDataStore;

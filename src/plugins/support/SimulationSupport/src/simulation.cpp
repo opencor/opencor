@@ -877,6 +877,17 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 //==============================================================================
 
+double * SimulationResults::data(double *pArray, int pIndex, int pRun) const
+{
+    // Return our algebraic data at the given index and for the given run
+
+    DataStore::DataStoreVariables data = mData.value(pArray);
+
+    return data.isEmpty()?nullptr:data[pIndex]->values(pRun);
+}
+
+//==============================================================================
+
 SimulationImportData::SimulationImportData(Simulation *pSimulation) :
     SimulationObject(pSimulation),
     mDataStores(QList<DataStore::DataStore *>())

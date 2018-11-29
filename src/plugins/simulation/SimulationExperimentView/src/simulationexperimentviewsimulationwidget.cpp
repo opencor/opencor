@@ -3869,6 +3869,9 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
         return pSimulation->results()->states(pParameter->index(), pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
         return pSimulation->results()->algebraic(pParameter->index(), pRun);
+    case CellMLSupport::CellmlFileRuntimeParameter::Data:
+        return pSimulation->results()->data(pParameter->array(),
+                                            pParameter->index(), pRun);
     default:
         // Not a relevant type, so return null
         // Note: we should never reach this point...
