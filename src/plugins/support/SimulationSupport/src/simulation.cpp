@@ -662,8 +662,7 @@ void SimulationResults::createDataStore()
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
 
-    for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->parameters()) {
         DataStore::DataStoreVariable *variable = nullptr;
 
         switch (parameter->type()) {
