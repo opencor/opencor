@@ -807,7 +807,10 @@ bool SimulationResults::addRun()
 
 void SimulationResults::addPoint(double pPoint)
 {
-    // Add the data to our data store
+    // Add the data to our data store after making sure that all our variables
+    // are up to date
+
+    mSimulation->data()->recomputeVariables(pPoint);
 
     mDataStore->addValues(pPoint);
 }
