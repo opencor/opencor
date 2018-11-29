@@ -36,7 +36,7 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-CsvDataStoreExporterWorker::CsvDataStoreExporterWorker(DataStore::DataStoreData *pDataStoreData) :
+CsvDataStoreExporterWorker::CsvDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData) :
     DataStore::DataStoreExporterWorker(pDataStoreData)
 {
 }
@@ -232,7 +232,7 @@ void CsvDataStoreExporterWorker::run()
 
 //==============================================================================
 
-DataStore::DataStoreExporterWorker * CsvDataStoreExporter::workerInstance(DataStore::DataStoreData *pDataStoreData)
+DataStore::DataStoreExporterWorker * CsvDataStoreExporter::workerInstance(DataStore::DataStoreExportData *pDataStoreData)
 {
     // Return an instance of our worker
 

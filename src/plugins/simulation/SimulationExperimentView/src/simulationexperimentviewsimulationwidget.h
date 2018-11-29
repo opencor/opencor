@@ -79,7 +79,7 @@ namespace Core {
 //==============================================================================
 
 namespace DataStore {
-    class DataStoreData;
+    class DataStoreExportData;
     class DataStoreImportData;
 }   // namespace DataStore
 
@@ -393,9 +393,9 @@ private slots:
     void dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
                              const QString &pErrorMessage);
 
-    void dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
+    void dataStoreExportProgress(DataStore::DataStoreExportData *pDataStoreData,
                                  double pProgress);
-    void dataStoreExportDone(DataStore::DataStoreData *pDataStoreData,
+    void dataStoreExportDone(DataStore::DataStoreExportData *pDataStoreData,
                              const QString &pErrorMessage);
 
     void checkSimulationProperties();

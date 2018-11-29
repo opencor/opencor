@@ -41,7 +41,7 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BiosignalmlDataStoreExporterWorker::BiosignalmlDataStoreExporterWorker(DataStore::DataStoreData *pDataStoreData) :
+BiosignalmlDataStoreExporterWorker::BiosignalmlDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData) :
     DataStore::DataStoreExporterWorker(pDataStoreData)
 {
 }
@@ -179,7 +179,7 @@ void BiosignalmlDataStoreExporterWorker::run()
 
 //==============================================================================
 
-DataStore::DataStoreExporterWorker * BiosignalmlDataStoreExporter::workerInstance(DataStore::DataStoreData *pDataStoreData)
+DataStore::DataStoreExporterWorker * BiosignalmlDataStoreExporter::workerInstance(DataStore::DataStoreExportData *pDataStoreData)
 {
     // Return an instance of our worker
 

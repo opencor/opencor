@@ -372,8 +372,8 @@ DataStore * DataStoreImportData::dataStore() const
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
-                             const DataStoreVariables &pVariables) :
+DataStoreExportData::DataStoreExportData(const QString &pFileName, DataStore *pDataStore,
+                                         const DataStoreVariables &pVariables) :
     DataStoreImportData(pFileName, pDataStore),
     mVariables(pVariables)
 {
@@ -381,7 +381,7 @@ DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
 
 //==============================================================================
 
-DataStoreVariables DataStoreData::variables() const
+DataStoreVariables DataStoreExportData::variables() const
 {
     // Return our variables
 
@@ -584,14 +584,14 @@ void DataStoreImporter::importData(DataStoreImportData *pImportData)
 
 //==============================================================================
 
-DataStoreExporterWorker::DataStoreExporterWorker(DataStoreData *pDataStoreData) :
+DataStoreExporterWorker::DataStoreExporterWorker(DataStoreExportData *pDataStoreData) :
     mDataStoreData(pDataStoreData)
 {
 }
 
 //==============================================================================
 
-void DataStoreExporter::exportData(DataStoreData *pDataStoreData)
+void DataStoreExporter::exportData(DataStoreExportData *pDataStoreData)
 {
     // Create and move our worker to a thread
     // Note: we cannot use the new connect() syntax with our worker's signals
@@ -606,14 +606,14 @@ void DataStoreExporter::exportData(DataStoreData *pDataStoreData)
     connect(thread, &QThread::started,
             worker, &DataStoreExporterWorker::run);
 
-    connect(worker, SIGNAL(progress(DataStoreData *, double)),
-            this, SIGNAL(progress(DataStoreData *, double)));
+    connect(worker, SIGNAL(progress(DataStoreExportData *, double)),
+            this, SIGNAL(progress(DataStoreExportData *, double)));
 
-    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
-            this, SIGNAL(done(DataStoreData *, const QString &)));
-    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
+            this, SIGNAL(done(DataStoreExportData *, const QString &)));
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
             thread, SLOT(quit()));
-    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
             worker, SLOT(deleteLater()));
 
     connect(thread, &QThread::finished,

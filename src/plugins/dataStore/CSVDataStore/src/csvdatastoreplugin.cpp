@@ -89,9 +89,9 @@ DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString
 
 //==============================================================================
 
-DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
-                                                       DataStore::DataStore *pDataStore,
-                                                       const QMap<int, QIcon> &pIcons) const
+DataStore::DataStoreExportData * CSVDataStorePlugin::getExportData(const QString &pFileName,
+                                                                   DataStore::DataStore *pDataStore,
+                                                                   const QMap<int, QIcon> &pIcons) const
 {
     // Ask which data should be exported
 
@@ -113,7 +113,7 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                                  csvFilters, &firstCsvFilter);
 
         if (!fileName.isEmpty())
-            return new DataStore::DataStoreData(fileName, pDataStore, dataStoreDialog.selectedData());
+            return new DataStore::DataStoreExportData(fileName, pDataStore, dataStoreDialog.selectedData());
     }
 
     return nullptr;

@@ -3252,9 +3252,9 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(),
-                                                                          mSimulation->results()->dataStore(),
-                                                                          CellMLSupport::CellmlFileRuntimeParameter::icons());
+    DataStore::DataStoreExportData *dataStoreData = dataStoreInterface->getExportData(mSimulation->fileName(),
+                                                                                      mSimulation->results()->dataStore(),
+                                                                                      CellMLSupport::CellmlFileRuntimeParameter::icons());
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
@@ -3271,7 +3271,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone,
                 Qt::UniqueConnection);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                dataStoreData, &DataStore::DataStoreData::deleteLater);
+                dataStoreData, &DataStore::DataStoreExportData::deleteLater);
 
         dataStoreExporter->exportData(dataStoreData);
     }
@@ -4226,7 +4226,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreExportData *pDataStoreData,
                                                                        double pProgress)
 {
     Q_UNUSED(pDataStoreData);
@@ -4238,7 +4238,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::DataStoreData *pDataStoreData,
+void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::DataStoreExportData *pDataStoreData,
                                                                    const QString &pErrorMessage)
 {
     Q_UNUSED(pDataStoreData);

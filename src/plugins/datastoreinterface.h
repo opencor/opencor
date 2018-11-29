@@ -141,13 +141,13 @@ protected:
 
 //==============================================================================
 
-class DataStoreData : public DataStoreImportData
+class DataStoreExportData : public DataStoreImportData
 {
     Q_OBJECT
 
 public:
-    explicit DataStoreData(const QString &pFileName, DataStore *pDataStore,
-                           const DataStoreVariables &pVariables);
+    explicit DataStoreExportData(const QString &pFileName, DataStore *pDataStore,
+                                 const DataStoreVariables &pVariables);
 
     DataStoreVariables variables() const;
 
@@ -232,14 +232,14 @@ class DataStoreExporterWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStoreExporterWorker(DataStoreData *pDataStoreData);
+    explicit DataStoreExporterWorker(DataStoreExportData *pDataStoreData);
 
 protected:
-    DataStoreData *mDataStoreData;
+    DataStoreExportData *mDataStoreData;
 
 signals:
-    void progress(DataStoreData *pDataStoreData, double pProgress);
-    void done(DataStoreData *pDataStoreData, const QString &pErrorMessage);
+    void progress(DataStoreExportData *pDataStoreData, double pProgress);
+    void done(DataStoreExportData *pDataStoreData, const QString &pErrorMessage);
 
 public slots:
    virtual void run() = 0;
@@ -252,14 +252,14 @@ class DataStoreExporter : public QObject
     Q_OBJECT
 
 public:
-    void exportData(DataStoreData *pDataStoreData);
+    void exportData(DataStoreExportData *pDataStoreData);
 
 protected:
-    virtual DataStoreExporterWorker * workerInstance(DataStoreData *pDataStoreData) = 0;
+    virtual DataStoreExporterWorker * workerInstance(DataStoreExportData *pDataStoreData) = 0;
 
 signals:
-    void progress(DataStoreData *pDataStoreData, double pProgress);
-    void done(DataStoreData *pDataStoreData, const QString &pErrorMessage);
+    void progress(DataStoreExportData *pDataStoreData, double pProgress);
+    void done(DataStoreExportData *pDataStoreData, const QString &pErrorMessage);
 };
 
 //==============================================================================

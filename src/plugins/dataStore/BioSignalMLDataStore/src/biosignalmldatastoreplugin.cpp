@@ -87,9 +87,9 @@ DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const
 
 //==============================================================================
 
-DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pFileName,
-                                                               DataStore::DataStore *pDataStore,
-                                                               const QMap<int, QIcon> &pIcons) const
+DataStore::DataStoreExportData * BioSignalMLDataStorePlugin::getExportData(const QString &pFileName,
+                                                                           DataStore::DataStore *pDataStore,
+                                                                           const QMap<int, QIcon> &pIcons) const
 {
     // Ask which data should be exported, as well as some other information
 
