@@ -79,7 +79,8 @@ public:
         State,
         Algebraic,
         Floating,
-        LocallyBound
+        LocallyBound,
+        Data
     };
 
     explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,

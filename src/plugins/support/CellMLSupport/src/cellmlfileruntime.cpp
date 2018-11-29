@@ -211,6 +211,7 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
     static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
     static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
     static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
+    static const QIcon DataIcon             = QIcon(":/CellMLSupport/data.png");
 
     // Initialise the mapping, if needed
 
@@ -221,6 +222,7 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
         Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
         Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
         Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Data, DataIcon);
     }
 
     return Icons;
