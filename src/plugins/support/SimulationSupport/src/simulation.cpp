@@ -608,7 +608,9 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mRates(DataStore::DataStoreVariables()),
     mStates(DataStore::DataStoreVariables()),
     mAlgebraic(DataStore::DataStoreVariables()),
-    mData(QMap<double *, DataStore::DataStoreVariables>())
+    mData(QMap<double *, DataStore::DataStoreVariables>()),
+    mDataDataStores(QMap<double *, DataStore::DataStore *>())
+
 {
     // Create our data store
 
@@ -763,6 +765,7 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
     // Ask our data and results objects to import the given data
 
     mData.insert(pArray, mDataStore->addVariables(pArray, pDataStore->variables().count()));
+    mDataDataStores.insert(pArray, pDataStore);
 
     // Customise our imported data
 
@@ -806,9 +809,52 @@ bool SimulationResults::addRun()
 void SimulationResults::addPoint(double pPoint)
 {
     // Add the data to our data store after making sure that all our variables
-    // are up to date
+    // are up to date and that we have the correct imported data values for the
+    // given point
 
     mSimulation->data()->recomputeVariables(pPoint);
+
+    foreach (double *array, mData.keys()) {
+        DataStore::DataStore *dataStore = mDataDataStores.value(array);
+        DataStore::DataStoreVariable *voi = dataStore->voi();
+        DataStore::DataStoreVariables variables = dataStore->variables();
+
+        for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
+            DataStore::DataStoreVariable *variable = variables[i];
+            double middleVoiValue = 0.0;
+            quint64 first = 0;
+            quint64 middle = 0;
+            quint64 last = voi->size()-1;
+
+            while (first <= last) {
+                middle = (first+last) >> 1;
+                middleVoiValue = voi->value(middle);
+
+                if (middleVoiValue < pPoint)
+                    first = middle+1;
+                else if (middleVoiValue > pPoint)
+                    last = middle-1;
+                else
+                    break;
+            }
+
+            if (middleVoiValue < pPoint) {
+                double middleDataValue = variable->value(middle);
+                double afterVoiValue = voi->value(middle+1);
+                double afterDataValue = variable->value(middle+1);
+
+                array[i] = afterDataValue-(afterVoiValue-pPoint)*(afterDataValue-middleDataValue)/(afterVoiValue-middleVoiValue);
+            } else if (middleVoiValue > pPoint) {
+                double beforeVoiValue = voi->value(middle-1);
+                double beforeDataValue = variable->value(middle-1);
+                double middleDataValue = variable->value(middle);
+
+                array[i] = beforeDataValue+(pPoint-beforeVoiValue)*(middleDataValue-beforeDataValue)/(middleVoiValue-beforeVoiValue);
+            } else {
+                array[i] = variable->value(middle);
+            }
+        }
+    }
 
     mDataStore->addValues(pPoint);
 }

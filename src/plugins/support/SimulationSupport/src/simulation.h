@@ -219,6 +219,8 @@ private:
     DataStore::DataStoreVariables mAlgebraic;
     QMap<double *, DataStore::DataStoreVariables> mData;
 
+    QMap<double *, DataStore::DataStore *> mDataDataStores;
+
     void createDataStore();
     void deleteDataStore();
 
