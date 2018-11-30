@@ -818,8 +818,20 @@ void SimulationResults::addPoint(double pPoint)
 
     mSimulation->data()->recomputeVariables(pPoint);
 
+    // Determine the real value of our point, if we didn't have several runs,
+    // but only one
+
+    double realPoint = 0.0;
+
+    for (int i = 0, iMax = runsCount()-1; i < iMax; ++i) {
+        if (mDataStore->voi()->size(i))
+            realPoint += mDataStore->voi()->value(mDataStore->voi()->size(i)-1, i);
+    }
+
+    realPoint += pPoint;
+
     // Make sure that we have the correct imported data values for the given
-    // point
+    // point, keeping in mind that we may have several runs
 
     foreach (double *array, mData.keys()) {
         DataStore::DataStore *dataStore = mDataDataStores.value(array);
@@ -830,7 +842,8 @@ void SimulationResults::addPoint(double pPoint)
             quint64 first = 0;
             quint64 last = voi->size()-1;
 
-            if ((pPoint < voi->value(first)) || (pPoint > voi->value(last))) {
+            if (   (realPoint < voi->value(first))
+                || (realPoint > voi->value(last))) {
                 array[i] = qQNaN();
             } else {
                 quint64 middle = 0;
@@ -840,9 +853,9 @@ void SimulationResults::addPoint(double pPoint)
                     middle = (first+last) >> 1;
                     middleVoiValue = voi->value(middle);
 
-                    if (middleVoiValue < pPoint)
+                    if (middleVoiValue < realPoint)
                         first = middle+1;
-                    else if (middleVoiValue > pPoint)
+                    else if (middleVoiValue > realPoint)
                         last = middle-1;
                     else
                         break;
@@ -850,16 +863,16 @@ void SimulationResults::addPoint(double pPoint)
 
                 DataStore::DataStoreVariable *variable = variables[i];
 
-                if (middleVoiValue < pPoint) {
+                if (middleVoiValue < realPoint) {
                     double afterVoiValue = voi->value(middle+1);
                     double afterDataValue = variable->value(middle+1);
 
-                    array[i] = afterDataValue-(afterVoiValue-pPoint)*(afterDataValue-variable->value(middle))/(afterVoiValue-middleVoiValue);
-                } else if (middleVoiValue > pPoint) {
+                    array[i] = afterDataValue-(afterVoiValue-realPoint)*(afterDataValue-variable->value(middle))/(afterVoiValue-middleVoiValue);
+                } else if (middleVoiValue > realPoint) {
                     double beforeVoiValue = voi->value(middle-1);
                     double beforeDataValue = variable->value(middle-1);
 
-                    array[i] = beforeDataValue+(pPoint-beforeVoiValue)*(variable->value(middle)-beforeDataValue)/(middleVoiValue-beforeVoiValue);
+                    array[i] = beforeDataValue+(realPoint-beforeVoiValue)*(variable->value(middle)-beforeDataValue)/(middleVoiValue-beforeVoiValue);
                 } else {
                     array[i] = variable->value(middle);
                 }
