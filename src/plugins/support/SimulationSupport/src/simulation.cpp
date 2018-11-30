@@ -814,11 +814,12 @@ bool SimulationResults::addRun()
 
 void SimulationResults::addPoint(double pPoint)
 {
-    // Add the data to our data store after making sure that all our variables
-    // are up to date and that we have the correct imported data values for the
-    // given point
+    // Make sure that all our variables are up to date
 
     mSimulation->data()->recomputeVariables(pPoint);
+
+    // Make sure that we have the correct imported data values for the given
+    // point
 
     foreach (double *array, mData.keys()) {
         DataStore::DataStore *dataStore = mDataDataStores.value(array);
@@ -865,6 +866,8 @@ void SimulationResults::addPoint(double pPoint)
             }
         }
     }
+
+    // Now that we are all set, we can add the data to our data store
 
     mDataStore->addValues(pPoint);
 }
