@@ -844,17 +844,15 @@ void SimulationResults::addPoint(double pPoint)
                 DataStore::DataStoreVariable *variable = variables[i];
 
                 if (middleVoiValue < pPoint) {
-                    double middleDataValue = variable->value(middle);
                     double afterVoiValue = voi->value(middle+1);
                     double afterDataValue = variable->value(middle+1);
 
-                    array[i] = afterDataValue-(afterVoiValue-pPoint)*(afterDataValue-middleDataValue)/(afterVoiValue-middleVoiValue);
+                    array[i] = afterDataValue-(afterVoiValue-pPoint)*(afterDataValue-variable->value(middle))/(afterVoiValue-middleVoiValue);
                 } else if (middleVoiValue > pPoint) {
                     double beforeVoiValue = voi->value(middle-1);
                     double beforeDataValue = variable->value(middle-1);
-                    double middleDataValue = variable->value(middle);
 
-                    array[i] = beforeDataValue+(pPoint-beforeVoiValue)*(middleDataValue-beforeDataValue)/(middleVoiValue-beforeVoiValue);
+                    array[i] = beforeDataValue+(pPoint-beforeVoiValue)*(variable->value(middle)-beforeDataValue)/(middleVoiValue-beforeVoiValue);
                 } else {
                     array[i] = variable->value(middle);
                 }
