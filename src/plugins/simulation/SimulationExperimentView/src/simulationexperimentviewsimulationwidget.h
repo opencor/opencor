@@ -292,6 +292,8 @@ private:
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
                                                                  QString &pCellmlComponent,
                                                                  QString &pCellmlVariable);
+    bool isRuntimeDataParameter(const QString &pComponent,
+                                const QString &pVariable);
 
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);

@@ -1844,7 +1844,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     }
 
     // Create a 2D plot output for each graph panel that we have, and retrieve
-    // all the graphs, if any, that are to be plotted on them
+    // all the graphs, if any, that are to be plotted on them (except, at this
+    // stage, the ones involving imported data)
 
     static const QString SedmlProperty = QString("<%1>%2</%1>");
 
@@ -2001,10 +2002,26 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
         int graphCounter = 0;
 
         foreach (Core::Property *property, graphsProperties) {
-            ++graphCounter;
+            // Make sure that our graph doesn't involve some imported data
+            // otherwise skip it
+
+            Core::Properties properties = property->properties();
+            QStringList propertyX = properties[2]->value().split('.');
+            QStringList propertyY = properties[3]->value().split('.');
+            QString componentX = propertyX[propertyX.count()-2];
+            QString variableX = propertyX.last();
+            QString componentY = propertyY[propertyY.count()-2];
+            QString variableY = propertyY.last();
+
+            if (   isRuntimeDataParameter(componentX, variableX)
+                || isRuntimeDataParameter(componentY, variableY)) {
+                continue;
+            }
 
             // Create two data generators for the X and Y parameters of our
             // current graph
+
+            ++graphCounter;
 
             libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
             libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
@@ -2018,19 +2035,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
             libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-            Core::Properties properties = property->properties();
-            QStringList propertyX = properties[2]->value().split('.');
-            QStringList propertyY = properties[3]->value().split('.');
 
             sedmlVariableX->setId(QString("xVariable%1_%2").arg(data.graphPlotCounter)
                                                            .arg(graphCounter).toStdString());
             sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-            addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
+            addSedmlVariableTarget(sedmlVariableX, componentX, variableX);
 
             sedmlVariableY->setId(QString("yVariable%1_%2").arg(data.graphPlotCounter)
                                                            .arg(graphCounter).toStdString());
             sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-            addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
+            addSedmlVariableTarget(sedmlVariableY, componentY, variableY);
 
             sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
             sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
@@ -2552,6 +2566,24 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
     }
 
     return nullptr;
+}
+
+//==============================================================================
+
+bool SimulationExperimentViewSimulationWidget::isRuntimeDataParameter(const QString &pComponent,
+                                                                      const QString &pVariable)
+{
+    // Go through the runtime data parameters to see if one of them corresponds
+    // to the given component/variable
+
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mSimulation->runtime()->dataParameters()) {
+        if (   !pComponent.compare(parameter->componentHierarchy().last())
+            && !pVariable.compare(parameter->name())) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================
