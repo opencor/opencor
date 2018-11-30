@@ -149,6 +149,11 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
     populateModel(runtime);
     populateContextMenu(runtime);
 
+    // Reset our import information, if we are reloading ourselves
+
+    if (pReloadingView)
+        mImportComponent = nullptr;
+
     // Keep track of when some of the model's data has changed
 
     connect(pSimulation->data(), &SimulationSupport::SimulationData::updated,
