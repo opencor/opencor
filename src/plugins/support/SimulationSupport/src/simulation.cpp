@@ -707,6 +707,11 @@ void SimulationResults::createDataStore()
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
     }
+
+    // Reimport our data, if any
+
+    foreach (double *array, mDataDataStores.keys())
+        mData.insert(array, mDataStore->addVariables(array, mDataDataStores.value(array)->variables().count()));
 }
 
 //==============================================================================
@@ -728,6 +733,8 @@ void SimulationResults::deleteDataStore()
     mRates = DataStore::DataStoreVariables();
     mStates = DataStore::DataStoreVariables();
     mAlgebraic = DataStore::DataStoreVariables();
+
+    mData.clear();
 }
 
 //==============================================================================
@@ -744,7 +751,6 @@ void SimulationResults::reload()
 void SimulationResults::reset()
 {
     // Reset our data store by deleting it and then recreating it
-//---ISSUE1845--- SEE WHAT NEEDS TO BE DONE WITH REGARDS TO IMPORTED DATA...
 
     deleteDataStore();
     createDataStore();
@@ -1041,7 +1047,6 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
         delete mRuntime;
 
         mRuntime = mCellmlFile?mCellmlFile->runtime(true):nullptr;
-//---ISSUE1845--- SEE WHAT NEEDS TO BE DONE WITH REGARDS TO IMPORTED DATA...
     }
 }
 
