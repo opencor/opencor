@@ -146,16 +146,15 @@ double * SimulationData::data(DataStore::DataStore *pDataStore) const
 
 //==============================================================================
 
-void SimulationData::importData(DataStore::DataStore *pDataStore)
+double * SimulationData::importData(DataStore::DataStore *pDataStore)
 {
-    // Make sure that all the given data store is not only already mapped and,
-    // if so, associate an array of doubles to it
+    // Associate an array of doubles to the given data store and return it
 
-    if (!mData.contains(pDataStore)) {
-        double *data = new double[pDataStore->variables().count()] {};
+    double *data = new double[pDataStore->variables().count()] {};
 
-        mData.insert(pDataStore, data);
-    }
+    mData.insert(pDataStore, data);
+
+    return data;
 }
 
 //==============================================================================
@@ -1218,9 +1217,8 @@ void Simulation::importData(DataStore::DataStoreImportData *pImportData)
     // Ask our data and results objects to import the given data
 
     DataStore::DataStore *dataStore = pImportData->dataStore();
-    double *array = mData->data(dataStore);
+    double *array = mData->importData(dataStore);
 
-    mData->importData(dataStore);
     mResults->importData(dataStore, array);
 
     // Ask our runtime to import the given data
