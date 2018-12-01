@@ -34,7 +34,7 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BiosignalmlDataStoreData : public DataStore::DataStoreData
+class BiosignalmlDataStoreData : public DataStore::DataStoreExportData
 {
 public:
     explicit BiosignalmlDataStoreData(const QString &pFileName,

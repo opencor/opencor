@@ -39,7 +39,7 @@ class BiosignalmlDataStoreExporterWorker : public DataStore::DataStoreExporterWo
     Q_OBJECT
 
 public:
-    explicit BiosignalmlDataStoreExporterWorker(DataStore::DataStoreData *pDataStoreData);
+    explicit BiosignalmlDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData);
 
 public slots:
     void run() override;
@@ -52,7 +52,7 @@ class BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
     Q_OBJECT
 
 protected:
-    DataStore::DataStoreExporterWorker * workerInstance(DataStore::DataStoreData *pDataStoreData) override;
+    DataStore::DataStoreExporterWorker * workerInstance(DataStore::DataStoreExportData *pDataStoreData) override;
 };
 
 //==============================================================================
