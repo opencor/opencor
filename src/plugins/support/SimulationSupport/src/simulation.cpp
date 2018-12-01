@@ -633,8 +633,7 @@ void SimulationResults::createDataStore()
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
 
-    for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->parameters()) {
         DataStore::DataStoreVariable *variable = nullptr;
 
         switch (parameter->type()) {
@@ -747,7 +746,11 @@ bool SimulationResults::addRun()
 
 void SimulationResults::addPoint(double pPoint)
 {
-    // Add the data to our data store
+    // Make sure that all our variables are up to date
+
+    mSimulation->data()->recomputeVariables(pPoint);
+
+    // Now that we are all set, we can add the data to our data store
 
     mDataStore->addValues(pPoint);
 }

@@ -156,10 +156,7 @@ void SimulationWorker::run()
 
         timer.start();
 
-        // Add our first point after making sure that all the variables are up
-        // to date
-
-        mSimulation->data()->recomputeVariables(mCurrentPoint);
+        // Add our first point
 
         mSimulation->results()->addPoint(mCurrentPoint);
 
@@ -197,10 +194,7 @@ void SimulationWorker::run()
             if (mError)
                 break;
 
-            // Add our new point after making sure that all the variables are up
-            // to date
-
-            mSimulation->data()->recomputeVariables(mCurrentPoint);
+            // Add our new point
 
             mSimulation->results()->addPoint(mCurrentPoint);
 
