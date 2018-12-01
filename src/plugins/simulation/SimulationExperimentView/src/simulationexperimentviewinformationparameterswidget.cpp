@@ -488,8 +488,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
         connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        // Keep track of the parameter associated with our model parameter
-        // action
+        // Keep track of the parameter associated with our parameter action
 
         mParameterActions.insert(parameterAction, parameter);
     }
