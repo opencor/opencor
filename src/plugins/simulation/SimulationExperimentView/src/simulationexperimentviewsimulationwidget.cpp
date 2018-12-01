@@ -3944,10 +3944,13 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                             double valX = graph->data(pSimulationRun)->sample(i).x();
                             double valY = graph->data(pSimulationRun)->sample(i).y();
 
-                            minX = qMin(minX, valX);
-                            maxX = qMax(maxX, valX);
-                            minY = qMin(minY, valY);
-                            maxY = qMax(maxY, valY);
+                            if (   !qIsInf(valX) && !qIsNaN(valX)
+                                && !qIsInf(valY) && !qIsNaN(valY)) {
+                                minX = qMin(minX, valX);
+                                maxX = qMax(maxX, valX);
+                                minY = qMin(minY, valY);
+                                maxY = qMax(maxY, valY);
+                            }
                         }
 
                         // Update our plot, if our graph segment cannot fit
