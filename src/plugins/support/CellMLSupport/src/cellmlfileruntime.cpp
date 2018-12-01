@@ -269,8 +269,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     // the model
     // Note: this is to avoid having to go through the code information an
     //       unnecessary number of times when we want to retrieve either of
-    //       those numbers (e.g. see
-    //       SimulationExperimentViewSimulationResults::addPoint())...
+    //       those numbers (e.g. see SimulationResults::addPoint())...
 
     mConstantsCount = int(mCodeInformation->constantIndexCount());
     mStatesRatesCount = int(mCodeInformation->rateIndexCount());
