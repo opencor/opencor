@@ -609,7 +609,6 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mAlgebraic(DataStore::DataStoreVariables()),
     mData(QMap<double *, DataStore::DataStoreVariables>()),
     mDataDataStores(QMap<double *, DataStore::DataStore *>())
-
 {
     // Create our data store
 
