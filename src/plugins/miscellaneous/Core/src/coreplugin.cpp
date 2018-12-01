@@ -554,23 +554,21 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
-        // Look for a file type
-
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
+        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
+        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
+
+        // Keep track of file types
 
         if (fileTypeInterface)
             fileTypeInterfaces << fileTypeInterface;
 
-        // Look for a solver
-
-        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
+        // Keep track of solvers
 
         if (solverInterface)
             solverInterfaces << solverInterface;
 
-        // Look for a data store
-
-        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
+        // Keep track of data stores
 
         if (dataStoreInterface)
             dataStoreInterfaces << dataStoreInterface;
