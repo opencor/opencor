@@ -4457,6 +4457,19 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
                                 tr("<strong>%1</strong> is not a data file.").arg(invalidDataFileName));
     }
 
+    // Reset all of our model parameters and clear our simulation results, if we
+    // have some data to import
+    // Note: this prevents OpenCOR from crashing when importing some data and
+    //       then deciding to plot some of it when there are already some runs.
+    //       Indeed, the imported data hasn't been computed for those runs...
+//---ISSUE1845--- IN THE FUTURE, WE WANT OpenCOR TO "COMPUTE" ANY EXISTING RUN
+//                FOR OUR IMPORTED DATA...
+
+    if (dataStoreInterfaces.count()) {
+        resetAllModelParameters();
+        clearSimulationResults();
+    }
+
     // Retrieve some imported data for our different data files
 
     QMap<QString, DataStore::DataStoreImportData *> dataStoreImportDatas = QMap<QString, DataStore::DataStoreImportData *>();
