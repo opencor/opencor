@@ -39,7 +39,7 @@ class CsvDataStoreExporterWorker : public DataStore::DataStoreExporterWorker
     Q_OBJECT
 
 public:
-    explicit CsvDataStoreExporterWorker(DataStore::DataStoreData *pDataStoreData);
+    explicit CsvDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData);
 
 public slots:
     void run() override;
@@ -52,7 +52,7 @@ class CsvDataStoreExporter : public DataStore::DataStoreExporter
     Q_OBJECT
 
 protected:
-    DataStore::DataStoreExporterWorker * workerInstance(DataStore::DataStoreData *pDataStoreData) override;
+    DataStore::DataStoreExporterWorker * workerInstance(DataStore::DataStoreExportData *pDataStoreData) override;
 };
 
 //==============================================================================

@@ -3173,9 +3173,9 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(),
-                                                                          mSimulation->results()->dataStore(),
-                                                                          CellMLSupport::CellmlFileRuntimeParameter::icons());
+    DataStore::DataStoreExportData *dataStoreData = dataStoreInterface->getExportData(mSimulation->fileName(),
+                                                                                      mSimulation->results()->dataStore(),
+                                                                                      CellMLSupport::CellmlFileRuntimeParameter::icons());
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
@@ -3192,7 +3192,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
                 this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone,
                 Qt::UniqueConnection);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                dataStoreData, &DataStore::DataStoreData::deleteLater);
+                dataStoreData, &DataStore::DataStoreExportData::deleteLater);
 
         dataStoreExporter->exportData(dataStoreData);
     }
@@ -3721,8 +3721,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                 }
             }
 
-            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
-            {
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (!hasData && needInitialisationY) {
                     minY = startingPoint;
                     maxY = endingPoint;
@@ -3945,10 +3944,13 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                             double valX = graph->data(pSimulationRun)->sample(i).x();
                             double valY = graph->data(pSimulationRun)->sample(i).y();
 
-                            minX = qMin(minX, valX);
-                            maxX = qMax(maxX, valX);
-                            minY = qMin(minY, valY);
-                            maxY = qMax(maxY, valY);
+                            if (   !qIsInf(valX) && !qIsNaN(valX)
+                                && !qIsInf(valY) && !qIsNaN(valY)) {
+                                minX = qMin(minX, valX);
+                                maxX = qMax(maxX, valX);
+                                minY = qMin(minY, valY);
+                                maxY = qMax(maxY, valY);
+                            }
                         }
 
                         // Update our plot, if our graph segment cannot fit
@@ -4080,7 +4082,7 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreData *pDataStoreData,
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreExportData *pDataStoreData,
                                                                        double pProgress)
 {
     Q_UNUSED(pDataStoreData);
@@ -4092,7 +4094,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::DataStoreData *pDataStoreData,
+void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::DataStoreExportData *pDataStoreData,
                                                                    const QString &pErrorMessage)
 {
     Q_UNUSED(pDataStoreData);

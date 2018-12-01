@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 4;
+    return 5;
 }
 
 //==============================================================================
@@ -345,8 +345,9 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
-                             const DataStoreVariables &pVariables) :
+DataStoreExportData::DataStoreExportData(const QString &pFileName,
+                                         DataStore *pDataStore,
+                                         const DataStoreVariables &pVariables) :
     mFileName(pFileName),
     mDataStore(pDataStore),
     mVariables(pVariables)
@@ -355,7 +356,7 @@ DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
 
 //==============================================================================
 
-QString DataStoreData::fileName() const
+QString DataStoreExportData::fileName() const
 {
     // Return our file name
 
@@ -364,7 +365,7 @@ QString DataStoreData::fileName() const
 
 //==============================================================================
 
-DataStore * DataStoreData::dataStore() const
+DataStore * DataStoreExportData::dataStore() const
 {
     // Return our data store
 
@@ -373,7 +374,7 @@ DataStore * DataStoreData::dataStore() const
 
 //==============================================================================
 
-DataStoreVariables DataStoreData::variables() const
+DataStoreVariables DataStoreExportData::variables() const
 {
     // Return our variables
 
@@ -534,14 +535,14 @@ void DataStore::addValues(double pVoiValue)
 
 //==============================================================================
 
-DataStoreExporterWorker::DataStoreExporterWorker(DataStoreData *pDataStoreData) :
+DataStoreExporterWorker::DataStoreExporterWorker(DataStoreExportData *pDataStoreData) :
     mDataStoreData(pDataStoreData)
 {
 }
 
 //==============================================================================
 
-void DataStoreExporter::exportData(DataStoreData *pDataStoreData)
+void DataStoreExporter::exportData(DataStoreExportData *pDataStoreData)
 {
     // Create and move our worker to a thread
     // Note: we cannot use the new connect() syntax with our worker's signals
@@ -556,14 +557,14 @@ void DataStoreExporter::exportData(DataStoreData *pDataStoreData)
     connect(thread, &QThread::started,
             worker, &DataStoreExporterWorker::run);
 
-    connect(worker, SIGNAL(progress(DataStoreData *, double)),
-            this, SIGNAL(progress(DataStoreData *, double)));
+    connect(worker, SIGNAL(progress(DataStoreExportData *, double)),
+            this, SIGNAL(progress(DataStoreExportData *, double)));
 
-    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
-            this, SIGNAL(done(DataStoreData *, const QString &)));
-    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
+            this, SIGNAL(done(DataStoreExportData *, const QString &)));
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
             thread, SLOT(quit()));
-    connect(worker, SIGNAL(done(DataStoreData *, const QString &)),
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
             worker, SLOT(deleteLater()));
 
     connect(thread, &QThread::finished,

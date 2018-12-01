@@ -751,7 +751,8 @@ QRectF GraphPanelPlotGraph::boundingRect()
                     for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
                         QPointF sample = run->data()->sample(i);
 
-                        if (!qIsInf(sample.x()) && !qIsNaN(sample.x())) {
+                        if (   !qIsInf(sample.x()) && !qIsNaN(sample.x())
+                            && !qIsInf(sample.y()) && !qIsNaN(sample.y())) {
                             if (needInitMinX) {
                                 minX = sample.x();
 
@@ -767,9 +768,7 @@ QRectF GraphPanelPlotGraph::boundingRect()
                             } else if (sample.x() > maxX) {
                                 maxX = sample.x();
                             }
-                        }
 
-                        if (!qIsInf(sample.y()) && !qIsNaN(sample.y())) {
                             if (needInitMinY) {
                                 minY = sample.y();
 
@@ -795,7 +794,8 @@ QRectF GraphPanelPlotGraph::boundingRect()
                     }
                 }
 
-                mBoundingRect |= boundingRect;
+                if (boundingRect != InvalidRect)
+                    mBoundingRect |= boundingRect;
             }
         }
     }
@@ -831,7 +831,9 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                         QPointF sample = run->data()->sample(i);
 
                         if (   !qIsInf(sample.x()) && !qIsNaN(sample.x())
-                            &&  (sample.x() > 0.0)) {
+                            &&  (sample.x() > 0.0)
+                            && !qIsInf(sample.y()) && !qIsNaN(sample.y())
+                            &&  (sample.y() > 0.0)) {
                             if (needInitMinX) {
                                 minX = sample.x();
 
@@ -847,10 +849,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                             } else if (sample.x() > maxX) {
                                 maxX = sample.x();
                             }
-                        }
 
-                        if (   !qIsInf(sample.y()) && !qIsNaN(sample.y())
-                            &&  (sample.y() > 0.0)) {
                             if (needInitMinY) {
                                 minY = sample.y();
 
