@@ -1218,11 +1218,9 @@ void Simulation::importData(DataStore::DataStoreImportData *pImportData)
     // Ask our data and results objects to import the given data
 
     DataStore::DataStore *dataStore = pImportData->dataStore();
-
-    mData->importData(dataStore);
-
     double *array = mData->data(dataStore);
 
+    mData->importData(dataStore);
     mResults->importData(dataStore, array);
 
     // Ask our runtime to import the given data
