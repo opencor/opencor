@@ -942,7 +942,7 @@ endif()
 
 if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
     # We want to build our copy of the QtWebKit package, so don't build any
-    # plugins since some of them may require QtWebKit
+    # of our plugins since some of them may require QtWebKit
 
     set(PLUGINS)
 endif()
