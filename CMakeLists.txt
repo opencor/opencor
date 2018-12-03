@@ -931,6 +931,7 @@ set(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
 )
+set(PLUGINS)
 
 if(ENABLE_TEST_PLUGINS)
     list(APPEND PLUGINS
