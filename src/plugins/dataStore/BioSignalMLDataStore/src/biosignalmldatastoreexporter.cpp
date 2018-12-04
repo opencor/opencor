@@ -26,10 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QApplication>
-#include <QDateTime>
 #include <QFile>
-#include <QTextStream>
 #include <QUrl>
 
 //==============================================================================
@@ -44,14 +41,14 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-BiosignalmlDataStoreExporter::BiosignalmlDataStoreExporter(DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pDataStoreData)
+BiosignalmlDataStoreExporterWorker::BiosignalmlDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData) :
+    DataStore::DataStoreExporterWorker(pDataStoreData)
 {
 }
 
 //==============================================================================
 
-void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
+void BiosignalmlDataStoreExporterWorker::run()
 {
     // Determine the number of steps to export everything
 
@@ -66,9 +63,10 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
     double oneOverNbOfSteps = 1.0/nbOfSteps;
     int stepNb = 0;
 
-    // Export the given data store to a BioSignalML file
+    // Export our data store to a BioSignalML file
 
     bsml::HDF5::Recording *recording = nullptr;
+    QString errorMessage = QString();
 
     try {
         // Create and populate a recording
@@ -150,7 +148,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
                     rowCount = 0;
                 }
 
-                emit progress(++stepNb*oneOverNbOfSteps);
+                emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
             }
 
             signalArray->extend(data, size_t(variables.count()*rowCount));
@@ -161,7 +159,7 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
         // Something went wrong, so retrieve the error message and delete our
         // BioSignalML file
 
-        pErrorMessage = tr("The data could not be exported to BioSignalML (%1).").arg(exception.what());
+        errorMessage = tr("The data could not be exported to BioSignalML (%1).").arg(exception.what());
 
         QFile::remove(dataStoreData->fileName());
     }
@@ -173,6 +171,19 @@ void BiosignalmlDataStoreExporter::execute(QString &pErrorMessage) const
 
         delete recording;
     }
+
+    // Let people know that our export is done
+
+    emit done(mDataStoreData, errorMessage);
+}
+
+//==============================================================================
+
+DataStore::DataStoreExporterWorker * BiosignalmlDataStoreExporter::workerInstance(DataStore::DataStoreExportData *pDataStoreData)
+{
+    // Return an instance of our worker
+
+    return new BiosignalmlDataStoreExporterWorker(pDataStoreData);
 }
 
 //==============================================================================

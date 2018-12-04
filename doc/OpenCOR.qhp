@@ -4,41 +4,25 @@
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <files>
-            <file>3rdparty/googleCodePrettify/*.*</file>
-
-            <file>3rdparty/jQuery/*.*</file>
-
-            <file>3rdparty/KaTeX/*.*</file>
-            <file>3rdparty/KaTeX/contrib/*.*</file>
-            <file>3rdparty/KaTeX/fonts/*.*</file>
-
-            <file>res/*.*</file>
-            <file>res/pics/*.*</file>
-            <file>res/pics/oxygen/actions/*.*</file>
-            <file>res/pics/oxygen/categories/*.*</file>
-            <file>res/pics/oxygen/places/*.*</file>
-            <file>res/pics/oxygen/status/*.*</file>
-
             <file>user/*.*</file>
+
+            <file>user/_images/*.*</file>
+
+            <file>user/_static/*.*</file>
+            <file>user/_static/katex/*.*</file>
+            <file>user/_static/katex/contrib/*.*</file>
+            <file>user/_static/katex/fonts/*.*</file>
+
             <file>user/plugins/*.*</file>
             <file>user/plugins/dataStore/*.*</file>
             <file>user/plugins/editing/*.*</file>
-            <file>user/plugins/editing/res/pics/*.*</file>
             <file>user/plugins/miscellaneous/*.*</file>
-            <file>user/plugins/miscellaneous/res/pics/*.*</file>
             <file>user/plugins/organisation/*.*</file>
-            <file>user/plugins/organisation/res/pics/*.*</file>
-            <file>user/plugins/res/pics/*.*</file>
             <file>user/plugins/simulation/*.*</file>
-            <file>user/plugins/simulation/res/pics/*.*</file>
             <file>user/plugins/solver/*.*</file>
-            <file>user/plugins/support/CellMLSupport/res/pics/*.*</file>
-            <file>user/plugins/support/SEDMLSupport/res/pics/*.*</file>
             <file>user/plugins/tools/*.*</file>
-            <file>user/res/*.*</file>
-            <file>user/res/pics/*.*</file>
+
             <file>user/userInterfaces/*.*</file>
-            <file>user/userInterfaces/res/pics/*.*</file>
         </files>
     </filterSection>
 </QtHelpProject>

@@ -64,9 +64,9 @@ QString CSVDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
-DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
-                                                       DataStore::DataStore *pDataStore,
-                                                       const QMap<int, QIcon> &pIcons) const
+DataStore::DataStoreExportData * CSVDataStorePlugin::getExportData(const QString &pFileName,
+                                                                   DataStore::DataStore *pDataStore,
+                                                                   const QMap<int, QIcon> &pIcons) const
 {
     // Ask which data should be exported
 
@@ -88,7 +88,7 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
                                                  &csvFilter);
 
         if (!fileName.isEmpty())
-            return new DataStore::DataStoreData(fileName, pDataStore, dataStoreDialog.selectedData());
+            return new DataStore::DataStoreExportData(fileName, pDataStore, dataStoreDialog.selectedData());
     }
 
     return nullptr;
@@ -96,11 +96,14 @@ DataStore::DataStoreData * CSVDataStorePlugin::getData(const QString &pFileName,
 
 //==============================================================================
 
-DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const
+DataStore::DataStoreExporter * CSVDataStorePlugin::dataStoreExporterInstance() const
 {
-    // Return an instance of our CSV data store exporter
+    // Return the 'global' instance of our CSV data store exporter
 
-    return new CsvDataStoreExporter(pDataStoreData);
+    static CsvDataStoreExporter instance;
+
+    return static_cast<CsvDataStoreExporter *>(Core::globalInstance("OpenCOR::CSVDataStore::CsvDataStoreExporter::instance()",
+                                                                    &instance));
 }
 
 //==============================================================================

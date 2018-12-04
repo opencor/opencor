@@ -34,14 +34,25 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-class CsvDataStoreExporter : public DataStore::DataStoreExporter
+class CsvDataStoreExporterWorker : public DataStore::DataStoreExporterWorker
 {
     Q_OBJECT
 
 public:
-    explicit CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreData);
+    explicit CsvDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData);
 
-    void execute(QString &pErrorMessage) const override;
+public slots:
+    void run() override;
+};
+
+//==============================================================================
+
+class CsvDataStoreExporter : public DataStore::DataStoreExporter
+{
+    Q_OBJECT
+
+protected:
+    DataStore::DataStoreExporterWorker * workerInstance(DataStore::DataStoreExportData *pDataStoreData) override;
 };
 
 //==============================================================================

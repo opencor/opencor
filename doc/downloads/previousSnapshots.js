@@ -1,5 +1,54 @@
 var jsonData = { "versions": [
-                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 10, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 11, "year": 2018, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> converted (and updated) the documentation to reStructuredText (see issue <a href=\"https://github.com/opencor/opencor/issues/1544\">#1544</a>). Properly keep track of the sizes of some splitters (see issue <a href=\"https://github.com/opencor/opencor/issues/1871\">#1871</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> don't skip the first data point (see issue <a href=\"https://github.com/opencor/opencor/issues/1860\">#1860</a>)." },
+                       { "change": "<strong>PMR-based windows:</strong> make sure that the spinning wheel is hidden when changing instances of PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1862\">#1862</a>). Make sure they get populated when being shown after having changed instances of PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1865\">#1865</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 10, "year": 2018, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>General:</strong> unmanage and (re)manage a new file that has been saved (see issue <a href=\"https://github.com/opencor/opencor/issues/1846\">#1846</a>). Overlayed icons now have the same resolution as standard icons on HiDPI screens (see issue <a href=\"https://github.com/opencor/opencor/issues/1850\">#1850</a>). Recognise macOS Mojave (10.14) (see issue <a href=\"https://github.com/opencor/opencor/issues/1851\">#1851</a>)." },
+                       { "change": "<strong>Graph Panel widget:</strong> prevent OpenCOR from potentially freezing when plotting invalid data (see issue <a href=\"https://github.com/opencor/opencor/issues/1853\">#1853</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> now have two reset buttons rather than one with a drop-down menu (see issue <a href=\"https://github.com/opencor/opencor/issues/1835\">#1835</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1833\">#1833</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1847\">#1847</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.7 (see issue <a href=\"https://github.com/opencor/opencor/issues/1857\">#1857</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 10, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -24,7 +73,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1814\">#1814</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1829\">#1829</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 18, "month": 9, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 18, "month": 9, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -49,7 +98,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1799\">#1799</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 9, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 9, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -75,7 +124,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1743\">#1743</a>). Renamed our BioSignalML plugin to libBioSignalML (see issue <a href=\"https://github.com/opencor/opencor/issues/1754\">#1754</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2p (see issue <a href=\"https://github.com/opencor/opencor/issues/1767\">#1767</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 7, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 7, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -101,7 +150,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 6.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1729\">#1729</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.7 (see issue <a href=\"https://github.com/opencor/opencor/issues/1731\">#1731</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1736\">#1736</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 27, "month": 6, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 27, "month": 6, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -126,7 +175,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1672\">#1672</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/1704\">#1704</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 5, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 5, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -155,7 +204,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 6.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1552\">#1552</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1643\">#1643</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 4, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 4, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -185,7 +234,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> have libgit2 use our copy of zlib rather than the one provided by the system (see issue <a href=\"https://github.com/opencor/opencor/issues/1577\">#1577</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.27.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1588\">#1588</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2o (see issue <a href=\"https://github.com/opencor/opencor/issues/1589\">#1589</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1608\">#1608</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 3, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 3, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -210,7 +259,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1557\">#1557</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 3, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 3, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -234,7 +283,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1548\">#1548</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 2, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 2, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -256,7 +305,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Simulation Experiment view:</strong> prevent the legend labels from disappearing upon clearing the simulation data (see issue <a href=\"https://github.com/opencor/opencor/issues/1537\">#1537</a>). Prevent the clearing of simulation data from taking too long when we have several graph panels (see issue <a href=\"https://github.com/opencor/opencor/issues/1538\">#1538</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 31, "month": 1, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 31, "month": 1, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -281,7 +330,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Simulation Experiment view:</strong> added support for multiple runs (see issue <a href=\"https://github.com/opencor/opencor/issues/1523\">#1523</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 1, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 1, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -306,7 +355,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1507\">#1507</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 12, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 12, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -332,7 +381,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2n (see issue <a href=\"https://github.com/opencor/opencor/issues/1483\">#1483</a>). Upgraded <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.16.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1494\">#1494</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 5.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1502\">#1502</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 11, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 11, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -355,7 +404,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Simulation Experiment view:</strong> can now distinguish between the background colour of the plot area and that of the surrounding area (see issue <a href=\"https://github.com/opencor/opencor/issues/1473\">#1473</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 28, "month": 11, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 28, "month": 11, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -381,7 +430,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 3.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1453\">#1453</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2m (see issue <a href=\"https://github.com/opencor/opencor/issues/1458\">#1458</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1466\">#1466</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 10, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 10, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -405,7 +454,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>PMR window:</strong> retrieve public exposures only when really needed." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 10, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 10, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -429,7 +478,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Simulation Experiment view:</strong> added support for the alpha channel in the colours used to customise a graph. Made sure that the GUI is properly initialised when (re)loading a SED-ML file." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 9, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 25, "month": 9, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -453,7 +502,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Simulation Experiment view:</strong> added the ability to customise a graph (see issue <a href=\"https://github.com/opencor/opencor/issues/591\">#591</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 9, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 9, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -478,7 +527,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://khan.github.io/KaTeX/\">KaTeX</a> to version 0.8.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1401\">#1401</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 5.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1407\">#1407</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 8, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 12, "month": 8, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -503,7 +552,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> to version 3.1.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1393\">#1393</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 7, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 23, "month": 7, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -530,7 +579,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.26 (see issue <a href=\"https://github.com/opencor/opencor/issues/1340\">#1340</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 4.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1352\">#1352</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1358\">#1358</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 21, "month": 6, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 21, "month": 6, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -554,7 +603,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2l (see issue <a href=\"https://github.com/opencor/opencor/issues/1318\">#1318</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 7, "month": 5, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 7, "month": 5, "year": 2017, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -576,7 +625,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>General:</strong> now provide a mechanism to package and download pre-built libraries (see issue <a href=\"https://github.com/opencor/opencor/issues/1106\">#1106</a>). Can now download an official version of OpenCOR from either the OpenCOR website or GitHub (see issue <a href=\"https://github.com/opencor/opencor/issues/1154\">#1154</a>). Changed our license to GPL v3.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1301\">#1301</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 28, "month": 4, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 28, "month": 4, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -609,7 +658,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.2.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1264\">#1264</a>)" }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 24, "month": 3, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 24, "month": 3, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -632,7 +681,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.2.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1252\">#1252</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 4.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1248\">#1248</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 15, "month": 3, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 15, "month": 3, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -657,7 +706,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>CellML Text view:</strong> now ignore `documentation` elements rather than consider them as unknown (and therefore 'fail'; see issue <a href=\"https://github.com/opencor/opencor/issues/1245\">#1245</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 4, "month": 3, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 4, "month": 3, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -679,7 +728,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>PMR Workspaces window:</strong> fixed a crash that used to occur when expanding a workspace by clicking on its arrow (\">\") when nothing else was selected (see issue <a href=\"https://github.com/opencor/opencor/issues/1242\">#1242</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 3, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 3, "month": 3, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -702,7 +751,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>PMR Workspaces window:</strong> fixed a small problem with synchronising potentially resulting in a segmentation fault on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/1236\">#1236</a>). Can now create a workspace from a non-empty (and non-Git) folder (see issue <a href=\"https://github.com/opencor/opencor/issues/1237\">#1237</a>). Now make it obvious which PMR site is being used (see issue <a href=\"https://github.com/opencor/opencor/issues/1239\">#1239</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 24, "month": 2, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 24, "month": 2, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -730,7 +779,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.10 (see issue <a href=\"https://github.com/opencor/opencor/issues/1227\">#1227</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 10, "month": 2, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 10, "month": 2, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -754,7 +803,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>PMR Workspaces window:</strong> added the 'teaching' instance to the list of PMR instances (see issue <a href=\"https://github.com/opencor/opencor/issues/1218\">#1218</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 8, "month": 2, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 8, "month": 2, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -777,7 +826,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>PMR Workspaces window:</strong> allow the user's name and email to be set in Preferences (see issue <a href=\"https://github.com/opencor/opencor/issues/1057\">#1057</a>). Allow the PMR instance to be set in Preferences (see issue <a href=\"https://github.com/opencor/opencor/issues/1069\">#1069</a>). Fixed a problem with the log on/off icon not showing properly on a Mac with a HiDPI screen resolution (see issue <a href=\"https://github.com/opencor/opencor/issues/1204\">#1204</a>). Let the user know if no name and/or email are provided (see issue <a href=\"https://github.com/opencor/opencor/issues/1208\">#1208</a>). Warn the user if we try to commit without a message (see issue <a href=\"https://github.com/opencor/opencor/issues/1209\">#1209</a>). Don't rely on an external browser to do the PMR authentication (see issue <a href=\"https://github.com/opencor/opencor/issues/1211\">#1211</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 2, "year": 2017, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 2, "year": 2017, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -802,7 +851,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://khan.github.io/KaTeX/\">KaTeX</a> to version 0.7.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1195\">#1195</a>). Upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 3.9.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1099\">#1099</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.25.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1190\">#1190</a>). Upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2k (see issue <a href=\"https://github.com/opencor/opencor/issues/1202\">#1202</a>). Upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.9.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1179\">#1179</a>). Upgraded <a href=\"http://www.zlib.net/\">zlib</a> to version 1.2.11 (see issue <a href=\"https://github.com/opencor/opencor/issues/1193\">#1193</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 11, "year": 2016, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 17, "month": 11, "year": 2016, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -827,7 +876,7 @@ var jsonData = { "versions": [
                        { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.24.3 (see issue <a href=\"https://github.com/opencor/opencor/issues/1145\">#1145</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 11, "year": 2016, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 9, "month": 11, "year": 2016, "type": 2, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [

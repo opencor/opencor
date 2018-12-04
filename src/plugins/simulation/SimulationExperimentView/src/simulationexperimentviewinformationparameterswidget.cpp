@@ -40,12 +40,16 @@ namespace SimulationExperimentView {
 
 SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInformationParametersWidget(QWidget *pParent) :
     PropertyEditorWidget(false, pParent),
+    mPlotAgainstVoiMenuAction(nullptr),
+    mPlotAgainstMenu(nullptr),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mSimulation(nullptr),
     mNeedClearing(false),
     mVoiAccessible(false),
-    mGradientIndices(QSet<int>())
+    mGradientIndices(QSet<int>()),
+    mToggleGradientsMenuAction(nullptr),
+    mToggleGradientsMenuSeparator(nullptr)
 {
     // Create our context menu
 
@@ -61,15 +65,16 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
 
 void SimulationExperimentViewInformationParametersWidget::retranslateContextMenu()
 {
-    // Retranslate our context menu, in case it has been populated
+    // Retranslate our context menu, if it exists / has been populated
 
-    if (mContextMenu->actions().count() >= mVoiAccessible+1) {
-        if (mVoiAccessible)
-            mContextMenu->actions()[0]->setText(tr("Plot Against Variable Of Integration"));
+    if (mPlotAgainstVoiMenuAction)
+        mPlotAgainstVoiMenuAction->setText(tr("Plot Against Variable Of Integration"));
 
-        mContextMenu->actions()[(mVoiAccessible?0:-1)+1]->setText(tr("Plot Against"));
-        mContextMenu->actions()[(mVoiAccessible?0:-1)+3]->setText(tr("Toggle gradient calculation for constant"));
-    }
+    if (mPlotAgainstMenu)
+        mPlotAgainstMenu->menuAction()->setText(tr("Plot Against"));
+
+    if (mToggleGradientsMenuAction)
+        mToggleGradientsMenuAction->setText(tr("Toggle gradient calculation for constant"));
 }
 
 //==============================================================================
@@ -111,8 +116,9 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 
     bool gradientActionVisible = (parameter && parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant);
 
-    mContextMenu->actions()[(mVoiAccessible?0:-1)+2]->setVisible(gradientActionVisible);
-    mContextMenu->actions()[(mVoiAccessible?0:-1)+3]->setVisible(gradientActionVisible);
+    mToggleGradientsMenuSeparator->setVisible(gradientActionVisible);
+
+    mToggleGradientsMenuAction->setVisible(gradientActionVisible);
 
     // Generate and show the context menu
 
@@ -382,9 +388,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
-
         property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
-
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
 
@@ -408,22 +412,22 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 {
     // Create our two main menu items
 
-    QAction *voiAction = mVoiAccessible?mContextMenu->addAction(QString()):nullptr;
-    QMenu *plotAgainstMenu = new QMenu(mContextMenu);
+    if (mVoiAccessible)
+        mPlotAgainstVoiMenuAction = mContextMenu->addAction(QString());
 
-    mContextMenu->addAction(plotAgainstMenu->menuAction());
+    mPlotAgainstMenu = new QMenu(mContextMenu);
+
+    mContextMenu->addMenu(mPlotAgainstMenu);
 
     // Create a hidden menu item to toggle whether constants have gradients calculated
 
-    QAction *gradientSeparator = mContextMenu->addSeparator();
+    mToggleGradientsMenuSeparator = mContextMenu->addSeparator();
+    mToggleGradientsMenuSeparator->setVisible(false);
 
-    gradientSeparator->setVisible(false);
+    mToggleGradientsMenuAction = mContextMenu->addAction(QString());
+    mToggleGradientsMenuAction->setVisible(false);
 
-    QAction *gradientAction = mContextMenu->addAction(QString());
-
-    connect(gradientAction, SIGNAL(triggered(bool)), this, SLOT(toggleGradientFlag()));
-
-    gradientAction->setVisible(false);
+    connect(mToggleGradientsMenuAction, SIGNAL(triggered(bool)), this, SLOT(toggleGradientFlag()));
 
     // Initialise our menu items
 
@@ -433,10 +437,10 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
     // keep track of the parameter associated with our first main menu item
 
     if (mVoiAccessible) {
-        connect(voiAction, &QAction::triggered,
+        connect(mPlotAgainstVoiMenuAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        mParameterActions.insert(voiAction, pRuntime->voi());
+        mParameterActions.insert(mPlotAgainstVoiMenuAction, pRuntime->voi());
     }
 
     // Populate our context menu with the parameters
@@ -455,7 +459,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
-            QMenu *menu = plotAgainstMenu;
+            QMenu *menu = mPlotAgainstMenu;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a menu for our current
@@ -510,8 +514,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
         connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        // Keep track of the parameter associated with our model parameter
-        // action
+        // Keep track of the parameter associated with our parameter action
 
         mParameterActions.insert(parameterAction, parameter);
     }

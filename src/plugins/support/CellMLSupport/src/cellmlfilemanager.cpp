@@ -50,11 +50,11 @@ CellmlFileManager * CellmlFileManager::instance()
 
 //==============================================================================
 
-bool CellmlFileManager::isCellmlFile(const QString &pFileName) const
+bool CellmlFileManager::isCellmlFile(const QString &pFileName)
 {
     // Return whether the given file is a CellML file
 
-    return instance()->isFile(pFileName);
+    return isFile(pFileName);
 }
 
 //==============================================================================

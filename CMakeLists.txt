@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.11)
 
 # Project definition
 
@@ -304,8 +304,6 @@ set_property(DIRECTORY PROPERTY EP_BASE ${EXTERNAL_PROJECT_BUILD_DIR})
 
 if(CCACHE)
     set(CMAKE_ARGS -DCMAKE_CXX_COMPILER_LAUNCHER=${CCACHE})
-else()
-    set(CMAKE_ARGS)
 endif()
 
 if(APPLE)
@@ -334,18 +332,16 @@ endif()
 # simply use libz${PRE}.1${POST})
 
 if(APPLE)
-    set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_POST ${CMAKE_SHARED_LIBRARY_SUFFIX})
 elseif(NOT WIN32)
     set(CMAKE_SHARED_LIBRARY_SUFFIX_PRE ${CMAKE_SHARED_LIBRARY_SUFFIX})
-    set(CMAKE_SHARED_LIBRARY_SUFFIX_POST)
 endif()
 
 # On Windows, specify the version of ICU that we are using while on Linux, add
 # our copy of the ICU and Mesa libraries
-# Note #1: On Linux, ICU is needed so that our external projects that need ICU
+# Note #1: on Linux, ICU is needed so that our external projects that need ICU
 #          (e.g. QtWebKit) can rely on the ICU version that we want to use...
-# Note #2: On Linux, Mesa is needed so that we can run OpenCOR on machines that
+# Note #2: on Linux, Mesa is needed so that we can run OpenCOR on machines that
 #          don't have 'proper' OpenGL support (e.g. on a Linux virtual machine
 #          in VirtualBox)...
 
@@ -364,16 +360,11 @@ add_subdirectory(src/3rdparty/QtWebKit)
 
 if(ENABLE_TESTS)
     set(TEST Test)
-else()
-    set(TEST)
 endif()
 
 if(USE_PREBUILT_QTWEBKIT_PACKAGE)
     set(WEBKIT WebKit)
     set(WEBKITWIDGETS WebKitWidgets)
-else()
-    set(WEBKIT)
-    set(WEBKITWIDGETS)
 endif()
 
 set(REQUIRED_QT_MODULES
@@ -399,16 +390,11 @@ include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/diff_match_patch/src)
 if(APPLE)
     if(ENABLE_TESTS)
         set(QTTEST QtTest)
-    else()
-        set(QTTEST)
     endif()
 
     if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         set(QTWEBKIT QtWebKit)
         set(QTWEBKITWIDGETS QtWebKitWidgets)
-    else()
-        set(QTWEBKIT)
-        set(QTWEBKITWIDGETS)
     endif()
 
     set(MACOS_QT_LIBRARIES
@@ -463,8 +449,6 @@ else()
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
         set(LINK_FLAGS_PROPERTIES "-stdlib=libc++")
-    else()
-        set(LINK_FLAGS_PROPERTIES)
     endif()
 endif()
 
@@ -594,8 +578,6 @@ track_files(
 
 if("${PROJECT_VERSION}" STREQUAL "")
     set(SNAPSHOT ON)
-else()
-    set(SNAPSHOT OFF)
 endif()
 
 string(TIMESTAMP DATE "%Y-%m-%d")
@@ -872,16 +854,12 @@ if(ENABLE_SAMPLE_PLUGINS)
         sample/SampleView
         sample/SampleWindow
     )
-else()
-    set(SAMPLE_PLUGINS)
 endif()
 
 if(ENABLE_TEST_PLUGINS)
     set(TEST_PLUGINS
         test/ZincWindow
     )
-else()
-    set(TEST_PLUGINS)
 endif()
 
 set(PLUGINS
@@ -1002,10 +980,16 @@ foreach(PLUGIN ${PLUGINS})
     add_subdirectory(src/plugins/${PLUGIN})
 endforeach()
 
-# Configure our help file
+# Fetch parts of our documentation and build it
 
-configure_file(${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc
+                                                           ${PROJECT_BUILD_DIR}/doc)
+
+configure_file(${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp.in
                ${PROJECT_BUILD_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp)
+
+build_documentation(user)
+build_documentation(developer)
 
 # Build the GUI version of OpenCOR
 
@@ -1270,7 +1254,6 @@ if(WIN32)
         set(NSIS_GENERATOR NSIS)
     else()
         set(NSIS_FOUND FALSE)
-        set(NSIS_GENERATOR)
     endif()
 
     set(CPACK_GENERATOR ${NSIS_GENERATOR} ZIP)
@@ -1294,7 +1277,6 @@ if(WIN32)
 
     install(FILES ${ADDITIONAL_FILES}
             DESTINATION bin)
-
     install(FILES ${QT_BINARY_DIR}/${ORIG_MESA_FILENAME}
             DESTINATION bin
             RENAME ${DEST_MESA_FILENAME})

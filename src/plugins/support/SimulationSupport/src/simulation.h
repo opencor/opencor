@@ -92,7 +92,23 @@ class SimulationWorker;
 
 //==============================================================================
 
-class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
+class SimulationObject : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit SimulationObject(Simulation *pSimulation);
+
+public slots:
+    Simulation * simulation() const;
+
+protected:
+    Simulation *mSimulation;
+};
+
+//==============================================================================
+
+class SIMULATIONSUPPORT_EXPORT SimulationData : public SimulationObject
 {
     Q_OBJECT
 
@@ -146,10 +162,8 @@ public:
 public slots:
     void reload();
 
-    OpenCOR::SimulationSupport::Simulation * simulation() const;
-
-    int delay() const;
-    void setDelay(int pDelay);
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
 
     double startingPoint() const;
 
@@ -177,10 +191,9 @@ public slots:
     void setGradientCalculationByIndex(const int &pIndex, bool pCalculate);
 
 private:
-    Simulation *mSimulation;
     SimulationResults *mSimulationResults;
 
-    int mDelay;
+    quint64 mDelay;
 
     double mStartingPoint;
     double mEndingPoint;
@@ -234,7 +247,7 @@ signals:
 
 //==============================================================================
 
-class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
+class SIMULATIONSUPPORT_EXPORT SimulationResults : public SimulationObject
 {
     Q_OBJECT
 
@@ -274,8 +287,6 @@ public slots:
     OpenCOR::DataStore::DataStore * dataStore() const;
 
 private:
-    Simulation *mSimulation;
-
     DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
@@ -324,12 +335,12 @@ public:
 
     bool addRun();
 
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
+    void run();
+    void pause();
+    void resume();
+    void stop();
 
-    bool reset(bool pAll = true);
+    void reset(bool pAll = true);
 
 public slots:
     QString fileName() const;
@@ -348,8 +359,8 @@ public slots:
 
     double currentPoint() const;
 
-    int delay() const;
-    void setDelay(int pDelay);
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
 
     quint64 size();
 
@@ -369,8 +380,6 @@ private:
     SimulationData *mData;
     SimulationResults *mResults;
 
-    QEventLoop *mWorkerFinishedEventLoop;
-
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
     bool simulationSettingsOk(bool pEmitSignal = true);
@@ -381,7 +390,8 @@ signals:
 
     void running(bool pIsResuming);
     void paused();
-    void stopped(qint64 pElapsedTime);
+
+    void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
 };

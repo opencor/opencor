@@ -47,7 +47,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardF
 public:
     static CellmlFileManager * instance();
 
-    bool isCellmlFile(const QString &pFileName) const;
+    bool isCellmlFile(const QString &pFileName);
 
     CellmlFile * cellmlFile(const QString &pFileName);
 

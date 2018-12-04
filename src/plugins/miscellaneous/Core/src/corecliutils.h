@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "coreglobal.h"
 #include "file.h"
+#include "filetypeinterface.h"
 #include "plugin.h"
 #include "plugininfo.h"
 
@@ -77,6 +78,7 @@ QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
 
 //==============================================================================
 
+class QDropEvent;
 class QNetworkReply;
 
 //==============================================================================
@@ -144,7 +146,8 @@ void CORE_EXPORT setActiveDirectory(const QString &pDirName);
 bool CORE_EXPORT isDirectory(const QString &pDirName);
 bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
 
-void CORE_EXPORT doNothing(int pMax);
+void CORE_EXPORT doNothing(quint64 pMax);
+void CORE_EXPORT doNothing(const quint64 *pMax, bool *pStopped = nullptr);
 
 void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
                                     bool &pOutIsLocalFile,
@@ -174,6 +177,12 @@ bool CORE_EXPORT validXmlFile(const QString &pXmlFileName,
                               const QString &pSchemaFileName);
 
 QByteArray CORE_EXPORT serialiseDomDocument(const QDomDocument &pDomDocument);
+
+QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces);
+QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                                const QString &pMimeType);
+
+QStringList CORE_EXPORT droppedFileNames(QDropEvent *pEvent);
 
 //==============================================================================
 

@@ -3,7 +3,7 @@
     <docFiles>
         <generate>
             <file>
-                <input>${CMAKE_SOURCE_DIR}/doc/OpenCOR.qhp</input>
+                <input>${PROJECT_BUILD_DIR}/doc/OpenCOR.qhp</input>
                 <output>${PROJECT_BUILD_DIR}/OpenCOR.qch</output>
             </file>
         </generate>

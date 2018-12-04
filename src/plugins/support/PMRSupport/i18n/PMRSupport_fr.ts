@@ -4,16 +4,16 @@
 <context>
     <name>OpenCOR::PMRSupport::PmrSupportPreferencesWidget</name>
     <message>
-        <source>the primary site is selected. Everything on this site is permanent and persistent. It is always up and always stable.</source>
-        <translation>le site principal est sélectionné. Tout sur ce site est permanent et persistant. Il est toujours disponible et toujours stable.</translation>
+        <source>the primary instance is selected. Everything on this instance is permanent and persistent. It is always up and always stable.</source>
+        <translation>l&apos;instance principale est sélectionnée. Tout sur cette instance est permanent et persistant. Elle est toujours disponible et toujours stable.</translation>
     </message>
     <message>
-        <source>the staging site is selected. It is used for public testing/preview of PMR developments. Data on this site is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise.</source>
-        <translation>le site de transit est sélectionné. Il est utilisé pour publiquement tester/prévisualiser les développements de PMR. Les données sur ce site sont effacées périodiquement chaque fois qu&apos;un nouveau test/aperçu public de la suite logicielle PMR est publié pour l&apos;exercice de test requis.</translation>
+        <source>the staging instance is selected. It is used for public testing/preview of PMR developments. Data on this instance is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise.</source>
+        <translation>l&apos;instance de transit est sélectionnée. Elle est utilisée pour publiquement tester/prévisualiser les développements de PMR. Les données sur cette instance sont effacées périodiquement chaque fois qu&apos;un nouveau test/aperçu public de la suite logicielle PMR est publié pour l&apos;exercice de test requis.</translation>
     </message>
     <message>
-        <source>the teaching site is selected. The functionality of this site should match the primary site, but without the data persistency guarantees. While data on this site is also not permanent, any wipes to data stored will be announced on the cellml-discussion mailing list.</source>
-        <translation>le site d&apos;enseignement est sélectionné. Les fonctionnalités de ce site devraient correspondre à celles du site principal, mais sans les garanties de persistance des données. Bien que les données sur ce site ne soient pas non plus permanentes, tout effacement des données stockées sera annoncé sur la liste de discussion cellml-discussion.</translation>
+        <source>the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;cellml-discussion mailing list&lt;/a&gt;.</source>
+        <translation>l&apos;instance d&apos;enseignement est sélectionnée. Les fonctionnalités de cette instance devraient correspondre à celles de l&apos;instance principale, mais sans les garanties de persistance des données. Bien que les données sur cette instance ne soient pas non plus permanentes, tout effacement des données stockées sera annoncé sur la &lt;a href=&quot;https://lists.cellml.org/sympa/info/cellml-discussion&quot;&gt;liste de discussion cellml-discussion&lt;/a&gt;.</translation>
     </message>
 </context>
 <context>
@@ -35,8 +35,8 @@
         <translation>Aucunes informations d&apos;espace de travail n&apos;ont pu être trouvées pour %1.</translation>
     </message>
     <message>
-        <source>%1 Site</source>
-        <translation>Site %1</translation>
+        <source>%1 Instance</source>
+        <translation>Instance %1</translation>
     </message>
     <message>
         <source>No exposure file information could be found for %1.</source>

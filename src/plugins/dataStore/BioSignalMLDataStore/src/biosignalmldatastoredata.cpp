@@ -37,7 +37,7 @@ BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
                                                    const QString &pComment,
                                                    DataStore::DataStore *pDataStore,
                                                    const DataStore::DataStoreVariables &pVariables) :
-    DataStore::DataStoreData(pFileName, pDataStore, pVariables),
+    DataStore::DataStoreExportData(pFileName, pDataStore, pVariables),
     mName(pName),
     mAuthor(pAuthor),
     mDescription(pDescription),

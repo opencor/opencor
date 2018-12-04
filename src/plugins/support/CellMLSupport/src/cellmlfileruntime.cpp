@@ -269,8 +269,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     // the model
     // Note: this is to avoid having to go through the code information an
     //       unnecessary number of times when we want to retrieve either of
-    //       those numbers (e.g. see
-    //       SimulationExperimentViewSimulationResults::addPoint())...
+    //       those numbers (e.g. see SimulationResults::addPoint())...
 
     mConstantsCount = int(mCodeInformation->constantIndexCount());
     mStatesRatesCount = int(mCodeInformation->rateIndexCount());
@@ -419,8 +418,8 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
                     voiName = parameter->name();
                     voiComponentHierarchy = parameter->componentHierarchy();
-            } else if (   parameter->name().compare(voiName)
-                           || (parameter->componentHierarchy() != voiComponentHierarchy)) {
+            } else if (    parameter->name().compare(voiName)
+                       || (parameter->componentHierarchy() != voiComponentHierarchy)) {
                     // The CellML API wrongly validated a model that has more
                     // more than one VOI (at least, according to the CellML
                     // API), but this is clearly wrong (not to mention that it

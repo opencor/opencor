@@ -56,14 +56,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QEventLoop>
+#include <QThread>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SimulationSupport {
 
 //==============================================================================
 
+SimulationObject::SimulationObject(Simulation *pSimulation) :
+    mSimulation(pSimulation)
+{
+}
+
+//==============================================================================
+
+Simulation * SimulationObject::simulation() const
+{
+    // Return our simulation
+
+    return mSimulation;
+}
+
+//==============================================================================
+
 SimulationData::SimulationData(Simulation *pSimulation) :
-    mSimulation(pSimulation),
-    mSimulationResults(0),
+    SimulationObject(pSimulation),
+    mSimulationResults(nullptr),
     mDelay(0),
     mStartingPoint(0.0),
     mEndingPoint(1000.0),
@@ -75,7 +96,7 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mNlaSolverName(QString()),
     mNlaSolverProperties(Solver::Solver::Properties()),
     mGradientIndices(QVector<int>()),
-    mGradientsArray(0),
+    mGradientsArray(nullptr),
     mSimulationDataUpdatedFunction(std::bind(&SimulationData::updateParameters, this))
 {
     // Create our various arrays
@@ -108,15 +129,6 @@ void SimulationData::reload()
 
     deleteArrays();
     createArrays();
-}
-
-//==============================================================================
-
-Simulation * SimulationData::simulation() const
-{
-    // Return our simulation
-
-    return mSimulation;
 }
 
 //==============================================================================
@@ -193,16 +205,16 @@ DataStore::DataStoreValues * SimulationData::algebraicValues() const
 
 //==============================================================================
 
-int SimulationData::delay() const
+const quint64 * SimulationData::delay() const
 {
     // Return our delay
 
-    return mDelay;
+    return &mDelay;
 }
 
 //==============================================================================
 
-void SimulationData::setDelay(int pDelay)
+void SimulationData::setDelay(quint64 pDelay)
 {
     // Set our delay
 
@@ -541,13 +553,13 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
     // Note: we start with our states since they are more likely to be modified
     //       than our constants...
 
-    for (int i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
+    for (quint64 i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
         if (!qIsNull(mStatesArray->data(i)-mInitialStates[i]))
             return true;
     }
 
     if (pCheckConstants) {
-        for (int i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
+        for (quint64 i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
             if (!qIsNull(mConstantsArray->data(i)-mInitialConstants[i]))
                 return true;
         }
@@ -607,10 +619,10 @@ void SimulationData::createArrays()
     if (runtime) {
         // Create our various arrays to compute our model
 
-        mConstantsArray = new DataStore::DataStoreArray(runtime->constantsCount());
-        mRatesArray = new DataStore::DataStoreArray(runtime->ratesCount());
-        mStatesArray = new DataStore::DataStoreArray(runtime->statesCount());
-        mAlgebraicArray = new DataStore::DataStoreArray(runtime->algebraicCount());
+        mConstantsArray = new DataStore::DataStoreArray(quint64(runtime->constantsCount()));
+        mRatesArray = new DataStore::DataStoreArray(quint64(runtime->ratesCount()));
+        mStatesArray = new DataStore::DataStoreArray(quint64(runtime->statesCount()));
+        mAlgebraicArray = new DataStore::DataStoreArray(quint64(runtime->algebraicCount()));
 
         // Create DataStoreValues to hold properties of our model's arrays
 
@@ -661,9 +673,9 @@ void SimulationData::deleteArrays()
     // Reset our various arrays
     // Note: this shouldn't be needed, but better be safe than sorry...
 
-    mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = 0;
-    mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = 0;
-    mDummyStates = mInitialConstants = mInitialStates = 0;
+    mConstantsArray = mRatesArray = mStatesArray = mAlgebraicArray = nullptr;
+    mConstantsValues = mRatesValues = mStatesValues = mAlgebraicValues = nullptr;
+    mDummyStates = mInitialConstants = mInitialStates = nullptr;
 }
 
 //==============================================================================
@@ -715,11 +727,11 @@ bool SimulationData::createGradientsArray()
     if (!mGradientIndices.isEmpty()) {
         // Allocate the array to hold sensitivity gradients at a single point
 
-        mGradientsArray = new DataStore::DataStoreArray(mGradientIndices.size()*mStatesArray->size());
+        mGradientsArray = new DataStore::DataStoreArray(quint64(mGradientIndices.size())*mStatesArray->size());
 
         return true;
     } else {
-        mGradientsArray = 0;
+        mGradientsArray = nullptr;
 
         return false;
     }
@@ -742,7 +754,7 @@ double * SimulationData::gradients() const
 {
     // Return our gradients array if it has been allocated
 
-    return mGradientsArray?mGradientsArray->data():0;
+    return mGradientsArray?mGradientsArray->data():nullptr;
 }
 
 //==============================================================================
@@ -751,7 +763,7 @@ int SimulationData::gradientsSize() const
 {
     // Return the size of the gradients array
 
-    return mGradientsArray?mGradientsArray->size():0;
+    return mGradientsArray?int(mGradientsArray->size()):0;
 }
 
 //==============================================================================
@@ -776,14 +788,14 @@ int SimulationData::gradientsCount() const
 //==============================================================================
 
 SimulationResults::SimulationResults(Simulation *pSimulation) :
-    mSimulation(pSimulation),
+    SimulationObject(pSimulation),
     mDataStore(nullptr),
     mPoints(nullptr),
     mConstants(DataStore::DataStoreVariables()),
     mRates(DataStore::DataStoreVariables()),
     mStates(DataStore::DataStoreVariables()),
     mAlgebraic(DataStore::DataStoreVariables()),
-    mGradientsStore(0),
+    mGradientsStore(nullptr),
     mGradients(DataStore::DataStoreVariables())
 {
     // Create our data store
@@ -847,8 +859,7 @@ void SimulationResults::createDataStore()
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
 
-    for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
+    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->parameters()) {
         DataStore::DataStoreValue *value = nullptr;
         DataStore::DataStoreVariable *variable = nullptr;
 
@@ -973,7 +984,7 @@ bool SimulationResults::initialiseGradientsStore()
         if (simulationSize)
             return mGradientsStore->addRun(simulationSize);
     } else {
-        mGradientsStore = 0;
+        mGradientsStore = nullptr;
         mGradients = DataStore::DataStoreVariables();
         return true;
     }
@@ -1028,7 +1039,11 @@ bool SimulationResults::addRun()
 
 void SimulationResults::addPoint(double pPoint)
 {
-    // Add the data to our data store
+    // Make sure that all our variables are up to date
+
+    mSimulation->data()->recomputeVariables(pPoint);
+
+    // Now that we are all set, we can add the data to our data store
 
     mDataStore->addValues(pPoint);
 
@@ -1142,8 +1157,7 @@ DataStore::DataStoreVariables SimulationResults::algebraicVariables() const
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
     mRuntime(nullptr),
-    mWorker(nullptr),
-    mWorkerFinishedEventLoop(new QEventLoop())
+    mWorker(nullptr)
 {
     // Retrieve our file details
 
@@ -1204,7 +1218,7 @@ QString Simulation::furtherInitialize() const
 
     const libsedml::SedAlgorithm *sedmlAlgorithm = sedmlUniformTimeCourse->getAlgorithm();
 
-    SolverInterface *odeSolverInterface = 0;
+    SolverInterface *odeSolverInterface = nullptr;
     SolverInterfaces solverInterfaces = Core::solverInterfaces();
 
     QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
@@ -1223,7 +1237,7 @@ QString Simulation::furtherInitialize() const
         return tr("the requested solver (%1) could not be found").arg(kisaoId);
     }
 
-    for (int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
+    for (unsigned int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
         const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
         QString kisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
         QString id = odeSolverInterface->id(kisaoId);
@@ -1522,7 +1536,7 @@ double Simulation::currentPoint() const
 
 //==============================================================================
 
-int Simulation::delay() const
+const quint64 * Simulation::delay() const
 {
     // Return our delay
 
@@ -1531,7 +1545,7 @@ int Simulation::delay() const
 
 //==============================================================================
 
-void Simulation::setDelay(int pDelay)
+void Simulation::setDelay(quint64 pDelay)
 {
     // Set our delay
 
@@ -1574,96 +1588,89 @@ quint64 Simulation::size()
 
 //==============================================================================
 
-bool Simulation::run()
+void Simulation::run()
 {
+    // Make sure that we have a runtime
+
     if (!mRuntime)
-        return false;
+        return;
 
-    // Initialise our worker, if not active
+    // Initialise sensitivity gradients data store
 
-    if (mWorker) {
-        return false;
-    } else {
-        // Make sure that the simulation settings we were given are sound
+    if (!mResults->initialiseGradientsStore())
+        return;
 
-        if (!simulationSettingsOk())
-            return false;
+    // Initialise our worker, if we don't already have one and if the
+    // simulation settings we were given are sound
 
-        // Initialise sensitivity gradients data store
+    if (!mWorker && simulationSettingsOk()) {
+        // Create and move our worker to a thread
 
-        if (!mResults->initialiseGradientsStore())
-            return false;
+        QThread *thread = new QThread();
+        mWorker = new SimulationWorker(this, thread, mWorker);
 
-        // Create our worker
+        mWorker->moveToThread(thread);
 
-        mWorker = new SimulationWorker(this, mWorker);
-
-        if (!mWorker) {
-            emit error(tr("the simulation worker could not be created"));
-
-            return false;
-        }
-
-        // Create a few connections
+        connect(thread, &QThread::started,
+                mWorker, &SimulationWorker::run);
 
         connect(mWorker, &SimulationWorker::running,
                 this, &Simulation::running);
         connect(mWorker, &SimulationWorker::paused,
                 this, &Simulation::paused);
 
-        connect(mWorker, &SimulationWorker::finished,
-                this, &Simulation::stopped);
+        connect(mWorker, &SimulationWorker::done,
+                this, &Simulation::done);
+        connect(mWorker, &SimulationWorker::done,
+                thread, &QThread::quit);
+        connect(mWorker, &SimulationWorker::done,
+                mWorker, &SimulationWorker::deleteLater);
 
         connect(mWorker, &SimulationWorker::error,
                 this, &Simulation::error);
 
-        // Track of when our worker is finished
+        connect(thread, &QThread::finished,
+                thread, &QThread::deleteLater);
 
-        connect(mWorker, &SimulationWorker::finished,
-                mWorkerFinishedEventLoop, &QEventLoop::quit);
+        // Start our worker by starting the thread in which it is
 
-        // Start our worker
-
-        return mWorker->run();
+        thread->start();
     }
 }
 
 //==============================================================================
 
-bool Simulation::pause()
+void Simulation::pause()
 {
     // Pause our worker
 
-    return mWorker?mWorker->pause():false;
+    if (mWorker)
+        mWorker->pause();
 }
 
 //==============================================================================
 
-bool Simulation::resume()
+void Simulation::resume()
 {
     // Resume our worker
 
-    return mWorker?mWorker->resume():false;
+    if (mWorker)
+        mWorker->resume();
 }
 
 //==============================================================================
 
-bool Simulation::stop()
+void Simulation::stop()
 {
-    // Stop our worker, if any, and wait for it to be done
+    // Stop our worker
 
-    if (mWorker && mWorker->stop()) {
-        mWorkerFinishedEventLoop->exec();
-
-        return true;
-    } else {
-        return false;
-    }
+    if (mWorker)
+        mWorker->stop();
 }
 
 //==============================================================================
 
-bool Simulation::reset(bool pAll)
+void Simulation::reset(bool pAll)
 {
     // Reset our data
 
@@ -1671,7 +1678,8 @@ bool Simulation::reset(bool pAll)
 
     // Reset our worker
 
-    return mWorker?mWorker->reset():false;
+    if (mWorker)
+        mWorker->reset();
 }
 
 //==============================================================================

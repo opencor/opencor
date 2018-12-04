@@ -328,7 +328,7 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         // Get the elapsed time when the simulation has finished
 
-        connect(pSimulation, &Simulation::stopped,
+        connect(pSimulation, &Simulation::done,
                 this, &SimulationSupportPythonWrapper::simulationFinished);
 
         // Get error messages from the simulation
@@ -347,8 +347,9 @@ bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 
         // Start the simulation and wait for it to complete
 
-        if (pSimulation->run())
-            waitForCompletion.exec();
+        pSimulation->run();
+
+        waitForCompletion.exec();
 
         // Disconnect our signal handlers now that the simulation has finished
 

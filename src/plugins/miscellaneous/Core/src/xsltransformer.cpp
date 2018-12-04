@@ -36,8 +36,8 @@ namespace Core {
 
 //==============================================================================
 
-XslTransformerJob::XslTransformerJob(const QString &pInput,
-                                     const QString &pXsl) :
+XslTransformerWorker::XslTransformerWorker(const QString &pInput,
+                                           const QString &pXsl) :
     mInput(pInput),
     mXsl(pXsl)
 {
@@ -45,92 +45,7 @@ XslTransformerJob::XslTransformerJob(const QString &pInput,
 
 //==============================================================================
 
-QString XslTransformerJob::input() const
-{
-    // Return our input
-
-    return mInput;
-}
-
-//==============================================================================
-
-QString XslTransformerJob::xsl() const
-{
-    // Return our XSL
-
-    return mXsl;
-}
-
-//==============================================================================
-
-XslTransformer::XslTransformer() :
-    mPaused(false),
-    mStopped(false),
-    mJobs(QList<XslTransformerJob>())
-{
-    // Create our thread
-
-    mThread = new QThread();
-
-    // Move ourselves to our thread
-
-    moveToThread(mThread);
-
-    // Create a few connections
-
-    connect(mThread, &QThread::started,
-            this, &XslTransformer::started);
-
-    connect(mThread, &QThread::finished,
-            mThread, &QThread::deleteLater);
-    connect(mThread, &QThread::finished,
-            this, &XslTransformer::deleteLater);
-}
-
-//==============================================================================
-
-void XslTransformer::transform(const QString &pInput, const QString &pXsl)
-{
-    // Add a new job to our list
-
-    mJobsMutex.lock();
-        mJobs << XslTransformerJob(pInput, pXsl);
-    mJobsMutex.unlock();
-
-    // Start/resume our thread, if needed
-
-    if (!mThread->isRunning())
-        mThread->start();
-    else if (mPaused)
-        mPausedCondition.wakeOne();
-}
-
-//==============================================================================
-
-void XslTransformer::stop()
-{
-    // Shutdown our thread, if needed
-
-    if (mThread->isRunning()) {
-        // Ask our thread to stop
-
-        mStopped = true;
-
-        // Resume our thread, if needed
-
-        if (mPaused)
-            mPausedCondition.wakeOne();
-
-        // Ask our thread to quit and wait for it to do so
-
-        mThread->quit();
-        mThread->wait();
-    }
-}
-
-//==============================================================================
-
-void XslTransformer::started()
+void XslTransformerWorker::run()
 {
     // Create our XML query object
 
@@ -139,51 +54,50 @@ void XslTransformer::started()
 
     xmlQuery.setMessageHandler(&dummyMessageHandler);
 
-    // Do our XSL transformations
+    // Customise our XML query object
 
-    QMutex pausedMutex;
+    xmlQuery.setFocus(mInput);
+    xmlQuery.setQuery(mXsl);
 
-    while (!mStopped) {
-        // Carry out our different jobs
+    // Do the XSL transformation
 
-        while (mJobs.count() && !mStopped) {
-            // Retrieve the first job in our list
+    QString output;
 
-            mJobsMutex.lock();
-                XslTransformerJob job = mJobs.first();
+    if (!xmlQuery.evaluateTo(&output))
+        output = QString();
 
-                mJobs.removeFirst();
-            mJobsMutex.unlock();
+    // Let people know that our XSL transformation is done
 
-            // Customise our XML query object
+    emit done(mInput, output);
+}
 
-            xmlQuery.setFocus(job.input());
-            xmlQuery.setQuery(job.xsl());
+//==============================================================================
 
-            // Do the XSL transformation
+void XslTransformer::transform(const QString &pInput, const QString &pXsl)
+{
+    // Create and move our worker to a thread
 
-            QString output;
+    QThread *thread = new QThread();
+    XslTransformerWorker *worker = new XslTransformerWorker(pInput, pXsl);
 
-            if (!xmlQuery.evaluateTo(&output))
-                output = QString();
+    worker->moveToThread(thread);
 
-            // Let people know that an XSL transformation has been performed
+    connect(thread, &QThread::started,
+            worker, &XslTransformerWorker::run);
 
-            emit done(job.input(), output);
-        }
+    connect(worker, &XslTransformerWorker::done,
+            this, &XslTransformer::done);
+    connect(worker, &XslTransformerWorker::done,
+            thread, &QThread::quit);
+    connect(worker, &XslTransformerWorker::done,
+            worker, &XslTransformerWorker::deleteLater);
 
-        // Pause ourselves, unless we have been asked to stop
+    connect(thread, &QThread::finished,
+            thread, &QThread::deleteLater);
 
-        if (!mStopped) {
-            mPaused = true;
+    // Start our worker by starting the thread in which it is
 
-            pausedMutex.lock();
-                mPausedCondition.wait(&pausedMutex);
-            pausedMutex.unlock();
-
-            mPaused = false;
-        }
-    }
+    thread->start();
 }
 
 //==============================================================================

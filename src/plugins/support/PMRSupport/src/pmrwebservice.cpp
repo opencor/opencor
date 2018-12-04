@@ -506,7 +506,7 @@ QString PmrWebService::siteName() const
 {
     // Determine and return the name of our PMR site
 
-    return tr("%1 Site").arg(Core::formatMessage(QUrl(mPmrUrl).host().split('.').first(), false));
+    return tr("%1 Instance").arg(Core::formatMessage(QUrl(mPmrUrl).host().split('.').first(), false));
 }
 
 //==============================================================================

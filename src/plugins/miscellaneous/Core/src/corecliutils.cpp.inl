@@ -217,6 +217,8 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
     // Try to read a remote file as text, but only if we are connected to the
     // Internet
 
+    pContents = QByteArray();
+
     if (internetConnectionAvailable()) {
         // Create a network access manager so that we can retrieve the contents
         // of the remote file
@@ -256,11 +258,8 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
 
             if (pErrorMessage)
                 *pErrorMessage = QString();
-        } else {
-            pContents = QByteArray();
-
-            if (pErrorMessage)
-                *pErrorMessage = networkReply->errorString();
+        } else if (pErrorMessage) {
+            *pErrorMessage = networkReply->errorString();
         }
 
         // Delete (later) the network reply
@@ -504,6 +503,8 @@ bool readFile(const QString &pFileNameOrUrl, QByteArray &pFileContents,
 
     // Read the contents of the file, which file name or URL is given
 
+    pFileContents = QByteArray();
+
     if (isLocalFile) {
         QFile file(fileNameOrUrl);
 
@@ -514,8 +515,6 @@ bool readFile(const QString &pFileNameOrUrl, QByteArray &pFileContents,
 
             return true;
         } else {
-            pFileContents = QByteArray();
-
             return false;
         }
     } else {
@@ -532,7 +531,7 @@ bool readFile(const QString &pFileNameOrUrl, QString &pFileContents,
 {
     // Read the contents of the file, which file name or URL is given
 
-    QByteArray fileContents = QByteArray();
+    QByteArray fileContents;
     bool res = readFile(pFileNameOrUrl, fileContents, pErrorMessage);
 
     pFileContents = fileContents;

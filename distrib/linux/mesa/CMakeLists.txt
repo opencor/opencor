@@ -3,16 +3,11 @@ project(Mesa)
 # Name and version of our package
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 17.1.0)
-
-# Version of our library
-
-set(MAJOR_LIBRARY_VERSION 1)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.5)
+set(PACKAGE_VERSION 18.2.5)
 
 # Git tag for our library
 
-set(GIT_TAG v17.1.0)
+set(GIT_TAG v18.2.5)
 
 # Specify where our local package will be installed
 
@@ -20,7 +15,7 @@ set(FULL_LOCAL_EXTERNAL_PACKAGE_DIR ${PROJECT_SOURCE_DIR}/${LOCAL_EXTERNAL_PACKA
 
 # Name of our package's shared library
 
-set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}GL${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_LIBRARY_VERSION})
+set(SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}GL${CMAKE_SHARED_LIBRARY_SUFFIX}.1)
 
 # Specify the files that need to have their SHA-1 value checked
 
@@ -37,9 +32,9 @@ if(USE_PREBUILT_MESA_PACKAGE)
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${RELATIVE_PROJECT_SOURCE_DIR} 2a677c7ecd522a6682a12ee64234a8b78d17686c
+                          ${RELATIVE_PROJECT_SOURCE_DIR} 52dfa8a4caa6e45ea9f2dfa73d0b769289f5087a
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES 8988c322d8055b34f2a56dd0a8ebd327883fb3a5)
+                          SHA1_VALUES 1070359633864b71e005051551e9a411097d7e48)
 else()
     # Build Mesa as an external project
 

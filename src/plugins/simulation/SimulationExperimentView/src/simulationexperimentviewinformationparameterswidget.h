@@ -70,6 +70,8 @@ protected:
 
 private:
     QMenu *mContextMenu;
+    QAction *mPlotAgainstVoiMenuAction;
+    QMenu *mPlotAgainstMenu;
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
@@ -80,6 +82,9 @@ private:
     bool mVoiAccessible;
 
     QSet<int> mGradientIndices;
+
+    QAction *mToggleGradientsMenuAction;
+    QAction *mToggleGradientsMenuSeparator;
 
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);

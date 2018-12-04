@@ -52,11 +52,11 @@ SedmlFileManager * SedmlFileManager::instance()
 
 //==============================================================================
 
-bool SedmlFileManager::isSedmlFile(const QString &pFileName) const
+bool SedmlFileManager::isSedmlFile(const QString &pFileName)
 {
     // Return whether the given file is a SED-ML file
 
-    return instance()->isFile(pFileName);
+    return isFile(pFileName);
 }
 
 //==============================================================================

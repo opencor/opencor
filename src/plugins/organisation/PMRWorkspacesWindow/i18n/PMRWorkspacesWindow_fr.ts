@@ -209,7 +209,7 @@
         <translation>Se Connecter</translation>
     </message>
     <message>
-        <source>Log off PMR</source>
+        <source>Log off from PMR</source>
         <translation>Se déconnecter de PMR</translation>
     </message>
     <message>

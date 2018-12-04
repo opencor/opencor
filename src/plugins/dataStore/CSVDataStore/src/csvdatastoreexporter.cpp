@@ -36,16 +36,16 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-CsvDataStoreExporter::CsvDataStoreExporter(DataStore::DataStoreData *pDataStoreData) :
-    DataStore::DataStoreExporter(pDataStoreData)
+CsvDataStoreExporterWorker::CsvDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData) :
+    DataStore::DataStoreExporterWorker(pDataStoreData)
 {
 }
 
 //==============================================================================
 
-void CsvDataStoreExporter::execute(QString &pErrorMessage) const
+void CsvDataStoreExporterWorker::run()
 {
-    // Do the export itself
+    // Export our data store to a CSV file
     // Note: we would normally rely on a string to which we would append our
     //       header and then data, and then use that string as a parameter to
     //       Core::writeFile(). However, although this works fine with 'small'
@@ -55,6 +55,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
     //       first write our header and then our data, one row at a time...
 
     QFile file(Core::temporaryFileName());
+    QString errorMessage = QString();
 
     if (file.open(QIODevice::WriteOnly)) {
         // Determine whether we need to export the VOI and, if so, remove it
@@ -75,14 +76,10 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         //          is much faster than preventing ourselves from adding
         //          duplicates in the first place...
 
-        QStringList variablesUri = QStringList();
         QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
 
-        foreach (DataStore::DataStoreVariable *variable, variables) {
-            variablesUri << variable->uri();
-
+        for (int i = 0, iMax = variables.count(); i < iMax; ++i)
             variablesRuns << DataStore::DataStoreVariables();
-        }
 
         int nbOfRuns = dataStore->runsCount();
         QList<quint64> runsIndex = QList<quint64>();
@@ -100,15 +97,10 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
 
             // Variables
 
-            int j = 0;
+            int j = -1;
 
-            foreach (DataStore::DataStoreVariable *variable, dataStore->variables()) {
-                if (variablesUri.contains(variable->uri())) {
-                    variablesRuns[j] << variable;
-
-                    ++j;
-                }
-            }
+            foreach (DataStore::DataStoreVariable *variable, variables)
+                variablesRuns[++j] << variable;
         }
 
         voiValues = voiValues.toSet().toList();
@@ -155,7 +147,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         // to output our header
 
         if (res) {
-            emit progress(++stepNb*oneOverNbOfSteps);
+            emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
 
             for (int i = 0, iMax = voiValues.count(); i < iMax; ++i) {
                 QString rowData = QString();
@@ -202,7 +194,7 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
                 if (!res)
                     break;
 
-                emit progress(++stepNb*oneOverNbOfSteps);
+                emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
             }
         }
 
@@ -227,11 +219,24 @@ void CsvDataStoreExporter::execute(QString &pErrorMessage) const
         if (!res) {
             file.remove();
 
-            pErrorMessage = tr("The data could not be exported to CSV.");
+            errorMessage = tr("The data could not be written.");
         }
     } else {
-        pErrorMessage = tr("The CSV file could not be created.");
+        errorMessage = tr("The CSV file could not be created.");
     }
+
+    // Let people know that our export is done
+
+    emit done(mDataStoreData, errorMessage);
+}
+
+//==============================================================================
+
+DataStore::DataStoreExporterWorker * CsvDataStoreExporter::workerInstance(DataStore::DataStoreExportData *pDataStoreData)
+{
+    // Return an instance of our worker
+
+    return new CsvDataStoreExporterWorker(pDataStoreData);
 }
 
 //==============================================================================

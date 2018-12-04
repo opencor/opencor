@@ -16,43 +16,11 @@ function fileSize(size) {
     }
 }
 
-function hasVersions() {
-    return jsonData.versions.length;
-}
-
-function hasSnapshots() {
-    var versions = jsonData.versions;
-
-    if (versions.length) {
-        for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
-            if (versions[versionIndex].type === 2)
-                return true;
-        }
-
-        return false;
-    } else {
-        return false;
-    }
-}
-
 function versions(downloads) {
     // Make sure that the jsonData variable is available
 
     if (typeof jsonData === "undefined")
         return;
-
-    // Put a warning about our change of license
-
-    document.write("<div class=\"warning\">\n");
-    document.write("    <strong>Change of license:</strong>\n");
-    document.write("\n");
-    document.write("    <ul>\n");
-    document.write("        <li>Version 0.1.x of OpenCOR is not released under any particular license.</li>\n");
-    document.write("        <li>Versions 0.2 to 0.5 of OpenCOR are released under the <a href=\"https://opensource.org/licenses/Apache-2.0\">Apache 2.0 license</a>.</li>\n");
-    document.write("        <li>Starting with the 2017-05-07 snapshot, OpenCOR is released under the <a href=\"https://opensource.org/licenses/GPL-3.0\">GPL v3.0 license</a>.</li>\n");
-    document.write("        <li>This change allows us to keep using <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> (a text-based editing widget), which is also released under the <a href=\"https://opensource.org/licenses/GPL-3.0\">GPL v3.0 license</a>.</li>\n");
-    document.write("    </ul>\n");
-    document.write("</div>\n");
 
     // Retrieve the size of our various downloadable files, should we be
     // running this script from opencor.ws
@@ -88,6 +56,49 @@ function versions(downloads) {
         // Some CSS for our downloads menus
 
         document.write("<style>\n");
+        document.write("    div.download,\n");
+        document.write("    div.section {\n");
+        document.write("        color: rgb(103, 103, 103);\n");
+        document.write("        font-size: 13pt;\n");
+        document.write("        font-weight: bold;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    div.download {\n");
+        document.write("        border-radius: 13px 13px 0px 0px;\n");
+        document.write("        margin: 1.5em 0px 0px 0px;\n");
+        document.write("        padding: 3px 7px 3px 7px;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    div.download table,\n");
+        document.write("    div.section table {\n");
+        document.write("        table-layout: fixed;\n");
+        document.write("        border-spacing: 0px;\n");
+        document.write("        width: 100%;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    div.download table td,\n");
+        document.write("    div.section table td {\n");
+        document.write("        padding: 0px;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    div.download table td.date,\n");
+        document.write("    div.section table td.date {\n");
+        document.write("        text-align: right;\n");
+        document.write("        font-size: 9pt;\n");
+        document.write("        font-style: italic;\n");
+        document.write("        font-weight: normal;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    div.download table td.whatIsNew {\n");
+        document.write("        text-align: center;\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    div.download table td.whatIsNew span.whatIsNew {\n");
+        document.write("        font-size: 7pt;\n");
+        document.write("        font-style: italic;\n");
+        document.write("        font-weight: normal;\n");
+        document.write("    }\n");
+        document.write("\n");
         document.write("    span.fakeLink {\n");
         document.write("        color: rgb(103, 103, 103);\n");
         document.write("        cursor: pointer;\n");
@@ -98,6 +109,12 @@ function versions(downloads) {
         document.write("        border: 1px solid rgba(103, 103, 103, 0.13);\n");
         document.write("        background: rgba(103, 103, 103, 0.05);\n");
         document.write("        color: rgb(103, 103, 103);\n");
+        document.write("    }\n");
+        document.write("\n");
+        document.write("    span.license {\n");
+        document.write("        font-size: 7pt;\n");
+        document.write("        font-style: italic;\n");
+        document.write("        font-weight: normal;\n");
         document.write("    }\n");
         document.write("\n");
         document.write("    table ul.downloadsMenu {\n");
@@ -191,6 +208,7 @@ function versions(downloads) {
             var versionMonth = version.month;
             var versionYear = version.year;
             var versionType = version.type;
+            var versionLicense = version.license;
             var versionPlatforms = version.platforms;
             var versionChanges = version.changes;
 
@@ -219,26 +237,35 @@ function versions(downloads) {
 
             // Output some general information about the version
 
-            var sectionClass = "section";
+            var downloadClass = "download";
 
             if (versionType === 1)
-                sectionClass += " official officialSection";
+                downloadClass += " official officialDownload";
             else if ((versionType === 2) && downloads)
-                sectionClass += " latest latestSection";
+                downloadClass += " latest latestDownload";
             else
-                sectionClass += " old oldSection";
+                downloadClass += " old oldDownload";
 
-            document.write("<div class=\""+sectionClass+"\">\n");
+            document.write("<div class=\""+downloadClass+"\">\n");
             document.write("    <table>\n");
             document.write("        <tbody>\n");
             document.write("            <tr>\n");
             document.write("                <td>\n");
             document.write("                    "+versionTitle+"\n");
 
-            if (downloads)
-                document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
+            if (versionLicense == 1)
+                document.write("                    <span class=\"license\"><a href=\"https://opensource.org/licenses/Apache-2.0\">Apache v2.0</a></span>\n");
+            else if (versionLicense == 2)
+                document.write("                    <span class=\"license\"><a href=\"https://opensource.org/licenses/GPL-3.0\">GPL v3.0</a></span>\n");
 
             document.write("                </td>\n");
+
+            if (downloads) {
+                document.write("                <td class=\"whatIsNew\">\n");
+                document.write("                    <span class=\"whatIsNew\"><a href=\"../whatIsNew.html#"+versionAnchor+"\">What is new?</a></span>\n");
+                document.write("                </td>\n");
+            }
+
             document.write("                <td class=\"date\">\n");
 
             if (downloads) {
