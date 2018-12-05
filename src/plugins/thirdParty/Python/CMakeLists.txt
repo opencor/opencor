@@ -23,7 +23,6 @@ set(GIT_TAG "opencor")
 
 set(PIP_GIT_TAG "18.1")
 set(SETUPTOOLS_GIT_TAG "v40.6.2")
-set(WHEEL_GIT_TAG "0.31.0")
 
 # Specify where our local package will be installed
 
