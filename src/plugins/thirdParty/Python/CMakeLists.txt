@@ -21,8 +21,8 @@ set(GIT_TAG "opencor")
 
 # Git tags of Python package installers
 
-set(PIP_GIT_TAG "10.0.1")
-set(SETUPTOOLS_GIT_TAG "v39.0.1")
+set(PIP_GIT_TAG "18.1")
+set(SETUPTOOLS_GIT_TAG "v40.6.2")
 set(WHEEL_GIT_TAG "0.31.0")
 
 # Specify where our local package will be installed
