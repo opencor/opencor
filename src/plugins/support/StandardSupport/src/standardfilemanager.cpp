@@ -63,7 +63,7 @@ StandardFileManager::~StandardFileManager()
 
 //==============================================================================
 
-bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking)
+bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking) const
 {
     // If the given file is already managed, then we consider that it's of the
     // right type (e.g. CellML file), even though it may not be of the right
@@ -91,7 +91,7 @@ bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking)
 
 //==============================================================================
 
-bool StandardFileManager::isFile(const QString &pFileName)
+bool StandardFileManager::isFile(const QString &pFileName) const
 {
     // Check whether the given file is of the right type, i.e. whether it can be
     // loaded
@@ -101,7 +101,7 @@ bool StandardFileManager::isFile(const QString &pFileName)
 
 //==============================================================================
 
-StandardFile * StandardFileManager::file(const QString &pFileName)
+StandardFile * StandardFileManager::file(const QString &pFileName) const
 {
     // Return the File object, if any, associated with the given file
 
