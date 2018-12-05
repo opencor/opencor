@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2q (see issue <a href=\"https://github.com/opencor/opencor/issues/1883\">#1883</a>)." }
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2q (see issue <a href=\"https://github.com/opencor/opencor/issues/1883\">#1883</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 18.2.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/1901\">#1901</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0, "license": 1,

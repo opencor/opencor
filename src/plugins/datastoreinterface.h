@@ -258,7 +258,7 @@ signals:
     void done(DataStoreExportData *pDataStoreData, const QString &pErrorMessage);
 
 public slots:
-   virtual void run() = 0;
+    virtual void run() = 0;
 };
 
 //==============================================================================
