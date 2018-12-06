@@ -129,9 +129,9 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
     if (ipythonWidget && PyObject_TypeCheck(ipythonWidget, &PythonQtInstanceWrapper_Type)) {
 
-        PythonQtInstanceWrapper *widgetWrapper = (PythonQtInstanceWrapper*)ipythonWidget;
+        PythonQtInstanceWrapper *widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper*>(ipythonWidget);
 
-        mPythonQtConsoleWidget = (QWidget *)widgetWrapper->_objPointerCopy;
+        mPythonQtConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
 
         this->setFocusProxy(mPythonQtConsoleWidget);
 

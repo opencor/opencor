@@ -64,7 +64,7 @@ public:
 ctkAbstractPythonManagerPrivate::ctkAbstractPythonManagerPrivate(ctkAbstractPythonManager &object) :
   q_ptr(&object)
 {
-  this->InitFunction = 0;
+  this->InitFunction = nullptr;
   this->PythonQtInitializationFlags = PythonQt::RedirectStdOut;
 }
 
