@@ -46,6 +46,9 @@ static QString PythonQtConsole = R"PYTHON(
 import logging
 import sys
 
+## To debug this code, use `import pdb; pdb.set_trace()` to set
+## a breakpoint and start OpenCOR from the command line
+
 # Add the current working directory to IPython's search path
 
 sys.path.insert(0, '.')
