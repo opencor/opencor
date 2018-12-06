@@ -29,10 +29,10 @@ set(QTCONSOLE_VERSION 4.4.3)
 set(QTCONSOLE_PYTHONQT 4.4.3.1)
 
 set(TRAITLETS_VERSION 4.3.2)
-set(TRAITLETS_PYTHONQT 4.3.2)
+set(TRAITLETS_PYTHONQT 4.3.2.1)
 
 set(JUPYTER_VERSION 1.0.0)
-set(JUPYTER_LAB_VERSION 0.35.4)
+set(JUPYTERLAB_VERSION 0.35.4)
 
 set(LXML_VERSION 4.2.1)
 
@@ -176,7 +176,7 @@ else()
             ipykernel==${IPYKERNEL_VERSION}
             qtconsole==${QTCONSOLE_VERSION}
             jupyter==${JUPYTER_VERSION}
-            jupyterlab==${JUPYTER_LAB_VERSION}
+            jupyterlab==${JUPYTERLAB_VERSION}
         WORKING_DIRECTORY
             ${FULL_DEST_EXTERNAL_BINARIES_DIR}
         VERBATIM
