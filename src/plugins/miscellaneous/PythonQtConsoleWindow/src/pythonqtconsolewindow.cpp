@@ -133,7 +133,7 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
     PyObject *ipythonWidget = pythonQtInstance->callAndReturnPyObject(createWidget);
 
-    PythonQtInstanceWrapper *widgetWrapper = PythonQtSupport::getInstanceWrapper(ipythonWidget);
+    PythonQtInstanceWrapper *widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper*>(ipythonWidget);
 
     if (widgetWrapper) {
         mPythonQtConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
