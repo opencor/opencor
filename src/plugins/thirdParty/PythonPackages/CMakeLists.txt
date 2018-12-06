@@ -12,7 +12,7 @@ set(RELEASE_TAG v${PYTHON_VERSION}_devel)
 
 # The versions of the Python packages we bundle
 
-set(NUMPY_VERSION 1.14.2)
+set(NUMPY_VERSION 1.15.4)
 
 set(MATPLOTLIB_VERSION 3.0.2)
 set(MATPLOTLIB_OPENCOR 3.0.2.1)
@@ -34,9 +34,10 @@ set(TRAITLETS_PYTHONQT 4.3.2.1)
 set(JUPYTER_VERSION 1.0.0)
 set(JUPYTERLAB_VERSION 0.35.4)
 
-set(LXML_VERSION 4.2.1)
+set(LXML_VERSION 4.2.5)
 
-set(SPHINX_VERSION 1.7.2)
+set(SPHINX_VERSION 1.8.2)
+
 
 # Our GitHub organisation
 
