@@ -516,7 +516,9 @@ else()
                                  WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/bin
                                  DEPENDEES cleanSitePackagesDirectory)
 
-        set(CREATE_PACKAGE_TARGET installPip)
+        ExternalProject_Add_StepTargets(${PACKAGE_BUILD} installPip)
+
+        set(CREATE_PACKAGE_TARGET ${PACKAGE_BUILD}-installPip)
     endif()
 
     # Package Python's include files and libraries
