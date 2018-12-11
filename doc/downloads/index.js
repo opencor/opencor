@@ -1,24 +1,5 @@
 var jsonData = { "versions": [
-                   { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 1, "license": 1,
-                     "platforms": [
-                       { "name": "Windows", "supported": "Windows 7 and later",
-                         "files": [
-                           { "extension": ".exe" }, { "extension": ".zip" }
-                         ]
-                       },
-                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
-                         "files": [
-                           { "extension": ".tar.gz" }
-                         ]
-                       },
-                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
-                         "files": [
-                           { "extension": ".dmg" }, { "extension": ".zip" }
-                         ]
-                       }
-                     ]
-                   },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 19, "month": 11, "year": 2018, "type": 2, "license": 2,
+                   { "major": 0, "minor": 6, "patch": 0, "day": 11, "month": 12, "year": 2018, "type": 1, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -35,9 +16,25 @@ var jsonData = { "versions": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
                        }
-                     ],
-                     "changes": [
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://www.openssl.org/\">OpenSSL</a> to version 1.0.2q (see issue <a href=\"https://github.com/opencor/opencor/issues/1883\">#1883</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 18.2.6 (see issue <a href=\"https://github.com/opencor/opencor/issues/1901\">#1901</a>)." }
+                     ]
+                   },
+                   { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
                      ]
                    },
                    { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0, "license": 1,
