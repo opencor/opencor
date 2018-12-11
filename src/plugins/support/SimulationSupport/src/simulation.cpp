@@ -739,7 +739,11 @@ void SimulationResults::deleteDataStore()
 
 void SimulationResults::reload()
 {
-    // Reload ourselves by resetting ourselves
+    // Reload ourselves by resetting ourselves, this after having cleared all of
+    // our imported data stores (since we don't keep track of imported data when
+    // reloading a file)
+
+    mDataDataStores.clear();
 
     reset();
 }
