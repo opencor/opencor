@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 # Project definition
 
-project(OpenCOR VERSION 0.6)
+project(OpenCOR)
 
 # Our options
 
