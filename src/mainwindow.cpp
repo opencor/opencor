@@ -50,9 +50,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QCloseEvent>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QLocale>
 #include <QRect>
+#include <QScreen>
 #include <QSettings>
 #include <QShortcut>
 #include <QTimer>
@@ -691,14 +691,14 @@ void MainWindow::loadSettings()
 
         // Default size and position of the main window
 
-        QRect desktopGeometry = qApp->desktop()->availableGeometry();
-        int horizSpace = desktopGeometry.width()/13;
-        int vertSpace = desktopGeometry.height()/13;
+        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+        int horizSpace = availableGeometry.width()/13;
+        int vertSpace = availableGeometry.height()/13;
 
-        setGeometry(desktopGeometry.left()+horizSpace,
-                    desktopGeometry.top()+vertSpace,
-                    desktopGeometry.width()-2*horizSpace,
-                    desktopGeometry.height()-2*vertSpace);
+        setGeometry(availableGeometry.left()+horizSpace,
+                    availableGeometry.top()+vertSpace,
+                    availableGeometry.width()-2*horizSpace,
+                    availableGeometry.height()-2*vertSpace);
     }
 
     // Retrieve whether the docked windows are to be shown
