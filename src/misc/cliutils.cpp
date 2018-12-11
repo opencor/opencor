@@ -195,8 +195,9 @@ QString applicationDescription(bool pGuiMode)
 QString prettyProductName()
 {
     // Return a pretty version of the product name
-    // Note: Qt 5.9.7 LTS doesn't recognise macOS Mojave (10.14), so we need to
-    //       handle that particular case...
+    // Note: Qt 5.12.0 LTS doesn't recognise macOS Mojave (10.14) (see
+    //       https://bugreports.qt.io/browse/QTBUG-72489), so we need to handle
+    //       handle that particular case ourselves...
 
     QString res = QSysInfo::prettyProductName();
 
