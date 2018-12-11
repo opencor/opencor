@@ -136,6 +136,9 @@ div.section {
     /*        necessary if we want to use a section at the beginning of */
     /*        a page (because of our fixed header at the top)...        */
     border-bottom: 1px solid rgba(103, 103, 103, 0.39);
+    color: rgb(103, 103, 103);
+    font-size: 13pt;
+    font-weight: bold;
 }
 
 img.center {
