@@ -16,6 +16,7 @@ if(NOT WIN32 AND NOT APPLE)
 endif()
 
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
+set(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
 
 option(USE_PREBUILT_BIOSIGNALML_PACKAGE "Use the pre-built version of the BioSignalML package" ON)
 option(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
@@ -353,7 +354,7 @@ endif()
 
 # Retrieve or build our copy of QtWebKit
 
-add_subdirectory(src/3rdparty/QtWebKit)
+#add_subdirectory(src/3rdparty/QtWebKit)
 
 # Required Qt modules
 
@@ -516,21 +517,15 @@ if(ENABLE_TEST_PLUGINS)
     add_definitions(-DENABLE_TEST_PLUGINS)
 endif()
 
-# On macOS, make sure that we support 10.10 and later, unless a specific
+# On macOS, make sure that we support version 10.12 and later, unless a specific
 # deployment target has been specified
 
 if(APPLE)
     if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
     endif()
 
-    if(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.12")
-        set(SYSTEM_NAME "OS X")
-    else()
-        set(SYSTEM_NAME "macOS")
-    endif()
-
-    set(BUILD_INFORMATION "${BUILD_INFORMATION} for ${SYSTEM_NAME} ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
+    set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
 endif()
 
 # Destination of our plugins so that we don't have to deploy OpenCOR on Windows
@@ -945,6 +940,7 @@ if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
 
     set(PLUGINS)
 endif()
+set(PLUGINS)
 
 foreach(PLUGIN ${PLUGINS})
     set(PLUGIN_DIR src/plugins/${PLUGIN})
