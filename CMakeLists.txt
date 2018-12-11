@@ -16,6 +16,7 @@ if(NOT WIN32 AND NOT APPLE)
 endif()
 
 option(USE_PREBUILT_QTWEBKIT_PACKAGE "Use the pre-built version of the QtWebKit package" ON)
+set(USE_PREBUILT_QTWEBKIT_PACKAGE OFF)
 
 option(USE_PREBUILT_BIOSIGNALML_PACKAGE "Use the pre-built version of the BioSignalML package" ON)
 option(USE_PREBUILT_CELLMLAPI_PACKAGE "Use the pre-built version of the CellML API package" ON)
@@ -353,7 +354,7 @@ endif()
 
 # Retrieve or build our copy of QtWebKit
 
-add_subdirectory(src/3rdparty/QtWebKit)
+#add_subdirectory(src/3rdparty/QtWebKit)
 
 # Required Qt modules
 
@@ -939,6 +940,7 @@ if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
 
     set(PLUGINS)
 endif()
+set(PLUGINS)
 
 foreach(PLUGIN ${PLUGINS})
     set(PLUGIN_DIR src/plugins/${PLUGIN})
