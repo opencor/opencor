@@ -1201,37 +1201,26 @@ void MainWindow::actionPluginsTriggered()
 
 void MainWindow::showPreferencesDialog(const QString &pPluginName)
 {
-    // Show the preferences dialog, if we have at least one plugin that supports
-    // the Preferences interface
+    // Show the preferences dialog
 
-    if (mPluginManager->plugins().count()) {
-        if (mLoadedPreferencesPlugins.count()) {
-            mSettings->beginGroup("PreferencesDialog");
-                PreferencesDialog preferencesDialog(mSettings, mPluginManager,
-                                                    pPluginName, this);
+    mSettings->beginGroup("PreferencesDialog");
+        PreferencesDialog preferencesDialog(mSettings, mPluginManager,
+                                            pPluginName, this);
 
-                preferencesDialog.exec();
-            mSettings->endGroup();
+        preferencesDialog.exec();
+    mSettings->endGroup();
 
-            // Let people know about the plugins that had their preferences
-            // changed, if any and if requested
+    // Let people know about the plugins that had their preferences changed, if
+    // any and if requested
 
-            if (    (preferencesDialog.result() == QMessageBox::Ok)
-                && !preferencesDialog.pluginNames().isEmpty()) {
-                foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-                    PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
+    if (    (preferencesDialog.result() == QMessageBox::Ok)
+        && !preferencesDialog.pluginNames().isEmpty()) {
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+            PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
-                    if (preferencesInterface)
-                        preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
-                }
-            }
-        } else {
-            warningMessageBox(tr("Preferences"),
-                              tr("No plugins have preferences."));
+            if (preferencesInterface)
+                preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
         }
-    } else {
-        warningMessageBox(tr("Preferences"),
-                          tr("No plugins could be found."));
     }
 }
 
