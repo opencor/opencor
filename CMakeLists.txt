@@ -400,6 +400,7 @@ if(APPLE)
     set(MACOS_QT_LIBRARIES
         QtConcurrent
         QtCore
+        QtDBus
         QtGui
         QtHelp
         QtMacExtras
