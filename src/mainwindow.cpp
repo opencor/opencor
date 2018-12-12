@@ -59,6 +59,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QUrl>
 #include <QWindow>
 
+#include <QDebug>
+#include <QStyleFactory>
 //==============================================================================
 
 #ifdef Q_OS_WIN
@@ -100,6 +102,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     mDockedWindowsVisible(true),
     mDockedWindowsState(QByteArray())
 {
+qDebug() << QStyleFactory::keys();
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
     // itself
