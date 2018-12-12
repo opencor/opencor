@@ -354,7 +354,7 @@ endif()
 
 # Retrieve or build our copy of QtWebKit
 
-#add_subdirectory(src/3rdparty/QtWebKit)
+add_subdirectory(src/3rdparty/QtWebKit)
 
 # Required Qt modules
 
@@ -941,7 +941,6 @@ if(NOT USE_PREBUILT_QTWEBKIT_PACKAGE)
 
     set(PLUGINS)
 endif()
-set(PLUGINS)
 
 foreach(PLUGIN ${PLUGINS})
     set(PLUGIN_DIR src/plugins/${PLUGIN})
