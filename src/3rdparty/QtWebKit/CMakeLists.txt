@@ -125,18 +125,18 @@ if(USE_PREBUILT_QTWEBKIT_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 93287a9b6324dc2857b8775cfef7f332e3b29ae4
+                              ${RELATIVE_PROJECT_SOURCE_DIR} b1654f324c305d15d09a81a88cc37f82b2fd7ace
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 5add97d2f47b3d0b231989458abc7ba1a5b41ef7
-                                          17b3339432e9f99f9b702d4d85c04225c4d3c9d1)
+                              SHA1_VALUES 906390d3c893aad8b123d7e9ae884d474ed78dbb
+                                          cbace54abac7c6df21d1c0f8a2e00fc9a0c9a696)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 5611b118ebcadf16e9cc6a2a562d1535a54e04f5
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 40537e170b81053e143d63c67dbad4f705b5d9f3
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3d81e88afd4fbc712abd4c83327605539156ed89
-                                          beb2849ef45c1b451578bebf47a93f9f94267a52)
+                              SHA1_VALUES b31e92eaf327eab809356855a332982702e5891d
+                                          91fd09d27e4e80cf6ac6e60a6263abb09e690989)
     endif()
 else()
     # Build JPEG, PNG and ZLIB as external projects, if on Linux or macOS
