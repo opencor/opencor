@@ -1077,6 +1077,7 @@ if(APPLE)
     macos_deploy_qt_plugin(platforms qcocoa)
     macos_deploy_qt_plugin(printsupport cocoaprintersupport)
     macos_deploy_qt_plugin(sqldrivers qsqlite)
+    macos_deploy_qt_plugin(styles qmacstyle)
 else()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
