@@ -216,7 +216,7 @@ QSize minimumWidgetSize(QWidget *pWidget)
         if (expandingDirections & Qt::Vertical)
             minimumSize.setHeight(qMax(minimumSize.height(), 100));
 
-        QRect screen = qApp->screenAt(pWidget->pos())->geometry();
+        QRect screen = qApp->screenAt(mainWindow()->pos())->geometry();
 
         minimumSize.setWidth(qMin(minimumSize.width(), screen.width()*2/3));
         minimumSize.setHeight(qMin(minimumSize.height(), screen.height()*2/3));
