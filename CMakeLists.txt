@@ -1249,6 +1249,7 @@ if(WIN32)
     windows_deploy_qt_plugin(platforms qwindows)
     windows_deploy_qt_plugin(printsupport windowsprintersupport)
     windows_deploy_qt_plugin(sqldrivers qsqlite)
+    windows_deploy_qt_plugin(styles qwindowsvistastyle)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
