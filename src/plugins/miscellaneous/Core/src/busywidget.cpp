@@ -30,12 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QColor>
-#include <QDesktopWidget>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPainterPath>
 #include <QPoint>
 #include <QRectF>
+#include <QScreen>
 #include <QTimer>
 
 //==============================================================================
@@ -361,9 +361,9 @@ void BusyWidget::resize()
     if (mParent) {
         QWidget::resize(mParent->width(), mParent->height());
     } else {
-        QRect desktopGeometry = qApp->desktop()->availableGeometry();
+        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
-        QWidget::resize(desktopGeometry.width(), desktopGeometry.height());
+        QWidget::resize(availableGeometry.width(), availableGeometry.height());
     }
 }
 
