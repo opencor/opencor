@@ -5,7 +5,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "COMBINE support",
                              "entries": [
-                               { "type": "fixed", "description": "Files with a master attribute of \"1\"." }
+                               { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
                              ]
                            }
                          ]
