@@ -477,7 +477,7 @@ QSize ZincWidget::sizeHint() const
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
+}   // namespace ZincWidget
 }   // namespace OpenCOR
 
 //==============================================================================
