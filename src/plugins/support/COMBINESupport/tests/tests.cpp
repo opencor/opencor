@@ -239,6 +239,33 @@ void Tests::loadingErrorTests()
     QVERIFY(combineArchive.issues().count() == 1);
     QCOMPARE(combineArchive.issues().first().message(),
              QString("no reference to the COMBINE archive itself could be found"));
+
+    // Try to load a COMBINE archive which manifest references a file with its
+    // "master" attribute set to "true", i.e. valid
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/masterfilewithtrue.omex"));
+
+    QVERIFY(combineArchive.reload());
+    QVERIFY(combineArchive.isValid());
+
+    // Try to load a COMBINE archive which manifest references a file with its
+    // "master" attribute set to "1", i.e. valid
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/masterfilewithone.omex"));
+
+    QVERIFY(combineArchive.reload());
+    QVERIFY(combineArchive.isValid());
+
+    // Try to load a COMBINE archive which manifest references a file with its
+    // "master" attribute set to "True", i.e. invalid
+
+    combineArchive.setFileName(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/masterfilewithcapitalisedtrue.omex"));
+
+    QVERIFY(combineArchive.reload());
+    QVERIFY(!combineArchive.isValid());
+    QVERIFY(combineArchive.issues().count() == 1);
+    QCOMPARE(combineArchive.issues().first().message(),
+             QString("the manifest is not a valid OMEX file"));
 }
 
 //==============================================================================
