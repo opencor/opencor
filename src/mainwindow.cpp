@@ -50,9 +50,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QCloseEvent>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QLocale>
 #include <QRect>
+#include <QScreen>
 #include <QSettings>
 #include <QShortcut>
 #include <QTimer>
@@ -691,14 +691,14 @@ void MainWindow::loadSettings()
 
         // Default size and position of the main window
 
-        QRect desktopGeometry = qApp->desktop()->availableGeometry();
-        int horizSpace = desktopGeometry.width()/13;
-        int vertSpace = desktopGeometry.height()/13;
+        QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+        int horizSpace = availableGeometry.width()/13;
+        int vertSpace = availableGeometry.height()/13;
 
-        setGeometry(desktopGeometry.left()+horizSpace,
-                    desktopGeometry.top()+vertSpace,
-                    desktopGeometry.width()-2*horizSpace,
-                    desktopGeometry.height()-2*vertSpace);
+        setGeometry(availableGeometry.left()+horizSpace,
+                    availableGeometry.top()+vertSpace,
+                    availableGeometry.width()-2*horizSpace,
+                    availableGeometry.height()-2*vertSpace);
     }
 
     // Retrieve whether the docked windows are to be shown
@@ -1201,37 +1201,26 @@ void MainWindow::actionPluginsTriggered()
 
 void MainWindow::showPreferencesDialog(const QString &pPluginName)
 {
-    // Show the preferences dialog, if we have at least one plugin that supports
-    // the Preferences interface
+    // Show the preferences dialog
 
-    if (mPluginManager->plugins().count()) {
-        if (mLoadedPreferencesPlugins.count()) {
-            mSettings->beginGroup("PreferencesDialog");
-                PreferencesDialog preferencesDialog(mSettings, mPluginManager,
-                                                    pPluginName, this);
+    mSettings->beginGroup("PreferencesDialog");
+        PreferencesDialog preferencesDialog(mSettings, mPluginManager,
+                                            pPluginName, this);
 
-                preferencesDialog.exec();
-            mSettings->endGroup();
+        preferencesDialog.exec();
+    mSettings->endGroup();
 
-            // Let people know about the plugins that had their preferences
-            // changed, if any and if requested
+    // Let people know about the plugins that had their preferences changed, if
+    // any and if requested
 
-            if (    (preferencesDialog.result() == QMessageBox::Ok)
-                && !preferencesDialog.pluginNames().isEmpty()) {
-                foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-                    PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
+    if (    (preferencesDialog.result() == QMessageBox::Ok)
+        && !preferencesDialog.pluginNames().isEmpty()) {
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+            PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
-                    if (preferencesInterface)
-                        preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
-                }
-            }
-        } else {
-            warningMessageBox(tr("Preferences"),
-                              tr("No plugins have preferences."));
+            if (preferencesInterface)
+                preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
         }
-    } else {
-        warningMessageBox(tr("Preferences"),
-                          tr("No plugins could be found."));
     }
 }
 

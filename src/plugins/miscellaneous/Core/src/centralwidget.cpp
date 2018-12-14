@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QDragEnterEvent>
 #include <QFile>
@@ -52,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMimeData>
 #include <QPushButton>
 #include <QRect>
+#include <QScreen>
 #include <QSettings>
 #include <QSizePolicy>
 #include <QStackedWidget>
@@ -284,7 +284,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mRemoteFileDialogUrlLabel = new QLabel(mRemoteFileDialog);
     mRemoteFileDialogUrlValue = new QLineEdit(mRemoteFileDialog);
 
-    mRemoteFileDialogUrlValue->setMinimumWidth(qApp->desktop()->availableGeometry().width()/5);
+    mRemoteFileDialogUrlValue->setMinimumWidth(qApp->primaryScreen()->availableGeometry().width()/5);
 
     dialogLayout->addWidget(mRemoteFileDialogUrlLabel, 0, 0);
     dialogLayout->addWidget(mRemoteFileDialogUrlValue, 0, 1);

@@ -27,13 +27,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileSystemModel>
 #include <QLayout>
 #include <QMainWindow>
 #include <QPointer>
 #include <QPushButton>
+#include <QScreen>
 #include <QSettings>
 #include <QStandardItemModel>
 

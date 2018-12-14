@@ -32,8 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QCloseEvent>
-#include <QDesktopWidget>
 #include <QElapsedTimer>
+#include <QScreen>
 #include <QTimer>
 #include <QWindow>
 
@@ -111,7 +111,7 @@ SplashScreenWindow::SplashScreenWindow() :
     // our screen
 
     adjustSize();
-    move(QApplication::desktop()->screenGeometry().center()-rect().center());
+    move(qApp->primaryScreen()->geometry().center()-rect().center());
 }
 
 //==============================================================================

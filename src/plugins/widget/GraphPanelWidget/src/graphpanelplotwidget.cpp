@@ -32,12 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QClipboard>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QGestureEvent>
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
+#include <QScreen>
 #include <QTimer>
 
 //==============================================================================
@@ -1109,7 +1109,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     pPainter->setPen(pen);
 
-    QRect coordinatesRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coordinates);
+    QRect coordinatesRect = pPainter->boundingRect(qApp->primaryScreen()->availableGeometry(), 0, coordinates);
 
     // Determine where the coordinates and its background should be drawn
 
