@@ -30,11 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QDockWidget>
 #include <QMainWindow>
 #include <QPainter>
 #include <QPen>
+#include <QScreen>
 #include <QSettings>
 
 //==============================================================================
@@ -63,10 +63,10 @@ QSize CommonWidget::defaultSize(double pRatio) const
 {
     // The default size of a widget is a ratio of the available geometry
 
-    QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
-    return QSize(int(pRatio*desktopGeometry.width()),
-                 int(pRatio*desktopGeometry.height()));
+    return QSize(int(pRatio*availableGeometry.width()),
+                 int(pRatio*availableGeometry.height()));
 }
 
 //==============================================================================

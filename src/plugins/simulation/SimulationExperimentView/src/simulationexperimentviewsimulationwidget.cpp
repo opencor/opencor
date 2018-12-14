@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QDir>
 #include <QDragEnterEvent>
 #include <QLabel>
@@ -59,6 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMainWindow>
 #include <QMenu>
 #include <QMimeData>
+#include <QScreen>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
@@ -253,6 +253,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
 
+    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+
     mDelayWidget = new QwtWheel(mToolBarWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     QWidget *delaySpaceWidget = new QWidget(mToolBarWidget);
@@ -260,7 +262,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDelayValueWidget = new QLabel(mToolBarWidget);
 
     mDelayWidget->setBorderWidth(0);
-    mDelayWidget->setFixedSize(int(0.07*qApp->desktop()->screenGeometry().width()),
+    mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
                                mDelayWidget->height() >> 1);
     mDelayWidget->setFocusPolicy(Qt::NoFocus);
     mDelayWidget->setRange(0.0, 55.0);
@@ -511,7 +513,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSplitterWidget->addWidget(mContentsWidget);
     mSplitterWidget->addWidget(simulationOutputWidget);
 
-    mSplitterWidget->setSizes(QIntList() << qApp->desktop()->screenGeometry().height() << 1);
+    mSplitterWidget->setSizes(QIntList() << availableGeometry.height() << 1);
 
     layout->addWidget(mSplitterWidget);
 
