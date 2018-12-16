@@ -77,7 +77,7 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
                               SHA1_VALUES cd13142392f665fcf11f0137cbfcfa3d073cfbc9)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 80893562cf7bed19faac2a73b4a2a78330e19abf
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 4b3bcdb4e03a7a786df3bbf0941f5dc00ab1ddb8
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 584180a078aa3944f7d7fbcdf18054544b1c4c84)
     endif()
