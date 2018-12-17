@@ -349,35 +349,24 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
             // We are dealing with a GMRES/Bi-CGStab/TFQMR linear solver
 
             if (!preconditioner.compare(BandedPreconditioner)) {
-                if (!linearSolver.compare(GmresLinearSolver)) {
+                if (!linearSolver.compare(GmresLinearSolver))
                     mLinearSolver = SUNSPGMR(mStatesVector, PREC_LEFT, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
+                else if (!linearSolver.compare(BiCgStabLinearSolver))
                     mLinearSolver = SUNSPBCGS(mStatesVector, PREC_LEFT, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else {
+                else
                     mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_LEFT, 0);
 
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                }
-
+                CVSpilsSetLinearSolver(mSolver, mLinearSolver);
                 CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
             } else {
-                if (!linearSolver.compare(GmresLinearSolver)) {
+                if (!linearSolver.compare(GmresLinearSolver))
                     mLinearSolver = SUNSPGMR(mStatesVector, PREC_NONE, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
+                else if (!linearSolver.compare(BiCgStabLinearSolver))
                     mLinearSolver = SUNSPBCGS(mStatesVector, PREC_NONE, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else {
+                else
                     mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_NONE, 0);
 
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                }
+                CVSpilsSetLinearSolver(mSolver, mLinearSolver);
             }
         }
     }
