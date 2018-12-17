@@ -43,7 +43,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 5;
+    return 4;
 }
 
 //==============================================================================

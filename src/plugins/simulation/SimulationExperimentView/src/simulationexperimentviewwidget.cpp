@@ -36,9 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QHeaderView>
 #include <QLayout>
+#include <QScreen>
 #include <QSettings>
 #include <QTimer>
 
@@ -92,8 +92,9 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the sizes of our simulation widget and of its contents widget
 
-    static const QVariantList defaultContentsSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                                    << 0.75*qApp->desktop()->screenGeometry().width();
+    int availableGeometryWidth = qApp->primaryScreen()->availableGeometry().width();
+    QVariantList defaultContentsSizes = QVariantList() << 0.25*availableGeometryWidth
+                                                       << 0.75*availableGeometryWidth;
 
     mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
     mContentsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsContentsSizes, defaultContentsSizes).toList());

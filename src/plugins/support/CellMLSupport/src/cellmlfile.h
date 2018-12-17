@@ -67,7 +67,7 @@ public:
     QString message() const;
 
 private:
-   QString mMessage;
+    QString mMessage;
 };
 
 //==============================================================================

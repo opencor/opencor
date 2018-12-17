@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <QApplication>
 #include <QBuffer>
-#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QFileDialog>
 #include <QFileSystemModel>
@@ -45,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QPainter>
 #include <QPushButton>
+#include <QScreen>
 #include <QSettings>
 #include <QSizePolicy>
 #include <QStandardItemModel>

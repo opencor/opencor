@@ -400,6 +400,7 @@ if(APPLE)
     set(MACOS_QT_LIBRARIES
         QtConcurrent
         QtCore
+        QtDBus
         QtGui
         QtHelp
         QtMacExtras
@@ -518,21 +519,15 @@ if(ENABLE_TEST_PLUGINS)
     add_definitions(-DENABLE_TEST_PLUGINS)
 endif()
 
-# On macOS, make sure that we support 10.10 and later, unless a specific
+# On macOS, make sure that we support version 10.12 and later, unless a specific
 # deployment target has been specified
 
 if(APPLE)
     if("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
-        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.10)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 10.12)
     endif()
 
-    if(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.12")
-        set(SYSTEM_NAME "OS X")
-    else()
-        set(SYSTEM_NAME "macOS")
-    endif()
-
-    set(BUILD_INFORMATION "${BUILD_INFORMATION} for ${SYSTEM_NAME} ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
+    set(BUILD_INFORMATION "${BUILD_INFORMATION} for macOS ${CMAKE_OSX_DEPLOYMENT_TARGET} and later")
 endif()
 
 # Destination of our plugins so that we don't have to deploy OpenCOR on Windows
@@ -1128,6 +1123,7 @@ if(APPLE)
     macos_deploy_qt_plugin(platforms qcocoa)
     macos_deploy_qt_plugin(printsupport cocoaprintersupport)
     macos_deploy_qt_plugin(sqldrivers qsqlite)
+    macos_deploy_qt_plugin(styles qmacstyle)
 else()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
@@ -1299,6 +1295,7 @@ if(WIN32)
     windows_deploy_qt_plugin(platforms qwindows)
     windows_deploy_qt_plugin(printsupport windowsprintersupport)
     windows_deploy_qt_plugin(sqldrivers qsqlite)
+    windows_deploy_qt_plugin(styles qwindowsvistastyle)
 
     # Python runtime libraries and utilities
 

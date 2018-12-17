@@ -37,12 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "llvmclangbegin.h"
-    #include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvmclangend.h"
-
-//==============================================================================
-
 void Tests::initTestCase()
 {
     // Create our compiler engine

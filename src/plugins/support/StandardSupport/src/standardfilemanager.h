@@ -45,9 +45,9 @@ class STANDARDSUPPORT_EXPORT StandardFileManager : public QObject
     Q_OBJECT
 
 public:
-    bool isFile(const QString &pFileName);
+    bool isFile(const QString &pFileName) const;
 
-    StandardFile * file(const QString &pFileName);
+    StandardFile * file(const QString &pFileName) const;
 
 protected:
     QMap<QString, StandardFile *> mFiles;
@@ -60,7 +60,7 @@ protected:
     virtual StandardFile * create(const QString &pFileName) const = 0;
 
 private:
-    bool isFile(const QString &pFileName, bool pForceChecking);
+    bool isFile(const QString &pFileName, bool pForceChecking) const;
 
     void reload(const QString &pFileName, bool pForceChecking);
 

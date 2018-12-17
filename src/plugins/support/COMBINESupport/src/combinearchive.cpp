@@ -410,7 +410,8 @@ bool CombineArchive::isValid()
         } else {
             mFiles << CombineArchiveFile(fileName, location,
                                          CombineArchiveFile::format(childElement.attribute("format")),
-                                         !childElement.attribute("master").compare("true"));
+                                            !childElement.attribute("master").compare("true")
+                                         || !childElement.attribute("master").compare("1"));
         }
     }
 

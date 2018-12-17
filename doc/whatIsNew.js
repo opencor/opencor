@@ -1,5 +1,18 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 19, "month": 11, "year": 2018,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 11, "month": 12, "year": 2018,
+                     "categories": [
+                       { "name": "Support",
+                         "entries": [
+                           { "type": "subCategory", "name": "COMBINE support",
+                             "entries": [
+                               { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
+                             ]
+                           }
+                         ]
+                       }
+                     ]
+                   },
+                   { "anchor": "0.6", "description": "Version 0.6", "day": 11, "month": 12, "year": 2018,
                      "categories": [
                        { "name": "General",
                          "entries": [

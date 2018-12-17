@@ -52,7 +52,7 @@ SedmlFileManager * SedmlFileManager::instance()
 
 //==============================================================================
 
-bool SedmlFileManager::isSedmlFile(const QString &pFileName)
+bool SedmlFileManager::isSedmlFile(const QString &pFileName) const
 {
     // Return whether the given file is a SED-ML file
 
@@ -61,11 +61,11 @@ bool SedmlFileManager::isSedmlFile(const QString &pFileName)
 
 //==============================================================================
 
-SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
+SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName) const
 {
     // Return the SedmlFile object, if any, associated with the given file
 
-    return static_cast<SedmlFile *>(instance()->file(pFileName));
+    return static_cast<SedmlFile *>(file(pFileName));
 }
 
 //==============================================================================
