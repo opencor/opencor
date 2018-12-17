@@ -174,7 +174,7 @@ index 0df0f764d..170077052 100644
 +        if QT_API != "PythonQt":
 +            qApp.exec_()
 diff --git lib/matplotlib/backends/qt_compat.py lib/matplotlib/backends/qt_compat.py
-index b0fa0a907..635c388cc 100644
+index b0fa0a907..10838bf6c 100644
 --- lib/matplotlib/backends/qt_compat.py
 +++ lib/matplotlib/backends/qt_compat.py
 @@ -22,12 +22,14 @@ from matplotlib import rcParams
@@ -225,7 +225,7 @@ index b0fa0a907..635c388cc 100644
          from PySide2 import QtCore, QtGui, QtWidgets, __version__
 +        _getSaveFileName = QtWidgets.QFileDialog.getSaveFileName
 +    elif QT_API == QT_API_PYTHONQT:  # try importing PythonQt
-+        from PythonQt import QtCore, QtGui, QtWidgets
++        from PythonQt import QtCore, QtGui
 +        __version__ = "3.2"
 +        __version_info__ = "-"
 +
