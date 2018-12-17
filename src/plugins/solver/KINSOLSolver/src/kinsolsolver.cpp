@@ -302,9 +302,8 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
             KINDlsSetLinearSolver(solver, linearSolver, matrix);
         } else if (!linearSolverValue.compare(BandedLinearSolver)) {
-            matrix = SUNBandMatrix(pSize,
-                                   upperHalfBandwidthValue, lowerHalfBandwidthValue,
-                                   upperHalfBandwidthValue+lowerHalfBandwidthValue);
+            matrix = SUNBandMatrix(pSize, upperHalfBandwidthValue,
+                                          lowerHalfBandwidthValue);
             linearSolver = SUNBandLinearSolver(parametersVector, matrix);
 
             KINDlsSetLinearSolver(solver, linearSolver, matrix);
