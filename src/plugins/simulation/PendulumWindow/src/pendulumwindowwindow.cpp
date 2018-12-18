@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCheckBox>
 #include <QDir>
 #include <QLabel>
+#include <QSlider>
 
 //==============================================================================
 
