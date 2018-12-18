@@ -64,9 +64,9 @@ QString BioSignalMLDataStorePlugin::dataStoreName() const
 
 //==============================================================================
 
-DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pFileName,
-                                                               DataStore::DataStore *pDataStore,
-                                                               const QMap<int, QIcon> &pIcons) const
+DataStore::DataStoreExportData * BioSignalMLDataStorePlugin::getExportData(const QString &pFileName,
+                                                                           DataStore::DataStore *pDataStore,
+                                                                           const QMap<int, QIcon> &pIcons) const
 {
     // Ask which data should be exported, as well as some other information
 
@@ -100,11 +100,14 @@ DataStore::DataStoreData * BioSignalMLDataStorePlugin::getData(const QString &pF
 
 //==============================================================================
 
-DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const
+DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::dataStoreExporterInstance() const
 {
-    // Return an instance of our BioSignalML data store exporter
+    // Return the 'global' instance of our BioSignalML data store exporter
 
-    return new BiosignalmlDataStoreExporter(pDataStoreData);
+    static BiosignalmlDataStoreExporter instance;
+
+    return static_cast<BiosignalmlDataStoreExporter *>(Core::globalInstance("OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreExporter::instance()",
+                                                                            &instance));
 }
 
 //==============================================================================

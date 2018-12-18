@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 3;
+    return 4;
 }
 
 //==============================================================================
@@ -345,8 +345,9 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
-                             const DataStoreVariables &pVariables) :
+DataStoreExportData::DataStoreExportData(const QString &pFileName,
+                                         DataStore *pDataStore,
+                                         const DataStoreVariables &pVariables) :
     mFileName(pFileName),
     mDataStore(pDataStore),
     mVariables(pVariables)
@@ -355,7 +356,7 @@ DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore,
 
 //==============================================================================
 
-QString DataStoreData::fileName() const
+QString DataStoreExportData::fileName() const
 {
     // Return our file name
 
@@ -364,7 +365,7 @@ QString DataStoreData::fileName() const
 
 //==============================================================================
 
-DataStore * DataStoreData::dataStore() const
+DataStore * DataStoreExportData::dataStore() const
 {
     // Return our data store
 
@@ -373,7 +374,7 @@ DataStore * DataStoreData::dataStore() const
 
 //==============================================================================
 
-DataStoreVariables DataStoreData::variables() const
+DataStoreVariables DataStoreExportData::variables() const
 {
     // Return our variables
 
@@ -495,23 +496,6 @@ DataStoreVariables DataStore::voiAndVariables()
 
 //==============================================================================
 
-DataStoreVariable * DataStore::addVariable(double *pValue)
-{
-    // Add a variable to our data store, but only if we haven't already added
-    // some runs
-
-    if (mVoi->runsCount())
-        return nullptr;
-
-    DataStoreVariable *variable = new DataStoreVariable(pValue);
-
-    mVariables << variable;
-
-    return variable;
-}
-
-//==============================================================================
-
 DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 {
     // Add some variables to our data store, but only if we haven't already
@@ -551,61 +535,44 @@ void DataStore::addValues(double pVoiValue)
 
 //==============================================================================
 
-DataStoreExporter::DataStoreExporter(DataStoreData *pDataStoreData) :
+DataStoreExporterWorker::DataStoreExporterWorker(DataStoreExportData *pDataStoreData) :
     mDataStoreData(pDataStoreData)
 {
-    // Create our thread
-
-    mThread = new QThread();
-
-    // Move ourselves to our thread
-
-    moveToThread(mThread);
-
-    // Create a few connections
-
-    connect(mThread, &QThread::started,
-            this, &DataStoreExporter::started);
-
-    connect(mThread, &QThread::finished,
-            mThread, &QThread::deleteLater);
-    connect(mThread, &QThread::finished,
-            this, &DataStoreExporter::deleteLater);
 }
 
 //==============================================================================
 
-DataStoreExporter::~DataStoreExporter()
+void DataStoreExporter::exportData(DataStoreExportData *pDataStoreData)
 {
-    // Delete some internal objects
-    // Note: no need to delete mDataStore since it will be automatically
-    //       deleted through our threaded mechanism...
+    // Create and move our worker to a thread
+    // Note: we cannot use the new connect() syntax with our worker's signals
+    //       since it's an instance of a derived class located in another
+    //       plugin...
 
-    delete mDataStoreData;
-}
+    QThread *thread = new QThread();
+    DataStoreExporterWorker *worker = workerInstance(pDataStoreData);
 
-//==============================================================================
+    worker->moveToThread(thread);
 
-void DataStoreExporter::start()
-{
-    // Start the export
+    connect(thread, &QThread::started,
+            worker, &DataStoreExporterWorker::run);
 
-    mThread->start();
-}
+    connect(worker, SIGNAL(progress(DataStoreExportData *, double)),
+            this, SIGNAL(progress(DataStoreExportData *, double)));
 
-//==============================================================================
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
+            this, SIGNAL(done(DataStoreExportData *, const QString &)));
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
+            thread, SLOT(quit()));
+    connect(worker, SIGNAL(done(DataStoreExportData *, const QString &)),
+            worker, SLOT(deleteLater()));
 
-void DataStoreExporter::started()
-{
-    // Do the export itself
+    connect(thread, &QThread::finished,
+            thread, &QThread::deleteLater);
 
-    QString errorMessage = QString();
+    // Start our worker by starting the thread in which it is
 
-    execute(errorMessage);
-
-    // Let people know that we are done with the export
-
-    emit done(errorMessage);
+    thread->start();
 }
 
 //==============================================================================

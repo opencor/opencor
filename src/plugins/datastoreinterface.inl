@@ -32,11 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     virtual QString dataStoreName() const PURE;
 
-    virtual DataStore::DataStoreData * getData(const QString &pFileName,
-                                               DataStore::DataStore *pDataStore,
-                                               const QMap<int, QIcon> &pIcons) const PURE;
+    virtual DataStore::DataStoreExportData * getExportData(const QString &pFileName,
+                                                           DataStore::DataStore *pDataStore,
+                                                           const QMap<int, QIcon> &pIcons) const PURE;
 
-    virtual DataStore::DataStoreExporter * dataStoreExporterInstance(DataStore::DataStoreData *pDataStoreData) const PURE;
+    virtual DataStore::DataStoreExporter * dataStoreExporterInstance() const PURE;
 
 #undef PURE
 

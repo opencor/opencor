@@ -1,10 +1,24 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 29, "month": 10, "year": 2018,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 11, "month": 12, "year": 2018,
+                     "categories": [
+                       { "name": "Support",
+                         "entries": [
+                           { "type": "subCategory", "name": "COMBINE support",
+                             "entries": [
+                               { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
+                             ]
+                           }
+                         ]
+                       }
+                     ]
+                   },
+                   { "anchor": "0.6", "description": "Version 0.6", "day": 11, "month": 12, "year": 2018,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "added", "description": "Preferences dialog." },
                            { "type": "added", "description": "include/exclude plugins from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
+                           { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Linux\">Linux</a>." },
                            { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a>." },
                            { "type": "improved", "description": "Plugins dialog." },
@@ -16,12 +30,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "API",
                          "entries": [
-                           { "type": "added", "description": "<a href=\"https://github.com/NuML/NuML/\">NuML</a> API (via <a href=\"https://github.com/NuML/NuML/\">libNuML</a>)." },
-                           { "type": "subCategory", "name": "CellML API",
-                             "entries": [
-                               { "type": "fixed", "description": "Memory access in the CUSES service." }
-                             ]
-                           }
+                           { "type": "added", "description": "<a href=\"https://github.com/NuML/NuML/\">NuML</a> API (via <a href=\"https://github.com/NuML/NuML/\">libNuML</a>)." }
                          ]
                        },
                        { "name": "Data store",
@@ -50,9 +59,8 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "improved", "description": "Conversion of <a href=\"https://www.cellml.org/\">CellML</a> files to the <a href=\"http://www.opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a>." },
-                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
-                               { "type": "fixed", "description": "Saving of a new file." }
+                               { "type": "improved", "description": "Conversion of <a href=\"https://www.cellml.org/\">CellML</a> files to the <a href=\"user/plugins/editing/cellmlTextView.html#plugins-editing-cellmltextview-cellmltextformat\">CellML Text format</a>." },
+                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." }
                              ]
                            }
                          ]
@@ -64,7 +72,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Organisation",
                          "entries": [
-                           { "type": "added", "description": "<a href=\"plugins/organisation/PMRWorkspacesWindow.html\">PMR Workspaces window</a>." },
+                           { "type": "added", "description": "<a href=\"user/plugins/organisation/pmrWorkspacesWindow.html\">PMR Workspaces window</a>." },
                            { "type": "subCategory", "name": "PMR window",
                              "entries": [
                                { "type": "improved", "description": "Initialisation." },
@@ -77,30 +85,33 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Simulation Experiment view (formerly known as the Single Cell view)",
                              "entries": [
-                               { "type": "added", "description": "Support for log scales." },
                                { "type": "added", "description": "Support for multiple runs." },
                                { "type": "added", "description": "Ability to customise a graph." },
+                               { "type": "added", "description": "Support for logarithmic scales." },
                                { "type": "added", "description": "Ability to customise a graph panel." },
                                { "type": "added", "description": "Ability to show the legend of a graph panel." },
+                               { "type": "added", "description": "Support for pinch gestures to zoom in/out a graph panel." },
                                { "type": "added", "description": "Export a graph panel to various formats (e.g. PDF, PNG, SVG)." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
                                { "type": "improved", "description": "Colour for a new graph." },
+                               { "type": "improved", "description": "Simulation time information." },
                                { "type": "improved", "description": "Running of long simulations." },
+                               { "type": "improved", "description": "Resetting of model parameters." },
                                { "type": "improved", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
-                               { "type": "fixed", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
+                               { "type": "fixed", "description": "<a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver issue when modifying a model state." }
                              ]
                            }
                          ]
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> solver",
                              "entries": [
                                { "type": "added", "description": "Parametrisation of the solver." }
                              ]
                            },
-                           { "type": "comment", "description": "The <a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver was removed." }
+                           { "type": "comment", "description": "The <a href=\"https://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver was removed (in favour of <a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a>+<a href=\"https://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a>)." }
                          ]
                        },
                        { "name": "Support",
@@ -110,7 +121,7 @@ var jsonData = { "versions": [
                                { "type": "improved", "description": "Generation of error messages." }
                              ]
                            },
-                           { "type": "subCategory", "name": "SED-ML support",
+                           { "type": "subCategory", "name": "<a href=\"https://sed-ml.github.io/\">SED-ML</a> support",
                              "entries": [
                                { "type": "added", "description": "Customisation of graph panels." }
                              ]
@@ -135,7 +146,7 @@ var jsonData = { "versions": [
                            { "type": "added", "description": "Detection of changes to one or several file dependencies." },
                            { "type": "added", "description": "Support for an OpenCOR-specific URL scheme." },
                            { "type": "added", "description": "Default view to open a particular type of file." },
-                           { "type": "added", "description": "Reference to the <a href=\"http://tutorial-on-cellml-opencor-and-pmr.readthedocs.org/en/latest/index.html\">official OpenCOR tutorial</a>." },
+                           { "type": "added", "description": "Reference to the <a href=\"https://tutorial-on-cellml-opencor-and-pmr.readthedocs.io/en/latest/\">official OpenCOR tutorial</a>." },
                            { "type": "added", "description": "Use of a user's proxy settings." },
                            { "type": "improved", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "improved", "description": "Handling of files." },
@@ -152,7 +163,7 @@ var jsonData = { "versions": [
                        { "name": "API",
                          "entries": [
                            { "type": "added", "description": "<a href=\"http://sbml.org/\">SBML</a> API (via <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>)." },
-                           { "type": "added", "description": "<a href=\"http://www.sed-ml.org/\">SED-ML</a> API (via <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>)." }
+                           { "type": "added", "description": "<a href=\"https://sed-ml.github.io/\">SED-ML</a> API (via <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>)." }
                          ]
                        },
                        { "name": "Data store",
@@ -186,7 +197,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "added", "description": "Import/export of the <a href=\"http://www.opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> from/to <a href=\"https://www.cellml.org/\">CellML</a>." },
+                               { "type": "added", "description": "Import/export of the <a href=\"user/plugins/editing/cellmlTextView.html#plugins-editing-cellmltextview-cellmltextformat\">CellML Text format</a> from/to <a href=\"https://www.cellml.org/\">CellML</a>." },
                                { "type": "added", "description": "Support for the <code>min()</code>/<code>max()</code> and <code>gcd()</code>/<code>lcm()</code> functions." },
                                { "type": "added", "description": "Offer to save the contents of the view to a text file if it cannot be saved as a <a href=\"https://www.cellml.org/\">CellML</a> file." },
                                { "type": "improved", "description": "Syntax highlighting." },
@@ -198,7 +209,7 @@ var jsonData = { "versions": [
                                { "type": "fixed", "description": "Serialisation of metadata." }
                              ]
                            },
-                           { "type": "added", "description": "<a href=\"plugins/editing/RawSEDMLView.html\">Raw SED-ML view</a>." }
+                           { "type": "added", "description": "<a href=\"user/plugins/editing/rawSedmlView.html\">Raw SED-ML view</a>." }
                          ]
                        },
                        { "name": "Organisation",
@@ -206,7 +217,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
                              "entries": [
                                { "type": "improved", "description": "Listing of exposures and exposure files." },
-                               { "type": "added", "description": "Listing of <a href=\"http://www.sed-ml.org/\">SED-ML</a> files." },
+                               { "type": "added", "description": "Listing of <a href=\"https://sed-ml.github.io/\">SED-ML</a> files." },
                                { "type": "added", "description": "Cloning of a workspace." },
                                { "type": "added", "description": "Opening of an exposure file." }
                              ]
@@ -217,7 +228,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Single Cell view",
                              "entries": [
-                               { "type": "added", "description": "Basic <a href=\"http://www.sed-ml.org/\">SED-ML</a> support (both through a SED-ML file and a <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
+                               { "type": "added", "description": "Basic <a href=\"https://sed-ml.github.io/\">SED-ML</a> support (both through a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file and a <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a>)." },
                                { "type": "added", "description": "Creation of a new <a href=\"https://www.cellml.org/\">CellML</a> file or update of an existing one based on the results of a simulation." },
                                { "type": "added", "description": "Specification of the minimum/maximum values of the axes of a graph panel." },
                                { "type": "added", "description": "Synchronisation of the X and/or Y axes of all the graph panels." },
@@ -232,12 +243,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver",
                              "entries": [
                                { "type": "improved", "description": "Parametrisation of the solver." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver",
                              "entries": [
                                { "type": "improved", "description": "Parametrisation of the solver." }
                              ]
@@ -246,8 +257,8 @@ var jsonData = { "versions": [
                        },
                        { "name": "Support",
                          "entries": [
-                           { "type": "added", "description": "Support for <a href=\"http://www.sed-ml.org/\">SED-ML</a>." },
-                           { "type": "added", "description": "Support for <a href=\"http://co.mbine.org/documents/archive\">COMBINE archive</a>." },
+                           { "type": "added", "description": "Support for <a href=\"https://sed-ml.github.io/\">SED-ML</a>." },
+                           { "type": "added", "description": "Support for <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a>." },
                            { "type": "subCategory", "name": "<a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> support",
                              "entries": [
                                { "type": "improved", "description": "Support for Unicode." }
@@ -303,7 +314,7 @@ var jsonData = { "versions": [
                            { "type": "added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_Yosemite\">OS X 10.10</a> (Yosemite)." },
                            { "type": "improved", "description": "OpenCOR logo." },
                            { "type": "improved", "description": "Binaries on <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
-                           { "type": "improved", "description": "<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
+                           { "type": "improved", "description": "<a href=\"https://nsis.sourceforge.io/\">NSIS</a> packaging on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "improved", "description": "<a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> packaging on <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "improved", "description": "Handling of files." },
                            { "type": "improved", "description": "Display of numbers." },
@@ -320,7 +331,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Annotation view",
                              "entries": [
-                               { "type": "added", "description": "Two new <a href=\"http://biomodels.net/qualifiers/\">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>)." },
+                               { "type": "added", "description": "Two new <a href=\"https://co.mbine.org/standards/qualifiers\">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>)." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Responsiveness of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Listing of component variables." },
@@ -348,7 +359,7 @@ var jsonData = { "versions": [
                                { "type": "fixed", "description": "Retrieval of view settings." }
                              ]
                            },
-                           { "type": "added", "description": "<a href=\"plugins/editing/CellMLTextView.html\">CellML Text view</a>." }
+                           { "type": "added", "description": "<a href=\"user/plugins/editing/cellmlTextView.html\">CellML Text view</a>." }
                          ]
                        },
                        { "name": "Miscellaneous",
@@ -418,12 +429,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Development",
                          "entries": [
-                           { "type": "subCategory", "name": "Examples of <a href=\"http://www.opencor.ws/developer/develop/plugins/\">how to write plugins</a>",
+                           { "type": "subCategory", "name": "Examples of <a href=\"developer/develop/plugins/index.html\">how to write plugins</a>",
                              "entries": [
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/Sample.html\">Sample</a> plugin." },
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/SampleTools.html\">SampleTools</a> plugin." },
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/SampleView.html\">SampleView</a> plugin." },
-                               { "type": "added", "description": "<a href=\"http://www.opencor.ws/developer/develop/plugins/SampleWindow.html\">SampleWindow</a> plugin." }
+                               { "type": "added", "description": "<a href=\"developer/develop/plugins/sample.html\">Sample</a> plugin." },
+                               { "type": "added", "description": "<a href=\"developer/develop/plugins/sampleTools.html\">Sample tools</a> plugin." },
+                               { "type": "added", "description": "<a href=\"developer/develop/plugins/sampleView.html\">Sample view</a> plugin." },
+                               { "type": "added", "description": "<a href=\"developer/develop/plugins/sampleWindow.html\">Sample window</a> plugin." }
                              ]
                            }
                          ]
@@ -437,8 +448,8 @@ var jsonData = { "versions": [
                                { "type": "fixed", "description": "Listing of suggested ontological terms." }
                              ]
                            },
-                           { "type": "added", "description": "<a href=\"plugins/editing/RawTextView.html\">Raw view</a>." },
-                           { "type": "added", "description": "<a href=\"plugins/editing/RawCellMLView.html\">Raw CellML view</a>." }
+                           { "type": "added", "description": "<a href=\"user/plugins/editing/rawTextView.html\">Raw view</a>." },
+                           { "type": "added", "description": "<a href=\"user/plugins/editing/rawCellmlView.html\">Raw CellML view</a>." }
                          ]
                        },
                        { "name": "Miscellaneous",
@@ -490,12 +501,12 @@ var jsonData = { "versions": [
                        },
                        { "name": "Solver",
                          "entries": [
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> solver",
                              "entries": [
                                { "type": "added", "description": "Choice to interpolate the solution." }
                              ]
                            },
-                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver",
+                           { "type": "subCategory", "name": "<a href=\"https://computation.llnl.gov/projects/sundials/ida\">IDA</a> solver",
                              "entries": [
                                { "type": "added", "description": "Choice to interpolate the solution." }
                              ]
@@ -529,7 +540,7 @@ var jsonData = { "versions": [
                        },
                        { "name": "Miscellaneous",
                          "entries": [
-                           { "type": "added", "description": "<a href=\"plugins/tools/CellMLTools.html\">CellML tools</a>." }
+                           { "type": "added", "description": "<a href=\"user/plugins/tools/cellmlTools.html\">CellML tools</a>." }
                          ]
                        },
                        { "name": "Organisation",

@@ -39,9 +39,10 @@ namespace SimulationSupport {
 
 //==============================================================================
 
-SimulationWorker::SimulationWorker(Simulation *pSimulation,
+SimulationWorker::SimulationWorker(Simulation *pSimulation, QThread *pThread,
                                    SimulationWorker *&pSelf) :
     mSimulation(pSimulation),
+    mThread(pThread),
     mRuntime(pSimulation->runtime()),
     mCurrentPoint(0.0),
     mPaused(false),
@@ -50,26 +51,6 @@ SimulationWorker::SimulationWorker(Simulation *pSimulation,
     mError(false),
     mSelf(pSelf)
 {
-    // Create our thread
-
-    mThread = new QThread();
-
-    // Move ourselves to our thread
-
-    moveToThread(mThread);
-
-    // Create a few connections
-
-    connect(mThread, &QThread::started,
-            this, &SimulationWorker::started);
-
-    connect(this, &SimulationWorker::finished,
-            mThread, &QThread::quit);
-
-    connect(mThread, &QThread::finished,
-            mThread, &QThread::deleteLater);
-    connect(mThread, &QThread::finished,
-            this, &SimulationWorker::deleteLater);
 }
 
 //==============================================================================
@@ -103,100 +84,7 @@ double SimulationWorker::currentPoint() const
 
 //==============================================================================
 
-bool SimulationWorker::run()
-{
-    // Start our thread, but only if we are not already running
-
-    if (!mThread->isRunning()) {
-        mThread->start();
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SimulationWorker::pause()
-{
-    // Pause ourselves, but only if we are currently running
-
-    if (isRunning()) {
-        // Ask ourselves to pause
-
-        mPaused = true;
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SimulationWorker::resume()
-{
-    // Resume ourselves, but only if are currently paused
-
-    if (isPaused()) {
-        // Ask ourselves to resume
-
-        mPausedCondition.wakeOne();
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SimulationWorker::stop()
-{
-    // Check that we are either running or paused
-
-    if (isRunning() || isPaused()) {
-        // Ask our thread to stop
-
-        mStopped = true;
-
-        // Resume our thread, if needed
-
-        if (isPaused())
-            mPausedCondition.wakeOne();
-
-        // Ask our thread to quit and wait for it to do so
-
-        mThread->quit();
-        mThread->wait();
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SimulationWorker::reset()
-{
-    // Check that we are either running or paused
-
-    if (isRunning() || isPaused()) {
-        // Ask ourselves to reinitialise our solver
-
-        mReset = true;
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-void SimulationWorker::started()
+void SimulationWorker::run()
 {
     // Let people know that we are running
 
@@ -268,10 +156,7 @@ void SimulationWorker::started()
 
         timer.start();
 
-        // Add our first point after making sure that all the variables are up
-        // to date
-
-        mSimulation->data()->recomputeVariables(mCurrentPoint);
+        // Add our first point
 
         mSimulation->results()->addPoint(mCurrentPoint);
 
@@ -309,10 +194,7 @@ void SimulationWorker::started()
             if (mError)
                 break;
 
-            // Add our new point after making sure that all the variables are up
-            // to date
-
-            mSimulation->data()->recomputeVariables(mCurrentPoint);
+            // Add our new point
 
             mSimulation->results()->addPoint(mCurrentPoint);
 
@@ -327,7 +209,7 @@ void SimulationWorker::started()
                 // Delay things a bit, if needed
 
                 if (mSimulation->delay())
-                    Core::doNothing(100*mSimulation->delay());
+                    Core::doNothing(mSimulation->delay(), &mStopped);
 
                 // Pause ourselves, if needed
 
@@ -380,14 +262,58 @@ void SimulationWorker::started()
 
     // Reset our simulation owner's knowledge of us
     // Note: if we were to do it the Qt way, our simulation owner would have a
-    //       slot for our finished() signal, but we want our simulation owner to
+    //       slot for our done() signal, but we want our simulation owner to
     //       know as quickly as possible that we are done...
 
     mSelf = nullptr;
 
     // Let people know that we are done and give them the elapsed time
 
-    emit finished(mError?-1:elapsedTime);
+    emit done(mError?-1:elapsedTime);
+}
+
+//==============================================================================
+
+void SimulationWorker::pause()
+{
+    // Pause ourselves, if we are currently running
+
+    if (isRunning())
+        mPaused = true;
+}
+
+//==============================================================================
+
+void SimulationWorker::resume()
+{
+    // Resume ourselves, if we are currently paused
+
+    if (isPaused())
+        mPausedCondition.wakeOne();
+}
+
+//==============================================================================
+
+void SimulationWorker::stop()
+{
+    // Stop ourselves, if we are currently running or paused
+
+    if (isRunning() || isPaused()) {
+        mStopped = true;
+
+        if (isPaused())
+            mPausedCondition.wakeOne();
+    }
+}
+
+//==============================================================================
+
+void SimulationWorker::reset()
+{
+    // Stop ourselves, if we are currently running or paused
+
+    if (isRunning() || isPaused())
+        mReset = true;
 }
 
 //==============================================================================

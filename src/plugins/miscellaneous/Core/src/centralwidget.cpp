@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QDragEnterEvent>
 #include <QFile>
@@ -52,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMimeData>
 #include <QPushButton>
 #include <QRect>
+#include <QScreen>
 #include <QSettings>
 #include <QSizePolicy>
 #include <QStackedWidget>
@@ -284,7 +284,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mRemoteFileDialogUrlLabel = new QLabel(mRemoteFileDialog);
     mRemoteFileDialogUrlValue = new QLineEdit(mRemoteFileDialog);
 
-    mRemoteFileDialogUrlValue->setMinimumWidth(qApp->desktop()->availableGeometry().width()/5);
+    mRemoteFileDialogUrlValue->setMinimumWidth(qApp->primaryScreen()->availableGeometry().width()/5);
 
     dialogLayout->addWidget(mRemoteFileDialogUrlLabel, 0, 0);
     dialogLayout->addWidget(mRemoteFileDialogUrlValue, 0, 1);
@@ -817,7 +817,7 @@ void CentralWidget::openFile()
 {
     // Ask for the file(s) to be opened
 
-    QStringList fileNames = getOpenFileNames(tr("Open File"),
+    QStringList fileNames = getOpenFileNames(tr("Open"),
                                              filters(fileTypeInterfaces()));
 
     // Open the file(s)
@@ -1114,8 +1114,8 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         QString firstSupportedFilter = supportedFilters.isEmpty()?QString():supportedFilters.first();
 
         newFileName = getSaveFileName(pNeedNewFileName?
-                                          tr("Save File As"):
-                                          tr("Save File"),
+                                          tr("Save As"):
+                                          tr("Save"),
                                       fileIsNew?
                                           Core::newFileName(mFileTabs->tabToolTip(pIndex), viewInterface->viewDefaultFileExtension()):
                                           Core::newFileName(newFileName, tr("New"), true),
@@ -1521,9 +1521,9 @@ void CentralWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Accept the proposed action for the event, but only if at least one mode
     // is available and if we are dropping URIs or items from our file organiser
 
-    if (   mModeTabs->count()
-        && (pEvent->mimeData()->hasFormat(FileSystemMimeType))
-        && (!pEvent->mimeData()->urls().isEmpty())) {
+    if (    mModeTabs->count()
+        &&  pEvent->mimeData()->hasFormat(FileSystemMimeType)
+        && !pEvent->mimeData()->urls().isEmpty()) {
         // Note: we test the list of URLs in case we are trying to drop one or
         //       several folders (and no file) from the file organiser, in which
         //       case the list of URLs will be empty...
@@ -1548,41 +1548,9 @@ void CentralWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 void CentralWidget::dropEvent(QDropEvent *pEvent)
 {
-    // Retrieve the name of the various files that have been dropped
-
-    QList<QUrl> urlList = pEvent->mimeData()->urls();
-    QStringList fileNames;
-
-    for (int i = 0, iMax = urlList.count(); i < iMax; ++i)
-    {
-        QString fileName = urlList[i].toLocalFile();
-        QFileInfo fileInfo = fileName;
-
-        if (fileInfo.isFile()) {
-            if (fileInfo.isSymLink()) {
-                // We are dropping a symbolic link, so retrieve its target and
-                // check that it exists, and if it does then add it
-
-                fileName = fileInfo.symLinkTarget();
-
-                if (QFile::exists(fileName))
-                    fileNames << fileName;
-            } else {
-                // We are dropping a file, so we can just add it
-
-                fileNames << fileName;
-            }
-        }
-    }
-
-    // fileNames may contain duplicates (in case we dropped some symbolic
-    // links), so remove them
-
-    fileNames.removeDuplicates();
-
     // Open the various files
 
-    openFiles(fileNames);
+    openFiles(droppedFileNames(pEvent));
 
     // Accept the proposed action for the event
 

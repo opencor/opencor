@@ -45,7 +45,7 @@ public:
 
     bool isCombineArchive(const QString &pFileName) const;
 
-    CombineArchive * combineArchive(const QString &pFileName);
+    CombineArchive * combineArchive(const QString &pFileName) const;
 
 protected:
     bool canLoad(const QString &pFileName) const override;

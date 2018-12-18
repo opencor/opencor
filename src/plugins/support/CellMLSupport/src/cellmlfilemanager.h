@@ -49,7 +49,7 @@ public:
 
     bool isCellmlFile(const QString &pFileName) const;
 
-    CellmlFile * cellmlFile(const QString &pFileName);
+    CellmlFile * cellmlFile(const QString &pFileName) const;
 
 protected:
     bool canLoad(const QString &pFileName) const override;

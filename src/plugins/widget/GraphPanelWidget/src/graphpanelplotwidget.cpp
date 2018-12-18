@@ -32,12 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QClipboard>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QGestureEvent>
 #include <QImageWriter>
 #include <QMenu>
 #include <QPaintEvent>
+#include <QScreen>
 #include <QTimer>
 
 //==============================================================================
@@ -751,7 +751,8 @@ QRectF GraphPanelPlotGraph::boundingRect()
                     for (size_t i = 0, iMax = run->dataSize(); i < iMax; ++i) {
                         QPointF sample = run->data()->sample(i);
 
-                        if (!qIsInf(sample.x()) && !qIsNaN(sample.x())) {
+                        if (   !qIsInf(sample.x()) && !qIsNaN(sample.x())
+                            && !qIsInf(sample.y()) && !qIsNaN(sample.y())) {
                             if (needInitMinX) {
                                 minX = sample.x();
 
@@ -767,9 +768,7 @@ QRectF GraphPanelPlotGraph::boundingRect()
                             } else if (sample.x() > maxX) {
                                 maxX = sample.x();
                             }
-                        }
 
-                        if (!qIsInf(sample.y()) && !qIsNaN(sample.y())) {
                             if (needInitMinY) {
                                 minY = sample.y();
 
@@ -795,7 +794,8 @@ QRectF GraphPanelPlotGraph::boundingRect()
                     }
                 }
 
-                mBoundingRect |= boundingRect;
+                if (boundingRect != InvalidRect)
+                    mBoundingRect |= boundingRect;
             }
         }
     }
@@ -831,7 +831,9 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                         QPointF sample = run->data()->sample(i);
 
                         if (   !qIsInf(sample.x()) && !qIsNaN(sample.x())
-                            &&  (sample.x() > 0.0)) {
+                            &&  (sample.x() > 0.0)
+                            && !qIsInf(sample.y()) && !qIsNaN(sample.y())
+                            &&  (sample.y() > 0.0)) {
                             if (needInitMinX) {
                                 minX = sample.x();
 
@@ -847,10 +849,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                             } else if (sample.x() > maxX) {
                                 maxX = sample.x();
                             }
-                        }
 
-                        if (   !qIsInf(sample.y()) && !qIsNaN(sample.y())
-                            &&  (sample.y() > 0.0)) {
                             if (needInitMinY) {
                                 minY = sample.y();
 
@@ -1110,7 +1109,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     pPainter->setPen(pen);
 
-    QRect coordinatesRect = pPainter->boundingRect(qApp->desktop()->availableGeometry(), 0, coordinates);
+    QRect coordinatesRect = pPainter->boundingRect(qApp->primaryScreen()->availableGeometry(), 0, coordinates);
 
     // Determine where the coordinates and its background should be drawn
 

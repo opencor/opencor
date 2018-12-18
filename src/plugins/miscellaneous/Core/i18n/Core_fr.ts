@@ -4,19 +4,19 @@
 <context>
     <name>OpenCOR::Core::CentralWidget</name>
     <message>
-        <source>Sample</source>
-        <translation>Exemple</translation>
-    </message>
-    <message>
-        <source>Test</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Editing</source>
         <translation>Édition</translation>
     </message>
     <message>
         <source>Simulation</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Sample</source>
+        <translation>Exemple</translation>
+    </message>
+    <message>
+        <source>Test</source>
         <translation></translation>
     </message>
     <message>
@@ -38,6 +38,10 @@
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
@@ -92,8 +96,12 @@
         <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne peut pas sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
     </message>
     <message>
-        <source>Save File As</source>
+        <source>Save As</source>
         <translation>Sauvegarder Sous</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Sauvegarder</translation>
     </message>
     <message>
         <source>New</source>
@@ -290,12 +298,12 @@
 <context>
     <name>OpenCOR::Core::Property</name>
     <message>
-        <source>: </source>
-        <translation> : </translation>
-    </message>
-    <message>
         <source>Select Colour</source>
         <translation>Sélectionner Couleur</translation>
+    </message>
+    <message>
+        <source>: </source>
+        <translation> : </translation>
     </message>
 </context>
 <context>
@@ -452,22 +460,6 @@
         <translation>Po</translation>
     </message>
     <message>
-        <source>All Files</source>
-        <translation>Tous Fichiers</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
-    </message>
-    <message>
-        <source>Please choose an empty directory.</source>
-        <translation>Veuillez choisir un répertoire vide.</translation>
-    </message>
-    <message>
         <source>d</source>
         <translation>j</translation>
     </message>
@@ -486,6 +478,22 @@
     <message>
         <source>ms</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Tous Fichiers</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists and is opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà et est ouvert.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
+    </message>
+    <message>
+        <source>Please choose an empty directory.</source>
+        <translation>Veuillez choisir un répertoire vide.</translation>
     </message>
 </context>
 </TS>

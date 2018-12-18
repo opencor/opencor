@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreglobal.h"
-#include "filetypeinterface.h"
 
 //==============================================================================
 
@@ -207,10 +206,6 @@ void CORE_EXPORT showEnableWidget(QWidget *pWidget, bool pVisible,
                                   bool pEnabled = true);
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
-
-QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces);
-QStringList CORE_EXPORT filters(const FileTypeInterfaces &pFileTypeInterfaces,
-                                const QString &pMimeType);
 
 bool CORE_EXPORT opencorActive();
 

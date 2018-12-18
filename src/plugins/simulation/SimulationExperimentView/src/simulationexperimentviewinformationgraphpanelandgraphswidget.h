@@ -138,8 +138,6 @@ private:
 
     QMap<QString, QString> mRenamedModelListValues;
 
-    bool mCanEmitGraphsUpdatedSignal;
-
     void retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor);
 
     void populateGraphPanelPropertyEditor();

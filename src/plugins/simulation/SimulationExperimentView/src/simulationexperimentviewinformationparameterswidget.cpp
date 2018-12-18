@@ -40,6 +40,8 @@ namespace SimulationExperimentView {
 
 SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInformationParametersWidget(QWidget *pParent) :
     PropertyEditorWidget(false, pParent),
+    mPlotAgainstVoiMenuAction(nullptr),
+    mPlotAgainstMenu(nullptr),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mSimulation(nullptr),
@@ -60,14 +62,13 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
 
 void SimulationExperimentViewInformationParametersWidget::retranslateContextMenu()
 {
-    // Retranslate our context menu, in case it has been populated
+    // Retranslate our context menu, if it exists / has been populated
 
-    if (mContextMenu->actions().count() >= mVoiAccessible+1) {
-        if (mVoiAccessible)
-            mContextMenu->actions()[0]->setText(tr("Plot Against Variable Of Integration"));
+    if (mPlotAgainstVoiMenuAction)
+        mPlotAgainstVoiMenuAction->setText(tr("Plot Against Variable Of Integration"));
 
-        mContextMenu->actions()[(mVoiAccessible?0:-1)+1]->setText(tr("Plot Against"));
-    }
+    if (mPlotAgainstMenu)
+        mPlotAgainstMenu->menuAction()->setText(tr("Plot Against"));
 }
 
 //==============================================================================
@@ -371,9 +372,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
         property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
                               || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
-
         property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
-
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
 
@@ -397,10 +396,12 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 {
     // Create our two main menu items
 
-    QAction *voiAction = mVoiAccessible?mContextMenu->addAction(QString()):nullptr;
-    QMenu *plotAgainstMenu = new QMenu(mContextMenu);
+    if (mVoiAccessible)
+        mPlotAgainstVoiMenuAction = mContextMenu->addAction(QString());
 
-    mContextMenu->addAction(plotAgainstMenu->menuAction());
+    mPlotAgainstMenu = new QMenu(mContextMenu);
+
+    mContextMenu->addMenu(mPlotAgainstMenu);
 
     // Initialise our two main menu items
 
@@ -410,10 +411,10 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
     // keep track of the parameter associated with our first main menu item
 
     if (mVoiAccessible) {
-        connect(voiAction, &QAction::triggered,
+        connect(mPlotAgainstVoiMenuAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        mParameterActions.insert(voiAction, pRuntime->voi());
+        mParameterActions.insert(mPlotAgainstVoiMenuAction, pRuntime->voi());
     }
 
     // Populate our context menu with the parameters
@@ -432,7 +433,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
 
-            QMenu *menu = plotAgainstMenu;
+            QMenu *menu = mPlotAgainstMenu;
 
             foreach (const QString &component, parameter->componentHierarchy()) {
                 // Check whether we already have a menu for our current
@@ -487,8 +488,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
         connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
 
-        // Keep track of the parameter associated with our model parameter
-        // action
+        // Keep track of the parameter associated with our parameter action
 
         mParameterActions.insert(parameterAction, parameter);
     }

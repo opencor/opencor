@@ -44,11 +44,11 @@ static const auto SettingsPreferencesStyle = QStringLiteral("Style");
 //==============================================================================
 
 #if defined(Q_OS_WIN)
-    static const auto SettingsPreferencesStyleDefault = QStringLiteral("WindowsVista");
+    static const auto SettingsPreferencesStyleDefault = QStringLiteral("windowsvista");
 #elif defined(Q_OS_LINUX)
     static const auto SettingsPreferencesStyleDefault = QStringLiteral("Fusion");
 #elif defined(Q_OS_MAC)
-    static const auto SettingsPreferencesStyleDefault = QStringLiteral("Macintosh");
+    static const auto SettingsPreferencesStyleDefault = QStringLiteral("macintosh");
 #else
     #error Unsupported platform
 #endif

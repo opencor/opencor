@@ -34,14 +34,25 @@ namespace BioSignalMLDataStore {
 
 //==============================================================================
 
-class BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
+class BiosignalmlDataStoreExporterWorker : public DataStore::DataStoreExporterWorker
 {
     Q_OBJECT
 
 public:
-    explicit BiosignalmlDataStoreExporter(DataStore::DataStoreData *pDataStoreData);
+    explicit BiosignalmlDataStoreExporterWorker(DataStore::DataStoreExportData *pDataStoreData);
 
-    void execute(QString &pErrorMessage) const override;
+public slots:
+    void run() override;
+};
+
+//==============================================================================
+
+class BiosignalmlDataStoreExporter : public DataStore::DataStoreExporter
+{
+    Q_OBJECT
+
+protected:
+    DataStore::DataStoreExporterWorker * workerInstance(DataStore::DataStoreExportData *pDataStoreData) override;
 };
 
 //==============================================================================

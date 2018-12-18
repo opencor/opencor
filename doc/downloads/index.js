@@ -1,24 +1,24 @@
 var jsonData = { "versions": [
-                   { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 1,
+                   { "major": 0, "minor": 6, "patch": 0, "day": 11, "month": 12, "year": 2018, "type": 1, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
                            { "extension": ".exe" }, { "extension": ".zip" }
                          ]
                        },
-                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
                          "files": [
                            { "extension": ".tar.gz" }
                          ]
                        },
-                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
                          "files": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 29, "month": 10, "year": 2018, "type": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 11, "month": 12, "year": 2018, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,12 +37,31 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> converted (and updated) the documentation to reStructuredText (see issue <a href=\"https://github.com/opencor/opencor/issues/1544\">#1544</a>). Properly keep track of the sizes of some splitters (see issue <a href=\"https://github.com/opencor/opencor/issues/1871\">#1871</a>)." },
-                       { "change": "<strong>Graph Panel widget:</strong> don't skip the first data point (see issue <a href=\"https://github.com/opencor/opencor/issues/1860\">#1860</a>)." },
-                       { "change": "<strong>PMR-based windows:</strong> make sure that the spinning wheel is hidden when changing instances of PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1862\">#1862</a>). Make sure they get populated when being shown after having changed instances of PMR (see issue <a href=\"https://github.com/opencor/opencor/issues/1865\">#1865</a>)." }
+                       { "change": "<strong>General:</strong> upgraded to Qt 5.12.0 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1910\">#1910</a>)." },
+                       { "change": "<strong>COMBINE support:</strong> now recognise files that have a master attribute of \"1\" rather than \"true\" (see issue <a href=\"https://github.com/opencor/opencor/issues/1912\">#1912</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1917\">#1917</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 18.2.7 (see issue <a href=\"https://github.com/opencor/opencor/issues/1918\">#1918</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 4.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1919\">#1919</a>)." }
                      ]
                    },
-                   { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0,
+                   { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 14.04 LTS (Trusty Tahr) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "OS X 10.8 (Mountain Lion) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ]
+                   },
+                   { "major": 0, "minor": 4, "patch": 1, "day": 20, "month": 5, "year": 2015, "type": 0, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -63,7 +82,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
+                   { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -84,7 +103,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 3, "patch": 0, "day": 19, "month": 8, "year": 2014, "type": 0,
+                   { "major": 0, "minor": 3, "patch": 0, "day": 19, "month": 8, "year": 2014, "type": 0, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows XP and later",
                          "files": [
@@ -104,7 +123,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 2, "patch": 0, "day": 19, "month": 11, "year": 2013, "type": 0,
+                   { "major": 0, "minor": 2, "patch": 0, "day": 19, "month": 11, "year": 2013, "type": 0, "license": 1,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows XP and later",
                          "files": [
@@ -124,7 +143,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 1, "patch": 2, "day": 29, "month": 5, "year": 2013, "type": 0,
+                   { "major": 0, "minor": 1, "patch": 2, "day": 29, "month": 5, "year": 2013, "type": 0, "license": 0,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows XP and later",
                          "files": [
@@ -144,7 +163,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 1, "patch": 1, "day": 17, "month": 4, "year": 2013, "type": 0,
+                   { "major": 0, "minor": 1, "patch": 1, "day": 17, "month": 4, "year": 2013, "type": 0, "license": 0,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows XP and later",
                          "files": [
@@ -164,7 +183,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 1, "patch": 0, "day": 1, "month": 4, "year": 2013, "type": 0,
+                   { "major": 0, "minor": 1, "patch": 0, "day": 1, "month": 4, "year": 2013, "type": 0, "license": 0,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows XP and later",
                          "files": [
