@@ -3,11 +3,11 @@ project(Mesa)
 # Name and version of our package
 
 set(PACKAGE_NAME Mesa)
-set(PACKAGE_VERSION 18.2.6)
+set(PACKAGE_VERSION 18.2.7)
 
 # Git tag for our library
 
-set(GIT_TAG v18.2.6)
+set(GIT_TAG v18.2.7)
 
 # Specify where our local package will be installed
 
@@ -32,9 +32,9 @@ if(USE_PREBUILT_MESA_PACKAGE)
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${RELATIVE_PROJECT_SOURCE_DIR} dc16cad8e7941fc29a4cb938e500d8d4c5844f15
+                          ${RELATIVE_PROJECT_SOURCE_DIR} 5ef847e91581fc8d190ac87bc6bebd0e9160eeb1
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES 8d37a916661c7319e774ab729e55c1536b559c49)
+                          SHA1_VALUES c2c53537d0ffed962e2e096c5eb988da801a54e0)
 else()
     # Build Mesa as an external project
 
