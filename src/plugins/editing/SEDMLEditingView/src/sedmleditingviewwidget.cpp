@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QSettings>
 
 //==============================================================================
@@ -93,8 +93,9 @@ void SedmlEditingViewWidget::loadSettings(QSettings *pSettings)
     //          effectively be less than 13% of the desktop's height, but that
     //          doesn't matter at all...
 
-    QVariantList defaultSedmlEditingViewWidgetSizes = QVariantList() << qApp->desktop()->screenGeometry().height()
-                                                                     << 0.13*qApp->desktop()->screenGeometry().height();
+    int availableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
+    QVariantList defaultSedmlEditingViewWidgetSizes = QVariantList() << availableGeometryHeight
+                                                                     << 0.13*availableGeometryHeight;
 
     mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSedmlEditingViewWidgetSizes, defaultSedmlEditingViewWidgetSizes).toList());
 

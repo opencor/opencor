@@ -1157,8 +1157,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::populateGraph
         connect(parameterAction, &QAction::triggered,
                 this, &SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateParameterValue);
 
-        // Keep track of the parameter associated with our model parameter
-        // action
+        // Keep track of the parameter associated with our parameter action
 
         mParameterActions.insert(parameterAction, parameter);
     }

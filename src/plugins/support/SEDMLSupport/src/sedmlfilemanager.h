@@ -45,7 +45,7 @@ public:
 
     bool isSedmlFile(const QString &pFileName) const;
 
-    SedmlFile * sedmlFile(const QString &pFileName);
+    SedmlFile * sedmlFile(const QString &pFileName) const;
 
 protected:
     bool canLoad(const QString &pFileName) const override;

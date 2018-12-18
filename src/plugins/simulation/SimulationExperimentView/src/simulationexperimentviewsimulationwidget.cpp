@@ -51,12 +51,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QDir>
 #include <QLabel>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
+#include <QScreen>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
@@ -136,8 +136,9 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
             this, &SimulationExperimentViewSimulationWidget::simulationRunning);
     connect(mSimulation, &SimulationSupport::Simulation::paused,
             this, &SimulationExperimentViewSimulationWidget::simulationPaused);
-    connect(mSimulation, &SimulationSupport::Simulation::stopped,
-            this, &SimulationExperimentViewSimulationWidget::simulationStopped);
+
+    connect(mSimulation, &SimulationSupport::Simulation::done,
+            this, &SimulationExperimentViewSimulationWidget::simulationDone);
 
     connect(mSimulation, &SimulationSupport::Simulation::error,
             this, QOverload<const QString &>::of(&SimulationExperimentViewSimulationWidget::simulationError));
@@ -184,7 +185,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                            Core::newAction(mToolBarWidget):
                                            nullptr;
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
-                                                  mToolBarWidget);
+                                                     mToolBarWidget);
     mPreferencesAction = Core::newAction(QIcon(":/oxygen/categories/preferences-system.png"),
                                          mToolBarWidget);
 
@@ -240,6 +241,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     // Create a wheel (and a label to show its value) to specify the delay (in
     // milliseconds) between the output of two data points
 
+    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+
     mDelayWidget = new QwtWheel(mToolBarWidget);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     QWidget *delaySpaceWidget = new QWidget(mToolBarWidget);
@@ -247,7 +250,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mDelayValueWidget = new QLabel(mToolBarWidget);
 
     mDelayWidget->setBorderWidth(0);
-    mDelayWidget->setFixedSize(int(0.07*qApp->desktop()->screenGeometry().width()),
+    mDelayWidget->setFixedSize(int(0.07*availableGeometry.width()),
                                mDelayWidget->height() >> 1);
     mDelayWidget->setFocusPolicy(Qt::NoFocus);
     mDelayWidget->setRange(0.0, 55.0);
@@ -484,7 +487,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     mOutputWidget = new QTextEdit(this);
 
-    mOutputWidget->setAcceptDrops(false);
     mOutputWidget->setFrameStyle(QFrame::NoFrame);
     mOutputWidget->setReadOnly(true);
 
@@ -498,7 +500,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSplitterWidget->addWidget(mContentsWidget);
     mSplitterWidget->addWidget(simulationOutputWidget);
 
-    mSplitterWidget->setSizes(QIntList() << qApp->desktop()->screenGeometry().height() << 1);
+    mSplitterWidget->setSizes(QIntList() << availableGeometry.height() << 1);
 
     layout->addWidget(mSplitterWidget);
 
@@ -671,8 +673,8 @@ void SimulationExperimentViewSimulationWidget::updateSimulationMode()
     mClearSimulationResultsAction->setEnabled(    mSimulation->results()->size()
                                               && !simulationModeEnabled);
     mSimulationResultsExportAction->setEnabled(    mSimulationResultsExportDropDownMenu->actions().count()
-                                            &&  mSimulation->results()->size()
-                                            && !simulationModeEnabled);
+                                               &&  mSimulation->results()->size()
+                                               && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
@@ -3173,23 +3175,28 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
     // results
 
     DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(qobject_cast<QAction *>(sender()));
-    DataStore::DataStoreData *dataStoreData = dataStoreInterface->getData(mSimulation->fileName(),
-                                                                          mSimulation->results()->dataStore(),
-                                                                          CellMLSupport::CellmlFileRuntimeParameter::icons());
+    DataStore::DataStoreExportData *dataStoreData = dataStoreInterface->getExportData(mSimulation->fileName(),
+                                                                                      mSimulation->results()->dataStore(),
+                                                                                      CellMLSupport::CellmlFileRuntimeParameter::icons());
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
 
         Core::centralWidget()->showProgressBusyWidget();
 
-        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance(dataStoreData);
+        DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
+
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress,
+                Qt::UniqueConnection);
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
-        connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone,
+                Qt::UniqueConnection);
+        connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
+                dataStoreData, &DataStore::DataStoreExportData::deleteLater);
 
-        dataStoreExporter->start();
+        dataStoreExporter->exportData(dataStoreData);
     }
 }
 
@@ -3199,9 +3206,9 @@ void SimulationExperimentViewSimulationWidget::updateDelayValue(double pDelayVal
 {
     // Update our delay value widget
 
-    int delay = 0;
-    int increment = 1;
-    int multiple = 10;
+    quint64 delay = 0;
+    quint64 increment = 1;
+    quint64 multiple = 10;
 
     for (int i = 0, iMax = int(pDelayValue); i < iMax; ++i) {
         delay += increment;
@@ -3249,7 +3256,7 @@ void SimulationExperimentViewSimulationWidget::simulationPaused()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::simulationStopped(qint64 pElapsedTime)
+void SimulationExperimentViewSimulationWidget::simulationDone(qint64 pElapsedTime)
 {
     // Output the given elapsed time, if valid
 
@@ -3716,8 +3723,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                 }
             }
 
-            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
-            {
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
                 if (!hasData && needInitialisationY) {
                     minY = startingPoint;
                     maxY = endingPoint;
@@ -3940,10 +3946,13 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
                             double valX = graph->data(pSimulationRun)->sample(i).x();
                             double valY = graph->data(pSimulationRun)->sample(i).y();
 
-                            minX = qMin(minX, valX);
-                            maxX = qMax(maxX, valX);
-                            minY = qMin(minY, valY);
-                            maxY = qMax(maxY, valY);
+                            if (   !qIsInf(valX) && !qIsNaN(valX)
+                                && !qIsInf(valY) && !qIsNaN(valY)) {
+                                minX = qMin(minX, valX);
+                                maxX = qMax(maxX, valX);
+                                minY = qMin(minY, valY);
+                                maxY = qMax(maxY, valY);
+                            }
                         }
 
                         // Update our plot, if our graph segment cannot fit
@@ -4075,8 +4084,23 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString &pErrorMessage)
+void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreExportData *pDataStoreData,
+                                                                       double pProgress)
 {
+    Q_UNUSED(pDataStoreData);
+
+    // There has been some progress with our export, so update our busy widget
+
+    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::DataStoreExportData *pDataStoreData,
+                                                                   const QString &pErrorMessage)
+{
+    Q_UNUSED(pDataStoreData);
+
     // We are done with the export, so hide our busy widget
 
     Core::centralWidget()->hideBusyWidget();
@@ -4087,15 +4111,6 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(const QString
         Core::warningMessageBox(tr("Simulation Results Export"),
                                 pErrorMessage);
     }
-}
-
-//==============================================================================
-
-void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(double pProgress)
-{
-    // There has been some progress with our export, so update our busy widget
-
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================

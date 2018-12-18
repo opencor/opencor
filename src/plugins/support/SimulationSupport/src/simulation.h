@@ -31,10 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class QEventLoop;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -67,7 +63,20 @@ class SimulationWorker;
 
 //==============================================================================
 
-class SIMULATIONSUPPORT_EXPORT SimulationData : public QObject
+class SimulationObject : public QObject
+{
+public:
+    explicit SimulationObject(Simulation *pSimulation);
+
+    Simulation * simulation() const;
+
+protected:
+    Simulation *mSimulation;
+};
+
+//==============================================================================
+
+class SIMULATIONSUPPORT_EXPORT SimulationData : public SimulationObject
 {
     Q_OBJECT
 
@@ -77,15 +86,13 @@ public:
 
     void reload();
 
-    Simulation * simulation() const;
-
     double * constants() const;
     double * rates() const;
     double * states() const;
     double * algebraic() const;
 
-    int delay() const;
-    void setDelay(int pDelay);
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
 
     double startingPoint() const;
     void setStartingPoint(double pStartingPoint, bool pRecompute = true);
@@ -124,9 +131,7 @@ public:
     void checkForModifications();
 
 private:
-    Simulation *mSimulation;
-
-    int mDelay;
+    quint64 mDelay;
 
     double mStartingPoint;
     double mEndingPoint;
@@ -166,7 +171,7 @@ signals:
 
 //==============================================================================
 
-class SIMULATIONSUPPORT_EXPORT SimulationResults : public QObject
+class SIMULATIONSUPPORT_EXPORT SimulationResults : public SimulationObject
 {
     Q_OBJECT
 
@@ -196,8 +201,6 @@ public:
     double * algebraic(int pIndex, int pRun = -1) const;
 
 private:
-    Simulation *mSimulation;
-
     DataStore::DataStore *mDataStore;
 
     DataStore::DataStoreVariable *mPoints;
@@ -257,17 +260,17 @@ public:
 
     double currentPoint() const;
 
-    int delay() const;
-    void setDelay(int pDelay);
+    const quint64 * delay() const;
+    void setDelay(quint64 pDelay);
 
     quint64 size();
 
-    bool run();
-    bool pause();
-    bool resume();
-    bool stop();
+    void run();
+    void pause();
+    void resume();
+    void stop();
 
-    bool reset(bool pAll = true);
+    void reset(bool pAll = true);
 
 private:
     QString mFileName;
@@ -285,8 +288,6 @@ private:
     SimulationData *mData;
     SimulationResults *mResults;
 
-    QEventLoop *mWorkerFinishedEventLoop;
-
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
     bool simulationSettingsOk(bool pEmitSignal = true);
@@ -294,7 +295,8 @@ private:
 signals:
     void running(bool pIsResuming);
     void paused();
-    void stopped(qint64 pElapsedTime);
+
+    void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
 };

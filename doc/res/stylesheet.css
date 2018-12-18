@@ -80,44 +80,6 @@ div.copyright div img.vpr {
     border: 0px;
 }
 
-div.download,
-div.section {
-    color: rgb(103, 103, 103);
-    font-size: 13pt;
-    font-weight: bold;
-}
-
-div.download {
-    border-radius: 13px 13px 0px 0px;
-    margin: 1.5em 0px 0px 0px;
-    padding: 3px 7px 3px 7px;
-}
-
-div.download table,
-div.section table {
-    border-spacing: 0px;
-    width: 100%;
-}
-
-div.download table td,
-div.section table td {
-    padding: 0px;
-}
-
-div.download table td.date,
-div.section table td.date {
-    text-align: right;
-    font-size: 9pt;
-    font-style: italic;
-    font-weight: normal;
-}
-
-div.download table td span.whatIsNew {
-    font-size: 7pt;
-    font-style: italic;
-    font-weight: normal;
-}
-
 div.header {
     z-index: 999;
     padding: 3px;
@@ -174,14 +136,9 @@ div.section {
     /*        necessary if we want to use a section at the beginning of */
     /*        a page (because of our fixed header at the top)...        */
     border-bottom: 1px solid rgba(103, 103, 103, 0.39);
-}
-
-div.warning {
-    border-radius: 5px;
-    border: 1px solid rgb(250, 235, 204);
-    background: rgb(252, 248, 227);
-    color: rgb(138, 109, 59);
-    padding: 7px 7px 1px 7px;
+    color: rgb(103, 103, 103);
+    font-size: 13pt;
+    font-weight: bold;
 }
 
 img.center {
@@ -205,6 +162,10 @@ img.downloads {
 img.downloads:hover {
     border: 1px solid rgba(103, 103, 103, 0.39);
     background: rgba(103, 103, 103, 0.13);
+}
+
+img.vcenter {
+    vertical-align: -3px;
 }
 
 span.anchor {

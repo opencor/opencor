@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QSettings>
 
 //==============================================================================
@@ -120,9 +120,10 @@ void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
     //          respectively, of the desktop's height, but that doesn't matter
     //          at all...
 
-    QVariantList defaultCellmlEditingViewWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                                      << qApp->desktop()->screenGeometry().height()
-                                                                      << 0.13*qApp->desktop()->screenGeometry().height();
+    int availableGeometryHeight = qApp->primaryScreen()->availableGeometry().height();
+    QVariantList defaultCellmlEditingViewWidgetSizes = QVariantList() << 0.19*availableGeometryHeight
+                                                                      << availableGeometryHeight
+                                                                      << 0.13*availableGeometryHeight;
 
     mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlEditingViewWidgetSizes, defaultCellmlEditingViewWidgetSizes).toList());
 

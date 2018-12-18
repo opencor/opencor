@@ -47,11 +47,9 @@ MathmlConverter::MathmlConverter()
 
 MathmlConverter::~MathmlConverter()
 {
-    // Stop our XSL transformer
-    // Note: we don't need to delete it since it will be done as part of its
-    //       thread being stopped...
+    // Delete our XSL transformer
 
-    mXslTransformer->stop();
+    delete mXslTransformer;
 }
 
 //==============================================================================
@@ -71,8 +69,8 @@ void MathmlConverter::convert(const QString &pContentMathml)
 void MathmlConverter::xslTransformationDone(const QString &pInput,
                                             const QString &pOutput)
 {
-    // Let people know that our MathML conversion has been performed (after
-    // having cleaned up its output)
+    // Let people know that our MathML conversion is done (after having cleaned
+    // up its output)
 
     emit done(pInput, cleanPresentationMathml(pOutput));
 }

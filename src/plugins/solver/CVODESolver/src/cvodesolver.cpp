@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sunlinsol/sunlinsol_spbcgs.h"
 #include "sunlinsol/sunlinsol_spgmr.h"
 #include "sunlinsol/sunlinsol_sptfqmr.h"
+#include "sunnonlinsol/sunnonlinsol_fixedpoint.h"
 
 //==============================================================================
 
@@ -115,6 +116,7 @@ CvodeSolver::CvodeSolver() :
     mStatesVector(nullptr),
     mMatrix(nullptr),
     mLinearSolver(nullptr),
+    mNonLinearSolver(nullptr),
     mUserData(nullptr),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
@@ -133,6 +135,7 @@ CvodeSolver::~CvodeSolver()
 
     N_VDestroy_Serial(mStatesVector);
     SUNLinSolFree(mLinearSolver);
+    SUNNonlinSolFree(mNonLinearSolver);
     SUNMatDestroy(mMatrix);
 
     CVodeFree(&mSolver);
@@ -303,8 +306,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
 
     bool newtonIteration = !iterationType.compare(NewtonIteration);
 
-    mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
-                          newtonIteration?CV_NEWTON:CV_FUNCTIONAL);
+    mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS);
 
     // Use our own error handler
 
@@ -333,53 +335,46 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (newtonIteration) {
         if (!linearSolver.compare(DenseLinearSolver)) {
             mMatrix = SUNDenseMatrix(pRatesStatesCount, pRatesStatesCount);
-            mLinearSolver = SUNDenseLinearSolver(mStatesVector, mMatrix);
+            mLinearSolver = SUNLinSol_Dense(mStatesVector, mMatrix);
 
-            CVDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+            CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
         } else if (!linearSolver.compare(BandedLinearSolver)) {
-            mMatrix = SUNBandMatrix(pRatesStatesCount,
-                                    upperHalfBandwidth, lowerHalfBandwidth,
-                                    upperHalfBandwidth+lowerHalfBandwidth);
-            mLinearSolver = SUNBandLinearSolver(mStatesVector, mMatrix);
+            mMatrix = SUNBandMatrix(pRatesStatesCount, upperHalfBandwidth,
+                                                       lowerHalfBandwidth);
+            mLinearSolver = SUNLinSol_Band(mStatesVector, mMatrix);
 
-            CVDlsSetLinearSolver(mSolver, mLinearSolver, mMatrix);
+            CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
         } else if (!linearSolver.compare(DiagonalLinearSolver)) {
             CVDiag(mSolver);
         } else {
             // We are dealing with a GMRES/Bi-CGStab/TFQMR linear solver
 
             if (!preconditioner.compare(BandedPreconditioner)) {
-                if (!linearSolver.compare(GmresLinearSolver)) {
-                    mLinearSolver = SUNSPGMR(mStatesVector, PREC_LEFT, 0);
+                if (!linearSolver.compare(GmresLinearSolver))
+                    mLinearSolver = SUNLinSol_SPGMR(mStatesVector, PREC_LEFT, 0);
+                else if (!linearSolver.compare(BiCgStabLinearSolver))
+                    mLinearSolver = SUNLinSol_SPBCGS(mStatesVector, PREC_LEFT, 0);
+                else
+                    mLinearSolver = SUNLinSol_SPTFQMR(mStatesVector, PREC_LEFT, 0);
 
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
-                    mLinearSolver = SUNSPBCGS(mStatesVector, PREC_LEFT, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else {
-                    mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_LEFT, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                }
-
-                CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
+                CVodeSetLinearSolver(mSolver, mLinearSolver, nullptr);
+                CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth,
+                                                           lowerHalfBandwidth);
             } else {
-                if (!linearSolver.compare(GmresLinearSolver)) {
-                    mLinearSolver = SUNSPGMR(mStatesVector, PREC_NONE, 0);
+                if (!linearSolver.compare(GmresLinearSolver))
+                    mLinearSolver = SUNLinSol_SPGMR(mStatesVector, PREC_NONE, 0);
+                else if (!linearSolver.compare(BiCgStabLinearSolver))
+                    mLinearSolver = SUNLinSol_SPBCGS(mStatesVector, PREC_NONE, 0);
+                else
+                    mLinearSolver = SUNLinSol_SPTFQMR(mStatesVector, PREC_NONE, 0);
 
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else if (!linearSolver.compare(BiCgStabLinearSolver)) {
-                    mLinearSolver = SUNSPBCGS(mStatesVector, PREC_NONE, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                } else {
-                    mLinearSolver = SUNSPTFQMR(mStatesVector, PREC_NONE, 0);
-
-                    CVSpilsSetLinearSolver(mSolver, mLinearSolver);
-                }
+                CVodeSetLinearSolver(mSolver, mLinearSolver, nullptr);
             }
         }
+    } else {
+        mNonLinearSolver = SUNNonlinSol_FixedPoint(mStatesVector, 0);
+
+        CVodeSetNonlinearSolver(mSolver, mNonLinearSolver);
     }
 
     // Set our relative and absolute tolerances

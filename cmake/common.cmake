@@ -47,33 +47,41 @@ endmacro()
 
 macro(build_documentation DOCUMENTATION_NAME)
     # Build the given documentation as an external project and have it copied to
-    # our final documentation directory
+    # our final documentation directory, but only if we Python and Sphinx are
+    # available
+    # Note: the check for Python and Sphinx is in case we are building only one
+    #       of our third-party libraries (to upgrade it to a newer version for
+    #       example), in which case we want our Python and PythonPackages
+    #       plugins will probably not be built...
 
-    set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
+    if(    NOT "${PYTHON_EXECUTABLE}" STREQUAL ""
+       AND NOT "${SPHINX_EXECUTABLE}" STREQUAL "")
+        set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
 
-    string(REPLACE ";" "|"
-           DOCUMENTATION_SPHINX_EXECUTABLE "${SPHINX_EXECUTABLE}")
+        string(REPLACE ";" "|"
+               DOCUMENTATION_SPHINX_EXECUTABLE "${SPHINX_EXECUTABLE}")
 
-    ExternalProject_Add(${DOCUMENTATION_BUILD}
-        SOURCE_DIR
-            ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
-        GIT_REPOSITORY
-            https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
-        CMAKE_ARGS
-            -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
-            -DSPHINX_EXECUTABLE=${DOCUMENTATION_SPHINX_EXECUTABLE}
-        LIST_SEPARATOR
-            |
-        INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/${DOCUMENTATION_BUILD}/html
-                                               ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
-    )
+        ExternalProject_Add(${DOCUMENTATION_BUILD}
+            SOURCE_DIR
+                ${CMAKE_SOURCE_DIR}/ext/doc/${DOCUMENTATION_NAME}
+            GIT_REPOSITORY
+                https://github.com/opencor/${DOCUMENTATION_NAME}-documentation
+            CMAKE_ARGS
+                -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
+                -DSPHINX_EXECUTABLE=${DOCUMENTATION_SPHINX_EXECUTABLE}
+            LIST_SEPARATOR
+                |
+            INSTALL_COMMAND
+                ${CMAKE_COMMAND} -E copy_directory ${PROJECT_BUILD_DIR}/ext/Build/${DOCUMENTATION_BUILD}/html
+                                                   ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
+        )
 
-    # Add our external project as a dependency to our project build target, so
-    # that our Help window plugin can generate the help files that will be
-    # embedded in OpenCOR as a resource
+        # Add our external project as a dependency to our project build target,
+        # so that our Help window plugin can generate the help files that will
+        # be embedded in OpenCOR as a resource
 
-    add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+        add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+    endif()
 endmacro()
 
 #===============================================================================
@@ -156,21 +164,15 @@ macro(add_plugin PLUGIN_NAME)
 
     # Generate and add the different files needed by the plugin
 
-    if("${ARG_HEADERS_MOC}" STREQUAL "")
-        set(SOURCES_MOC)
-    else()
+    if(NOT "${ARG_HEADERS_MOC}" STREQUAL "")
         qt5_wrap_cpp(SOURCES_MOC ${ARG_HEADERS_MOC})
     endif()
 
-    if("${ARG_UIS}" STREQUAL "")
-        set(SOURCES_UIS)
-    else()
+    if(NOT "${ARG_UIS}" STREQUAL "")
         qt5_wrap_ui(SOURCES_UIS ${ARG_UIS})
     endif()
 
-    if("${RESOURCES}" STREQUAL "")
-        set(SOURCES_RCS)
-    else()
+    if(NOT "${RESOURCES}" STREQUAL "")
         qt5_add_resources(SOURCES_RCS ${RESOURCES})
     endif()
 

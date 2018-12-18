@@ -54,16 +54,16 @@ bool CellmlFileManager::isCellmlFile(const QString &pFileName) const
 {
     // Return whether the given file is a CellML file
 
-    return instance()->isFile(pFileName);
+    return isFile(pFileName);
 }
 
 //==============================================================================
 
-CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
+CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName) const
 {
     // Return the CellmlFile object, if any, associated with the given file
 
-    return static_cast<CellmlFile *>(instance()->file(pFileName));
+    return static_cast<CellmlFile *>(file(pFileName));
 }
 
 //==============================================================================

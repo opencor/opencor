@@ -3,34 +3,37 @@ project(SUNDIALSPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME SUNDIALS)
-set(PACKAGE_VERSION 3.2.1)
+set(PACKAGE_VERSION 4.0.0)
 
 # Version of our package's libraries
 
-set(MAJOR_ARKODE_LIBRARY_VERSION 2)
-set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.2.1)
+set(MAJOR_ARKODE_LIBRARY_VERSION 3)
+set(ARKODE_LIBRARY_VERSION ${MAJOR_ARKODE_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_CVODES_LIBRARY_VERSION 3)
-set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.2.1)
+set(MAJOR_CVODES_LIBRARY_VERSION 4)
+set(CVODES_LIBRARY_VERSION ${MAJOR_CVODES_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_IDAS_LIBRARY_VERSION 2)
-set(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.2.1)
+set(MAJOR_IDAS_LIBRARY_VERSION 3)
+set(IDAS_LIBRARY_VERSION ${MAJOR_IDAS_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_KINSOL_LIBRARY_VERSION 3)
-set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.2.1)
+set(MAJOR_KINSOL_LIBRARY_VERSION 4)
+set(KINSOL_LIBRARY_VERSION ${MAJOR_KINSOL_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_NVEC_LIBRARY_VERSION 3)
-set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.2.1)
+set(MAJOR_NVEC_LIBRARY_VERSION 4)
+set(NVEC_LIBRARY_VERSION ${MAJOR_NVEC_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_SUNLINSOL_LIBRARY_VERSION 1)
-set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.2.1)
+set(MAJOR_SUNLINSOL_LIBRARY_VERSION 2)
+set(SUNLINSOL_LIBRARY_VERSION ${MAJOR_SUNLINSOL_LIBRARY_VERSION}.0.0)
 
-set(MAJOR_SUNMATRIX_LIBRARY_VERSION 1)
-set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.2.1)
+set(MAJOR_SUNNONLINSOL_LIBRARY_VERSION 1)
+set(SUNNONLINSOL_LIBRARY_VERSION ${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}.0.0)
+
+set(MAJOR_SUNMATRIX_LIBRARY_VERSION 2)
+set(SUNMATRIX_LIBRARY_VERSION ${MAJOR_SUNMATRIX_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v3.2.1)
+set(GIT_TAG v4.0.0)
 
 # Specify where our local package will be installed
 
@@ -74,6 +77,12 @@ if(WIN32)
 
     set(SUNLINSOLSPTFQMR_SHARED_LIBRARY sundials_sunlinsolsptfqmr${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(SUNLINSOLSPTFQMR_IMPORT_LIBRARY sundials_sunlinsolsptfqmr${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    set(SUNNONLINSOLFIXEDPOINT_SHARED_LIBRARY sundials_sunnonlinsolfixedpoint${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(SUNNONLINSOLFIXEDPOINT_IMPORT_LIBRARY sundials_sunnonlinsolfixedpoint${CMAKE_IMPORT_LIBRARY_SUFFIX})
+
+    set(SUNNONLINSOLNEWTON_SHARED_LIBRARY sundials_sunnonlinsolnewton${CMAKE_SHARED_LIBRARY_SUFFIX})
+    set(SUNNONLINSOLNEWTON_IMPORT_LIBRARY sundials_sunnonlinsolnewton${CMAKE_IMPORT_LIBRARY_SUFFIX})
 
     set(SUNMATRIXBAND_SHARED_LIBRARY sundials_sunmatrixband${CMAKE_SHARED_LIBRARY_SUFFIX})
     set(SUNMATRIXBAND_IMPORT_LIBRARY sundials_sunmatrixband${CMAKE_IMPORT_LIBRARY_SUFFIX})
@@ -120,6 +129,12 @@ else()
     set(SUNLINSOLSPTFQMR_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunlinsolsptfqmr${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_SUNLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     set(SUNLINSOLSPTFQMR_IMPORT_LIBRARY ${SUNLINSOLSPTFQMR_SHARED_LIBRARY})
 
+    set(SUNNONLINSOLFIXEDPOINT_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunnonlinsolfixedpoint${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(SUNNONLINSOLFIXEDPOINT_IMPORT_LIBRARY ${SUNNONLINSOLFIXEDPOINT_SHARED_LIBRARY})
+
+    set(SUNNONLINSOLNEWTON_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunnonlinsolnewton${CMAKE_SHARED_LIBRARY_SUFFIX}.${MAJOR_SUNNONLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
+    set(SUNNONLINSOLNEWTON_IMPORT_LIBRARY ${SUNNONLINSOLNEWTON_SHARED_LIBRARY})
+
     set(SUNMATRIXBAND_SHARED_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunmatrixband${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${MAJOR_SUNMATRIX_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST})
     set(SUNMATRIXBAND_IMPORT_LIBRARY ${SUNMATRIXBAND_SHARED_LIBRARY})
 
@@ -147,6 +162,8 @@ set(EXTERNAL_BINARIES
     ${SUNLINSOLSPFGMR_SHARED_LIBRARY}
     ${SUNLINSOLSPGMR_SHARED_LIBRARY}
     ${SUNLINSOLSPTFQMR_SHARED_LIBRARY}
+    ${SUNNONLINSOLFIXEDPOINT_SHARED_LIBRARY}
+    ${SUNNONLINSOLNEWTON_SHARED_LIBRARY}
     ${SUNMATRIXBAND_SHARED_LIBRARY}
     ${SUNMATRIXDENSE_SHARED_LIBRARY}
     ${SUNMATRIXSPARSE_SHARED_LIBRARY}
@@ -167,6 +184,8 @@ set(SHA1_FILES
     lib/${SUNLINSOLSPFGMR_SHARED_LIBRARY}
     lib/${SUNLINSOLSPGMR_SHARED_LIBRARY}
     lib/${SUNLINSOLSPTFQMR_SHARED_LIBRARY}
+    lib/${SUNNONLINSOLFIXEDPOINT_SHARED_LIBRARY}
+    lib/${SUNNONLINSOLNEWTON_SHARED_LIBRARY}
     lib/${SUNMATRIXBAND_SHARED_LIBRARY}
     lib/${SUNMATRIXDENSE_SHARED_LIBRARY}
     lib/${SUNMATRIXSPARSE_SHARED_LIBRARY}
@@ -186,6 +205,8 @@ if(WIN32)
         lib/${SUNLINSOLSPFGMR_IMPORT_LIBRARY}
         lib/${SUNLINSOLSPGMR_IMPORT_LIBRARY}
         lib/${SUNLINSOLSPTFQMR_IMPORT_LIBRARY}
+        lib/${SUNNONLINSOLFIXEDPOINT_IMPORT_LIBRARY}
+        lib/${SUNNONLINSOLNEWTON_IMPORT_LIBRARY}
         lib/${SUNMATRIXBAND_IMPORT_LIBRARY}
         lib/${SUNMATRIXDENSE_IMPORT_LIBRARY}
         lib/${SUNMATRIXSPARSE_IMPORT_LIBRARY}
@@ -203,111 +224,123 @@ if(USE_PREBUILT_SUNDIALS_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} ecfeb37085a7e81cbd84b2a930340f4666a595d9
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 593f23bbd2f5e81c221b2c928b03bccb5ba7b077
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 274d9727d46723499920c2004f3554b719ad35e4
-                                              00198fa3b96553c96a4d922d3f358f726123625f
-                                              3886f20e20bdc8f0f891833df9ec5b03f951aa16
-                                              a1cf451123757f346dbd7375a7088e8673315ae5
-                                              3328153a400188fe382bdae0b9a7845a5a6a2b62
-                                              6c0e341cbbfd5e587a51fa6e1c6d49810d28760d
-                                              0b646e2458538ae9726ee4dc540c89b80970fa0c
-                                              8c3d53316a270827d77042a74eacb8ac590d7c31
-                                              6d94161e5b74d534956e8eec7d902fcff16b451f
-                                              4cad654848ea1e7eb7ffd4b584712c3a2aeaf61e
-                                              c2fe21ba2ca7ec291b1f2934d7e4b0094857ad0e
-                                              c42e09b5f406f06045edb4d155c4f125fe0bc684
-                                              0996074e7c58851968ad805b025395338d3f96be
-                                              16ade14965efcc011208ad17daabfae8b5b03f60
-                                              10209091cbe0985848c11a7c1cc7bf97d6413ac5
-                                              48845723ed8f1cb761d59fac9bfc5476b9a0ec95
-                                              3ab286feb20a13e48e9bfad24bbce572e9d2d7cd
-                                              e5b07e7ebefb239e13995b510753d0284eaf9f30
-                                              7da90b39186e6ced47b6c47367dad34487bb417e
-                                              a44e3496c5dc48b7d1419d36568be151876edef9
-                                              0e580ce7e3f8acd07358a7a00a13b04598c64886
-                                              927827730fd4fbf32ea7e612b5ce82c5e663554b
-                                              8dff350c6c92c3cd4d85293acc0337269fe96f18
-                                              2338181edc897e5c3ffab2653b481944c156fd32
-                                              a1470647eb08198ff46afc8b59a4e49c222aea02
-                                              6ae54bdea809a4a88c78df6c7b37ccdce90e6e33
-                                              88b272c61ee1e59495af0952858c2152d7198c34
-                                              268df6f422c758e79244df83b0db3e53b71c9168
-                                              807a890630d423aa89849f294572f3363be8ee3c
-                                              bfddd33efb040ae9ea3aea9d28e166dba5acd0ec)
+                                  SHA1_VALUES 907523e9e06798084939ebcbc111df40220cffde
+                                              bee39bbc028ec3bbdeea02da31e9bfb1cbe19fc4
+                                              15470efda04151439a393ffc6e8be879c15bb4f7
+                                              c74dd26a27de81af4eaba5e724bd95fee6a4d403
+                                              16d483671a32e9b916ad9c4a295900bafe66896f
+                                              5c4235ea698921da2c60b5e9951407176bfe66c6
+                                              4f586dfc7d751fd882d7db6149dae1ac70dcc116
+                                              147653442b6594ec1b4f6ce25d37b8ca1f3bf8b0
+                                              9ad10b1a0b2dee5a6b1fb1dda0b161f71502f112
+                                              3d20090e4e4675a847059191cdf13535c2dca873
+                                              887f4457701c222cfd3da67376b2c8ce1ac98192
+                                              26671858dd6704f258683215bf6dd2ebaeb6ea58
+                                              dd30632ca9859cf0c43d1e81352c793eb587d983
+                                              5a995f56a94f68bafba174add6c93a0f4370b0ee
+                                              eb146b269906509f578907a28feebe92c77ea097
+                                              4430bcd70e538a3b0dce7d2b90380ce304f73fbf
+                                              0e53eb78e499d2d9688eca436149c998f1369506
+                                              21859c6aaa433eb1bb123dd4d8b1ec043b5d86c9
+                                              5abeccf4d67c400910298297e3aa74ff5edd3a15
+                                              e80d7bf39fc10c3fca14918e2ec20ea60c08162d
+                                              1b11d60a04f1a28591267909513d0dc317347a17
+                                              1a86b228cee7afea4c5185e2feedf8b53e696313
+                                              0ceac5602e511539d54a5d9a483002b42236b10d
+                                              f1fc6ab065a778f9cdfe4d40175d1c9f115c4665
+                                              5049afb8a83f9b74fb1fd60dcdb2a472171cb5c6
+                                              bb96ac4dcd5447f600edf046b8e296e1c5a2caad
+                                              8948bfb5e572724571a096a4fc364d23fc360fc8
+                                              70d5323204ceba7f0c57f5cbd7ed94a26b04b646
+                                              1f8d42fa3d39c2e2e750042d0f6472ee034230e8
+                                              ec26728f72449d2c3bb30ab7680b0bd7da8810ce
+                                              21af3191fe33c413250f7e494c02924d997b576a
+                                              1f14f52c28b9285a559262f5aea85d2b8f33584d
+                                              2e3ea998fd9a366067b1603b398bc0a7c1bcb308
+                                              bd727dfa9914991acf6cf2dfc78f9fbd0de16f5a)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} e50d266abdae5b5cc3fde40520dbdf886c1af60f
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 01de6c0d9b6901f0181ab70109b33232fafb0e3f
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 8cb1bce32b87a8b32bb9fd9149f7f56cc0681011
-                                              9a1b59155f5872e9821f58061662a270ec5354a8
-                                              c02b3fc080c049a8b94abcc6bc6211f80f4a4289
-                                              6b0a54f6400a502fed83a5fd9468600976baabfd
-                                              58899aa2999ba28e4371b66bd2acaf45796acbd4
-                                              b6ee0d77a189e8a9f3b466844ab62960c2c6254f
-                                              4ab7f8cca35262870c2c3efc7d1e4a7c1c650ff7
-                                              3c0d30fea54d0f98765cb934e1b73650648bb315
-                                              c0bba6c7b7d517aab3b9b8710f52a068f9f65c3a
-                                              27ad292763d377c4137dcd63f2e5a73ecb088457
-                                              b6faa40e3551bbad361a89a3db4caccbb01cfe61
-                                              412008e0df141183eccccf147b4bfd8fc50f0873
-                                              2656170410f585018c9d2bfbdf42fa87e4b4560c
-                                              1c1dd83db7dd16ab9b9858b1c5aabc44f0100bc8
-                                              9143a4c317d9cc6745cf1cea91e4df0c58883350
-                                              03c9ec1e5f762e9c57ecb1115e1bb1273c96568c
-                                              2050cb313bc09f0b8881173069580a895acb179f
-                                              3b4461173a39a065621b90f2edc3c031d53e8022
-                                              3de57414bc9b95377dcbbee580727e4340398696
-                                              510568fbd5f74475796b6a2118f9c5ffce7f4f38
-                                              f7a89addce9ee983e1ef7fd9d471d6c2634c3e6f
-                                              d3b499161b769123c137e8c675b7cf724c72760e
-                                              e6ad4c05cc6b75b1cf7ebd2a3799a6cda9a49360
-                                              b299659ec7e946bad2623b2af99693d7368e5f7b
-                                              19bd818b214414030c66a6fae127b9e815151859
-                                              fed9fbdd445a208c4bfa36ac9798b96191ca7dd9
-                                              06e4772e3cd0b707745b9dd25cfb94eb832051b7
-                                              7b57e974cc753d50929b9ccf0905efcb9dafe8a9
-                                              7c67880c58a1d45f63b05e85b5473a89ae908e01
-                                              55a2d9983b67cec380e53742fe5ca9feeaa75d28)
+                                  SHA1_VALUES 2252cada052b1015b82b887bc31425508a27a42b
+                                              6e253b742439f41e1fe64cb15368362ea56a2e14
+                                              ef47f893d1705a913879c3f61cb0a3c50a443498
+                                              662fc066f4bfd13204c8d09ce87e89ab570ac3c1
+                                              19fb06b722617890ab95d8ce209085217942081f
+                                              28f1d178f708dd35beb15d35d778f7c9cfccdbc2
+                                              004f0acb36f72aacf02c1a1c255c2d5ccc6028ee
+                                              8a45bcda1bca165d2bd3fec2449287af2c1a9a57
+                                              2c31db82fb6a9cae7c6e040800134795bfcfa57b
+                                              2b74388697ec11cd04863f8cb830aba5d45deb49
+                                              f6ee71cbc50f720d357f815d9e0b1d2edf64db56
+                                              8f1712eab4e405529b83d438d69b4779d9158060
+                                              a120fbe1a00bb939adcaf12a13009ba9d84297ec
+                                              60ab4a09b91127d2b79f9ce12a60953cbe3a3c2c
+                                              fbf7b88a5a324bf0f96d9d9b56a5e10b31774b72
+                                              330c9e69ed85dd397c98df585bf95ea815968119
+                                              8c4199710d62c480d91df62cb91d184fa9450ab7
+                                              931758551e30074bcd05a9796cf5d360f7f5a665
+                                              fd20ce53407f2eafe3b2c0df968b082caf5b5a85
+                                              fd83f4af06afe2f7f901a0842f15bb311a24ba40
+                                              c1d8febabc79aa49c9496d998f404190620bcadd
+                                              0e5173ec115815da53acad92dd358e0e0b2adf29
+                                              40a9bf16af52121fc8c28df9ae751237094b6659
+                                              d84eae7570c8d75e23d7f9588776d6aa2341cc87
+                                              2e04e7f67b7034af54b8968ccbdf33ef13a35679
+                                              3a300da87194c659c794fbb9992acdb12d3f76b6
+                                              2b0c2ec12416aa85e77bd4020cb75e69289e2e81
+                                              77cd7b928a831d421db97573c1b7448551da0fe6
+                                              28ae36c200b348b78bd4ace086d305a7a68c024b
+                                              07c5c6fdfa398b0788499ecbf9ef526156a90ce9
+                                              dc9b84cd266823bc0337b24e4b863378006decab
+                                              f3d007567a83b7306dca1a6b6adcf6e8b4a11c84
+                                              07799cd5f053a85942305546fbfb68bde66aaec9
+                                              717eeb784ff3d7ea83b10197a7ba9886522537e3)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1f15d2087aa11bf6796ac0fcbfe9ed48b3612a2f
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1e1458853300d01a886fac48c0ccf36864611002
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES afc2b203c3660c78a3d9d428276c535969dc8cde
-                                          ed579b3441c05e555d39e2c348084b67b594baa7
-                                          a838efdc350cf1123e775dbbecb684028429d3cc
-                                          d97a03ff8b0776a04135ad0be7fcf535049241f0
-                                          6629fe010a35285ca9f47030dacfc2cdea504198
-                                          cef4ff4cd8ff2cd110570e1adde3f41871c03d72
-                                          bf801c792e26404cee613729713bc20d248fe55e
-                                          20836ed707abff1be0d0b6e87d08f228335f787a
-                                          7a025df1de8fad516378c5b516e81da71b008627
-                                          682bdd488b2c7126a0e2e146344c4bb783b04138
-                                          1e724feff8553e99cad27dcce0e502eddebff922
-                                          f40341f4a6174384eeb34f15799cbf6375357c3b
-                                          dac6ce77edbea9d426d85451fd905eec11519759
-                                          b2aab52c7a75dcb49cad8c2aae82b8ca9ad6800f
-                                          a7080ef1f6450f0a3521ead2d0adfadc5720b430)
+                              SHA1_VALUES 8f2796fba24035731f2268e8865817bc453fe54f
+                                          137beecd25b8f4932e135b86395c1e7f2d398ede
+                                          f729e24f4fe68edba2dbf4f214f6829d7a3fedb6
+                                          c0862ccd3a67eddcbedc32f914914147cb4cde9d
+                                          df4e16e519e08bd0ad8550af5da1a83bbb533c58
+                                          f4d3b5eae4e59ef71718083b6f25c36feb70bd94
+                                          24bf6668cae6c99989f3da3979861fb27eca6161
+                                          47b111de8f9647405a1806e8385a497d323cba29
+                                          63845c0e3a1f08b0bcd8b2b3f628b6b8b89d539b
+                                          b631a2d94ade81b0c01feff90b446e8e7dd8e870
+                                          db06d9a89c87cda4ae9d85153278c4670bdb57c7
+                                          002e11a14dbe0be639846bc2c7243a379b156c5d
+                                          d199645f9bad25c47bbc4f11872a43be496fcd89
+                                          67203d32e45b549126b36848e342ff714a568075
+                                          2e98c6e45b09ee2e37d8d59159a5d61aa67f2b5d
+                                          a105fe16721bcc09333260f6eb1478eb79a5484f
+                                          9419ec54450f8326b445da1cbab3e96657b6e08e)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 2a810ef12dcb0ff843250aee6be5cd092644c978
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f820dff2145539ffda5dc9fd0540b0e3bee89f07
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 07a602cf9982623ac89795ad8ee6b900d561bcc7
-                                          d647bcb68ba644574a620de0c28a09d4f43f9434
-                                          7eecaa8d9c5c244f8a4b1230a805ea28d2183130
-                                          bd8932c0a184c0de87338a78f1a44114beeadfcd
-                                          42a41a2869a1a3d975fb00c189a270f666c58b41
-                                          368abefe9433750defea6dfae81e93d314ce3c6f
-                                          7bad809272dd4ffae5ba450bddf88311c3bc3f65
-                                          ce1c6ac75d1aa06506c5e884ffc9b20e2fd5328e
-                                          8cfcff62241b8bae74623f3c54bad1d4fdf68973
-                                          f963887a46f2d523c47003e201f0dfa6936ee9a8
-                                          1b1c4e064a9f633fe6881d3f49eac81d6fb15547
-                                          7b688d11bda1ad91270e419c4e04fa910ac35e49
-                                          88efe51b8c9aa5e23ba3c6ab2942293c36877ccc
-                                          351c5a8acac9db8136bbdec2a456e5b1e11e3a36
-                                          54c5434e24c99d0948796552e5c51524498129b8)
+                              SHA1_VALUES 8f542da4dc0aa858f8066ce04475768ebd83f225
+                                          90213d4f86082c9ad0c7c5b048acd5b961a818a5
+                                          2eb4a3dbf9eef4e1fba816006ae098802b0314b6
+                                          b52c356ce6320a6606dc65851cfd571e819b35e7
+                                          84c02c256e4098985bf1ac6684acd5a3580d9ebc
+                                          09a4d185b593cf4f0e6e80b9f3aca123751590d0
+                                          ed5502231cc66ba6c478d29e7903ea020a7fbdf2
+                                          c762b74f99d33293464bd38d2b6cd5aae735a0cb
+                                          dfc7b8c4dbff6f1bf49ec571c6fce229cdf680bc
+                                          9e436c113bd0033006266ec72c63a69206b5db7b
+                                          90c81d667b6a9195e5ab09ebdbaee2a649319675
+                                          1d994350093570058cc7daf13e23acf1284683b7
+                                          df1a7e1047fb7adcae77e58c3a0feea3d7aec781
+                                          192071702d727e51124ba3305efadce2340bc5a6
+                                          9ea12e4d7e4f1a72d421b11ec082d64e9485f87c
+                                          f26121b8428bfabb0d29b45390369a1b6380c383
+                                          a85bbe2b711c211438638518defa74549f53af8e)
     endif()
 else()
     # Ignore some warnings
@@ -358,6 +391,8 @@ else()
             <INSTALL_DIR>/lib/${SUNLINSOLSPFGMR_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SUNLINSOLSPGMR_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SUNLINSOLSPTFQMR_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${SUNNONLINSOLFIXEDPOINT_IMPORT_LIBRARY}
+            <INSTALL_DIR>/lib/${SUNNONLINSOLNEWTON_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SUNMATRIXBAND_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SUNMATRIXDENSE_IMPORT_LIBRARY}
             <INSTALL_DIR>/lib/${SUNMATRIXSPARSE_IMPORT_LIBRARY}
@@ -453,6 +488,20 @@ else()
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunnonlinsolfixedpointLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNNONLINSOLFIXEDPOINT_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunnonlinsolfixedpoint${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNNONLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SUNNONLINSOLFIXEDPOINT_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                 DEPENDEES install)
+
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copySunnonlinsolnewtonLibrary
+                                 COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNNONLINSOLNEWTON_SHARED_LIBRARY}
+                                 COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunnonlinsolnewton${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNNONLINSOL_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
+                                                                  ${SUNNONLINSOLNEWTON_SHARED_LIBRARY}
+                                 WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                 DEPENDEES install)
+
         ExternalProject_Add_Step(${PACKAGE_BUILD} copySunmatrixbandLibrary
                                  COMMAND ${CMAKE_COMMAND} -E remove -f ${SUNMATRIXBAND_SHARED_LIBRARY}
                                  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SHARED_LIBRARY_PREFIX}sundials_sunmatrixband${CMAKE_SHARED_LIBRARY_SUFFIX_PRE}.${SUNMATRIX_LIBRARY_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX_POST}
@@ -502,6 +551,8 @@ set(SUNDIALS_SUNLINSOLSPBCGS_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNLINSOLSPBCGS_
 set(SUNDIALS_SUNLINSOLSPFGMR_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNLINSOLSPFGMR_IMPORT_LIBRARY} PARENT_SCOPE)
 set(SUNDIALS_SUNLINSOLSPGMR_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNLINSOLSPGMR_IMPORT_LIBRARY} PARENT_SCOPE)
 set(SUNDIALS_SUNLINSOLSPTFQMR_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNLINSOLSPTFQMR_IMPORT_LIBRARY} PARENT_SCOPE)
+set(SUNDIALS_SUNNONLINSOLFIXEDPOINT_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNNONLINSOLFIXEDPOINT_IMPORT_LIBRARY} PARENT_SCOPE)
+set(SUNDIALS_SUNNONLINSOLNEWTON_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNNONLINSOLNEWTON_IMPORT_LIBRARY} PARENT_SCOPE)
 set(SUNDIALS_SUNMATRIXBAND_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNMATRIXBAND_IMPORT_LIBRARY} PARENT_SCOPE)
 set(SUNDIALS_SUNMATRIXDENSE_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNMATRIXDENSE_IMPORT_LIBRARY} PARENT_SCOPE)
 set(SUNDIALS_SUNMATRIXSPARSE_LIBRARY ${EXTERNAL_BINARIES_DIR}/${SUNMATRIXSPARSE_IMPORT_LIBRARY} PARENT_SCOPE)
@@ -518,6 +569,8 @@ set(SUNDIALS_LIBRARIES
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNLINSOLSPFGMR_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNLINSOLSPGMR_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNLINSOLSPTFQMR_LIBRARY}
+    ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNNONLINSOLFIXEDPOINT_LIBRARY}
+    ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNNONLINSOLNEWTON_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNMATRIXBAND_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNMATRIXDENSE_LIBRARY}
     ${EXTERNAL_BINARIES_DIR}/${SUNDIALS_SUNMATRIXSPARSE_LIBRARY}

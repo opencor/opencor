@@ -30,9 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QLayout>
 #include <QMetaType>
+#include <QScreen>
 #include <QSettings>
 #include <QVariant>
 
@@ -69,11 +69,12 @@ void CellmlAnnotationViewWidget::loadSettings(QSettings *pSettings)
     //       some information between the different instances, so we have to do
     //       it here instead...
 
-    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                            << 0.75*qApp->desktop()->screenGeometry().width();
-    QVariantList defaultMetadataDetailsWidgetSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().height()
-                                                                    << 0.25*qApp->desktop()->screenGeometry().height()
-                                                                    << 0.50*qApp->desktop()->screenGeometry().height();
+    QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
+    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.25*availableGeometry.width()
+                                                            << 0.75*availableGeometry.width();
+    QVariantList defaultMetadataDetailsWidgetSizes = QVariantList() << 0.25*availableGeometry.height()
+                                                                    << 0.25*availableGeometry.height()
+                                                                    << 0.50*availableGeometry.height();
 
     mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
     mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());

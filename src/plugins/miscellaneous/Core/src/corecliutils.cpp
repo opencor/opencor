@@ -33,9 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QChar>
 #include <QCryptographicHash>
 #include <QDir>
+#include <QDropEvent>
 #include <QIODevice>
 #include <QLocale>
 #include <QMap>
+#include <QMimeData>
 #include <QNetworkAccessManager>
 #include <QNetworkInterface>
 #include <QNetworkReply>
@@ -463,19 +465,55 @@ bool isEmptyDirectory(const QString &pDirName)
     #pragma optimize("", off)
 #endif
 
-void doNothing(int pMax)
+void doNothing(quint64 pMax)
 {
     // A silly function, which aim is simply to do nothing
     // Note: this function came about because there is no way, on Windows, to
     //       pause a thread for less than a millisecond (and this is in the best
-    //       of cases)...
+    //       of cases...
 
-    for (int i = 0; i < pMax; ++i)
+    for (quint64 i = 0; i < 1000*pMax; ++i) {
 #ifdef Q_OS_WIN
         ;
 #else
         asm("nop");
 #endif
+    }
+}
+
+#ifdef Q_OS_WIN
+    #pragma optimize("", on)
+#endif
+
+//==============================================================================
+
+#ifdef Q_OS_WIN
+    #pragma optimize("", off)
+#endif
+
+void doNothing(const quint64 *pMax, bool *pStopped)
+{
+    // A silly function, which aim is simply to do nothing
+    // Note #1: this function came about because there is no way, on Windows, to
+    //          pause a thread for less than a millisecond (and this is in the
+    //          best of cases)...
+    // Note #2: pMax is a pointer so that we can adapt in real-time to the a
+    //          value we are passed (which is useful if, in our Simulation
+    //          Experiment view, we set a big delay and then decide to reduce
+    //          it)...
+    // Note #3: pStopped is optional and is used to stop our loop, in case it
+    //          takes forever...
+
+    for (quint64 i = 0; i < 1000**pMax; ++i) {
+        if (pStopped && *pStopped)
+            break;
+
+#ifdef Q_OS_WIN
+        ;
+#else
+        asm("nop");
+#endif
+    }
 }
 
 #ifdef Q_OS_WIN
@@ -881,6 +919,83 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     foreach (const QString &elementAttribute, elementsAttributes.keys())
         res.replace(elementAttribute+"=\"\"", elementsAttributes.value(elementAttribute));
+
+    return res;
+}
+
+//==============================================================================
+
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    bool pCheckMimeTypes, const QString &pMimeType)
+{
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types, if any
+
+    QStringList res = QStringList();
+
+    foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
+        if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
+            res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
+    }
+
+    return res;
+}
+
+//==============================================================================
+
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces)
+{
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces
+
+    return filters(pFileTypeInterfaces, false, QString());
+}
+
+//==============================================================================
+
+QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
+                    const QString &pMimeType)
+{
+    // Convert and return as a list of strings the filters corresponding to the
+    // given file type interfaces, using the given MIME types
+
+    return filters(pFileTypeInterfaces, true, pMimeType);
+}
+
+//==============================================================================
+
+QStringList droppedFileNames(QDropEvent *pEvent)
+{
+    // Retrieve the name of the various files that have been dropped
+
+    QStringList res = QStringList();
+    QList<QUrl> urls = pEvent->mimeData()->urls();
+
+    for (int i = 0, iMax = urls.count(); i < iMax; ++i) {
+        QString fileName = urls[i].toLocalFile();
+        QFileInfo fileInfo = fileName;
+
+        if (fileInfo.isFile()) {
+            if (fileInfo.isSymLink()) {
+                // We are dropping a symbolic link, so retrieve its target and
+                // check that it exists, and if it does then add it
+
+                fileName = fileInfo.symLinkTarget();
+
+                if (QFile::exists(fileName))
+                    res << fileName;
+            } else {
+                // We are dropping a file, so we can just add it
+
+                res << fileName;
+            }
+        }
+    }
+
+    // There may be duplicates (in case we dropped some symbolic links), so
+    // remove them
+
+    res.removeDuplicates();
 
     return res;
 }
