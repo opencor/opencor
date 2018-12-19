@@ -525,10 +525,8 @@ void DataStore::addValues(double pVoiValue)
     //       the VOI value first, we might in some cases (see issue #1579 for
     //       example) end up with the wrong size...
 
-    for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
-         variable != variableEnd; ++variable) {
-        (*variable)->addValue();
-    }
+    for (auto variable : mVariables)
+        variable->addValue();
 
     mVoi->addValue(pVoiValue);
 }

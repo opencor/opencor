@@ -756,11 +756,10 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         QString oldDiffString = QString();
         QString newDiffString = QString();
 
-        for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
-             diffIterator != endDiffIterator; ++diffIterator) {
-            QString text = cleanHtmlEscaped(QString::fromStdWString((*diffIterator).text));
+        for (auto diff : diffs) {
+            QString text = cleanHtmlEscaped(QString::fromStdWString(diff.text));
 
-            switch ((*diffIterator).operation) {
+            switch (diff.operation) {
             case DiffMatchPatch::EQUAL:
                 oldDiffString += text;
                 newDiffString += text;
