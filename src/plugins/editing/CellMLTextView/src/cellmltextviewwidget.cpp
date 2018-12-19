@@ -1172,16 +1172,10 @@ QString CellmlTextViewWidget::statement(int pPosition) const
         // Skip spaces and comments to determine the real start of our current
         // statement
 
-        EditorWidget::EditorWidget *editor = mEditingWidget->editorWidget();
         int shift = 0;
-        int style;
 
         forever {
-            style = editor->styleAt(fromPosition);
-
-            if (   (style == CellmlTextViewLexer::SingleLineComment)
-                || (style == CellmlTextViewLexer::MultilineComment)
-                || currentStatement[shift].isSpace()) {
+            if (isComment(fromPosition) || currentStatement[shift].isSpace()) {
                 ++fromPosition;
                 ++shift;
             } else {
@@ -1192,7 +1186,7 @@ QString CellmlTextViewWidget::statement(int pPosition) const
         // Make sure that we are within our current statement
 
         return ((pPosition >= fromPosition) && (pPosition < toPosition))?
-                   editor->textInRange(fromPosition, toPosition):
+                   mEditingWidget->editorWidget()->textInRange(fromPosition, toPosition):
                    QString();
     } else {
         // Our current statement doesn't contain something that we can recognise
