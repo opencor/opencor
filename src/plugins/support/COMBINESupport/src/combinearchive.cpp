@@ -256,7 +256,7 @@ bool CombineArchive::save(const QString &pFileName)
     QByteArray fileList = QByteArray();
     QString fileFormat;
 
-    foreach (const CombineArchiveFile &file, mFiles) {
+    for (const auto &file : mFiles) {
         switch (file.format()) {
         case CombineArchiveFile::Unknown:
             return false;
@@ -302,7 +302,7 @@ bool CombineArchive::save(const QString &pFileName)
                       +fileList
                       +"</omexManifest>\n");
 
-    foreach (const CombineArchiveFile &file, mFiles) {
+    for (const auto &file : mFiles) {
         if (file.location().compare(".")) {
             QByteArray fileContents;
 
@@ -490,7 +490,7 @@ CombineArchiveFiles CombineArchive::masterFiles()
 
     CombineArchiveFiles res = CombineArchiveFiles();
 
-    foreach (const CombineArchiveFile &file, mFiles) {
+    for (const auto &file : mFiles) {
         if (file.isMaster())
             res << file;
     }

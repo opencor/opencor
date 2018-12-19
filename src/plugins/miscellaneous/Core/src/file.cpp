@@ -120,7 +120,7 @@ File::Status File::check()
     QString newSha1 = sha1();
     QStringList newDependenciesSha1 = QStringList();
 
-    foreach (const QString &dependency, mDependencies)
+    for (const auto &dependency : mDependencies)
         newDependenciesSha1 << sha1(dependency);
 
     if (newSha1.isEmpty()) {
@@ -402,7 +402,7 @@ bool File::setDependencies(const QStringList &pDependencies)
 
         mDependenciesSha1.clear();
 
-        foreach (const QString &dependency, pDependencies)
+        for (const auto &dependency : pDependencies)
             mDependenciesSha1 << sha1(dependency);
 
         return true;

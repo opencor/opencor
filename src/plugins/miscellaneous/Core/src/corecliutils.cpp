@@ -89,7 +89,7 @@ QBoolList qVariantListToBoolList(const QVariantList &pVariantList)
 
     QBoolList res = QBoolList();
 
-    foreach (const QVariant &variant, pVariantList)
+    for (const auto &variant : pVariantList)
         res << variant.toBool();
 
     return res;
@@ -103,7 +103,7 @@ QVariantList qBoolListToVariantList(const QBoolList &pBoolList)
 
     QVariantList res = QVariantList();
 
-    foreach (int nb, pBoolList)
+    for (auto nb : pBoolList)
         res << nb;
 
     return res;
@@ -117,7 +117,7 @@ QIntList qVariantListToIntList(const QVariantList &pVariantList)
 
     QIntList res = QIntList();
 
-    foreach (const QVariant &variant, pVariantList)
+    for (const auto &variant : pVariantList)
         res << variant.toInt();
 
     return res;
@@ -131,7 +131,7 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 
     QVariantList res = QVariantList();
 
-    foreach (int nb, pIntList)
+    for (auto nb : pIntList)
         res << nb;
 
     return res;
@@ -553,7 +553,7 @@ void cleanContentMathml(QDomElement pDomElement)
             nonMathmlAttributes << attribute;
     }
 
-    foreach (QDomNode nonMathmlAttribute, nonMathmlAttributes)
+    for (const auto &nonMathmlAttribute : nonMathmlAttributes)
         pDomElement.removeAttributeNode(nonMathmlAttribute.toAttr());
 
     // Go through the element's child elements, if any, and clean them up
@@ -917,7 +917,7 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     // Manually serialise the elements' attributes
 
-    foreach (const QString &elementAttribute, elementsAttributes.keys())
+    for (const auto &elementAttribute : elementsAttributes.keys())
         res.replace(elementAttribute+"=\"\"", elementsAttributes.value(elementAttribute));
 
     return res;
@@ -933,7 +933,7 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
 
     QStringList res = QStringList();
 
-    foreach (FileTypeInterface *fileTypeInterface, pFileTypeInterfaces) {
+    for (auto fileTypeInterface : pFileTypeInterfaces) {
         if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
             res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
     }

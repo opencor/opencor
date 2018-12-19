@@ -218,7 +218,7 @@ SolverInterface * SimulationData::solverInterface(const QString &pSolverName) co
 {
     // Return the named solver interface, if any
 
-    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+    for (auto solverInterface : Core::solverInterfaces()) {
         if (!solverInterface->solverName().compare(pSolverName))
             return solverInterface;
     }
@@ -633,7 +633,7 @@ void SimulationResults::createDataStore()
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->parameters()) {
+    for (auto parameter : runtime->parameters()) {
         DataStore::DataStoreVariable *variable = nullptr;
 
         switch (parameter->type()) {

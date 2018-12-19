@@ -197,7 +197,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     //       being referenced all over the place, which is really not what we
     //       want since that unnecessarily pollutes things...
 
-    foreach (const QString &key, mNamespaces.keys())
+    for (const auto &key : mNamespaces.keys())
         mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
 
     return true;

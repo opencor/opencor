@@ -284,7 +284,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     cellmlOpenToolButton->setMenu(cellmlOpenDropDownMenu);
     cellmlOpenToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
-    foreach (Plugin *cellmlEditingViewPlugin, pViewWidget->cellmlEditingViewPlugins()) {
+    for (auto cellmlEditingViewPlugin : pViewWidget->cellmlEditingViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
@@ -297,7 +297,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     cellmlOpenDropDownMenu->addSeparator();
 
-    foreach (Plugin *cellmlSimulationViewPlugin, pViewWidget->cellmlSimulationViewPlugins()) {
+    for (auto cellmlSimulationViewPlugin : pViewWidget->cellmlSimulationViewPlugins()) {
         QAction *action = Core::newAction(Core::mainWindow());
 
         cellmlOpenDropDownMenu->addAction(action);
@@ -329,7 +329,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     simulationResultsExportToolButton->setMenu(mSimulationResultsExportDropDownMenu);
     simulationResultsExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
-    foreach (DataStoreInterface *dataStoreInterface, Core::dataStoreInterfaces()) {
+    for (auto dataStoreInterface : Core::dataStoreInterfaces()) {
         QString dataStoreName = dataStoreInterface->dataStoreName();
         QAction *action = mSimulationResultsExportDropDownMenu->addAction(dataStoreName+"...");
 
@@ -602,7 +602,7 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
 
     // Retranslate our CellML editing view actions
 
-    foreach (QAction *cellmlEditingViewAction, mCellmlBasedViewPlugins.keys()) {
+    for (auto cellmlEditingViewAction : mCellmlBasedViewPlugins.keys()) {
         Plugin *plugin = mCellmlBasedViewPlugins.value(cellmlEditingViewAction);
         QString viewName = qobject_cast<ViewInterface *>(plugin->instance())->viewName();
 
@@ -626,7 +626,7 @@ void SimulationExperimentViewSimulationWidget::updateDataStoreActions()
 {
     // Update our data store actions
 
-    foreach (QAction *action, mDataStoreInterfaces.keys()) {
+    for (auto action : mDataStoreInterfaces.keys()) {
         I18nInterface::retranslateAction(action,
                                          action->text(),
                                          tr("Export the simulation results to %1").arg(mDataStoreInterfaces.value(action)->dataStoreName()));
@@ -795,7 +795,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             // There is one or several issues with our COMBINE archive, so list
             // it/them
 
-            foreach (const COMBINESupport::CombineArchiveIssue &combineArchiveIssue, combineArchiveIssues) {
+            for (const auto &combineArchiveIssue : combineArchiveIssues) {
                 QString issueType;
 
                 switch (combineArchiveIssue.type()) {
@@ -830,7 +830,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             // There is one or several issues with our SED-ML file, so list
             // it/them
 
-            foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
+            for (const auto &sedmlFileIssue : sedmlFileIssues) {
                 QString issueType;
 
                 switch (sedmlFileIssue.type()) {
@@ -919,12 +919,11 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                     //       cases...
 
                     if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
-                        foreach (const CellMLSupport::CellmlFileIssue &issue,
-                                 runtime?
-                                     runtime->issues():
-                                     mSimulation->cellmlFile()?
-                                         mSimulation->cellmlFile()->issues():
-                                         CellMLSupport::CellmlFileIssues()) {
+                        for (const auto &issue : runtime?
+                                                     runtime->issues():
+                                                     mSimulation->cellmlFile()?
+                                                         mSimulation->cellmlFile()->issues():
+                                                         CellMLSupport::CellmlFileIssues()) {
                             information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"))
                                                                                                                             .arg(issue.message());
                         }
@@ -1189,7 +1188,7 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         ObjRef<iface::cellml_api::CellMLComponentSet> components = mSimulation->cellmlFile()->model()->localComponents();
         QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters = mContentsWidget->informationWidget()->parametersWidget()->parameters();
 
-        foreach (Core::Property *property, parameters.keys()) {
+        for (auto property : parameters.keys()) {
             CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
 
             if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
@@ -1569,7 +1568,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     if (odeSolverInterface)
         sedmlAlgorithm->setKisaoID(odeSolverInterface->kisaoId(mSimulation->data()->odeSolverName()).toStdString());
 
-    foreach (const QString &odeSolverProperty, odeSolverProperties.keys()) {
+    for (const auto &odeSolverProperty : odeSolverProperties.keys()) {
         QString kisaoId = odeSolverInterface->kisaoId(odeSolverProperty);
         QVariant odeSolverPropertyValue = odeSolverProperties.value(odeSolverProperty);
         QString value = (odeSolverPropertyValue.type() == QVariant::Double)?
@@ -1608,7 +1607,7 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
         QString annotation = QString();
         Solver::Solver::Properties nlaSolverProperties = mSimulation->data()->nlaSolverProperties();
 
-        foreach (const QString &nlaSolverProperty, nlaSolverProperties.keys()) {
+        for (const auto &nlaSolverProperty : nlaSolverProperties.keys()) {
             annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty)
                                                               .arg(SEDMLSupport::Id)
                                                               .arg(nlaSolverProperty)
@@ -1800,8 +1799,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     QMap<Core::Properties, GraphsData> graphsData = QMap<Core::Properties, GraphsData>();
     int graphPlotCounter = 0;
 
-    foreach (GraphPanelWidget::GraphPanelWidget *graphPanel,
-             graphPanelsWidget->graphPanels()) {
+    for (auto graphPanel : graphPanelsWidget->graphPanels()) {
         // Create and customise the look and feel of our 2D plot
 
         Core::Properties graphPanelProperties = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel)->properties();
@@ -1931,13 +1929,13 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     // Create and customise 2D plot outputs and data generators for all the
     // graphs that are to be plotted, if any
 
-    foreach (const Core::Properties &graphsProperties, graphsPropertiesList) {
+    for (const auto &graphsProperties : graphsPropertiesList) {
         // Create some graphs
 
         GraphsData data = graphsData.value(graphsProperties);
         int graphCounter = 0;
 
-        foreach (Core::Property *property, graphsProperties) {
+        for (auto property : graphsProperties) {
             ++graphCounter;
 
             // Create two data generators for the X and Y parameters of our
@@ -2160,7 +2158,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         QString commonPath = QString(cellmlFileName).remove(FileNameRegEx)+"/";
         QMap<QString, QString> remoteImportedFileNames = QMap<QString, QString>();
 
-        foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+        for (const auto &importedFileName : cellmlFile->importedFileNames()) {
             // Check for the common path
 
             QString importedFilePath = remoteCellmlFile?
@@ -2226,7 +2224,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
                                         (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
                                             COMBINESupport::CombineArchiveFile::Cellml_1_0:
                                             COMBINESupport::CombineArchiveFile::Cellml_1_1)) {
-                foreach (const QString &importedFileName, cellmlFile->importedFileNames()) {
+                for (const auto &importedFileName : cellmlFile->importedFileNames()) {
                     QString realImportedFileName = remoteCellmlFile?
                                                        remoteImportedFileNames.value(importedFileName):
                                                        importedFileName;
@@ -2262,7 +2260,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
         // Remove the local copy of our remote imported CellML files, if any
 
-        foreach (const QString &localImportedFileName, remoteImportedFileNames.values())
+        for (const auto &localImportedFileName : remoteImportedFileNames.values())
             QFile::remove(localImportedFileName);
 
         // Let the user know about any error that may have occurred
@@ -2351,7 +2349,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         }
 
         if (!pProperty || !needOdeSolverGuiUpdate) {
-            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
+            for (auto property : solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
                 if (!pProperty || (pProperty == property)) {
                     mSimulation->data()->addOdeSolverProperty(property->id(), property->variantValue());
 
@@ -2383,7 +2381,7 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         }
 
         if (!pProperty || !needNlaSolverGuiUpdate) {
-            foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
+            for (auto property : solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (!pProperty || (pProperty == property)) {
                     mSimulation->data()->addNlaSolverProperty(property->id(), property->variantValue(), pResetNlaSolver);
 
@@ -2480,7 +2478,7 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
     pCellmlComponent = componentName;
     pCellmlVariable = variableName+QString(variableDegree, '\'');
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mSimulation->runtime()->parameters()) {
+    for (auto parameter : mSimulation->runtime()->parameters()) {
         if (   !componentName.compare(parameter->componentHierarchy().last())
             && !variableName.compare(parameter->name())
             &&  (variableDegree == parameter->degree())) {
@@ -2588,7 +2586,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
     Core::Properties solverProperties = Core::Properties();
     QString kisaoId = QString::fromStdString(sedmlAlgorithm->getKisaoID());
 
-    foreach (SolverInterface *solverInterface, solverInterfaces) {
+    for (auto solverInterface : solverInterfaces) {
         if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
             odeSolverInterface = solverInterface;
             solverProperties = odeSolverData->solversProperties().value(solverInterface->solverName());
@@ -2612,7 +2610,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
         QString id = odeSolverInterface->id(kisaoId);
         bool propertySet = false;
 
-        foreach (Core::Property *solverProperty, solverProperties) {
+        for (auto solverProperty : solverProperties) {
             if (!solverProperty->id().compare(id)) {
                 QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
 
@@ -2690,7 +2688,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                         QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
                         bool propertySet = false;
 
-                        foreach (Core::Property *solverProperty, solverProperties) {
+                        for (auto solverProperty : solverProperties) {
                             if (!solverProperty->id().compare(id)) {
                                 solverProperty->setValue(value);
 
@@ -2730,7 +2728,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 mustHaveNlaSolver = true;
                 nlaSolverName = QString::fromStdString(nlaSolverNode.getAttrValue(nlaSolverNode.getAttrIndex(SEDMLSupport::Name.toStdString())));
 
-                foreach (SolverInterface *solverInterface, solverInterfaces) {
+                for (auto solverInterface : solverInterfaces) {
                     if (!nlaSolverName.compare(solverInterface->solverName())) {
                         solverProperties = nlaSolverData->solversProperties().value(solverInterface->solverName());
 
@@ -2752,7 +2750,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                             QString value = QString::fromStdString(solverPropertyNode.getAttrValue(solverPropertyNode.getAttrIndex(SEDMLSupport::Value.toStdString())));
                             bool propertySet = false;
 
-                            foreach (Core::Property *solverProperty, solverProperties) {
+                            for (auto solverProperty : solverProperties) {
                                 if (!solverProperty->id().compare(id)) {
                                     solverProperty->setValue(value);
 
@@ -3383,7 +3381,7 @@ void SimulationExperimentViewSimulationWidget::simulationPropertyChanged(Core::P
     // Note: needProcessingEvents is used to ensure that our plots are all
     //       updated at once...
 
-    foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
+    for (auto plot : mPlots) {
         if (updatePlot(plot, true, false))
             needProcessingEvents = true;
     }
@@ -3564,7 +3562,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
 
     GraphPanelWidget::GraphPanelPlotWidgets plots = GraphPanelWidget::GraphPanelPlotWidgets();
 
-    foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pGraphs) {
+    for (auto graph : pGraphs) {
         // Show/hide the graph
 
         graph->setVisible(graph->isValid() && graph->isSelected());
@@ -3595,7 +3593,7 @@ void SimulationExperimentViewSimulationWidget::graphsUpdated(const GraphPanelWid
     // Update and replot our various plots, if allowed
 
     if (mCanUpdatePlotsForUpdatedGraphs) {
-        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, plots) {
+        for (auto plot : plots) {
             updatePlot(plot, true, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
@@ -3674,7 +3672,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     bool needInitialisationX = true;
     bool needInitialisationY = true;
 
-    foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, pPlot->graphs()) {
+    for (auto graph : pPlot->graphs()) {
         if (graph->isVisible()) {
             SimulationSupport::Simulation *simulation = mViewWidget->simulation(graph->fileName());
             double startingPoint = simulation->data()->startingPoint();
@@ -3840,7 +3838,7 @@ void SimulationExperimentViewSimulationWidget::updateGui(bool pCheckVisibility)
     if (mNeedUpdatePlots) {
         mNeedUpdatePlots = false;
 
-        foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots)
+        for (auto plot : mPlots)
             updatePlot(plot, true, true);
 
         processEvents();
@@ -3873,7 +3871,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
     bool visible = isVisible();
     bool needProcessingEvents = false;
 
-    foreach (GraphPanelWidget::GraphPanelPlotWidget *plot, mPlots) {
+    for (auto plot : mPlots) {
         // If our runs are to be reset (i.e. our plot's viewport are going to be
         // reset) or a run to be added (be it really or faked), then we want to
         // be able to update our plot's viewport if needed (i.e. a graph segment
@@ -3890,7 +3888,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         double plotMinY = plot->minY();
         double plotMaxY = plot->maxY();
 
-        foreach (GraphPanelWidget::GraphPanelPlotGraph *graph, plot->graphs()) {
+        for (auto graph : plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->simulation()->fileName())) {
                 if (pTask != None)
                     mOldDataSizes.remove(graph);
@@ -4165,7 +4163,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
     mGraphPanelPropertiesModified.clear();
     mGraphsPropertiesModified.clear();
 
-    foreach (GraphPanelWidget::GraphPanelWidget *graphPanel, graphPanelsWidget->graphPanels()) {
+    for (auto graphPanel : graphPanelsWidget->graphPanels()) {
         Core::PropertyEditorWidget *propertyEditor = graphPanelAndGraphsWidget->graphPanelPropertyEditor(graphPanel);
 
         mGraphPanelPropertiesModified.insert(propertyEditor,
@@ -4194,7 +4192,7 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 
     QStringList res = QStringList();
 
-    foreach (Core::Property *property, pPropertyEditor->allProperties()) {
+    for (auto property : pPropertyEditor->allProperties()) {
         if (property->isCheckable()) {
             if (property->isChecked())
                 res << TrueValue;
@@ -4227,12 +4225,12 @@ void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
     bool graphsPropertiesModified = mGraphsProperties.keys() != mGraphsPropertiesModified.keys();
 
     if (!graphPanelPropertiesModified) {
-        foreach (bool someGraphPanelPropertiesModified, mGraphPanelPropertiesModified.values())
+        for (auto someGraphPanelPropertiesModified : mGraphPanelPropertiesModified.values())
             graphPanelPropertiesModified = graphPanelPropertiesModified || someGraphPanelPropertiesModified;
     }
 
     if (!graphsPropertiesModified) {
-        foreach (bool someGraphsPropertiesModified, mGraphsPropertiesModified.values())
+        for (auto someGraphsPropertiesModified : mGraphsPropertiesModified.values())
             graphsPropertiesModified = graphsPropertiesModified || someGraphsPropertiesModified;
     }
 

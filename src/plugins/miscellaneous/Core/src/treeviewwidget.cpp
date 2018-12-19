@@ -295,7 +295,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
             const QItemSelection selection = selectionModel()->selection();
 
             if (!dragDropOverwriteMode()) {
-                foreach (const QItemSelectionRange &itemSelectionRange, selection) {
+                for (const auto &itemSelectionRange : selection) {
                     QModelIndex parent = itemSelectionRange.parent();
 
                     if (   !itemSelectionRange.left()
@@ -309,7 +309,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
                 // We can't remove the rows so reset the items (i.e. the view
                 // is like a table)
 
-                foreach (const QModelIndex &index, selection.indexes()) {
+                for (const auto &index : selection.indexes()) {
                     QMap<int, QVariant> roles = model()->itemData(index);
 
                     for (auto role = roles.begin(), roleEnd = roles.end();

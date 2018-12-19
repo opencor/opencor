@@ -136,7 +136,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Retrieve some categories of plugins
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+    for (auto plugin : mPluginManager->loadedPlugins()) {
         if (qobject_cast<PluginInterface *>(plugin->instance()))
             mLoadedPluginPlugins << plugin;
 
@@ -264,13 +264,13 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Initialise the plugins themselves
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
 
     // Initialise the plugin further by doing things that can only be done by
     // OpenCOR itself (e.g. set the central widget, create some menus)
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+    for (auto plugin : mPluginManager->loadedPlugins())
         initializeGuiPlugin(plugin);
 
     // Let our various plugins know that all of them have been initialised
@@ -282,12 +282,12 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       (e.g. the SimulationExperimentView plugin needs to know which
     //       solvers, if any, are available to it)...
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
 
     // Keep track of the showing/hiding of the different window widgets
 
-    foreach (Plugin *plugin, mLoadedWindowPlugins) {
+    for (auto plugin : mLoadedWindowPlugins) {
         connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), &QDockWidget::visibilityChanged,
                 this, &MainWindow::updateDockWidgetsVisibility);
     }
@@ -328,7 +328,7 @@ MainWindow::~MainWindow()
     //       (e.g. as a result of selecting Tools | Reset All) doesn't make
     //       sense and will, in fact, crash OpenCOR...
 
-    foreach (Plugin *plugin, mLoadedWindowPlugins) {
+    for (auto plugin : mLoadedWindowPlugins) {
         disconnect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), &QDockWidget::visibilityChanged,
                    this, &MainWindow::updateDockWidgetsVisibility);
     }
@@ -402,7 +402,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
         // Delete any Web inspector window (which may have been created through
         // our use of QtWebKit)
 
-        foreach (QWindow *window, QGuiApplication::topLevelWindows()) {
+        for (auto window : QGuiApplication::topLevelWindows()) {
             if (!window->objectName().compare("QWebInspectorClassWindow"))
                 window->close();
         }
@@ -577,7 +577,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some sub-menus before some menu item/separator in our File menu
 
-        foreach (const Gui::Menu &guiMenu, guiMenus) {
+        for (const auto &guiMenu : guiMenus) {
             if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
                 mGui->menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
         }
@@ -586,7 +586,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         static QString pluginForFileNewMenu = QString();
 
-        foreach (const Gui::MenuAction &guiMenuAction, guiMenuActions) {
+        for (const auto &guiMenuAction : guiMenuActions) {
             if (guiMenuAction.type() == Gui::MenuAction::FileNew) {
                 // Check whether the File|New menu has been created and if not,
                 // then create it
@@ -711,7 +711,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the settings of our various plugins
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins) {
+    for (auto plugin : mLoadedPluginPlugins) {
         mSettings->beginGroup(SettingsPlugins);
             mSettings->beginGroup(plugin->name());
                 qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(mSettings);
@@ -763,7 +763,7 @@ void MainWindow::saveSettings() const
 
     // Keep track of the settings of our various plugins
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins) {
+    for (auto plugin : mLoadedPluginPlugins) {
         mSettings->beginGroup(SettingsPlugins);
             mSettings->beginGroup(plugin->name());
                 qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(mSettings);
@@ -834,13 +834,13 @@ void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
         //       safely retranslate them since a plugin may require another
         //       plugin to work properly...
 
-        foreach (Plugin *plugin, mLoadedI18nPlugins)
+        for (auto plugin : mLoadedI18nPlugins)
             qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name())
                                                                                                   .arg(newLocale));
 
         // Retranslate our various plugins
 
-        foreach (Plugin *plugin, mLoadedI18nPlugins)
+        for (auto plugin : mLoadedI18nPlugins)
             qobject_cast<I18nInterface *>(plugin->instance())->retranslateUi();
 
         // Reorder our various View|Windows menu items, just in case
@@ -872,7 +872,7 @@ void MainWindow::reorderViewWindowsMenu()
         QStringList menuItemTitles;
         QMap<QString, QAction *> menuItemActions;
 
-        foreach (QAction *menuItemAction, mViewWindowsMenu->actions()) {
+        for (auto menuItemAction : mViewWindowsMenu->actions()) {
             // Remove any "&" present in the menu item title, as well as replace
             // accentuated characters by non-accentuated ones, making the
             // sorting sensible
@@ -900,7 +900,7 @@ void MainWindow::reorderViewWindowsMenu()
         //       end of the menu, so since we do it in the right order, we end
         //       up with the menu items being properly ordered...
 
-        foreach (const QString &menuItemTitle, menuItemTitles)
+        for (const auto &menuItemTitle : menuItemTitles)
             mViewWindowsMenu->addAction(menuItemActions.value(menuItemTitle));
     }
 }
@@ -1006,7 +1006,7 @@ void MainWindow::handleArguments(const QStringList &pArguments)
 
     QStringList arguments = QStringList();
 
-    foreach (const QString &argument, pArguments) {
+    for (const auto &argument : pArguments) {
         QUrl url = argument;
 
         if (!url.scheme().compare("opencor"))
@@ -1084,7 +1084,7 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
 
         QString pluginName = actionName.split('.').first();
 
-        foreach (Plugin *plugin, mLoadedPluginPlugins) {
+        for (auto plugin : mLoadedPluginPlugins) {
             if (!plugin->name().compare(pluginName, Qt::CaseInsensitive)) {
                 // This is an action for the current plugin, so forward the
                 // action to it, should it support the Plugin interface
@@ -1215,7 +1215,7 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 
     if (    (preferencesDialog.result() == QMessageBox::Ok)
         && !preferencesDialog.pluginNames().isEmpty()) {
-        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        for (auto plugin : mPluginManager->loadedPlugins()) {
             PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
             if (preferencesInterface)
@@ -1293,7 +1293,7 @@ void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
         if (!pShow)
             mDockedWindowsState = saveState();
 
-        foreach (Plugin *plugin, mLoadedWindowPlugins) {
+        for (auto plugin : mLoadedWindowPlugins) {
             WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
 
             if (!windowInterface->windowWidget()->isFloating())
@@ -1339,7 +1339,7 @@ void MainWindow::updateDockWidgetsVisibility()
 
     mDockedWindowsVisible = false;
 
-    foreach (Plugin *plugin, mLoadedWindowPlugins) {
+    for (auto plugin : mLoadedWindowPlugins) {
         QDockWidget *dockWidget = qobject_cast<WindowInterface *>(plugin->instance())->windowWidget();
 
         if (!dockWidget->isFloating() && dockWidget->isVisible()) {

@@ -100,7 +100,7 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
     // files since if they are not then CentralWidget::openRemoteFile() will
     // open them as normal files
 
-    foreach (const QString &argument, pArguments)
+    for (const auto &argument : pArguments)
         mCentralWidget->openRemoteFile(argument);
 }
 
@@ -553,7 +553,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     SolverInterfaces solverInterfaces = SolverInterfaces();
     DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
 
-    foreach (Plugin *plugin, pLoadedPlugins) {
+    for (auto plugin : pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
         DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
@@ -590,7 +590,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
 
-    foreach (Plugin *plugin, pLoadedPlugins) {
+    for (auto plugin : pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (viewInterface) {
@@ -700,7 +700,7 @@ void CorePlugin::updateFileReopenMenu()
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
-    foreach (QAction *recentFileAction, mRecentFileActions) {
+    for (auto recentFileAction : mRecentFileActions) {
         mFileReopenSubMenu->removeAction(recentFileAction);
 
         delete recentFileAction;
@@ -712,7 +712,7 @@ void CorePlugin::updateFileReopenMenu()
 
     bool enabled = mFileOpenAction->isEnabled();
 
-    foreach (const QString &recentFile, mRecentFiles) {
+    for (const auto &recentFile : mRecentFiles) {
         QAction *action = newAction(mainWindow());
 
         action->setEnabled(enabled);

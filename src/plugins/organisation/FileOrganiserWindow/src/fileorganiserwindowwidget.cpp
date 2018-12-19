@@ -170,7 +170,7 @@ QByteArray FileOrganiserWindowModel::encodeData(const QModelIndexList &pIndexes)
 
         // Hierarchy to reach the various items
 
-        foreach (const QModelIndex &index, pIndexes) {
+        for (const auto &index : pIndexes) {
             // Hierarchy to reach the current item
 
             encodeHierarchyData(index, stream);
@@ -256,7 +256,7 @@ QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) 
     //       on to extract the name of the vavarious files the MIME data
     //       contains
 
-    foreach (const QModelIndex &index, pIndexes) {
+    for (const auto &index : pIndexes) {
         QString crtFilePath = filePath(index);
 
         if (!crtFilePath.isEmpty())

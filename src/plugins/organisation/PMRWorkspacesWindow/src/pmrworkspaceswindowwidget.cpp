@@ -550,8 +550,7 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
     // Note: for the key, we use the PMR URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    foreach (const QString &clonedWorkspaceFolder,
-             pSettings->value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
+    for (const auto &clonedWorkspaceFolder : pSettings->value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
@@ -763,7 +762,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
             urlsIterator.setValue(QPair<QString, bool>(urlsIterator.value().first, false));
         }
 
-        foreach (PMRSupport::PmrWorkspace *workspace, pWorkspaces) {
+        for (auto workspace : pWorkspaces) {
             // Remember our workspace, so we can find it by URL
 
             QString url = workspace->url();
@@ -813,7 +812,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     mModel->clear();
 
-    foreach (PMRSupport::PmrWorkspace *workspace, workspaceManager->workspaces())
+    for (auto workspace : workspaceManager->workspaces())
         addWorkspace(workspace);
 
     updateGui(   (pWorkspaces == PMRSupport::PmrWorkspaces())
@@ -1022,7 +1021,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
     pIsUnstaged = false;
     pHasConflicts = false;
 
-    foreach(PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
+    for (auto fileNode : pFileNode->children()) {
         // Check whether we already know about the file node
 
         PmrWorkspacesWindowItem *newItem = nullptr;
@@ -1229,7 +1228,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspace(PMRSupport::PmrWorkspace *pWork
 
         PmrWorkspacesWindowItems oldItemsToDelete = PmrWorkspacesWindowItems();
 
-        foreach (PmrWorkspacesWindowItem *oldItem, oldItems) {
+        for (auto oldItem : oldItems) {
             if (!newItems.contains(oldItem))
                 oldItemsToDelete << oldItem;
         }
@@ -1407,7 +1406,7 @@ void PmrWorkspacesWindowWidget::refreshWorkspaces()
     int workspacesCount = workspaces.count();
     int workspaceNb = 0;
 
-    foreach (PMRSupport::PmrWorkspace *workspace, workspaces)
+    for (auto workspace : workspaces)
         refreshWorkspace(workspace, ++workspaceNb == workspacesCount);
 }
 

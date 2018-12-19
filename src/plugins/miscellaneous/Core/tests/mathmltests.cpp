@@ -94,7 +94,7 @@ void MathmlTests::tests(const QString &pCategory)
 
     xmlQuery.setMessageHandler(&dummyMessageHandler);
 
-    foreach (const QString &fileName, QDir(dirName).entryList(QStringList() << "*.in")) {
+    for (const auto &fileName : QDir(dirName).entryList(QStringList() << "*.in")) {
         QString focus = OpenCOR::rawFileContents(dirName+fileName);
 
         xmlQuery.setFocus(focus);

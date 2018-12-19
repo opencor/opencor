@@ -68,7 +68,7 @@ CentralWidget * centralWidget()
     static CentralWidget *res = nullptr;
 
     if (firstTime) {
-        foreach (QObject *object, mainWindow()->children()) {
+        for (auto object : mainWindow()->children()) {
             if (!strcmp(object->metaObject()->className(), "OpenCOR::Core::CentralWidget")) {
                 res = qobject_cast<CentralWidget *>(object);
 
