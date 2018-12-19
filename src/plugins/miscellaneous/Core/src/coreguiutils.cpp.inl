@@ -159,7 +159,7 @@ QMainWindow * mainWindow()
     static QMainWindow *res = nullptr;
 
     if (firstTime) {
-        foreach (QWidget *widget, qApp->topLevelWidgets()) {
+        for (auto widget : qApp->topLevelWidgets()) {
             if (widget->inherits("OpenCOR::MainWindow")) {
                 res = qobject_cast<QMainWindow *>(widget);
 

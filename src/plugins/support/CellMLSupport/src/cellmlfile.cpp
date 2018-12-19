@@ -109,7 +109,7 @@ void CellmlFile::reset()
     mRdfApiRepresentation = nullptr;
     mRdfDataSource = nullptr;
 
-    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+    for (auto rdfTriple : mRdfTriples)
         delete rdfTriple;
 
     mRdfTriples.clear();
@@ -477,7 +477,7 @@ bool CellmlFile::load()
 
     retrieveCmetaIdsFromCellmlElement(mModel);
 
-    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+    for (auto rdfTriple : mRdfTriples)
         mUsedCmetaIds << rdfTriple->metadataId();
 
     mUsedCmetaIds.removeDuplicates();
@@ -537,7 +537,7 @@ bool CellmlFile::save(const QString &pFileName)
 
     QStringList usedCmetaIds = QStringList();
 
-    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+    for (auto rdfTriple : mRdfTriples)
         usedCmetaIds << rdfTriple->metadataId();
 
     usedCmetaIds.removeDuplicates();
@@ -831,7 +831,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
     // Go through the RDF triples associated with the given CellML element and
     // check whether it is the one we are after
 
-    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement)) {
+    for (auto rdfTriple : rdfTriples(pElement)) {
         if (   !pQualifier.compare(rdfTriple->qualifierAsString())
             && !pResource.compare(rdfTriple->resource())
             && !pId.compare(rdfTriple->id())) {

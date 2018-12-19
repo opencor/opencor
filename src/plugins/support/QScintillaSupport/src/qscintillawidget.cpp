@@ -164,7 +164,7 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
     mContextMenu->clear();
 
-    foreach (QAction *action, pContextMenuActions)
+    for (auto action : pContextMenuActions)
         mContextMenu->addAction(action);
 }
 

@@ -110,7 +110,7 @@ void PmrWebService::exposuresResponse(const QJsonDocument &pJsonDocument)
     PmrExposures exposures = PmrExposures();
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
-    foreach (const QVariant &links, collectionMap["links"].toList()) {
+    for (const auto &links : collectionMap["links"].toList()) {
         QVariantMap linksMap = links.toMap();
 
         if (!linksMap["rel"].toString().compare("bookmark")) {
@@ -192,7 +192,7 @@ void PmrWebService::workspaceResponse(const QJsonDocument &pJsonDocument)
         QString workspaceName = QString();
         QString workspaceId = QString();
 
-        foreach (const QVariant &data, itemsList.first().toMap()["data"].toList()) {
+        for (const auto &data : itemsList.first().toMap()["data"].toList()) {
             QVariantMap dataMap = data.toMap();
             QString name = dataMap["name"].toString();
 
@@ -288,7 +288,7 @@ void PmrWebService::workspacesResponse(const QJsonDocument &pJsonDocument)
     PmrWorkspaces workspaces = PmrWorkspaces();
     QVariantMap collectionMap = pJsonDocument.object().toVariantMap()["collection"].toMap();
 
-    foreach (const QVariant &links, collectionMap["links"].toList()) {
+    for (const auto &links : collectionMap["links"].toList()) {
         QVariantMap linksMap = links.toMap();
 
         if (!linksMap["rel"].toString().compare("bookmark")) {
@@ -348,7 +348,7 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
         QString workspaceOwner = QString();
         QString workspaceName = QString();
 
-        foreach (const QVariant &data, itemsList.first().toMap()["data"].toList()) {
+        for (const auto &data : itemsList.first().toMap()["data"].toList()) {
             QVariantMap dataMap = data.toMap();
 
             if (!dataMap["name"].toString().compare("storage"))
@@ -597,7 +597,7 @@ void PmrWebService::exposureFileInformationResponse(const QJsonDocument &pJsonDo
                     // Check whether the exposure file has a link called
                     // "Launch with OpenCOR" (e.g. for SED-ML files)
 
-                    foreach (const QVariant &links, collectionMap["links"].toList()) {
+                    for (const auto &links : collectionMap["links"].toList()) {
                         QVariantMap linksMap = links.toMap();
                         QString prompt = linksMap["prompt"].toString();
                         QString rel = linksMap["rel"].toString();
@@ -686,7 +686,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         QString workspaceUrl = QString();
         QStringList exposureFileUrls = QStringList();
 
-        foreach (const QVariant &links, collectionMap["links"].toList()) {
+        for (const auto &links : collectionMap["links"].toList()) {
             QVariantMap linksMap = links.toMap();
             QString rel = linksMap["rel"].toString();
 
@@ -724,7 +724,7 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         // hasn't already been done
 
         if (exposure->exposureFiles().isEmpty()) {
-            foreach (const QString &exposureFileUrl, exposureFileUrls)
+            for (const auto &exposureFileUrl : exposureFileUrls)
                 requestExposureFileInformation(exposureFileUrl, exposure);
         }
     }

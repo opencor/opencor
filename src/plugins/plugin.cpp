@@ -81,7 +81,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 
             mStatusErrors = QString();
 
-            foreach (const QString &dependency, pInfo->dependencies()) {
+            for (const auto &dependency : pInfo->dependencies()) {
                 Plugin *pluginDependency = pPluginManager->plugin(dependency);
 
                 if (   !pluginDependency
@@ -207,7 +207,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 
                             bool pluginInterfacesOk = true;
 
-                            foreach (PluginInterface *pluginWithInterfaces, pluginsWithInterfaces) {
+                            for (auto pluginWithInterfaces : pluginsWithInterfaces) {
                                 if (!pluginWithInterfaces->pluginInterfacesOk(pFileName, mInstance)) {
                                     pluginInterfacesOk = false;
 
@@ -546,7 +546,7 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
     if (!pluginInfo)
         return res;
 
-    foreach (const QString &plugin, pluginInfo->dependencies())
+    for (const auto &plugin : pluginInfo->dependencies())
         res << fullDependencies(pPluginsDir, plugin, pLevel+1);
 
     delete pluginInfo;

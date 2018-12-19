@@ -333,7 +333,7 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
         int i = -1;
         int lastValueIndex = pValuesList.count()-1;
 
-        foreach (const QString &lineStyle, pValuesList) {
+        for (const auto &lineStyle : pValuesList) {
             if (++i)
                 values += (i == lastValueIndex)?" "+tr("or")+" ":", ";
 
@@ -470,7 +470,7 @@ bool SedmlFile::isSupported()
         SolverInterface *usedSolverInterface = nullptr;
         QString kisaoId = QString::fromStdString(firstSimulationAlgorithm->getKisaoID());
 
-        foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+        for (auto solverInterface : Core::solverInterfaces()) {
             if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
                 usedSolverInterface = solverInterface;
 

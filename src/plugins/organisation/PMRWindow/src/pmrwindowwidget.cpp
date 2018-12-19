@@ -348,7 +348,7 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
 
     static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
-    foreach (const QString &exposureFile, sortedExposureFiles) {
+    for (const auto &exposureFile : sortedExposureFiles) {
         item->appendRow(new PmrWindowItem(PmrWindowItem::ExposureFile,
                                           QString(exposureFile).remove(FilePathRegEx),
                                           exposureFile));

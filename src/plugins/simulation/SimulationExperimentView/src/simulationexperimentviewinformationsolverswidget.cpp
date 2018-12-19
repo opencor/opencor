@@ -146,7 +146,7 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
     // Note: this is effectively to have the description of our solvers'
     //       properties properly updated...
 
-    foreach (Core::Property *property, allProperties()) {
+    for (auto property : allProperties()) {
         if (mDescriptions.contains(property)) {
             // The property has a description associated with it, so retrieve
             // the version, if any, which corresponds to our current locale
@@ -187,7 +187,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
     QStringList solversNames = QStringList();
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
 
-    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+    for (auto solverInterface : Core::solverInterfaces()) {
         if (solverInterface->solverType() == pSolverType) {
             // Keep track of the solver's interface
 
@@ -211,8 +211,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
             Core::Property *property = nullptr;
             Core::Properties properties = Core::Properties();
 
-            foreach (const Solver::Property &solverInterfaceProperty,
-                     solverInterface->solverProperties()) {
+            for (const auto &solverInterfaceProperty : solverInterface->solverProperties()) {
                 // Add the solver's property and set its default value
 
                 switch (solverInterfaceProperty.type()) {
@@ -320,8 +319,8 @@ void SimulationExperimentViewInformationSolversWidget::setPropertiesUnit(Simulat
 
     // Go through the solvers' properties and set the unit of the relevant ones
 
-    foreach (const Core::Properties &properties, pSolverData->solversProperties()) {
-        foreach (Core::Property *property, properties) {
+    for (const auto &properties : pSolverData->solversProperties()) {
+        for (auto property : properties) {
             if (!property->unit().isEmpty())
                 property->setUnit(pVoiUnit);
         }
@@ -356,7 +355,7 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
     if (mNlaSolverData) {
         pSimulation->data()->setNlaSolverName(mNlaSolverData->solversListProperty()->value(), false);
 
-        foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName())) {
+        for (auto property : mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName())) {
             pSimulation->data()->addNlaSolverProperty(property->id(),
                                                       property->variantValue(),
                                                       false);
@@ -422,7 +421,7 @@ void SimulationExperimentViewInformationSolversWidget::updateSolverGui(Simulatio
     Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
     QMap<QString, QString> solverPropertiesValues = QMap<QString, QString>();
 
-    foreach (Core::Property *solverProperty, solverProperties)
+    for (auto solverProperty : solverProperties)
         solverPropertiesValues.insert(solverProperty->id(),solverProperty->value());
 
     // Ask our solver interface to tell us about the visibility of its
@@ -434,7 +433,7 @@ void SimulationExperimentViewInformationSolversWidget::updateSolverGui(Simulatio
     // Note: if there is no visibility information for a given solver property,
     //       then it means that it should be visible...
 
-    foreach (Core::Property *solverProperty, solverProperties)
+    for (auto solverProperty : solverProperties)
         solverProperty->setVisible(solverPropertiesVisibility.value(solverProperty->id(), true));
 }
 
@@ -469,7 +468,7 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(SimulationE
          solverProperties != solverPropertiesEnd; ++solverProperties) {
         bool solverPropertiesVisible = !solverProperties.key().compare(pSolverName);
 
-        foreach (Core::Property *solverProperty, solverProperties.value())
+        for (auto solverProperty : solverProperties.value())
             solverProperty->setVisible(solverPropertiesVisible);
     }
 }

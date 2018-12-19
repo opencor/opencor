@@ -429,7 +429,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
 
-    foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
+    for (const auto &itemInformationSha1 : mItemInformationSha1s) {
         CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(itemInformationSha1);
         bool enabledButton;
 
@@ -561,7 +561,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
         QString ontologicalTerms = QString();
 
-        foreach (const CellmlAnnotationViewMetadataEditDetailsItem &item, pItems) {
+        for (const auto &item : pItems) {
             // Keep track of some information
 
             QString itemInformation = item.resource()+"|"+item.id();
@@ -984,7 +984,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                 QString resource;
                 QString id;
 
-                foreach (const QVariant &terms, jsonDocument.object().toVariantMap()["results"].toList()) {
+                for (const auto &terms : jsonDocument.object().toVariantMap()["results"].toList()) {
                     termMap = terms.toMap();
                     name = termMap["name"].toString();
 

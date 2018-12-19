@@ -377,7 +377,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         // Add the value items to our list, keeping in mind separators
 
-        foreach (const QString &valueItem, property->listValues()) {
+        for (const auto &valueItem : property->listValues()) {
             if (valueItem.isEmpty())
                 listEditor->insertSeparator(listEditor->count());
             else
@@ -1456,7 +1456,7 @@ void PropertyEditorWidget::clear()
 
     // Delete some internal objects
 
-    foreach (Property *property, mAllProperties)
+    for (auto property : mAllProperties)
         delete property;
 
     mProperties.clear();
@@ -2208,7 +2208,7 @@ void PropertyEditorWidget::deleteProperty(Property *pProperty)
     // Recursively delete the memory associated with the given property and any
     // of its children
 
-    foreach (Property *property, pProperty->properties())
+    for (auto property : pProperty->properties())
         deleteProperty(property);
 
     mAllProperties.removeOne(pProperty);
@@ -2313,7 +2313,7 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 
     // Return our information about the property at the given index
 
-    foreach (Property *property, mAllProperties) {
+    for (auto property : mAllProperties) {
         if (property->hasIndex(pIndex))
             return property;
     }

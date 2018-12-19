@@ -195,7 +195,7 @@ KinsolSolver::~KinsolSolver()
 {
     // Delete some internal objects
 
-    foreach (KinsolSolverData *data, mData.values())
+    for (auto data : mData.values())
         delete data;
 }
 
