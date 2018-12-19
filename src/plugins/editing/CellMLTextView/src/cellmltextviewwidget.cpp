@@ -997,6 +997,18 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
 
 //==============================================================================
 
+bool CellmlTextViewWidget::isComment(int pPosition) const
+{
+    // Return whether we have a comment at the given position
+
+    int style = mEditingWidget->editorWidget()->styleAt(pPosition);
+
+    return    (style == CellmlTextViewLexer::SingleLineComment)
+           || (style == CellmlTextViewLexer::MultilineComment);
+}
+
+//==============================================================================
+
 QString CellmlTextViewWidget::partialStatement(int pPosition,
                                                int &pFromPosition,
                                                int &pToPosition) const
