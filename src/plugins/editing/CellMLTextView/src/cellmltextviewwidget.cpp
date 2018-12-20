@@ -1004,18 +1004,6 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
 
 //==============================================================================
 
-bool CellmlTextViewWidget::isComment(int pPosition) const
-{
-    // Return whether we have a comment at the given position
-
-    int style = mEditingWidget->editorWidget()->styleAt(pPosition);
-
-    return    (style == CellmlTextViewLexer::SingleLineComment)
-           || (style == CellmlTextViewLexer::MultilineComment);
-}
-
-//==============================================================================
-
 QString CellmlTextViewWidget::partialStatement(int pPosition,
                                                int &pFromPosition,
                                                int &pToPosition) const
@@ -1179,10 +1167,16 @@ QString CellmlTextViewWidget::statement(int pPosition) const
         // Skip spaces and comments to determine the real start of our current
         // statement
 
+        EditorWidget::EditorWidget *editor = mEditingWidget->editorWidget();
         int shift = 0;
+        int style;
 
         forever {
-            if (isComment(fromPosition) || currentStatement[shift].isSpace()) {
+            style = editor->styleAt(fromPosition);
+
+            if (   (style == CellmlTextViewLexer::SingleLineComment)
+                || (style == CellmlTextViewLexer::MultilineComment)
+                || currentStatement[shift].isSpace()) {
                 ++fromPosition;
                 ++shift;
             } else {
@@ -1193,7 +1187,7 @@ QString CellmlTextViewWidget::statement(int pPosition) const
         // Make sure that we are within our current statement
 
         return ((pPosition >= fromPosition) && (pPosition < toPosition))?
-                   mEditingWidget->editorWidget()->textInRange(fromPosition, toPosition):
+                   editor->textInRange(fromPosition, toPosition):
                    QString();
     } else {
         // Our current statement doesn't contain something that we can recognise
