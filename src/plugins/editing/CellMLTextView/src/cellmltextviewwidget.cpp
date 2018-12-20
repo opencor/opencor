@@ -1004,6 +1004,19 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, bool pOnlyErrors)
 
 //==============================================================================
 
+bool CellmlTextViewWidget::isComment(int pPosition) const
+{
+    // Return whether we have a single or multiline comment at the given
+    // position
+
+    int style = mEditingWidget->editorWidget()->styleAt(pPosition);
+
+    return    (style == CellmlTextViewLexer::SingleLineComment)
+           || (style == CellmlTextViewLexer::MultilineComment);
+}
+
+//==============================================================================
+
 QString CellmlTextViewWidget::partialStatement(int pPosition,
                                                int &pFromPosition,
                                                int &pToPosition) const
@@ -1142,67 +1155,68 @@ void CellmlTextViewWidget::updateViewer()
         return;
     }
 
-    // Retrieve the (partial) statement around our current position
+    // Make sure that our current position is not within a comment
 
     int position = mEditingWidget->editorWidget()->currentPosition();
-    int fromPosition;
-    int toPosition;
+    QString currentStatement = QString();
 
-    QString currentStatement = partialStatement(position, fromPosition, toPosition);
+    if (!isComment(position)) {
+        // Retrieve the (partial) statement around our current position
 
-    // Check, using our CellML Text parser, whether our (partial) statement
-    // contains something that we can recognise
+        int fromPosition;
+        int toPosition;
 
-    CellmlTextViewParser parser;
+        currentStatement = partialStatement(position, fromPosition, toPosition);
 
-    if (parser.execute(currentStatement, false)) {
-        if (parser.statementType() == CellmlTextViewParser::PiecewiseSel) {
-            // We are at the beginning of a piecewise statement, so retrieve its
-            // end
+        // Check, using our CellML Text parser, whether our (partial) statement
+        // contains something that we can recognise
 
-            currentStatement += endOfPiecewiseStatement(toPosition);
-        } else if (   (parser.statementType() == CellmlTextViewParser::PiecewiseCase)
-                   || (parser.statementType() == CellmlTextViewParser::PiecewiseOtherwise)) {
-            // We are in the middle of a piecewise statement, so retrieve both
-            // its beginning and end
+        CellmlTextViewParser parser;
 
-            currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement+endOfPiecewiseStatement(toPosition);
-        } else if (parser.statementType() == CellmlTextViewParser::PiecewiseEndSel) {
-            // We are at the beginning of a piecewise statement, so retrieve its
-            // beginning
+        if (parser.execute(currentStatement, false)) {
+            if (parser.statementType() == CellmlTextViewParser::PiecewiseSel) {
+                // We are at the beginning of a piecewise statement, so retrieve
+                // its end
 
-            currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement;
-        }
+                currentStatement += endOfPiecewiseStatement(toPosition);
+            } else if (   (parser.statementType() == CellmlTextViewParser::PiecewiseCase)
+                       || (parser.statementType() == CellmlTextViewParser::PiecewiseOtherwise)) {
+                // We are in the middle of a piecewise statement, so retrieve
+                // both its beginning and end
 
-        // Skip spaces and comments to determine the real start of our current
-        // statement
+                currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement+endOfPiecewiseStatement(toPosition);
+            } else if (parser.statementType() == CellmlTextViewParser::PiecewiseEndSel) {
+                // We are at the beginning of a piecewise statement, so retrieve
+                // its beginning
 
-        EditorWidget::EditorWidget *editor = mEditingWidget->editorWidget();
-        int shift = 0;
-        int style;
-
-        forever {
-            style = editor->styleAt(fromPosition);
-
-            if (   (style == CellmlTextViewLexer::SingleLineComment)
-                || (style == CellmlTextViewLexer::MultilineComment)
-                || currentStatement[shift].isSpace()) {
-                ++fromPosition;
-                ++shift;
-            } else {
-                break;
+                currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement;
             }
+
+            // Skip spaces and comments to determine the real start of our
+            // current statement
+
+            int shift = 0;
+
+            forever {
+                if (isComment(fromPosition) || currentStatement[shift].isSpace()) {
+                    ++fromPosition;
+                    ++shift;
+                } else {
+                    break;
+                }
+            }
+
+            // Make sure that we are within our current statement
+
+            currentStatement = ((position >= fromPosition) && (position < toPosition))?
+                                   mEditingWidget->editorWidget()->textInRange(fromPosition, toPosition):
+                                   QString();
+        } else {
+            // Our current statement doesn't contain something that we can
+            // recognise
+
+            currentStatement = QString();
         }
-
-        // Make sure that we are within our current statement
-
-        currentStatement = ((position >= fromPosition) && (position < toPosition))?
-                               editor->textInRange(fromPosition, toPosition):
-                               QString();
-    } else {
-        // Our current statement doesn't contain something that we can recognise
-
-        currentStatement = QString();
     }
 
     // Update the contents of our viewer
