@@ -191,7 +191,6 @@ private:
                              int &pToPosition) const;
     QString beginningOfPiecewiseStatement(int &pPosition) const;
     QString endOfPiecewiseStatement(int &pPosition) const;
-    QString statement() const;
 
 private slots:
     void updateViewer();

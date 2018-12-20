@@ -1131,8 +1131,17 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
 
 //==============================================================================
 
-QString CellmlTextViewWidget::statement() const
+void CellmlTextViewWidget::updateViewer()
 {
+    // Make sure that we still have an editing widget (i.e. it hasn't been
+    // closed since the signal was emitted) and that its editor allows us to
+    // handle connections
+
+    if (   !mEditingWidget
+        || !mEditingWidget->editorWidget()->handleEditorChanges()) {
+        return;
+    }
+
     // Retrieve the (partial) statement around our current position
 
     int position = mEditingWidget->editorWidget()->currentPosition();
@@ -1187,32 +1196,14 @@ QString CellmlTextViewWidget::statement() const
 
         // Make sure that we are within our current statement
 
-        return ((position >= fromPosition) && (position < toPosition))?
-                   editor->textInRange(fromPosition, toPosition):
-                   QString();
+        currentStatement = ((position >= fromPosition) && (position < toPosition))?
+                               editor->textInRange(fromPosition, toPosition):
+                               QString();
     } else {
         // Our current statement doesn't contain something that we can recognise
 
-        return QString();
+        currentStatement = QString();
     }
-}
-
-//==============================================================================
-
-void CellmlTextViewWidget::updateViewer()
-{
-    // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted) and that its editor allows us to
-    // handle connections
-
-    if (   !mEditingWidget
-        || !mEditingWidget->editorWidget()->handleEditorChanges()) {
-        return;
-    }
-
-    // Retrieve our current statement, if any
-
-    QString currentStatement = statement();
 
     // Update the contents of our viewer
 
