@@ -1131,14 +1131,15 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
 
 //==============================================================================
 
-QString CellmlTextViewWidget::statement(int pPosition) const
+QString CellmlTextViewWidget::statement() const
 {
     // Retrieve the (partial) statement around the given position
 
+    int position = mEditingWidget->editorWidget()->currentPosition();
     int fromPosition;
     int toPosition;
 
-    QString currentStatement = partialStatement(pPosition, fromPosition, toPosition);
+    QString currentStatement = partialStatement(position, fromPosition, toPosition);
 
     // Check, using our CellML Text parser, whether our (partial) statement
     // contains something that we can recognise
@@ -1186,7 +1187,7 @@ QString CellmlTextViewWidget::statement(int pPosition) const
 
         // Make sure that we are within our current statement
 
-        return ((pPosition >= fromPosition) && (pPosition < toPosition))?
+        return ((position >= fromPosition) && (position < toPosition))?
                    editor->textInRange(fromPosition, toPosition):
                    QString();
     } else {
@@ -1209,9 +1210,9 @@ void CellmlTextViewWidget::updateViewer()
         return;
     }
 
-    // Retrieve the statement, if any, around our current position
+    // Retrieve our current statement, if any
 
-    QString currentStatement = statement(mEditingWidget->editorWidget()->currentPosition());
+    QString currentStatement = statement();
 
     // Update the contents of our viewer
 
