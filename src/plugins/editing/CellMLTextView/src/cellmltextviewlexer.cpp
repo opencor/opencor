@@ -180,6 +180,10 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
     if (editor()->SendScintilla(QsciScintillaBase::SCI_GETENDSTYLED) != pBytesEnd)
         qFatal("FATAL ERROR | %s:%d: the styling of the text must be incremental.", __FILE__, __LINE__);
 #endif
+
+    // Let people know that we are done with our styling
+
+    emit done();
 }
 
 //==============================================================================

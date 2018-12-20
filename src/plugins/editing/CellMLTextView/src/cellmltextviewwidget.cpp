@@ -515,11 +515,18 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
             // The conversion was successful, so we can apply our CellML Text
             // lexer to our editor
 
-            editingWidget->editorWidget()->setLexer(new CellmlTextViewLexer(this));
+            CellmlTextViewLexer *lexer = new CellmlTextViewLexer(this);
+
+            editingWidget->editorWidget()->setLexer(lexer);
 
             // Update our viewer whenever necessary
+            // Note: normally, we would update our viewer when the text has
+            //       changed or the cursor position has changed. However, when
+            //       it comes to the text being changed, we need to make sure
+            //       that the styling is done, hence checking for the lexer to
+            //       be done...
 
-            connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::textChanged,
+            connect(lexer, &CellmlTextViewLexer::done,
                     this, &CellmlTextViewWidget::updateViewer);
             connect(editingWidget->editorWidget(), &EditorWidget::EditorWidget::cursorPositionChanged,
                     this, &CellmlTextViewWidget::updateViewer);
