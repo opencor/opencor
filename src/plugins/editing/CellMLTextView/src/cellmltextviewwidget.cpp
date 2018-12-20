@@ -1199,7 +1199,8 @@ void CellmlTextViewWidget::updateViewer()
 
             forever {
                 if (isComment(fromPosition) || currentStatement[shift].isSpace()) {
-                    ++fromPosition;
+                    fromPosition += QString(currentStatement[shift]).toUtf8().size();
+
                     ++shift;
                 } else {
                     break;
