@@ -1133,7 +1133,7 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
 
 QString CellmlTextViewWidget::statement() const
 {
-    // Retrieve the (partial) statement around the given position
+    // Retrieve the (partial) statement around our current position
 
     int position = mEditingWidget->editorWidget()->currentPosition();
     int fromPosition;
