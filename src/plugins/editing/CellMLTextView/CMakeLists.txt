@@ -27,8 +27,6 @@ add_plugin(CellMLTextView
         src/cellmltextviewplugin.h
         src/cellmltextviewscanner.h
         src/cellmltextviewwidget.h
-    DEFINITIONS
-        QSCINTILLA_DLL
     PLUGINS
         CellMLEditingView
     TESTS
