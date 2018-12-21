@@ -715,8 +715,10 @@ void FileManager::checkFiles()
     //       them, and to check a file that has been removed will crash
     //       OpenCOR...
 
-    for (auto file : mFiles) {
-        if (!mFiles.values().contains(file))
+    auto files = mFiles.values();
+
+    for (auto file : files) {
+        if (!files.contains(file))
             continue;
 
         QString fileName = file->fileName();
