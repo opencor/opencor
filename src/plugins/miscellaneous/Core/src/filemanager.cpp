@@ -72,7 +72,7 @@ FileManager::~FileManager()
 
     // Remove all the managed files
 
-    for (auto file : mFiles)
+    for (auto file : mFiles.values())
         delete file;
 }
 

@@ -229,15 +229,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::retranslateUi
 
     // Retranslate all our property editors
 
-    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors)
+    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors.values())
         graphPanelPropertyEditor->retranslateUi();
 
-    for (auto graphsPropertyEditor : mGraphsPropertyEditors)
+    for (auto graphsPropertyEditor : mGraphsPropertyEditors.values())
         graphsPropertyEditor->retranslateUi();
 
     // Retranslate the contents of our graph panel property editors
 
-    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors)
+    for (auto graphPanelPropertyEditor : mGraphPanelPropertyEditors.values())
         retranslateGraphPanelPropertyEditor(graphPanelPropertyEditor);
 
     // Retranslate the information about our graphs properties
@@ -275,7 +275,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::finalize()
 
     // Remove all our graphs' runs
 
-    for (auto graph : mGraphs)
+    for (auto graph : mGraphs.values())
         graph->removeRuns();
 }
 
@@ -1656,7 +1656,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateAllGrap
     // Go through our graphs property editors and update the information about
     // the graph properties they hold
 
-    for (auto graphsPropertyEditor : mGraphsPropertyEditors) {
+    for (auto graphsPropertyEditor : mGraphsPropertyEditors.values()) {
         mGraphsPropertyEditor = graphsPropertyEditor;
 
         updateGraphsInfo();

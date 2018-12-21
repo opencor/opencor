@@ -154,7 +154,7 @@ void SimulationExperimentViewWidget::retranslateUi()
 {
     // Retranslate our simulation widgets
 
-    for (auto simulationWidget : mSimulationWidgets)
+    for (auto simulationWidget : mSimulationWidgets.values())
         simulationWidget->retranslateUi();
 }
 
@@ -306,7 +306,7 @@ void SimulationExperimentViewWidget::fileOpened(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    for (auto simulationWidget : mSimulationWidgets)
+    for (auto simulationWidget : mSimulationWidgets.values())
         simulationWidget->updateGui(true);
 }
 
@@ -361,7 +361,7 @@ void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        for (auto simulationWidget : mSimulationWidgets)
+        for (auto simulationWidget : mSimulationWidgets.values())
             simulationWidget->updateGui(true);
     }
 }
@@ -388,7 +388,7 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
 
     // Let our simulation widgets know that a file has been renamed
 
-    for (auto simulationWidget : mSimulationWidgets)
+    for (auto simulationWidget : mSimulationWidgets.values())
         simulationWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
@@ -402,7 +402,7 @@ void SimulationExperimentViewWidget::fileClosed(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    for (auto simulationWidget : mSimulationWidgets)
+    for (auto simulationWidget : mSimulationWidgets.values())
         simulationWidget->updateGui(true);
 }
 
@@ -521,7 +521,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
 
         if (previousSimulationResultsSize != mSimulationResultsSizes.value(pFileName)) {
-            for (auto currentSimulationWidget : mSimulationWidgets) {
+            for (auto currentSimulationWidget : mSimulationWidgets.values()) {
                 currentSimulationWidget->updateSimulationResults(simulationWidget,
                                                                  previousSimulationResultsSize,
                                                                  simulationRunsCount-2,
@@ -541,7 +541,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
-        for (auto currentSimulationWidget : mSimulationWidgets) {
+        for (auto currentSimulationWidget : mSimulationWidgets.values()) {
             currentSimulationWidget->updateSimulationResults(simulationWidget,
                                                              simulationResultsSize,
                                                              simulationRunsCount-1,

@@ -1478,7 +1478,7 @@ bool GraphPanelPlotLegendWidget::needScrollBar() const
 
     int legendLabelsHeight = 0;
 
-    for (auto legendLabel : mLegendLabels)
+    for (auto legendLabel : mLegendLabels.values())
         legendLabelsHeight += legendLabel->height();
 
     return !pos().y() && (legendLabelsHeight > height());
