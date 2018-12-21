@@ -226,7 +226,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     layout->addWidget(mModeTabs);
     layout->addWidget(centralWidget);
 
-    for (auto mode : mModes)
+    for (auto mode : mModes.values())
         layout->addWidget(mode->viewTabs());
 
     // A connection to handle the case where a file was created or duplicated
@@ -263,7 +263,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Some connections to handle our mode views tab bar
 
-    for (auto mode : mModes) {
+    for (auto mode : mModes.values()) {
         connect(mode->viewTabs(), &TabBarWidget::currentChanged,
                 this, &CentralWidget::updateGui);
         connect(mode->viewTabs(), &TabBarWidget::currentChanged,
@@ -327,7 +327,7 @@ CentralWidget::~CentralWidget()
 
     // Delete our various modes
 
-    for (auto mode : mModes)
+    for (auto mode : mModes.values())
         delete mode;
 }
 
@@ -634,7 +634,7 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our mode views tab bar
 
-    for (auto mode : mModes) {
+    for (auto mode : mModes.values()) {
         TabBarWidget *viewTabs = mode->viewTabs();
 
         for (int i = 0, iMax = viewTabs->count(); i < iMax; ++i)
@@ -1715,7 +1715,7 @@ void CentralWidget::updateGui()
     bool changedModes = sender() == mModeTabs;
     bool changedViews = false;
 
-    for (auto mode : mModes) {
+    for (auto mode : mModes.values()) {
         if (sender() == mode->viewTabs()) {
             changedViews = true;
 
@@ -2103,7 +2103,7 @@ void CentralWidget::updateModifiedSettings()
     mModeTabs->setEnabled(true);
     mModeTabs->setToolTip(QString());
 
-    for (auto mode : mModes) {
+    for (auto mode : mModes.values()) {
         TabBarWidget *viewTabs = mode->viewTabs();
 
         viewTabs->setEnabled(true);

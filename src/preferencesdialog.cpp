@@ -341,7 +341,7 @@ void PreferencesDialog::buttonBoxAccepted()
 
     mPluginNames = QStringList();
 
-    for (auto preferencesWidget : mItemPreferencesWidgets) {
+    for (auto preferencesWidget : mItemPreferencesWidgets.values()) {
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
@@ -413,7 +413,7 @@ void PreferencesDialog::resetAll()
 {
     // Reset all of our general and plugins' preferences
 
-    for (auto preferencesWidget : mItemPreferencesWidgets)
+    for (auto preferencesWidget : mItemPreferencesWidgets.values())
         preferencesWidget->resetPreferences();
 }
 
