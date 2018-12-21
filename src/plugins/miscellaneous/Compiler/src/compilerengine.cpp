@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Compiler engine
 //==============================================================================
 
-#ifdef Q_OS_WIN
+#ifdef _WIN32
     #define _SCL_SECURE_NO_WARNINGS
 #endif
 

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML file runtime
 //==============================================================================
 
-#ifdef Q_OS_WIN
+#ifdef _WIN32
     #define NOMINMAX
 #endif
 
