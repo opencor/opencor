@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef EditorWidget_PLUGIN
-        #define EDITORWIDGET_EXPORT __declspec(dllexport)
-    #else
-        #define EDITORWIDGET_EXPORT __declspec(dllimport)
-    #endif
+#ifdef EditorWidget_PLUGIN
+    #define EDITORWIDGET_EXPORT Q_DECL_EXPORT
 #else
-    #define EDITORWIDGET_EXPORT
+    #define EDITORWIDGET_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

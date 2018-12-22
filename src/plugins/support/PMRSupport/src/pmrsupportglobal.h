@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef PMRSupport_PLUGIN
-        #define PMRSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define PMRSUPPORT_EXPORT __declspec(dllimport)
-    #endif
+#ifdef PMRSupport_PLUGIN
+    #define PMRSUPPORT_EXPORT Q_DECL_EXPORT
 #else
-    #define PMRSUPPORT_EXPORT
+    #define PMRSUPPORT_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

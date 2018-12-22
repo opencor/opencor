@@ -28,14 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef OpenCOR_MAIN
     #define CORE_EXPORT
 #else
-    #ifdef _WIN32
-        #ifdef Core_PLUGIN
-            #define CORE_EXPORT __declspec(dllexport)
-        #else
-            #define CORE_EXPORT __declspec(dllimport)
-        #endif
+    #ifdef Core_PLUGIN
+        #define CORE_EXPORT Q_DECL_EXPORT
     #else
-        #define CORE_EXPORT
+        #define CORE_EXPORT Q_DECL_IMPORT
     #endif
 #endif
 
