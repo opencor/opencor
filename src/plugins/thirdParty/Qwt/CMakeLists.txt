@@ -3,16 +3,16 @@ project(QwtPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME Qwt)
-set(PACKAGE_VERSION 6.1.3)
+set(PACKAGE_VERSION 6.1.4)
 
 # Version of our library
 
 set(MAJOR_LIBRARY_VERSION 6)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.3)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.1.4)
 
 # Git tag for our library
 
-set(GIT_TAG v6.1.3)
+set(GIT_TAG v6.1.4)
 
 # Specify where our local package will be installed
 
@@ -74,33 +74,33 @@ if(USE_PREBUILT_QWT_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 26d0408acc800d2254359cd08f54e3316a40d854
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d1d2fbec22fc34e1c0f7612676e006d9577dcad7
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 48d1ff3f27a5c474ea9140db3f967ee59e1c013b
-                                              77c9ffad27d8970571508f479d1a944a49c6be70
-                                              58a84a8e3b3dee4eae7243b86d1ae71880201abb
-                                              e7c24127e29420a553cd5143bdf8a9d01ab58d5a)
+                                  SHA1_VALUES 5ef799b130da578317eaac11bcca0b6e784e856f
+                                              535fe36ced19b874fb3a2955e18f161ba8d92325
+                                              6d660396d4cec8f0be73272ce8ca4c834d0c7290
+                                              f86d1415aff8941bd82fc130ee0c633f3a76a853)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} b660184b7183c9c77065ae312e836c63220036c1
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 8eb1b10dc5cde285b12882ed7b35f2537783514e
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 797be5b8c8274f5d79dba26d0c8cfc81d37def55
-                                              1a11e5972ba5cbe929f00aab8bc683aa5f32b220
-                                              50a3c9853ef6e732de0bd08e982f5da2f91f3c03
-                                              282f4e4f017b7abdf224a2b1460e766647a06277)
+                                  SHA1_VALUES 9474b4e7b65741b3b618e5409460db6d04789892
+                                              ed05b52cb3e4a60b22544d254c92d3ea8393cb41
+                                              133e4d38b569b0e53b8de01a80a81ac9fff3c97a
+                                              6b57f528da6778958cca548ff092f6ab41dbad27)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1168208c7d280bc622ef850d98e2f045c8a30759
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 06ea2b255732bba881ef91711710f5ac1ff5aee8
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 192399896b63528a83a481df6d2ce6b690b64c0f
-                                          7b1c5bf136a8639197cddef53c76c7661f397260)
+                              SHA1_VALUES f7f1c1644ad921895a722d9f44bbda1d5da7f79e
+                                          95fb741efee4869580381ba2937ecd0844dbb690)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 52592dbd18c64155408cd0411144cdf48f041e42
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 381b0959620e75bbbba71a566f65edb7c72ab6fd
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES dfc29b02b23434e793968332a95ea5fe5357f90e
-                                          94183cb96c5b1f93ee65bca9ce19d7f0273ec650)
+                              SHA1_VALUES 0bbc21646c80c63d37da95e5f6da131608f18649
+                                          20942273668742335d5ab5f754a26148ee331162)
     endif()
 else()
     # Set platform specific configuration options
