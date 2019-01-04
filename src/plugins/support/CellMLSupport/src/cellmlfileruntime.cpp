@@ -775,7 +775,7 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         }
     } else {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage, false)));
+                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage)));
     }
 }
 
