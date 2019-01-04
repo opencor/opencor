@@ -416,8 +416,8 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
                     voiName = parameter->name();
                     voiComponentHierarchy = parameter->componentHierarchy();
-            } else if (    parameter->name().compare(voiName)
-                       || (parameter->componentHierarchy() != voiComponentHierarchy)) {
+                } else if (    parameter->name().compare(voiName)
+                           || (parameter->componentHierarchy() != voiComponentHierarchy)) {
                     // The CellML API wrongly validated a model that has more
                     // more than one VOI (at least, according to the CellML
                     // API), but this is clearly wrong (not to mention that it
