@@ -775,7 +775,7 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         }
     } else {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage, false)));
+                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage)));
     }
 }
 
@@ -797,7 +797,7 @@ void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel
 
         checkCodeInformation(mCodeInformation);
     } catch (iface::cellml_api::CellMLException &exception) {
-        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation), false));
+        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation)));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }
