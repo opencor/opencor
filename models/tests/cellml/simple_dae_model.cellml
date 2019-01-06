@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <model name="simple_dae_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <component name="main">
-        <variable initial_value="0" name="a" units="dimensionless"/>
+        <variable initial_value="1" name="a" units="dimensionless"/>
         <variable name="b" units="dimensionless"/>
         <variable name="t" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -22,14 +22,13 @@
             <apply>
                 <eq/>
                 <apply>
-                    <minus/>
-                    <apply>
-                        <sin/>
-                        <ci>a</ci>
-                    </apply>
+                    <cos/>
                     <ci>b</ci>
                 </apply>
-                <cn cellml:units="dimensionless">0</cn>
+                <apply>
+                    <sin/>
+                    <ci>a</ci>
+                </apply>
             </apply>
         </math>
     </component>
