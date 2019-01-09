@@ -10,6 +10,15 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Simulation Experiment view",
+                             "entries": [
+                               { "type": "improved", "description": "Plotting of simulations." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Support",
                          "entries": [
                            { "type": "subCategory", "name": "COMBINE support",
