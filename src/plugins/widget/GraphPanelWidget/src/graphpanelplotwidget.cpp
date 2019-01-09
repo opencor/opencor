@@ -1887,10 +1887,10 @@ void GraphPanelPlotWidget::updateActions()
 
     QRectF dRect = realDataRect();
 
-    mResetZoomAction->setEnabled(   !qIsNull(crtMinX-dRect.left())
-                                 || !qIsNull(crtMaxX-(dRect.left()+dRect.width()))
-                                 || !qIsNull(crtMinY-dRect.top())
-                                 || !qIsNull(crtMaxY-(dRect.top()+dRect.height())));
+    mResetZoomAction->setEnabled(   !qFuzzyCompare(crtMinX, dRect.left())
+                                 || !qFuzzyCompare(crtMaxX, dRect.left()+dRect.width())
+                                 || !qFuzzyCompare(crtMinY, dRect.top())
+                                 || !qFuzzyCompare(crtMaxY, dRect.top()+dRect.height()));
 }
 
 //==============================================================================
@@ -2682,7 +2682,7 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
     // Make sure that the given values are different (and therefore optimisable
     // as such)
 
-    if (qIsNull(pMin-pMax)) {
+    if (qFuzzyCompare(pMin, pMax)) {
         // The given values are the same, so update them so that we can properly
         // optimise them below
 
@@ -2951,14 +2951,16 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     bool yAxisValuesChanged = false;
 
     if (    pForceAxesSetting || pSynchronizeXAxis
-        || !qIsNull(pMinX-oldMinX) || !qIsNull(pMaxX-oldMaxX)) {
+        || !qFuzzyCompare(pMinX, oldMinX)
+        || !qFuzzyCompare(pMaxX, oldMaxX)) {
         setAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
         xAxisValuesChanged = true;
     }
 
     if (    pForceAxesSetting || pSynchronizeYAxis
-        || !qIsNull(pMinY-oldMinY) || !qIsNull(pMaxY-oldMaxY)) {
+        || !qFuzzyCompare(pMinY, oldMinY)
+        || !qFuzzyCompare(pMaxY, oldMaxY)) {
         setAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
         yAxisValuesChanged = true;
@@ -3760,7 +3762,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                              || (newMinBorderDistStartX != oldMinBorderDistStartX)
                              || (newMinBorderDistEndX != oldMinBorderDistEndX);
     bool yAlignmentChanged =     forceAlignment
-                             || !qIsNull(newMinExtentY-oldMinExtentY);
+                             || !qFuzzyCompare(newMinExtentY, oldMinExtentY);
     bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 
     for (auto plot : selfPlusNeighbors) {
@@ -3886,8 +3888,10 @@ void GraphPanelPlotWidget::customAxes()
         double newMinY = customAxesDialog.minY();
         double newMaxY = customAxesDialog.maxY();
 
-        if (   !qIsNull(newMinX-oldMinX) || !qIsNull(newMaxX-oldMaxX)
-            || !qIsNull(newMinY-oldMinY) || !qIsNull(newMaxY-oldMaxY)) {
+        if (   !qFuzzyCompare(newMinX, oldMinX)
+            || !qFuzzyCompare(newMaxX, oldMaxX)
+            || !qFuzzyCompare(newMinY, oldMinY)
+            || !qFuzzyCompare(newMaxY, oldMaxY)) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
                     true, true, true, true, false, false);
         }

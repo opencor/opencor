@@ -91,7 +91,7 @@ void HeunSolver::solve(double &pVoi, double pVoiEnd) const
     double realStep = mStep;
     double realHalfStep = 0.5*realStep;
 
-    while (!qIsNull(pVoi-pVoiEnd)) {
+    while (!qFuzzyCompare(pVoi, pVoiEnd)) {
         // Check that the time step is correct
 
         if (pVoi+realStep > pVoiEnd) {
@@ -121,7 +121,7 @@ void HeunSolver::solve(double &pVoi, double pVoiEnd) const
 
         // Advance through time
 
-        if (!qIsNull(realStep-mStep))
+        if (!qFuzzyCompare(realStep, mStep))
             pVoi = pVoiEnd;
         else
             pVoi = voiStart+(++stepNumber)*mStep;

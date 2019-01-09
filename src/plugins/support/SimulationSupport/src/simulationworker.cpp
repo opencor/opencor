@@ -200,7 +200,7 @@ void SimulationWorker::run()
 
             // Some post-processing, if needed
 
-            if (qIsNull(mCurrentPoint-endingPoint) || mStopped) {
+            if (qFuzzyCompare(mCurrentPoint, endingPoint) || mStopped) {
                 // We have reached our ending point or we have been asked to
                 // stop, so leave our main work loop
 
