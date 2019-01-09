@@ -2686,7 +2686,9 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
         // The given values are the same, so update them so that we can properly
         // optimise them below
 
-        double powerValue = qIsNull(pMin)?0.0:qFloor(log10(qAbs(pMin)))-1.0;
+        double powerValue = qFuzzyIsNull(pMin)?
+                                0.0:
+                                qFloor(log10(qAbs(pMin)))-1.0;
 
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
@@ -3391,7 +3393,8 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         QRectF zoomRegion = QRectF(canvasPoint(zoomRegionRect.topLeft()),
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height())));
 
-        if (!qIsNull(zoomRegion.width()) && !qIsNull(zoomRegion.height())) {
+        if (   !qFuzzyIsNull(zoomRegion.width())
+            && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
                     true, true, true, true, false, false);
