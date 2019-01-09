@@ -2718,10 +2718,10 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
         double minOverMinorStep = pMin/minorStep;
         double maxOverMinorStep = pMax/minorStep;
 
-        pMin = qFuzzyIsNull(minOverMinorStep-int(minOverMinorStep))?
+        pMin = qFuzzyCompare(minOverMinorStep, int(minOverMinorStep))?
                     minOverMinorStep*minorStep:
                     qFloor(minOverMinorStep)*minorStep;
-        pMax = qFuzzyIsNull(maxOverMinorStep-int(maxOverMinorStep))?
+        pMax = qFuzzyCompare(maxOverMinorStep, int(maxOverMinorStep))?
                     maxOverMinorStep*minorStep:
                     qCeil(maxOverMinorStep)*minorStep;
     } else {
@@ -2730,10 +2730,10 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
         double minOverMinStep = pMin/minStep;
         double maxOverMaxStep = pMax/maxStep;
 
-        pMin = qFuzzyIsNull(minOverMinStep-int(minOverMinStep))?
+        pMin = qFuzzyCompare(minOverMinStep, int(minOverMinStep))?
                     minOverMinStep*minStep:
                     qFloor(minOverMinStep)*minStep;
-        pMax = qFuzzyIsNull(maxOverMaxStep-int(maxOverMaxStep))?
+        pMax = qFuzzyCompare(maxOverMaxStep, int(maxOverMaxStep))?
                     maxOverMaxStep*maxStep:
                     qCeil(maxOverMaxStep)*maxStep;
     }
