@@ -40,7 +40,8 @@ namespace Core {
 //==============================================================================
 
 FileManager::FileManager() :
-    mFiles(QMap<QString, File *>()),
+    mFiles(QList<File *>()),
+    mFileNameFiles(QMap<QString, File *>()),
     mFilesReadable(QMap<QString, bool>()),
     mFilesWritable(QMap<QString, bool>()),
     mCheckFilesEnabled(true)
@@ -72,7 +73,7 @@ FileManager::~FileManager()
 
     // Remove all the managed files
 
-    for (auto file : mFiles.values())
+    for (auto file : mFiles)
         delete file;
 }
 
@@ -136,7 +137,11 @@ FileManager::Status FileManager::manage(const QString &pFileName,
             // The file isn't already managed, so add it to our list of managed
             // files and let people know about it being now managed
 
-            mFiles.insert(fileName, new File(fileName, pType, pUrl));
+            File *file = new File(fileName, pType, pUrl);
+
+            mFiles << file;
+
+            mFileNameFiles.insert(fileName, file);
 
             startStopTimer();
 
@@ -161,7 +166,8 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     if (file) {
         // The file is managed, so we can remove it
 
-        mFiles.remove(fileName);
+        mFiles.removeOne(file);
+        mFileNameFiles.remove(fileName);
 
         delete file;
 
@@ -181,7 +187,7 @@ File * FileManager::file(const QString &pFileName) const
 {
     // Return the File object, if any, associated with the given file
 
-    return mFiles.value(canonicalFileName(pFileName));
+    return mFileNameFiles.value(canonicalFileName(pFileName));
 }
 
 //==============================================================================
@@ -244,7 +250,7 @@ QString FileManager::fileName(const QString &pUrl) const
 {
     // Return the given file's file name, if it is being managed
 
-    for (auto file : mFiles.values()) {
+    for (auto file : mFiles) {
         if (!pUrl.compare(file->url()))
             return file->fileName();
     }
@@ -586,8 +592,8 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
         if (file->setFileName(newFileName)) {
             QString oldFileName = canonicalFileName(pOldFileName);
 
-            mFiles.insert(newFileName, file);
-            mFiles.remove(oldFileName);
+            mFileNameFiles.insert(newFileName, file);
+            mFileNameFiles.remove(oldFileName);
 
             emit fileRenamed(oldFileName, newFileName);
 
@@ -715,10 +721,8 @@ void FileManager::checkFiles()
     //       them, and to check a file that has been removed will crash
     //       OpenCOR...
 
-    auto files = mFiles.values();
-
-    for (auto file : files) {
-        if (!files.contains(file))
+    for (auto file : mFiles) {
+        if (!mFiles.contains(file))
             continue;
 
         QString fileName = file->fileName();
