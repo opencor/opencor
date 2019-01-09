@@ -21,12 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Compiler tests
 //==============================================================================
 
-#ifdef _WIN32
-    #define _SCL_SECURE_NO_WARNINGS
-#endif
-
-//==============================================================================
-
 #include "compilerengine.h"
 #include "compilermath.h"
 #include "tests.h"

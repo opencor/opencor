@@ -84,7 +84,7 @@ void GraphPanelsWidget::retranslateUi()
 
     // Retranslate all our graph panels
 
-    foreach (GraphPanelWidget *graphPanel, mGraphPanels)
+    for (auto graphPanel : mGraphPanels)
         graphPanel->retranslateUi();
 }
 
@@ -347,7 +347,7 @@ void GraphPanelsWidget::setSizes(const QIntList &pSizes)
     // Set our sizes as internal and/or default sizes, depending on whether the
     // given sizes consist of ones
 
-    foreach (int size, pSizes) {
+    for (auto size : pSizes) {
         if (size != 1) {
             mUseInternalSizes = false;
 
@@ -380,7 +380,7 @@ void GraphPanelsWidget::updateGraphPanels(GraphPanelWidget *pGraphPanel)
 
     // Inactivate all the other graph panels
 
-    foreach (GraphPanelWidget *graphPanel, mGraphPanels) {
+    for (auto graphPanel : mGraphPanels) {
         if (graphPanel != pGraphPanel) {
             // We are not dealing with the graph panel that just got activated,
             // so inactivate it

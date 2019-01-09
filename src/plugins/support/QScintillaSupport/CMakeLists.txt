@@ -11,8 +11,6 @@ add_plugin(QScintillaSupport
     HEADERS_MOC
         src/qscintillasupportplugin.h
         src/qscintillawidget.h
-    DEFINITIONS
-        QSCINTILLA_DLL
     PLUGINS
         Core
         QScintilla

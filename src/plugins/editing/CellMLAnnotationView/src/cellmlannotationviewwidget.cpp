@@ -96,7 +96,7 @@ void CellmlAnnotationViewWidget::retranslateUi()
 {
     // Retranslate our editing widgets
 
-    foreach (CellmlAnnotationViewEditingWidget *editingWidget, mEditingWidgets)
+    for (auto editingWidget : mEditingWidgets.values())
         editingWidget->retranslateUi();
 }
 

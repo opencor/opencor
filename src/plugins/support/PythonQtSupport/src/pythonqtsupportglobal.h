@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef PythonQtSupport_PLUGIN
-        #define PYTHONQTSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define PYTHONQTSUPPORT_EXPORT __declspec(dllimport)
-    #endif
+#ifdef PythonQtSupport_PLUGIN
+    #define PYTHONQTSUPPORT_EXPORT Q_DECL_EXPORT
 #else
-    #define PYTHONQTSUPPORT_EXPORT
+    #define PYTHONQTSUPPORT_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

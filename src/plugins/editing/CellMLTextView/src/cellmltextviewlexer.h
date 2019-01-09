@@ -40,6 +40,8 @@ namespace CellMLTextView {
 
 class CellmlTextViewLexer : public QsciLexerCustom
 {
+    Q_OBJECT
+
 public:
     enum {
         Default,
@@ -99,6 +101,9 @@ private:
 
     int fullTextBytesPosition(int pPosition) const;
     int textBytesPosition(const QString &pText, int pPosition) const;
+
+signals:
+    void done();
 };
 
 //==============================================================================

@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef SimulationSupport_PLUGIN
-        #define SIMULATIONSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define SIMULATIONSUPPORT_EXPORT __declspec(dllimport)
-    #endif
+#ifdef SimulationSupport_PLUGIN
+    #define SIMULATIONSUPPORT_EXPORT Q_DECL_EXPORT
 #else
-    #define SIMULATIONSUPPORT_EXPORT
+    #define SIMULATIONSUPPORT_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

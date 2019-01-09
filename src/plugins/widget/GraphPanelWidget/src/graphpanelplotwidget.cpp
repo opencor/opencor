@@ -376,7 +376,7 @@ void GraphPanelPlotGraph::attach(GraphPanelPlotWidget *pPlot)
 
     mDummyRun->attach(pPlot);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->attach(pPlot);
 
     mPlot = pPlot;
@@ -392,7 +392,7 @@ void GraphPanelPlotGraph::detach()
 
     mDummyRun->detach();
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->detach();
 
     mPlot = nullptr;
@@ -452,7 +452,7 @@ void GraphPanelPlotGraph::removeRuns()
 {
     // Delete all our runs
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         delete run;
 
     mRuns.clear();
@@ -573,7 +573,7 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setPen(pPen);
 }
 
@@ -600,7 +600,7 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 
     mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
 }
 
@@ -625,7 +625,7 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 
     mDummyRun->setTitle(pTitle);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setTitle(pTitle);
 }
 
@@ -650,7 +650,7 @@ void GraphPanelPlotGraph::setVisible(bool pVisible)
 
     mDummyRun->setVisible(pVisible);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setVisible(pVisible);
 }
 
@@ -660,7 +660,7 @@ bool GraphPanelPlotGraph::hasData() const
 {
     // Return whether we have some data for any of our runs
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns) {
+    for (auto run : mRuns) {
         if (run->dataSize())
             return true;
     }
@@ -734,7 +734,7 @@ QRectF GraphPanelPlotGraph::boundingRect()
     if ((mBoundingRect == InvalidRect) && !mRuns.isEmpty()) {
         mBoundingRect = QRectF();
 
-        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+        for (auto run : mRuns) {
             if (run->dataSize()) {
                 QRectF boundingRect = mBoundingRects.value(run, InvalidRect);
 
@@ -813,7 +813,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
     if ((mBoundingLogRect == InvalidRect) && !mRuns.isEmpty()) {
         mBoundingLogRect = QRectF();
 
-        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+        for (auto run : mRuns) {
             if (run->dataSize()) {
                 QRectF boundingLogRect = mBoundingLogRects.value(run, InvalidRect);
 
@@ -1478,7 +1478,7 @@ bool GraphPanelPlotLegendWidget::needScrollBar() const
 
     int legendLabelsHeight = 0;
 
-    foreach (QwtLegendLabel *legendLabel, mLegendLabels)
+    for (auto legendLabel : mLegendLabels.values())
         legendLabelsHeight += legendLabel->height();
 
     return !pos().y() && (legendLabelsHeight > height());
@@ -1755,7 +1755,7 @@ GraphPanelPlotWidget::~GraphPanelPlotWidget()
 
     delete mDirectPainter;
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs)
+    for (auto graph : mGraphs)
         delete graph;
 }
 
@@ -2766,7 +2766,7 @@ bool GraphPanelPlotWidget::hasData() const
     // Determine and return whether at least one of the graphs, which are valid
     // and selected, has some data
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+    for (auto graph : mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->hasData())
             return true;
     }
@@ -2785,7 +2785,7 @@ bool GraphPanelPlotWidget::dataRect(QRectF &pDataRect) const
 
     pDataRect = QRectF();
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+    for (auto graph : mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             pDataRect |= graph->boundingRect();
 
@@ -2807,7 +2807,7 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
     pDataLogRect = QRectF();
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+    for (auto graph : mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             pDataLogRect |= graph->boundingLogRect();
 
@@ -2976,19 +2976,19 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
                 && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *plot, mNeighbors) {
+                for (auto plot : mNeighbors) {
                     plot->setAxes(pMinX, pMaxX, pMinY, pMaxY,
                                   false, false, false, true, false, false);
                 }
             } else if (   xAxisValuesChanged
                        && mSynchronizeXAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *plot, mNeighbors) {
+                for (auto plot : mNeighbors) {
                     plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(),
                                   false, false, false, true, false, false);
                 }
             } else if (   yAxisValuesChanged
                        && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *plot, mNeighbors) {
+                for (auto plot : mNeighbors) {
                     plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY,
                                   false, false, false, true, false, false);
                 }
@@ -3152,7 +3152,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     int legendWidth = 0;
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
+    for (auto plot : selfPlusNeighbors)  {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
@@ -3163,7 +3163,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
         }
     }
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+    for (auto plot : selfPlusNeighbors) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         legend->setSizeHintWidth(legend->needScrollBar()?
@@ -3714,7 +3714,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+    for (auto plot : selfPlusNeighbors) {
         // Determine how much space we should have directly to the left and
         // right of the X axis
 
@@ -3760,7 +3760,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                              || !qIsNull(newMinExtentY-oldMinExtentY);
     bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+    for (auto plot : selfPlusNeighbors) {
         GraphPanelPlotScaleWidget *xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
 
         xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
@@ -3809,7 +3809,7 @@ void GraphPanelPlotWidget::exportTo()
     QStringList filters = QStringList() << pdfFilter
                                         << tr("SVG File - Scalable Vector Graphics (*.svg)");
 
-    foreach (const QString &supportedMimeType, QImageWriter::supportedMimeTypes()) {
+    for (const auto &supportedMimeType : QImageWriter::supportedMimeTypes()) {
         if (!supportedMimeType.compare("image/bmp"))
             filters << tr("BMP File - Windows Bitmap (*.bmp)");
         else if (!supportedMimeType.compare("image/jpeg"))

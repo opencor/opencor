@@ -87,7 +87,7 @@ int main(int pArgC, char *pArgV[])
         std::cout << "********* " << testsGroup.key().toStdString() << " *********" << std::endl;
         std::cout << std::endl;
 
-        foreach (const QString &testName, testsGroup.value()) {
+        for (const auto &testName : testsGroup.value()) {
             // Execute the test itself
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
@@ -125,7 +125,7 @@ int main(int pArgC, char *pArgV[])
         else
             std::cout << "The following tests failed:" << std::endl;
 
-        foreach (const QString &failedTest, failedTests)
+        for (const auto &failedTest : failedTests)
             std::cout << " - " << failedTest.toStdString() << std::endl;
     }
 

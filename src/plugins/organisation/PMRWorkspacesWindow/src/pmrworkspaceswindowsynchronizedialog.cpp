@@ -415,7 +415,7 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 
     PmrWorkspacesWindowSynchronizeDialogItems res = PmrWorkspacesWindowSynchronizeDialogItems();
 
-    foreach (PMRSupport::PmrWorkspaceFileNode *fileNode, pFileNode->children()) {
+    for (auto fileNode : pFileNode->children()) {
         if (fileNode->hasChildren()) {
             // This is a folder, so populate ourselves with its children
 
@@ -536,7 +536,7 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 
     // Delete old unused items
 
-    foreach (PmrWorkspacesWindowSynchronizeDialogItem *oldItem, oldItems) {
+    for (auto oldItem : oldItems) {
         if (!newItems.contains(oldItem)) {
             mDiffHtmls.remove(oldItem->text());
             mCellmlDiffHtmls.remove(oldItem->text());
@@ -573,7 +573,7 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
                    this, &PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox);
 
         if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(pItem->index()))) {
-            foreach (const QModelIndex &fileIndex, mChangesValue->selectionModel()->selectedIndexes())
+            for (const auto &fileIndex : mChangesValue->selectionModel()->selectedIndexes())
                 mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
         }
 
@@ -739,7 +739,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         QString oldString = QString();
         QString newString = QString();
 
-        foreach (const DifferenceData &differenceData, pDifferencesData) {
+        for (const auto &differenceData : pDifferencesData) {
             if (differenceData.tag == '+')
                 newString += differenceData.difference+Separator;
             else
@@ -756,11 +756,10 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         QString oldDiffString = QString();
         QString newDiffString = QString();
 
-        for (DiffMatchPatch::Diffs::const_iterator diffIterator = diffs.begin(), endDiffIterator = diffs.end();
-             diffIterator != endDiffIterator; ++diffIterator) {
-            QString text = cleanHtmlEscaped(QString::fromStdWString((*diffIterator).text));
+        for (auto diff : diffs) {
+            QString text = cleanHtmlEscaped(QString::fromStdWString(diff.text));
 
-            switch ((*diffIterator).operation) {
+            switch (diff.operation) {
             case DiffMatchPatch::EQUAL:
                 oldDiffString += text;
                 newDiffString += text;
@@ -798,7 +797,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
         int addLineNumber = -1;
         int removeLineNumber = -1;
 
-        foreach (const DifferenceData &differenceData, pDifferencesData) {
+        for (const auto &differenceData : pDifferencesData) {
             html += Row.arg(differenceData.operation)
                        .arg(differenceData.removeLineNumber)
                        .arg(differenceData.addLineNumber)
@@ -868,7 +867,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     int removeLineNumber = 0;
     DifferencesData differencesData = DifferencesData();
 
-    foreach (const QString &difference, differencesList) {
+    for (const auto &difference : differencesList) {
         ++differenceNumber;
 
         if (difference.startsWith("@@") && difference.endsWith("@@")) {
@@ -1049,7 +1048,7 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
     if (indexes.isEmpty()) {
         // No selected indexes, so select the previously selected indexes
 
-        foreach (const QModelIndex &index, mPreviouslySelectedIndexes)
+        for (const auto &index : mPreviouslySelectedIndexes)
             mChangesValue->selectionModel()->select(index, QItemSelectionModel::Select);
     } else {
         // We have some selected indexes, so keep track of them

@@ -226,7 +226,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     layout->addWidget(mModeTabs);
     layout->addWidget(centralWidget);
 
-    foreach (CentralWidgetMode *mode, mModes)
+    for (auto mode : mModes.values())
         layout->addWidget(mode->viewTabs());
 
     // A connection to handle the case where a file was created or duplicated
@@ -263,7 +263,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Some connections to handle our mode views tab bar
 
-    foreach (CentralWidgetMode *mode, mModes) {
+    for (auto mode : mModes.values()) {
         connect(mode->viewTabs(), &TabBarWidget::currentChanged,
                 this, &CentralWidget::updateGui);
         connect(mode->viewTabs(), &TabBarWidget::currentChanged,
@@ -327,7 +327,7 @@ CentralWidget::~CentralWidget()
 
     // Delete our various modes
 
-    foreach (CentralWidgetMode *mode, mModes)
+    for (auto mode : mModes.values())
         delete mode;
 }
 
@@ -390,7 +390,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     QStringList fileNamesOrUrls = pSettings->value(SettingsFileNamesOrUrls).toStringList();
 
-    foreach (const QString &fileNameOrUrl, fileNamesOrUrls) {
+    for (const auto &fileNameOrUrl : fileNamesOrUrls) {
         if (pSettings->value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool())
             openRemoteFile(fileNameOrUrl, false);
         else
@@ -399,7 +399,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the selected modes and views of our different files
 
-    foreach (const QString &fileName, mFileNames) {
+    for (const auto &fileName : mFileNames) {
         QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
                                     fileManagerInstance->url(fileName):
                                     fileName;
@@ -484,7 +484,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     static const QString SettingsFileModeViewHeader = SettingsFileModeView.arg(QString())
                                                                           .arg(QString());
 
-    foreach (const QString &key, pSettings->allKeys()) {
+    for (const auto &key : pSettings->allKeys()) {
         if (   key.startsWith(SettingsFileIsRemoteHeader)
             || key.startsWith(SettingsFileModeHeader)
             || key.startsWith(SettingsFileModeViewHeader)) {
@@ -498,7 +498,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QStringList fileNames = QStringList();
     QStringList fileNamesOrUrls = QStringList();
 
-    foreach (const QString &fileName, mFileNames) {
+    for (const auto &fileName : mFileNames) {
         if (!fileManagerInstance->isNew(fileName)) {
             // The file is not new, so keep track of it, as well as of whether
             // it's a remote file
@@ -520,7 +520,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of the selected modes and views of our different files
 
-    foreach (const QString &fileName, fileNames) {
+    for (const auto &fileName : fileNames) {
         QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
                                     fileManagerInstance->url(fileName):
                                     fileName;
@@ -579,7 +579,7 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     // Determine which loaded plugins support a given interface
 
-    foreach (Plugin *plugin, pLoadedPlugins) {
+    for (auto plugin : pLoadedPlugins) {
         if (qobject_cast<FileHandlingInterface *>(plugin->instance()))
             mLoadedFileHandlingPlugins << plugin;
 
@@ -607,8 +607,8 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
     //       called as part of OpenCOR's loading its settings, so we do it here
     //       instead...
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
-        foreach (const QString &fileName, mFileNames)
+    for (auto plugin : mLoadedFileHandlingPlugins) {
+        for (const auto &fileName : mFileNames)
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
     }
 }
@@ -634,7 +634,7 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our mode views tab bar
 
-    foreach (CentralWidgetMode *mode, mModes) {
+    for (auto mode : mModes.values()) {
         TabBarWidget *viewTabs = mode->viewTabs();
 
         for (int i = 0, iMax = viewTabs->count(); i < iMax; ++i)
@@ -799,7 +799,7 @@ QString CentralWidget::openFile(const QString &pFileName, const File::Type &pTyp
     //       hence we do something similar to what is done in
     //       settingsLoaded()...
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+    for (auto plugin : mLoadedFileHandlingPlugins)
         qobject_cast<FileHandlingInterface *>(plugin->instance())->fileOpened(fileName);
 
     return QString();
@@ -1363,12 +1363,12 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 
         // Ask our view plugins to remove the corresponding view for the file
 
-        foreach (Plugin *plugin, mLoadedViewPlugins)
+        for (auto plugin : mLoadedViewPlugins)
             qobject_cast<ViewInterface *>(plugin->instance())->removeViewWidget(fileName);
 
         // Let our plugins know about the file having just been closed
 
-        foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+        for (auto plugin : mLoadedFileHandlingPlugins)
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileClosed(fileName);
 
         // Unregister the file from our file manager
@@ -1632,7 +1632,7 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
 {
     // Let all our plugins know about the file having been reloaded/saved
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
+    for (auto plugin : mLoadedFileHandlingPlugins) {
         if (pFileReloaded)
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
         else
@@ -1643,7 +1643,7 @@ void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
     // EditingViewPlugin::fileReloaded() for example), we need to tell them to
     // update their GUI
 
-    foreach (Plugin *plugin, mLoadedGuiPlugins)
+    for (auto plugin : mLoadedGuiPlugins)
         qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin(pFileName), pFileName);
 
     // Similarly, we need to update our GUI
@@ -1684,7 +1684,7 @@ void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
     // correspond to a menu with visible/enabled or hidden/disabled actions,
     // respectively
 
-    foreach (QAction *action, pActions) {
+    for (auto action : pActions) {
         QMenu *actionMenu = action->menu();
 
         if (actionMenu) {
@@ -1694,7 +1694,7 @@ void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
 
             bool showEnable = false;
 
-            foreach (QAction *actionMenuAction, actionMenuActions) {
+            for (auto actionMenuAction : actionMenuActions) {
                 if (   !actionMenuAction->isSeparator()
                     &&  actionMenuAction->isVisible()) {
                     showEnable = true;
@@ -1741,7 +1741,7 @@ void CentralWidget::updateGui()
     bool changedModes = sender() == mModeTabs;
     bool changedViews = false;
 
-    foreach (CentralWidgetMode *mode, mModes) {
+    for (auto mode : mModes.values()) {
         if (sender() == mode->viewTabs()) {
             changedViews = true;
 
@@ -1777,7 +1777,7 @@ void CentralWidget::updateGui()
 
             QStringList defaultViews = QStringList();
 
-            foreach (Plugin *plugin, mLoadedFileTypePlugins) {
+            for (auto plugin : mLoadedFileTypePlugins) {
                 FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
                 if (fileTypeInterface->isFile(fileName)) {
@@ -1790,7 +1790,7 @@ void CentralWidget::updateGui()
             if (defaultViews.isEmpty())
                 defaultViews << "RawTextView";
 
-            foreach (const QString &defaultView, defaultViews) {
+            for (const auto &defaultView : defaultViews) {
                 if (selectView(defaultView))
                     break;
             }
@@ -1941,7 +1941,7 @@ void CentralWidget::updateGui()
     //       tools that may need to be enabled/disabled and shown/hidden,
     //       depending on which view plugin and/or file are currently active...
 
-    foreach (Plugin *plugin, mLoadedGuiPlugins)
+    for (auto plugin : mLoadedGuiPlugins)
         qobject_cast<GuiInterface *>(plugin->instance())->updateGui(viewPlugin, fileName);
 
     // Go through our different menus and show/hide them, depending on whether
@@ -2129,7 +2129,7 @@ void CentralWidget::updateModifiedSettings()
     mModeTabs->setEnabled(true);
     mModeTabs->setToolTip(QString());
 
-    foreach (CentralWidgetMode *mode, mModes) {
+    for (auto mode : mModes.values()) {
         TabBarWidget *viewTabs = mode->viewTabs();
 
         viewTabs->setEnabled(true);
@@ -2175,7 +2175,7 @@ void CentralWidget::filePermissionsChanged(const QString &pFileName)
 
     // Let our plugins know about the file having had its permissions changed
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+    for (auto plugin : mLoadedFileHandlingPlugins)
         qobject_cast<FileHandlingInterface *>(plugin->instance())->filePermissionsChanged(pFileName);
 }
 
@@ -2185,7 +2185,7 @@ void CentralWidget::fileModified(const QString &pFileName)
 {
     // Let our plugins know about the file having been modified
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+    for (auto plugin : mLoadedFileHandlingPlugins)
         qobject_cast<FileHandlingInterface *>(plugin->instance())->fileModified(pFileName);
 }
 
@@ -2245,7 +2245,7 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
             // Let our plugins know about a file having been renamed
 
-            foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+            for (auto plugin : mLoadedFileHandlingPlugins)
                 qobject_cast<FileHandlingInterface *>(plugin->instance())->fileRenamed(pOldFileName, pNewFileName);
 
             break;
@@ -2316,14 +2316,14 @@ void CentralWidget::updateStatusBarWidgets(QList<QWidget *> pWidgets)
 
     static QList<QWidget *> statusBarWidgets = QList<QWidget *>();
 
-    foreach (QWidget *statusBarWidget, statusBarWidgets)
+    for (auto statusBarWidget : statusBarWidgets)
         mainWindow()->statusBar()->removeWidget(statusBarWidget);
 
     // Add and show the given status bar widgets, and keep track of them
 
     statusBarWidgets.clear();
 
-    foreach (QWidget *widget, pWidgets) {
+    for (auto widget : pWidgets) {
         mainWindow()->statusBar()->addWidget(widget);
 
         widget->show();

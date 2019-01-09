@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef ZincWidget_PLUGIN
-        #define ZINCWIDGET_EXPORT __declspec(dllexport)
-    #else
-        #define ZINCWIDGET_EXPORT __declspec(dllimport)
-    #endif
+#ifdef ZincWidget_PLUGIN
+    #define ZINCWIDGET_EXPORT Q_DECL_EXPORT
 #else
-    #define ZINCWIDGET_EXPORT
+    #define ZINCWIDGET_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================
