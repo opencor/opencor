@@ -369,8 +369,11 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
     // Make sure that our 'new' property editors' columns' width is the same as
     // that of our 'old' property editors, and that the expanded state of our
     // graph panel editor's sections is properly set
+    // Note: the only reason we check mGraphPanelPropertyEditor and
+    //       mGraphsPropertyEditor is to keep Xcode happy...
 
-    if (oldGraphPanelPropertyEditor && oldGraphsPropertyEditor) {
+    if (   oldGraphPanelPropertyEditor && oldGraphsPropertyEditor
+        && mGraphPanelPropertyEditor && mGraphsPropertyEditor) {
         for (int i = 0, iMax = oldGraphPanelPropertyEditor->header()->count(); i < iMax; ++i)
             mGraphPanelPropertyEditor->setColumnWidth(i, oldGraphPanelPropertyEditor->columnWidth(i));
 
