@@ -436,11 +436,8 @@ void MainWindow::keyPressEvent(QKeyEvent *pEvent)
     //          with Cmd+M to minimise OpenCOR on macOS, but then we wouldn't be
     //          able to close the find/replace widget of a text editor...
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Escape)) {
+    if (   (pEvent->modifiers() == Qt::NoModifier)
+        && (pEvent->key() == Qt::Key_Escape)) {
         if (isFullScreen())
             showNormal();
 

@@ -229,11 +229,8 @@ bool CellmlTextViewWidgetEditingWidget::handleEditorKeyPressEvent(QKeyEvent *pEv
 {
     // Some key combinations from our editor
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        &&  (pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Slash)) {
+    if (   (pEvent->modifiers() == Qt::ControlModifier)
+        && (pEvent->key() == Qt::Key_Slash)) {
         // We want to (un)comment the selected text, if any, or the current
         // line, so start by retrieving the position of our cursor within our
         // editor
