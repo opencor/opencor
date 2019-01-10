@@ -3314,12 +3314,8 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     // Check which action to can carry out
 
-    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
-                       && !(pEvent->modifiers() & Qt::ControlModifier)
-                       && !(pEvent->modifiers() & Qt::AltModifier)
-                       && !(pEvent->modifiers() & Qt::MetaModifier);
-
-    if (noModifiers && (pEvent->button() == Qt::LeftButton)) {
+    if (   (pEvent->modifiers() == Qt::NoModifier)
+        && (pEvent->button() == Qt::LeftButton)) {
         // We want to pan, but only do this if we are not completely zoomed out
 
         if (mCanZoomOutX || mCanZoomOutY) {
@@ -3327,27 +3323,22 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
             mPoint = pEvent->pos();
         }
-    } else if (    (pEvent->modifiers() & Qt::ShiftModifier)
-               && !(pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
+    } else if (   (pEvent->modifiers() == Qt::ShiftModifier)
                && (pEvent->button() == Qt::LeftButton)) {
         // We want to show the coordinates
 
         mAction = ShowCoordinates;
 
         mOverlayWidget->setPoint(pEvent->pos());
-    } else if (noModifiers && (pEvent->button() == Qt::RightButton)) {
+    } else if (   (pEvent->modifiers() == Qt::NoModifier)
+               && (pEvent->button() == Qt::RightButton)) {
         // We want to zoom in/out
 
         mAction = Zoom;
 
         mOriginPoint = pEvent->pos();
         mPoint = pEvent->pos();
-    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-               &&  (pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
+    } else if (   (pEvent->modifiers() == Qt::ControlModifier)
                && (pEvent->button() == Qt::RightButton)) {
         // We want to zoom a region, but only allow it if we are not already
         // fully zoomed in
@@ -3458,11 +3449,8 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 {
     // Handle the wheel mouse button for zooming in/out
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
+    if (   (pEvent->modifiers() == Qt::NoModifier)
+        && canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
         // Make sure that we are not already carrying out an action
 
         if (mAction == None) {
