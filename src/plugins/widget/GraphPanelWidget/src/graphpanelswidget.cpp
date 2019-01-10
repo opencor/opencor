@@ -188,14 +188,9 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
 
     // Synchronise the axes of our graph panels, if needed, and ensure that they
     // are all aligned with one another by forcing the setting of the axes of
-    // our active graph panel
-    // Note: at startup, activeGraphPanelPlot is (obviously) null, hence we use
-    //       our newly created graph panel's plot instead...
+    // our newly active graph panel
 
-    GraphPanelPlotWidget *activeGraphPanelPlot = mActiveGraphPanel?mActiveGraphPanel->plot():nullptr;
-
-    if (!activeGraphPanelPlot)
-        activeGraphPanelPlot = mActiveGraphPanel->plot();
+    GraphPanelPlotWidget *activeGraphPanelPlot = res->plot();
 
     activeGraphPanelPlot->setAxes(activeGraphPanelPlot->minX(),
                                   activeGraphPanelPlot->maxX(),
