@@ -344,22 +344,25 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
             break;
     }
 
-    // Add the given exposure files to the exposure and show them
+    // Add the given exposure files to the exposure, if it could actually be
+    // found, and show them
 
-    static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
+    if (item) {
+        static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
-    for (const auto &exposureFile : sortedExposureFiles) {
-        item->appendRow(new PmrWindowItem(PmrWindowItem::ExposureFile,
-                                          QString(exposureFile).remove(FilePathRegEx),
-                                          exposureFile));
+        for (const auto &exposureFile : sortedExposureFiles) {
+            item->appendRow(new PmrWindowItem(PmrWindowItem::ExposureFile,
+                                              QString(exposureFile).remove(FilePathRegEx),
+                                              exposureFile));
+        }
+
+        if (mDontExpandExposures.contains(pUrl))
+            mDontExpandExposures.removeOne(pUrl);
+        else
+            expand(item->index());
+
+        resizeTreeViewToContents();
     }
-
-    if (mDontExpandExposures.contains(pUrl))
-        mDontExpandExposures.removeOne(pUrl);
-    else
-        expand(item->index());
-
-    resizeTreeViewToContents();
 }
 
 //==============================================================================
