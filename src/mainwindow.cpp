@@ -574,9 +574,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some sub-menus before some menu item/separator in our File menu
 
-        for (const auto &guiMenu : guiMenus) {
-            if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
-                mGui->menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
+        QMenu *menuFile = mGui->menuFile;
+
+        if (menuFile) {
+            for (const auto &guiMenu : guiMenus) {
+                if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
+                    menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
+            }
         }
 
         // Add some actions to our File|New menu and keep track of them
