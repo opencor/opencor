@@ -1829,7 +1829,7 @@ void CentralWidget::updateGui()
     } else {
         // There is a current file, so retrieve its view
 
-        QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
+        QString fileViewKey = mode?viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName):QString();
 
         newView = viewInterface?viewInterface->viewWidget(fileName):nullptr;
 
