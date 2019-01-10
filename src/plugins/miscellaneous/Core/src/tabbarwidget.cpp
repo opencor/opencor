@@ -102,7 +102,8 @@ void TabBarStyle::drawControl(ControlElement pElement,
 
             drawItemText(pPainter, tabRect, alignment, tab->palette,
                          tab->state & State_Enabled, tab->text,
-                         ((tab->state & State_Selected) && pWidget->isActiveWindow())?
+                         (   (tab->state & State_Selected)
+                          && pWidget && pWidget->isActiveWindow())?
                              QPalette::BrightText:
                              QPalette::WindowText);
 
