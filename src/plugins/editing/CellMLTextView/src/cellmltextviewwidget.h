@@ -187,11 +187,12 @@ private:
     bool parse(const QString &pFileName, QString &pExtra);
     bool parse(const QString &pFileName, bool pOnlyErrors = false);
 
+    bool isComment(int pPosition) const;
+
     QString partialStatement(int pPosition, int &pFromPosition,
                              int &pToPosition) const;
     QString beginningOfPiecewiseStatement(int &pPosition) const;
     QString endOfPiecewiseStatement(int &pPosition) const;
-    QString statement(int pPosition) const;
 
 private slots:
     void updateViewer();

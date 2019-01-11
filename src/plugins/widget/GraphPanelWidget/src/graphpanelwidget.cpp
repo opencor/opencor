@@ -78,12 +78,9 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                                    QAction *pSynchronizeXAxisAction,
                                    QAction *pSynchronizeYAxisAction,
                                    QWidget *pParent) :
-    Widget(pParent)
+    Widget(pParent),
+    mActive(false)
 {
-    // We are not active by default
-
-    mActive = false;
-
     // Create and set our horizontal layout
 
     QHBoxLayout *layout = new QHBoxLayout(this);
@@ -120,7 +117,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     GraphPanelPlotWidgets neighbors = GraphPanelPlotWidgets();
 
-    foreach (GraphPanelWidget *neighbor, pNeighbors)
+    for (auto neighbor : pNeighbors)
         neighbors << neighbor->plot();
 
     mPlot = new GraphPanelPlotWidget(neighbors, pSynchronizeXAxisAction,
@@ -138,7 +135,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     // Let our plot's neighbours know about our plot
 
-    foreach (GraphPanelPlotWidget *neighbor, neighbors)
+    for (auto neighbor : neighbors)
         neighbor->addNeighbor(mPlot);
 }
 
@@ -157,7 +154,7 @@ GraphPanelWidget::~GraphPanelWidget()
     // Let our plot's neighbours know that our plot is not going to be their
     // neighbour anymore
 
-    foreach (GraphPanelPlotWidget *plot, mPlot->neighbors()) {
+    for (auto plot : mPlot->neighbors()) {
         if (plot != mPlot)
             plot->removeNeighbor(mPlot);
     }
@@ -239,7 +236,7 @@ void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
 
     GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
 
-    foreach (GraphPanelPlotGraph *graph, pGraphs) {
+    for (auto graph : pGraphs) {
         if (mPlot->removeGraph(graph))
             graphs << graph;
     }

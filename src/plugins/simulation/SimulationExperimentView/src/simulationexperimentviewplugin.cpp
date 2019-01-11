@@ -196,7 +196,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     Plugins cellmlEditingViewPlugins = Plugins();
     Plugins cellmlSimulationViewPlugins = Plugins();
 
-    foreach (Plugin *plugin, pLoadedPlugins) {
+    for (auto plugin : pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (   viewInterface

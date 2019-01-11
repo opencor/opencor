@@ -28,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma warning(disable: 4267)
     #pragma warning(disable: 4291)
 #elif defined(Q_OS_LINUX)
+    #if defined(__GNUC__) && (__GNUC__ >= 8)
+        #pragma GCC diagnostic ignored "-Wclass-memaccess"
+    #endif
     #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"
     #pragma GCC diagnostic ignored "-Wunused-parameter"

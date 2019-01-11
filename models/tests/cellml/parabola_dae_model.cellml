@@ -2,7 +2,7 @@
 <model name="parabola_dae_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <component name="main">
         <variable name="time" units="dimensionless"/>
-        <variable initial_value="123" name="offset" units="dimensionless"/>
+        <variable name="offset" units="dimensionless"/>
         <variable name="x" units="dimensionless"/>
         <variable initial_value="offset" name="y" units="dimensionless"/>
         <variable name="z" units="dimensionless"/>

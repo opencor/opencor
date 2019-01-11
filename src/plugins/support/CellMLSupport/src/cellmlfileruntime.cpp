@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #ifdef _WIN32
-    #define _SCL_SECURE_NO_WARNINGS
-
     #define NOMINMAX
 #endif
 
@@ -418,8 +416,8 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
                     voiName = parameter->name();
                     voiComponentHierarchy = parameter->componentHierarchy();
-            } else if (    parameter->name().compare(voiName)
-                       || (parameter->componentHierarchy() != voiComponentHierarchy)) {
+                } else if (    parameter->name().compare(voiName)
+                           || (parameter->componentHierarchy() != voiComponentHierarchy)) {
                     // The CellML API wrongly validated a model that has more
                     // more than one VOI (at least, according to the CellML
                     // API), but this is clearly wrong (not to mention that it
@@ -482,7 +480,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     QString initConsts = QString();
     QString compCompConsts = QString();
 
-    foreach (const QString &initConst, initConstsList) {
+    for (const auto &initConst : initConstsList) {
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
@@ -726,7 +724,7 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
     if (!mParameters.contains(mVoi))
         delete mVoi;
 
-    foreach (CellmlFileRuntimeParameter *parameter, mParameters)
+    for (auto parameter : mParameters)
         delete parameter;
 
     mVoi = nullptr;
@@ -777,7 +775,7 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         }
     } else {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage, false)));
+                                   tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage)));
     }
 }
 
@@ -799,7 +797,7 @@ void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel
 
         checkCodeInformation(mCodeInformation);
     } catch (iface::cellml_api::CellMLException &exception) {
-        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation), false));
+        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation)));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }
@@ -885,7 +883,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
 
     QString res = QString();
 
-    foreach (const QString &code, QString::fromStdWString(pCode).split("\r\n")) {
+    for (const auto &code : QString::fromStdWString(pCode).split("\r\n")) {
         if (!CommentRegEx.match(code.trimmed()).hasMatch())
             res += (res.isEmpty()?QString():"\n")+code;
     }

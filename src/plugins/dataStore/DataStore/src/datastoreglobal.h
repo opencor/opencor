@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef DataStore_PLUGIN
-        #define DATASTORE_EXPORT __declspec(dllexport)
-    #else
-        #define DATASTORE_EXPORT __declspec(dllimport)
-    #endif
+#ifdef DataStore_PLUGIN
+    #define DATASTORE_EXPORT Q_DECL_EXPORT
 #else
-    #define DATASTORE_EXPORT
+    #define DATASTORE_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

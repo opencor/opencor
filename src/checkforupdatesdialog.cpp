@@ -77,7 +77,7 @@ void CheckForUpdatesEngine::check()
             QString versionVersion;
             QString versionDate;
 
-            foreach (const QVariant &version, versions.object().toVariantMap()["versions"].toList()) {
+            for (const auto &version : versions.object().toVariantMap()["versions"].toList()) {
                 // Retrieve the version and date of the current version
 
                 versionMap = version.toMap();
@@ -154,7 +154,7 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 {
     // Return whether we have a newer official version
 
-    foreach (const QString &newerVersion, mNewerVersions) {
+    for (const auto &newerVersion : mNewerVersions) {
         if (!newerVersion.contains('-'))
             return true;
     }
@@ -263,7 +263,7 @@ void CheckForUpdatesDialog::updateGui()
 
                 QString version = QString();
 
-                foreach (const QString &newerVersion, mEngine->newerVersions()) {
+                for (const auto &newerVersion : mEngine->newerVersions()) {
                     if (newerVersion.contains('-')) {
                         version = newerVersion;
 
@@ -291,7 +291,7 @@ void CheckForUpdatesDialog::updateGui()
 
             QString version = QString();
 
-            foreach (const QString &newerVersion, mEngine->newerVersions()) {
+            for (const auto &newerVersion : mEngine->newerVersions()) {
                 if (!newerVersion.contains('-')) {
                     version = newerVersion;
 

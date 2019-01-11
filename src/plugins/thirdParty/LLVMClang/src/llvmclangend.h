@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if defined(Q_OS_WIN)
     #pragma warning(pop)
 #elif defined(Q_OS_LINUX)
+    #if defined(__GNUC__) && (__GNUC__ >= 8)
+        #pragma GCC diagnostic error "-Wclass-memaccess"
+    #endif
     #pragma GCC diagnostic error "-Wmissing-field-initializers"
     #pragma GCC diagnostic error "-Wstrict-aliasing"
     #pragma GCC diagnostic error "-Wunused-parameter"

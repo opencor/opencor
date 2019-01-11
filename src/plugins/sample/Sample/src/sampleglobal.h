@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef Sample_PLUGIN
-        #define SAMPLE_EXPORT __declspec(dllexport)
-    #else
-        #define SAMPLE_EXPORT __declspec(dllimport)
-    #endif
+#ifdef Sample_PLUGIN
+    #define SAMPLE_EXPORT Q_DECL_EXPORT
 #else
-    #define SAMPLE_EXPORT
+    #define SAMPLE_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================
