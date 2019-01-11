@@ -32,9 +32,9 @@ if(USE_PREBUILT_MESA_PACKAGE)
            RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/${REMOTE_EXTERNAL_PACKAGE_DIR}")
 
     retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                          ${RELATIVE_PROJECT_SOURCE_DIR} 5ef847e91581fc8d190ac87bc6bebd0e9160eeb1
+                          ${RELATIVE_PROJECT_SOURCE_DIR} 8caeac7734935529ce880aed1d799e2208a3c856
                           SHA1_FILES ${SHA1_FILES}
-                          SHA1_VALUES c2c53537d0ffed962e2e096c5eb988da801a54e0)
+                          SHA1_VALUES 9542db2ad4e6c427d01ee061b01cf2971ea3c50f)
 else()
     # Build Mesa as an external project
 
