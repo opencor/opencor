@@ -369,19 +369,9 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
             // Make sure that our workspace is a Git repository
 
             if (!storage.compare("git")) {
-                PmrWorkspace *workspace = new PmrWorkspace(!exposure,
-                                                           workspaceName,
-                                                           workspaceUrl,
-                                                           workspaceDescription,
-                                                           workspaceOwner,
-                                                           this);
                 QString dirName = QString();
 
                 if (exposure) {
-                    // Cloning a workspace from an exposure
-
-                    exposure->setWorkspace(workspace);
-
                     // Check that we aren't already managing a clone of the
                     // workspace
 
@@ -403,8 +393,21 @@ void PmrWebService::workspaceInformationResponse(const QJsonDocument &pJsonDocum
 
                 // Clone the workspace, if we have an empty directory
 
-                if (!dirName.isEmpty())
+                if (!dirName.isEmpty()) {
+                    PmrWorkspace *workspace = new PmrWorkspace(!exposure,
+                                                               workspaceName,
+                                                               workspaceUrl,
+                                                               workspaceDescription,
+                                                               workspaceOwner,
+                                                               this);
+
                     requestWorkspaceClone(workspace, dirName);
+
+                    // Let our exposure, if any, know that we have cloned it
+
+                    if (exposure)
+                        exposure->setWorkspace(workspace);
+                }
             } else if (exposure) {
                 emitInformation(tr("The workspace for %1 is not a Git repository.").arg(exposure->toHtml()));
             }

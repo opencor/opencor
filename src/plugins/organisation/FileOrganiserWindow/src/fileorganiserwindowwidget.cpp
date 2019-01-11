@@ -200,7 +200,12 @@ QModelIndex FileOrganiserWindowModel::decodeHierarchyData(QDataStream &pStream) 
     for (int j = 0; j < levelsCount; ++j) {
         pStream >> row;
 
-        crtItem = crtItem->child(row, 0);
+        QStandardItem *newCrtItem = crtItem->child(row, 0);
+
+        if (newCrtItem)
+            crtItem = newCrtItem;
+        else
+            break;
     }
 
     return indexFromItem(crtItem);
@@ -357,30 +362,21 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
     // Recursively retrieve the item settings
 
     static int crtItemIndex = -1;
-    QStringList itemInfo;
-
-    itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
+    QStringList itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
 
     if (!itemInfo.isEmpty()) {
-        QString textOrPath = itemInfo[0];
-        int parentItemIndex = itemInfo[1].toInt();
-        int childItemsCount = itemInfo[2].toInt();
-        bool expanded = itemInfo[3].toInt();
+        int childItemsCount = itemInfo[1].toInt();
 
         // Create the item, in case we are not dealing with the root folder item
 
         QStandardItem *childParentItem = nullptr;
 
-        if (parentItemIndex == -1) {
-            // We are dealing with the root folder item, so don't do anything
-            // except for keeping track of it for when retrieving its child
-            // items, if any
-
-            childParentItem = mModel->invisibleRootItem();
-        } else {
+        if (pParentItem) {
             // This is not the root folder item, so we can create the item which
             // is either a folder or a file, depending on its number of child
             // items
+
+            QString textOrPath = itemInfo[0];
 
             if (childItemsCount >= 0) {
                 // We are dealing with a folder item
@@ -388,12 +384,11 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
                 FileOrganiserWindowItem *folderItem = new FileOrganiserWindowItem(QFileIconProvider().icon(QFileIconProvider::Folder),
                                                                                   textOrPath, true);
 
-                if (pParentItem)
-                    pParentItem->appendRow(folderItem);
+                pParentItem->appendRow(folderItem);
 
                 // Expand the folder item, if necessary
 
-                if (expanded)
+                if (itemInfo[2].toInt())
                     setExpanded(folderItem->index(), true);
 
                 // The folder item is to be the parent of any of its child item
@@ -403,11 +398,8 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
                 // We are dealing with a file item
 
                 if (QFileInfo(textOrPath).exists()) {
-                    FileOrganiserWindowItem *fileItem = new FileOrganiserWindowItem(QFileIconProvider().icon(QFileIconProvider::File),
-                                                                                    textOrPath);
-
-                    if (pParentItem)
-                        pParentItem->appendRow(fileItem);
+                    pParentItem->appendRow(new FileOrganiserWindowItem(QFileIconProvider().icon(QFileIconProvider::File),
+                                                                       textOrPath));
 
                     // Add the file to our file manager
                     // Note: it doesn't matter whether or not the file is
@@ -417,6 +409,12 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
                     mFileManager->manage(textOrPath);
                 }
             }
+        } else {
+            // We are dealing with the root folder item, so don't do anything
+            // except for keeping track of it for when retrieving its child
+            // items, if any
+
+            childParentItem = mModel->invisibleRootItem();
         }
 
         // Retrieve any child item
@@ -460,8 +458,7 @@ void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
 //==============================================================================
 
 void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
-                                                 QStandardItem *pItem,
-                                                 int pParentItemIndex) const
+                                                 QStandardItem *pItem) const
 {
     // Recursively keep track of the item settings
 
@@ -479,16 +476,14 @@ void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
     if ((item == mModel->invisibleRootItem()) || item->isFolder()) {
         // We are dealing with a folder item (be it the root folder item or not)
 
-        itemInfo << item->text() << QString::number(pParentItemIndex)
-                 << QString::number(item->rowCount())
+        itemInfo << item->text() << QString::number(item->rowCount())
                  << QString(isExpanded(item->index())?"1":"0");
     } else {
         // We are dealing with a file item
 
         QString fileName = item->path();
 
-        itemInfo << fileName
-                 << QString::number(pParentItemIndex) << "-1" << "0";
+        itemInfo << fileName << "-1" << "0";
 
         // Remove the file from our file manager
         // Note: it doesn't matter whether or not the file has already been
@@ -501,10 +496,8 @@ void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
 
     // Keep track of any child item
 
-    int childParentItemIndex = crtItemIndex;
-
     for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
-        saveItemSettings(pSettings, item->child(i), childParentItemIndex);
+        saveItemSettings(pSettings, item->child(i));
 }
 
 //==============================================================================
@@ -521,7 +514,7 @@ void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
     pSettings->remove(SettingsModel);
 
     pSettings->beginGroup(SettingsModel);
-        saveItemSettings(pSettings, mModel->invisibleRootItem(), -1);
+        saveItemSettings(pSettings, mModel->invisibleRootItem());
     pSettings->endGroup();
 
     // Keep track of the currently selected item, but only if it is visible

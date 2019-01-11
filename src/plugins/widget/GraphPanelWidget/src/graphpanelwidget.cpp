@@ -78,12 +78,9 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
                                    QAction *pSynchronizeXAxisAction,
                                    QAction *pSynchronizeYAxisAction,
                                    QWidget *pParent) :
-    Widget(pParent)
+    Widget(pParent),
+    mActive(false)
 {
-    // We are not active by default
-
-    mActive = false;
-
     // Create and set our horizontal layout
 
     QHBoxLayout *layout = new QHBoxLayout(this);
