@@ -95,6 +95,18 @@ if(USE_PREBUILT_OPENSSL_PACKAGE)
                                               4606e2925ea625f64d9913bef1ca42ec41381d88
                                               a68e9271e617bd13bd6b6e63c28fcc68966b481c)
         endif()
+
+        # Make a copy of our import libraries
+        # Note: our package contains both libcrypto-1_1-x64.lib and
+        #       libssl-1_1-x64.lib, but when building OpenSSL, we actually end
+        #       up with both libcrypto.lib and libssl.lib. Now, as expected, our
+        #       DLLs need the import libraries in our package, but CMake looks
+        #       for the import libraries that were originally built, hence we
+        #       must have both versions...
+
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy lib/${CRYPTO_IMPORT_LIBRARY} lib/${REAL_CRYPTO_IMPORT_LIBRARY}
+                        COMMAND ${CMAKE_COMMAND} -E copy lib/${SSL_IMPORT_LIBRARY} lib/${REAL_SSL_IMPORT_LIBRARY}
+                        WORKING_DIRECTORY ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR})
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 324cfe1c279b0ef6058f7c154cfdd90e6cc98edc
