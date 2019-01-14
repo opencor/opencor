@@ -926,12 +926,6 @@ set(PLUGINS
     widget/MathMLViewerWidget
     widget/WebViewerWidget
 )
-set(PLUGINS
-    thirdParty/zlib
-    thirdParty/OpenSSL
-
-    thirdParty/libgit2
-)
 
 if(ENABLE_TEST_PLUGINS)
     list(APPEND PLUGINS
