@@ -185,7 +185,7 @@ else()
     if(WIN32)
         # We want both our shared and import libraries to be in the same place
 
-        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDllsAndRenameLibs
+        ExternalProject_Add_Step(${PACKAGE_BUILD} copyDllsAndDuplicateLibs
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${CRYPTO_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy bin/${SSL_SHARED_LIBRARY} lib
                                  COMMAND ${CMAKE_COMMAND} -E copy lib/${REAL_CRYPTO_IMPORT_LIBRARY} lib/${CRYPTO_IMPORT_LIBRARY}
