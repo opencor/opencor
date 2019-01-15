@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef SEDMLEditingView_PLUGIN
-        #define SEDMLEDITINGVIEW_EXPORT __declspec(dllexport)
-    #else
-        #define SEDMLEDITINGVIEW_EXPORT __declspec(dllimport)
-    #endif
+#ifdef SEDMLEditingView_PLUGIN
+    #define SEDMLEDITINGVIEW_EXPORT Q_DECL_EXPORT
 #else
-    #define SEDMLEDITINGVIEW_EXPORT
+    #define SEDMLEDITINGVIEW_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

@@ -96,7 +96,7 @@ void RawCellmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    foreach (CellMLEditingView::CellmlEditingViewWidget *editingWidget, mEditingWidgets)
+    for (auto editingWidget : mEditingWidgets.values())
         editingWidget->retranslateUi();
 }
 
@@ -353,7 +353,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         int nbOfReportedIssues = 0;
 
-        foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
+        for (const auto &cellmlFileIssue : cellmlFileIssues) {
             nbOfReportedIssues +=    !pOnlyErrors
                                   ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
         }
@@ -372,7 +372,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         // Add whatever issue there may be to our list and select the first one
         // of them
 
-        foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
+        for (const auto &cellmlFileIssue : cellmlFileIssues) {
             if (   !pOnlyErrors
                 || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
                 editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?

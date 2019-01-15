@@ -124,8 +124,7 @@ private:
     FileOrganiserWindowModel *mModel;
 
     void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
-    void saveItemSettings(QSettings *pSettings, QStandardItem *pItem,
-                          int pParentItemIndex) const;
+    void saveItemSettings(QSettings *pSettings, QStandardItem *pItem) const;
 
     QString newFolderName(QStandardItem *pFolderItem) const;
     void collapseEmptyFolders(QStandardItem *pFolder);

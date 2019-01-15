@@ -201,7 +201,7 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     // Populate the data model with our plugins that support the Preferences
     // interface
 
-    foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
+    for (auto plugin : mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
         if (preferencesInterface && preferencesInterface->preferencesWidget()) {
@@ -341,7 +341,7 @@ void PreferencesDialog::buttonBoxAccepted()
 
     mPluginNames = QStringList();
 
-    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets) {
+    for (auto preferencesWidget : mItemPreferencesWidgets.values()) {
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
@@ -413,7 +413,7 @@ void PreferencesDialog::resetAll()
 {
     // Reset all of our general and plugins' preferences
 
-    foreach (Preferences::PreferencesWidget *preferencesWidget, mItemPreferencesWidgets)
+    for (auto preferencesWidget : mItemPreferencesWidgets.values())
         preferencesWidget->resetPreferences();
 }
 

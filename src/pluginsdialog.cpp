@@ -148,7 +148,7 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
     static const QIcon LoadedIcon    = QIcon(":/oxygen/actions/dialog-ok-apply.png");
     static const QIcon NotLoadedIcon = QIcon(":/oxygen/actions/edit-delete.png");
 
-    foreach (Plugin *plugin, mPluginManager->sortedPlugins()) {
+    for (auto plugin : mPluginManager->sortedPlugins()) {
         // Create the item corresponding to the current plugin
 
         QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?LoadedIcon:NotLoadedIcon,
@@ -193,7 +193,7 @@ PluginsDialog::PluginsDialog(QSettings *pSettings,
 
     // Make a category checkable if it contains selectable plugins
 
-    foreach (QStandardItem *categoryItem, mCategoryItems) {
+    for (auto categoryItem : mCategoryItems.values()) {
         for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i) {
             if (categoryItem->child(i)->isCheckable()) {
                 categoryItem->setCheckable(true);
@@ -452,7 +452,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
 
     // Update the selected state of all our unselectable plugins
 
-    foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems) {
+    for (auto unselectablePluginItem : mUnselectablePluginItems) {
         // First, reset the selected state of our unselectable plugin
 
         unselectablePluginItem->setCheckState(Qt::Unchecked);
@@ -460,7 +460,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
         // Next, go through our selectable plugins and check whether one of them
         // needs our unselectable plugin
 
-        foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems) {
+        for (auto selectablePluginItem : mSelectablePluginItems) {
             if (   (selectablePluginItem->checkState() == Qt::Checked)
                 && (mPluginManager->plugin(selectablePluginItem->text())->info()->fullDependencies().contains(unselectablePluginItem->text()))) {
                 unselectablePluginItem->setCheckState(Qt::Checked);
@@ -473,7 +473,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // Update the selected state of all our categories which have at least one
     // selectable plugin
 
-    foreach (QStandardItem *categoryItem, mCategoryItems) {
+    for (auto categoryItem : mCategoryItems.values()) {
         int nbOfPlugins = categoryItem->rowCount();
 
         if (nbOfPlugins) {
@@ -510,8 +510,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
         // We are initialising the plugins dialog, so retrieve the initial
         // loading state of the plugins
 
-        foreach (QStandardItem *plugin,
-                 mSelectablePluginItems+mUnselectablePluginItems) {
+        for (auto plugin : mSelectablePluginItems+mUnselectablePluginItems) {
             mInitialLoadingStates.insert(plugin->text(),
                                          plugin->checkState() == Qt::Checked);
         }
@@ -519,7 +518,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
 
     bool buttonsEnabled = false;
 
-    foreach (QStandardItem *plugin, mSelectablePluginItems+mUnselectablePluginItems) {
+    for (auto plugin : mSelectablePluginItems+mUnselectablePluginItems) {
         if (mInitialLoadingStates.value(plugin->text()) != (plugin->checkState() == Qt::Checked)) {
             buttonsEnabled = true;
 
@@ -561,7 +560,7 @@ void PluginsDialog::buttonBoxAccepted()
 {
     // Keep track of the loading state of the various selectable plugins
 
-    foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems) {
+    for (auto selectablePluginItem : mSelectablePluginItems) {
         Plugin::setLoad(selectablePluginItem->text(),
                         selectablePluginItem->checkState() == Qt::Checked);
     }
@@ -653,14 +652,14 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
 
     // Show/hide our unselectable plugins
 
-    foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems) {
+    for (auto unselectablePluginItem : mUnselectablePluginItems) {
         mGui->treeView->setRowHidden(unselectablePluginItem->row(),
                                      unselectablePluginItem->parent()->index(), pChecked);
     }
 
     // Show/hide our categories, based on whether they contain visible plugins
 
-    foreach (QStandardItem *categoryItem, mCategoryItems) {
+    for (auto categoryItem : mCategoryItems.values()) {
         if (categoryItem->hasChildren()) {
             // The category contains plugins, but the question is whether they
             // are visible

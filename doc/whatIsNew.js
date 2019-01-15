@@ -1,6 +1,24 @@
 var jsonData = { "versions": [
                    { "anchor": "latest", "description": "Latest snapshot", "day": 11, "month": 12, "year": 2018,
                      "categories": [
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "improved", "description": "Unicode support." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Simulation Experiment view",
+                             "entries": [
+                               { "type": "improved", "description": "Plotting of simulations." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Support",
                          "entries": [
                            { "type": "subCategory", "name": "COMBINE support",

@@ -91,7 +91,7 @@ void UserMessageWidget::setScale(double pScale)
 {
     // Scale ourselves, if needed
 
-    if (!qIsNull(pScale-mScale)) {
+    if (!qFuzzyCompare(pScale, mScale)) {
         mScale = pScale;
 
         QFont newFont = font();

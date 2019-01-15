@@ -252,7 +252,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
 {
     // Update our data
 
-    foreach (Core::Property *property, allProperties()) {
+    for (auto property : allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {
@@ -353,7 +353,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
     QString componentHierarchy = QString();
     Core::Property *sectionProperty = nullptr;
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
+    for (auto parameter : pRuntime->parameters()) {
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
@@ -366,7 +366,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
             Core::Property *parentSectionProperty = nullptr;
 
-            foreach (const QString &component, parameter->componentHierarchy()) {
+            for (const auto &component : parameter->componentHierarchy()) {
                 // Check whether we already have a section for our current
                 // component
 
@@ -376,7 +376,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                     // We have a parent section, so go through its children and
                     // retrieve the one for our current component
 
-                    foreach (QObject *object, parentSectionProperty->children()) {
+                    for (auto object : parentSectionProperty->children()) {
                         Core::Property *property = qobject_cast<Core::Property *>(object);
 
                         if (    property
@@ -391,7 +391,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                     // We don't have a parent section, so go through our
                     // properties and retrieve the one for our current component
 
-                    foreach (Core::Property *property, properties()) {
+                    for (auto property : properties()) {
                         if (    (property->type() == Core::Property::Section)
                             && !property->name().compare(component)) {
                             sectionProperty = property;
@@ -504,7 +504,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
     QString componentHierarchy = QString();
     QMenu *componentMenu = nullptr;
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
+    for (auto parameter : pRuntime->parameters()) {
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
@@ -517,13 +517,13 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
             QMenu *menu = mPlotAgainstMenu;
 
-            foreach (const QString &component, parameter->componentHierarchy()) {
+            for (const auto &component : parameter->componentHierarchy()) {
                 // Check whether we already have a menu for our current
                 // component
 
                 componentMenu = nullptr;
 
-                foreach (QObject *object, menu->children()) {
+                for (auto object : menu->children()) {
                     QMenu *subMenu = qobject_cast<QMenu *>(object);
 
                     if (    subMenu
@@ -582,7 +582,7 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
 {
     // Update the extra info of all our properties
 
-    foreach (Core::Property *property, allProperties()) {
+    for (auto property : allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
         if (parameter) {

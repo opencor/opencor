@@ -143,7 +143,7 @@ DataStoreVariable::~DataStoreVariable()
 {
     // Delete some internal objects
 
-    foreach (DataStoreVariableRun *run, mRuns)
+    for (auto run : mRuns)
         delete run;
 }
 
@@ -425,7 +425,7 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-    foreach (DataStoreVariable *variable, mVariables)
+    for (auto variable : mVariables)
         delete variable;
 }
 
@@ -459,7 +459,7 @@ bool DataStore::addRun(quint64 pCapacity)
     try {
         mVoi->addRun(pCapacity);
 
-        foreach (DataStoreVariable *variable, mVariables)
+        for (auto variable : mVariables)
             variable->addRun(pCapacity);
     } catch (...) {
         // We couldn't add a run to our VOI and all our variables, so only keep
@@ -467,7 +467,7 @@ bool DataStore::addRun(quint64 pCapacity)
 
         mVoi->keepRuns(oldRunsCount);
 
-        foreach (DataStoreVariable *variable, mVariables)
+        for (auto variable : mVariables)
             variable->keepRuns(oldRunsCount);
 
         return false;
@@ -552,10 +552,8 @@ void DataStore::addValues(double pVoiValue)
     //       the VOI value first, we might in some cases (see issue #1579 for
     //       example) end up with the wrong size...
 
-    for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
-         variable != variableEnd; ++variable) {
-        (*variable)->addValue();
-    }
+    for (auto variable : mVariables)
+        variable->addValue();
 
     mVoi->addValue(pVoiValue);
 }

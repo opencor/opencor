@@ -61,7 +61,7 @@ CliApplication::~CliApplication()
 
     QSettings settings;
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins) {
+    for (auto plugin : mLoadedPluginPlugins) {
         settings.beginGroup(SettingsPlugins);
             settings.beginGroup(plugin->name());
                 qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&settings);
@@ -71,7 +71,7 @@ CliApplication::~CliApplication()
 
     // Finalise our loaded plugins, if any
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->finalizePlugin();
 
     // Delete some internal objects
@@ -90,7 +90,7 @@ void CliApplication::loadPlugins()
 
     // Retrieve some categories of plugins
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+    for (auto plugin : mPluginManager->loadedPlugins()) {
         if (qobject_cast<PluginInterface *>(plugin->instance()))
             mLoadedPluginPlugins << plugin;
 
@@ -100,19 +100,19 @@ void CliApplication::loadPlugins()
 
     // Initialise the plugins themselves
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
 
     // Let our various plugins know that all of them have been initialised
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
 
     // Retrieve the settings of our various plugins
 
     QSettings settings;
 
-    foreach (Plugin *plugin, mLoadedPluginPlugins) {
+    for (auto plugin : mLoadedPluginPlugins) {
         settings.beginGroup(SettingsPlugins);
             settings.beginGroup(plugin->name());
                 qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(&settings);
@@ -132,7 +132,7 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
     QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList availablePluginNames = QStringList();
 
-    foreach (const QFileInfo &fileInfo, fileInfoList)
+    for (const auto &fileInfo : fileInfoList)
         availablePluginNames << Plugin::name(fileInfo.canonicalFilePath());
 
     // Include/exclude the given plugins to/from the GUI version of OpenCOR,
@@ -142,7 +142,7 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
 
     std::sort(pluginNames.begin(), pluginNames.end());
 
-    foreach (const QString &pluginName, pluginNames) {
+    for (const auto &pluginName : pluginNames) {
         QString status;
 
         if (availablePluginNames.contains(pluginName)) {
@@ -221,7 +221,7 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
         bool pluginFound = false;
         bool pluginHasCliSupport = false;
 
-        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        for (auto plugin : mPluginManager->loadedPlugins()) {
             if (!commandPlugin.compare(plugin->name())) {
                 pluginFound = true;
                 pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance());
@@ -253,7 +253,7 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
     bool firstPlugin = true;
 
-    foreach (Plugin *plugin, mLoadedCliPlugins) {
+    for (auto plugin : mLoadedCliPlugins) {
         if (    commandPlugin.isEmpty()
             || !commandPlugin.compare(plugin->name())) {
             QStringList arguments = pArguments;
@@ -339,7 +339,7 @@ void CliApplication::plugins() const
 
     QStringList pluginsInfo = QStringList();
 
-    foreach (Plugin *plugin, mLoadedCliPlugins) {
+    for (auto plugin : mLoadedCliPlugins) {
         // Retrieve the CLI plugin and its default description
 
         QString pluginInfo = plugin->name();
@@ -362,7 +362,7 @@ void CliApplication::plugins() const
     else
         std::cout << "The following CLI plugins are available:" << std::endl;
 
-    foreach (const QString &pluginInfo, pluginsInfo)
+    for (const auto &pluginInfo : pluginsInfo)
         std::cout << " - " << pluginInfo.toStdString() << std::endl;
 }
 
@@ -394,7 +394,7 @@ void CliApplication::status() const
 
     QStringList pluginsInfo = QStringList();
 
-    foreach (Plugin *plugin, mPluginManager->plugins()) {
+    for (auto plugin : mPluginManager->plugins()) {
         // Retrieve the plugin and its status
 
         QString pluginInfo = plugin->name()+": ";
@@ -466,7 +466,7 @@ void CliApplication::status() const
     else
         std::cout << "The following plugins are available:" << std::endl;
 
-    foreach (const QString &pluginInfo, pluginsInfo)
+    for (const auto &pluginInfo : pluginsInfo)
         std::cout << " - " << pluginInfo.toStdString() << std::endl;
 }
 
@@ -509,7 +509,7 @@ bool CliApplication::run(int *pRes)
     // Note: we remove the first argument since it corresponds to the full path
     //       to our executable, which we are not interested in...
 
-    foreach (const QString &appArgument, appArguments) {
+    for (const auto &appArgument : appArguments) {
         if (   (option == CommandOption)
             || (option == ExcludeOption)
             || (option == IncludeOption)) {

@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef ZIPSupport_PLUGIN
-        #define ZIPSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define ZIPSUPPORT_EXPORT __declspec(dllimport)
-    #endif
+#ifdef ZIPSupport_PLUGIN
+    #define ZIPSUPPORT_EXPORT Q_DECL_EXPORT
 #else
-    #define ZIPSUPPORT_EXPORT
+    #define ZIPSUPPORT_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

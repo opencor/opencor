@@ -376,7 +376,7 @@ void GraphPanelPlotGraph::attach(GraphPanelPlotWidget *pPlot)
 
     mDummyRun->attach(pPlot);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->attach(pPlot);
 
     mPlot = pPlot;
@@ -392,7 +392,7 @@ void GraphPanelPlotGraph::detach()
 
     mDummyRun->detach();
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->detach();
 
     mPlot = nullptr;
@@ -452,7 +452,7 @@ void GraphPanelPlotGraph::removeRuns()
 {
     // Delete all our runs
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         delete run;
 
     mRuns.clear();
@@ -573,7 +573,7 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setPen(pPen);
 }
 
@@ -600,7 +600,7 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 
     mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
 }
 
@@ -625,7 +625,7 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 
     mDummyRun->setTitle(pTitle);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setTitle(pTitle);
 }
 
@@ -650,7 +650,7 @@ void GraphPanelPlotGraph::setVisible(bool pVisible)
 
     mDummyRun->setVisible(pVisible);
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns)
+    for (auto run : mRuns)
         run->setVisible(pVisible);
 }
 
@@ -660,7 +660,7 @@ bool GraphPanelPlotGraph::hasData() const
 {
     // Return whether we have some data for any of our runs
 
-    foreach (GraphPanelPlotGraphRun *run, mRuns) {
+    for (auto run : mRuns) {
         if (run->dataSize())
             return true;
     }
@@ -734,7 +734,7 @@ QRectF GraphPanelPlotGraph::boundingRect()
     if ((mBoundingRect == InvalidRect) && !mRuns.isEmpty()) {
         mBoundingRect = QRectF();
 
-        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+        for (auto run : mRuns) {
             if (run->dataSize()) {
                 QRectF boundingRect = mBoundingRects.value(run, InvalidRect);
 
@@ -813,7 +813,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
     if ((mBoundingLogRect == InvalidRect) && !mRuns.isEmpty()) {
         mBoundingLogRect = QRectF();
 
-        foreach (GraphPanelPlotGraphRun *run, mRuns) {
+        for (auto run : mRuns) {
             if (run->dataSize()) {
                 QRectF boundingLogRect = mBoundingLogRects.value(run, InvalidRect);
 
@@ -1478,7 +1478,7 @@ bool GraphPanelPlotLegendWidget::needScrollBar() const
 
     int legendLabelsHeight = 0;
 
-    foreach (QwtLegendLabel *legendLabel, mLegendLabels)
+    for (auto legendLabel : mLegendLabels.values())
         legendLabelsHeight += legendLabel->height();
 
     return !pos().y() && (legendLabelsHeight > height());
@@ -1755,7 +1755,7 @@ GraphPanelPlotWidget::~GraphPanelPlotWidget()
 
     delete mDirectPainter;
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs)
+    for (auto graph : mGraphs)
         delete graph;
 }
 
@@ -1887,10 +1887,10 @@ void GraphPanelPlotWidget::updateActions()
 
     QRectF dRect = realDataRect();
 
-    mResetZoomAction->setEnabled(   !qIsNull(crtMinX-dRect.left())
-                                 || !qIsNull(crtMaxX-(dRect.left()+dRect.width()))
-                                 || !qIsNull(crtMinY-dRect.top())
-                                 || !qIsNull(crtMaxY-(dRect.top()+dRect.height())));
+    mResetZoomAction->setEnabled(   !qFuzzyCompare(crtMinX, dRect.left())
+                                 || !qFuzzyCompare(crtMaxX, dRect.left()+dRect.width())
+                                 || !qFuzzyCompare(crtMinY, dRect.top())
+                                 || !qFuzzyCompare(crtMaxY, dRect.top()+dRect.height()));
 }
 
 //==============================================================================
@@ -2682,11 +2682,13 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
     // Make sure that the given values are different (and therefore optimisable
     // as such)
 
-    if (qIsNull(pMin-pMax)) {
+    if (qFuzzyCompare(pMin, pMax)) {
         // The given values are the same, so update them so that we can properly
         // optimise them below
 
-        double powerValue = qIsNull(pMin)?0.0:qFloor(log10(qAbs(pMin)))-1.0;
+        double powerValue = qFuzzyIsNull(pMin)?
+                                0.0:
+                                qFloor(log10(qAbs(pMin)))-1.0;
 
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
@@ -2718,10 +2720,10 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
         double minOverMinorStep = pMin/minorStep;
         double maxOverMinorStep = pMax/minorStep;
 
-        pMin = qFuzzyIsNull(minOverMinorStep-int(minOverMinorStep))?
+        pMin = qFuzzyCompare(minOverMinorStep, int(minOverMinorStep))?
                     minOverMinorStep*minorStep:
                     qFloor(minOverMinorStep)*minorStep;
-        pMax = qFuzzyIsNull(maxOverMinorStep-int(maxOverMinorStep))?
+        pMax = qFuzzyCompare(maxOverMinorStep, int(maxOverMinorStep))?
                     maxOverMinorStep*minorStep:
                     qCeil(maxOverMinorStep)*minorStep;
     } else {
@@ -2730,10 +2732,10 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
         double minOverMinStep = pMin/minStep;
         double maxOverMaxStep = pMax/maxStep;
 
-        pMin = qFuzzyIsNull(minOverMinStep-int(minOverMinStep))?
+        pMin = qFuzzyCompare(minOverMinStep, int(minOverMinStep))?
                     minOverMinStep*minStep:
                     qFloor(minOverMinStep)*minStep;
-        pMax = qFuzzyIsNull(maxOverMaxStep-int(maxOverMaxStep))?
+        pMax = qFuzzyCompare(maxOverMaxStep, int(maxOverMaxStep))?
                     maxOverMaxStep*maxStep:
                     qCeil(maxOverMaxStep)*maxStep;
     }
@@ -2766,7 +2768,7 @@ bool GraphPanelPlotWidget::hasData() const
     // Determine and return whether at least one of the graphs, which are valid
     // and selected, has some data
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+    for (auto graph : mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->hasData())
             return true;
     }
@@ -2785,7 +2787,7 @@ bool GraphPanelPlotWidget::dataRect(QRectF &pDataRect) const
 
     pDataRect = QRectF();
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+    for (auto graph : mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             pDataRect |= graph->boundingRect();
 
@@ -2807,7 +2809,7 @@ bool GraphPanelPlotWidget::dataLogRect(QRectF &pDataLogRect) const
 
     pDataLogRect = QRectF();
 
-    foreach (GraphPanelPlotGraph *graph, mGraphs) {
+    for (auto graph : mGraphs) {
         if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             pDataLogRect |= graph->boundingLogRect();
 
@@ -2949,14 +2951,16 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     bool yAxisValuesChanged = false;
 
     if (    pForceAxesSetting || pSynchronizeXAxis
-        || !qIsNull(pMinX-oldMinX) || !qIsNull(pMaxX-oldMaxX)) {
+        || !qFuzzyCompare(pMinX, oldMinX)
+        || !qFuzzyCompare(pMaxX, oldMaxX)) {
         setAxis(QwtPlot::xBottom, pMinX, pMaxX);
 
         xAxisValuesChanged = true;
     }
 
     if (    pForceAxesSetting || pSynchronizeYAxis
-        || !qIsNull(pMinY-oldMinY) || !qIsNull(pMaxY-oldMaxY)) {
+        || !qFuzzyCompare(pMinY, oldMinY)
+        || !qFuzzyCompare(pMaxY, oldMaxY)) {
         setAxis(QwtPlot::yLeft, pMinY, pMaxY);
 
         yAxisValuesChanged = true;
@@ -2976,19 +2980,19 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
                 && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *plot, mNeighbors) {
+                for (auto plot : mNeighbors) {
                     plot->setAxes(pMinX, pMaxX, pMinY, pMaxY,
                                   false, false, false, true, false, false);
                 }
             } else if (   xAxisValuesChanged
                        && mSynchronizeXAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *plot, mNeighbors) {
+                for (auto plot : mNeighbors) {
                     plot->setAxes(pMinX, pMaxX, plot->minY(), plot->maxY(),
                                   false, false, false, true, false, false);
                 }
             } else if (   yAxisValuesChanged
                        && mSynchronizeYAxisAction->isChecked()) {
-                foreach (GraphPanelPlotWidget *plot, mNeighbors) {
+                for (auto plot : mNeighbors) {
                     plot->setAxes(plot->minX(), plot->maxX(), pMinY, pMaxY,
                                   false, false, false, true, false, false);
                 }
@@ -3152,7 +3156,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
     GraphPanelPlotWidgets selfPlusNeighbors = GraphPanelPlotWidgets() << this << mNeighbors;
     int legendWidth = 0;
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors)  {
+    for (auto plot : selfPlusNeighbors)  {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
@@ -3163,7 +3167,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
         }
     }
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+    for (auto plot : selfPlusNeighbors) {
         GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         legend->setSizeHintWidth(legend->needScrollBar()?
@@ -3310,12 +3314,8 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     // Check which action to can carry out
 
-    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
-                       && !(pEvent->modifiers() & Qt::ControlModifier)
-                       && !(pEvent->modifiers() & Qt::AltModifier)
-                       && !(pEvent->modifiers() & Qt::MetaModifier);
-
-    if (noModifiers && (pEvent->button() == Qt::LeftButton)) {
+    if (   (pEvent->modifiers() == Qt::NoModifier)
+        && (pEvent->button() == Qt::LeftButton)) {
         // We want to pan, but only do this if we are not completely zoomed out
 
         if (mCanZoomOutX || mCanZoomOutY) {
@@ -3323,27 +3323,22 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
             mPoint = pEvent->pos();
         }
-    } else if (    (pEvent->modifiers() & Qt::ShiftModifier)
-               && !(pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
+    } else if (   (pEvent->modifiers() == Qt::ShiftModifier)
                && (pEvent->button() == Qt::LeftButton)) {
         // We want to show the coordinates
 
         mAction = ShowCoordinates;
 
         mOverlayWidget->setPoint(pEvent->pos());
-    } else if (noModifiers && (pEvent->button() == Qt::RightButton)) {
+    } else if (   (pEvent->modifiers() == Qt::NoModifier)
+               && (pEvent->button() == Qt::RightButton)) {
         // We want to zoom in/out
 
         mAction = Zoom;
 
         mOriginPoint = pEvent->pos();
         mPoint = pEvent->pos();
-    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-               &&  (pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
+    } else if (   (pEvent->modifiers() == Qt::ControlModifier)
                && (pEvent->button() == Qt::RightButton)) {
         // We want to zoom a region, but only allow it if we are not already
         // fully zoomed in
@@ -3391,7 +3386,8 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
         QRectF zoomRegion = QRectF(canvasPoint(zoomRegionRect.topLeft()),
                                    canvasPoint(zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height())));
 
-        if (!qIsNull(zoomRegion.width()) && !qIsNull(zoomRegion.height())) {
+        if (   !qFuzzyIsNull(zoomRegion.width())
+            && !qFuzzyIsNull(zoomRegion.height())) {
             setAxes(zoomRegion.left(), zoomRegion.right(),
                     zoomRegion.bottom(), zoomRegion.top(),
                     true, true, true, true, false, false);
@@ -3453,11 +3449,8 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
 {
     // Handle the wheel mouse button for zooming in/out
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
+    if (   (pEvent->modifiers() == Qt::NoModifier)
+        && canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
         // Make sure that we are not already carrying out an action
 
         if (mAction == None) {
@@ -3714,7 +3707,7 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
     axisWidget(QwtPlot::xBottom)->getMinBorderDist(oldMinBorderDistStartX, oldMinBorderDistEndX);
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+    for (auto plot : selfPlusNeighbors) {
         // Determine how much space we should have directly to the left and
         // right of the X axis
 
@@ -3757,10 +3750,10 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
                              || (newMinBorderDistStartX != oldMinBorderDistStartX)
                              || (newMinBorderDistEndX != oldMinBorderDistEndX);
     bool yAlignmentChanged =     forceAlignment
-                             || !qIsNull(newMinExtentY-oldMinExtentY);
+                             || !qFuzzyCompare(newMinExtentY, oldMinExtentY);
     bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 
-    foreach (GraphPanelPlotWidget *plot, selfPlusNeighbors) {
+    for (auto plot : selfPlusNeighbors) {
         GraphPanelPlotScaleWidget *xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
 
         xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
@@ -3809,7 +3802,7 @@ void GraphPanelPlotWidget::exportTo()
     QStringList filters = QStringList() << pdfFilter
                                         << tr("SVG File - Scalable Vector Graphics (*.svg)");
 
-    foreach (const QString &supportedMimeType, QImageWriter::supportedMimeTypes()) {
+    for (const auto &supportedMimeType : QImageWriter::supportedMimeTypes()) {
         if (!supportedMimeType.compare("image/bmp"))
             filters << tr("BMP File - Windows Bitmap (*.bmp)");
         else if (!supportedMimeType.compare("image/jpeg"))
@@ -3883,8 +3876,10 @@ void GraphPanelPlotWidget::customAxes()
         double newMinY = customAxesDialog.minY();
         double newMaxY = customAxesDialog.maxY();
 
-        if (   !qIsNull(newMinX-oldMinX) || !qIsNull(newMaxX-oldMaxX)
-            || !qIsNull(newMinY-oldMinY) || !qIsNull(newMaxY-oldMaxY)) {
+        if (   !qFuzzyCompare(newMinX, oldMinX)
+            || !qFuzzyCompare(newMaxX, oldMaxX)
+            || !qFuzzyCompare(newMinY, oldMinY)
+            || !qFuzzyCompare(newMaxY, oldMaxY)) {
             setAxes(newMinX, newMaxX, newMinY, newMaxY,
                     true, true, true, true, false, false);
         }

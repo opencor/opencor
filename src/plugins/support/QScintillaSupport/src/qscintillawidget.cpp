@@ -164,7 +164,7 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
     mContextMenu->clear();
 
-    foreach (QAction *action, pContextMenuActions)
+    for (auto action : pContextMenuActions)
         mContextMenu->addAction(action);
 }
 
@@ -603,10 +603,8 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Increase/decrease/reset the font size, if needed
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        &&  (pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+    if (   (pEvent->modifiers() == Qt::ControlModifier)
+        || (pEvent->modifiers() == Qt::ControlModifier+Qt::KeypadModifier)) {
         if (pEvent->key() == Qt::Key_0) {
             zoomTo(0);
 

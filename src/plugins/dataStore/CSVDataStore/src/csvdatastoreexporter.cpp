@@ -99,7 +99,7 @@ void CsvDataStoreExporterWorker::run()
 
             int j = -1;
 
-            foreach (DataStore::DataStoreVariable *variable, variables)
+            for (auto variable : variables)
                 variablesRuns[++j] << variable;
         }
 
@@ -126,7 +126,7 @@ void CsvDataStoreExporterWorker::run()
                             .arg(QString());
         }
 
-        foreach (DataStore::DataStoreVariable *variable, variables) {
+        for (auto variable : variables) {
             for (int i = 0; i < nbOfRuns; ++i) {
                 if (!header.isEmpty())
                     header += ',';
@@ -162,17 +162,17 @@ void CsvDataStoreExporterWorker::run()
                 for (int j = 0; j < nbOfRuns; ++j)
                     updateRunsIndex << false;
 
-                foreach (const DataStore::DataStoreVariables &variableRuns, variablesRuns) {
+                for (const auto &variableRuns : variablesRuns) {
                     int j = 0;
 
-                    foreach (DataStore::DataStoreVariable *variableRun, variableRuns) {
+                    for (auto variableRun : variableRuns) {
                         if (firstRowData && rowData.isEmpty())
                             firstRowData = false;
                         else
                             rowData += ',';
 
                         if (   (runsIndex[j] < dataStore->size(j))
-                            && qIsNull(dataStore->voi()->value(runsIndex[j], j)-voiValue)) {
+                            && qFuzzyCompare(dataStore->voi()->value(runsIndex[j], j), voiValue)) {
                             rowData += QString::number(variableRun->value(runsIndex[j], j));
 
                             updateRunsIndex[j] = true;

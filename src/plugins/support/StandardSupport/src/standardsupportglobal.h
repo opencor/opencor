@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef StandardSupport_PLUGIN
-        #define STANDARDSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define STANDARDSUPPORT_EXPORT __declspec(dllimport)
-    #endif
+#ifdef StandardSupport_PLUGIN
+    #define STANDARDSUPPORT_EXPORT Q_DECL_EXPORT
 #else
-    #define STANDARDSUPPORT_EXPORT
+    #define STANDARDSUPPORT_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================
