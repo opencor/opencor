@@ -1097,7 +1097,9 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             set(RELEASE_TAG ${ARG_RELEASE_TAG})
         endif()
 
-        file(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
+        set (DOWNLOAD_URL "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}")
+
+        file(DOWNLOAD ${DOWNLOAD_URL} ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the package, should we have
@@ -1109,7 +1111,8 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             check_file(${REAL_DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
 
             if(NOT CHECK_FILE_OK)
-                message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
+                message("The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
+                message(FATAL_ERROR "It was downloaded from ${DOWNLOAD_URL}")
             endif()
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${FULL_COMPRESSED_FILENAME}
@@ -1122,7 +1125,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
-            message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved...")
+            message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved from ${DOWNLOAD_URL}...")
         endif()
 
         # Check that the package's files, if we managed to uncompress the
