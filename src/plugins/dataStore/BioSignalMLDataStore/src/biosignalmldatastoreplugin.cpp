@@ -36,6 +36,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "biosignalml/data/hdf5.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace BioSignalMLDataStore {
 
@@ -153,10 +157,24 @@ DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::dataStoreExporterInst
 bool BioSignalMLDataStorePlugin::isFile(const QString &pFileName) const
 {
     // Return whether the given file is of the type that we support
-//---ISSUE1845--- TO BE DONE...
-Q_UNUSED(pFileName);
 
-    return false;
+    bsml::HDF5::Recording *recording = nullptr;
+
+    try {
+        recording = new bsml::HDF5::Recording(pFileName.toStdString());
+    } catch (...) {
+        // Something went wrong, so clearly not a BioSignalML file
+
+        return false;
+    }
+
+    if (recording) {
+        recording->close();
+
+        delete recording;
+    }
+
+    return true;
 }
 
 //==============================================================================
