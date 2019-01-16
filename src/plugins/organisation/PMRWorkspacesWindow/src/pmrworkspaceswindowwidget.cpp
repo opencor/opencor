@@ -1321,8 +1321,8 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
 
     PMRSupport::PmrWorkspace *workspace = currentItem()?currentItem()->workspace():nullptr;
     PMRSupport::PmrWorkspace::WorkspaceStatus workspaceStatus = workspace?
-                                                  workspace->gitWorkspaceStatus():
-                                                  PMRSupport::PmrWorkspace::StatusUnknown;
+                                                                    workspace->gitWorkspaceStatus():
+                                                                    PMRSupport::PmrWorkspace::StatusUnknown;
 
     mViewWorkspaceInPmrAction->setEnabled(items.count());
     mViewWorkspaceOncomputerAction->setEnabled(nbOfWorkspacePaths && (nbOfWorkspacePaths == workspaces.count()));
@@ -1330,7 +1330,7 @@ void PmrWorkspacesWindowWidget::showCustomContextMenu() const
     mCopyWorkspacePathAction->setEnabled(oneWorkspacePath);
     mMakeLocalWorkspaceCopyAction->setEnabled(oneItem && !nbOfWorkspacePaths);
     mSynchronizeWorkspaceAction->setEnabled(   oneWorkspacePath
-                                            && (   (   workspace->isOwned()
+                                            && (   (   workspace && workspace->isOwned()
                                                     && (   (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)
                                                         || (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged)))
                                                 || (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)));

@@ -39,5 +39,4 @@ add_plugin(PMRSupport
         libgit2
         OAuth
         WebViewerWidget
-        zlib
 )

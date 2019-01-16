@@ -436,11 +436,8 @@ void MainWindow::keyPressEvent(QKeyEvent *pEvent)
     //          with Cmd+M to minimise OpenCOR on macOS, but then we wouldn't be
     //          able to close the find/replace widget of a text editor...
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Escape)) {
+    if (   (pEvent->modifiers() == Qt::NoModifier)
+        && (pEvent->key() == Qt::Key_Escape)) {
         if (isFullScreen())
             showNormal();
 
@@ -577,9 +574,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some sub-menus before some menu item/separator in our File menu
 
-        for (const auto &guiMenu : guiMenus) {
-            if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
-                mGui->menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
+        QMenu *menuFile = mGui->menuFile;
+
+        if (menuFile) {
+            for (const auto &guiMenu : guiMenus) {
+                if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
+                    menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
+            }
         }
 
         // Add some actions to our File|New menu and keep track of them

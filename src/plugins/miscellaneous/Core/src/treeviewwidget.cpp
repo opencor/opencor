@@ -109,10 +109,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)) {
+    if (pEvent->modifiers() == Qt::KeypadModifier) {
         // None of the modifiers is selected
 
         if (pEvent->key() == Qt::Key_Left) {

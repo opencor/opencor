@@ -69,7 +69,7 @@ void ForwardEulerSolver::solve(double &pVoi, double pVoiEnd) const
     int stepNumber = 0;
     double realStep = mStep;
 
-    while (!qIsNull(pVoi-pVoiEnd)) {
+    while (!qFuzzyCompare(pVoi, pVoiEnd)) {
         // Check that the time step is correct
 
         if (pVoi+realStep > pVoiEnd)
@@ -86,7 +86,7 @@ void ForwardEulerSolver::solve(double &pVoi, double pVoiEnd) const
 
         // Advance through time
 
-        if (!qIsNull(realStep-mStep))
+        if (!qFuzzyCompare(realStep, mStep))
             pVoi = pVoiEnd;
         else
             pVoi = voiStart+(++stepNumber)*mStep;

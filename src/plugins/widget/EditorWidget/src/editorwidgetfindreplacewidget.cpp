@@ -392,21 +392,16 @@ void EditorWidgetFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Some key combinations from our find/replace widget
 
-    if (     mOwner->isFindReplaceVisible()
-        && !(pEvent->modifiers() & Qt::ShiftModifier)
-        && !(pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_Escape)) {
+    if (   mOwner->isFindReplaceVisible()
+        && (pEvent->modifiers() == Qt::NoModifier)
+        && (pEvent->key() == Qt::Key_Escape)) {
         mOwner->setFindReplaceVisible(false);
 
         pEvent->accept();
-    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-               && !(pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
-               &&  (   (pEvent->key() == Qt::Key_Return)
-                    || (pEvent->key() == Qt::Key_Enter))) {
+    } else if (   (   (pEvent->modifiers() == Qt::NoModifier)
+                   && (pEvent->key() == Qt::Key_Return))
+               || (   (pEvent->modifiers() == Qt::KeypadModifier)
+                   && (pEvent->key() == Qt::Key_Enter))) {
         if (mGui->findEdit->hasFocus()) {
             mOwner->findNext();
 

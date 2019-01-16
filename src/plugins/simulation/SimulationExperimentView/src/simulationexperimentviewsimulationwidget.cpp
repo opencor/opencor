@@ -1572,27 +1572,28 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     Solver::Solver::Properties odeSolverProperties = mSimulation->data()->odeSolverProperties();
     QString annotation = QString();
 
-    if (odeSolverInterface)
+    if (odeSolverInterface) {
         sedmlAlgorithm->setKisaoID(odeSolverInterface->kisaoId(mSimulation->data()->odeSolverName()).toStdString());
 
-    for (const auto &odeSolverProperty : odeSolverProperties.keys()) {
-        QString kisaoId = odeSolverInterface->kisaoId(odeSolverProperty);
-        QVariant odeSolverPropertyValue = odeSolverProperties.value(odeSolverProperty);
-        QString value = (odeSolverPropertyValue.type() == QVariant::Double)?
-                            QString::number(odeSolverPropertyValue.toDouble(), 'g', 15):
-                            odeSolverPropertyValue.toString();
+        for (const auto &odeSolverProperty : odeSolverProperties.keys()) {
+            QString kisaoId = odeSolverInterface->kisaoId(odeSolverProperty);
+            QVariant odeSolverPropertyValue = odeSolverProperties.value(odeSolverProperty);
+            QString value = (odeSolverPropertyValue.type() == QVariant::Double)?
+                                QString::number(odeSolverPropertyValue.toDouble(), 'g', 15):
+                                odeSolverPropertyValue.toString();
 
-        if (kisaoId.isEmpty()) {
-            annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty)
-                                                              .arg(SEDMLSupport::Id)
-                                                              .arg(odeSolverProperty)
-                                                              .arg(SEDMLSupport::Value)
-                                                              .arg(value);
-        } else {
-            libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
+            if (kisaoId.isEmpty()) {
+                annotation += QString("<%1 %2=\"%3\" %4=\"%5\"/>").arg(SEDMLSupport::SolverProperty)
+                                                                  .arg(SEDMLSupport::Id)
+                                                                  .arg(odeSolverProperty)
+                                                                  .arg(SEDMLSupport::Value)
+                                                                  .arg(value);
+            } else {
+                libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->createAlgorithmParameter();
 
-            sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
-            sedmlAlgorithmParameter->setValue(value.toStdString());
+                sedmlAlgorithmParameter->setKisaoID(kisaoId.toStdString());
+                sedmlAlgorithmParameter->setValue(value.toStdString());
+            }
         }
     }
 
@@ -1754,7 +1755,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     double endingPoint = mSimulation->data()->endingPoint();
     double pointInterval = mSimulation->data()->pointInterval();
     quint64 nbOfPoints = quint64(ceil((endingPoint-startingPoint)/pointInterval));
-    bool needOneStepTask = !qIsNull((endingPoint-startingPoint)/nbOfPoints-pointInterval);
+    bool needOneStepTask = !qFuzzyCompare((endingPoint-startingPoint)/nbOfPoints, pointInterval);
 
     libsedml::SedUniformTimeCourse *sedmlUniformTimeCourse = sedmlDocument->createUniformTimeCourse();
 

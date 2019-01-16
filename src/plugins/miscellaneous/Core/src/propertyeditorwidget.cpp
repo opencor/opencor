@@ -69,18 +69,15 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
-    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
-                       && !(pEvent->modifiers() & Qt::ControlModifier)
-                       && !(pEvent->modifiers() & Qt::AltModifier)
-                       && !(pEvent->modifiers() & Qt::MetaModifier);
-
-    if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
+    if (   (pEvent->modifiers() == Qt::KeypadModifier)
+        && (pEvent->key() == Qt::Key_Up)) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
+    } else if (   (pEvent->modifiers() == Qt::KeypadModifier)
+               && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
@@ -178,18 +175,15 @@ void ListEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
-    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
-                       && !(pEvent->modifiers() & Qt::ControlModifier)
-                       && !(pEvent->modifiers() & Qt::AltModifier)
-                       && !(pEvent->modifiers() & Qt::MetaModifier);
-
-    if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
+    if (   (pEvent->modifiers() == Qt::KeypadModifier)
+        && (pEvent->key() == Qt::Key_Up)) {
         // The user wants to go to the previous property
 
         emit goToPreviousPropertyRequested();
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
+    } else if (   (pEvent->modifiers() == Qt::KeypadModifier)
+               && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         emit goToNextPropertyRequested();
@@ -1806,22 +1800,16 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Check some key combinations
 
-    bool noModifiers =    !(pEvent->modifiers() & Qt::ShiftModifier)
-                       && !(pEvent->modifiers() & Qt::ControlModifier)
-                       && !(pEvent->modifiers() & Qt::AltModifier)
-                       && !(pEvent->modifiers() & Qt::MetaModifier);
-
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        &&  (pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_A)) {
+    if (   (pEvent->modifiers() == Qt::ControlModifier)
+        && (pEvent->key() == Qt::Key_A)) {
         // The user wants to select everything, which we don't want to allow,
         // so just accept the event...
 
         pEvent->accept();
-    } else if (noModifiers && (   (pEvent->key() == Qt::Key_Return)
-                               || (pEvent->key() == Qt::Key_Enter))) {
+    } else if (   (   (pEvent->modifiers() == Qt::NoModifier)
+                   && (pEvent->key() == Qt::Key_Return))
+               || (   (pEvent->modifiers() == Qt::KeypadModifier)
+                   && (pEvent->key() == Qt::Key_Enter))) {
         // The user wants to start/stop editing the property
 
         if (mPropertyEditor)
@@ -1830,19 +1818,23 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             editProperty(currentProperty());
 
         pEvent->accept();
-    } else if (isEditing() && noModifiers && (pEvent->key() == Qt::Key_Escape)) {
+    } else if (   isEditing()
+               && (pEvent->modifiers() == Qt::NoModifier)
+               && (pEvent->key() == Qt::Key_Escape)) {
         // The user is editing and wants to cancel it
 
         finishEditing(false);
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Up)) {
+    } else if (   (pEvent->modifiers() == Qt::KeypadModifier)
+               && (pEvent->key() == Qt::Key_Up)) {
         // The user wants to go the previous property
 
         goToPreviousProperty();
 
         pEvent->accept();
-    } else if (noModifiers && (pEvent->key() == Qt::Key_Down)) {
+    } else if (   (pEvent->modifiers() == Qt::KeypadModifier)
+               && (pEvent->key() == Qt::Key_Down)) {
         // The user wants to go to the next property
 
         goToNextProperty();

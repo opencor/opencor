@@ -554,13 +554,13 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
     //       than our constants...
 
     for (quint64 i = 0, iMax = mStatesArray->size(); i < iMax; ++i) {
-        if (!qIsNull(mStatesArray->data(i)-mInitialStates[i]))
+        if (!qFuzzyCompare(mStatesArray->data(i), mInitialStates[i]))
             return true;
     }
 
     if (pCheckConstants) {
         for (quint64 i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
-            if (!qIsNull(mConstantsArray->data(i)-mInitialConstants[i]))
+            if (!qFuzzyCompare(mConstantsArray->data(i), mInitialConstants[i]))
                 return true;
         }
     }
@@ -1558,7 +1558,7 @@ bool Simulation::simulationSettingsOk(bool pEmitSignal)
 {
     // Check and return whether our simulation settings are sound
 
-    if (qIsNull(mData->startingPoint()-mData->endingPoint())) {
+    if (qFuzzyCompare(mData->startingPoint(), mData->endingPoint())) {
         if (pEmitSignal)
             emit error(tr("the starting and ending points cannot have the same value"));
 
