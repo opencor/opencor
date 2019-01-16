@@ -709,7 +709,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pArray) co
 
     CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
 
-    foreach (CellmlFileRuntimeParameter *parameter, mParameters) {
+    for (auto parameter : mParameters) {
         if (   (parameter->type() == CellmlFileRuntimeParameter::Data)
             && (!pArray || (parameter->array() == pArray))) {
             res << parameter;

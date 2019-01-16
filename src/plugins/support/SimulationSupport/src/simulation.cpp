@@ -582,7 +582,7 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    foreach (double *array, mData.values())
+    for (auto array : mData.values())
         delete[] array;
 
     mData.clear();
@@ -708,7 +708,7 @@ void SimulationResults::createDataStore()
 
     // Reimport our data, if any
 
-    foreach (double *array, mDataDataStores.keys())
+    for (auto array : mDataDataStores.keys())
         mData.insert(array, mDataStore->addVariables(array, mDataDataStores.value(array)->variables().count()));
 }
 
@@ -777,7 +777,7 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
 
     // Customise our imported data
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, runtime->dataParameters(pArray)) {
+    for (auto parameter : runtime->dataParameters(pArray)) {
         DataStore::DataStoreVariable *variable = mData.value(parameter->array())[parameter->index()];
 
         variable->setType(parameter->type());
@@ -835,7 +835,7 @@ void SimulationResults::addPoint(double pPoint)
     // Make sure that we have the correct imported data values for the given
     // point, keeping in mind that we may have several runs
 
-    foreach (double *array, mData.keys()) {
+    for (auto array : mData.keys()) {
         DataStore::DataStore *dataStore = mDataDataStores.value(array);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
@@ -975,7 +975,7 @@ SimulationImportData::~SimulationImportData()
 {
     // Delete some internal objects
 
-    foreach (DataStore::DataStore *dataStore, mDataStores)
+    for (auto dataStore : mDataStores)
         delete dataStore;
 }
 

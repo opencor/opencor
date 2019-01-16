@@ -644,8 +644,8 @@ void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *p
 
     bool acceptEvent = false;
 
-    foreach (const QString &fileName, Core::droppedFileNames(pEvent)) {
-        foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
+    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
+        for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
                 acceptEvent = true;
 
@@ -2577,7 +2577,7 @@ bool SimulationExperimentViewSimulationWidget::isRuntimeDataParameter(const QStr
     // Go through the runtime data parameters to see if one of them corresponds
     // to the given component/variable
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, mSimulation->runtime()->dataParameters()) {
+    for (auto parameter : mSimulation->runtime()->dataParameters()) {
         if (   !pComponent.compare(parameter->componentHierarchy().last())
             && !pVariable.compare(parameter->name())) {
             return true;
@@ -4206,7 +4206,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore
 
     double progress = 1.0;
 
-    foreach (double importDataProgress, mDataImportProgresses.values())
+    for (auto importDataProgress : mDataImportProgresses.values())
         progress = qMin(pProgress, importDataProgress);
 
     Core::centralWidget()->setBusyWidgetProgress(progress);
@@ -4230,12 +4230,12 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
     if (mDataImportProgresses.isEmpty()) {
         // Ask our simulation to account for our imported data
 
-        foreach (DataStore::DataStoreImportData *dataStoreImportData, mDataImportErrorMessages.keys())
+        for (auto dataStoreImportData : mDataImportErrorMessages.keys())
             mSimulation->importData(dataStoreImportData);
 
         // Update our Graphs and Parameters sections with our imported data
 
-        foreach (DataStore::DataStoreImportData *dataStoreImportData, mDataImportErrorMessages.keys()) {
+        for (auto dataStoreImportData : mDataImportErrorMessages.keys()) {
             mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData);
             mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData);
         }
@@ -4246,7 +4246,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
         // Let people know about any error that we came across
 
-        foreach (DataStore::DataStoreImportData *importData, mDataImportErrorMessages.keys()) {
+        for (auto importData : mDataImportErrorMessages.keys()) {
             QString errorMessage = mDataImportErrorMessages.value(importData);
 
             if (!errorMessage.isEmpty()) {
@@ -4435,11 +4435,11 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
 
     QStringList invalidDataFileNames = QStringList();
 
-    foreach (const QString &fileName, pFileNames) {
+    for (const auto &fileName : pFileNames) {
         // Determine the type of data file we are dealing with so we can use the
         // correct data store interface
 
-        foreach (FileTypeInterface *fileTypeInterface, Core::dataStoreFileTypeInterfaces()) {
+        for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
                 dataStoreInterfaces.insert(fileName, Core::dataStoreInterface(fileTypeInterface));
 
@@ -4453,7 +4453,7 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
 
     // Let people know about our invalid data files, if any
 
-    foreach (const QString &invalidDataFileName, invalidDataFileNames) {
+    for (const auto &invalidDataFileName : invalidDataFileNames) {
         Core::warningMessageBox(tr("Data Import"),
                                 tr("<strong>%1</strong> is not a data file.").arg(invalidDataFileName));
     }
@@ -4475,7 +4475,7 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
 
     QMap<QString, DataStore::DataStoreImportData *> dataStoreImportDatas = QMap<QString, DataStore::DataStoreImportData *>();
 
-    foreach (const QString &fileName, dataStoreInterfaces.keys()) {
+    for (const auto &fileName : dataStoreInterfaces.keys()) {
         DataStore::DataStoreImportData *dataStoreImportData = dataStoreInterfaces.value(fileName)->getImportData(fileName, mSimulation->importData()->addDataStore());
 
         if (dataStoreImportData) {
@@ -4491,7 +4491,7 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
     if (!dataStoreImportDatas.isEmpty())
         Core::centralWidget()->showProgressBusyWidget();
 
-    foreach (const QString &fileName, dataStoreImportDatas.keys()) {
+    for (const auto &fileName : dataStoreImportDatas.keys()) {
         DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterfaces.value(fileName)->dataStoreImporterInstance();
         DataStore::DataStoreImportData *dataStoreImportData = dataStoreImportDatas.value(fileName);
 

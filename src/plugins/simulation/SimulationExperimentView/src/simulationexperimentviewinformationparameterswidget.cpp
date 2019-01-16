@@ -192,7 +192,7 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->dataStore()));
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, parameters) {
+    for (auto parameter : parameters) {
         Core::Property *property = addDoubleProperty(importSubComponent);
 
         property->setEditable(false);
@@ -230,7 +230,7 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Populate our import sub-menu with the given data
 
-    foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, parameters) {
+    for (auto parameter : parameters) {
         QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
                                                             parameter->formattedName());
 
