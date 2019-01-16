@@ -68,7 +68,6 @@ void CsvDataStoreImporterWorker::run()
         // Read our header line and set up our data store
 
         DataStore::DataStore *dataStore = mImportData->dataStore();
-
         double oneOverNbOfLines = 1.0/nbOfLines;
 
         in.seek(0);
@@ -94,8 +93,8 @@ void CsvDataStoreImporterWorker::run()
 
                 QStringList fields = line.split(",");
 
-                for (int i = 1, iMax = fields.count(); i < iMax; ++i)
-                    values[i-1] = fields[i].toDouble();
+                for (int j = 1, iMax = fields.count(); j < iMax; ++j)
+                    values[j-1] = fields[j].toDouble();
 
                 dataStore->addValues(fields[0].toDouble());
 
