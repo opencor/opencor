@@ -53,10 +53,12 @@ void CsvDataStoreImporterWorker::run()
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         // Determine the number of non-empty lines
+        // Note: nbOfDataPoints starts at -1 because we are also going to count
+        //       the header of our CSV file...
 
         QTextStream in(&file);
         QString line;
-        quint64 nbOfDataPoints = -1;
+        quint64 nbOfDataPoints = quint64(-1);
 
         while (!in.atEnd()) {
             line = in.readLine().trimmed();
@@ -83,7 +85,7 @@ void CsvDataStoreImporterWorker::run()
         // Add a run to our data store
 
         if (dataStore->addRun(nbOfDataPoints)) {
-            // Read our data lines and have them stored in our data store
+            // Store the values of our different variables in our data store
 
             for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
                 line = in.readLine().trimmed();
