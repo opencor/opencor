@@ -82,11 +82,10 @@ void CsvDataStoreImporterWorker::run()
 
         dataStore->addVariables(values, nbOfVariables);
 
-        // Add a run to our data store
+        // Add a run to our data store and store the values of our different
+        // variables to it
 
         if (dataStore->addRun(nbOfDataPoints)) {
-            // Store the values of our different variables in our data store
-
             for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
                 line = in.readLine().trimmed();
 
