@@ -4223,8 +4223,8 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
     mDataImportProgresses.remove(pImportData);
     mDataImportErrorMessages.insert(pImportData, pErrorMessage);
 
-    // If mImportDataProgresses is empty then it means that we all our imports
-    // are done, in which case we need to update our Parameters section with our
+    // If mImportDataProgresses is empty then it means that all our imports are
+    // done, in which case we need to update our Parameters section with our
     // imported data, hide our busy widget and display error messages, if needed
 
     if (mDataImportProgresses.isEmpty()) {
