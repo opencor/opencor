@@ -46,4 +46,15 @@
         <translation>Les données n&apos;ont pas pu être exportées vers BioSignalML (%1).</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreImporterWorker</name>
+    <message>
+        <source>The memory needed to store the data could not be allocated.</source>
+        <translation>La mémoire nécessaire pour stocker les données n&apos;a pas pu être allouée.</translation>
+    </message>
+    <message>
+        <source>The data could not be imported from BioSignalML (%1).</source>
+        <translation>Les données n&apos;ont pas pu être importées à partir de BioSignalML (%1).</translation>
+    </message>
+</context>
 </TS>
