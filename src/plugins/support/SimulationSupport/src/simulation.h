@@ -225,6 +225,8 @@ private:
     void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
+
+    double realPoint(double pPoint, int pRun = -1) const;
 };
 
 //==============================================================================

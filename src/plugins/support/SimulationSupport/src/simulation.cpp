@@ -814,26 +814,35 @@ bool SimulationResults::addRun()
 
 //==============================================================================
 
+double SimulationResults::realPoint(double pPoint, int pRun) const
+{
+    // Determine the real value of the given point, if we didn't have several
+    // runs, but only one
+
+    double res = 0.0;
+
+    for (int i = 0, iMax = (pRun == -1)?runsCount()-1:pRun; i < iMax; ++i) {
+        if (mDataStore->voi()->size(i))
+            res += mDataStore->voi()->value(mDataStore->voi()->size(i)-1, i);
+    }
+
+    res += pPoint;
+
+    return res;
+}
+
+//==============================================================================
+
 void SimulationResults::addPoint(double pPoint)
 {
     // Make sure that all our variables are up to date
 
     mSimulation->data()->recomputeVariables(pPoint);
 
-    // Determine the real value of our point, if we didn't have several runs,
-    // but only one
-
-    double realPoint = 0.0;
-
-    for (int i = 0, iMax = runsCount()-1; i < iMax; ++i) {
-        if (mDataStore->voi()->size(i))
-            realPoint += mDataStore->voi()->value(mDataStore->voi()->size(i)-1, i);
-    }
-
-    realPoint += pPoint;
-
     // Make sure that we have the correct imported data values for the given
     // point, keeping in mind that we may have several runs
+
+    double realPoint = SimulationResults::realPoint(pPoint);
 
     for (auto array : mData.keys()) {
         DataStore::DataStore *dataStore = mDataDataStores.value(array);
