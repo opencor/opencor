@@ -56,49 +56,46 @@ void CsvDataStoreImporterWorker::run()
 
         QTextStream in(&file);
         QString line;
-        quint64 nbOfLines = 0;
+        quint64 nbOfDataPoints = -1;
 
         while (!in.atEnd()) {
             line = in.readLine().trimmed();
 
             if (!line.isEmpty())
-                ++nbOfLines;
+                ++nbOfDataPoints;
         }
 
         // Read our header line and set up our data store
 
         DataStore::DataStore *dataStore = mImportData->dataStore();
-        double oneOverNbOfLines = 1.0/nbOfLines;
+        double oneOverNbOfDataPoints = 1.0/nbOfDataPoints;
 
         in.seek(0);
 
         line = in.readLine().trimmed();
 
-        int nbOfValues = line.split(",").count()-1;
+        int nbOfVariables = line.split(",").count()-1;
 
-        double *values = new double[nbOfValues] {};
+        double *values = new double[nbOfVariables] {};
 
-        dataStore->addVariables(values, nbOfValues);
-
-        emit progress(mImportData, oneOverNbOfLines);
+        dataStore->addVariables(values, nbOfVariables);
 
         // Add a run to our data store
-        // Note: of capacity nbOfLines-1 because the first line is our header...
 
-        if (dataStore->addRun(nbOfLines-1)) {
+        if (dataStore->addRun(nbOfDataPoints)) {
             // Read our data lines and have them stored in our data store
 
-            for (quint64 i = 2; i <= nbOfLines; ++i) {
+            for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
                 line = in.readLine().trimmed();
 
                 QStringList fields = line.split(",");
 
-                for (int j = 0; j < nbOfValues; ++j)
+                for (int j = 0; j < nbOfVariables; ++j)
                     values[j] = fields[j+1].toDouble();
 
                 dataStore->addValues(fields[0].toDouble());
 
-                emit progress(mImportData, i*oneOverNbOfLines);
+                emit progress(mImportData, i*oneOverNbOfDataPoints);
             }
         } else {
             errorMessage = tr("The memory needed to store the data could not be allocated.");
