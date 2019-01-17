@@ -1217,19 +1217,18 @@ void Simulation::importData(DataStore::DataStoreImportData *pImportData)
     if (!mRuntime)
         return;
 
-    // Ask our data and results objects to import the given data
+    // Ask our runtime to import the given data
 
     DataStore::DataStore *dataStore = pImportData->dataStore();
     double *array = mData->importData(dataStore);
-
-    mResults->importData(dataStore, array);
-
-    // Ask our runtime to import the given data
-
     QStringList hierarchy = pImportData->hierarchy();
 
     for (int i = 0, iMax = dataStore->variables().count(); i < iMax; ++i)
         mRuntime->importData(QString("data_%1").arg(i+1), hierarchy, i, array);
+
+    // Ask our data and results objects to import the given data
+
+    mResults->importData(dataStore, array);
 }
 
 //==============================================================================
