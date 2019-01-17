@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "biosignalml/biosignalml.h"
 #include "biosignalml/data/hdf5.h"
 
 //==============================================================================
