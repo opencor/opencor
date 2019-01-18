@@ -772,7 +772,10 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
 
     // Ask our data and results objects to import the given data
 
-    mData.insert(pArray, mDataStore->addVariables(pArray, pDataStore->variables().count()));
+    DataStore::DataStoreVariables dataStoreVariables = pDataStore->variables();
+    DataStore::DataStoreVariables importedVariables = mDataStore->addVariables(pArray, dataStoreVariables.count());
+
+    mData.insert(pArray, importedVariables);
     mDataDataStores.insert(pArray, pDataStore);
 
     // Customise our imported data
@@ -784,6 +787,45 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
         variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
         variable->setLabel(parameter->formattedName());
         variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
+    }
+
+    // Compute the values of our imported data, so we can plot it straightaway
+    // along our other simulation results, if any
+
+    int runsCount = SimulationResults::runsCount();
+
+    if (runsCount) {
+        DataStore::DataStoreVariable *voi = mDataStore->voi();
+
+        for (int i = 0; i < runsCount; ++i) {
+            // Create a new run for each of our imported data
+
+            quint64 capacity = size(i);
+
+            for (auto importedVariable : importedVariables)
+                importedVariable->addRun(capacity);
+
+            // Add the value of our imported data to our new run
+
+            double *voiValues = voi->values(i);
+
+            for (quint64 j = 0, jMax = voi->size(i); j < jMax; ++j) {
+                double realPoint = SimulationResults::realPoint(voiValues[j], i);
+                int k = -1;
+
+                for (auto importedVariable : importedVariables)
+                    importedVariable->addValue(realValue(realPoint, pDataStore->voi(), dataStoreVariables[++k]));
+            }
+        }
+
+        // Update our imported data array so that it contains our latest
+        // computed values
+
+        quint64 lastPosition = size()-1;
+        int i = -1;
+
+        for (auto importedVariable : importedVariables)
+            pArray[++i] = importedVariable->value(lastPosition);
     }
 }
 
