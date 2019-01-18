@@ -833,6 +833,53 @@ double SimulationResults::realPoint(double pPoint, int pRun) const
 
 //==============================================================================
 
+double SimulationResults::realValue(double pPoint,
+                                    DataStore::DataStoreVariable *pVoi,
+                                    DataStore::DataStoreVariable *pVariable) const
+{
+    // Return the value of the given variable at the given point, doing a linear
+    // interpolation, if needed
+
+    quint64 first = 0;
+    quint64 last = pVoi->size()-1;
+
+    if (   (pPoint < pVoi->value(first))
+        || (pPoint > pVoi->value(last))) {
+        return qQNaN();
+    } else {
+        quint64 middle = 0;
+        double middleVoiValue = 0.0;
+
+        while (first <= last) {
+            middle = (first+last) >> 1;
+            middleVoiValue = pVoi->value(middle);
+
+            if (middleVoiValue < pPoint)
+                first = middle+1;
+            else if (middleVoiValue > pPoint)
+                last = middle-1;
+            else
+                break;
+        }
+
+        if (middleVoiValue < pPoint) {
+            double afterVoiValue = pVoi->value(middle+1);
+            double afterDataValue = pVariable->value(middle+1);
+
+            return afterDataValue-(afterVoiValue-pPoint)*(afterDataValue-pVariable->value(middle))/(afterVoiValue-middleVoiValue);
+        } else if (middleVoiValue > pPoint) {
+            double beforeVoiValue = pVoi->value(middle-1);
+            double beforeDataValue = pVariable->value(middle-1);
+
+            return beforeDataValue+(pPoint-beforeVoiValue)*(pVariable->value(middle)-beforeDataValue)/(middleVoiValue-beforeVoiValue);
+        } else {
+            return pVariable->value(middle);
+        }
+    }
+}
+
+//==============================================================================
+
 void SimulationResults::addPoint(double pPoint)
 {
     // Make sure that all our variables are up to date
@@ -849,46 +896,8 @@ void SimulationResults::addPoint(double pPoint)
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
 
-        for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
-            quint64 first = 0;
-            quint64 last = voi->size()-1;
-
-            if (   (realPoint < voi->value(first))
-                || (realPoint > voi->value(last))) {
-                array[i] = qQNaN();
-            } else {
-                quint64 middle = 0;
-                double middleVoiValue = 0.0;
-
-                while (first <= last) {
-                    middle = (first+last) >> 1;
-                    middleVoiValue = voi->value(middle);
-
-                    if (middleVoiValue < realPoint)
-                        first = middle+1;
-                    else if (middleVoiValue > realPoint)
-                        last = middle-1;
-                    else
-                        break;
-                }
-
-                DataStore::DataStoreVariable *variable = variables[i];
-
-                if (middleVoiValue < realPoint) {
-                    double afterVoiValue = voi->value(middle+1);
-                    double afterDataValue = variable->value(middle+1);
-
-                    array[i] = afterDataValue-(afterVoiValue-realPoint)*(afterDataValue-variable->value(middle))/(afterVoiValue-middleVoiValue);
-                } else if (middleVoiValue > realPoint) {
-                    double beforeVoiValue = voi->value(middle-1);
-                    double beforeDataValue = variable->value(middle-1);
-
-                    array[i] = beforeDataValue+(realPoint-beforeVoiValue)*(variable->value(middle)-beforeDataValue)/(middleVoiValue-beforeVoiValue);
-                } else {
-                    array[i] = variable->value(middle);
-                }
-            }
-        }
+        for (int i = 0, iMax = variables.count(); i < iMax; ++i)
+            array[i] = realValue(realPoint, voi, variables[i]);
     }
 
     // Now that we are all set, we can add the data to our data store

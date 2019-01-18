@@ -227,6 +227,9 @@ private:
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 
     double realPoint(double pPoint, int pRun = -1) const;
+
+    double realValue(double pPoint, DataStore::DataStoreVariable *pVoi,
+                     DataStore::DataStoreVariable *pVariable) const;
 };
 
 //==============================================================================
