@@ -525,11 +525,7 @@ DataStoreVariables DataStore::voiAndVariables()
 
 DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 {
-    // Add some variables to our data store, but only if we haven't already
-    // added some runs
-
-    if (mVoi->runsCount())
-        return DataStoreVariables();
+    // Add some variables to our data store
 
     DataStoreVariables variables = DataStoreVariables();
 
