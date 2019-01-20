@@ -1369,7 +1369,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     //       Indeed, to change the Y property may, for example, result in the
     //       title being also changed...
 
-    if ((oldTitle != graph->title()) || graphSymbolUpdated)
+    if (newTitle.compare(oldTitle) || graphSymbolUpdated)
         graph->plot()->updateGui();
 
     if (   (oldParameterX != graph->parameterX())
