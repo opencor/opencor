@@ -1370,7 +1370,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     //       title being also changed...
 
     if (newTitle.compare(oldTitle) || graphSymbolUpdated)
-        graph->plot()->updateGui();
+        graph->plot()->updateGui(false, graph->plot()->isLegendActive());
 
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
@@ -1481,7 +1481,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
         graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
         graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
 
-        graphPanelPlot->updateGui();
+        graphPanelPlot->updateGui(false, true);
     graphPanelPlot->setUpdatesEnabled(true);
 }
 
