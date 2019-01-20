@@ -1332,14 +1332,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     // Update the graph line settings
 
     QPen oldLinePen = graph->pen();
-    QPen linePen = oldLinePen;
+    QPen newLinePen = oldLinePen;
     Core::Properties lineProperties = properties[4]->properties();
 
-    linePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValueIndex()));
-    linePen.setWidth(lineProperties[1]->integerValue());
-    linePen.setColor(lineProperties[2]->colorValue());
+    newLinePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValueIndex()));
+    newLinePen.setWidth(lineProperties[1]->integerValue());
+    newLinePen.setColor(lineProperties[2]->colorValue());
 
-    graph->setPen(linePen);
+    graph->setPen(newLinePen);
 
     // Update the graph symbol settings
 
@@ -1377,7 +1377,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
         emit graphUpdated(graph);
     }
 
-    if ((oldLinePen != linePen) || graphSymbolUpdated) {
+    if ((oldLinePen != newLinePen) || graphSymbolUpdated) {
         graph->plot()->replot();
 
         processEvents();
