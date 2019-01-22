@@ -82,9 +82,24 @@ QString CSVDataStorePlugin::dataStoreName() const
 DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString &pFileName,
                                                                    DataStore::DataStore *pDataStore) const
 {
+    // Determine the number of variables in our CSV file
+
+    DataStore::DataStoreImportData *res = nullptr;
+    QFile file(pFileName);
+
+    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        // Determine our number of variables
+        // Note: -1 because we must skip the VOI...
+
+        res = new DataStore::DataStoreImportData(pFileName, pDataStore,
+                                                 QTextStream(&file).readLine().trimmed().split(",").count()-1);
+
+        file.close();
+    }
+
     // Return some information about the data we want to import
 
-    return new DataStore::DataStoreImportData(pFileName, pDataStore);
+    return res;
 }
 
 //==============================================================================

@@ -84,9 +84,24 @@ QString BioSignalMLDataStorePlugin::dataStoreName() const
 DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const QString &pFileName,
                                                                            DataStore::DataStore *pDataStore) const
 {
+    // Determine the number of variables in our BioSignalML file
+
+    DataStore::DataStoreImportData *res = nullptr;
+
+    try {
+        bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(pFileName.toStdString());
+        res = new DataStore::DataStoreImportData(pFileName, pDataStore,
+                                                 int(recording->get_signal_uris().size()));
+
+        recording->close();
+
+        delete recording;
+    } catch (...) {
+    }
+
     // Return some information about the data we want to import
 
-    return new DataStore::DataStoreImportData(pFileName, pDataStore);
+    return res;
 }
 
 //==============================================================================
