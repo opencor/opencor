@@ -45,13 +45,12 @@ void BiosignalmlDataStoreImporterWorker::run()
 {
     // Import our BioSignalML file in our data store
 
-    bsml::HDF5::Recording *recording = nullptr;
     QString errorMessage = QString();
 
     try {
         // Retrieve our clock and determine our number of data points
 
-        recording = new bsml::HDF5::Recording(mImportData->fileName().toStdString());
+        bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(mImportData->fileName().toStdString());
 
         std::vector<double> clockTicks = recording->get_clock(recording->get_clock_uris().front())->read();
         quint64 nbOfDataPoints = clockTicks.size();
@@ -93,16 +92,14 @@ void BiosignalmlDataStoreImporterWorker::run()
 
         delete[] values;
         delete[] variables;
+
+        recording->close();
+
+        delete recording;
     } catch (bsml::data::Exception &exception) {
         // Something went wrong, so retrieve the error message
 
         errorMessage = tr("The data could not be imported from BioSignalML (%1).").arg(exception.what());
-    }
-
-    if (recording) {
-        recording->close();
-
-        delete recording;
     }
 
     // Let people know that our import is done
