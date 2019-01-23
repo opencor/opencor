@@ -390,12 +390,20 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     // Allocate space for our values, as well as add the required number of
     // variables to our data store and a run that will contain all of our
     // imported data
+    // Note: we make several calls to DataStore::addVariable() rather than one
+    //       big one to DataStore::addVariables() in case we can't allocate
+    //       enough memory, in which case we will need to remove the variables
+    //       we have added, and a failing call to DataStore::addVariables()
+    //       wouldn't allow us to do this since that call wouldn't actually
+    //       return...
 
     DataStoreVariables variables = DataStoreVariables();
 
     try {
         mValues = new double[pNbOfVariables] {};
-        variables = pDataStore->addVariables(mValues, pNbOfVariables);
+
+        for (int i = 0; i < pNbOfVariables; ++i)
+            variables << pDataStore->addVariable(mValues+i);
 
         if (!pDataStore->addRun(pNbOfDataPoints))
             throw std::exception();
@@ -614,6 +622,19 @@ DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 
 //==============================================================================
 
+DataStoreVariable * DataStore::addVariable(double *pValue)
+{
+    // Add a variable to our data store
+
+    DataStoreVariable *variable = new DataStoreVariable(pValue);
+
+    mVariables << variable;
+
+    return variable;
+}
+
+//==============================================================================
+
 void DataStore::removeVariables(const DataStoreVariables &pVariables)
 {
     // Remove the given variables from our data store
@@ -623,6 +644,17 @@ void DataStore::removeVariables(const DataStoreVariables &pVariables)
 
         mVariables.removeOne(variable);
     }
+}
+
+//==============================================================================
+
+void DataStore::removeVariable(DataStoreVariable *pVariable)
+{
+    // Remove the given variable from our data store
+
+    delete pVariable;
+
+    mVariables.removeOne(pVariable);
 }
 
 //==============================================================================
