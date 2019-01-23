@@ -67,7 +67,7 @@ void BiosignalmlDataStoreImporterWorker::run()
         // Set up our data store
 
         DataStore::DataStore *dataStore = mImportData->dataStore();
-        double *values = new double[nbOfVariables] {};
+        double *values = mImportData->values();
 
         dataStore->addVariables(values, nbOfVariables);
 
@@ -89,7 +89,6 @@ void BiosignalmlDataStoreImporterWorker::run()
             errorMessage = tr("The memory needed to store the data could not be allocated.");
         }
 
-        delete[] values;
         delete[] variables;
 
         recording->close();

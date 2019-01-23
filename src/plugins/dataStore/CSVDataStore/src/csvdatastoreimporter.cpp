@@ -78,7 +78,7 @@ void CsvDataStoreImporterWorker::run()
 
         int nbOfVariables = line.split(",").count()-1;
 
-        double *values = new double[nbOfVariables] {};
+        double *values = mImportData->values();
 
         dataStore->addVariables(values, nbOfVariables);
 
@@ -101,8 +101,6 @@ void CsvDataStoreImporterWorker::run()
         } else {
             errorMessage = tr("The memory needed to store the data could not be allocated.");
         }
-
-        delete[] values;
 
         file.close();
     }

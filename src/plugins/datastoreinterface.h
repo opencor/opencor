@@ -148,17 +148,22 @@ public:
     explicit DataStoreImportData(const QString &pFileName,
                                  DataStore *pDataStore, int pNbOfVariables,
                                  quint64 pNbOfDataPoints);
+    ~DataStoreImportData();
 
     QStringList hierarchy() const;
 
     int nbOfVariables() const;
     quint64 nbOfDataPoints() const;
 
+    double * values() const;
+
 private:
     QStringList mHierarchy;
 
     int mNbOfVariables;
     quint64 mNbOfDataPoints;
+
+    double *mValues;
 };
 
 //==============================================================================

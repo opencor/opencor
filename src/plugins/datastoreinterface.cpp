@@ -384,6 +384,19 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     static int importNb = 0;
 
     mHierarchy = QStringList() << "imports" << QString("import_%1").arg(++importNb);
+
+    // Allocate space for our values
+
+    mValues = new double[pNbOfVariables] {};
+}
+
+//==============================================================================
+
+DataStoreImportData::~DataStoreImportData()
+{
+    // Delete some internal objects
+
+    delete mValues;
 }
 
 //==============================================================================
@@ -411,6 +424,15 @@ quint64 DataStoreImportData::nbOfDataPoints() const
     // Return our number of data points
 
     return mNbOfDataPoints;
+}
+
+//==============================================================================
+
+double * DataStoreImportData::values() const
+{
+    // Return our values
+
+    return mValues;
 }
 
 //==============================================================================
