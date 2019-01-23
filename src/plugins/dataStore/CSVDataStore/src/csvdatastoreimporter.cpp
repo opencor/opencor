@@ -80,7 +80,7 @@ void CsvDataStoreImporterWorker::run()
 
     // Let people know that our import is done
 
-    emit done(mImportData, QString());
+    emit done(mImportData, errorMessage);
 }
 
 //==============================================================================
