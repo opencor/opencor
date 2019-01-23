@@ -74,17 +74,13 @@ void BiosignalmlDataStoreImporterWorker::run()
 
         double oneOverNbOfDataPoints = 1.0/nbOfDataPoints;
 
-        if (dataStore->addRun(nbOfDataPoints)) {
-            for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
-                for (int j = 0; j < nbOfVariables; ++j)
-                    values[j] = variables[j]->data()[i-1];
+        for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
+            for (int j = 0; j < nbOfVariables; ++j)
+                values[j] = variables[j]->data()[i-1];
 
-                dataStore->addValues(clockTicks[i-1]);
+            dataStore->addValues(clockTicks[i-1]);
 
-                emit progress(mImportData, i*oneOverNbOfDataPoints);
-            }
-        } else {
-            errorMessage = tr("The memory needed to store the data could not be allocated.");
+            emit progress(mImportData, i*oneOverNbOfDataPoints);
         }
 
         delete[] variables;

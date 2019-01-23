@@ -83,21 +83,17 @@ void CsvDataStoreImporterWorker::run()
         // Add a run to our data store and store the values of our different
         // variables to it
 
-        if (dataStore->addRun(nbOfDataPoints)) {
-            for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
-                line = in.readLine().trimmed();
+        for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
+            line = in.readLine().trimmed();
 
-                QStringList fields = line.split(",");
+            QStringList fields = line.split(",");
 
-                for (int j = 0; j < nbOfVariables; ++j)
-                    values[j] = fields[j+1].toDouble();
+            for (int j = 0; j < nbOfVariables; ++j)
+                values[j] = fields[j+1].toDouble();
 
-                dataStore->addValues(fields[0].toDouble());
+            dataStore->addValues(fields[0].toDouble());
 
-                emit progress(mImportData, i*oneOverNbOfDataPoints);
-            }
-        } else {
-            errorMessage = tr("The memory needed to store the data could not be allocated.");
+            emit progress(mImportData, i*oneOverNbOfDataPoints);
         }
 
         file.close();

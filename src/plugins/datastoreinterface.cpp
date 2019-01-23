@@ -385,11 +385,14 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
     mHierarchy = QStringList() << "imports" << QString("import_%1").arg(++importNb);
 
-    // Allocate space for our values
+    // Allocate space for our values, as well as add the required number of
+    // variables to our data store and a run that will contain all of our
+    // imported data
 
     mValues = new double[pNbOfVariables] {};
 
     pDataStore->addVariables(mValues, pNbOfVariables);
+    pDataStore->addRun(pNbOfDataPoints);
 }
 
 //==============================================================================
