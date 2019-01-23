@@ -389,10 +389,24 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     // variables to our data store and a run that will contain all of our
     // imported data
 
-    mValues = new double[pNbOfVariables] {};
+    DataStoreVariables variables = DataStoreVariables();
 
-    pDataStore->addVariables(mValues, pNbOfVariables);
-    pDataStore->addRun(pNbOfDataPoints);
+    try {
+        mValues = new double[pNbOfVariables] {};
+        variables = pDataStore->addVariables(mValues, pNbOfVariables);
+
+        if (!pDataStore->addRun(pNbOfDataPoints))
+            throw std::exception();
+    } catch (...) {
+        // Something went wrong, so release the memory that was directly or
+        // indirectly allocated
+
+        delete mValues;
+
+        mValues = nullptr;
+
+        pDataStore->removeVariables(variables);
+    }
 }
 
 //==============================================================================
@@ -585,6 +599,19 @@ DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
     mVariables << variables;
 
     return variables;
+}
+
+//==============================================================================
+
+void DataStore::removeVariables(const DataStoreVariables &pVariables)
+{
+    // Remove the given variables from our data store
+
+    for (auto variable : pVariables) {
+        delete variable;
+
+        mVariables.removeOne(variable);
+    }
 }
 
 //==============================================================================

@@ -206,6 +206,7 @@ public:
     DataStoreVariables voiAndVariables();
 
     DataStoreVariables addVariables(double *pValues, int pCount);
+    void removeVariables(const DataStoreVariables &pVariables);
 
     void addValues(double pVoiValue);
 

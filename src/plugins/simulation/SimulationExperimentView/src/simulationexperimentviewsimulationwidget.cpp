@@ -4473,16 +4473,41 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
 
     // Retrieve some imported data for our different data files
 
+    enum Problem {
+        FileAccess,
+        MemoryAllocation
+    };
+
     QMap<QString, DataStore::DataStoreImportData *> dataStoreImportDatas = QMap<QString, DataStore::DataStoreImportData *>();
+    QMap<QString, Problem> problems = QMap<QString, Problem>();
 
     for (const auto &fileName : dataStoreInterfaces.keys()) {
         DataStore::DataStoreImportData *dataStoreImportData = dataStoreInterfaces.value(fileName)->getImportData(fileName, mSimulation->importData()->addDataStore());
 
         if (dataStoreImportData) {
-            dataStoreImportDatas.insert(fileName, dataStoreImportData);
+            if (dataStoreImportData->values()) {
+                dataStoreImportDatas.insert(fileName, dataStoreImportData);
 
-            mDataImportProgresses.insert(dataStoreImportData, 0.0);
+                mDataImportProgresses.insert(dataStoreImportData, 0.0);
+            } else {
+                delete dataStoreImportData;
+
+                problems.insert(fileName, MemoryAllocation);
+            }
+        } else {
+            problems.insert(fileName, FileAccess);
         }
+    }
+
+    // Let people know about the problems, if any, we got while trying to
+    // retrieve our import data
+
+    for (const auto &fileName : problems.keys()) {
+        Core::warningMessageBox(tr("Data Import"),
+                                tr("<strong>%1</strong> could not be imported (%2).").arg(fileName)
+                                                                                     .arg((problems.value(fileName) == FileAccess)?
+                                                                                              tr("the file could not be accessed"):
+                                                                                              tr("the memory needed to store the data could not be allocated")));
     }
 
     // We have got the imported data we need, so now do the actual import of our

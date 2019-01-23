@@ -648,5 +648,13 @@
         <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;est pas un fichier de données.</translation>
     </message>
+    <message>
+        <source>the file could not be accessed</source>
+        <translation>le fichier n&apos;a pas pu être accédé</translation>
+    </message>
+    <message>
+        <source>the memory needed to store the data could not be allocated</source>
+        <translation>la mémoire nécessaire pour stocker les données n&apos;a pas pu être allouée</translation>
+    </message>
 </context>
 </TS>
