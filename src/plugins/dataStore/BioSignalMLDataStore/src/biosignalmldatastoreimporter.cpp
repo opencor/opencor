@@ -69,8 +69,6 @@ void BiosignalmlDataStoreImporterWorker::run()
         DataStore::DataStore *dataStore = mImportData->dataStore();
         double *values = mImportData->values();
 
-        dataStore->addVariables(values, nbOfVariables);
-
         // Add a run to our data store and store the values of our different
         // variables to it
 

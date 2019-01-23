@@ -388,6 +388,8 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     // Allocate space for our values
 
     mValues = new double[pNbOfVariables] {};
+
+    pDataStore->addVariables(mValues, pNbOfVariables);
 }
 
 //==============================================================================

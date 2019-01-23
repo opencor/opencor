@@ -80,8 +80,6 @@ void CsvDataStoreImporterWorker::run()
 
         double *values = mImportData->values();
 
-        dataStore->addVariables(values, nbOfVariables);
-
         // Add a run to our data store and store the values of our different
         // variables to it
 
