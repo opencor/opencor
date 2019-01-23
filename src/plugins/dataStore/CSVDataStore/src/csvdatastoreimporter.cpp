@@ -57,10 +57,8 @@ void CsvDataStoreImporterWorker::run()
         DataStore::DataStore *dataStore = mImportData->dataStore();
         double *values = mImportData->values();
         int nbOfVariables = mImportData->nbOfVariables();
-        quint64 nbOfDataPoints = mImportData->nbOfDataPoints();
-        double oneOverNbOfDataPoints = 1.0/nbOfDataPoints;
 
-        for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
+        for (quint64 i = 0, iMax = mImportData->nbOfDataPoints(); i < iMax; ++i) {
             line = in.readLine().trimmed();
 
             QStringList fields = line.split(",");
@@ -70,7 +68,7 @@ void CsvDataStoreImporterWorker::run()
 
             dataStore->addValues(fields[0].toDouble());
 
-            emit progress(mImportData, i*oneOverNbOfDataPoints);
+            emit progress(mImportData, mImportData->progress());
         }
 
         file.close();

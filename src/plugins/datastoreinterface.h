@@ -157,6 +157,8 @@ public:
 
     double * values() const;
 
+    double progress();
+
 private:
     QStringList mHierarchy;
 
@@ -164,6 +166,9 @@ private:
     quint64 mNbOfDataPoints;
 
     double *mValues;
+
+    quint64 mProgress;
+    double mOneOverTotalProgress;
 };
 
 //==============================================================================

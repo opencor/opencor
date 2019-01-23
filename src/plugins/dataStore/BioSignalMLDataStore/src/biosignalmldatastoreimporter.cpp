@@ -67,16 +67,14 @@ void BiosignalmlDataStoreImporterWorker::run()
 
         DataStore::DataStore *dataStore = mImportData->dataStore();
         double *values = mImportData->values();
-        quint64 nbOfDataPoints = mImportData->nbOfDataPoints();
-        double oneOverNbOfDataPoints = 1.0/nbOfDataPoints;
 
-        for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
+        for (quint64 i = 0, iMax = mImportData->nbOfDataPoints(); i < iMax; ++i) {
             for (int j = 0; j < nbOfVariables; ++j)
-                values[j] = variables[j]->data()[i-1];
+                values[j] = variables[j]->data()[i];
 
-            dataStore->addValues(clockTicks[i-1]);
+            dataStore->addValues(clockTicks[i]);
 
-            emit progress(mImportData, i*oneOverNbOfDataPoints);
+            emit progress(mImportData, mImportData->progress());
         }
 
         delete[] variables;
