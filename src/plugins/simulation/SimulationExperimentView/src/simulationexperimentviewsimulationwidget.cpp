@@ -4500,7 +4500,7 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
     }
 
     // Let people know about the problems, if any, we got while trying to
-    // retrieve our import data
+    // retrieve our imported data
 
     for (const auto &fileName : problems.keys()) {
         Core::warningMessageBox(tr("Data Import"),
