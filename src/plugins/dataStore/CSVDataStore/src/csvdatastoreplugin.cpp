@@ -91,8 +91,22 @@ DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString
         // Determine our number of variables
         // Note: -1 because we must skip the VOI...
 
+        QTextStream in(&file);
+        QString line;
+        quint64 nbOfDataPoints = quint64(-1);
+
+        while (!in.atEnd()) {
+            line = in.readLine().trimmed();
+
+            if (!line.isEmpty())
+                ++nbOfDataPoints;
+        }
+
+        in.seek(0);
+
         res = new DataStore::DataStoreImportData(pFileName, pDataStore,
-                                                 QTextStream(&file).readLine().trimmed().split(",").count()-1);
+                                                 in.readLine().trimmed().split(",").count()-1,
+                                                 nbOfDataPoints);
 
         file.close();
     }

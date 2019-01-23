@@ -373,9 +373,11 @@ DataStore * DataStoreData::dataStore() const
 
 DataStoreImportData::DataStoreImportData(const QString &pFileName,
                                          DataStore *pDataStore,
-                                         int pNbOfVariables) :
+                                         int pNbOfVariables,
+                                         quint64 pNbOfDataPoints) :
     DataStoreData(pFileName, pDataStore),
-    mNbOfVariables(pNbOfVariables)
+    mNbOfVariables(pNbOfVariables),
+    mNbOfDataPoints(pNbOfDataPoints)
 {
     // Initialise our hierarchy
 
@@ -400,6 +402,15 @@ int DataStoreImportData::nbOfVariables() const
     // Return our number of variables
 
     return mNbOfVariables;
+}
+
+//==============================================================================
+
+quint64 DataStoreImportData::nbOfDataPoints() const
+{
+    // Return our number of data points
+
+    return mNbOfDataPoints;
 }
 
 //==============================================================================
