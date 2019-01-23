@@ -4227,16 +4227,14 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
     // imported data, hide our busy widget and display error messages, if needed
 
     if (mDataImportProgresses.isEmpty()) {
-        // Ask our simulation to account for our imported data
+        // Ask our simulation to account for our imported data, and update our
+        // Graphs and Parameters sections with our imported data
 
         QList<DataStore::DataStoreImportData *> dataStoreImportDatas = mDataImportErrorMessages.keys();
 
-        for (auto dataStoreImportData : dataStoreImportDatas)
+        for (auto dataStoreImportData : dataStoreImportDatas) {
             mSimulation->importData(dataStoreImportData);
 
-        // Update our Graphs and Parameters sections with our imported data
-
-        for (auto dataStoreImportData : dataStoreImportDatas) {
             mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData);
             mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData);
         }
