@@ -53,8 +53,8 @@ void CsvDataStoreImporterWorker::run()
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         // Determine the number of non-empty lines
-        // Note: nbOfDataPoints starts at -1 because we are also going to count
-        //       the header of our CSV file...
+        // Note: nbOfDataPoints starts at -1 because we are going to count the
+        //       header of our CSV file...
 
         QTextStream in(&file);
         QString line;

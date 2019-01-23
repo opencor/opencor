@@ -88,8 +88,11 @@ DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString
     QFile file(pFileName);
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        // Determine our number of variables
-        // Note: -1 because we must skip the VOI...
+        // Determine our number of variables and data points
+        // Note #1: we subtract 1 for our number of variables because otherwise
+        //          it would include the VOI, which we don't want...
+        // Note #2: nbOfDataPoints starts at -1 because we are going to count
+        //          the header of our CSV file...
 
         QTextStream in(&file);
         QString line;
