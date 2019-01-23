@@ -52,36 +52,13 @@ void CsvDataStoreImporterWorker::run()
     QString errorMessage = QString();
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        // Determine the number of non-empty lines
-        // Note: nbOfDataPoints starts at -1 because we are going to count the
-        //       header of our CSV file...
-
         QTextStream in(&file);
-        QString line;
-        quint64 nbOfDataPoints = quint64(-1);
-
-        while (!in.atEnd()) {
-            line = in.readLine().trimmed();
-
-            if (!line.isEmpty())
-                ++nbOfDataPoints;
-        }
-
-        // Read our header line and set up our data store
-
+        QString line = in.readLine();   // Header, which we ignore
         DataStore::DataStore *dataStore = mImportData->dataStore();
-        double oneOverNbOfDataPoints = 1.0/nbOfDataPoints;
-
-        in.seek(0);
-
-        line = in.readLine().trimmed();
-
-        int nbOfVariables = line.split(",").count()-1;
-
         double *values = mImportData->values();
-
-        // Add a run to our data store and store the values of our different
-        // variables to it
+        int nbOfVariables = mImportData->nbOfVariables();
+        quint64 nbOfDataPoints = mImportData->nbOfDataPoints();
+        double oneOverNbOfDataPoints = 1.0/nbOfDataPoints;
 
         for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
             line = in.readLine().trimmed();
@@ -97,11 +74,13 @@ void CsvDataStoreImporterWorker::run()
         }
 
         file.close();
+    } else {
+        errorMessage = tr("The file could not be opened.");
     }
 
     // Let people know that our import is done
 
-    emit done(mImportData, errorMessage);
+    emit done(mImportData, QString());
 }
 
 //==============================================================================

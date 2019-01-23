@@ -30,8 +30,8 @@
 <context>
     <name>OpenCOR::CSVDataStore::CsvDataStoreImporterWorker</name>
     <message>
-        <source>The memory needed to store the data could not be allocated.</source>
-        <translation>La mémoire nécessaire pour stocker les données n&apos;a pas pu être allouée.</translation>
+        <source>The file could not be opened.</source>
+        <translation>Le fichier n&apos;a pas pu être ouvert.</translation>
     </message>
 </context>
 </TS>

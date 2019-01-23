@@ -52,26 +52,22 @@ void BiosignalmlDataStoreImporterWorker::run()
 
         bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(mImportData->fileName().toStdString());
         std::vector<double> clockTicks = recording->get_clock(recording->get_clock_uris().front())->read();
-        quint64 nbOfDataPoints = clockTicks.size();
 
         // Retrieve the values of our different variables
 
-        std::list<rdf::URI> signalUris = recording->get_signal_uris();
-        int nbOfVariables = int(signalUris.size());
+        int nbOfVariables = mImportData->nbOfVariables();
         bsml::data::TimeSeries::Ptr *variables = new bsml::data::TimeSeries::Ptr[nbOfVariables] {};
         bsml::data::TimeSeries::Ptr *variable = variables-1;
 
-        for (auto signalUri : signalUris)
+        for (auto signalUri : recording->get_signal_uris())
             *(++variable) = recording->get_signal(signalUri)->read();
-
-        // Set up our data store
-
-        DataStore::DataStore *dataStore = mImportData->dataStore();
-        double *values = mImportData->values();
 
         // Add a run to our data store and store the values of our different
         // variables to it
 
+        DataStore::DataStore *dataStore = mImportData->dataStore();
+        double *values = mImportData->values();
+        quint64 nbOfDataPoints = mImportData->nbOfDataPoints();
         double oneOverNbOfDataPoints = 1.0/nbOfDataPoints;
 
         for (quint64 i = 1; i <= nbOfDataPoints; ++i) {
