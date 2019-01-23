@@ -4229,12 +4229,14 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
     if (mDataImportProgresses.isEmpty()) {
         // Ask our simulation to account for our imported data
 
-        for (auto dataStoreImportData : mDataImportErrorMessages.keys())
+        QList<DataStore::DataStoreImportData *> dataStoreImportDatas = mDataImportErrorMessages.keys();
+
+        for (auto dataStoreImportData : dataStoreImportDatas)
             mSimulation->importData(dataStoreImportData);
 
         // Update our Graphs and Parameters sections with our imported data
 
-        for (auto dataStoreImportData : mDataImportErrorMessages.keys()) {
+        for (auto dataStoreImportData : dataStoreImportDatas) {
             mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData);
             mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData);
         }
@@ -4245,12 +4247,12 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
         // Let people know about any error that we came across
 
-        for (auto importData : mDataImportErrorMessages.keys()) {
-            QString errorMessage = mDataImportErrorMessages.value(importData);
+        for (auto dataStoreImportData : dataStoreImportDatas) {
+            QString errorMessage = mDataImportErrorMessages.value(dataStoreImportData);
 
             if (!errorMessage.isEmpty()) {
                 Core::warningMessageBox(tr("Data Import"),
-                                        tr("<strong>%1</strong> could not be imported (%2).").arg(importData->fileName())
+                                        tr("<strong>%1</strong> could not be imported (%2).").arg(dataStoreImportData->fileName())
                                                                                              .arg(Core::formatMessage(errorMessage, true)));
             }
         }
