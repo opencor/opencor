@@ -4207,12 +4207,8 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore
 
     mDataImportProgresses.insert(pImportData, pProgress);
 
-    double progress = 1.0;
-
-    for (auto importDataProgress : mDataImportProgresses.values())
-        progress = qMin(pProgress, importDataProgress);
-
-    Core::centralWidget()->setBusyWidgetProgress(progress);
+    Core::centralWidget()->setBusyWidgetProgress(*std::min_element(mDataImportProgresses.begin(),
+                                                                   mDataImportProgresses.end()));
 }
 
 //==============================================================================
