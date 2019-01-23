@@ -125,7 +125,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>()),
     mDataImportProgresses(QMap<DataStore::DataStoreImportData *, double>()),
-    mDataImportErrorMessages(QMap<DataStore::DataStoreImportData *, QString>())
+    mDataImportErrorMessages(QMap<DataStore::DataStoreImportData *, QString>()),
+    mDataStoreFiles(QMap<QString, FileTypeInterface *>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -647,6 +648,8 @@ void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *p
     for (const auto &fileName : Core::droppedFileNames(pEvent)) {
         for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
             if (fileTypeInterface->isFile(fileName)) {
+                mDataStoreFiles.insert(fileName, fileTypeInterface);
+
                 acceptEvent = true;
 
                 break;
@@ -4438,17 +4441,31 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
     for (const auto &fileName : pFileNames) {
         // Determine the type of data file we are dealing with so we can use the
         // correct data store interface
+        // Note: we check whether mDataStoreFiles contains an entry for the
+        //       current file (which would mean that the file was dropped on the
+        //       Simulation Experiment view) and if not (i.e. we want to open a
+        //       data file using the main menu) then check whether the file is a
+        //       data file...
 
-        for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
-            if (fileTypeInterface->isFile(fileName)) {
-                dataStoreInterfaces.insert(fileName, Core::dataStoreInterface(fileTypeInterface));
+        FileTypeInterface *fileTypeInterface = mDataStoreFiles.value(fileName);
 
-                break;
+        if (!fileTypeInterface) {
+            for (auto dataStoreFileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
+                if (dataStoreFileTypeInterface->isFile(fileName)) {
+                    fileTypeInterface = dataStoreFileTypeInterface;
+
+                    break;
+                }
             }
         }
 
-        if (!dataStoreInterfaces.contains(fileName))
+        if (fileTypeInterface) {
+            dataStoreInterfaces.insert(fileName, Core::dataStoreInterface(fileTypeInterface));
+
+            mDataStoreFiles.remove(fileName);
+        } else {
             invalidDataFileNames << fileName;
+        }
     }
 
     // Let people know about our invalid data files, if any

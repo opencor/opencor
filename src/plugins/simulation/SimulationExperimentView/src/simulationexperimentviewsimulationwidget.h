@@ -259,6 +259,8 @@ private:
     QMap<DataStore::DataStoreImportData *, double> mDataImportProgresses;
     QMap<DataStore::DataStoreImportData *, QString> mDataImportErrorMessages;
 
+    QMap<QString, FileTypeInterface *> mDataStoreFiles;
+
     void output(const QString &pMessage);
 
     void updateSimulationMode();
