@@ -92,7 +92,7 @@ public:
     double * algebraic() const;
     double * data(DataStore::DataStore *pDataStore) const;
 
-    void importData(DataStore::DataStore *pDataStore, double *pData);
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     const quint64 * delay() const;
     void setDelay(quint64 pDelay);
@@ -188,7 +188,7 @@ public:
 
     void reset();
 
-    void importData(DataStore::DataStore *pDataStore, double *pData);
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     int runsCount() const;
 

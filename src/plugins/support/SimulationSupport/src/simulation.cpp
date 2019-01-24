@@ -146,11 +146,11 @@ double * SimulationData::data(DataStore::DataStore *pDataStore) const
 
 //==============================================================================
 
-void SimulationData::importData(DataStore::DataStore *pDataStore, double *pData)
+void SimulationData::importData(DataStore::DataStoreImportData *pImportData)
 {
     // Associate an array of doubles to the given data store
 
-    mData.insert(pDataStore, pData);
+    mData.insert(pImportData->importDataStore(), pImportData->resultsValues());
 }
 
 //==============================================================================
@@ -756,8 +756,7 @@ void SimulationResults::reset()
 
 //==============================================================================
 
-void SimulationResults::importData(DataStore::DataStore *pDataStore,
-                                   double *pData)
+void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
 {
     // Make sure that we have a runtime and a VOI
 
@@ -768,15 +767,16 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
 
     // Ask our data and results objects to import the given data
 
-    DataStore::DataStoreVariables dataStoreVariables = pDataStore->variables();
-    DataStore::DataStoreVariables importedVariables = mDataStore->addVariables(pData, dataStoreVariables.count());
+    DataStore::DataStore *importDataStore = pImportData->importDataStore();
+    double *resultsValues = pImportData->resultsValues();
+    DataStore::DataStoreVariables resultsVariables = pImportData->resultsVariables();
 
-    mData.insert(pData, importedVariables);
-    mDataDataStores.insert(pData, pDataStore);
+    mData.insert(resultsValues, resultsVariables);
+    mDataDataStores.insert(resultsValues, importDataStore);
 
     // Customise our imported data
 
-    for (auto parameter : runtime->dataParameters(pData)) {
+    for (auto parameter : runtime->dataParameters(resultsValues)) {
         DataStore::DataStoreVariable *variable = mData.value(parameter->data())[parameter->index()];
 
         variable->setType(parameter->type());
@@ -791,26 +791,28 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
     int runsCount = SimulationResults::runsCount();
 
     if (runsCount) {
-        DataStore::DataStoreVariable *voi = mDataStore->voi();
+        DataStore::DataStoreVariable *importVoi = importDataStore->voi();
+        DataStore::DataStoreVariable *resultsVoi = pImportData->resultsDataStore()->voi();
+        DataStore::DataStoreVariables importVariables = pImportData->importVariables();
 
         for (int i = 0; i < runsCount; ++i) {
             // Create a new run for each of our imported data
 
             quint64 capacity = size(i);
 
-            for (auto importedVariable : importedVariables)
+            for (auto importedVariable : resultsVariables)
                 importedVariable->addRun(capacity);
 
             // Add the value of our imported data to our new run
 
-            double *voiValues = voi->values(i);
+            double *voiValues = resultsVoi->values(i);
 
-            for (quint64 j = 0, jMax = voi->size(i); j < jMax; ++j) {
+            for (quint64 j = 0, jMax = resultsVoi->size(i); j < jMax; ++j) {
                 double realPoint = SimulationResults::realPoint(voiValues[j], i);
                 int k = -1;
 
-                for (auto importedVariable : importedVariables)
-                    importedVariable->addValue(realValue(realPoint, pDataStore->voi(), dataStoreVariables[++k]));
+                for (auto importedVariable : resultsVariables)
+                    importedVariable->addValue(realValue(realPoint, importVoi, importVariables[++k]));
             }
         }
 
@@ -820,8 +822,8 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
         quint64 lastPosition = size()-1;
         int i = -1;
 
-        for (auto importedVariable : importedVariables)
-            pData[++i] = importedVariable->value(lastPosition);
+        for (auto importedVariable : resultsVariables)
+            resultsValues[++i] = importedVariable->value(lastPosition);
     }
 }
 
@@ -1275,15 +1277,13 @@ void Simulation::importData(DataStore::DataStoreImportData *pImportData)
 
     // Ask our data and results objects to import the given data
 
-    DataStore::DataStore *importDataStore = pImportData->importDataStore();
-    double *resultsValues = pImportData->resultsValues();
-
-    mData->importData(importDataStore, resultsValues);
-    mResults->importData(importDataStore, resultsValues);
+    mData->importData(pImportData);
+    mResults->importData(pImportData);
 
     // Ask our runtime to import the given data
 
     QStringList hierarchy = pImportData->hierarchy();
+    double *resultsValues = pImportData->resultsValues();
 
     for (int i = 0, iMax = pImportData->nbOfVariables(); i < iMax; ++i)
         mRuntime->importData(QString("data_%1").arg(i+1), hierarchy, i, resultsValues);
