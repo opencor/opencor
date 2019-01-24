@@ -293,7 +293,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
         // Set our linear solver
 
-        SUNMatrix matrix = SUNMatrix();
+        SUNMatrix matrix = nullptr;
         SUNLinearSolver linearSolver;
 
         if (!linearSolverValue.compare(DenseLinearSolver)) {
