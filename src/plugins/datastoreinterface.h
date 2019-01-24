@@ -97,7 +97,7 @@ public:
     quint64 size(int pRun = -1) const;
 
     void addValue();
-    void addValue(double pValue);
+    void addValue(double pValue, int pRun = -1);
 
     double value(quint64 pPosition, int pRun = -1) const;
     double * values(int pRun = -1) const;
@@ -147,7 +147,8 @@ public:
                                  DataStore *pImportDataStore,
                                  DataStore *pResultsDataStore,
                                  int pNbOfVariables,
-                                 quint64 pNbOfDataPoints);
+                                 quint64 pNbOfDataPoints,
+                                 const QList<quint64> &pRunSizes);
     ~DataStoreImportData();
 
     bool valid() const;
@@ -165,6 +166,8 @@ public:
 
     DataStoreVariables importVariables() const;
     DataStoreVariables resultsVariables() const;
+
+    QList<quint64> runSizes() const;
 
     double progress();
 
@@ -184,6 +187,8 @@ private:
 
     DataStoreVariables mImportVariables;
     DataStoreVariables mResultsVariables;
+
+    QList<quint64> mRunSizes;
 
     quint64 mProgress;
     double mOneOverTotalProgress;

@@ -788,7 +788,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
     // Compute the values of our imported data, so we can plot it straightaway
     // along our other simulation results, if any
 
-    int runsCount = SimulationResults::runsCount();
+    int runsCount = pImportData->runSizes().count();
 
     if (runsCount) {
         DataStore::DataStoreVariable *importVoi = importDataStore->voi();
@@ -796,14 +796,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
         DataStore::DataStoreVariables importVariables = pImportData->importVariables();
 
         for (int i = 0; i < runsCount; ++i) {
-            // Create a new run for each of our imported data
-
-            quint64 capacity = size(i);
-
-            for (auto resultsVariable : resultsVariables)
-                resultsVariable->addRun(capacity);
-
-            // Add the value of our imported data to our new run
+            // Add the value of our imported data to our the corresponding run
 
             double *voiValues = resultsVoi->values(i);
 
@@ -812,7 +805,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
                 int k = -1;
 
                 for (auto resultsVariable : resultsVariables)
-                    resultsVariable->addValue(realValue(realPoint, importVoi, importVariables[++k]));
+                    resultsVariable->addValue(realValue(realPoint, importVoi, importVariables[++k]), i);
             }
         }
 
@@ -1296,6 +1289,15 @@ int Simulation::runsCount() const
     // Return the number of runs held by our results
 
     return mResults?mResults->runsCount():0;
+}
+
+//==============================================================================
+
+quint64 Simulation::runSize(int pRun) const
+{
+    // Return the size of the data store for the given run
+
+    return mResults?mResults->size(pRun):0;
 }
 
 //==============================================================================

@@ -4480,10 +4480,15 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
 
     QMap<QString, DataStore::DataStoreImportData *> dataStoreImportDatas = QMap<QString, DataStore::DataStoreImportData *>();
     QMap<QString, Problem> problems = QMap<QString, Problem>();
+    QList<quint64> runSizes = QList<quint64>();
+
+    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
+        runSizes << mSimulation->runSize(i);
 
     for (const auto &fileName : dataStoreInterfaces.keys()) {
         DataStore::DataStoreImportData *dataStoreImportData = dataStoreInterfaces.value(fileName)->getImportData(fileName, mSimulation->importData()->addDataStore(),
-                                                                                                                           mSimulation->results()->dataStore());
+                                                                                                                           mSimulation->results()->dataStore(),
+                                                                                                                           runSizes);
 
         if (dataStoreImportData) {
             // We have some import data, so now check whether it is actually

@@ -34,7 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     virtual DataStore::DataStoreImportData * getImportData(const QString &pFileName,
                                                            DataStore::DataStore *pImportDataStore,
-                                                           DataStore::DataStore *pResultsDataStore) const PURE;
+                                                           DataStore::DataStore *pResultsDataStore,
+                                                           const QList<quint64> &pRunSizes) const PURE;
     virtual DataStore::DataStoreExportData * getExportData(const QString &pFileName,
                                                            DataStore::DataStore *pDataStore,
                                                            const QMap<int, QIcon> &pIcons) const PURE;

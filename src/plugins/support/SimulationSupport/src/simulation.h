@@ -287,6 +287,7 @@ public:
     void importData(DataStore::DataStoreImportData *pImportData);
 
     int runsCount() const;
+    quint64 runSize(int pRun = -1) const;
 
     bool addRun();
 

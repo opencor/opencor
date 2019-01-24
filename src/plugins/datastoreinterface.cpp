@@ -301,13 +301,19 @@ void DataStoreVariable::addValue()
 
 //==============================================================================
 
-void DataStoreVariable::addValue(double pValue)
+void DataStoreVariable::addValue(double pValue, int pRun)
 {
     // Add the given value to our current (i.e. last) run
 
     Q_ASSERT(!mRuns.isEmpty());
 
-    mRuns.last()->addValue(pValue);
+    if (pRun == -1) {
+        mRuns.last()->addValue(pValue);
+    } else {
+        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
+
+        mRuns[pRun]->addValue(pValue);
+    }
 }
 
 //==============================================================================
@@ -365,7 +371,8 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
                                          DataStore *pImportDataStore,
                                          DataStore *pResultsDataStore,
                                          int pNbOfVariables,
-                                         quint64 pNbOfDataPoints) :
+                                         quint64 pNbOfDataPoints,
+                                         const QList<quint64> &pRunSizes) :
     DataStoreData(pFileName),
     mValid(true),
     mImportDataStore(pImportDataStore),
@@ -374,6 +381,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     mNbOfDataPoints(pNbOfDataPoints),
     mImportVariables(DataStoreVariables()),
     mResultsVariables(DataStoreVariables()),
+    mRunSizes(pRunSizes),
     mProgress(0),
     mOneOverTotalProgress(1.0/pNbOfDataPoints)
 {
@@ -405,6 +413,13 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
         if (!pImportDataStore->addRun(pNbOfDataPoints))
             throw std::exception();
+
+        if (!pRunSizes.isEmpty()) {
+            for (auto runSize : pRunSizes) {
+                for (auto resultsVariables : mResultsVariables)
+                    resultsVariables->addRun(runSize);
+            }
+        }
     } catch (...) {
         // Something went wrong, so release the memory that was directly or
         // indirectly allocated
@@ -416,6 +431,8 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
         pImportDataStore->removeVariables(mImportVariables);
         pResultsDataStore->removeVariables(mResultsVariables);
+//---ISSUE1845--- REMOVE EXTRA RUNS FROM BOTH OUR IMPORT AND RESULTS DATA
+//                STORES...
     }
 }
 
@@ -518,6 +535,15 @@ DataStoreVariables DataStoreImportData::resultsVariables() const
     // Return our results variables
 
     return mResultsVariables;
+}
+
+//==============================================================================
+
+QList<quint64> DataStoreImportData::runSizes() const
+{
+    // Return our run sizes
+
+    return mRunSizes;
 }
 
 //==============================================================================
