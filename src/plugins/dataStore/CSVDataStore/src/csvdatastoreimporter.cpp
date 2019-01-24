@@ -55,7 +55,7 @@ void CsvDataStoreImporterWorker::run()
         QTextStream in(&file);
         QString line = in.readLine();   // Header, which we ignore
         DataStore::DataStore *importDataStore = mImportData->importDataStore();
-        double *values = mImportData->values();
+        double *importValues = mImportData->importValues();
         int nbOfVariables = mImportData->nbOfVariables();
 
         for (quint64 i = 0, iMax = mImportData->nbOfDataPoints(); i < iMax; ++i) {
@@ -64,7 +64,7 @@ void CsvDataStoreImporterWorker::run()
             QStringList fields = line.split(",");
 
             for (int j = 0; j < nbOfVariables; ++j)
-                values[j] = fields[j+1].toDouble();
+                importValues[j] = fields[j+1].toDouble();
 
             importDataStore->addValues(fields[0].toDouble());
 

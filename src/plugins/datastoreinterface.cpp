@@ -393,10 +393,10 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     DataStoreVariables variables = DataStoreVariables();
 
     try {
-        mValues = new double[pNbOfVariables] {};
+        mImportValues = new double[pNbOfVariables] {};
 
         for (int i = 0; i < pNbOfVariables; ++i)
-            variables << pImportDataStore->addVariable(mValues+i);
+            variables << pImportDataStore->addVariable(mImportValues+i);
 
         if (!pImportDataStore->addRun(pNbOfDataPoints))
             throw std::exception();
@@ -404,9 +404,9 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
         // Something went wrong, so release the memory that was directly or
         // indirectly allocated
 
-        delete mValues;
+        delete mImportValues;
 
-        mValues = nullptr;
+        mImportValues = nullptr;
 
         pImportDataStore->removeVariables(variables);
     }
@@ -418,7 +418,7 @@ DataStoreImportData::~DataStoreImportData()
 {
     // Delete some internal objects
 
-    delete mValues;
+    delete mImportValues;
 }
 
 //==============================================================================
@@ -468,11 +468,11 @@ quint64 DataStoreImportData::nbOfDataPoints() const
 
 //==============================================================================
 
-double * DataStoreImportData::values() const
+double * DataStoreImportData::importValues() const
 {
-    // Return our values
+    // Return our import values
 
-    return mValues;
+    return mImportValues;
 }
 
 //==============================================================================

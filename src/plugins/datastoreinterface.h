@@ -158,7 +158,7 @@ public:
     int nbOfVariables() const;
     quint64 nbOfDataPoints() const;
 
-    double * values() const;
+    double * importValues() const;
 
     double progress();
 
@@ -171,7 +171,7 @@ private:
     int mNbOfVariables;
     quint64 mNbOfDataPoints;
 
-    double *mValues;
+    double *mImportValues;
 
     quint64 mProgress;
     double mOneOverTotalProgress;
