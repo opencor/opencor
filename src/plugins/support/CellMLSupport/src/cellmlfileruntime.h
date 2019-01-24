@@ -87,7 +87,7 @@ public:
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
                                         ParameterType pType, int pIndex,
-                                        double *pArray = nullptr);
+                                        double *pData = nullptr);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);
@@ -98,7 +98,7 @@ public:
     QStringList componentHierarchy() const;
     ParameterType type() const;
     int index() const;
-    double * array() const;
+    double * data() const;
 
     QString formattedName() const;
     QString formattedComponentHierarchy() const;
@@ -116,7 +116,7 @@ private:
     QStringList mComponentHierarchy;
     ParameterType mType;
     int mIndex;
-    double *mArray;
+    double *mData;
 };
 
 //==============================================================================
@@ -148,7 +148,7 @@ public:
 
     void importData(const QString &pName,
                     const QStringList &pComponentHierarchy, int pIndex,
-                    double *pArray);
+                    double *pData);
 
     int constantsCount() const;
     int statesCount() const;
@@ -163,7 +163,7 @@ public:
     CellmlFileIssues issues() const;
 
     CellmlFileRuntimeParameters parameters() const;
-    CellmlFileRuntimeParameters dataParameters(double *pArray = nullptr) const;
+    CellmlFileRuntimeParameters dataParameters(double *pData = nullptr) const;
 
     CellmlFileRuntimeParameter * voi() const;
 

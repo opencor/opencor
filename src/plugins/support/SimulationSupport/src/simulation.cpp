@@ -582,8 +582,8 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
-    for (auto array : mData.values())
-        delete[] array;
+    for (auto data : mData.values())
+        delete[] data;
 
     mData.clear();
 
@@ -708,8 +708,8 @@ void SimulationResults::createDataStore()
 
     // Reimport our data, if any
 
-    for (auto array : mDataDataStores.keys())
-        mData.insert(array, mDataStore->addVariables(array, mDataDataStores.value(array)->variables().count()));
+    for (auto data : mDataDataStores.keys())
+        mData.insert(data, mDataStore->addVariables(data, mDataDataStores.value(data)->variables().count()));
 }
 
 //==============================================================================
@@ -761,7 +761,7 @@ void SimulationResults::reset()
 //==============================================================================
 
 void SimulationResults::importData(DataStore::DataStore *pDataStore,
-                                   double *pArray)
+                                   double *pData)
 {
     // Make sure that we have a runtime and a VOI
 
@@ -773,15 +773,15 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
     // Ask our data and results objects to import the given data
 
     DataStore::DataStoreVariables dataStoreVariables = pDataStore->variables();
-    DataStore::DataStoreVariables importedVariables = mDataStore->addVariables(pArray, dataStoreVariables.count());
+    DataStore::DataStoreVariables importedVariables = mDataStore->addVariables(pData, dataStoreVariables.count());
 
-    mData.insert(pArray, importedVariables);
-    mDataDataStores.insert(pArray, pDataStore);
+    mData.insert(pData, importedVariables);
+    mDataDataStores.insert(pData, pDataStore);
 
     // Customise our imported data
 
-    for (auto parameter : runtime->dataParameters(pArray)) {
-        DataStore::DataStoreVariable *variable = mData.value(parameter->array())[parameter->index()];
+    for (auto parameter : runtime->dataParameters(pData)) {
+        DataStore::DataStoreVariable *variable = mData.value(parameter->data())[parameter->index()];
 
         variable->setType(parameter->type());
         variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
@@ -825,7 +825,7 @@ void SimulationResults::importData(DataStore::DataStore *pDataStore,
         int i = -1;
 
         for (auto importedVariable : importedVariables)
-            pArray[++i] = importedVariable->value(lastPosition);
+            pData[++i] = importedVariable->value(lastPosition);
     }
 }
 
@@ -933,13 +933,13 @@ void SimulationResults::addPoint(double pPoint)
 
     double realPoint = SimulationResults::realPoint(pPoint);
 
-    for (auto array : mData.keys()) {
-        DataStore::DataStore *dataStore = mDataDataStores.value(array);
+    for (auto data : mData.keys()) {
+        DataStore::DataStore *dataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
 
         for (int i = 0, iMax = variables.count(); i < iMax; ++i)
-            array[i] = realValue(realPoint, voi, variables[i]);
+            data[i] = realValue(realPoint, voi, variables[i]);
     }
 
     // Now that we are all set, we can add the data to our data store
@@ -1012,11 +1012,11 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 //==============================================================================
 
-double * SimulationResults::data(double *pArray, int pIndex, int pRun) const
+double * SimulationResults::data(double *pData, int pIndex, int pRun) const
 {
     // Return our algebraic data at the given index and for the given run
 
-    DataStore::DataStoreVariables data = mData.value(pArray);
+    DataStore::DataStoreVariables data = mData.value(pData);
 
     return data.isEmpty()?nullptr:data[pIndex]->values(pRun);
 }

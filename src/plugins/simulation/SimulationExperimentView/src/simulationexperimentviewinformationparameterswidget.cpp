@@ -279,7 +279,7 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
 
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::Data:
-                property->setDoubleValue(parameter->array()[parameter->index()], false);
+                property->setDoubleValue(parameter->data()[parameter->index()], false);
 
                 break;
             default:

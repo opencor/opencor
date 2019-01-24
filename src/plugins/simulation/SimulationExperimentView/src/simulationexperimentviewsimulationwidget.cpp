@@ -3905,7 +3905,7 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
         return pSimulation->results()->algebraic(pParameter->index(), pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Data:
-        return pSimulation->results()->data(pParameter->array(),
+        return pSimulation->results()->data(pParameter->data(),
                                             pParameter->index(), pRun);
     default:
         // Not a relevant type, so return null

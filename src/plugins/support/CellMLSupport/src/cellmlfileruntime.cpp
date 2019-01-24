@@ -65,14 +65,14 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        const QStringList &pComponentHierarchy,
                                                        ParameterType pType,
                                                        int pIndex,
-                                                       double *pArray) :
+                                                       double *pData) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),
     mComponentHierarchy(pComponentHierarchy),
     mType(pType),
     mIndex(pIndex),
-    mArray(pArray)
+    mData(pData)
 {
 }
 
@@ -154,11 +154,11 @@ int CellmlFileRuntimeParameter::index() const
 
 //==============================================================================
 
-double * CellmlFileRuntimeParameter::array() const
+double * CellmlFileRuntimeParameter::data() const
 {
     // Return our array
 
-    return mArray;
+    return mData;
 }
 
 //==============================================================================
@@ -603,12 +603,12 @@ bool CellmlFileRuntime::needNlaSolver() const
 
 void CellmlFileRuntime::importData(const QString &pName,
                                    const QStringList &pComponentHierarchy,
-                                   int pIndex, double *pArray)
+                                   int pIndex, double *pData)
 {
     mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
                                                   pComponentHierarchy,
                                                   CellmlFileRuntimeParameter::Data,
-                                                  pIndex, pArray);
+                                                  pIndex, pData);
 }
 
 //==============================================================================
@@ -703,7 +703,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::parameters() const
 
 //==============================================================================
 
-CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pArray) const
+CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pData) const
 {
     // Return the data parameter(s)
 
@@ -711,7 +711,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pArray) co
 
     for (auto parameter : mParameters) {
         if (   (parameter->type() == CellmlFileRuntimeParameter::Data)
-            && (!pArray || (parameter->array() == pArray))) {
+            && (!pData || (parameter->data() == pData))) {
             res << parameter;
         }
     }
