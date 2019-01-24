@@ -800,8 +800,8 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
 
             quint64 capacity = size(i);
 
-            for (auto importedVariable : resultsVariables)
-                importedVariable->addRun(capacity);
+            for (auto resultsVariable : resultsVariables)
+                resultsVariable->addRun(capacity);
 
             // Add the value of our imported data to our new run
 
@@ -811,8 +811,8 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
                 double realPoint = SimulationResults::realPoint(voiValues[j], i);
                 int k = -1;
 
-                for (auto importedVariable : resultsVariables)
-                    importedVariable->addValue(realValue(realPoint, importVoi, importVariables[++k]));
+                for (auto resultsVariable : resultsVariables)
+                    resultsVariable->addValue(realValue(realPoint, importVoi, importVariables[++k]));
             }
         }
 
@@ -822,8 +822,8 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
         quint64 lastPosition = size()-1;
         int i = -1;
 
-        for (auto importedVariable : resultsVariables)
-            resultsValues[++i] = importedVariable->value(lastPosition);
+        for (auto resultsVariable : resultsVariables)
+            resultsValues[++i] = resultsVariable->value(lastPosition);
     }
 }
 
