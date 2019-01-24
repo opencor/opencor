@@ -163,6 +163,9 @@ public:
     double * importValues() const;
     double * resultsValues() const;
 
+    DataStoreVariables importVariables() const;
+    DataStoreVariables resultsVariables() const;
+
     double progress();
 
 private:
@@ -178,6 +181,9 @@ private:
 
     double *mImportValues;
     double *mResultsValues;
+
+    DataStoreVariables mImportVariables;
+    DataStoreVariables mResultsVariables;
 
     quint64 mProgress;
     double mOneOverTotalProgress;
