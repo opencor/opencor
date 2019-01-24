@@ -190,7 +190,7 @@ void SimulationExperimentViewInformationParametersWidget::importData(DataStore::
 
     // Add the given data to our model
 
-    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->dataStore()));
+    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()));
 
     for (auto parameter : parameters) {
         Core::Property *property = addDoubleProperty(importSubComponent);

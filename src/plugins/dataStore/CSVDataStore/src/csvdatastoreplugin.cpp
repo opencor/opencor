@@ -107,7 +107,7 @@ DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString
 
         in.seek(0);
 
-        res = new DataStore::DataStoreImportData(pFileName, pDataStore,
+        res = new DataStore::DataStoreImportData(pFileName, pDataStore, nullptr,
                                                  in.readLine().trimmed().split(",").count()-1,
                                                  nbOfDataPoints);
 

@@ -54,7 +54,7 @@ void CsvDataStoreImporterWorker::run()
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         QTextStream in(&file);
         QString line = in.readLine();   // Header, which we ignore
-        DataStore::DataStore *dataStore = mImportData->dataStore();
+        DataStore::DataStore *importDataStore = mImportData->importDataStore();
         double *values = mImportData->values();
         int nbOfVariables = mImportData->nbOfVariables();
 
@@ -66,7 +66,7 @@ void CsvDataStoreImporterWorker::run()
             for (int j = 0; j < nbOfVariables; ++j)
                 values[j] = fields[j+1].toDouble();
 
-            dataStore->addValues(fields[0].toDouble());
+            importDataStore->addValues(fields[0].toDouble());
 
             emit progress(mImportData, mImportData->progress());
         }

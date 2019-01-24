@@ -345,9 +345,8 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-DataStoreData::DataStoreData(const QString &pFileName, DataStore *pDataStore) :
-    mFileName(pFileName),
-    mDataStore(pDataStore)
+DataStoreData::DataStoreData(const QString &pFileName) :
+    mFileName(pFileName)
 {
 }
 
@@ -362,20 +361,14 @@ QString DataStoreData::fileName() const
 
 //==============================================================================
 
-DataStore * DataStoreData::dataStore() const
-{
-    // Return our data store
-
-    return mDataStore;
-}
-
-//==============================================================================
-
 DataStoreImportData::DataStoreImportData(const QString &pFileName,
-                                         DataStore *pDataStore,
+                                         DataStore *pImportDataStore,
+                                         DataStore *pResultsDataStore,
                                          int pNbOfVariables,
                                          quint64 pNbOfDataPoints) :
-    DataStoreData(pFileName, pDataStore),
+    DataStoreData(pFileName),
+    mImportDataStore(pImportDataStore),
+    mResultsDataStore(pResultsDataStore),
     mNbOfVariables(pNbOfVariables),
     mNbOfDataPoints(pNbOfDataPoints),
     mProgress(0),
@@ -388,7 +381,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
     mHierarchy = QStringList() << "imports" << QString("import_%1").arg(++importNb);
 
     // Allocate space for our values, as well as add the required number of
-    // variables to our data store and a run that will contain all of our
+    // variables to our import data store and a run that will contain all of our
     // imported data
     // Note: we make several calls to DataStore::addVariable() rather than one
     //       big one to DataStore::addVariables() in case we can't allocate
@@ -403,9 +396,9 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
         mValues = new double[pNbOfVariables] {};
 
         for (int i = 0; i < pNbOfVariables; ++i)
-            variables << pDataStore->addVariable(mValues+i);
+            variables << pImportDataStore->addVariable(mValues+i);
 
-        if (!pDataStore->addRun(pNbOfDataPoints))
+        if (!pImportDataStore->addRun(pNbOfDataPoints))
             throw std::exception();
     } catch (...) {
         // Something went wrong, so release the memory that was directly or
@@ -415,7 +408,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
         mValues = nullptr;
 
-        pDataStore->removeVariables(variables);
+        pImportDataStore->removeVariables(variables);
     }
 }
 
@@ -426,6 +419,24 @@ DataStoreImportData::~DataStoreImportData()
     // Delete some internal objects
 
     delete mValues;
+}
+
+//==============================================================================
+
+DataStore * DataStoreImportData::importDataStore() const
+{
+    // Return our import data store
+
+    return mImportDataStore;
+}
+
+//==============================================================================
+
+DataStore * DataStoreImportData::resultsDataStore() const
+{
+    // Return our results data store
+
+    return mResultsDataStore;
 }
 
 //==============================================================================
@@ -477,9 +488,19 @@ double DataStoreImportData::progress()
 
 DataStoreExportData::DataStoreExportData(const QString &pFileName, DataStore *pDataStore,
                                          const DataStoreVariables &pVariables) :
-    DataStoreData(pFileName, pDataStore),
+    DataStoreData(pFileName),
+    mDataStore(pDataStore),
     mVariables(pVariables)
 {
+}
+
+//==============================================================================
+
+DataStore * DataStoreExportData::dataStore() const
+{
+    // Return our data store
+
+    return mDataStore;
 }
 
 //==============================================================================

@@ -128,14 +128,12 @@ class DataStoreData : public QObject
     Q_OBJECT
 
 public:
-    explicit DataStoreData(const QString &pFileName, DataStore *pDataStore);
+    explicit DataStoreData(const QString &pFileName);
 
     QString fileName() const;
-    DataStore * dataStore() const;
 
 protected:
     QString mFileName;
-    DataStore *mDataStore;
 };
 
 //==============================================================================
@@ -146,9 +144,14 @@ class DataStoreImportData : public DataStoreData
 
 public:
     explicit DataStoreImportData(const QString &pFileName,
-                                 DataStore *pDataStore, int pNbOfVariables,
+                                 DataStore *pImportDataStore,
+                                 DataStore *pResultsDataStore,
+                                 int pNbOfVariables,
                                  quint64 pNbOfDataPoints);
     ~DataStoreImportData();
+
+    DataStore * importDataStore() const;
+    DataStore * resultsDataStore() const;
 
     QStringList hierarchy() const;
 
@@ -160,6 +163,9 @@ public:
     double progress();
 
 private:
+    DataStore *mImportDataStore;
+    DataStore *mResultsDataStore;
+
     QStringList mHierarchy;
 
     int mNbOfVariables;
@@ -182,9 +188,13 @@ public:
                                  DataStore *pDataStore,
                                  const DataStoreVariables &pVariables);
 
+    DataStore * dataStore() const;
+
     DataStoreVariables variables() const;
 
 private:
+    DataStore *mDataStore;
+
     DataStoreVariables mVariables;
 };
 

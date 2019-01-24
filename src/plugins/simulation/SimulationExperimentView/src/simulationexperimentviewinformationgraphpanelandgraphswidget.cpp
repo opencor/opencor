@@ -305,7 +305,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::importData(Da
 
     // Populate our import sub-menu with the given data
 
-    for (auto parameter : mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->dataStore()))) {
+    for (auto parameter : mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()))) {
         QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
                                                             parameter->formattedName());
 

@@ -90,7 +90,7 @@ DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const
 
     try {
         bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(pFileName.toStdString());
-        res = new DataStore::DataStoreImportData(pFileName, pDataStore,
+        res = new DataStore::DataStoreImportData(pFileName, pDataStore, nullptr,
                                                  int(recording->get_signal_uris().size()),
                                                  recording->get_clock(recording->get_clock_uris().front())->read().size());
 
