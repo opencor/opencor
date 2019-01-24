@@ -1285,7 +1285,7 @@ void Simulation::importData(DataStore::DataStoreImportData *pImportData)
 
     QStringList hierarchy = pImportData->hierarchy();
 
-    for (int i = 0, iMax = importDataStore->variables().count(); i < iMax; ++i)
+    for (int i = 0, iMax = importDataStore->nbOfVariables(); i < iMax; ++i)
         mRuntime->importData(QString("data_%1").arg(i+1), hierarchy, i, resultsValues);
 }
 
