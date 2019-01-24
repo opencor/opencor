@@ -159,6 +159,7 @@ public:
     quint64 nbOfDataPoints() const;
 
     double * importValues() const;
+    double * resultsValues() const;
 
     double progress();
 
@@ -172,6 +173,7 @@ private:
     quint64 mNbOfDataPoints;
 
     double *mImportValues;
+    double *mResultsValues;
 
     quint64 mProgress;
     double mOneOverTotalProgress;

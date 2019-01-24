@@ -146,15 +146,11 @@ double * SimulationData::data(DataStore::DataStore *pDataStore) const
 
 //==============================================================================
 
-double * SimulationData::importData(DataStore::DataStore *pDataStore)
+void SimulationData::importData(DataStore::DataStore *pDataStore, double *pData)
 {
-    // Associate an array of doubles to the given data store and return it
+    // Associate an array of doubles to the given data store
 
-    double *data = new double[pDataStore->variables().count()] {};
-
-    mData.insert(pDataStore, data);
-
-    return data;
+    mData.insert(pDataStore, pData);
 }
 
 //==============================================================================
@@ -1280,16 +1276,17 @@ void Simulation::importData(DataStore::DataStoreImportData *pImportData)
     // Ask our data and results objects to import the given data
 
     DataStore::DataStore *importDataStore = pImportData->importDataStore();
-    double *array = mData->importData(importDataStore);
+    double *resultsValues = pImportData->resultsValues();
 
-    mResults->importData(importDataStore, array);
+    mData->importData(importDataStore, resultsValues);
+    mResults->importData(importDataStore, resultsValues);
 
     // Ask our runtime to import the given data
 
     QStringList hierarchy = pImportData->hierarchy();
 
     for (int i = 0, iMax = importDataStore->variables().count(); i < iMax; ++i)
-        mRuntime->importData(QString("data_%1").arg(i+1), hierarchy, i, array);
+        mRuntime->importData(QString("data_%1").arg(i+1), hierarchy, i, resultsValues);
 }
 
 //==============================================================================

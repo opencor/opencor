@@ -394,6 +394,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
     try {
         mImportValues = new double[pNbOfVariables] {};
+        mResultsValues = new double[pNbOfVariables] {};
 
         for (int i = 0; i < pNbOfVariables; ++i)
             variables << pImportDataStore->addVariable(mImportValues+i);
@@ -405,8 +406,10 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
         // indirectly allocated
 
         delete mImportValues;
+        delete mResultsValues;
 
         mImportValues = nullptr;
+        mResultsValues = nullptr;
 
         pImportDataStore->removeVariables(variables);
     }
@@ -417,6 +420,8 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 DataStoreImportData::~DataStoreImportData()
 {
     // Delete some internal objects
+    // Note: we must not delete mResultsValues since it is to be deleted by
+    //       whoever used us (e.g. a Simulation object)...
 
     delete mImportValues;
 }
@@ -473,6 +478,15 @@ double * DataStoreImportData::importValues() const
     // Return our import values
 
     return mImportValues;
+}
+
+//==============================================================================
+
+double * DataStoreImportData::resultsValues() const
+{
+    // Return our results values
+
+    return mResultsValues;
 }
 
 //==============================================================================

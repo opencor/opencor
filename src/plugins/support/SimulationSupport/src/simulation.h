@@ -92,7 +92,7 @@ public:
     double * algebraic() const;
     double * data(DataStore::DataStore *pDataStore) const;
 
-    double * importData(DataStore::DataStore *pDataStore);
+    void importData(DataStore::DataStore *pDataStore, double *pData);
 
     const quint64 * delay() const;
     void setDelay(quint64 pDelay);
