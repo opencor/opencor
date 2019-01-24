@@ -82,7 +82,8 @@ QString BioSignalMLDataStorePlugin::dataStoreName() const
 //==============================================================================
 
 DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const QString &pFileName,
-                                                                           DataStore::DataStore *pDataStore) const
+                                                                           DataStore::DataStore *pImportDataStore,
+                                                                           DataStore::DataStore *pResultsDataStore) const
 {
     // Determine the number of variables in our BioSignalML file
 
@@ -90,7 +91,8 @@ DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const
 
     try {
         bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(pFileName.toStdString());
-        res = new DataStore::DataStoreImportData(pFileName, pDataStore, nullptr,
+        res = new DataStore::DataStoreImportData(pFileName, pImportDataStore,
+                                                 pResultsDataStore,
                                                  int(recording->get_signal_uris().size()),
                                                  recording->get_clock(recording->get_clock_uris().front())->read().size());
 

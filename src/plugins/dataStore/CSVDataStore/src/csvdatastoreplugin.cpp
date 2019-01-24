@@ -80,7 +80,8 @@ QString CSVDataStorePlugin::dataStoreName() const
 //==============================================================================
 
 DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString &pFileName,
-                                                                   DataStore::DataStore *pDataStore) const
+                                                                   DataStore::DataStore *pImportDataStore,
+                                                                   DataStore::DataStore *pResultsDataStore) const
 {
     // Determine the number of variables in our CSV file
 
@@ -107,7 +108,8 @@ DataStore::DataStoreImportData * CSVDataStorePlugin::getImportData(const QString
 
         in.seek(0);
 
-        res = new DataStore::DataStoreImportData(pFileName, pDataStore, nullptr,
+        res = new DataStore::DataStoreImportData(pFileName, pImportDataStore,
+                                                 pResultsDataStore,
                                                  in.readLine().trimmed().split(",").count()-1,
                                                  nbOfDataPoints);
 
