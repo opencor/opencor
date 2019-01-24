@@ -367,6 +367,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
                                          int pNbOfVariables,
                                          quint64 pNbOfDataPoints) :
     DataStoreData(pFileName),
+    mValid(true),
     mImportDataStore(pImportDataStore),
     mResultsDataStore(pResultsDataStore),
     mNbOfVariables(pNbOfVariables),
@@ -405,6 +406,8 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
         // Something went wrong, so release the memory that was directly or
         // indirectly allocated
 
+        mValid = false;
+
         delete mImportValues;
         delete mResultsValues;
 
@@ -424,6 +427,15 @@ DataStoreImportData::~DataStoreImportData()
     //       whoever used us (e.g. a Simulation object)...
 
     delete mImportValues;
+}
+
+//==============================================================================
+
+bool DataStoreImportData::valid() const
+{
+    // Return whether we are valid
+
+    return mValid;
 }
 
 //==============================================================================

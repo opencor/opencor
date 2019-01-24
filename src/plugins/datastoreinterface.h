@@ -150,6 +150,8 @@ public:
                                  quint64 pNbOfDataPoints);
     ~DataStoreImportData();
 
+    bool valid() const;
+
     DataStore * importDataStore() const;
     DataStore * resultsDataStore() const;
 
@@ -164,6 +166,8 @@ public:
     double progress();
 
 private:
+    bool mValid;
+
     DataStore *mImportDataStore;
     DataStore *mResultsDataStore;
 

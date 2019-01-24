@@ -4486,10 +4486,10 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
                                                                                                                            mSimulation->results()->dataStore());
 
         if (dataStoreImportData) {
-            // We have some import data, so now check whether we were able to
-            // allocate all the memory we need
+            // We have some import data, so now check whether it is actually
+            // valid
 
-            if (dataStoreImportData->importValues()) {
+            if (dataStoreImportData->valid()) {
                 dataStoreImportDatas.insert(fileName, dataStoreImportData);
 
                 mDataImportProgresses.insert(dataStoreImportData, 0.0);
