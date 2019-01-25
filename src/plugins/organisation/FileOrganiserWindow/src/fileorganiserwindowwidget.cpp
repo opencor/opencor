@@ -170,7 +170,7 @@ QByteArray FileOrganiserWindowModel::encodeData(const QModelIndexList &pIndexes)
 
         // Hierarchy to reach the various items
 
-        foreach (const QModelIndex &index, pIndexes) {
+        for (const auto &index : pIndexes) {
             // Hierarchy to reach the current item
 
             encodeHierarchyData(index, stream);
@@ -256,7 +256,7 @@ QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) 
     //       on to extract the name of the vavarious files the MIME data
     //       contains
 
-    foreach (const QModelIndex &index, pIndexes) {
+    for (const auto &index : pIndexes) {
         QString crtFilePath = filePath(index);
 
         if (!crtFilePath.isEmpty())
@@ -357,30 +357,21 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
     // Recursively retrieve the item settings
 
     static int crtItemIndex = -1;
-    QStringList itemInfo;
-
-    itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
+    QStringList itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
 
     if (!itemInfo.isEmpty()) {
-        QString textOrPath = itemInfo[0];
-        int parentItemIndex = itemInfo[1].toInt();
         int childItemsCount = itemInfo[2].toInt();
-        bool expanded = itemInfo[3].toInt();
 
         // Create the item, in case we are not dealing with the root folder item
 
         QStandardItem *childParentItem = nullptr;
 
-        if (parentItemIndex == -1) {
-            // We are dealing with the root folder item, so don't do anything
-            // except for keeping track of it for when retrieving its child
-            // items, if any
-
-            childParentItem = mModel->invisibleRootItem();
-        } else {
+        if (pParentItem) {
             // This is not the root folder item, so we can create the item which
             // is either a folder or a file, depending on its number of child
             // items
+
+            QString textOrPath = itemInfo[0];
 
             if (childItemsCount >= 0) {
                 // We are dealing with a folder item
@@ -388,12 +379,11 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
                 FileOrganiserWindowItem *folderItem = new FileOrganiserWindowItem(QFileIconProvider().icon(QFileIconProvider::Folder),
                                                                                   textOrPath, true);
 
-                if (pParentItem)
-                    pParentItem->appendRow(folderItem);
+                pParentItem->appendRow(folderItem);
 
                 // Expand the folder item, if necessary
 
-                if (expanded)
+                if (itemInfo[3].toInt())
                     setExpanded(folderItem->index(), true);
 
                 // The folder item is to be the parent of any of its child item
@@ -403,11 +393,8 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
                 // We are dealing with a file item
 
                 if (QFileInfo(textOrPath).exists()) {
-                    FileOrganiserWindowItem *fileItem = new FileOrganiserWindowItem(QFileIconProvider().icon(QFileIconProvider::File),
-                                                                                    textOrPath);
-
-                    if (pParentItem)
-                        pParentItem->appendRow(fileItem);
+                    pParentItem->appendRow(new FileOrganiserWindowItem(QFileIconProvider().icon(QFileIconProvider::File),
+                                                                       textOrPath));
 
                     // Add the file to our file manager
                     // Note: it doesn't matter whether or not the file is
@@ -417,6 +404,12 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
                     mFileManager->manage(textOrPath);
                 }
             }
+        } else {
+            // We are dealing with the root folder item, so don't do anything
+            // except for keeping track of it for when retrieving its child
+            // items, if any
+
+            childParentItem = mModel->invisibleRootItem();
         }
 
         // Retrieve any child item

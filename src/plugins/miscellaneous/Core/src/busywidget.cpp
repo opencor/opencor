@@ -75,7 +75,7 @@ BusyWidget::BusyWidget(QWidget *pParent, double pProgress) :
 
     show();
 
-    if (qIsNull(pProgress+1.0))
+    if (qFuzzyCompare(pProgress, -1.0))
         mTimer->start();
 }
 
@@ -160,7 +160,7 @@ void BusyWidget::setBackgroundRoundness(double pBackgroundRoundness)
 {
     // Set our background roundness
 
-    if (!qIsNull(pBackgroundRoundness-mBackgroundRoundness)) {
+    if (!qFuzzyCompare(pBackgroundRoundness, mBackgroundRoundness)) {
         mBackgroundRoundness = pBackgroundRoundness;
 
         update();
@@ -249,7 +249,7 @@ void BusyWidget::setRoundness(double pRoundness)
 {
     // Set the roundness of our lines
 
-    if (!qIsNull(pRoundness-mRoundness)) {
+    if (!qFuzzyCompare(pRoundness, mRoundness)) {
         mRoundness = pRoundness;
 
         update();
@@ -293,7 +293,7 @@ void BusyWidget::setOpacity(double pOpacity)
 {
     // Set the opacity of our lines
 
-    if (!qIsNull(pOpacity-mOpacity)) {
+    if (!qFuzzyCompare(pOpacity, mOpacity)) {
         mOpacity = pOpacity;
 
         update();
@@ -337,10 +337,10 @@ void BusyWidget::setProgress(double pProgress)
 {
     // Set our progress and enable/disable our timer, depending on the case
 
-    if (!qIsNull(pProgress-mProgress)) {
+    if (!qFuzzyCompare(pProgress, mProgress)) {
         mProgress = pProgress;
 
-        if (qIsNull(pProgress+1.0)) {
+        if (qFuzzyCompare(pProgress, -1.0)) {
             mMainLine = 0;
 
             mTimer->start();
@@ -412,7 +412,7 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
     // Draw ourselves and accept the event
 
-    if (qIsNull(mProgress+1.0)) {
+    if (qFuzzyCompare(mProgress, -1.0)) {
         double lineCornerRadius = mRoundness*(mThickness >> 1);
 
         for (int i = 0; i < mCount; ++i) {
@@ -442,7 +442,7 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
         painter.setBrush(mForegroundColor);
 
-        if (qIsNull(mProgress-1.0)) {
+        if (qFuzzyCompare(mProgress, 1.0)) {
             painter.drawEllipse(QPointF(0.0, 0.0), 0.5*size, 0.5*size);
         } else {
             painter.drawPie(QRectF(-0.5*size, -0.5*size, size, size),

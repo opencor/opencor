@@ -87,17 +87,8 @@ void RawSedmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    foreach (SEDMLEditingView::SedmlEditingViewWidget *editingWidget, mEditingWidgets)
+    for (auto editingWidget : mEditingWidgets)
         editingWidget->retranslateUi();
-}
-
-//==============================================================================
-
-bool RawSedmlViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditingWidgets.contains(pFileName);
 }
 
 //==============================================================================
@@ -220,7 +211,7 @@ void RawSedmlViewWidget::fileReloaded(const QString &pFileName)
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName)) {
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
@@ -325,7 +316,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
         // Add whatever issue there may be to our list and select the first one
         // of them
 
-        foreach (const SEDMLSupport::SedmlFileIssue &sedmlFileIssue, sedmlFileIssues) {
+        for (const auto &sedmlFileIssue : sedmlFileIssues) {
             if (   !pOnlyErrors
                 || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
                 EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Unknown;

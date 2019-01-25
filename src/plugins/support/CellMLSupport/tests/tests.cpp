@@ -62,7 +62,7 @@ void Tests::runtimeTest(const QString &pFileName, const QString &pCellmlVersion,
     QStringList modelParameters = QStringList();
     OpenCOR::CellMLSupport::CellmlFileRuntimeParameters parameters = runtime->parameters();
 
-    foreach (OpenCOR::CellMLSupport::CellmlFileRuntimeParameter *parameter, parameters) {
+    for (auto parameter : parameters) {
         modelParameters << QString("%1 (%2)").arg(parameter->fullyFormattedName(),
                                                   parameter->formattedUnit(runtime->voi()->unit()));
     }

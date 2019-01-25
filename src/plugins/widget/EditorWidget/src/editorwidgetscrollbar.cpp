@@ -82,7 +82,7 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
 
     painter.setPen(HighlightPen);
 
-    foreach (int highlightedLine, mOwner->highlightedLines()) {
+    for (auto highlightedLine : mOwner->highlightedLines()) {
         cursorPosition = int(arrowButtonHeight+highlightedLine*positionScaling);
 
         if (!cursorPositions.contains(cursorPosition)) {

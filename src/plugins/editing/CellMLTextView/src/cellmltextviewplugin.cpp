@@ -21,12 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Text view plugin
 //==============================================================================
 
-#include "cellmleditingviewwidget.h"
-#include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewplugin.h"
 #include "cellmltextviewwidget.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 
@@ -489,7 +486,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
             if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";
 
-                foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
+                for (const auto &message : parser.messages()) {
                     if (message.type() == CellmlTextViewParserMessage::Error) {
                         errorMessage += QString("\n [%1:%2] %3").arg(message.line())
                                                                 .arg(message.column())

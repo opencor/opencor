@@ -21,12 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Compiler tests
 //==============================================================================
 
-#ifdef _WIN32
-    #define _SCL_SECURE_NO_WARNINGS
-#endif
-
-//==============================================================================
-
 #include "compilerengine.h"
 #include "compilermath.h"
 #include "tests.h"
@@ -254,7 +248,7 @@ void Tests::notOperatorTests()
              1.0);
     QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(mA),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA)),
+    QCOMPARE(reinterpret_cast<double (*)(double)>(mCompilerEngine->getFunction("function"))(qFuzzyIsNull(mA)),
              1.0);
 }
 
@@ -277,11 +271,11 @@ void Tests::orOperatorTests()
              0.0);
     QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qFuzzyIsNull(mA), mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qFuzzyIsNull(mB)),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qFuzzyIsNull(mA), qFuzzyIsNull(mB)),
              0.0);
 }
 
@@ -304,11 +298,11 @@ void Tests::xorOperatorTests()
              0.0);
     QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qFuzzyIsNull(mA), mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qFuzzyIsNull(mB)),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qFuzzyIsNull(mA), qFuzzyIsNull(mB)),
              0.0);
 }
 
@@ -331,11 +325,11 @@ void Tests::andOperatorTests()
              0.0);
     QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, mB),
              1.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), mB),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qFuzzyIsNull(mA), mB),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(mA, qFuzzyIsNull(mB)),
              0.0);
-    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qIsNull(mA), qIsNull(mB)),
+    QCOMPARE(reinterpret_cast<double (*)(double, double)>(mCompilerEngine->getFunction("function"))(qFuzzyIsNull(mA), qFuzzyIsNull(mB)),
              0.0);
 }
 

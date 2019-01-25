@@ -467,7 +467,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
         // Go through the RDF triples and make sure that their type is
         // consistent with that of the first RDF triple
 
-        foreach (CellmlFileRdfTriple *rdfTriple, *this) {
+        for (auto rdfTriple : *this) {
             if (   rdfTriple->subject()->asString().compare(subject)
                 || (rdfTriple->type() != res)) {
                 // The subject and/or the type of the current RDF triple is
@@ -545,7 +545,7 @@ void CellmlFileRdfTriples::recursiveAssociatedWith(CellmlFileRdfTriples &pRdfTri
 
     QString rdfTripleObject = pRdfTriple->object()->asString();
 
-    foreach (CellmlFileRdfTriple *rdfTriple, *this) {
+    for (auto rdfTriple : *this) {
         if (!rdfTriple->subject()->asString().compare(rdfTripleObject))
             recursiveAssociatedWith(pRdfTriples, rdfTriple);
     }
@@ -561,7 +561,7 @@ CellmlFileRdfTriples CellmlFileRdfTriples::associatedWith(iface::cellml_api::Cel
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
     QString cmetaId = QString::fromStdWString(pElement->cmetaId());
 
-    foreach (CellmlFileRdfTriple *rdfTriple, *this) {
+    for (auto rdfTriple : *this) {
         // Retrieve the RDF triple's subject so we can determine whether it's
         // from the group of RDF triples in which we are interested
 
@@ -617,7 +617,7 @@ bool CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
     // Remove all the given RDF triples
 
     if (pRdfTriples.count()) {
-        foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples) {
+        for (auto rdfTriple : pRdfTriples) {
             // Remove the RDF triple
 
             removeOne(rdfTriple);
@@ -682,7 +682,7 @@ QStringList CellmlFileRdfTriples::asStringList() const
 
     QStringList res = QStringList();
 
-    foreach (CellmlFileRdfTriple *rdfTriple, *this) {
+    for (auto rdfTriple : *this) {
         res << QString("%1|%2|%3").arg(rdfTriple->subject()->asString(),
                                        rdfTriple->predicate()->asString(),
                                        rdfTriple->object()->asString());

@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef SEDMLSupport_PLUGIN
-        #define SEDMLSUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define SEDMLSUPPORT_EXPORT __declspec(dllimport)
-    #endif
+#ifdef SEDMLSupport_PLUGIN
+    #define SEDMLSUPPORT_EXPORT Q_DECL_EXPORT
 #else
-    #define SEDMLSUPPORT_EXPORT
+    #define SEDMLSUPPORT_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

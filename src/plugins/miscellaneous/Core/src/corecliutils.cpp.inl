@@ -202,7 +202,7 @@ QStringList canonicalFileNames(const QStringList &pFileNames)
 
     QStringList res = QStringList();
 
-    foreach (const QString &fileName, pFileNames)
+    for (const auto &fileName : pFileNames)
         res << canonicalFileName(fileName);
 
     return res;
@@ -320,12 +320,12 @@ bool internetConnectionAvailable()
     // all of our network interfaces and checking whether one of them is both
     // active and is not a loopback, and has at least one IPv4 IP address
 
-    foreach (const QNetworkInterface &networkInterface, QNetworkInterface::allInterfaces()) {
+    for (const auto &networkInterface : QNetworkInterface::allInterfaces()) {
         QNetworkInterface::InterfaceFlags interfaceFlags = networkInterface.flags();
 
         if (    interfaceFlags.testFlag(QNetworkInterface::IsUp)
             && !interfaceFlags.testFlag(QNetworkInterface::IsLoopBack)) {
-            foreach (const QNetworkAddressEntry &addressEntry, networkInterface.addressEntries()) {
+            for (const auto &addressEntry : networkInterface.addressEntries()) {
                 QAbstractSocket::NetworkLayerProtocol protocol = addressEntry.ip().protocol();
 
                 if (   (protocol == QAbstractSocket::IPv4Protocol)

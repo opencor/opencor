@@ -962,6 +962,8 @@ macro(check_files DIRNAME FILENAMES SHA1_VALUES)
     # By default, everything is OK
 
     set(CHECK_FILES_OK TRUE)
+    set(INVALID_SHA1_FILES)
+    set(MISSING_FILES)
 
     # See our parameters as lists
 
@@ -997,11 +999,15 @@ macro(check_files DIRNAME FILENAMES SHA1_VALUES)
                     file(REMOVE ${REAL_FILENAME})
 
                     set(CHECK_FILES_OK FALSE)
+
+                    list(APPEND INVALID_SHA1_FILES ${FILENAME})
                 endif()
-            elseif(CHECK_FILES_OK)
+            else()
                 # The file is missing, so fail the checks
 
                 set(CHECK_FILES_OK FALSE)
+
+                list(APPEND MISSING_FILES ${FILENAME})
             endif()
         endforeach()
     endif()
@@ -1015,6 +1021,8 @@ macro(check_file DIRNAME FILENAME SHA1_VALUE)
     check_files(${DIRNAME} ${FILENAME} ${SHA1_VALUE})
 
     set(CHECK_FILE_OK ${CHECK_FILES_OK})
+    set(INVALID_SHA1_FILE ${INVALID_SHA1_FILES})
+    set(MISSING_FILE ${MISSING_FILES})
 endmacro()
 
 #===============================================================================
@@ -1089,7 +1097,9 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             set(RELEASE_TAG ${ARG_RELEASE_TAG})
         endif()
 
-        file(DOWNLOAD "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}" ${FULL_COMPRESSED_FILENAME}
+        set (PACKAGE_URL "https://github.com/opencor/${PACKAGE_REPOSITORY}/releases/download/${RELEASE_TAG}/${COMPRESSED_FILENAME}")
+
+        file(DOWNLOAD ${PACKAGE_URL} ${FULL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the compressed version of the package, should we have
@@ -1101,7 +1111,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             check_file(${REAL_DIRNAME} ${COMPRESSED_FILENAME} ${SHA1_VALUE})
 
             if(NOT CHECK_FILE_OK)
-                message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package does not have the expected SHA-1 value...")
+                message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') does not have the expected SHA-1 value...")
             endif()
 
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${FULL_COMPRESSED_FILENAME}
@@ -1114,7 +1124,7 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             # Note: this is in case we had an HTTP error of sorts, in which case
             #       we would end up with an empty file...
 
-            message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved...")
+            message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved from '${PACKAGE_URL}'...")
         endif()
 
         # Check that the package's files, if we managed to uncompress the
@@ -1126,10 +1136,20 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             check_files(${REAL_DIRNAME} "${ARG_SHA1_FILES}" "${ARG_SHA1_VALUES}")
 
             if(NOT CHECK_FILES_OK)
-                message(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package do not have the expected SHA-1 values...")
+                message("The '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') is invalid:")
+
+                foreach(SHA1_FILE ${ARG_SHA1_FILES})
+                    if("${SHA1_FILE}" IN_LIST INVALID_SHA1_FILES)
+                        message(" - '${SHA1_FILE}' does not have the expected SHA-1 value...")
+                    elseif("${SHA1_FILE}" IN_LIST MISSING_FILES)
+                        message(" - '${SHA1_FILE}' is missing...")
+                    endif()
+                endforeach()
+
+                message(FATAL_ERROR)
             endif()
         else()
-            message(FATAL_ERROR "The files in the '${PACKAGE_NAME}' package could not be uncompressed...")
+            message(FATAL_ERROR "The '${PACKAGE_NAME}' package (downloaded from '${PACKAGE_URL}') could not be uncompressed...")
         endif()
     endif()
 endmacro()

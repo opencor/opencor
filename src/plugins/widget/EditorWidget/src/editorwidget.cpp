@@ -645,7 +645,7 @@ int EditorWidget::styleAt(int pPosition) const
     // Return the style used at the given position
 
     return int(mEditor->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
-                                      mEditor->text().left(pPosition).toUtf8().length()));
+                                      pPosition));
 }
 
 //==============================================================================

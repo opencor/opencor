@@ -1,6 +1,30 @@
 var jsonData = { "versions": [
                    { "anchor": "latest", "description": "Latest snapshot", "day": 11, "month": 12, "year": 2018,
                      "categories": [
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Annotation view",
+                             "entries": [
+                               { "type": "fixed", "description": "Crash when a file has been rendered invalid." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "improved", "description": "Unicode support." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Simulation Experiment view",
+                             "entries": [
+                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
+                               { "type": "improved", "description": "Plotting of simulations." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Support",
                          "entries": [
                            { "type": "subCategory", "name": "COMBINE support",

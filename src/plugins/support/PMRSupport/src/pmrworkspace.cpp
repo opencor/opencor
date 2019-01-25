@@ -562,7 +562,7 @@ PmrWorkspaceFileNode * PmrWorkspace::parentFileNode(const QString &pPath,
         QString topFolder = pathComponents.first();
         PmrWorkspaceFileNode *newParentFileNode = nullptr;
 
-        foreach (PmrWorkspaceFileNode *childFileNode, realParentFileNode->children()) {
+        for (auto childFileNode : realParentFileNode->children()) {
             if (!topFolder.compare(childFileNode->name())) {
                 newParentFileNode = childFileNode;
 
@@ -642,7 +642,7 @@ void PmrWorkspace::refreshStatus()
         PmrWorkspaceFileNodes newFileNodes = mRepositoryStatusMap.values();
         PmrWorkspaceFileNodes oldFileNodesToDelete = PmrWorkspaceFileNodes();
 
-        foreach (PmrWorkspaceFileNode *oldFileNode, oldFileNodes) {
+        for (auto oldFileNode : oldFileNodes) {
             if (!newFileNodes.contains(oldFileNode))
                 oldFileNodesToDelete << oldFileNode;
         }
@@ -652,7 +652,7 @@ void PmrWorkspace::refreshStatus()
     } else if (mRootFileNode->hasChildren()) {
         // We are not open, so clear our root file node
 
-        foreach (PmrWorkspaceFileNode *child, mRootFileNode->children())
+        for (auto child : mRootFileNode->children())
             delete child;
     }
 }
@@ -668,7 +668,7 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
         return;
 
     if (pFileNode->hasChildren()) {
-        foreach (PmrWorkspaceFileNode *child, pFileNode->children())
+        for (auto child : pFileNode->children())
             deleteFileNodes(child, pFileNodes);
 
         // Remove the file node or let people know that we have been uncloned,
@@ -1275,7 +1275,7 @@ bool PmrWorkspace::merge()
             else
                 errorMessage += "\n\n"+tr("The following files have conflicts:");
 
-            foreach (const QString &conflictedFile, mConflictedFiles) {
+            for (const auto &conflictedFile : mConflictedFiles) {
                 ++counter;
 
                 if (counter == nbOfConflictedFiles) {

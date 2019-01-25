@@ -189,7 +189,7 @@ void PmrWebServiceManager::closeBrowser()
     // Close our temporary web browser, but only if the current page has
     // finished loading otherwise try again in a bit
 
-    if (qIsNull(mWebViewer->progressBarWidget()->value()))
+    if (qFuzzyIsNull(mWebViewer->progressBarWidget()->value()))
         mWebViewerDialog->close();
     else
         QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);

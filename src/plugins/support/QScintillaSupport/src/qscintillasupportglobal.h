@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef QScintillaSupport_PLUGIN
-        #define QSCINTILLASUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define QSCINTILLASUPPORT_EXPORT __declspec(dllimport)
-    #endif
+#ifdef QScintillaSupport_PLUGIN
+    #define QSCINTILLASUPPORT_EXPORT Q_DECL_EXPORT
 #else
-    #define QSCINTILLASUPPORT_EXPORT
+    #define QSCINTILLASUPPORT_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

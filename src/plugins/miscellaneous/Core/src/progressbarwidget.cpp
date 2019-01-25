@@ -82,7 +82,7 @@ void ProgressBarWidget::setValue(double pValue)
 
     double value = qMin(1.0, qMax(pValue, 0.0));
 
-    if (!qIsNull(value-mValue)) {
+    if (!qFuzzyCompare(value, mValue)) {
         bool needUpdate = int(mValue*width()) != int(value*width());
 
         mValue = value;

@@ -102,7 +102,8 @@ void TabBarStyle::drawControl(ControlElement pElement,
 
             drawItemText(pPainter, tabRect, alignment, tab->palette,
                          tab->state & State_Enabled, tab->text,
-                         ((tab->state & State_Selected) && pWidget->isActiveWindow())?
+                         (   (tab->state & State_Selected)
+                          && pWidget && pWidget->isActiveWindow())?
                              QPalette::BrightText:
                              QPalette::WindowText);
 
@@ -253,10 +254,12 @@ TabBarWidget::TabBarWidget(QWidget *pParent) :
     mOldIndex(-1)
 {
     // Customise our style, but only if we are on macOS
-    // Note: indeed, between Qt 5.6.x LTS and Qt 5.9.x LTS, the styling of a
-    //       QTabBar has changed quite a bit and is now not working properly,
-    //       hence we fix things by having 'our' own style (see
-    //       https://bugreports.qt.io/browse/QTBUG-61742)...
+    // Note #1: indeed, between Qt 5.6.x LTS and Qt 5.9.x LTS, the styling of a
+    //          QTabBar has changed quite a bit and is now not working properly,
+    //          hence we fix things by having 'our' own style (see
+    //          https://bugreports.qt.io/browse/QTBUG-61742)...
+    // Note #2: this eventually got "fixed", but it still doesn't look right, so
+    //          keep using our customised style...
 
 #ifdef Q_OS_MAC
     setStyle(new TabBarStyle());

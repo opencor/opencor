@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef WebViewerWidget_PLUGIN
-        #define WEBVIEWERWIDGET_EXPORT __declspec(dllexport)
-    #else
-        #define WEBVIEWERWIDGET_EXPORT __declspec(dllimport)
-    #endif
+#ifdef WebViewerWidget_PLUGIN
+    #define WEBVIEWERWIDGET_EXPORT Q_DECL_EXPORT
 #else
-    #define WEBVIEWERWIDGET_EXPORT
+    #define WEBVIEWERWIDGET_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

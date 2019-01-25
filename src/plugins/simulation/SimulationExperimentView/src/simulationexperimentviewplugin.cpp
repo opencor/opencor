@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlsupportplugin.h"
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
-#include "coreguiutils.h"
 #include "filemanager.h"
 #include "pendulumwindowwindow.h"
 #include "sedmlfilemanager.h"
@@ -33,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpreferenceswidget.h"
-#include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 #include "windowinterface.h"
 
@@ -198,7 +196,7 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     Plugins cellmlEditingViewPlugins = Plugins();
     Plugins cellmlSimulationViewPlugins = Plugins();
 
-    foreach (Plugin *plugin, pLoadedPlugins) {
+    for (auto plugin : pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (   viewInterface

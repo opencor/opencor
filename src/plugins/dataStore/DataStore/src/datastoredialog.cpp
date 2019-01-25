@@ -113,8 +113,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
     QString dataHierarchy = QString();
     QStandardItem *hierarchyItem = nullptr;
 
-    foreach (DataStoreVariable *variable,
-             pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
+    for (auto variable : pIncludeVoi?pDataStore->voiAndVariables():pDataStore->variables()) {
         if (variable->isVisible()) {
             // Check whether the variable is in the same hierarchy as the
             // previous one
@@ -130,7 +129,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
 
                 QStandardItem *parentHierarchyItem = mModel->invisibleRootItem();
 
-                foreach (const QString &hierarchyPart, crtDataHierarchy.split('/')) {
+                for (const auto &hierarchyPart : crtDataHierarchy.split('/')) {
                     hierarchyItem = nullptr;
 
                     for (int i = 0, iMax = parentHierarchyItem->rowCount(); i < iMax; ++i) {
@@ -159,23 +158,28 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
                 dataHierarchy = crtDataHierarchy;
             }
 
-            static const QIcon ErrorNodeIcon = QIcon(":/oxygen/emblems/emblem-important.png");
+            // Create a new item and add it to our hierarchy, but only if it
+            // really exists
 
-            QIcon variableIcon = pIcons.value(variable->type());
-            QStandardItem *dataItem = new QStandardItem(variableIcon.isNull()?
-                                                            ErrorNodeIcon:
-                                                            variableIcon,
-                                                        variable->label());
+            if (hierarchyItem) {
+                static const QIcon ErrorNodeIcon = QIcon(":/oxygen/emblems/emblem-important.png");
 
-            dataItem->setCheckable(true);
-            dataItem->setCheckState(Qt::Checked);
-            dataItem->setEditable(false);
+                QIcon variableIcon = pIcons.value(variable->type());
+                QStandardItem *dataItem = new QStandardItem(variableIcon.isNull()?
+                                                                ErrorNodeIcon:
+                                                                variableIcon,
+                                                            variable->label());
 
-            hierarchyItem->appendRow(dataItem);
+                dataItem->setCheckable(true);
+                dataItem->setCheckState(Qt::Checked);
+                dataItem->setEditable(false);
 
-            mData.insert(dataItem, variable);
+                hierarchyItem->appendRow(dataItem);
 
-            ++mNbOfData;
+                mData.insert(dataItem, variable);
+
+                ++mNbOfData;
+            }
         }
     }
 

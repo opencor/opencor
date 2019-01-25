@@ -60,7 +60,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList fileNames = QStringList();
 
-    foreach (const QFileInfo &fileInfo, fileInfoList)
+    for (const auto &fileInfo : fileInfoList)
         fileNames << fileInfo.canonicalFilePath();
 
     // Retrieve and initialise some information about the plugins
@@ -68,7 +68,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
 
-    foreach (const QString &fileName, fileNames) {
+    for (const auto &fileName : fileNames) {
         QString pluginName = Plugin::name(fileName);
         QString pluginError = QString();
         PluginInfo *pluginInfo = (Plugin::pluginInfoVersion(fileName) == pluginInfoVersion())?
@@ -92,13 +92,13 @@ PluginManager::PluginManager(bool pGuiMode) :
 
     QStringList sortedFileNames = QStringList();
 
-    foreach (const QString &fileName, fileNames) {
+    for (const auto &fileName : fileNames) {
         PluginInfo *pluginInfo = pluginsInfo.value(Plugin::name(fileName));
 
         if (pluginInfo) {
             int index = sortedFileNames.count();
 
-            foreach (const QString &loadBefore, pluginInfo->loadBefore()) {
+            for (const auto &loadBefore : pluginInfo->loadBefore()) {
                 int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
 
                 if (loadBeforeIndex < index)
@@ -115,7 +115,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     QStringList neededPlugins = QStringList();
     QStringList wantedPlugins = QStringList();
 
-    foreach (const QString &fileName, sortedFileNames) {
+    for (const auto &fileName : sortedFileNames) {
         QString pluginName = Plugin::name(fileName);
         PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
 
@@ -151,7 +151,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     //       wantedPlugins) might be (wrongly) needed by another plugin (i.e.
     //       listed in neededPlugins)...
 
-    foreach (const QString &plugin, plugins)
+    for (const auto &plugin : plugins)
         pluginFileNames << Plugin::fileName(mPluginsDir, plugin);
 
     // If we are in GUI mode, then we want to know about all the plugins,
@@ -189,7 +189,7 @@ PluginManager::PluginManager(bool pGuiMode) :
 
     // Deal with all the plugins we need and want
 
-    foreach (const QString &pluginFileName, pluginFileNames) {
+    for (const auto &pluginFileName : pluginFileNames) {
         QString pluginName = Plugin::name(pluginFileName);
         Plugin *plugin = new Plugin(pluginFileName,
                                     pluginsInfo.value(pluginName),
@@ -216,7 +216,7 @@ PluginManager::~PluginManager()
 {
     // Delete some internal objects
 
-    foreach (Plugin *plugin, mPlugins)
+    for (auto plugin : mPlugins)
         delete plugin;
 }
 
@@ -279,7 +279,7 @@ Plugin * PluginManager::plugin(const QString &pName) const
 {
     // Return the plugin, if any, which name is the one we have been passed
 
-    foreach (Plugin *plugin, mPlugins) {
+    for (auto plugin : mPlugins) {
         if (!pName.compare(plugin->name()))
             return plugin;
     }

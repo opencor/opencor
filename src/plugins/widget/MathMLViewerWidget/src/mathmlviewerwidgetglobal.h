@@ -25,14 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#ifdef _WIN32
-    #ifdef MathMLViewerWidget_PLUGIN
-        #define MATHMLVIEWERWIDGET_EXPORT __declspec(dllexport)
-    #else
-        #define MATHMLVIEWERWIDGET_EXPORT __declspec(dllimport)
-    #endif
+#ifdef MathMLViewerWidget_PLUGIN
+    #define MATHMLVIEWERWIDGET_EXPORT Q_DECL_EXPORT
 #else
-    #define MATHMLVIEWERWIDGET_EXPORT
+    #define MATHMLVIEWERWIDGET_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================

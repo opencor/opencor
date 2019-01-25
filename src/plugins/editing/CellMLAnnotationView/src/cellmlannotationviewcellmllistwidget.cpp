@@ -528,16 +528,23 @@ void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(bool pSelect
 
 void CellmlAnnotationViewCellmlListWidget::populateModel()
 {
+    // Make sure that we have a model before actually populating ourselves
+
+    iface::cellml_api::Model *cellmlModel = mCellmlFile->model();
+
+    if (!cellmlModel)
+        return;
+
     // Retrieve the model's root
 
     CellmlAnnotationViewCellmlElementItem *modelItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Model,
-                                                                                                 mCellmlFile->model());
+                                                                                                 cellmlModel);
 
     mTreeViewModel->invisibleRootItem()->appendRow(modelItem);
 
     // Retrieve the model's imports
 
-    ObjRef<iface::cellml_api::CellMLImportSet> imports = mCellmlFile->model()->imports();
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = cellmlModel->imports();
 
     if (imports->length()) {
         // Imports category
@@ -608,13 +615,13 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's units
 
-    ObjRef<iface::cellml_api::UnitsSet> unitsSet = mCellmlFile->model()->localUnits();
+    ObjRef<iface::cellml_api::UnitsSet> unitsSet = cellmlModel->localUnits();
 
     populateUnitsModel(modelItem, unitsSet);
 
     // Retrieve the model's components
 
-    ObjRef<iface::cellml_api::CellMLComponentSet> components = mCellmlFile->model()->localComponents();
+    ObjRef<iface::cellml_api::CellMLComponentSet> components = cellmlModel->localComponents();
 
     if (components->length()) {
         // Components category
@@ -668,7 +675,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's groups
 
-    ObjRef<iface::cellml_api::GroupSet> groups = mCellmlFile->model()->groups();
+    ObjRef<iface::cellml_api::GroupSet> groups = cellmlModel->groups();
 
     if (groups->length()) {
         // Groups category
@@ -741,7 +748,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
     // Retrieve the model's connections
 
-    ObjRef<iface::cellml_api::ConnectionSet> connections = mCellmlFile->model()->connections();
+    ObjRef<iface::cellml_api::ConnectionSet> connections = cellmlModel->connections();
 
     if (connections->length()) {
         // Connections category

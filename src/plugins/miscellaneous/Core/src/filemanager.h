@@ -148,7 +148,8 @@ public:
 private:
     QTimer *mTimer;
 
-    QMap<QString, File *> mFiles;
+    QList<File *> mFiles;
+    QMap<QString, File *> mFileNameFiles;
 
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
