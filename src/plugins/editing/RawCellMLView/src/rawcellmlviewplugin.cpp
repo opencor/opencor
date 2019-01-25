@@ -21,9 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Raw CellML view plugin
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "rawcellmlviewplugin.h"
@@ -335,16 +333,10 @@ QString RawCellMLViewPlugin::viewDefaultFileExtension() const
 
 QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with either a new file or a CellML 1.0/1.1
-    // file
+    // Make sure that we are dealing with a valid file
 
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
-
-    if (   !Core::FileManager::instance()->isNew(pFileName)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+    if (!mViewWidget->isValid(pFileName))
         return nullptr;
-    }
 
     // Update and return our Raw CellML view widget using the given CellML file
 
