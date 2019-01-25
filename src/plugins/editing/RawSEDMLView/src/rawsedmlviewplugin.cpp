@@ -21,12 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Raw SED-ML view plugin
 //==============================================================================
 
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "rawsedmlviewplugin.h"
 #include "rawsedmlviewwidget.h"
-#include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 
 //==============================================================================
@@ -337,9 +335,9 @@ QString RawSEDMLViewPlugin::viewDefaultFileExtension() const
 
 QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a SED-ML file (be it new or not)
+    // Make sure that we are dealing with a valid file
 
-    if (!SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
+    if (!mViewWidget->isValid(pFileName))
         return nullptr;
 
     // Update and return our Raw SED-ML view widget using the given SED-ML file

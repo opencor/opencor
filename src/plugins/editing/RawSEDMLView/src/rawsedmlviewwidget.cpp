@@ -93,6 +93,15 @@ void RawSedmlViewWidget::retranslateUi()
 
 //==============================================================================
 
+bool RawSedmlViewWidget::isValid(const QString &pFileName) const
+{
+    // Return whether we are dealing with a SED-ML file (be it new or not)
+
+    return SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName);
+}
+
+//==============================================================================
+
 void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
@@ -204,14 +213,15 @@ void RawSedmlViewWidget::fileSaved(const QString &pFileName)
 
 void RawSedmlViewWidget::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so reload it, should it be managed
+    // The given file has been reloaded, so reload it, should it be managed and
+    // still valid
     // Note: if the view for the given file is not the active view, then to call
     //       finalize() and then initialize() would activate the contents of the
     //       view (but the file tab would still point to the previously active
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (mEditingWidgets.contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName) && isValid(pFileName)) {
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
