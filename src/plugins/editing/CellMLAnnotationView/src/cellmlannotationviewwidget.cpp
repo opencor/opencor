@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -98,6 +99,19 @@ void CellmlAnnotationViewWidget::retranslateUi()
 
     for (auto editingWidget : mEditingWidgets.values())
         editingWidget->retranslateUi();
+}
+
+//==============================================================================
+
+bool CellmlAnnotationViewWidget::isValid(const QString &pFileName) const
+{
+    // Return whether we are dealing with an existing CellML 1.0/1.1 file
+
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
+
+    return    !Core::FileManager::instance()->isNew(pFileName)
+           &&  (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+                || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1));
 }
 
 //==============================================================================
@@ -198,9 +212,10 @@ void CellmlAnnotationViewWidget::fileSaved(const QString &pFileName)
 
 void CellmlAnnotationViewWidget::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so reload it, should it be managed
+    // The given file has been reloaded, so reload it, should it be managed and
+    // still valid
 
-    if (mEditingWidgets.contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName) && isValid(pFileName)) {
         finalize(pFileName);
         initialize(pFileName);
     }

@@ -21,13 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Annotation view plugin
 //==============================================================================
 
-#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
-#include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "coreguiutils.h"
-#include "filemanager.h"
 
 //==============================================================================
 
@@ -274,16 +271,10 @@ QString CellMLAnnotationViewPlugin::viewDefaultFileExtension() const
 
 QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
-    // file
+    // Make sure that we are dealing with a valid file
 
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
-
-    if (   Core::FileManager::instance()->isNew(pFileName)
-        || (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1))) {
+    if (!mViewWidget->isValid(pFileName))
         return nullptr;
-    }
 
     // Update and return our CellML Annotation view widget using the given
     // CellML file
