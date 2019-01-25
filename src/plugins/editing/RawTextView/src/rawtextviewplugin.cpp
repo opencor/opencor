@@ -312,9 +312,9 @@ QString RawTextViewPlugin::viewDefaultFileExtension() const
 
 QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a text file (be it new or not)
+    // Make sure that we are dealing with a valid file
 
-    if (!Core::isTextFile(pFileName))
+    if (!mViewWidget->isValid(pFileName))
         return nullptr;
 
     // Update and return our Raw Text view widget using the given file

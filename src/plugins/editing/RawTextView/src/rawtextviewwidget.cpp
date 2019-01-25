@@ -81,6 +81,15 @@ void RawTextViewWidget::retranslateUi()
 
 //==============================================================================
 
+bool RawTextViewWidget::isValid(const QString &pFileName) const
+{
+    // Return whether we are dealing with a text file (be it new or not)
+
+    return Core::isTextFile(pFileName);
+}
+
+//==============================================================================
+
 void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editor associated with the given file, if any
@@ -190,14 +199,15 @@ void RawTextViewWidget::fileSaved(const QString &pFileName)
 
 void RawTextViewWidget::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so reload it, should it be managed
+    // The given file has been reloaded, so reload it, should it be managed and
+    // still valid
     // Note: if the view for the given file is not the active view, then to call
     //       finalize() and then initialize() would activate the contents of the
     //       view (but the file tab would still point to the previously active
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (mEditors.contains(pFileName)) {
+    if (mEditors.contains(pFileName) && isValid(pFileName)) {
         bool update = mEditor == mEditors.value(pFileName);
 
         finalize(pFileName);
