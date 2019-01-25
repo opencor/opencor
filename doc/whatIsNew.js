@@ -3,6 +3,11 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "Editing",
                          "entries": [
+                           { "type": "subCategory", "name": "CellML Annotation view",
+                             "entries": [
+                               { "type": "fixed", "description": "Crash when a file has been rendered invalid." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "improved", "description": "Unicode support." }
@@ -14,6 +19,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Simulation Experiment view",
                              "entries": [
+                               { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." }
                              ]
                            }

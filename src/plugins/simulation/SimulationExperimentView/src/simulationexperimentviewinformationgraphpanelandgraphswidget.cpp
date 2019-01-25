@@ -1332,14 +1332,14 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     // Update the graph line settings
 
     QPen oldLinePen = graph->pen();
-    QPen linePen = oldLinePen;
+    QPen newLinePen = oldLinePen;
     Core::Properties lineProperties = properties[4]->properties();
 
-    linePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValueIndex()));
-    linePen.setWidth(lineProperties[1]->integerValue());
-    linePen.setColor(lineProperties[2]->colorValue());
+    newLinePen.setStyle(SEDMLSupport::lineStyle(lineProperties[0]->listValueIndex()));
+    newLinePen.setWidth(lineProperties[1]->integerValue());
+    newLinePen.setColor(lineProperties[2]->colorValue());
 
-    graph->setPen(linePen);
+    graph->setPen(newLinePen);
 
     // Update the graph symbol settings
 
@@ -1369,15 +1369,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     //       Indeed, to change the Y property may, for example, result in the
     //       title being also changed...
 
-    if ((oldTitle != graph->title()) || graphSymbolUpdated)
-        graph->plot()->updateGui();
+    if (newTitle.compare(oldTitle) || graphSymbolUpdated)
+        graph->plot()->updateGui(false, graph->plot()->isLegendActive());
 
     if (   (oldParameterX != graph->parameterX())
         || (oldParameterY != graph->parameterY())) {
         emit graphUpdated(graph);
     }
 
-    if ((oldLinePen != linePen) || graphSymbolUpdated) {
+    if ((oldLinePen != newLinePen) || graphSymbolUpdated) {
         graph->plot()->replot();
 
         processEvents();
@@ -1481,7 +1481,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::graphPanelPro
         graphPanelPlot->setZoomRegionFilled(zoomRegionProperties[4]->booleanValue());
         graphPanelPlot->setZoomRegionFillColor(zoomRegionProperties[5]->colorValue());
 
-        graphPanelPlot->updateGui();
+        graphPanelPlot->updateGui(false, true);
     graphPanelPlot->setUpdatesEnabled(true);
 }
 

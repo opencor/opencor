@@ -21,10 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Annotation view plugin
 //==============================================================================
 
-#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
-#include "cellmlfilemanager.h"
+#include "cellmlfile.h"
 #include "cellmlsupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"

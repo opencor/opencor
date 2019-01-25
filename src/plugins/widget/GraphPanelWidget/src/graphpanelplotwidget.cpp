@@ -3542,7 +3542,7 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
     // To remove a graph may affect our GUI (and that of our neighbours), so
     // update it
 
-    updateGui();
+    updateGui(false, isLegendActive());
 
     return true;
 }

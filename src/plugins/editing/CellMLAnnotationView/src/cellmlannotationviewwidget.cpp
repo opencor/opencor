@@ -102,15 +102,6 @@ void CellmlAnnotationViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool CellmlAnnotationViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditingWidgets.contains(pFileName);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editing widget associated with the given file, if any
@@ -209,7 +200,7 @@ void CellmlAnnotationViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
 
-    if (contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName)) {
         finalize(pFileName);
         initialize(pFileName);
     }

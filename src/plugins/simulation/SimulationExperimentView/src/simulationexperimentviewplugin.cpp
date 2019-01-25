@@ -25,14 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlsupportplugin.h"
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
-#include "coreguiutils.h"
 #include "filemanager.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpreferenceswidget.h"
-#include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
 //==============================================================================

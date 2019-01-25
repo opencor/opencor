@@ -357,7 +357,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                 else
                     mLinearSolver = SUNLinSol_SPTFQMR(mStatesVector, PREC_LEFT, 0);
 
-                CVodeSetLinearSolver(mSolver, mLinearSolver, nullptr);
+                CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
                 CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth,
                                                            lowerHalfBandwidth);
             } else {
@@ -368,7 +368,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                 else
                     mLinearSolver = SUNLinSol_SPTFQMR(mStatesVector, PREC_NONE, 0);
 
-                CVodeSetLinearSolver(mSolver, mLinearSolver, nullptr);
+                CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
             }
         }
     } else {
