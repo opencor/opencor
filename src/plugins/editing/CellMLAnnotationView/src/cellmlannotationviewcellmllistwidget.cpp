@@ -528,15 +528,9 @@ void CellmlAnnotationViewCellmlListWidget::initializeTreeViewWidget(bool pSelect
 
 void CellmlAnnotationViewCellmlListWidget::populateModel()
 {
-    // Make sure that we have a model before actually populating ourselves
-
-    iface::cellml_api::Model *cellmlModel = mCellmlFile->model();
-
-    if (!cellmlModel)
-        return;
-
     // Retrieve the model's root
 
+    iface::cellml_api::Model *cellmlModel = mCellmlFile->model();
     CellmlAnnotationViewCellmlElementItem *modelItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Model,
                                                                                                  cellmlModel);
 
