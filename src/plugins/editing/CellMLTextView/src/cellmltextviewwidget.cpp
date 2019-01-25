@@ -453,6 +453,19 @@ void CellmlTextViewWidget::retranslateUi()
 
 //==============================================================================
 
+bool CellmlTextViewWidget::isValid(const QString &pFileName) const
+{
+    // Return whether we are dealing with a new file or a CellML 1.0/1.1 file
+
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
+
+    return    Core::FileManager::instance()->isNew(pFileName)
+           || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+           || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1);
+}
+
+//==============================================================================
+
 void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
@@ -667,7 +680,8 @@ void CellmlTextViewWidget::fileSaved(const QString &pFileName)
 
 void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so reload it, should it be managed
+    // The given file has been reloaded, so reload it, should it be managed and
+    // still valid
     // Note: if the view for the given file is not the active view, then to call
     //       finalize() and then initialize() will activate the contents of the
     //       view (but the file tab will still point to the previously active
@@ -676,7 +690,7 @@ void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
 
     CellmlTextViewWidgetData *data = mData.value(pFileName);
 
-    if (data) {
+    if (data && isValid(pFileName)) {
         bool update = mEditingWidget == data->editingWidget();
 
         finalize(pFileName);
