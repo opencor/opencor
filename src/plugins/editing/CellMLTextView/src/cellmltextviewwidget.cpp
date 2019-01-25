@@ -453,15 +453,6 @@ void CellmlTextViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool CellmlTextViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mData.contains(pFileName);
-}
-
-//==============================================================================
-
 void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any

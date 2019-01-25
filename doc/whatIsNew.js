@@ -3,6 +3,11 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "Editing",
                          "entries": [
+                           { "type": "subCategory", "name": "CellML Annotation view",
+                             "entries": [
+                               { "type": "fixed", "description": "Crash when a file has been rendered invalid." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "improved", "description": "Unicode support." }

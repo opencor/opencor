@@ -57,8 +57,6 @@ public:
 
     void retranslateUi() override;
 
-    bool contains(const QString &pFileName) const;
-
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
 

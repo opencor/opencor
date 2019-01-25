@@ -81,15 +81,6 @@ void RawTextViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool RawTextViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditors.contains(pFileName);
-}
-
-//==============================================================================
-
 void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editor associated with the given file, if any
@@ -206,7 +197,7 @@ void RawTextViewWidget::fileReloaded(const QString &pFileName)
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (contains(pFileName)) {
+    if (mEditors.contains(pFileName)) {
         bool update = mEditor == mEditors.value(pFileName);
 
         finalize(pFileName);
