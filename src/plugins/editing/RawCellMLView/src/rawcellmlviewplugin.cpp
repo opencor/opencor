@@ -21,9 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Raw CellML view plugin
 //==============================================================================
 
-#include "cellmlfilemanager.h"
+#include "cellmlfile.h"
 #include "cellmlsupportplugin.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "rawcellmlviewplugin.h"
