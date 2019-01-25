@@ -21,12 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Text view plugin
 //==============================================================================
 
-#include "cellmleditingviewwidget.h"
-#include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewplugin.h"
 #include "cellmltextviewwidget.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 

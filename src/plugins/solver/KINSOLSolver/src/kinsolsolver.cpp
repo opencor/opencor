@@ -293,32 +293,32 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
         // Set our linear solver
 
-        SUNMatrix matrix = SUNMatrix();
+        SUNMatrix matrix = nullptr;
         SUNLinearSolver linearSolver;
 
         if (!linearSolverValue.compare(DenseLinearSolver)) {
             matrix = SUNDenseMatrix(pSize, pSize);
             linearSolver = SUNDenseLinearSolver(parametersVector, matrix);
 
-            KINDlsSetLinearSolver(solver, linearSolver, matrix);
+            KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (!linearSolverValue.compare(BandedLinearSolver)) {
             matrix = SUNBandMatrix(pSize, upperHalfBandwidthValue,
                                           lowerHalfBandwidthValue);
             linearSolver = SUNBandLinearSolver(parametersVector, matrix);
 
-            KINDlsSetLinearSolver(solver, linearSolver, matrix);
+            KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (!linearSolverValue.compare(GmresLinearSolver)) {
             linearSolver = SUNSPGMR(parametersVector, PREC_NONE, 0);
 
-            KINSpilsSetLinearSolver(solver, linearSolver);
+            KINSetLinearSolver(solver, linearSolver, matrix);
         } else if (!linearSolverValue.compare(BiCgStabLinearSolver)) {
             linearSolver = SUNSPBCGS(parametersVector, PREC_NONE, 0);
 
-            KINSpilsSetLinearSolver(solver, linearSolver);
+            KINSetLinearSolver(solver, linearSolver, matrix);
         } else {
             linearSolver = SUNSPTFQMR(parametersVector, PREC_NONE, 0);
 
-            KINSpilsSetLinearSolver(solver, linearSolver);
+            KINSetLinearSolver(solver, linearSolver, matrix);
         }
 
         // Keep track of our data

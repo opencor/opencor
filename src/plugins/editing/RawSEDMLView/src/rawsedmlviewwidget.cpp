@@ -93,15 +93,6 @@ void RawSedmlViewWidget::retranslateUi()
 
 //==============================================================================
 
-bool RawSedmlViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditingWidgets.contains(pFileName);
-}
-
-//==============================================================================
-
 void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
@@ -220,7 +211,7 @@ void RawSedmlViewWidget::fileReloaded(const QString &pFileName)
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName)) {
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
