@@ -22,7 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "collapsiblewidget.h"
+#include "combinefilemanager.h"
 #include "filemanager.h"
+#include "sedmlfilemanager.h"
 #include "simulation.h"
 #include "simulationexperimentviewcontentswidget.h"
 #include "simulationexperimentviewinformationgraphpanelandgraphswidget.h"
@@ -156,6 +158,22 @@ void SimulationExperimentViewWidget::retranslateUi()
 
     for (auto simulationWidget : mSimulationWidgets.values())
         simulationWidget->retranslateUi();
+}
+
+//==============================================================================
+
+bool SimulationExperimentViewWidget::isValid(const QString &pFileName) const
+{
+    // Return whether we are dealing with an existing CellML 1.0/1.1 file,
+    // SED-ML file or COMBINE archive
+
+    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
+
+    return    !Core::FileManager::instance()->isNew(pFileName)
+           &&  (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
+                || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)
+                || SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
+                || COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName));
 }
 
 //==============================================================================
@@ -345,11 +363,11 @@ void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 {
     // Let the simulation widget, if any, associated with the given file name
-    // know that a file has been reloaded
+    // know that a file has been reloaded, should the file still be valid
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget) {
+    if (simulationWidget && isValid(pFileName)) {
         simulationWidget->fileReloaded();
 
         // Make sure that our simulation's contents' information GUI is up to

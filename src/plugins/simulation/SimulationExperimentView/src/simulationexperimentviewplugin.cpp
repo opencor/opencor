@@ -25,14 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlsupportplugin.h"
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
-#include "coreguiutils.h"
-#include "filemanager.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpreferenceswidget.h"
-#include "simulationexperimentviewsimulationwidget.h"
 #include "simulationexperimentviewwidget.h"
 
 //==============================================================================
@@ -335,18 +332,10 @@ QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
 
 QWidget * SimulationExperimentViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Make sure that we are not dealing with a new file, but a CellML 1.0/1.1
-    // file, a SED-ML file or a COMBINE archive
+    // Make sure that we are dealing with a valid file
 
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
-
-    if (   Core::FileManager::instance()->isNew(pFileName)
-        || (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
-            && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
-            && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))) {
+    if (!mViewWidget->isValid(pFileName))
         return nullptr;
-    }
 
     // Update and return our simulation view widget using the given CellML file,
     // SED-ML file or COMBINE archive
