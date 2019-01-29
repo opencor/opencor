@@ -587,7 +587,13 @@ bool CliApplication::run(int *pRes)
         case NoOption:
             return false;
         case AboutOption:
-            about();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                about();
+            }
 
             break;
         case CommandOption:
@@ -641,23 +647,47 @@ bool CliApplication::run(int *pRes)
 
             break;
         case PluginsOption:
-            loadPlugins();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
 
-            plugins();
+                help();
+            } else {
+                loadPlugins();
+
+                plugins();
+            }
 
             break;
         case ResetOption:
-            reset();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                reset();
+            }
 
             break;
         case StatusOption:
-            loadPlugins();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
 
-            status();
+                help();
+            } else {
+                loadPlugins();
+
+                status();
+            }
 
             break;
         case VersionOption:
-            version();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                version();
+            }
 
             break;
         }
