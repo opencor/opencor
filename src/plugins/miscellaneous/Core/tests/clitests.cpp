@@ -87,6 +87,19 @@ void CliTests::cliHelpTests()
     QCOMPARE(OpenCOR::runCli(QStringList() << "-h"),
              help);
 
+    // Try a known command, but with the wrong number of arguments
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-a" << "argument"),
+             help);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-p" << "argument"),
+             help);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-r" << "argument"),
+             help);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-s" << "argument"),
+             help);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-v" << "argument"),
+             help);
+
     // Try an unknown command, resulting in the help being shown
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-x"),

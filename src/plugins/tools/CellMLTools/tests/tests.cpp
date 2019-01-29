@@ -45,6 +45,13 @@ void Tests::helpTests()
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help"),
              help);
 
+    // Try a known command, but with the wrong number of arguments
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "argument"),
+             help);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << "argument" << "argument"),
+             help);
+
     // Try an unknown command, resulting in the help being shown
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::unknown"),
