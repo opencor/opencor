@@ -630,7 +630,13 @@ bool CliApplication::run(int *pRes)
 
             break;
         case HelpOption:
-            help();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                help();
+            }
 
             break;
         case IncludeOption:
