@@ -103,6 +103,47 @@ void Tests::exportToCellml10Tests()
 
 //==============================================================================
 
+void Tests::validateCellmlFiles()
+{
+    // Validate a valid CellML file
+
+    QString fileName = OpenCOR::fileName("models/noble_model_1962.cellml");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName),
+             QStringList() << QString());
+
+    // Try to validate some invalid CellML files
+
+    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/representation_error_issue.cellml");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/representation_error_issue.cellml.out")));
+
+    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_warning_issues.cellml");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_warning_issues.cellml.out")));
+
+    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_error_and_warning_issues.cellml");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_error_and_warning_issues.cellml.out")));
+
+    // Try to validate a non-CellML file
+
+    fileName = OpenCOR::fileName("models/tests/sedml/noble_1962_local.sedml");
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/noble_1962_local.sedml.out")));
+
+    // Try to validate a non-existing CellML file
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << "non_existing_file"),
+             QStringList() << "The file could not be found." << QString());
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================

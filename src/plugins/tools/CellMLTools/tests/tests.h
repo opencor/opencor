@@ -37,6 +37,7 @@ private slots:
     void helpTests();
     void exportToUserDefinedFormatTests();
     void exportToCellml10Tests();
+    void validateCellmlFiles();
 };
 
 //==============================================================================
