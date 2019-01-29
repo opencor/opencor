@@ -363,7 +363,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
     // remote), so carry on with the command to run
 
     bool fileExists = QFile::exists(fileName);
-    bool validFile = true;
+    bool validFile = false;
 
     if (output.isEmpty()) {
         // Before actually running the command, we need to check and do a few
