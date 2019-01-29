@@ -116,7 +116,7 @@ QString fileSha1(const QString &pFileName)
 
 //==============================================================================
 
-QStringList runCli(const QStringList pArguments)
+int runCli(const QStringList pArguments, QStringList &pOutput)
 {
     // Go to the directory where our tests are located
     // Note: see main()...
@@ -161,7 +161,9 @@ QStringList runCli(const QStringList pArguments)
     QDir::setCurrent(origPath);
 #endif
 
-    return output.remove('\r').split('\n');
+    pOutput = output.remove('\r').split('\n');
+
+    return process.exitCode();
 }
 
 //==============================================================================
