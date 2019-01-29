@@ -192,19 +192,15 @@ void CliApplication::about() const
 
 //==============================================================================
 
-bool CliApplication::command(const QStringList &pArguments, int *pRes) const
+bool CliApplication::command(const QString &pCommand,
+                             const QStringList &pArguments, int &pRes) const
 {
-    // Make sure that we have at least one argument
-
-    if (!pArguments.count())
-        return false;
-
     // Determine whether the command is to be executed by all the CLI plugins or
     // only a given CLI plugin
 
     static const QString CommandSeparator = "::";
 
-    QString commandName = pArguments.first();
+    QString commandName = pCommand;
     QString commandPlugin = commandName;
     int commandSeparatorPosition = commandName.indexOf(CommandSeparator);
 
@@ -233,13 +229,13 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
         if (!pluginFound) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
 
-            *pRes = -1;
+            pRes = -1;
 
             return true;
         } else if (!pluginHasCliSupport) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
 
-            *pRes = -1;
+            pRes = -1;
 
             return true;
         }
@@ -250,7 +246,7 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
     if (mLoadedCliPlugins.isEmpty()) {
         std::cout << "No plugins could be found to run the command." << std::endl;
 
-        *pRes = -1;
+        pRes = -1;
 
         return true;
     }
@@ -262,19 +258,13 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
     for (auto plugin : mLoadedCliPlugins) {
         if (    commandPlugin.isEmpty()
             || !commandPlugin.compare(plugin->name())) {
-            QStringList arguments = pArguments;
-
-            arguments.removeFirst();
-            // Note: since the first argument corresponds to the command
-            //       itself...
-
             if (firstPlugin)
                 firstPlugin = false;
             else
                 std::cout << std::endl;
 
-            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, arguments))
-                *pRes = -1;
+            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, pArguments))
+                pRes = -1;
         }
     }
 
@@ -297,7 +287,7 @@ void CliApplication::help() const
     // Output some help
 
     std::cout << "Usage: " << qAppName().toStdString()
-              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>]::<command> [<argument> ...]] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
@@ -487,11 +477,11 @@ void CliApplication::version() const
 
 //==============================================================================
 
-bool CliApplication::run(int *pRes)
+bool CliApplication::run(int &pRes)
 {
     // See what needs doing with the CLI options, if anything
 
-    *pRes = 0;   // By default, everything is fine
+    pRes = 0;   // By default, everything is fine
 
     enum Option {
         NoOption,
@@ -527,60 +517,60 @@ bool CliApplication::run(int *pRes)
             if (option == NoOption) {
                 option = AboutOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-c") || !appArgument.compare("--command")) {
             if (option == NoOption) {
                 option = CommandOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-e") || !appArgument.compare("--exclude")) {
             if (option == NoOption) {
                 option = ExcludeOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-h") || !appArgument.compare("--help")) {
             if (option == NoOption) {
                 option = HelpOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-i") || !appArgument.compare("--include")) {
             if (option == NoOption) {
                 option = IncludeOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-p") || !appArgument.compare("--plugins")) {
             if (option == NoOption) {
                 option = PluginsOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-r") || !appArgument.compare("--reset")) {
             if (option == NoOption) {
                 option = ResetOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-s") || !appArgument.compare("--status")) {
             if (option == NoOption) {
                 option = StatusOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (!appArgument.compare("-v") || !appArgument.compare("--version")) {
             if (option == NoOption) {
                 option = VersionOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (appArgument.startsWith('-')) {
             // The user provided at least one unknown option
 
-            *pRes = -1;
+            pRes = -1;
 
             break;
         }
@@ -588,13 +578,13 @@ bool CliApplication::run(int *pRes)
 
     // Handle the option the user requested, if any
 
-    if (!*pRes) {
+    if (!pRes) {
         switch (option) {
         case NoOption:
             return false;
         case AboutOption:
             if (appArguments.count() != 1) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -608,14 +598,18 @@ bool CliApplication::run(int *pRes)
             // command to the plugin(s)
 
             if (arguments.isEmpty()) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
                 loadPlugins();
 
-                if (!command(arguments, pRes)) {
-                    *pRes = -1;
+                QString command = arguments.first();
+
+                arguments.removeFirst();
+
+                if (!CliApplication::command(command, arguments, pRes)) {
+                    pRes = -1;
 
                     help();
                 }
@@ -627,7 +621,7 @@ bool CliApplication::run(int *pRes)
             // plugin)
 
             if (arguments.isEmpty()) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -637,7 +631,7 @@ bool CliApplication::run(int *pRes)
             break;
         case HelpOption:
             if (appArguments.count() != 1) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -650,7 +644,7 @@ bool CliApplication::run(int *pRes)
             // plugin)
 
             if (arguments.isEmpty()) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -660,7 +654,7 @@ bool CliApplication::run(int *pRes)
             break;
         case PluginsOption:
             if (appArguments.count() != 1) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -672,7 +666,7 @@ bool CliApplication::run(int *pRes)
             break;
         case ResetOption:
             if (appArguments.count() != 1) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -682,7 +676,7 @@ bool CliApplication::run(int *pRes)
             break;
         case StatusOption:
             if (appArguments.count() != 1) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -694,7 +688,7 @@ bool CliApplication::run(int *pRes)
             break;
         case VersionOption:
             if (appArguments.count() != 1) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
