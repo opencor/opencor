@@ -233,9 +233,13 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
         if (!pluginFound) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
 
+            *pRes = -1;
+
             return true;
         } else if (!pluginHasCliSupport) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
+
+            *pRes = -1;
 
             return true;
         }
@@ -245,6 +249,8 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
     if (mLoadedCliPlugins.isEmpty()) {
         std::cout << "No plugins could be found to run the command." << std::endl;
+
+        *pRes = -1;
 
         return true;
     }
