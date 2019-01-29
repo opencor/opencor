@@ -82,10 +82,12 @@ void CliTests::cliHelpTests()
 {
     // Ask for OpenCOR's CLI help
 
+    QStringList help = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/help.out"));
+
     QCOMPARE(OpenCOR::runCli(QStringList() << "-h"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/help.out")));
+             help);
     QCOMPARE(OpenCOR::runCli(QStringList() << "-x"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/Core/tests/data/cli/help.out")));
+             help);
 }
 
 //==============================================================================
