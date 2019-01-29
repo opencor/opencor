@@ -233,9 +233,13 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
         if (!pluginFound) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
 
+            *pRes = -1;
+
             return true;
         } else if (!pluginHasCliSupport) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
+
+            *pRes = -1;
 
             return true;
         }
@@ -245,6 +249,8 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
     if (mLoadedCliPlugins.isEmpty()) {
         std::cout << "No plugins could be found to run the command." << std::endl;
+
+        *pRes = -1;
 
         return true;
     }
@@ -587,7 +593,13 @@ bool CliApplication::run(int *pRes)
         case NoOption:
             return false;
         case AboutOption:
-            about();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                about();
+            }
 
             break;
         case CommandOption:
@@ -624,7 +636,13 @@ bool CliApplication::run(int *pRes)
 
             break;
         case HelpOption:
-            help();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                help();
+            }
 
             break;
         case IncludeOption:
@@ -641,23 +659,47 @@ bool CliApplication::run(int *pRes)
 
             break;
         case PluginsOption:
-            loadPlugins();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
 
-            plugins();
+                help();
+            } else {
+                loadPlugins();
+
+                plugins();
+            }
 
             break;
         case ResetOption:
-            reset();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                reset();
+            }
 
             break;
         case StatusOption:
-            loadPlugins();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
 
-            status();
+                help();
+            } else {
+                loadPlugins();
+
+                status();
+            }
 
             break;
         case VersionOption:
-            version();
+            if (appArguments.count() != 1) {
+                *pRes = -1;
+
+                help();
+            } else {
+                version();
+            }
 
             break;
         }

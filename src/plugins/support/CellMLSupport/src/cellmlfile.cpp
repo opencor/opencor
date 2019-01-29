@@ -264,7 +264,16 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                             // We were able to retrieve the import contents, so
                             // instantiate the import with it
 
-                            import->instantiateFromText(fileContents.toStdWString());
+                            try {
+                                import->instantiateFromText(fileContents.toStdWString());
+                            } catch (iface::cellml_api::CellMLException &exception) {
+                                // Something went wrong with the instantiation
+                                // of the import
+
+                                throw(CellmlFileException(tr("<strong>%1</strong> imports <strong>%2</strong>, which contents could not be retrieved (%3)").arg(QDir::toNativeSeparators(xmlBaseFileNameOrUrl))
+                                                                                                                                                           .arg(xlinkHrefString)
+                                                                                                                                                           .arg(Core::formatMessage(QString::fromStdWString(exception.explanation)))));
+                            }
 
                             // Keep track of the import contents
 
