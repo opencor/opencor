@@ -70,7 +70,7 @@ int main(int pArgC, char *pArgV[])
 
     int res;
 
-    if (!cliApp->run(&res)) {
+    if (!cliApp->run(res)) {
         // OpenCOR isn't meant to be run as a CLI application, so start its GUI
         // version instead
 
