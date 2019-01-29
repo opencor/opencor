@@ -192,19 +192,15 @@ void CliApplication::about() const
 
 //==============================================================================
 
-bool CliApplication::command(const QStringList &pArguments, int *pRes) const
+bool CliApplication::command(const QString &pCommand,
+                             const QStringList &pArguments, int *pRes) const
 {
-    // Make sure that we have at least one argument
-
-    if (!pArguments.count())
-        return false;
-
     // Determine whether the command is to be executed by all the CLI plugins or
     // only a given CLI plugin
 
     static const QString CommandSeparator = "::";
 
-    QString commandName = pArguments.first();
+    QString commandName = pCommand;
     QString commandPlugin = commandName;
     int commandSeparatorPosition = commandName.indexOf(CommandSeparator);
 
@@ -262,18 +258,12 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
     for (auto plugin : mLoadedCliPlugins) {
         if (    commandPlugin.isEmpty()
             || !commandPlugin.compare(plugin->name())) {
-            QStringList arguments = pArguments;
-
-            arguments.removeFirst();
-            // Note: since the first argument corresponds to the command
-            //       itself...
-
             if (firstPlugin)
                 firstPlugin = false;
             else
                 std::cout << std::endl;
 
-            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, arguments))
+            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, pArguments))
                 *pRes = -1;
         }
     }
@@ -614,7 +604,11 @@ bool CliApplication::run(int *pRes)
             } else {
                 loadPlugins();
 
-                if (!command(arguments, pRes)) {
+                QString command = arguments.first();
+
+                arguments.removeFirst();
+
+                if (!CliApplication::command(command, arguments, pRes)) {
                     *pRes = -1;
 
                     help();

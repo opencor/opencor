@@ -65,7 +65,8 @@ private:
                         bool pInclude = true) const;
 
     void about() const;
-    bool command(const QStringList &pArguments, int *pRes) const;
+    bool command(const QString &pCommand, const QStringList &pArguments,
+                 int *pRes) const;
     void exclude(const QStringList &pPluginNames) const;
     void help() const;
     void include(const QStringList &pPluginNames) const;
