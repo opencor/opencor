@@ -132,7 +132,7 @@ int main(int pArgC, char *pArgV[])
         // Try to run the CLI version of OpenCOR
 
         int res;
-        bool runCliApplication = cliApp->run(&res);
+        bool runCliApplication = cliApp->run(res);
 
         delete cliApp;
 

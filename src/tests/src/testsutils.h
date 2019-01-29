@@ -45,7 +45,7 @@ QStringList fileContents(const QString &pFileName);
 
 QString fileSha1(const QString &pFileName);
 
-QStringList runCli(const QStringList pArguments);
+int runCli(const QStringList pArguments, QStringList &pOutput);
 
 //==============================================================================
 

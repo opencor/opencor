@@ -1,4 +1,4 @@
-Usage: OpenCOR [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]
+Usage: OpenCOR [-a|--about] [-c|--command [<plugin>]::<command> [<argument> ...]] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]
  -a, --about     Display some information about OpenCOR
  -c, --command   Send a command to one or all the CLI plugins
  -e, --exclude   Exclude the given plugin(s)
