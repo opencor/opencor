@@ -86,6 +86,9 @@ void CliTests::cliHelpTests()
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-h"),
              help);
+
+    // Try an unknown command, resulting in the help being shown
+
     QCOMPARE(OpenCOR::runCli(QStringList() << "-x"),
              help);
 }
