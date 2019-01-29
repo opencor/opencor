@@ -297,7 +297,7 @@ void CliApplication::help() const
     // Output some help
 
     std::cout << "Usage: " << qAppName().toStdString()
-              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>]::<command> [<options>]] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
