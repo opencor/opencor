@@ -33,6 +33,15 @@ var jsonData = { "versions": [
                              ]
                            }
                          ]
+                       },
+                       { "name": "Tools",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML tools",
+                             "entries": [
+                               { "type": "added", "description": "Validation of a <a href=\"https://www.cellml.org/\">CellML</a> file from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." }
+                             ]
+                           }
+                         ]
                        }
                      ]
                    },
