@@ -429,6 +429,9 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
         delete mImportValues;
         delete mResultsValues;
 
+        mImportValues = nullptr;
+        mResultsValues = nullptr;
+
         pImportDataStore->removeVariables(mImportVariables);
         pResultsDataStore->removeVariables(mResultsVariables);
     }
@@ -443,6 +446,7 @@ DataStoreImportData::~DataStoreImportData()
     //       whoever used us (e.g. a Simulation object)...
 
     delete mImportValues;
+    delete mResultsValues;
 }
 
 //==============================================================================
