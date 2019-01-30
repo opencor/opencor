@@ -412,7 +412,7 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
         }
 
         if (!pImportDataStore->addRun(pNbOfDataPoints))
-            throw std::exception();
+            throw;
 
         if (!pRunSizes.isEmpty()) {
             for (auto runSize : pRunSizes) {
