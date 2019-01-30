@@ -454,7 +454,6 @@ DataStoreImportData::~DataStoreImportData()
     //       whoever used us (e.g. a Simulation object)...
 
     delete mImportValues;
-    delete mResultsValues;
 }
 
 //==============================================================================
