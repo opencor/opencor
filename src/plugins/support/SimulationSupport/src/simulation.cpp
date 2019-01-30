@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
+#include "filemanager.h"
 #include "interfaces.h"
 #include "sedmlfilemanager.h"
 #include "simulation.h"
@@ -838,6 +839,11 @@ Simulation::Simulation(const QString &pFileName) :
 
     connect(mData, &SimulationData::error,
             this, &Simulation::error);
+
+    // Keep track of files being managed
+
+    connect(Core::FileManager::instance(), &Core::FileManager::fileManaged,
+            this, &Simulation::fileManaged);
 }
 
 //==============================================================================
@@ -1208,6 +1214,19 @@ void Simulation::reset(bool pAll)
 
     if (mWorker)
         mWorker->reset();
+}
+
+//==============================================================================
+
+void Simulation::fileManaged(const QString &pFileName)
+{
+    // A file is being managed, so update our internals by retrieving our file
+    // details, if we are that file
+    // Note: this will happen when saving a file under a new name, in which case
+    //       we need to update our internals...
+
+    if (!pFileName.compare(mFileName))
+        retrieveFileDetails(false);
 }
 
 //==============================================================================

@@ -299,6 +299,9 @@ signals:
     void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
+
+private slots:
+    void fileManaged(const QString &pFileName);
 };
 
 //==============================================================================
