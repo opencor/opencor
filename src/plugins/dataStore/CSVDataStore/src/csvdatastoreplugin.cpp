@@ -141,7 +141,7 @@ DataStore::DataStoreExportData * CSVDataStorePlugin::getExportData(const QString
         // Now that we know which data to export, we can ask for the name of the
         // CSV file where it is to be exported
 
-        QStringList csvFilters = Core::filters(FileTypeInterfaces() << CSVDataStore::fileTypeInterface());
+        QStringList csvFilters = Core::filters(FileTypeInterfaces() << fileTypeInterface());
         QString firstCsvFilter = csvFilters.first();
         QString fileName = Core::getSaveFileName(tr("Export To CSV"),
                                                  Core::newFileName(pFileName, tr("Data"), false, CsvFileExtension),

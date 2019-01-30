@@ -123,7 +123,7 @@ DataStore::DataStoreExportData * BioSignalMLDataStorePlugin::getExportData(const
         // Now that we have the information we need, we can ask for the name of
         // the BioSignalML file where to do the export
 
-        QStringList biosignalmlFilters = Core::filters(FileTypeInterfaces() << BioSignalMLDataStore::fileTypeInterface());
+        QStringList biosignalmlFilters = Core::filters(FileTypeInterfaces() << fileTypeInterface());
         QString firstBiosignalmlFilter = biosignalmlFilters.first();
         QString fileName = Core::getSaveFileName(tr("Export To BioSignalML"),
                                                  Core::newFileName(pFileName, tr("Data"), false, BiosignalmlFileExtension),
