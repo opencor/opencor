@@ -431,8 +431,6 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
         pImportDataStore->removeVariables(mImportVariables);
         pResultsDataStore->removeVariables(mResultsVariables);
-//---ISSUE1845--- REMOVE EXTRA RUNS FROM BOTH OUR IMPORT AND RESULTS DATA
-//                STORES...
     }
 }
 
