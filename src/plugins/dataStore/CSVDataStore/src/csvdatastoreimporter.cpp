@@ -46,7 +46,7 @@ CsvDataStoreImporterWorker::CsvDataStoreImporterWorker(DataStore::DataStoreImpor
 void CsvDataStoreImporterWorker::run()
 {
     // Import our CSV file in our data store
-    // Note: we rely on the fact that our CSV file is well-formed...
+    // Note: we rely on our CSV file to be well-formed...
 
     QFile file(mImportData->fileName());
     QString errorMessage = QString();
