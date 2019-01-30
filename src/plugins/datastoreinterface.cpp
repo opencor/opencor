@@ -418,13 +418,13 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
         }
 
         if (!pImportDataStore->addRun(pNbOfDataPoints))
-            throw;
+            throw std::exception();
 
         if (!pRunSizes.isEmpty()) {
             for (auto runSize : pRunSizes) {
                 for (auto resultsVariables : mResultsVariables) {
                     if (!resultsVariables->addRun(runSize))
-                        throw;
+                        throw std::exception();
                 }
             }
         }
@@ -642,11 +642,11 @@ bool DataStore::addRun(quint64 pCapacity)
 
     try {
         if (!mVoi->addRun(pCapacity))
-            throw;
+            throw std::exception();
 
         for (auto variable : mVariables) {
             if (!variable->addRun(pCapacity))
-                throw;
+                throw std::exception();
         }
     } catch (...) {
         // We couldn't add a run to our VOI and all our variables, so only keep
