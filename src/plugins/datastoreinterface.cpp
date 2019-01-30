@@ -184,11 +184,17 @@ int DataStoreVariable::runsCount() const
 
 //==============================================================================
 
-void DataStoreVariable::addRun(quint64 pCapacity)
+bool DataStoreVariable::addRun(quint64 pCapacity)
 {
-    // Add a run of the given capacity
+    // Try to add a run of the given capacity
 
-    mRuns << new DataStoreVariableRun(pCapacity, mValue);
+    try {
+        mRuns << new DataStoreVariableRun(pCapacity, mValue);
+    } catch (...) {
+        return false;
+    }
+
+    return true;
 }
 
 //==============================================================================
@@ -416,8 +422,10 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
 
         if (!pRunSizes.isEmpty()) {
             for (auto runSize : pRunSizes) {
-                for (auto resultsVariables : mResultsVariables)
-                    resultsVariables->addRun(runSize);
+                for (auto resultsVariables : mResultsVariables) {
+                    if (!resultsVariables->addRun(runSize))
+                        throw;
+                }
             }
         }
     } catch (...) {
@@ -634,10 +642,13 @@ bool DataStore::addRun(quint64 pCapacity)
     int oldRunsCount = mVoi->runsCount();
 
     try {
-        mVoi->addRun(pCapacity);
+        if (!mVoi->addRun(pCapacity))
+            throw;
 
-        for (auto variable : mVariables)
-            variable->addRun(pCapacity);
+        for (auto variable : mVariables) {
+            if (!variable->addRun(pCapacity))
+                throw;
+        }
     } catch (...) {
         // We couldn't add a run to our VOI and all our variables, so only keep
         // the number of runs we used to have

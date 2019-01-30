@@ -79,7 +79,7 @@ public:
 
     int runsCount() const;
 
-    void addRun(quint64 pCapacity);
+    bool addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
 
     int type() const;
