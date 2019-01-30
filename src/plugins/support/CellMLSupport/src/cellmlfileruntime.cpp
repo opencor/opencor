@@ -236,7 +236,6 @@ QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
 //==============================================================================
 
 CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
-    mCellmlFile(pCellmlFile),
     mCodeInformation(nullptr),
     mConstantsCount(0),
     mStatesRatesCount(0),
@@ -251,7 +250,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
     // Retrieve the CellML model associated with the CellML file
 
-    iface::cellml_api::Model *model = mCellmlFile->model();
+    iface::cellml_api::Model *model = pCellmlFile->model();
 
     if (!model)
         return;
@@ -548,15 +547,6 @@ CellmlFileRuntime::~CellmlFileRuntime()
     // Reset our properties
 
     reset(false, true);
-}
-
-//==============================================================================
-
-CellmlFile * CellmlFileRuntime::cellmlFile()
-{
-    // Return our CellML file
-
-    return mCellmlFile;
 }
 
 //==============================================================================

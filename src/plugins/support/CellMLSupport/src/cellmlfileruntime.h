@@ -134,8 +134,6 @@ public:
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime() override;
 
-    CellmlFile * cellmlFile();
-
     QString address() const;
 
     bool isValid() const;
@@ -159,8 +157,6 @@ public:
     CellmlFileRuntimeParameter * voi() const;
 
 private:
-    CellmlFile *mCellmlFile;
-
     bool mAtLeastOneNlaSystem;
 
     ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;

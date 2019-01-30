@@ -622,7 +622,7 @@ void SimulationResults::createDataStore()
 
     SimulationData *data = mSimulation->data();
 
-    mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase());
+    mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
 
     mPoints = mDataStore->voi();
 
