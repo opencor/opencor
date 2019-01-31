@@ -4122,7 +4122,7 @@ void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
 
     // Update our file's modified status
 
-    updateFileModifiedStatus();
+    updateSedmlFileOrCombineArchiveModifiedStatus();
 }
 
 //==============================================================================
@@ -4135,7 +4135,7 @@ void SimulationExperimentViewSimulationWidget::checkSolversProperties()
 
     // Update our file's modified status
 
-    updateFileModifiedStatus();
+    updateSedmlFileOrCombineArchiveModifiedStatus();
 }
 
 //==============================================================================
@@ -4182,7 +4182,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 
     // Update our file's modified status
 
-    updateFileModifiedStatus();
+    updateSedmlFileOrCombineArchiveModifiedStatus();
 }
 
 //==============================================================================
@@ -4209,7 +4209,7 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
+void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveModifiedStatus()
 {
     // Make sure that we are not dealing with a remote file
 
