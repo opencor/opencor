@@ -939,7 +939,7 @@ void SimulationResults::addPoint(double pPoint)
 
     double realPoint = SimulationResults::realPoint(pPoint);
 
-    for (auto data : mData.keys()) {
+    for (auto data : mDataDataStores.keys()) {
         DataStore::DataStore *dataStore = mDataDataStores.value(data);
         DataStore::DataStoreVariable *voi = dataStore->voi();
         DataStore::DataStoreVariables variables = dataStore->variables();
