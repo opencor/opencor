@@ -433,7 +433,7 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         Solver::unsetNlaSolver(runtime->address());
     }
 
-    // Let people know whether our data is 'cleaned', i.e. not modified, and ask
+    // Let people know whether our data is 'clean', i.e. not modified, and ask
     // our simulation worker to reset itself
 
     if (!pInitialize) {
