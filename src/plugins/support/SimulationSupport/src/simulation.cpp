@@ -798,11 +798,11 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
     // along our other simulation results, if any
 
     int runsCount = pImportData->runSizes().count();
+    DataStore::DataStoreVariable *importVoi = importDataStore->voi();
+    DataStore::DataStoreVariables importVariables = pImportData->importVariables();
 
     if (runsCount) {
-        DataStore::DataStoreVariable *importVoi = importDataStore->voi();
         DataStore::DataStoreVariable *resultsVoi = pImportData->resultsDataStore()->voi();
-        DataStore::DataStoreVariables importVariables = pImportData->importVariables();
 
         for (int i = 0; i < runsCount; ++i) {
             // Add the value of our imported data to our the corresponding run
@@ -826,6 +826,14 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
 
         for (auto resultsVariable : resultsVariables)
             resultsValues[++i] = resultsVariable->value(lastPosition);
+    } else {
+        // There are no runs, so update our imported data array so that it
+        // contains the computed values for our start point
+
+        for (int i = 0, iMax = resultsVariables.count(); i < iMax; ++i) {
+            resultsValues[i] = realValue(mSimulation->data()->startingPoint(),
+                                         importVoi, importVariables[i]);
+        }
     }
 }
 
