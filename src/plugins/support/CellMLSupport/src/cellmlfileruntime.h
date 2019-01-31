@@ -134,7 +134,7 @@ public:
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime() override;
 
-    CellmlFile * cellmlFile();
+    void update(CellmlFile *pCellmlFile, bool pAll = true);
 
     QString address() const;
 
@@ -159,8 +159,6 @@ public:
     CellmlFileRuntimeParameter * voi() const;
 
 private:
-    CellmlFile *mCellmlFile;
-
     bool mAtLeastOneNlaSystem;
 
     ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
@@ -185,7 +183,7 @@ private:
 
     void resetFunctions();
 
-    void reset(bool pRecreateCompilerEngine, bool pResetIssues);
+    void reset(bool pRecreateCompilerEngine, bool pResetIssues, bool pResetAll);
 
     void couldNotGenerateModelCodeIssue(const QString &pExtraInfo);
     void unknownProblemDuringModelCodeGenerationIssue();

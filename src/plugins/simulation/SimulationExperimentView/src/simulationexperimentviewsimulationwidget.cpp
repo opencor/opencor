@@ -3362,12 +3362,11 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsMo
 {
     // Update some of our actions based on whether we are modified
 
-    if (mDevelopmentModeAction->isChecked()) {
+    if (mDevelopmentModeAction->isChecked())
         Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
-    } else {
-        mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
-        mResetAllModelParametersAction->setEnabled(pIsModified);
-    }
+
+    mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
+    mResetAllModelParametersAction->setEnabled(pIsModified);
 }
 
 //==============================================================================
@@ -4122,7 +4121,7 @@ void SimulationExperimentViewSimulationWidget::checkSimulationProperties()
 
     // Update our file's modified status
 
-    updateFileModifiedStatus();
+    updateSedmlFileOrCombineArchiveModifiedStatus();
 }
 
 //==============================================================================
@@ -4135,7 +4134,7 @@ void SimulationExperimentViewSimulationWidget::checkSolversProperties()
 
     // Update our file's modified status
 
-    updateFileModifiedStatus();
+    updateSedmlFileOrCombineArchiveModifiedStatus();
 }
 
 //==============================================================================
@@ -4182,7 +4181,7 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 
     // Update our file's modified status
 
-    updateFileModifiedStatus();
+    updateSedmlFileOrCombineArchiveModifiedStatus();
 }
 
 //==============================================================================
@@ -4209,7 +4208,7 @@ QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::Pr
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::updateFileModifiedStatus()
+void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveModifiedStatus()
 {
     // Make sure that we are not dealing with a remote file
 
