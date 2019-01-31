@@ -320,7 +320,7 @@ private:
 
     QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
 
-    void updateFileModifiedStatus();
+    void updateSedmlFileOrCombineArchiveModifiedStatus();
 
     void simulationError(const QString &pMessage, ErrorType pErrorType);
 

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
+#include "filemanager.h"
 #include "interfaces.h"
 #include "sedmlfilemanager.h"
 #include "simulation.h"
@@ -425,10 +426,8 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     // Keep track of our various initial values
 
-    if (pInitialize) {
-        memcpy(mInitialConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
-        memcpy(mInitialStates, mStates, size_t(runtime->statesCount()*Solver::SizeOfDouble));
-    }
+    if (pInitialize)
+        updateInitialValues();
 
     // Use our "current" constants, if needed
 
@@ -451,8 +450,8 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         Solver::unsetNlaSolver(runtime->address());
     }
 
-    // Let people know whether our data is 'cleaned', i.e. not modified, and ask
-    // our simulation worker to reset itself
+    // Let people know whether our data is clean, i.e. not modified, and ask our
+    // simulation worker to reset itself
 
     if (!pInitialize) {
         emit modified(isModified());
@@ -460,6 +459,16 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         if (mSimulation->worker())
             mSimulation->worker()->reset();
     }
+}
+
+//==============================================================================
+
+void SimulationData::updateInitialValues()
+{
+    // Update our initial constants and states
+
+    memcpy(mInitialConstants, mConstants, size_t(mSimulation->runtime()->constantsCount()*Solver::SizeOfDouble));
+    memcpy(mInitialStates, mStates, size_t(mSimulation->runtime()->statesCount()*Solver::SizeOfDouble));
 }
 
 //==============================================================================
@@ -647,7 +656,7 @@ void SimulationResults::createDataStore()
 
     SimulationData *data = mSimulation->data();
 
-    mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase());
+    mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
 
     mPoints = mDataStore->voi();
 
@@ -1065,6 +1074,11 @@ Simulation::Simulation(const QString &pFileName) :
 
     connect(mData, &SimulationData::error,
             this, &Simulation::error);
+
+    // Keep track of files being managed
+
+    connect(Core::FileManager::instance(), &Core::FileManager::fileManaged,
+            this, &Simulation::fileManaged);
 }
 
 //==============================================================================
@@ -1110,12 +1124,17 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     if (mSedmlFile)
         mCellmlFile = mSedmlFile->cellmlFile();
 
-    // Get a (new) runtime, if possible
+    // Get a (new) runtime or update it, if possible
+    // Note: updating our runtime is essential when saving a file under a new
+    //       name...
 
     if (pRecreateRuntime) {
         delete mRuntime;
 
         mRuntime = mCellmlFile?mCellmlFile->runtime(true):nullptr;
+    } else {
+        if (mCellmlFile)
+            mRuntime->update(mCellmlFile, false);
     }
 }
 
@@ -1147,6 +1166,14 @@ void Simulation::save()
         mData->reload();
         mResults->reload();
     }
+
+    // Make sure that our initial values are up to date and check for
+    // modifications (which results in people being told that there are no
+    // modifications, meaning that a view like the Simulation Experiment view
+    // will disable its reset buttons)
+
+    mData->updateInitialValues();
+    mData->checkForModifications();
 }
 
 //==============================================================================
@@ -1477,6 +1504,19 @@ void Simulation::reset(bool pAll)
 
     if (mWorker)
         mWorker->reset();
+}
+
+//==============================================================================
+
+void Simulation::fileManaged(const QString &pFileName)
+{
+    // A file is being managed, so update our internals by retrieving our file
+    // details, if we are that file
+    // Note: this will happen when saving a file under a new name, in which case
+    //       we need to update our internals...
+
+    if (!pFileName.compare(mFileName))
+        retrieveFileDetails(false);
 }
 
 //==============================================================================
