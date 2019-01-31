@@ -134,6 +134,8 @@ public:
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime() override;
 
+    void update(CellmlFile *pCellmlFile, bool pAll = true);
+
     QString address() const;
 
     bool isValid() const;
@@ -181,7 +183,7 @@ private:
 
     void resetFunctions();
 
-    void reset(bool pRecreateCompilerEngine, bool pResetIssues);
+    void reset(bool pRecreateCompilerEngine, bool pResetIssues, bool pResetAll);
 
     void couldNotGenerateModelCodeIssue(const QString &pExtraInfo);
     void unknownProblemDuringModelCodeGenerationIssue();

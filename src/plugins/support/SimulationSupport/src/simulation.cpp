@@ -407,10 +407,8 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     // Keep track of our various initial values
 
-    if (pInitialize) {
-        memcpy(mInitialConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
-        memcpy(mInitialStates, mStates, size_t(runtime->statesCount()*Solver::SizeOfDouble));
-    }
+    if (pInitialize)
+        updateInitialValues();
 
     // Use our "current" constants, if needed
 
@@ -442,6 +440,16 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         if (mSimulation->worker())
             mSimulation->worker()->reset();
     }
+}
+
+//==============================================================================
+
+void SimulationData::updateInitialValues()
+{
+    // Update our initial constants and states
+
+    memcpy(mInitialConstants, mConstants, size_t(mSimulation->runtime()->constantsCount()*Solver::SizeOfDouble));
+    memcpy(mInitialStates, mStates, size_t(mSimulation->runtime()->statesCount()*Solver::SizeOfDouble));
 }
 
 //==============================================================================
@@ -888,12 +896,17 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     if (mSedmlFile)
         mCellmlFile = mSedmlFile->cellmlFile();
 
-    // Get a (new) runtime, if possible
+    // Get a (new) runtime or update it, if possible
+    // Note: updating our runtime is essential when saving a file under a new
+    //       name...
 
     if (pRecreateRuntime) {
         delete mRuntime;
 
         mRuntime = mCellmlFile?mCellmlFile->runtime(true):nullptr;
+    } else {
+        if (mCellmlFile)
+            mRuntime->update(mCellmlFile, false);
     }
 }
 
@@ -925,6 +938,14 @@ void Simulation::save()
         mData->reload();
         mResults->reload();
     }
+
+    // Make sure that our initial values are up to date and check for
+    // modifications (which results in people being told that there are no
+    // modifications, meaning that a view like the Simulation Experiment view
+    // will disable its reset buttons)
+
+    mData->updateInitialValues();
+    mData->checkForModifications();
 }
 
 //==============================================================================

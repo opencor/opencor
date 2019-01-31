@@ -130,6 +130,8 @@ public:
     bool isModified() const;
     void checkForModifications();
 
+    void updateInitialValues();
+
 private:
     quint64 mDelay;
 
