@@ -3362,12 +3362,11 @@ void SimulationExperimentViewSimulationWidget::simulationDataModified(bool pIsMo
 {
     // Update some of our actions based on whether we are modified
 
-    if (mDevelopmentModeAction->isChecked()) {
+    if (mDevelopmentModeAction->isChecked())
         Core::FileManager::instance()->setModified(mSimulation->fileName(), pIsModified);
-    } else {
-        mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
-        mResetAllModelParametersAction->setEnabled(pIsModified);
-    }
+
+    mResetStateModelParametersAction->setEnabled(mSimulation->data()->isStatesModified());
+    mResetAllModelParametersAction->setEnabled(pIsModified);
 }
 
 //==============================================================================
