@@ -811,10 +811,9 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
 
             for (quint64 j = 0, jMax = resultsVoi->size(i); j < jMax; ++j) {
                 double realPoint = SimulationResults::realPoint(voiValues[j], i);
-                int k = -1;
 
-                for (auto resultsVariable : resultsVariables)
-                    resultsVariable->addValue(realValue(realPoint, importVoi, importVariables[++k]), i);
+                for (int k = 0, kMax = resultsVariables.count(); k < kMax; ++k)
+                    resultsVariables[k]->addValue(realValue(realPoint, importVoi, importVariables[k]), i);
             }
         }
 
@@ -822,15 +821,14 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
         // computed values
 
         quint64 lastPosition = size()-1;
-        int i = -1;
 
-        for (auto resultsVariable : resultsVariables)
-            resultsValues[++i] = resultsVariable->value(lastPosition);
+        for (int i = 0, iMax = resultsVariables.count(); i < iMax; ++i)
+            resultsValues[i] = resultsVariables[i]->value(lastPosition);
     } else {
         // There are no runs, so update our imported data array so that it
         // contains the computed values for our start point
 
-        for (int i = 0, iMax = resultsVariables.count(); i < iMax; ++i) {
+        for (int i = 0, iMax = importVariables.count(); i < iMax; ++i) {
             resultsValues[i] = realValue(mSimulation->data()->startingPoint(),
                                          importVoi, importVariables[i]);
         }
