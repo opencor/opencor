@@ -19,6 +19,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Simulation Experiment view",
                              "entries": [
+                               { "type": "added", "description": "Basic support for the import of external data." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
                                { "type": "fixed", "description": "Various issue with saving a file under a new name." }
