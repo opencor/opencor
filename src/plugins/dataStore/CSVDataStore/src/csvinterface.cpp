@@ -18,17 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CSV data store plugin
+// CSV interface
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "datastoreinterface.h"
-#include "filetypeinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include "corecliutils.h"
+#include "csvinterface.h"
 
 //==============================================================================
 
@@ -37,33 +31,28 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-PLUGININFO_FUNC CSVDataStorePluginInfo();
-
-//==============================================================================
-
-static const auto CsvMimeType      = QStringLiteral("text/csv");
-static const auto CsvFileExtension = QStringLiteral("csv");
-
-//==============================================================================
-
-class CSVDataStorePlugin : public QObject, public DataStoreInterface,
-                           public FileTypeInterface, public I18nInterface
+CsvInterfaceData::CsvInterfaceData(FileTypeInterface *pFileTypeInterface) :
+    mFileTypeInterface(pFileTypeInterface)
 {
-    Q_OBJECT
+}
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CSVDataStorePlugin" FILE "csvdatastoreplugin.json")
+//==============================================================================
 
-    Q_INTERFACES(OpenCOR::FileTypeInterface)
-    Q_INTERFACES(OpenCOR::DataStoreInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
+FileTypeInterface * CsvInterfaceData::fileTypeInterface() const
+{
+    // Return our file type interface
 
-public:
-    explicit CSVDataStorePlugin();
+    return mFileTypeInterface;
+}
 
-#include "filetypeinterface.inl"
-#include "datastoreinterface.inl"
-#include "i18ninterface.inl"
-};
+//==============================================================================
+
+FileTypeInterface * fileTypeInterface()
+{
+    // Return our file type interface
+
+    return static_cast<CsvInterfaceData *>(Core::globalInstance(CsvInterfaceDataSignature))->fileTypeInterface();
+}
 
 //==============================================================================
 

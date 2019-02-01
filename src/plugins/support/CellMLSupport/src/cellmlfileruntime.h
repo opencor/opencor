@@ -79,13 +79,15 @@ public:
         State,
         Algebraic,
         Floating,
-        LocallyBound
+        LocallyBound,
+        Data
     };
 
     explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        ParameterType pType, int pIndex);
+                                        ParameterType pType, int pIndex,
+                                        double *pData = nullptr);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);
@@ -96,6 +98,7 @@ public:
     QStringList componentHierarchy() const;
     ParameterType type() const;
     int index() const;
+    double * data() const;
 
     QString formattedName() const;
     QString formattedComponentHierarchy() const;
@@ -113,6 +116,7 @@ private:
     QStringList mComponentHierarchy;
     ParameterType mType;
     int mIndex;
+    double *mData;
 };
 
 //==============================================================================
@@ -142,6 +146,10 @@ public:
 
     bool needNlaSolver() const;
 
+    void importData(const QString &pName,
+                    const QStringList &pComponentHierarchy, int pIndex,
+                    double *pData);
+
     int constantsCount() const;
     int statesCount() const;
     int ratesCount() const;
@@ -155,6 +163,7 @@ public:
     CellmlFileIssues issues() const;
 
     CellmlFileRuntimeParameters parameters() const;
+    CellmlFileRuntimeParameters dataParameters(double *pData = nullptr) const;
 
     CellmlFileRuntimeParameter * voi() const;
 

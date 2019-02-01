@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// CSV data store plugin
+// CSV data store importer
 //==============================================================================
 
 #pragma once
@@ -26,9 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreinterface.h"
-#include "filetypeinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
 
 //==============================================================================
 
@@ -37,32 +34,25 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-PLUGININFO_FUNC CSVDataStorePluginInfo();
-
-//==============================================================================
-
-static const auto CsvMimeType      = QStringLiteral("text/csv");
-static const auto CsvFileExtension = QStringLiteral("csv");
-
-//==============================================================================
-
-class CSVDataStorePlugin : public QObject, public DataStoreInterface,
-                           public FileTypeInterface, public I18nInterface
+class CsvDataStoreImporterWorker : public DataStore::DataStoreImporterWorker
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CSVDataStorePlugin" FILE "csvdatastoreplugin.json")
-
-    Q_INTERFACES(OpenCOR::FileTypeInterface)
-    Q_INTERFACES(OpenCOR::DataStoreInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-
 public:
-    explicit CSVDataStorePlugin();
+    explicit CsvDataStoreImporterWorker(DataStore::DataStoreImportData *pImportData);
 
-#include "filetypeinterface.inl"
-#include "datastoreinterface.inl"
-#include "i18ninterface.inl"
+public slots:
+    void run() override;
+};
+
+//==============================================================================
+
+class CsvDataStoreImporter : public DataStore::DataStoreImporter
+{
+    Q_OBJECT
+
+protected:
+    DataStore::DataStoreImporterWorker * workerInstance(DataStore::DataStoreImportData *pImportData) override;
 };
 
 //==============================================================================

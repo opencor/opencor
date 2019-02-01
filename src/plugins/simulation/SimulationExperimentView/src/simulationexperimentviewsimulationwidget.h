@@ -80,6 +80,7 @@ namespace Core {
 
 namespace DataStore {
     class DataStoreExportData;
+    class DataStoreImportData;
 }   // namespace DataStore
 
 //==============================================================================
@@ -164,6 +165,11 @@ public:
 
     void resetSimulationProgress();
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
+
 private:
     enum ErrorType {
         General,
@@ -207,6 +213,7 @@ private:
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
+    QAction *mDataImportAction;
     QAction *mSimulationResultsExportAction;
     QAction *mPreferencesAction;
 
@@ -249,6 +256,11 @@ private:
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
+    QMap<DataStore::DataStoreImportData *, double> mDataImportProgresses;
+    QMap<DataStore::DataStoreImportData *, QString> mDataImportErrorMessages;
+
+    QMap<QString, FileTypeInterface *> mDataStoreFiles;
+
     void output(const QString &pMessage);
 
     void updateSimulationMode();
@@ -282,6 +294,8 @@ private:
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
                                                                  QString &pCellmlComponent,
                                                                  QString &pCellmlVariable);
+    bool isRuntimeDataParameter(const QString &pComponent,
+                                const QString &pVariable);
 
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);
@@ -313,11 +327,15 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
+    void importDataFiles(const QStringList &pFileNames);
+
 signals:
     void splitterMoved(const QIntList &pSizes);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
+
+    void allImportsDone();
 
 private slots:
     void runPauseResumeSimulation();
@@ -336,6 +354,7 @@ private slots:
 
     void emitSplitterMoved();
 
+    void dataImport();
     void simulationResultsExport();
 
     void updateDelayValue(double pDelayValue);
@@ -372,6 +391,11 @@ private slots:
     void openCellmlFile();
 
     void plotAxesChanged();
+
+    void dataStoreImportProgress(DataStore::DataStoreImportData *pImportData,
+                                 double pProgress);
+    void dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
+                             const QString &pErrorMessage);
 
     void dataStoreExportProgress(DataStore::DataStoreExportData *pDataStoreData,
                                  double pProgress);

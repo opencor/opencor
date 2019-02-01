@@ -90,6 +90,9 @@ public:
     double * rates() const;
     double * states() const;
     double * algebraic() const;
+    double * data(DataStore::DataStore *pDataStore) const;
+
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     const quint64 * delay() const;
     void setDelay(quint64 pDelay);
@@ -157,6 +160,8 @@ private:
     double *mInitialConstants;
     double *mInitialStates;
 
+    QMap<DataStore::DataStore *, double *> mData;
+
     void createArrays();
     void deleteArrays();
 
@@ -185,6 +190,8 @@ public:
 
     void reset();
 
+    void importData(DataStore::DataStoreImportData *pImportData);
+
     int runsCount() const;
 
     bool addRun();
@@ -201,6 +208,7 @@ public:
     double * rates(int pIndex, int pRun = -1) const;
     double * states(int pIndex, int pRun = -1) const;
     double * algebraic(int pIndex, int pRun = -1) const;
+    double * data(double *pData, int pIndex, int pRun = -1) const;
 
 private:
     DataStore::DataStore *mDataStore;
@@ -212,10 +220,34 @@ private:
     DataStore::DataStoreVariables mStates;
     DataStore::DataStoreVariables mAlgebraic;
 
+    QMap<double *, DataStore::DataStoreVariables> mData;
+    QMap<double *, DataStore::DataStore *> mDataDataStores;
+
     void createDataStore();
     void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
+
+    double realPoint(double pPoint, int pRun = -1) const;
+
+    double realValue(double pPoint, DataStore::DataStoreVariable *pVoi,
+                     DataStore::DataStoreVariable *pVariable) const;
+};
+
+//==============================================================================
+
+class SIMULATIONSUPPORT_EXPORT SimulationImportData : public SimulationObject
+{
+    Q_OBJECT
+
+public:
+    explicit SimulationImportData(Simulation *pSimulation);
+    ~SimulationImportData();
+
+    DataStore::DataStore * addDataStore();
+
+private:
+    QList<DataStore::DataStore *> mDataStores;
 };
 
 //==============================================================================
@@ -252,8 +284,12 @@ public:
 
     SimulationData * data() const;
     SimulationResults * results() const;
+    SimulationImportData * importData() const;
+
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     int runsCount() const;
+    quint64 runSize(int pRun = -1) const;
 
     bool addRun();
 
@@ -289,6 +325,7 @@ private:
 
     SimulationData *mData;
     SimulationResults *mResults;
+    SimulationImportData *mImportData;
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 

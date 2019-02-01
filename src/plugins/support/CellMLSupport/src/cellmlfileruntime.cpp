@@ -64,13 +64,15 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
                                                        ParameterType pType,
-                                                       int pIndex) :
+                                                       int pIndex,
+                                                       double *pData) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),
     mComponentHierarchy(pComponentHierarchy),
     mType(pType),
-    mIndex(pIndex)
+    mIndex(pIndex),
+    mData(pData)
 {
 }
 
@@ -152,6 +154,15 @@ int CellmlFileRuntimeParameter::index() const
 
 //==============================================================================
 
+double * CellmlFileRuntimeParameter::data() const
+{
+    // Return our array
+
+    return mData;
+}
+
+//==============================================================================
+
 QString CellmlFileRuntimeParameter::formattedName() const
 {
     // Return a formatted version of our name
@@ -209,6 +220,7 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
     static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
     static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
     static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
+    static const QIcon DataIcon             = QIcon(":/CellMLSupport/data.png");
 
     // Initialise the mapping, if needed
 
@@ -219,6 +231,7 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
         Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
         Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
         Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
+        Icons.insert(CellmlFileRuntimeParameter::Data, DataIcon);
     }
 
     return Icons;
@@ -595,6 +608,18 @@ bool CellmlFileRuntime::needNlaSolver() const
 
 //==============================================================================
 
+void CellmlFileRuntime::importData(const QString &pName,
+                                   const QStringList &pComponentHierarchy,
+                                   int pIndex, double *pData)
+{
+    mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
+                                                  pComponentHierarchy,
+                                                  CellmlFileRuntimeParameter::Data,
+                                                  pIndex, pData);
+}
+
+//==============================================================================
+
 int CellmlFileRuntime::constantsCount() const
 {
     // Return the number of constants in the model
@@ -681,6 +706,24 @@ CellmlFileRuntimeParameters CellmlFileRuntime::parameters() const
     // Return the parameter(s)
 
     return mParameters;
+}
+
+//==============================================================================
+
+CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pData) const
+{
+    // Return the data parameter(s)
+
+    CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
+
+    for (auto parameter : mParameters) {
+        if (   (parameter->type() == CellmlFileRuntimeParameter::Data)
+            && (!pData || (parameter->data() == pData))) {
+            res << parameter;
+        }
+    }
+
+    return res;
 }
 
 //==============================================================================

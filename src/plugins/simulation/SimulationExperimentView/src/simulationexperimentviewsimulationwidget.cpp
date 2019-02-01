@@ -52,10 +52,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
+#include <QDragEnterEvent>
 #include <QLabel>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenu>
+#include <QMimeData>
 #include <QScreen>
 #include <QTextEdit>
 #include <QTimer>
@@ -121,7 +123,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mGraphPanelsWidgetSizesModified(false),
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedUpdatePlots(false),
-    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>())
+    mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>()),
+    mDataImportProgresses(QMap<DataStore::DataStoreImportData *, double>()),
+    mDataImportErrorMessages(QMap<DataStore::DataStoreImportData *, QString>()),
+    mDataStoreFiles(QMap<QString, FileTypeInterface *>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
     // corresponding simulation from it
@@ -145,6 +150,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     connect(mSimulation->data(), &SimulationSupport::SimulationData::modified,
             this, &SimulationExperimentViewSimulationWidget::simulationDataModified);
+
+    // Allow for things to be dropped on us
+
+    setAcceptDrops(true);
 
     // Create a tool bar
 
@@ -184,6 +193,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mSedmlExportCombineArchiveAction = (mSimulation->fileType() != SimulationSupport::Simulation::CombineArchive)?
                                            Core::newAction(mToolBarWidget):
                                            nullptr;
+    mDataImportAction = Core::newAction(QIcon(":/oxygen/actions/document-import.png"),
+                                        mToolBarWidget);
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                      mToolBarWidget);
     mPreferencesAction = Core::newAction(QIcon(":/oxygen/categories/preferences-system.png"),
@@ -229,6 +240,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                 this, QOverload<>::of(&SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive));
     }
 
+    connect(mDataImportAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::dataImport);
     connect(mPreferencesAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::preferences);
 
@@ -366,6 +379,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mDataImportAction);
     mToolBarWidget->addWidget(simulationResultsExportToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mPreferencesAction);
@@ -577,6 +591,8 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
                                          tr("Export the simulation to SED-ML using a COMBINE archive"));
     }
 
+    I18nInterface::retranslateAction(mDataImportAction, tr("Data Import"),
+                                     tr("Import some data"));
     I18nInterface::retranslateAction(mSimulationResultsExportAction, tr("Simulation Results Export"),
                                      tr("Export the simulation results"));
 
@@ -618,6 +634,58 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
     // Retranslate our contents widget
 
     mContentsWidget->retranslateUi();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+{
+    // Accept the proposed action for the event, but only if it refers to one or
+    // several data store files
+
+    bool acceptEvent = false;
+
+    for (const auto &fileName : Core::droppedFileNames(pEvent)) {
+        for (auto fileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
+            if (fileTypeInterface->isFile(fileName)) {
+                mDataStoreFiles.insert(fileName, fileTypeInterface);
+
+                acceptEvent = true;
+
+                break;
+            }
+        }
+
+        if (acceptEvent)
+            break;
+    }
+
+    if (acceptEvent)
+        pEvent->acceptProposedAction();
+    else
+        pEvent->ignore();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+{
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
+{
+    // Import the one or several data files
+
+    importDataFiles(Core::droppedFileNames(pEvent));
+
+    // Accept the proposed action for the event
+
+    pEvent->acceptProposedAction();
 }
 
 //==============================================================================
@@ -1781,7 +1849,8 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     }
 
     // Create a 2D plot output for each graph panel that we have, and retrieve
-    // all the graphs, if any, that are to be plotted on them
+    // all the graphs, if any, that are to be plotted on them (except, at this
+    // stage, the ones involving imported data)
 
     static const QString SedmlProperty = QString("<%1>%2</%1>");
 
@@ -1937,10 +2006,26 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
         int graphCounter = 0;
 
         for (auto property : graphsProperties) {
-            ++graphCounter;
+            // Make sure that our graph doesn't involve some imported data
+            // otherwise skip it
+
+            Core::Properties properties = property->properties();
+            QStringList propertyX = properties[2]->value().split('.');
+            QStringList propertyY = properties[3]->value().split('.');
+            QString componentX = propertyX[propertyX.count()-2];
+            QString variableX = propertyX.last();
+            QString componentY = propertyY[propertyY.count()-2];
+            QString variableY = propertyY.last();
+
+            if (   isRuntimeDataParameter(componentX, variableX)
+                || isRuntimeDataParameter(componentY, variableY)) {
+                continue;
+            }
 
             // Create two data generators for the X and Y parameters of our
             // current graph
+
+            ++graphCounter;
 
             libsedml::SedDataGenerator *sedmlDataGeneratorX = sedmlDocument->createDataGenerator();
             libsedml::SedDataGenerator *sedmlDataGeneratorY = sedmlDocument->createDataGenerator();
@@ -1954,19 +2039,16 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
             libsedml::SedVariable *sedmlVariableX = sedmlDataGeneratorX->createVariable();
             libsedml::SedVariable *sedmlVariableY = sedmlDataGeneratorY->createVariable();
-            Core::Properties properties = property->properties();
-            QStringList propertyX = properties[2]->value().split('.');
-            QStringList propertyY = properties[3]->value().split('.');
 
             sedmlVariableX->setId(QString("xVariable%1_%2").arg(data.graphPlotCounter)
                                                            .arg(graphCounter).toStdString());
             sedmlVariableX->setTaskReference(sedmlRepeatedTask->getId());
-            addSedmlVariableTarget(sedmlVariableX, propertyX[propertyX.count()-2], propertyX.last());
+            addSedmlVariableTarget(sedmlVariableX, componentX, variableX);
 
             sedmlVariableY->setId(QString("yVariable%1_%2").arg(data.graphPlotCounter)
                                                            .arg(graphCounter).toStdString());
             sedmlVariableY->setTaskReference(sedmlRepeatedTask->getId());
-            addSedmlVariableTarget(sedmlVariableY, propertyY[propertyY.count()-2], propertyY.last());
+            addSedmlVariableTarget(sedmlVariableY, componentY, variableY);
 
             sedmlDataGeneratorX->setMath(SBML_parseFormula(sedmlVariableX->getId().c_str()));
             sedmlDataGeneratorY->setMath(SBML_parseFormula(sedmlVariableY->getId().c_str()));
@@ -2488,6 +2570,24 @@ CellMLSupport::CellmlFileRuntimeParameter * SimulationExperimentViewSimulationWi
     }
 
     return nullptr;
+}
+
+//==============================================================================
+
+bool SimulationExperimentViewSimulationWidget::isRuntimeDataParameter(const QString &pComponent,
+                                                                      const QString &pVariable)
+{
+    // Go through the runtime data parameters to see if one of them corresponds
+    // to the given component/variable
+
+    for (auto parameter : mSimulation->runtime()->dataParameters()) {
+        if (   !pComponent.compare(parameter->componentHierarchy().last())
+            && !pVariable.compare(parameter->name())) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -3168,6 +3268,20 @@ void SimulationExperimentViewSimulationWidget::emitSplitterMoved()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::dataImport()
+{
+    // Ask for the data files to be imported
+
+    QStringList fileNames = Core::getOpenFileNames(tr("Data Import"),
+                                                   Core::filters(Core::dataStoreFileTypeInterfaces()));
+
+    // Import the one or several data files
+
+    importDataFiles(fileNames);
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 {
     // Retrieve some data so that we can effectively export our simulation
@@ -3789,6 +3903,9 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
         return pSimulation->results()->states(pParameter->index(), pRun);
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
         return pSimulation->results()->algebraic(pParameter->index(), pRun);
+    case CellMLSupport::CellmlFileRuntimeParameter::Data:
+        return pSimulation->results()->data(pParameter->data(),
+                                            pParameter->index(), pRun);
     default:
         // Not a relevant type, so return null
         // Note: we should never reach this point...
@@ -4082,6 +4199,69 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore::DataStoreImportData *pImportData,
+                                                                       double pProgress)
+{
+    // There has been some progress with our import, so update our busy widget
+
+    mDataImportProgresses.insert(pImportData, pProgress);
+
+    Core::centralWidget()->setBusyWidgetProgress(*std::min_element(mDataImportProgresses.begin(),
+                                                                   mDataImportProgresses.end()));
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
+                                                                   const QString &pErrorMessage)
+{
+    // We are done with an import, so don't track its progress anymore and keep
+    // track of its error message
+
+    mDataImportProgresses.remove(pImportData);
+    mDataImportErrorMessages.insert(pImportData, pErrorMessage);
+
+    // If mImportDataProgresses is empty then it means that all our imports are
+    // done, in which case we need to update our Parameters section with our
+    // imported data, hide our busy widget and display error messages, if needed
+
+    if (mDataImportProgresses.isEmpty()) {
+        // Ask our simulation to account for our imported data, and update our
+        // Graphs and Parameters sections with our imported data
+
+        QList<DataStore::DataStoreImportData *> dataStoreImportDatas = mDataImportErrorMessages.keys();
+
+        for (auto dataStoreImportData : dataStoreImportDatas) {
+            mSimulation->importData(dataStoreImportData);
+
+            mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData);
+            mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData);
+        }
+
+        // Hide our busy widget
+
+        Core::centralWidget()->hideBusyWidget();
+
+        // Let people know about any error that we came across
+
+        for (auto dataStoreImportData : dataStoreImportDatas) {
+            QString errorMessage = mDataImportErrorMessages.value(dataStoreImportData);
+
+            if (!errorMessage.isEmpty()) {
+                Core::warningMessageBox(tr("Data Import"),
+                                        tr("<strong>%1</strong> could not be imported (%2).").arg(dataStoreImportData->fileName())
+                                                                                             .arg(Core::formatMessage(errorMessage, true)));
+            }
+        }
+
+        mDataImportErrorMessages.clear();
+
+        emit allImportsDone();
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore::DataStoreExportData *pDataStoreData,
                                                                        double pProgress)
 {
@@ -4241,6 +4421,125 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
                                                    || graphPanelPropertiesModified
                                                    || graphsPropertiesModified
                                                    || mGraphPanelsWidgetSizesModified));
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList &pFileNames)
+{
+    // Import the given data files
+
+    QMap<QString, DataStoreInterface *> dataStoreInterfaces = QMap<QString, DataStoreInterface *>();
+
+    QStringList invalidDataFileNames = QStringList();
+
+    for (const auto &fileName : pFileNames) {
+        // Determine the type of data file we are dealing with so we can use the
+        // correct data store interface
+        // Note: we check whether mDataStoreFiles contains an entry for the
+        //       current file (which would mean that the file was dropped on the
+        //       Simulation Experiment view) and if not (i.e. we want to open a
+        //       data file using the main menu) then check whether the file is a
+        //       data file...
+
+        FileTypeInterface *fileTypeInterface = mDataStoreFiles.value(fileName);
+
+        if (!fileTypeInterface) {
+            for (auto dataStoreFileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
+                if (dataStoreFileTypeInterface->isFile(fileName)) {
+                    fileTypeInterface = dataStoreFileTypeInterface;
+
+                    break;
+                }
+            }
+        }
+
+        if (fileTypeInterface) {
+            dataStoreInterfaces.insert(fileName, Core::dataStoreInterface(fileTypeInterface));
+
+            mDataStoreFiles.remove(fileName);
+        } else {
+            invalidDataFileNames << fileName;
+        }
+    }
+
+    // Let people know about our invalid data files, if any
+
+    for (const auto &invalidDataFileName : invalidDataFileNames) {
+        Core::warningMessageBox(tr("Data Import"),
+                                tr("<strong>%1</strong> is not a data file.").arg(invalidDataFileName));
+    }
+
+    // Retrieve some imported data for our different data files
+
+    enum Problem {
+        FileAccess,
+        MemoryAllocation
+    };
+
+    QMap<QString, DataStore::DataStoreImportData *> dataStoreImportDatas = QMap<QString, DataStore::DataStoreImportData *>();
+    QMap<QString, Problem> problems = QMap<QString, Problem>();
+    QList<quint64> runSizes = QList<quint64>();
+
+    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
+        runSizes << mSimulation->runSize(i);
+
+    for (const auto &fileName : dataStoreInterfaces.keys()) {
+        DataStore::DataStoreImportData *dataStoreImportData = dataStoreInterfaces.value(fileName)->getImportData(fileName, mSimulation->importData()->addDataStore(),
+                                                                                                                           mSimulation->results()->dataStore(),
+                                                                                                                           runSizes);
+
+        if (dataStoreImportData) {
+            // We have some import data, so now check whether it is actually
+            // valid
+
+            if (dataStoreImportData->valid()) {
+                dataStoreImportDatas.insert(fileName, dataStoreImportData);
+
+                mDataImportProgresses.insert(dataStoreImportData, 0.0);
+            } else {
+                delete dataStoreImportData;
+
+                problems.insert(fileName, MemoryAllocation);
+            }
+        } else {
+            problems.insert(fileName, FileAccess);
+        }
+    }
+
+    // Let people know about the problems, if any, we got while trying to
+    // retrieve our imported data
+
+    for (const auto &fileName : problems.keys()) {
+        Core::warningMessageBox(tr("Data Import"),
+                                tr("<strong>%1</strong> could not be imported (%2).").arg(fileName)
+                                                                                     .arg((problems.value(fileName) == FileAccess)?
+                                                                                              tr("the file could not be accessed"):
+                                                                                              tr("the memory needed to store the data could not be allocated")));
+    }
+
+    // We have got the imported data we need, so now do the actual import of our
+    // data files
+
+    if (!dataStoreImportDatas.isEmpty())
+        Core::centralWidget()->showProgressBusyWidget();
+
+    for (const auto &fileName : dataStoreImportDatas.keys()) {
+        DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterfaces.value(fileName)->dataStoreImporterInstance();
+        DataStore::DataStoreImportData *dataStoreImportData = dataStoreImportDatas.value(fileName);
+
+        connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress,
+                Qt::UniqueConnection);
+
+        connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
+                Qt::UniqueConnection);
+        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
+                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
+
+        dataStoreImporter->importData(dataStoreImportData);
+    }
 }
 
 //==============================================================================
