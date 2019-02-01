@@ -711,10 +711,26 @@ void SimulationResults::createDataStore()
         }
     }
 
-    // Reimport our data, if any
+    // Reimport our data, if any, and update their array so that it contains the
+    // computed values for our start point
 
-    for (auto data : mDataDataStores.keys())
-        mData.insert(data, mDataStore->addVariables(data, mDataDataStores.value(data)->variables().count()));
+    for (auto data : mDataDataStores.keys()) {
+        DataStore::DataStore *importDataStore = mDataDataStores.value(data);
+        DataStore::DataStoreVariables variables = mDataStore->addVariables(data, importDataStore->variables().count());
+
+        mData.insert(data, variables);
+
+        DataStore::DataStoreVariable *importVoi = importDataStore->voi();
+        DataStore::DataStoreVariables importVariables = importDataStore->variables();
+
+        for (int i = 0, iMax = importVariables.count(); i < iMax; ++i)
+            data[i] = realValue(mSimulation->currentPoint(), importVoi, importVariables[i]);
+    }
+
+    // Let people know that our (imported) data, if any, has been updated
+
+    if (mDataDataStores.count())
+        emit data->updated(mSimulation->currentPoint());
 }
 
 //==============================================================================
