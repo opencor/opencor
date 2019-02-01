@@ -828,10 +828,8 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
         // There are no runs, so update our imported data array so that it
         // contains the computed values for our start point
 
-        for (int i = 0, iMax = importVariables.count(); i < iMax; ++i) {
-            resultsValues[i] = realValue(mSimulation->data()->startingPoint(),
-                                         importVoi, importVariables[i]);
-        }
+        for (int i = 0, iMax = importVariables.count(); i < iMax; ++i)
+            resultsValues[i] = realValue(mSimulation->currentPoint(), importVoi, importVariables[i]);
     }
 }
 
