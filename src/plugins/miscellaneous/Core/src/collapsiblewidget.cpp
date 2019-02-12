@@ -128,8 +128,8 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
     // Note: we keep track of our top and bottom separators since we may need
     //       to hide them in some cases/circumstances...
 
-    mTopSeparator = newLineWidget(borderColor(), this);
-    mBottomSeparator = newLineWidget(borderColor(), this);
+    mTopSeparator = newLineWidget(this);
+    mBottomSeparator = newLineWidget(this);
 
     layout->addWidget(mTopSeparator);
     layout->addWidget(subWidget);
