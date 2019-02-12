@@ -88,9 +88,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
     static const QIcon UserIcon = QIcon(":/oxygen/apps/preferences-desktop-user-password.png");
 
-    static const int UserIconWidth = UserIcon.availableSizes().first().width();
-    static const int UserIconHeight = UserIcon.availableSizes().first().height();
-
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
     QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
@@ -121,8 +118,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addWidget(spacer);
     toolBarWidget->addAction(mGui->actionPmr);
 
-    mLoggedOnIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkGreen);
-    mLoggedOffIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkRed);
+    mLoggedOnIcon = Core::tintedIcon(UserIcon, Qt::darkGreen);
+    mLoggedOffIcon = Core::tintedIcon(UserIcon, Qt::darkRed);
 
     mGui->layout->addWidget(toolBarWidget);
 

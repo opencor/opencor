@@ -561,8 +561,8 @@ QFrame * newLineWidget(QWidget *pParent)
 QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
     if (pIcon.isNull())
         return QString();
@@ -582,8 +582,8 @@ QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
     return iconDataUri(QIcon(pIcon), pWidth, pHeight, pMode);
 }
@@ -600,41 +600,46 @@ QIcon standardIcon(QStyle::StandardPixmap pStandardIcon,
 
 //==============================================================================
 
-QIcon tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
-                 const QColor &pColor)
+QIcon tintedIcon(const QIcon &pIcon, const QColor &pColor)
 {
-    // Create and return a tinted icon using the given icon and colour
+    // Create and return a tinted icon using (all the sizes of) the given icon
+    // and colour
 
-    QGraphicsScene scene(0, 0, pWidth, pHeight);
-    QGraphicsPixmapItem pixmapItem;
-    QGraphicsColorizeEffect effect;
+    QIcon res = QIcon();
 
-    effect.setColor(pColor);
+    for (const auto &size : pIcon.availableSizes()) {
+        QGraphicsScene scene(0, 0, size.width(), size.height());
+        QGraphicsPixmapItem pixmapItem;
+        QGraphicsColorizeEffect effect;
 
-    pixmapItem.setGraphicsEffect(&effect);
-    pixmapItem.setPixmap(pIcon.pixmap(pWidth, pHeight));
+        effect.setColor(pColor);
 
-    scene.addItem(&pixmapItem);
+        pixmapItem.setGraphicsEffect(&effect);
+        pixmapItem.setPixmap(pIcon.pixmap(size));
 
-    QImage image(pWidth, pHeight, QImage::Format_ARGB32_Premultiplied);
-    QPainter painter(&image);
+        scene.addItem(&pixmapItem);
 
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.fillRect(image.rect(), Qt::transparent);
+        QImage image(size, QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&image);
 
-    scene.render(&painter);
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(image.rect(), Qt::transparent);
 
-    return QPixmap::fromImage(image);
+        scene.render(&painter);
+
+        res.addPixmap(QPixmap::fromImage(image));
+    }
+
+    return res;
 }
 
 //==============================================================================
 
-QIcon tintedIcon(const QString &pIcon, int pWidth, int pHeight,
-                 const QColor &pColor)
+QIcon tintedIcon(const QString &pIcon, const QColor &pColor)
 {
-    // Create and return a tinted icon using the given icon and colour
+    // Return a tinted icon using the given icon and colour
 
-    return tintedIcon(QIcon(pIcon), pWidth, pHeight, pColor);
+    return tintedIcon(QIcon(pIcon), pColor);
 }
 
 //==============================================================================
