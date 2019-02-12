@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDesktopServices>
 #include <QDir>
-#include <QGraphicsColorizeEffect>
 #include <QLabel>
 #include <QMainWindow>
 #include <QSettings>
@@ -98,8 +97,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     int plusIconSize = int(0.57*folderIconSize);
     int scaledIconSize = devicePixelRatio()*toolBarWidget->iconSize().width();
     // Note: we scale the icon in case we are on a non-HiDPI screen, in which
-    //       case the icon would be smaller than the what we need for our tool
-    //       bar widget...
+    //       case the icon would be smaller than what we need for our tool bar
+    //       widget...
 
     mGui->actionNew->setIcon(Core::scaledIcon(Core::overlayedIcon(folderIcon, PlusIcon,
                                                                   folderIconSize, folderIconSize,

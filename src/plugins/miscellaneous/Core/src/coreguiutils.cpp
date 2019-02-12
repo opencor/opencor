@@ -524,18 +524,17 @@ QAction * newSeparator(QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
+QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 {
     // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
     // using a QFrame widget
 
     QFrame *res = new QFrame(pParent);
+    QString color = borderColor().name();
 
     res->setStyleSheet(QString("QFrame {"
-                               "    border: 1px solid rgb(%1, %2, %3);"
-                               "}").arg(pColor.red())
-                                   .arg(pColor.green())
-                                   .arg(pColor.blue()));
+                               "    border: 1px solid %1;"
+                               "}").arg(color));
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -550,29 +549,11 @@ QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
-{
-    // Create and return a 'real' horizontal line widget
-
-    return newLineWidget(pHorizontal, borderColor(), pParent);
-}
-
-//==============================================================================
-
-QFrame * newLineWidget(const QColor &pColor, QWidget *pParent)
-{
-    // Create and return a 'real' horizontal line widget
-
-    return newLineWidget(true, pColor, pParent);
-}
-
-//==============================================================================
-
 QFrame * newLineWidget(QWidget *pParent)
 {
     // Create and return a 'real' horizontal line widget
 
-    return newLineWidget(true, borderColor(), pParent);
+    return newLineWidget(true, pParent);
 }
 
 //==============================================================================

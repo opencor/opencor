@@ -154,10 +154,7 @@ QAction CORE_EXPORT * newAction(QWidget *pParent);
 
 QAction CORE_EXPORT * newSeparator(QWidget *pParent);
 
-QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, const QColor &pColor,
-                                   QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, QWidget *pParent);
-QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
 QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,

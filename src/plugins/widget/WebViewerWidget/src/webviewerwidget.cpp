@@ -144,6 +144,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     mWebView = new QWebView(this);
 
+    mWebView->setAcceptDrops(false);
     mWebView->setPage(new WebViewerPage(this));
 
     mWebView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
