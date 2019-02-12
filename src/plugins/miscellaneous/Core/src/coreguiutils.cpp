@@ -526,8 +526,8 @@ QAction * newSeparator(QWidget *pParent)
 
 QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 {
-    // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
-    // using a QFrame widget
+    // Create and return a line widget, i.e. one which is 1 pixel wide, using a
+    // QFrame widget
 
     QFrame *res = new QFrame(pParent);
     QString color = borderColor().name();
@@ -551,7 +551,7 @@ QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 
 QFrame * newLineWidget(QWidget *pParent)
 {
-    // Create and return a 'real' horizontal line widget
+    // Return a new horizontal line widget
 
     return newLineWidget(true, pParent);
 }
@@ -678,8 +678,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(QIcon(pBaseIcon), pOverlayIcon, pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -691,8 +690,7 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(pBaseIcon, QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -704,8 +702,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -716,7 +713,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
                  Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
 {
-    // Create and return a scaled version of the given icon
+    // Return a scaled version of the given icon
 
     return pIcon.pixmap(pIcon.availableSizes().first()).scaled(pWidth, pHeight,
                                                                pAspectMode,
@@ -728,7 +725,7 @@ QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
 QIcon scaledIcon(const QString &pIcon, int pWidth, int pHeight,
                  Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
 {
-    // Create and return a scaled version of the given icon
+    // Return a scaled version of the given icon
 
     return scaledIcon(QIcon(pIcon), pWidth, pHeight, pAspectMode, pMode);
 }
