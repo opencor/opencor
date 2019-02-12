@@ -360,16 +360,16 @@ void EditorWidgetFindReplaceWidget::updateStyleSheet()
                           "}"
                           ""
                           "QToolButton:focus {"
-                          "    background: rgba(%1, %2, %3, 0.13);"
+                          "    background-color: rgba(%1, %2, %3, 0.13);"
                           "    border: 1px solid rgba(%1, %2, %3, 0.39);"
                           "}"
                           ""
                           "QToolButton:hover {"
-                          "    background: rgba(%1, %2, %3, 0.39);"
+                          "    background-color: rgba(%1, %2, %3, 0.39);"
                           "}"
                           ""
                           "QToolButton:pressed {"
-                          "    background: rgba(%1, %2, %3, 0.79);"
+                          "    background-color: rgba(%1, %2, %3, 0.79);"
                           "}").arg(shadowColor.red())
                               .arg(shadowColor.green())
                               .arg(shadowColor.blue()));
