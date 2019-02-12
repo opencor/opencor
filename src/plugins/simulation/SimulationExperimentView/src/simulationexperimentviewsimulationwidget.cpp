@@ -163,14 +163,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
 
     static const QIcon ResetIcon = QIcon(":/oxygen/actions/view-refresh.png");
 
-    static const int ResetIconWidth = ResetIcon.availableSizes().first().width();
-    static const int ResetIconHeight = ResetIcon.availableSizes().first().height();
-
     mRunPauseResumeSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-start.png"),
                                                       Qt::Key_F9, mToolBarWidget);
     mStopSimulationAction = Core::newAction(QIcon(":/oxygen/actions/media-playback-stop.png"),
                                             QKeySequence(Qt::ControlModifier|Qt::Key_F2), mToolBarWidget);
-    mResetStateModelParametersAction = Core::newAction(Core::tintedIcon(ResetIcon, ResetIconWidth, ResetIconHeight, Qt::darkBlue),
+    mResetStateModelParametersAction = Core::newAction(Core::tintedIcon(ResetIcon, Qt::darkBlue),
                                                         mToolBarWidget);
     mResetAllModelParametersAction = Core::newAction(ResetIcon, mToolBarWidget);
     mClearSimulationResultsAction = Core::newAction(QIcon(":/oxygen/actions/trash-empty.png"),
