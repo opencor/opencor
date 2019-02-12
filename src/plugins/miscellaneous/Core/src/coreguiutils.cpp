@@ -561,8 +561,8 @@ QFrame * newLineWidget(QWidget *pParent)
 QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
     if (pIcon.isNull())
         return QString();
@@ -582,8 +582,8 @@ QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
     return iconDataUri(QIcon(pIcon), pWidth, pHeight, pMode);
 }
