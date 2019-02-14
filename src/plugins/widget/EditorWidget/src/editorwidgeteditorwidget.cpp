@@ -285,7 +285,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
                               SCI_REPLACETARGET;
     QByteArray replaceText = mFindReplace->replaceText().toUtf8();
     const char *rawReplaceText = replaceText.constData();
-    ulong rawReplaceTextLen = ulong(strlen(rawReplaceText));
+    uintptr_t rawReplaceTextLen = uintptr_t(strlen(rawReplaceText));
     int selFoundTextLen = 0;
 
     forever {
@@ -297,7 +297,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         SendScintilla(SCI_SETTARGETSTART, findTextPos);
         SendScintilla(SCI_SETTARGETEND, 0);
 
-        findTextPos = int(SendScintilla(SCI_SEARCHINTARGET, ulong(findTextLen), rawFindText));
+        findTextPos = int(SendScintilla(SCI_SEARCHINTARGET, uintptr_t(findTextLen), rawFindText));
 
         if (findTextPos == -1) {
             // No more occurrences, so just leave our loop
