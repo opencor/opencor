@@ -47,17 +47,18 @@ void TabBarStyle::drawControl(ControlElement pElement,
 
     if (pElement == CE_TabBarTabLabel) {
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
-            QRect tabRect = tab->rect;
-            bool verticalTab =     (tab->shape == QTabBar::RoundedWest)
-                                || (tab->shape == QTabBar::RoundedEast)
-                                || (tab->shape == QTabBar::TriangularWest)
-                                || (tab->shape == QTabBar::TriangularEast);
             int alignment = Qt::AlignCenter | Qt::TextShowMnemonic;
 
             if (!styleHint(SH_UnderlineShortcut, pOption, pWidget))
                 alignment |= Qt::TextHideMnemonic;
 
-            if (verticalTab) {
+            bool isVerticalTab =     (tab->shape == QTabBar::RoundedWest)
+                                 || (tab->shape == QTabBar::RoundedEast)
+                                 || (tab->shape == QTabBar::TriangularWest)
+                                 || (tab->shape == QTabBar::TriangularEast);
+            QRect tabRect = tab->rect;
+
+            if (isVerticalTab) {
                 pPainter->save();
 
                 int x, y, rotation;
@@ -88,9 +89,7 @@ void TabBarStyle::drawControl(ControlElement pElement,
 
             if (!tab->icon.isNull()) {
                 pPainter->drawPixmap(iconRect.x(), iconRect.y(),
-                                     tab->icon.pixmap(pWidget?
-                                                          pWidget->window()->windowHandle():
-                                                          nullptr,
+                                     tab->icon.pixmap(pWidget->window()->windowHandle(),
                                                       tab->iconSize,
                                                       (tab->state & State_Enabled)?
                                                           QIcon::Normal:
@@ -103,11 +102,11 @@ void TabBarStyle::drawControl(ControlElement pElement,
             drawItemText(pPainter, tabRect, alignment, tab->palette,
                          tab->state & State_Enabled, tab->text,
                          (   (tab->state & State_Selected)
-                          && pWidget && pWidget->isActiveWindow())?
+                          && pWidget->isActiveWindow())?
                              QPalette::BrightText:
                              QPalette::WindowText);
 
-            if (verticalTab)
+            if (isVerticalTab)
                 pPainter->restore();
 
             if (tab->state & State_HasFocus) {
