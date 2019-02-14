@@ -202,17 +202,19 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(const
 
     Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget();
     QLabel *webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
+
+    webViewerLabel->setAlignment(Qt::AlignBottom);
+    webViewerLabel->setFont(newFont);
+
     QWidget *webViewerSpacer = new QWidget(webViewerToolBarWidget);
+
+    webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     QAction *webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
     QAction *webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
     QAction *webViewerZoomOutAction = Core::newAction(QIcon(":/oxygen/actions/zoom-out.png"), webViewerToolBarWidget);
 
     mWebViewerCellmlTextFormatAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"), webViewerToolBarWidget);
-
-    webViewerLabel->setAlignment(Qt::AlignBottom);
-    webViewerLabel->setFont(newFont);
-
-    webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     I18nInterface::retranslateAction(mWebViewerCellmlTextFormatAction, tr("CellML Text Format"),
                                      tr("Try to use the CellML Text format whenever possible"));
