@@ -52,7 +52,7 @@ void TabBarStyle::drawControl(ControlElement pElement,
             if (!styleHint(SH_UnderlineShortcut, pOption, pWidget))
                 alignment |= Qt::TextHideMnemonic;
 
-            bool isVerticalTab =     (tab->shape == QTabBar::RoundedWest)
+            bool isVerticalTab =    (tab->shape == QTabBar::RoundedWest)
                                  || (tab->shape == QTabBar::RoundedEast)
                                  || (tab->shape == QTabBar::TriangularWest)
                                  || (tab->shape == QTabBar::TriangularEast);
@@ -102,7 +102,7 @@ void TabBarStyle::drawControl(ControlElement pElement,
             drawItemText(pPainter, tabRect, alignment, tab->palette,
                          tab->state & State_Enabled, tab->text,
                          (   (tab->state & State_Selected)
-                          && pWidget->isActiveWindow())?
+                          && (tab->state & State_Active))?
                              QPalette::BrightText:
                              QPalette::WindowText);
 
