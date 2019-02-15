@@ -78,6 +78,17 @@ TabBarWidget::TabBarWidget(QWidget *pParent) :
 
 //==============================================================================
 
+TabBarWidget::~TabBarWidget()
+{
+    // Delete some internal objects
+
+#ifdef Q_OS_MAC
+    delete style();
+#endif
+}
+
+//==============================================================================
+
 int TabBarWidget::oldIndex() const
 {
     // Return our old index
