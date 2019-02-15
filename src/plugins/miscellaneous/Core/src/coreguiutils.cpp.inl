@@ -19,9 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 // Core GUI utilities
-//------------------------------------------------------------------------------
-// Qt upgrade: make sure that StyledItemDelegate::sizeHint() still behaves as
-//             expected...
 //==============================================================================
 
 static const auto SettingsPosition = QStringLiteral("Position");
