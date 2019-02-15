@@ -44,6 +44,7 @@ class CORE_EXPORT TabBarWidget : public QTabBar
 
 public:
     explicit TabBarWidget(QWidget *pParent);
+    ~TabBarWidget() override;
 
     int oldIndex() const;
     void setOldIndex(int pOldIndex);
