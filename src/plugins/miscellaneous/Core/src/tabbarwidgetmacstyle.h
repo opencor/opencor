@@ -18,18 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Tab bar widget
+// Tab bar widget Mac style
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "coreglobal.h"
-
-//==============================================================================
-
-#include <QTabBar>
+#include <QProxyStyle>
+#include <QStyleOptionTab>
 
 //==============================================================================
 
@@ -38,23 +35,20 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT TabBarWidget : public QTabBar
+class TabBarWidgetMacStyle : public QProxyStyle
 {
     Q_OBJECT
 
 public:
-    explicit TabBarWidget(QWidget *pParent);
+    void drawControl(ControlElement pElement, const QStyleOption *pOption,
+                     QPainter *pPainter, const QWidget *pWidget = nullptr) const override;
 
-    int oldIndex() const;
-    void setOldIndex(int pOldIndex);
-
-protected:
-    void wheelEvent(QWheelEvent *pEvent) override;
-
-    QSize tabSizeHint(int pIndex) const override;
+    QRect subElementRect(SubElement pElement, const QStyleOption *pOption,
+                         const QWidget *pWidget) const override;
 
 private:
-    int mOldIndex;
+    void tabLayout(const QStyleOptionTab *pOption, const QWidget *pWidget,
+                   QRect *pTextRect, QRect *pIconRect) const;
 };
 
 //==============================================================================

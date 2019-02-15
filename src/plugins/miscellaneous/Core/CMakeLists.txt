@@ -2,6 +2,11 @@ project(CorePlugin)
 
 # Add the plugin
 
+if(APPLE)
+    set(TABBARWIDGETMACSTYLE_CPP src/tabbarwidgetmacstyle.cpp)
+    set(TABBARWIDGETMACSTYLE_H src/tabbarwidgetmacstyle.h)
+endif()
+
 add_plugin(Core
     SOURCES
         ../../cliinterface.cpp
@@ -19,6 +24,8 @@ add_plugin(Core
         ../../solverinterface.cpp
         ../../viewinterface.cpp
         ../../windowinterface.cpp
+
+        ${TABBARWIDGETMACSTYLE_CPP}
 
         src/borderedwidget.cpp
         src/busywidget.cpp
@@ -50,6 +57,8 @@ add_plugin(Core
         ../../pluginmanager.h
         ../../preferencesinterface.h
         ../../solverinterface.h
+
+        ${TABBARWIDGETMACSTYLE_H}
 
         src/borderedwidget.h
         src/busywidget.h
