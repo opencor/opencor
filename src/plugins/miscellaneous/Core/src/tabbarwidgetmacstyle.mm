@@ -40,7 +40,7 @@ void TabBarWidgetMacStyle::drawControl(ControlElement pElement,
                                        const QWidget *pWidget) const
 {
     // Draw a tab bar tab label
-    // Note: anything else is drawn by our parent...
+    // Note: anything else is done by our parent...
 
     if (pElement == CE_TabBarTabLabel) {
         // Note: adapted from QCommonStyle::drawControl()...
@@ -135,10 +135,12 @@ QRect TabBarWidgetMacStyle::subElementRect(SubElement pElement,
                                            const QStyleOption *pOption,
                                            const QWidget *pWidget) const
 {
-    // Determine and return the size of a sub-element
-    // Note: adapted from QCommonStyle::subElementRect()...
+    // Determine and return the size of tab bar tab text
+    // Note: anything else is done by our parent...
 
     if (pElement == SE_TabBarTabText) {
+        // Note: adapted from QCommonStyle::subElementRect()...
+
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
             QRect res;
             QRect dummy;
