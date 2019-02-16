@@ -25,7 +25,7 @@ add_plugin(Core
         ../../viewinterface.cpp
         ../../windowinterface.cpp
 
-        ${TABBARWIDGETMACSTYLE_CPP}
+        ${TABBARWIDGETMACSTYLE_MM}
 
         src/borderedwidget.cpp
         src/busywidget.cpp
