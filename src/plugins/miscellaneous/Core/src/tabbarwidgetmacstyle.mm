@@ -39,10 +39,12 @@ void TabBarWidgetMacStyle::drawControl(ControlElement pElement,
                                        QPainter *pPainter,
                                        const QWidget *pWidget) const
 {
-    // Draw a control
-    // Note: this is adapted from QCommonStyle::drawControl()...
+    // Draw a tab bar tab label
+    // Note: anything else is drawn by our parent...
 
     if (pElement == CE_TabBarTabLabel) {
+        // Note: adapted from QCommonStyle::drawControl()...
+
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
             int alignment = Qt::AlignCenter | Qt::TextShowMnemonic;
 
@@ -134,7 +136,7 @@ QRect TabBarWidgetMacStyle::subElementRect(SubElement pElement,
                                            const QWidget *pWidget) const
 {
     // Determine and return the size of a sub-element
-    // Note: this is adapted from QCommonStyle::subElementRect()...
+    // Note: adapted from QCommonStyle::subElementRect()...
 
     if (pElement == SE_TabBarTabText) {
         if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
@@ -158,8 +160,8 @@ void TabBarWidgetMacStyle::tabLayout(const QStyleOptionTab *pOption,
                                      const QWidget *pWidget, QRect *pTextRect,
                                      QRect *pIconRect) const
 {
-    // Compute the tab layout
-    // Note: this is adapted from QCommonStylePrivate::tabLayout()...
+    // Compute our tab layout
+    // Note: adapted from QCommonStylePrivate::tabLayout()...
 
     Q_ASSERT(pTextRect);
     Q_ASSERT(pIconRect);
