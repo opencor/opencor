@@ -3,7 +3,7 @@ project(CorePlugin)
 # Add the plugin
 
 if(APPLE)
-    set(TABBARWIDGETMACSTYLE_CPP src/tabbarwidgetmacstyle.cpp)
+    set(TABBARWIDGETMACSTYLE_MM src/tabbarwidgetmacstyle.mm)
     set(TABBARWIDGETMACSTYLE_H src/tabbarwidgetmacstyle.h)
 endif()
 
@@ -25,7 +25,7 @@ add_plugin(Core
         ../../viewinterface.cpp
         ../../windowinterface.cpp
 
-        ${TABBARWIDGETMACSTYLE_CPP}
+        ${TABBARWIDGETMACSTYLE_MM}
 
         src/borderedwidget.cpp
         src/busywidget.cpp
