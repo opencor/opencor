@@ -3,7 +3,7 @@ project(CorePlugin)
 # Add the plugin
 
 if(APPLE)
-    set(TABBARWIDGETMACSTYLE_CPP src/tabbarwidgetmacstyle.cpp)
+    set(TABBARWIDGETMACSTYLE_MM src/tabbarwidgetmacstyle.mm)
     set(TABBARWIDGETMACSTYLE_H src/tabbarwidgetmacstyle.h)
 endif()
 
