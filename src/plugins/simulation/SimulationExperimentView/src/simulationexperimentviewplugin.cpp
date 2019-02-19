@@ -61,6 +61,17 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool SimulationExperimentViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewPlugin::saveFile(const QString &pOldFileName,
                                               const QString &pNewFileName,
                                               bool &pNeedFeedback)

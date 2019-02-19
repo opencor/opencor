@@ -117,6 +117,17 @@ bool CorePlugin::canClose()
 // File handling interface
 //==============================================================================
 
+bool CorePlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CorePlugin::saveFile(const QString &pOldFileName,
                           const QString &pNewFileName,
                           bool &pNeedFeedback)
