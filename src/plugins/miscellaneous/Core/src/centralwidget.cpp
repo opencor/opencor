@@ -1686,13 +1686,15 @@ void CentralWidget::showEnableActions(const QList<QAction *> &pActions)
 
 void CentralWidget::updateGui()
 {
+    // Check whether we are doing something, in which case we revert to our old
+    // tab index, if possible
+    // Note: indeed, it's too risky to update our GUI if we are already doing
+    //       something since things may, for example, not be fully
+    //       initialised...
+
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
 
     if (mState != Idling) {
-        // We are doing something, so it's too risky to update the GUI for now
-        // (e.g. things may not be fully initialised), so revert to our old tab
-        // index, if possible
-
         if (tabBar)
             setTabBarCurrentIndex(tabBar, tabBar->oldIndex());
 
