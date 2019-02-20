@@ -899,6 +899,14 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
 //==============================================================================
 
+void CentralWidget::importFile(const QString &pFileNameOrUrl)
+{
+//---ISSUE2000--- TO BE FINISHED...
+qDebug(">>> Import '%s'...", qPrintable(pFileNameOrUrl));
+}
+
+//==============================================================================
+
 void CentralWidget::openRemoteFileChanged()
 {
     // Enable/disable the open button depending on whether we have some text for

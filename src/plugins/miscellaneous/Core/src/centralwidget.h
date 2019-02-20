@@ -115,6 +115,8 @@ public:
 
     void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
+    void importFile(const QString &pFileNameOrUrl);
+
     bool canClose();
 
     bool selectMode(const QString &pModeName);

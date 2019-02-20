@@ -121,7 +121,8 @@ bool CorePlugin::importFile(const QString &pFileName)
     // We rely on this interface not to import the given file as such, but to
     // get the current view to import it, if it can, or open it as any normal
     // file, if the current view cannot import it
-qDebug(">>> Import '%s'...", qPrintable(pFileName));
+
+    mCentralWidget->importFile(pFileName);
 
     return false;
 }
