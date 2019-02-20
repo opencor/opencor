@@ -4495,7 +4495,6 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
     } else {
         problem = FileAccess;
     }
-    problem = FileAccess;
 
     // Do the actual import unless there was a problem, in which case we let
     // people know about the problem
