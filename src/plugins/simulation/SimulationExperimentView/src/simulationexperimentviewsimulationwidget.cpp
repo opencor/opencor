@@ -124,8 +124,6 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mCanUpdatePlotsForUpdatedGraphs(true),
     mNeedUpdatePlots(false),
     mOldDataSizes(QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64>()),
-    mDataImportProgresses(QMap<DataStore::DataStoreImportData *, double>()),
-    mDataImportErrorMessages(QMap<DataStore::DataStoreImportData *, QString>()),
     mFileTypeInterfaces(QMap<QString, FileTypeInterface *>())
 {
     // Ask our simulation manager to manage our file and then retrieve the
@@ -4212,49 +4210,27 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore
 void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
                                                                    const QString &pErrorMessage)
 {
-    // We are done with an import, so don't track its progress anymore and keep
-    // track of its error message
+    // Ask our simulation to account for our imported data, and update our
+    // Graphs and Parameters sections with our imported data
 
-    mDataImportProgresses.remove(pImportData);
-    mDataImportErrorMessages.insert(pImportData, pErrorMessage);
+    mSimulation->importData(pImportData);
 
-    // If mImportDataProgresses is empty then it means that all our imports are
-    // done, in which case we need to update our Parameters section with our
-    // imported data, hide our busy widget and display error messages, if needed
+    mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(pImportData);
+    mContentsWidget->informationWidget()->parametersWidget()->importData(pImportData);
 
-    if (mDataImportProgresses.isEmpty()) {
-        // Ask our simulation to account for our imported data, and update our
-        // Graphs and Parameters sections with our imported data
+    // Hide our busy widget
 
-        QList<DataStore::DataStoreImportData *> dataStoreImportDatas = mDataImportErrorMessages.keys();
+    Core::centralWidget()->hideBusyWidget();
 
-        for (auto dataStoreImportData : dataStoreImportDatas) {
-            mSimulation->importData(dataStoreImportData);
+    // Let people know about any error that we came across
 
-            mContentsWidget->informationWidget()->graphPanelAndGraphsWidget()->importData(dataStoreImportData);
-            mContentsWidget->informationWidget()->parametersWidget()->importData(dataStoreImportData);
-        }
-
-        // Hide our busy widget
-
-        Core::centralWidget()->hideBusyWidget();
-
-        // Let people know about any error that we came across
-
-        for (auto dataStoreImportData : dataStoreImportDatas) {
-            QString errorMessage = mDataImportErrorMessages.value(dataStoreImportData);
-
-            if (!errorMessage.isEmpty()) {
-                Core::warningMessageBox(tr("Data Import"),
-                                        tr("<strong>%1</strong> could not be imported (%2).").arg(dataStoreImportData->fileName())
-                                                                                             .arg(Core::formatMessage(errorMessage, true)));
-            }
-        }
-
-        mDataImportErrorMessages.clear();
-
-        emit allImportsDone();
+    if (!pErrorMessage.isEmpty()) {
+        Core::warningMessageBox(tr("Data Import"),
+                                tr("<strong>%1</strong> could not be imported (%2).").arg(pImportData->fileName())
+                                                                                     .arg(Core::formatMessage(pErrorMessage, true)));
     }
+
+    emit allImportsDone();
 }
 
 //==============================================================================
@@ -4477,9 +4453,7 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
     if (dataStoreImportData) {
         // We have some import data, so now check whether it is actually valid
 
-        if (dataStoreImportData->valid()) {
-            mDataImportProgresses.insert(dataStoreImportData, 0.0);
-        } else {
+        if (!dataStoreImportData->valid()) {
             delete dataStoreImportData;
 
             dataStoreImportData = nullptr;
