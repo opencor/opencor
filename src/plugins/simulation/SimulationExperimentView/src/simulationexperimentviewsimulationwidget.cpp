@@ -652,9 +652,6 @@ void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *p
                 break;
             }
         }
-
-        if (acceptEvent)
-            break;
     }
 
     if (acceptEvent)
@@ -4511,6 +4508,13 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
                 dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
 
         dataStoreImporter->importData(dataStoreImportData);
+
+        QEventLoop waitLoop;
+
+        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
+                &waitLoop, &QEventLoop::quit);
+
+        waitLoop.exec();
 
         return true;
     } else {
