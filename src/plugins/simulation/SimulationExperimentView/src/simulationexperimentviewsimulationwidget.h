@@ -141,9 +141,8 @@ public:
 
     QIcon fileTabIcon() const;
 
+    bool import(const QString &pFileName);
     bool save(const QString &pFileName);
-
-    void importDataFiles(const QStringList &pFileNames);
 
     void filePermissionsChanged();
     void fileReloaded();

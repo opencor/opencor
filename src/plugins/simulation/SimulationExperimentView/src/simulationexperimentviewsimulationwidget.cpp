@@ -678,7 +678,8 @@ void SimulationExperimentViewSimulationWidget::dropEvent(QDropEvent *pEvent)
 {
     // Import the one or several data files
 
-    importDataFiles(Core::droppedFileNames(pEvent));
+    for (const auto &fileName : Core::droppedFileNames(pEvent))
+        import(fileName);
 
     // Accept the proposed action for the event
 
@@ -3274,7 +3275,8 @@ void SimulationExperimentViewSimulationWidget::dataImport()
 
     // Import the one or several data files
 
-    importDataFiles(fileNames);
+    for (const auto &fileName : fileNames)
+        import(fileName);
 }
 
 //==============================================================================
@@ -4422,14 +4424,15 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList &pFileNames)
+bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
 {
     // Import the given data files
 
     QMap<QString, DataStoreInterface *> dataStoreInterfaces = QMap<QString, DataStoreInterface *>();
     QStringList invalidDataFileNames = QStringList();
+QStringList fileNames = QStringList() << pFileName;
 
-    for (const auto &fileName : pFileNames) {
+    for (const auto &fileName : fileNames) {
         // Determine the type of data file we are dealing with so we can use the
         // correct data store interface
         // Note: we check whether mDataStoreFiles contains an entry for the
@@ -4536,6 +4539,8 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
 
         dataStoreImporter->importData(dataStoreImportData);
     }
+
+return true;
 }
 
 //==============================================================================
