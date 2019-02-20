@@ -4427,7 +4427,6 @@ void SimulationExperimentViewSimulationWidget::importDataFiles(const QStringList
     // Import the given data files
 
     QMap<QString, DataStoreInterface *> dataStoreInterfaces = QMap<QString, DataStoreInterface *>();
-
     QStringList invalidDataFileNames = QStringList();
 
     for (const auto &fileName : pFileNames) {
