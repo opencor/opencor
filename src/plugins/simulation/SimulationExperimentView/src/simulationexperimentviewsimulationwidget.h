@@ -260,7 +260,7 @@ private:
     QMap<DataStore::DataStoreImportData *, double> mDataImportProgresses;
     QMap<DataStore::DataStoreImportData *, QString> mDataImportErrorMessages;
 
-    QMap<QString, FileTypeInterface *> mDataStoreFiles;
+    QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
     void output(const QString &pMessage);
 
