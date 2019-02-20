@@ -3298,10 +3298,12 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportProgress,
+                Qt::UniqueConnection);
 
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreExportDone,
+                Qt::UniqueConnection);
         connect(dataStoreExporter, &DataStore::DataStoreExporter::done,
                 dataStoreData, &DataStore::DataStoreExportData::deleteLater);
 
@@ -4473,10 +4475,12 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
         DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterface->dataStoreImporterInstance();
 
         connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress,
+                Qt::UniqueConnection);
 
         connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
+                Qt::UniqueConnection);
         connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
                 dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
 
