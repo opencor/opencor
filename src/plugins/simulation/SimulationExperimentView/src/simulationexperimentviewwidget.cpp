@@ -283,6 +283,17 @@ QIcon SimulationExperimentViewWidget::fileTabIcon(const QString &pFileName) cons
 
 //==============================================================================
 
+bool SimulationExperimentViewWidget::importFile(const QString &pFileName)
+{
+    // Import the given file into the current simulation widget
+
+    mSimulationWidget->importDataFiles(QStringList() << pFileName);
+
+    return true;
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewWidget::saveFile(const QString &pOldFileName,
                                               const QString &pNewFileName)
 {

@@ -143,6 +143,8 @@ public:
 
     bool save(const QString &pFileName);
 
+    void importDataFiles(const QStringList &pFileNames);
+
     void filePermissionsChanged();
     void fileReloaded();
 
@@ -326,8 +328,6 @@ private:
 
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
-
-    void importDataFiles(const QStringList &pFileNames);
 
 signals:
     void splitterMoved(const QIntList &pSizes);

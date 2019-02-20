@@ -63,11 +63,9 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 
 bool SimulationExperimentViewPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Let our view widget know that we want to import a file
 
-    // We don't handle this interface...
-
-    return false;
+    return mViewWidget->importFile(pFileName);
 }
 
 //==============================================================================
