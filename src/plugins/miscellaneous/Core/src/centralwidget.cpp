@@ -145,8 +145,7 @@ CentralWidget::CentralWidget(QWidget *pParent) :
     mFileModeTabIndexes(QMap<QString, int>()),
     mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
     mFileNames(QStringList()),
-    mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
-    mViews(QMap<QString, QWidget *>())
+    mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>())
 {
     // Create and set our horizontal layout
 
@@ -1351,15 +1350,6 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 
         mFileTabs->removeTab(realIndex);
 
-        // Remove track of the views for the file
-
-        for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
-            ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
-
-            for (int j = 0, jMax = mModes.value(fileMode)->viewPlugins().count(); j < jMax; ++j)
-                mViews.remove(viewKey(i, j, fileName));
-        }
-
         // Ask our view plugins to remove the corresponding view for the file
 
         for (auto plugin : mLoadedViewPlugins)
@@ -1597,18 +1587,6 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
 
 //==============================================================================
 
-QString CentralWidget::viewKey(int pMode, int pView, const QString &pFileName)
-{
-    // Return the view key to be used with mViews for the given mode, view and
-    // file name
-
-    return QString("%1|%2|%3").arg(pMode)
-                              .arg(pView)
-                              .arg(pFileName);
-}
-
-//==============================================================================
-
 void CentralWidget::fileReloadedOrSaved(const QString &pFileName,
                                         bool pFileReloaded)
 {
@@ -1837,21 +1815,12 @@ void CentralWidget::updateGui()
     if (fileName.isEmpty()) {
         newView = mLogoView;
     } else {
-        // There is a current file, so retrieve its view
-
-        QString fileViewKey = mode?viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName):QString();
+        // There is a current file, so retrieve its view and if none exists then
+        // use our no-view widget instead and update its message
 
         newView = viewInterface?viewInterface->viewWidget(fileName):nullptr;
 
-        if (newView) {
-            // We could get a view for the current file, so keep track of it
-
-            if (!mViews.value(fileViewKey))
-                mViews.insert(fileViewKey, newView);
-        } else {
-            // The interface doesn't have a view for the current file, so use
-            // our no-view widget instead and update its message
-
+        if (!newView) {
             newView = mNoViewMsg;
 
             updateNoViewMsg();

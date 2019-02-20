@@ -183,8 +183,6 @@ private:
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
 
-    QString viewKey(int pMode, int pView, const QString &pFileName);
-
     void fileReloadedOrSaved(const QString &pFileName, bool pFileReloaded);
 
     void setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex);
