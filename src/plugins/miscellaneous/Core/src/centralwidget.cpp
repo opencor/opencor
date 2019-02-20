@@ -900,8 +900,18 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
 void CentralWidget::importFile(const QString &pFileNameOrUrl)
 {
-//---ISSUE2000--- TO BE FINISHED...
-qDebug(">>> Import '%s'...", qPrintable(pFileNameOrUrl));
+    // Try to get our current view to import the given file and it cannot then
+    // just open it
+
+    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
+
+    if (   !fileHandlingInterface
+        || !fileHandlingInterface->importFile(pFileNameOrUrl)) {
+        // The current view doesn't support the import of files or can't import
+        // it, so open the file as a normal file
+
+        openRemoteFile(pFileNameOrUrl);
+    }
 }
 
 //==============================================================================
