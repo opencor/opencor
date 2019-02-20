@@ -4197,19 +4197,6 @@ void SimulationExperimentViewSimulationWidget::plotAxesChanged()
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore::DataStoreImportData *pImportData,
-                                                                       double pProgress)
-{
-    // There has been some progress with our import, so update our busy widget
-
-    mDataImportProgresses.insert(pImportData, pProgress);
-
-    Core::centralWidget()->setBusyWidgetProgress(*std::min_element(mDataImportProgresses.begin(),
-                                                                   mDataImportProgresses.end()));
-}
-
-//==============================================================================
-
 void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
                                                                    const QString &pErrorMessage)
 {
@@ -4500,7 +4487,7 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
         DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterface->dataStoreImporterInstance();
 
         connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress);
+                Core::centralWidget(), &Core::CentralWidget::setBusyWidgetProgress);
 
         connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone);

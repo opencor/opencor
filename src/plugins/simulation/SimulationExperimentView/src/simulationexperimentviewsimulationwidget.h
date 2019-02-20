@@ -391,8 +391,6 @@ private slots:
 
     void plotAxesChanged();
 
-    void dataStoreImportProgress(DataStore::DataStoreImportData *pImportData,
-                                 double pProgress);
     void dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
                              const QString &pErrorMessage);
 
