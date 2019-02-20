@@ -51,6 +51,7 @@ namespace OpenCOR {
 //==============================================================================
 
 class CoreInterface;
+class FileHandlingInterface;
 class PluginManager;
 
 //==============================================================================
@@ -97,6 +98,7 @@ private:
     Plugins mLoadedWindowPlugins;
 
     CoreInterface *mCoreInterface;
+    FileHandlingInterface *mFileHandlingInterface;
 
     QString mRawLocale;
 

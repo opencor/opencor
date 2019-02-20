@@ -118,9 +118,10 @@ bool CorePlugin::canClose()
 
 bool CorePlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
+    // We rely on this interface not to import the given file as such, but to
+    // get the current view to import it, if it can, or open it as any normal
+    // file, if the current view cannot import it
+qDebug(">>> Import '%s'...", qPrintable(pFileName));
 
     return false;
 }

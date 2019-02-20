@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "coreinterface.h"
+#include "filehandlinginterface.h"
 #include "guiapplication.h"
 #include "guiinterface.h"
 #include "guiutils.h"
@@ -157,8 +158,14 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Retrieve our Core plugin's interface, should the Core plugin be loaded
 
-    if (mPluginManager->corePlugin())
-        mCoreInterface = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance());
+    Plugin *corePlugin = mPluginManager->corePlugin();
+
+    if (corePlugin) {
+        QObject *corePluginInstance = corePlugin->instance();
+
+        mCoreInterface = qobject_cast<CoreInterface *>(corePluginInstance);
+        mFileHandlingInterface = qobject_cast<FileHandlingInterface *>(corePluginInstance);
+    }
 
     // Set up the GUI
 
@@ -1083,6 +1090,24 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
         //       opencor://openFiles//home/user/file1|/home/user/file2...
 
         handleArguments(urlArguments(pUrl).split('|'));
+    } else if (!actionName.compare("importFile", Qt::CaseInsensitive)) {
+        // We want to import a file
+        // Note: the file name is contained in the path of the URL minus the
+        //       leading forward slash. Indeed, an import file request looks
+        //       like opencor://importFile//home/user/file...
+
+        if (mFileHandlingInterface)
+            mFileHandlingInterface->importFile(urlArguments(pUrl));
+    } else if (!actionName.compare("importFiles", Qt::CaseInsensitive)) {
+        // We want to import some files
+        // Note: the file names are contained in the path of the URL minus the
+        //       leading forward slash. Indeed, an import files request looks
+        //       like opencor://importFiles//home/user/file1|/home/user/file2...
+
+        if (mFileHandlingInterface) {
+            for (const auto &fileName : urlArguments(pUrl).split('|'))
+                mFileHandlingInterface->importFile(fileName);
+        }
     } else {
         // We are dealing with an action that OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
