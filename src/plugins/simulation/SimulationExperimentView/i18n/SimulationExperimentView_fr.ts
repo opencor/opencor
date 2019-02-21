@@ -656,5 +656,21 @@
         <source>the memory needed to store the data could not be allocated</source>
         <translation>la mémoire nécessaire pour stocker les données n&apos;a pas pu être allouée</translation>
     </message>
+    <message>
+        <source>Local</source>
+        <translation>Locales</translation>
+    </message>
+    <message>
+        <source>Import some local data</source>
+        <translation>Importer des données locales</translation>
+    </message>
+    <message>
+        <source>Remote</source>
+        <translation>À Distance</translation>
+    </message>
+    <message>
+        <source>Import some remote data</source>
+        <translation>Importer des données à distance</translation>
+    </message>
 </context>
 </TS>
