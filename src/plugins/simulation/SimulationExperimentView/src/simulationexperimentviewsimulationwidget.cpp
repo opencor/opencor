@@ -604,9 +604,9 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
 
     I18nInterface::retranslateAction(mDataImportAction, tr("Data Import"),
                                      tr("Import some data"));
-    I18nInterface::retranslateAction(mLocalDataImportAction, tr("Local"),
+    I18nInterface::retranslateAction(mLocalDataImportAction, tr("Local..."),
                                      tr("Import some local data"));
-    I18nInterface::retranslateAction(mRemoteDataImportAction, tr("Remote"),
+    I18nInterface::retranslateAction(mRemoteDataImportAction, tr("Remote..."),
                                      tr("Import some remote data"));
     I18nInterface::retranslateAction(mSimulationResultsExportAction, tr("Simulation Results Export"),
                                      tr("Export the simulation results"));
