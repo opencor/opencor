@@ -287,7 +287,7 @@ bool SimulationExperimentViewWidget::importFile(const QString &pFileName)
 {
     // Import the given file into the current simulation widget
 
-    return mSimulationWidget->import(pFileName);
+    return mSimulationWidget->import(pFileName, false);
 }
 
 //==============================================================================

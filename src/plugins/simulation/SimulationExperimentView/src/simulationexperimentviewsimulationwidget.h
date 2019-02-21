@@ -141,7 +141,7 @@ public:
 
     QIcon fileTabIcon() const;
 
-    bool import(const QString &pFileName);
+    bool import(const QString &pFileName, bool pShowWarning = true);
     bool save(const QString &pFileName);
 
     void filePermissionsChanged();

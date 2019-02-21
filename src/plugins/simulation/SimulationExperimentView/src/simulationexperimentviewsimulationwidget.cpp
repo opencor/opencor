@@ -4404,7 +4404,8 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
 
 //==============================================================================
 
-bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
+bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
+                                                      bool pShowWarning)
 {
     // Determine the type of file we are dealing with so we can use the correct
     // data store interface
@@ -4431,8 +4432,10 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
     if (fileTypeInterface) {
         mFileTypeInterfaces.remove(pFileName);
     } else {
-        Core::warningMessageBox(tr("Data Import"),
-                                tr("<strong>%1</strong> is not a data file.").arg(pFileName));
+        if (pShowWarning) {
+            Core::warningMessageBox(tr("Data Import"),
+                                    tr("<strong>%1</strong> is not a data file.").arg(pFileName));
+        }
 
         return false;
     }
