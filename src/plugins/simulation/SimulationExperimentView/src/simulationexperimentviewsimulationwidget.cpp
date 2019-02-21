@@ -1456,9 +1456,9 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
     setUpdatesEnabled(false);
         // Clear our simulation results
         // Note: we temporarily disable updates to prevent the GUI from taking
-        //       too long to update itself (something that might happen when we
-        //       have several graph panels since they will try to realign
-        //       themselves)...
+        //       too long to update itself (something that would happen if we
+        //       were to have several graph panels since they would try to
+        //       realign themselves)...
 
         mSimulation->results()->reset();
 
@@ -1535,8 +1535,8 @@ void SimulationExperimentViewSimulationWidget::initializeTrackers(bool pInitialz
     // and check for changes whenever a property gets changed
     // Note: we pass Qt::UniqueConnection in our calls to connect() so that we
     //       don't end up with several identical connections (something that
-    //       might happen if we reload our SED-ML file / COMBINE archive for
-    //       example)...
+    //       would happen if we were to reload our SED-ML file / COMBINE
+    //       archive)...
 
     SimulationExperimentViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SimulationExperimentViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
@@ -3292,6 +3292,10 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
 
     if (dataStoreData) {
         // We have got the data we need, so do the actual export
+        // Note: we pass Qt::UniqueConnection in some of our calls to connect()
+        //       so that we don't end up with several identical connections
+        //       (something that would happen if we were to reuse the same data
+        //       store exporter)...
 
         Core::centralWidget()->showProgressBusyWidget();
 
@@ -4470,6 +4474,11 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName)
     // people know about the problem
 
     if (problem == None) {
+        // Note: we pass Qt::UniqueConnection in some of our calls to connect()
+        //       so that we don't end up with several identical connections
+        //       (something that would happen if we were to reuse the same data
+        //       store importer)...
+
         Core::centralWidget()->showProgressBusyWidget();
 
         DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterface->dataStoreImporterInstance();
