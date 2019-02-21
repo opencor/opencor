@@ -3265,6 +3265,121 @@ void SimulationExperimentViewSimulationWidget::emitSplitterMoved()
 
 //==============================================================================
 
+bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
+                                                      bool pShowWarning)
+{
+    // Determine the type of file we are dealing with so we can use the correct
+    // data store interface
+    // Note: we check whether mFileTypeInterfaces contains an entry for the
+    //       given file (which would mean that the file was dropped on us) and
+    //       if not (i.e. we want to import file using our main menu or our URI
+    //       scheme) then check whether the file is a data file...
+
+    FileTypeInterface *fileTypeInterface = mFileTypeInterfaces.value(pFileName);
+
+    if (!fileTypeInterface) {
+        for (auto dataStoreFileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
+            if (dataStoreFileTypeInterface->isFile(pFileName)) {
+                fileTypeInterface = dataStoreFileTypeInterface;
+
+                break;
+            }
+        }
+    }
+
+    // Make sure that we have a got a file type interface for the given file or
+    // leave if not
+
+    if (fileTypeInterface) {
+        mFileTypeInterfaces.remove(pFileName);
+    } else {
+        if (pShowWarning) {
+            Core::warningMessageBox(tr("Data Import"),
+                                    tr("<strong>%1</strong> is not a data file.").arg(pFileName));
+        }
+
+        return false;
+    }
+
+    // Retrieve some imported data for the given file
+
+    enum Problem {
+        None,
+        FileAccess,
+        MemoryAllocation
+    };
+
+    QList<quint64> runSizes = QList<quint64>();
+
+    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
+        runSizes << mSimulation->runSize(i);
+
+    DataStoreInterface *dataStoreInterface = Core::dataStoreInterface(fileTypeInterface);
+    DataStore::DataStoreImportData *dataStoreImportData = dataStoreInterface->getImportData(pFileName, mSimulation->importData()->addDataStore(),
+                                                                                                       mSimulation->results()->dataStore(),
+                                                                                                       runSizes);
+    Problem problem = None;
+
+    if (dataStoreImportData) {
+        // We have some import data, so now check whether it is actually valid
+
+        if (!dataStoreImportData->valid()) {
+            delete dataStoreImportData;
+
+            dataStoreImportData = nullptr;
+
+            problem = MemoryAllocation;
+        }
+    } else {
+        problem = FileAccess;
+    }
+
+    // Do the actual import unless there was a problem, in which case we let
+    // people know about the problem
+
+    if (problem == None) {
+        // Note: we pass Qt::UniqueConnection in some of our calls to connect()
+        //       so that we don't end up with several identical connections
+        //       (something that would happen if we were to reuse the same data
+        //       store importer)...
+
+        Core::centralWidget()->showProgressBusyWidget();
+
+        DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterface->dataStoreImporterInstance();
+
+        connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress,
+                Qt::UniqueConnection);
+
+        connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
+                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
+                Qt::UniqueConnection);
+        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
+                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
+
+        dataStoreImporter->importData(dataStoreImportData);
+
+        QEventLoop waitLoop;
+
+        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
+                &waitLoop, &QEventLoop::quit);
+
+        waitLoop.exec();
+
+        return true;
+    } else {
+        Core::warningMessageBox(tr("Data Import"),
+                                tr("<strong>%1</strong> could not be imported (%2).").arg(pFileName)
+                                                                                     .arg((problem == FileAccess)?
+                                                                                              tr("the file could not be accessed"):
+                                                                                              tr("the memory needed to store the data could not be allocated")));
+
+        return false;
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::dataImport()
 {
     // Ask for the data files to be imported
@@ -4400,121 +4515,6 @@ void SimulationExperimentViewSimulationWidget::updateSedmlFileOrCombineArchiveMo
                                                    || graphPanelPropertiesModified
                                                    || graphsPropertiesModified
                                                    || mGraphPanelsWidgetSizesModified));
-}
-
-//==============================================================================
-
-bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
-                                                      bool pShowWarning)
-{
-    // Determine the type of file we are dealing with so we can use the correct
-    // data store interface
-    // Note: we check whether mFileTypeInterfaces contains an entry for the
-    //       given file (which would mean that the file was dropped on us) and
-    //       if not (i.e. we want to import file using our main menu or our URI
-    //       scheme) then check whether the file is a data file...
-
-    FileTypeInterface *fileTypeInterface = mFileTypeInterfaces.value(pFileName);
-
-    if (!fileTypeInterface) {
-        for (auto dataStoreFileTypeInterface : Core::dataStoreFileTypeInterfaces()) {
-            if (dataStoreFileTypeInterface->isFile(pFileName)) {
-                fileTypeInterface = dataStoreFileTypeInterface;
-
-                break;
-            }
-        }
-    }
-
-    // Make sure that we have a got a file type interface for the given file or
-    // leave if not
-
-    if (fileTypeInterface) {
-        mFileTypeInterfaces.remove(pFileName);
-    } else {
-        if (pShowWarning) {
-            Core::warningMessageBox(tr("Data Import"),
-                                    tr("<strong>%1</strong> is not a data file.").arg(pFileName));
-        }
-
-        return false;
-    }
-
-    // Retrieve some imported data for the given file
-
-    enum Problem {
-        None,
-        FileAccess,
-        MemoryAllocation
-    };
-
-    QList<quint64> runSizes = QList<quint64>();
-
-    for (int i = 0, iMax = mSimulation->runsCount(); i < iMax; ++i)
-        runSizes << mSimulation->runSize(i);
-
-    DataStoreInterface *dataStoreInterface = Core::dataStoreInterface(fileTypeInterface);
-    DataStore::DataStoreImportData *dataStoreImportData = dataStoreInterface->getImportData(pFileName, mSimulation->importData()->addDataStore(),
-                                                                                                       mSimulation->results()->dataStore(),
-                                                                                                       runSizes);
-    Problem problem = None;
-
-    if (dataStoreImportData) {
-        // We have some import data, so now check whether it is actually valid
-
-        if (!dataStoreImportData->valid()) {
-            delete dataStoreImportData;
-
-            dataStoreImportData = nullptr;
-
-            problem = MemoryAllocation;
-        }
-    } else {
-        problem = FileAccess;
-    }
-
-    // Do the actual import unless there was a problem, in which case we let
-    // people know about the problem
-
-    if (problem == None) {
-        // Note: we pass Qt::UniqueConnection in some of our calls to connect()
-        //       so that we don't end up with several identical connections
-        //       (something that would happen if we were to reuse the same data
-        //       store importer)...
-
-        Core::centralWidget()->showProgressBusyWidget();
-
-        DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterface->dataStoreImporterInstance();
-
-        connect(dataStoreImporter, &DataStore::DataStoreImporter::progress,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportProgress,
-                Qt::UniqueConnection);
-
-        connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
-                this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
-                Qt::UniqueConnection);
-        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
-                dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
-
-        dataStoreImporter->importData(dataStoreImportData);
-
-        QEventLoop waitLoop;
-
-        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
-                &waitLoop, &QEventLoop::quit);
-
-        waitLoop.exec();
-
-        return true;
-    } else {
-        Core::warningMessageBox(tr("Data Import"),
-                                tr("<strong>%1</strong> could not be imported (%2).").arg(pFileName)
-                                                                                     .arg((problem == FileAccess)?
-                                                                                              tr("the file could not be accessed"):
-                                                                                              tr("the memory needed to store the data could not be allocated")));
-
-        return false;
-    }
 }
 
 //==============================================================================
