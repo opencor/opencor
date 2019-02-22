@@ -240,10 +240,10 @@ private:
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
     QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
-    QStringList mSimulationProperties;
-    QStringList mSolversProperties;
-    QMap<Core::PropertyEditorWidget *, QStringList> mGraphPanelProperties;
-    QMap<Core::PropertyEditorWidget *, QStringList> mGraphsProperties;
+    QVariantList mSimulationProperties;
+    QVariantList mSolversProperties;
+    QMap<Core::PropertyEditorWidget *, QVariantList> mGraphPanelProperties;
+    QMap<Core::PropertyEditorWidget *, QVariantList> mGraphsProperties;
 
     bool mSimulationPropertiesModified;
     bool mSolversPropertiesModified;
@@ -318,7 +318,7 @@ private:
     bool createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
                          const QString &pFileName, const QString &pModelSource);
 
-    QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
+    QVariantList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
 
     void updateSedmlFileOrCombineArchiveModifiedStatus();
 

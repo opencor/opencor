@@ -111,10 +111,10 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mValidSimulationEnvironment(false),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
-    mSimulationProperties(QStringList()),
-    mSolversProperties(QStringList()),
-    mGraphPanelProperties(QMap<Core::PropertyEditorWidget *, QStringList>()),
-    mGraphsProperties(QMap<Core::PropertyEditorWidget *, QStringList>()),
+    mSimulationProperties(QVariantList()),
+    mSolversProperties(QVariantList()),
+    mGraphPanelProperties(QMap<Core::PropertyEditorWidget *, QVariantList>()),
+    mGraphsProperties(QMap<Core::PropertyEditorWidget *, QVariantList>()),
     mSimulationPropertiesModified(false),
     mSolversPropertiesModified(false),
     mGraphPanelPropertiesModified(QMap<Core::PropertyEditorWidget *, bool>()),
@@ -4493,22 +4493,14 @@ void SimulationExperimentViewSimulationWidget::checkGraphPanelsAndGraphs()
 
 //==============================================================================
 
-QStringList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const
+QVariantList SimulationExperimentViewSimulationWidget::allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const
 {
     // Return all the property values of the given property editor
 
-    QStringList res = QStringList();
+    QVariantList res = QVariantList();
 
-    for (auto property : pPropertyEditor->allProperties()) {
-        if (property->isCheckable()) {
-            if (property->isChecked())
-                res << TrueValue;
-            else
-                res << FalseValue;
-        }
-
-        res << property->value();
-    }
+    for (auto property : pPropertyEditor->allProperties())
+        res << property->variantValue();
 
     return res;
 }
