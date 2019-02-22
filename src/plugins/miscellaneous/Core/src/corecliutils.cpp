@@ -332,7 +332,7 @@ QString fileSha1(const QString &pFileName)
         QCryptographicHash hash(QCryptographicHash::Sha1);
 
         if (hash.addData(&file))
-            res = hash.result();
+            res = hash.result().toHex();
 
         file.close();
     }
