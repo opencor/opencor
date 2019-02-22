@@ -182,8 +182,8 @@ HelpWindowWidget::~HelpWindowWidget()
 
     // Delete the help files
 
-    QFile(mQchFileName).remove();
-    QFile(mQhcFileName).remove();
+    QFile::remove(mQchFileName);
+    QFile::remove(mQhcFileName);
 }
 
 //==============================================================================
