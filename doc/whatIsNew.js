@@ -22,7 +22,8 @@ var jsonData = { "versions": [
                                { "type": "added", "description": "Basic support for the import of external data." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "improved", "description": "Plotting of simulations." },
-                               { "type": "fixed", "description": "Various issue with saving a file under a new name." }
+                               { "type": "fixed", "description": "Various issues with saving a file under a new name." },
+                               { "type": "fixed", "description": "Issue with a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> being considered modified after changing languages." }
                              ]
                            }
                          ]

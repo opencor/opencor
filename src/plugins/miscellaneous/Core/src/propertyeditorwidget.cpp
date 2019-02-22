@@ -815,8 +815,6 @@ QVariant Property::variantValue() const
     switch (mType) {
     case Section:
     case String:
-    case List:
-    case Color:
         return value();
     case Integer:
     case IntegerGe0:
@@ -826,8 +824,12 @@ QVariant Property::variantValue() const
     case DoubleGe0:
     case DoubleGt0:
         return doubleValue();
+    case List:
+        return listValueIndex();
     case Boolean:
         return booleanValue();
+    case Color:
+        return colorValue();
     }
 
     return QVariant();
