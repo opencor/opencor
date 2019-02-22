@@ -445,6 +445,30 @@
         <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
     </message>
     <message>
+        <source>Data Import</source>
+        <translation>Importation Données</translation>
+    </message>
+    <message>
+        <source>Import some data</source>
+        <translation>Importer des données</translation>
+    </message>
+    <message>
+        <source>Local...</source>
+        <translation>Locales...</translation>
+    </message>
+    <message>
+        <source>Import some local data</source>
+        <translation>Importer des données locales</translation>
+    </message>
+    <message>
+        <source>Remote...</source>
+        <translation>À Distance...</translation>
+    </message>
+    <message>
+        <source>Import some remote data</source>
+        <translation>Importer des données à distance</translation>
+    </message>
+    <message>
         <source>Simulation Results Export</source>
         <translation>Exporter Résultats Simulation</translation>
     </message>
@@ -625,28 +649,12 @@
         <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée)</translation>
     </message>
     <message>
-        <source>Simulation time:</source>
-        <translation>Temps de simulation :</translation>
-    </message>
-    <message>
-        <source>%1 using %2</source>
-        <translation>%1 avec %2</translation>
-    </message>
-    <message>
-        <source>Data Import</source>
-        <translation>Importation Données</translation>
-    </message>
-    <message>
-        <source>Import some data</source>
-        <translation>Importer des données</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;est pas un fichier de données.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;est pas un fichier de données.</translation>
     </message>
     <message>
         <source>the file could not be accessed</source>
@@ -657,20 +665,12 @@
         <translation>la mémoire nécessaire pour stocker les données n&apos;a pas pu être allouée</translation>
     </message>
     <message>
-        <source>Import some local data</source>
-        <translation>Importer des données locales</translation>
+        <source>Simulation time:</source>
+        <translation>Temps de simulation :</translation>
     </message>
     <message>
-        <source>Import some remote data</source>
-        <translation>Importer des données à distance</translation>
-    </message>
-    <message>
-        <source>Local...</source>
-        <translation>Locales...</translation>
-    </message>
-    <message>
-        <source>Remote...</source>
-        <translation>À Distance...</translation>
+        <source>%1 using %2</source>
+        <translation>%1 avec %2</translation>
     </message>
 </context>
 </TS>
