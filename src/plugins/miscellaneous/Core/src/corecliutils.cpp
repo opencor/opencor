@@ -325,16 +325,19 @@ QString fileSha1(const QString &pFileName)
 {
     // Return the SHA-1 value of the given file
 
+    QString res = QString();
     QFile file(pFileName);
 
     if (file.open(QFile::ReadOnly)) {
         QCryptographicHash hash(QCryptographicHash::Sha1);
 
         if (hash.addData(&file))
-            return hash.result();
+            res = hash.result();
+
+        file.close();
     }
 
-    return QString();
+    return res;
 }
 
 //==============================================================================
