@@ -743,8 +743,8 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
 
     if (data) {
         if (Core::FileManager::instance()->isModified(pFileName)) {
-            // The given file is considered as modified, so we need to retrieve
-            // the contents of its physical version
+            // The given file is considered modified, so we need to retrieve the
+            // contents of its physical version
 
             QString fileContents;
 
@@ -771,8 +771,8 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
 
             return Core::sha1(data->editingWidget()->editorWidget()->contents()).compare(Core::sha1(data->convertedFileContents()));
         } else {
-            // The given file is not considered as modified, so simply compare
-            // the SHA-1 value of our editor's contents with our internal one
+            // The given file is not considered modified, so simply compare the
+            // SHA-1 value of our editor's contents with our internal one
 
             return Core::sha1(data->editingWidget()->editorWidget()->contents()).compare(data->sha1());
         }

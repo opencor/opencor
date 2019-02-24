@@ -50,7 +50,7 @@ void BiosignalmlDataStoreImporterWorker::run()
     try {
         // Retrieve our clock and determine our number of data points
 
-        bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(mImportData->fileName().toStdString());
+        bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(mImportData->fileName().toStdString(), true);
         std::vector<double> clockTicks = recording->get_clock(recording->get_clock_uris().front())->read();
 
         // Retrieve the values of our different variables
