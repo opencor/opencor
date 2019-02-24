@@ -57,12 +57,6 @@ StandardFileManager::StandardFileManager() :
 
 //==============================================================================
 
-StandardFileManager::~StandardFileManager()
-{
-}
-
-//==============================================================================
-
 bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking) const
 {
     // If the given file is already managed, then we consider that it's of the

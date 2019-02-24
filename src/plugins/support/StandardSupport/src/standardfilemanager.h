@@ -53,7 +53,6 @@ protected:
     QMap<QString, StandardFile *> mFiles;
 
     explicit StandardFileManager();
-    ~StandardFileManager() override;
 
     virtual bool canLoad(const QString &pFileName) const = 0;
 
