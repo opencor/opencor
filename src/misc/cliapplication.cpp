@@ -61,11 +61,11 @@ CliApplication::~CliApplication()
 
     QSettings settings;
 
+    settings.beginGroup(SettingsPlugins);
+
     for (auto plugin : mLoadedPluginPlugins) {
-        settings.beginGroup(SettingsPlugins);
-            settings.beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&settings);
-            settings.endGroup();
+        settings.beginGroup(plugin->name());
+            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&settings);
         settings.endGroup();
     }
 

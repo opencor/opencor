@@ -656,12 +656,12 @@ void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
-        saveSettings(&settings);
 
-        reset(pPmrUrl);
+    saveSettings(&settings);
 
-        loadSettings(&settings);
-    settings.endGroup();
+    reset(pPmrUrl);
+
+    loadSettings(&settings);
 }
 
 //==============================================================================
@@ -1580,23 +1580,22 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
-                    PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, mTimer, Core::mainWindow());
+            settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
 
-                    synchronizeDialog.exec(&settings);
+            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(&settings, workspace, mTimer, Core::mainWindow());
 
-                    if (synchronizeDialog.result() == QMessageBox::Ok) {
-                        QStringList fileNames = synchronizeDialog.fileNames();
+            synchronizeDialog.exec();
 
-                        for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-                            workspace->stageFile(fileNames[i], true);
+            if (synchronizeDialog.result() == QMessageBox::Ok) {
+                QStringList fileNames = synchronizeDialog.fileNames();
 
-                        workspace->commit(synchronizeDialog.message());
+                for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+                    workspace->stageFile(fileNames[i], true);
 
-                        needRequestWorkspaceSynchronize = true;
-                    }
-                settings.endGroup();
-            settings.endGroup();
+                workspace->commit(synchronizeDialog.message());
+
+                needRequestWorkspaceSynchronize = true;
+            }
         } else if (    workspace->isOwned()
                    && (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)) {
             // Something went wrong during a previous synchronisation (and the
