@@ -882,7 +882,9 @@ void CentralWidget::openRemoteFile()
     mSettings->beginGroup("RemoteFileDialog");
         RemoteFileDialog remoteFileDialog(mSettings, tr("Open Remote File"), this);
 
-        if (remoteFileDialog.exec())
+        remoteFileDialog.exec();
+
+        if (remoteFileDialog.result() == QMessageBox::Accepted)
             openRemoteFile(remoteFileDialog.url());
     mSettings->endGroup();
 }
