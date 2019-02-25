@@ -70,9 +70,8 @@ class CORE_EXPORT Dialog : public QDialog
 
 public:
     explicit Dialog(QSettings *pSettings, QWidget *pParent);
-    explicit Dialog(QWidget *pParent);
 
-    int exec(QSettings *pSettings);
+    int exec() override;
 
     bool hasPositionAndSize();
 
@@ -80,9 +79,6 @@ protected:
     QSettings *mSettings;
 
     void resizeEvent(QResizeEvent *pEvent) override;
-
-public slots:
-    int exec() override;
 };
 
 //==============================================================================

@@ -24,10 +24,6 @@
         <translation>Ouvrir Fichier À Distance</translation>
     </message>
     <message>
-        <source>URL:</source>
-        <translation>URL :</translation>
-    </message>
-    <message>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
@@ -319,6 +315,13 @@
     <message>
         <source>Unit</source>
         <translation>Unité</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::Core::RemoteFileDialog</name>
+    <message>
+        <source>URL:</source>
+        <translation>URL :</translation>
     </message>
 </context>
 <context>

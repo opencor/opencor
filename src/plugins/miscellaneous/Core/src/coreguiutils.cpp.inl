@@ -34,14 +34,6 @@ Dialog::Dialog(QSettings *pSettings, QWidget *pParent) :
 
 //==============================================================================
 
-Dialog::Dialog(QWidget *pParent) :
-    QDialog(pParent),
-    mSettings(nullptr)
-{
-}
-
-//==============================================================================
-
 void Dialog::resizeEvent(QResizeEvent *pEvent)
 {
     // Default handling of the event
@@ -59,14 +51,12 @@ int Dialog::exec()
 {
     // Retrieve our position and size, if possible
 
-    if (mSettings) {
-        QPoint position = mSettings->value(SettingsPosition).toPoint();
-        QSize size = mSettings->value(SettingsSize).toSize();
+    QPoint position = mSettings->value(SettingsPosition).toPoint();
+    QSize size = mSettings->value(SettingsSize).toSize();
 
-        if (!position.isNull() && !size.isNull()) {
-            move(position);
-            resize(size);
-        }
+    if (!position.isNull() && !size.isNull()) {
+        move(position);
+        resize(size);
     }
 
     // Execute ourselves
@@ -75,10 +65,8 @@ int Dialog::exec()
 
     // Keep track of our position and size, if possible
 
-    if (mSettings) {
-        mSettings->setValue(SettingsPosition, pos());
-        mSettings->setValue(SettingsSize, size());
-    }
+    mSettings->setValue(SettingsPosition, pos());
+    mSettings->setValue(SettingsSize, Dialog::size());
 
     // Return the result of our execution
 
@@ -87,25 +75,12 @@ int Dialog::exec()
 
 //==============================================================================
 
-int Dialog::exec(QSettings *pSettings)
-{
-    // Keep track of the given settings and execute ourselves
-
-    mSettings = pSettings;
-
-    return exec();
-}
-
-//==============================================================================
-
 bool Dialog::hasPositionAndSize()
 {
     // Return whether we already have a position and size, if possible
 
-    return mSettings?
-                   !mSettings->value(SettingsPosition).toPoint().isNull()
-                && !mSettings->value(SettingsSize).toSize().isNull():
-                false;
+    return    !mSettings->value(SettingsPosition).toPoint().isNull()
+           && !mSettings->value(SettingsSize).toSize().isNull();
 }
 
 //==============================================================================

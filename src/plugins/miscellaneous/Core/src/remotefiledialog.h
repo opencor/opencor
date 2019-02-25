@@ -18,75 +18,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// GUI utilities
+// Remote file dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "coreglobal.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
-#include <QColor>
-#include <QMessageBox>
-#include <QStyledItemDelegate>
-
-//==============================================================================
-
-class QAction;
-class QMainWindow;
-class QSettings;
+class QDialogButtonBox;
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace Core {
 
 //==============================================================================
 
-#include "coreguiutils.h.inl"
-
-//==============================================================================
-// Note: both guiutils.h and coreguiutils.h must specifically define
-//       Dialog. To have it in guiutils.h.inl is NOT good enough since the MOC
-//       won't pick it up...
-
-class CORE_EXPORT Dialog : public QDialog
+class RemoteFileDialog : public Dialog
 {
     Q_OBJECT
 
 public:
-    explicit Dialog(QSettings *pSettings, QWidget *pParent);
+    explicit RemoteFileDialog(QSettings *pSettings, const QString &pTitle,
+                              QWidget *pParent);
 
-    int exec() override;
+    QString url() const;
 
-    bool hasPositionAndSize();
+private:
+    QLabel *mUrlLabel;
+    QLineEdit *mUrlValue;
+    QDialogButtonBox *mButtonBox;
 
-protected:
-    QSettings *mSettings;
-
-    void resizeEvent(QResizeEvent *pEvent) override;
-};
-
-//==============================================================================
-// Note: both guiutils.h and coreguiutils.h must specifically define
-//       StyledItemDelegate. To have it in guiutils.h.inl is NOT good enough
-//       since the MOC won't pick it up...
-
-class CORE_EXPORT StyledItemDelegate : public QStyledItemDelegate
-{
-    Q_OBJECT
-
-public:
-    explicit StyledItemDelegate(QObject *pParent);
-
-    QSize sizeHint(const QStyleOptionViewItem &pOption,
-                   const QModelIndex &pIndex) const override;
+private slots:
+    void changed();
 };
 
 //==============================================================================
 
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

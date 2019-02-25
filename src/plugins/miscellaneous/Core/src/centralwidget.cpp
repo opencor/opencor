@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "guiinterface.h"
 #include "interfaces.h"
+#include "remotefiledialog.h"
 #include "tabbarwidget.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
@@ -268,43 +269,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
         connect(mode->viewTabs(), &TabBarWidget::currentChanged,
                 this, &CentralWidget::updateFileTabIcons);
     }
-
-    // Create our remote file dialog
-//---OPENCOR--- THE ORIGINAL PLAN WAS TO HAVE A REGULAR EXPRESSION TO VALIDATE A
-//              URL, BUT IT LOOKS LIKE THERE MIGHT BE AN ISSUE WITH
-//              QRegularExpressionValidator, SO WE SIMPLY ALLOW FREE TEXT FOR
-//              NOW (SEE https://bugreports.qt.io/browse/QTBUG-38034)...
-
-    mRemoteFileDialog = new Dialog(this);
-    QGridLayout *dialogLayout = new QGridLayout(mRemoteFileDialog);
-
-    mRemoteFileDialog->setLayout(dialogLayout);
-
-    mRemoteFileDialogUrlLabel = new QLabel(mRemoteFileDialog);
-    mRemoteFileDialogUrlValue = new QLineEdit(mRemoteFileDialog);
-
-    mRemoteFileDialogUrlValue->setMinimumWidth(qApp->primaryScreen()->availableGeometry().width()/5);
-
-    dialogLayout->addWidget(mRemoteFileDialogUrlLabel, 0, 0);
-    dialogLayout->addWidget(mRemoteFileDialogUrlValue, 0, 1);
-
-    mRemoteFileDialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
-
-    dialogLayout->addWidget(mRemoteFileDialogButtonBox, 1, 0, 1, 2);
-
-    dialogLayout->setSizeConstraint(QLayout::SetFixedSize);
-
-    openRemoteFileChanged();
-
-    // Some connections to handle our remote file dialog
-
-    connect(mRemoteFileDialogUrlValue, &QLineEdit::textChanged,
-            this, &CentralWidget::openRemoteFileChanged);
-
-    connect(mRemoteFileDialogButtonBox, &QDialogButtonBox::accepted,
-            this, &CentralWidget::doOpenRemoteFile);
-    connect(mRemoteFileDialogButtonBox, &QDialogButtonBox::rejected,
-            this, &CentralWidget::cancelOpenRemoteFile);
 }
 
 //==============================================================================
@@ -647,11 +611,6 @@ void CentralWidget::retranslateUi()
     // Retranslate our no view widget message
 
     updateNoViewMsg();
-
-    // Retranslate our remote file dialog
-
-    mRemoteFileDialog->setWindowTitle(tr("Open Remote File"));
-    mRemoteFileDialogUrlLabel->setText(tr("URL:"));
 }
 
 //==============================================================================
@@ -916,44 +875,15 @@ void CentralWidget::importFile(const QString &pFileNameOrUrl)
 
 //==============================================================================
 
-void CentralWidget::openRemoteFileChanged()
-{
-    // Enable/disable the open button depending on whether we have some text for
-    // the remote file
-
-    mRemoteFileDialogButtonBox->button(QDialogButtonBox::Open)->setEnabled(!mRemoteFileDialogUrlValue->text().isEmpty());
-}
-
-//==============================================================================
-
-void CentralWidget::doOpenRemoteFile()
-{
-    // Open the remote file
-
-    mRemoteFileDialog->accept();
-
-    openRemoteFile(mRemoteFileDialogUrlValue->text());
-}
-
-//==============================================================================
-
-void CentralWidget::cancelOpenRemoteFile()
-{
-    // Cancel the opening of a remote file
-
-    mRemoteFileDialog->reject();
-}
-
-//==============================================================================
-
 void CentralWidget::openRemoteFile()
 {
     // Ask for the URL of the remote file that is to be opened
 
-    mRemoteFileDialogUrlValue->setText(QString());
-
     mSettings->beginGroup("RemoteFileDialog");
-        mRemoteFileDialog->exec(mSettings);
+        RemoteFileDialog remoteFileDialog(mSettings, tr("Open Remote File"), this);
+
+        if (remoteFileDialog.exec())
+            openRemoteFile(remoteFileDialog.url());
     mSettings->endGroup();
 }
 

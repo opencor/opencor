@@ -37,9 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class QDialogButtonBox;
-class QLabel;
-class QLineEdit;
 class QStackedWidget;
 
 //==============================================================================
@@ -57,7 +54,6 @@ namespace Core {
 //==============================================================================
 
 class CentralWidget;
-class Dialog;
 class UserMessageWidget;
 class TabBarWidget;
 
@@ -163,11 +159,6 @@ private:
 
     QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
 
-    Dialog *mRemoteFileDialog;
-    QLabel *mRemoteFileDialogUrlLabel;
-    QLineEdit *mRemoteFileDialogUrlValue;
-    QDialogButtonBox *mRemoteFileDialogButtonBox;
-
     QMap<QString, QWidget *> mViews;
 
     Plugin * viewPlugin(int pIndex) const;
@@ -228,10 +219,6 @@ public slots:
 
 private slots:
     void updateGui();
-
-    void openRemoteFileChanged();
-    void doOpenRemoteFile();
-    void cancelOpenRemoteFile();
 
     void fileChanged(const QString &pFileName, bool pFileChanged,
                      bool pDependenciesChanged);
