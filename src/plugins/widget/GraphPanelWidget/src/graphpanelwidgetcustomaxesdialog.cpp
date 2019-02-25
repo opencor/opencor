@@ -47,7 +47,7 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
                                                                    double pMinY,
                                                                    double pMaxY,
                                                                    QWidget *pParent) :
-    Core::Dialog(pParent),
+    Core::Dialog(new QSettings(), pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
 {
     // Set up the GUI
@@ -68,11 +68,9 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &GraphPanelWidgetCustomAxesDialog::reject);
 
-    // Create our 'special' settings
+    // Customise our 'special' settings
     // Note: special in the sense that we don't retrieve them from the plugin
     //       itself since this is not a view, a window or anything like that...
-
-    mSettings = new QSettings();
 
     mSettings->beginGroup(SettingsPlugins);
     mSettings->beginGroup("GraphPanelWidget");
@@ -103,6 +101,10 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
 
 GraphPanelWidgetCustomAxesDialog::~GraphPanelWidgetCustomAxesDialog()
 {
+    // Delete some internal objects
+
+    delete mSettings;
+
     // Delete the GUI
 
     delete mGui;
