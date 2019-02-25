@@ -117,8 +117,8 @@ void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                newEditor->loadSettings(&settings);
-            settings.endGroup();
+
+            newEditor->loadSettings(&settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -158,8 +158,8 @@ void RawTextViewWidget::finalize(const QString &pFileName)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editor->saveSettings(&settings);
-            settings.endGroup();
+
+            editor->saveSettings(&settings);
 
             mNeedLoadingSettings = true;
             mEditor = nullptr;

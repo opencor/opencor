@@ -146,8 +146,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editingWidget->loadSettings(&settings);
-            settings.endGroup();
+
+            editingWidget->loadSettings(&settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -192,8 +192,8 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editingWidget->saveSettings(&settings);
-            settings.endGroup();
+
+            editingWidget->saveSettings(&settings);
 
             mNeedLoadingSettings = true;
             mEditingWidget = nullptr;

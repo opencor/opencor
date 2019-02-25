@@ -469,19 +469,18 @@ void PmrWorkspacesWindowWindow::actionNewTriggered()
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
-        settings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
-            PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(&settings, Core::mainWindow());
+    settings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
 
-            if (newWorkspaceDialog.exec() == QDialog::Accepted) {
-                // Ask the PMR web service to create a new workspace, resulting
-                // in the (empty) workspace being cloned into its folder
+    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(&settings, Core::mainWindow());
 
-                mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
-                                                    newWorkspaceDialog.description(),
-                                                    newWorkspaceDialog.path());
-            }
-        settings.endGroup();
-    settings.endGroup();
+    if (newWorkspaceDialog.exec() == QDialog::Accepted) {
+        // Ask the PMR web service to create a new workspace, resulting in the
+        // (empty) workspace being cloned into its folder
+
+        mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
+                                            newWorkspaceDialog.description(),
+                                            newWorkspaceDialog.path());
+    }
 }
 
 //==============================================================================

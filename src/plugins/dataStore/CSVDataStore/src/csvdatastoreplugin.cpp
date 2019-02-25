@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QFile>
 #include <QMainWindow>
-#include <QSettings>
 #include <QTextStream>
 
 //==============================================================================
@@ -130,14 +129,11 @@ DataStore::DataStoreExportData * CSVDataStorePlugin::getExportData(const QString
 {
     // Ask which data should be exported
 
-    DataStore::DataStoreDialog dataStoreDialog(pDataStore, true, pIcons, Core::mainWindow());
-    QSettings settings;
+    DataStore::DataStoreDialog dataStoreDialog(SettingsPlugins+"/CSVDataStore",
+                                               pDataStore, true, pIcons,
+                                               Core::mainWindow());
 
-    settings.beginGroup(SettingsPlugins);
-    settings.beginGroup("CSVDataStore");
-    settings.beginGroup("DataStoreDialog");
-
-    if (dataStoreDialog.exec(&settings)) {
+    if (dataStoreDialog.exec()) {
         // Now that we know which data to export, we can ask for the name of the
         // CSV file where it is to be exported
 
