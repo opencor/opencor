@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "datastoreinterface.h"
 #include "datastoredialog.h"
+#include "plugin.h"
 
 //==============================================================================
 
@@ -85,6 +86,7 @@ DataStoreDialog::DataStoreDialog(const QString &pGroupName,
     //       normally retrieve from a plugin since our plugin is not a view, a
     //       window or anything like that...
 
+    mSettings->beginGroup(SettingsPlugins);
     mSettings->beginGroup(pGroupName);
     mSettings->beginGroup("DataStoreDialog");
 

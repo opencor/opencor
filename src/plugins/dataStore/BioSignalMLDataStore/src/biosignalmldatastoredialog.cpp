@@ -42,8 +42,8 @@ namespace BioSignalMLDataStore {
 BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDataStore,
                                                        const QMap<int, QIcon> &pIcons,
                                                        QWidget *pParent) :
-    DataStore::DataStoreDialog(SettingsPlugins+"/BioSignalMLDataStore",
-                               pDataStore, false, pIcons, pParent)
+    DataStore::DataStoreDialog("BioSignalMLDataStore", pDataStore, false,
+                               pIcons, pParent)
 {
     // Customise our GUI
 

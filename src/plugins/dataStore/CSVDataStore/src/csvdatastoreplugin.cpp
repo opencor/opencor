@@ -129,9 +129,8 @@ DataStore::DataStoreExportData * CSVDataStorePlugin::getExportData(const QString
 {
     // Ask which data should be exported
 
-    DataStore::DataStoreDialog dataStoreDialog(SettingsPlugins+"/CSVDataStore",
-                                               pDataStore, true, pIcons,
-                                               Core::mainWindow());
+    DataStore::DataStoreDialog dataStoreDialog("CSVDataStore", pDataStore, true,
+                                               pIcons, Core::mainWindow());
 
     if (dataStoreDialog.exec()) {
         // Now that we know which data to export, we can ask for the name of the
