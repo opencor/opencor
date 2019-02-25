@@ -130,8 +130,8 @@ void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                newEditingWidget->loadSettings(&settings);
-            settings.endGroup();
+
+            newEditingWidget->loadSettings(&settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -172,8 +172,8 @@ void RawSedmlViewWidget::finalize(const QString &pFileName)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editingWidget->saveSettings(&settings);
-            settings.endGroup();
+
+            editingWidget->saveSettings(&settings);
 
             mNeedLoadingSettings = true;
             mEditingWidget = nullptr;

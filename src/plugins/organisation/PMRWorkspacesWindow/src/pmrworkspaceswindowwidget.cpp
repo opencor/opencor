@@ -656,12 +656,12 @@ void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
-        saveSettings(&settings);
 
-        reset(pPmrUrl);
+    saveSettings(&settings);
 
-        loadSettings(&settings);
-    settings.endGroup();
+    reset(pPmrUrl);
+
+    loadSettings(&settings);
 }
 
 //==============================================================================

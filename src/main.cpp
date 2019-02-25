@@ -192,52 +192,52 @@ int main(int pArgC, char *pArgV[])
     QSettings settings;
 
     settings.beginGroup(OpenCOR::SettingsCheckForUpdatesDialog);
-        bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
-        bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
 
-        if (checkForUpdatesAtStartup) {
-            OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
+    bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
+    bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
 
-            checkForUpdatesEngine->check();
+    if (checkForUpdatesAtStartup) {
+        OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
 
-            if (   ( includeSnapshots && checkForUpdatesEngine->hasNewerVersion())
-                || (!includeSnapshots && checkForUpdatesEngine->hasNewerOfficialVersion())) {
-                // Retrieve the language to be used to show the check for
-                // updates window
+        checkForUpdatesEngine->check();
 
-                QString locale = OpenCOR::locale();
+        if (   ( includeSnapshots && checkForUpdatesEngine->hasNewerVersion())
+            || (!includeSnapshots && checkForUpdatesEngine->hasNewerOfficialVersion())) {
+            // Retrieve the language to be used to show the check for updates
+            // window
 
-                QLocale::setDefault(QLocale(locale));
+            QString locale = OpenCOR::locale();
 
-                QTranslator qtBaseTranslator;
-                QTranslator qtHelpTranslator;
-                QTranslator qtXmlPatternsTranslator;
-                QTranslator appTranslator;
+            QLocale::setDefault(QLocale(locale));
 
-                qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtBaseTranslator);
+            QTranslator qtBaseTranslator;
+            QTranslator qtHelpTranslator;
+            QTranslator qtXmlPatternsTranslator;
+            QTranslator appTranslator;
 
-                qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtHelpTranslator);
+            qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtBaseTranslator);
 
-                qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtXmlPatternsTranslator);
+            qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtHelpTranslator);
 
-                appTranslator.load(":/app_"+locale);
-                guiApp->installTranslator(&appTranslator);
+            qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtXmlPatternsTranslator);
 
-                // Show the check for updates window
-                // Note: checkForUpdatesEngine gets deleted by
-                //       checkForUpdatesDialog...
+            appTranslator.load(":/app_"+locale);
+            guiApp->installTranslator(&appTranslator);
 
-                OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(&settings, checkForUpdatesEngine);
+            // Show the check for updates window
+            // Note: checkForUpdatesEngine gets deleted by
+            //       checkForUpdatesDialog...
 
-                checkForUpdatesDialog.exec();
-            } else {
-                delete checkForUpdatesEngine;
-            }
+            OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(&settings, checkForUpdatesEngine);
+
+            checkForUpdatesDialog.exec();
+        } else {
+            delete checkForUpdatesEngine;
         }
-    settings.endGroup();
+    }
 #endif
 
     // Create and show our splash screen, if we are not in debug mode
