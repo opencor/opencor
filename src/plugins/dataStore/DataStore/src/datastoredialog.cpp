@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QPushButton>
+#include <QSettings>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -69,14 +70,24 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
+DataStoreDialog::DataStoreDialog(const QString &pGroupName,
+                                 DataStore *pDataStore, bool pIncludeVoi,
                                  const QMap<int, QIcon> &pIcons,
                                  QWidget *pParent) :
-    Core::Dialog(pParent),
+    Core::Dialog(new QSettings(), pParent),
     mGui(new Ui::DataStoreDialog),
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
     mNbOfData(0)
 {
+    // Customise our 'special' settings
+    // Note: special in the sense that we use our own settings (the one we
+    //       created and passed to our parent) as opposed to the one we would
+    //       normally retrieve from a plugin since our plugin is not a view, a
+    //       window or anything like that...
+
+    mSettings->beginGroup(pGroupName);
+    mSettings->beginGroup("DataStoreDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -196,6 +207,10 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
 
 DataStoreDialog::~DataStoreDialog()
 {
+    // Delete some internal objects
+
+    delete mSettings;
+
     // Delete the GUI
 
     delete mGui;
