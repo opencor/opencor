@@ -21,11 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Main
 //==============================================================================
 
-#include "checkforupdatesdialog.h"
 #include "cliapplication.h"
 #include "cliutils.h"
 #include "guiapplication.h"
-#include "guiutils.h"
 #include "mainwindow.h"
 
 #ifdef Q_OS_MAC
@@ -33,16 +31,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifndef QT_DEBUG
+    #include "checkforupdatesdialog.h"
     #include "splashscreenwindow.h"
 #endif
 
 //==============================================================================
 
-#include <QDir>
-#include <QLocale>
 #include <QProcess>
 #include <QSettings>
-#include <QVariant>
 
 #if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     #include <QWebSettings>
