@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
 #include "guiapplication.h"
+#include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
