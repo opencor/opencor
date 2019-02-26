@@ -231,7 +231,7 @@ int main(int pArgC, char *pArgV[])
             // Note: checkForUpdatesEngine gets deleted by
             //       checkForUpdatesDialog...
 
-            OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(&settings, checkForUpdatesEngine);
+            OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(settings, checkForUpdatesEngine);
 
             checkForUpdatesDialog.exec();
         } else {
