@@ -25,12 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QSettings>
 #include <QVariant>
 #include <QWidget>
-
-//==============================================================================
-
-class QSettings;
 
 //==============================================================================
 
@@ -53,7 +50,6 @@ class PreferencesWidget : public QWidget
 
 public:
     explicit PreferencesWidget(const QString &pName, QWidget *pParent);
-    ~PreferencesWidget() override;
 
     virtual bool preferencesChanged() const = 0;
 
@@ -61,7 +57,7 @@ public:
     virtual void savePreferences() = 0;
 
 protected:
-    QSettings *mSettings;
+    QSettings mSettings;
 };
 
 //==============================================================================
