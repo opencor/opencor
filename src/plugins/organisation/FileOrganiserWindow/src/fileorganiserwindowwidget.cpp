@@ -436,7 +436,7 @@ void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
     // Retrieve the data model
 
     pSettings->beginGroup(SettingsModel);
-        loadItemSettings(pSettings, nullptr);
+        loadItemSettings(pSettings);
     pSettings->endGroup();
 
     // Retrieve the currently selected item, if any

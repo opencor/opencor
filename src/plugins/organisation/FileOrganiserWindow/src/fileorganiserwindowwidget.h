@@ -123,7 +123,8 @@ private:
     Core::FileManager *mFileManager;
     FileOrganiserWindowModel *mModel;
 
-    void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
+    void loadItemSettings(QSettings *pSettings,
+                          QStandardItem *pParentItem = nullptr);
     void saveItemSettings(QSettings *pSettings, QStandardItem *pItem,
                           int pParentItemIndex) const;
 
