@@ -158,12 +158,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
-    // Initialise (update) our PMR URL
-
-    update(PreferencesInterface::preference(PMRSupport::PluginName,
-                                            PMRSupport::SettingsPreferencesPmrUrl,
-                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
-
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
 
@@ -171,9 +165,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
     // Some connections to process responses from our PMR web service
-
-    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWorkspacesWindowWindow::showInformation);
@@ -248,6 +239,22 @@ void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
     pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
     pSettings.endGroup();
+
+    // Initialise (update) our PMR URL
+    // Note: we do it here rather than in our constructor because we need
+    //       mPmrWorkspacesWindowWidget to be fully initialised...
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
+
+    // A connection to show ourselves busy when our PMR web service is
+    // Note: we do it here rather than in our constructor otherwise our main
+    //       window won't properly resize upon startup, in case we are floating
+    //       (as opposed to being docked)...
+
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 }
 
 //==============================================================================
