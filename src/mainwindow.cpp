@@ -712,13 +712,15 @@ void MainWindow::loadSettings()
 
     // Retrieve the settings of our various plugins
 
+    mSettings->beginGroup(SettingsPlugins);
+
     for (auto plugin : mLoadedPluginPlugins) {
-        mSettings->beginGroup(SettingsPlugins);
-            mSettings->beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(mSettings);
-            mSettings->endGroup();
+        mSettings->beginGroup(plugin->name());
+            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(mSettings);
         mSettings->endGroup();
     }
+
+    mSettings->endGroup();
 
     // Let our core plugin know that all of the plugins have loaded their
     // settings
@@ -764,13 +766,15 @@ void MainWindow::saveSettings() const
 
     // Keep track of the settings of our various plugins
 
+    mSettings->beginGroup(SettingsPlugins);
+
     for (auto plugin : mLoadedPluginPlugins) {
-        mSettings->beginGroup(SettingsPlugins);
-            mSettings->beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(mSettings);
-            mSettings->endGroup();
+        mSettings->beginGroup(plugin->name());
+            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(mSettings);
         mSettings->endGroup();
     }
+
+    mSettings->endGroup();
 }
 
 //==============================================================================
