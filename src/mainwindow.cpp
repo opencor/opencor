@@ -1242,11 +1242,9 @@ void MainWindow::actionCheckForUpdatesTriggered()
 {
     // Show the check for updates dialog
 
-    mSettings.beginGroup(SettingsCheckForUpdatesDialog);
-        CheckForUpdatesDialog checkForUpdatesDialog(mSettings, mApplicationDate, this);
+    CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-        checkForUpdatesDialog.exec();
-    mSettings.endGroup();
+    checkForUpdatesDialog.exec();
 }
 
 //==============================================================================
