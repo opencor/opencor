@@ -84,10 +84,9 @@ static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySe
 
 //==============================================================================
 
-PluginsDialog::PluginsDialog(QSettings &pSettings,
-                             PluginManager *pPluginManager,
+PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
                              QWidget *pParent) :
-    Dialog(pSettings, pParent),
+    Dialog(pParent),
     mGui(new Ui::PluginsDialog),
     mPluginManager(pPluginManager),
     mSelectablePluginItems(QList<QStandardItem *>()),
@@ -96,6 +95,10 @@ PluginsDialog::PluginsDialog(QSettings &pSettings,
     mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
     mItemCategories(QMap<QStandardItem *, PluginInfo::Category>())
 {
+    // Customise our settings
+
+    mSettings.beginGroup("PluginsDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);
