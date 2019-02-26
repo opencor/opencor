@@ -44,7 +44,8 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings, QWidget *pParent) :
+PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QSettings &pSettings,
+                                                                             QWidget *pParent) :
     Core::Dialog(pSettings, pParent),
     mGui(new Ui::PmrWorkspacesWindowNewWorkspaceDialog)
 {

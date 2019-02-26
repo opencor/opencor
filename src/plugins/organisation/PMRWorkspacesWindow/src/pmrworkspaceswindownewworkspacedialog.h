@@ -45,7 +45,7 @@ class PmrWorkspacesWindowNewWorkspaceDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings,
+    explicit PmrWorkspacesWindowNewWorkspaceDialog(QSettings &pSettings,
                                                    QWidget *pParent);
     ~PmrWorkspacesWindowNewWorkspaceDialog() override;
 

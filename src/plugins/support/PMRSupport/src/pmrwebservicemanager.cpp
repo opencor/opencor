@@ -136,7 +136,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
     mWebViewerUsed = true;
 
     if (!mWebViewerDialog) {
-        mWebViewerDialog = new Core::Dialog(&mSettings, Core::mainWindow());
+        mWebViewerDialog = new Core::Dialog(mSettings, Core::mainWindow());
 
         connect(mWebViewerDialog, &Core::Dialog::rejected,
                 this, &PmrWebServiceManager::authenticationCancelled);

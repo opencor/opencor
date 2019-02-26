@@ -1582,7 +1582,7 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
             settings.beginGroup(mSettingsGroup);
             settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
 
-            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(&settings, workspace, mTimer, Core::mainWindow());
+            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(settings, workspace, mTimer, Core::mainWindow());
 
             synchronizeDialog.exec();
 

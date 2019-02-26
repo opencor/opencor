@@ -93,7 +93,7 @@ class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowSynchronizeDialog(QSettings *pSettings,
+    explicit PmrWorkspacesWindowSynchronizeDialog(QSettings &pSettings,
                                                   PMRSupport::PmrWorkspace *pWorkspace,
                                                   QTimer *pTimer,
                                                   QWidget *pParent);

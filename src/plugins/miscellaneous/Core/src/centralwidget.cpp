@@ -939,7 +939,7 @@ void CentralWidget::openRemoteFile()
     settings.beginGroup(mSettingsGroup);
     settings.beginGroup("RemoteFileDialog");
 
-    mRemoteFileDialog->exec(&settings);
+    mRemoteFileDialog->exec(settings);
 }
 
 //==============================================================================

@@ -67,7 +67,7 @@ class PluginsDialog : public Dialog
     Q_OBJECT
 
 public:
-    explicit PluginsDialog(QSettings *pSettings, PluginManager *pPluginManager,
+    explicit PluginsDialog(QSettings &pSettings, PluginManager *pPluginManager,
                            QWidget *pParent);
     ~PluginsDialog() override;
 

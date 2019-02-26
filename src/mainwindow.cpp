@@ -1180,7 +1180,7 @@ void MainWindow::actionPluginsTriggered()
         // There are some plugins, so we can show the plugins dialog
 
         mSettings.beginGroup("PluginsDialog");
-            PluginsDialog pluginsDialog(&mSettings, mPluginManager, this);
+            PluginsDialog pluginsDialog(mSettings, mPluginManager, this);
 
             pluginsDialog.exec();
         mSettings.endGroup();
@@ -1203,7 +1203,7 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
     // Show the preferences dialog
 
     mSettings.beginGroup("PreferencesDialog");
-        PreferencesDialog preferencesDialog(&mSettings, mPluginManager,
+        PreferencesDialog preferencesDialog(mSettings, mPluginManager,
                                             pPluginName, this);
 
         preferencesDialog.exec();
@@ -1248,7 +1248,7 @@ void MainWindow::actionCheckForUpdatesTriggered()
     // Show the check for updates dialog
 
     mSettings.beginGroup(SettingsCheckForUpdatesDialog);
-        CheckForUpdatesDialog checkForUpdatesDialog(&mSettings, mApplicationDate, this);
+        CheckForUpdatesDialog checkForUpdatesDialog(mSettings, mApplicationDate, this);
 
         checkForUpdatesDialog.exec();
     mSettings.endGroup();

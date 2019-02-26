@@ -133,7 +133,7 @@ void PreferencesItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PreferencesDialog::PreferencesDialog(QSettings *pSettings,
+PreferencesDialog::PreferencesDialog(QSettings &pSettings,
                                      PluginManager *pPluginManager,
                                      const QString &pPluginName,
                                      QWidget *pParent) :

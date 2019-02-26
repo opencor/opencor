@@ -92,7 +92,7 @@ static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSpli
 
 //==============================================================================
 
-PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QSettings *pSettings,
+PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QSettings &pSettings,
                                                                            PMRSupport::PmrWorkspace *pWorkspace,
                                                                            QTimer *pTimer,
                                                                            QWidget *pParent) :
@@ -255,13 +255,13 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QSett
 
     // Retrieve our user's settings
 
-    mWebViewer->loadSettings(*mSettings);
+    mWebViewer->loadSettings(mSettings);
 
-    mWebViewerCellmlTextFormatAction->setChecked(mSettings->value(SettingsCellmlTextFormatSupport, true).toBool());
+    mWebViewerCellmlTextFormatAction->setChecked(mSettings.value(SettingsCellmlTextFormatSupport, true).toBool());
 
-    mHorizontalSplitter->setSizes(qVariantListToIntList(mSettings->value(SettingsHorizontalSplitterSizes).toList()));
-    mVerticalSplitter->setSizes(qVariantListToIntList(mSettings->value(SettingsVerticalSplitterSizes,
-                                                                       QVariantList() << 222 << 555).toList()));
+    mHorizontalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsHorizontalSplitterSizes).toList()));
+    mVerticalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsVerticalSplitterSizes,
+                                                                      QVariantList() << 222 << 555).toList()));
 
     // Add some dialog buttons
 
@@ -360,15 +360,15 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 {
     // Keep track of our user's settings
 
-    mWebViewer->saveSettings(*mSettings);
+    mWebViewer->saveSettings(mSettings);
 
-    mSettings->setValue(SettingsCellmlTextFormatSupport,
-                        mWebViewerCellmlTextFormatAction->isChecked());
+    mSettings.setValue(SettingsCellmlTextFormatSupport,
+                       mWebViewerCellmlTextFormatAction->isChecked());
 
-    mSettings->setValue(SettingsHorizontalSplitterSizes,
-                        qIntListToVariantList(mHorizontalSplitter->sizes()));
-    mSettings->setValue(SettingsVerticalSplitterSizes,
-                        qIntListToVariantList(mVerticalSplitter->sizes()));
+    mSettings.setValue(SettingsHorizontalSplitterSizes,
+                       qIntListToVariantList(mHorizontalSplitter->sizes()));
+    mSettings.setValue(SettingsVerticalSplitterSizes,
+                       qIntListToVariantList(mVerticalSplitter->sizes()));
 }
 
 //==============================================================================

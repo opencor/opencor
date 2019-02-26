@@ -47,7 +47,7 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
                                                                    double pMinY,
                                                                    double pMaxY,
                                                                    QWidget *pParent) :
-    Core::Dialog(new QSettings(), pParent),
+    Core::Dialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
 {
     // Set up the GUI
@@ -72,9 +72,9 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
     // Note: special in the sense that we don't retrieve them from the plugin
     //       itself since this is not a view, a window or anything like that...
 
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup("GraphPanelWidget");
-    mSettings->beginGroup("GraphPanelWidgetCustomAxesDialog");
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup("GraphPanelWidget");
+    mSettings.beginGroup("GraphPanelWidgetCustomAxesDialog");
 
     // Only allow double numbers
 
@@ -101,10 +101,6 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
 
 GraphPanelWidgetCustomAxesDialog::~GraphPanelWidgetCustomAxesDialog()
 {
-    // Delete some internal objects
-
-    delete mSettings;
-
     // Delete the GUI
 
     delete mGui;
