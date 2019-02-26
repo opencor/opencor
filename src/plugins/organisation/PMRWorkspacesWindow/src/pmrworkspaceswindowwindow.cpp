@@ -236,28 +236,28 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
+void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
 {
     // Keep track of our settings' group
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 
     // Retrieve the settings of the workspaces window widget
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
+void PmrWorkspacesWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the settings of the workspaces window widget
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

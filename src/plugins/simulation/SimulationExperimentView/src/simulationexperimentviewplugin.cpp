@@ -234,7 +234,7 @@ void SimulationExperimentViewPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our Simulation Experiment view settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
+        mViewWidget->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -245,7 +245,7 @@ void SimulationExperimentViewPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our Simulation Experiment view settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
+        mViewWidget->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

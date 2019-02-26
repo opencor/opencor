@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMainWindow>
 #include <QMenu>
 #include <QPalette>
-#include <QSettings>
 
 //==============================================================================
 
@@ -634,7 +633,7 @@ void CorePlugin::loadSettings(QSettings *pSettings)
     // Retrieve the central widget settings
 
     pSettings->beginGroup(mCentralWidget->objectName());
-        mCentralWidget->loadSettings(pSettings);
+        mCentralWidget->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -655,7 +654,7 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
     // Keep track of the central widget settings
 
     pSettings->beginGroup(mCentralWidget->objectName());
-        mCentralWidget->saveSettings(pSettings);
+        mCentralWidget->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

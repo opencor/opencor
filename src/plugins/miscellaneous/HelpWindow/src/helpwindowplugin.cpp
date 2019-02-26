@@ -126,7 +126,7 @@ void HelpWindowPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our Help window settings
 
     pSettings->beginGroup(mHelpWindow->objectName());
-        mHelpWindow->loadSettings(pSettings);
+        mHelpWindow->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -137,7 +137,7 @@ void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our Help window settings
 
     pSettings->beginGroup(mHelpWindow->objectName());
-        mHelpWindow->saveSettings(pSettings);
+        mHelpWindow->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

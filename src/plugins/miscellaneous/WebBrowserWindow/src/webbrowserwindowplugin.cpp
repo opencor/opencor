@@ -126,7 +126,7 @@ void WebBrowserWindowPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our Web Browser window settings
 
     pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
-        mWebBrowserWindowWindow->loadSettings(pSettings);
+        mWebBrowserWindowWindow->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -137,7 +137,7 @@ void WebBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our Web Browser window settings
 
     pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
-        mWebBrowserWindowWindow->saveSettings(pSettings);
+        mWebBrowserWindowWindow->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

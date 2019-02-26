@@ -125,7 +125,7 @@ void FileOrganiserWindowPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our File Organiser window settings
 
     pSettings->beginGroup(mFileOrganiserWindowWindow->objectName());
-        mFileOrganiserWindowWindow->loadSettings(pSettings);
+        mFileOrganiserWindowWindow->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -136,7 +136,7 @@ void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our File Organiser window settings
 
     pSettings->beginGroup(mFileOrganiserWindowWindow->objectName());
-        mFileOrganiserWindowWindow->saveSettings(pSettings);
+        mFileOrganiserWindowWindow->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

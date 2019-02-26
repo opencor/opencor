@@ -245,7 +245,7 @@ void RawSEDMLViewPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our Raw SED-ML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
+        mViewWidget->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -256,7 +256,7 @@ void RawSEDMLViewPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our Raw SED-ML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
+        mViewWidget->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

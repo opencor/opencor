@@ -125,7 +125,7 @@ void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our File Browser window settings
 
     pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
-        mFileBrowserWindowWindow->loadSettings(pSettings);
+        mFileBrowserWindowWindow->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -136,7 +136,7 @@ void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our File Browser window settings
 
     pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
-        mFileBrowserWindowWindow->saveSettings(pSettings);
+        mFileBrowserWindowWindow->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

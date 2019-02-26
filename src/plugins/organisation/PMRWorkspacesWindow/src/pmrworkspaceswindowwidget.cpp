@@ -539,18 +539,18 @@ static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspa
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
+void PmrWorkspacesWindowWidget::loadSettings(QSettings &pSettings)
 {
     // Keep track of our settings' group
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 
     // Retrieve and keep track of some information about the previously cloned
     // workspace folders
     // Note: for the key, we use the PMR URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    for (const auto &clonedWorkspaceFolder : pSettings->value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
+    for (const auto &clonedWorkspaceFolder : pSettings.value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
@@ -597,14 +597,14 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
+void PmrWorkspacesWindowWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the names of folders containing cloned workspaces
     // Note: for the key, we use the PMR URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    pSettings->setValue(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host()),
-                        QVariant(mClonedWorkspaceFolderUrls.keys()));
+    pSettings.setValue(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host()),
+                       QVariant(mClonedWorkspaceFolderUrls.keys()));
 }
 
 //==============================================================================
@@ -657,11 +657,11 @@ void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
 
     settings.beginGroup(mSettingsGroup);
 
-    saveSettings(&settings);
+    saveSettings(settings);
 
     reset(pPmrUrl);
 
-    loadSettings(&settings);
+    loadSettings(settings);
 }
 
 //==============================================================================

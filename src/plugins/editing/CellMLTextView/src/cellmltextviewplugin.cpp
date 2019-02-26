@@ -298,7 +298,7 @@ void CellMLTextViewPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our CellML Text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
+        mViewWidget->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -315,7 +315,7 @@ void CellMLTextViewPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our generic CellML Text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
+        mViewWidget->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

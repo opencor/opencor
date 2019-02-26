@@ -127,7 +127,7 @@ void PMRWindowPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our PMR window settings
 
     pSettings->beginGroup(mPmrWindowWindow->objectName());
-        mPmrWindowWindow->loadSettings(pSettings);
+        mPmrWindowWindow->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -138,7 +138,7 @@ void PMRWindowPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our PMR window settings
 
     pSettings->beginGroup(mPmrWindowWindow->objectName());
-        mPmrWindowWindow->saveSettings(pSettings);
+        mPmrWindowWindow->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

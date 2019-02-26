@@ -204,11 +204,11 @@ static const auto SettingsZoomLevel = QStringLiteral("ZoomLevel");
 
 //==============================================================================
 
-void WebViewerWidget::loadSettings(QSettings *pSettings)
+void WebViewerWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve the zoom level
 
-    setZoomLevel(pSettings->value(SettingsZoomLevel, DefaultZoomLevel).toInt());
+    setZoomLevel(pSettings.value(SettingsZoomLevel, DefaultZoomLevel).toInt());
 
     emitZoomRelatedSignals();
 
@@ -225,11 +225,11 @@ void WebViewerWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void WebViewerWidget::saveSettings(QSettings *pSettings) const
+void WebViewerWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the zoom level
 
-    pSettings->setValue(SettingsZoomLevel, mZoomLevel);
+    pSettings.setValue(SettingsZoomLevel, mZoomLevel);
 }
 
 //==============================================================================

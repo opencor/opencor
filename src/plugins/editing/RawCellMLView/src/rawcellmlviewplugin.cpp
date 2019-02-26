@@ -266,7 +266,7 @@ void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
     // Retrieve our Raw CellML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
+        mViewWidget->loadSettings(*pSettings);
     pSettings->endGroup();
 }
 
@@ -277,7 +277,7 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
     // Keep track of our Raw CellML view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
+        mViewWidget->saveSettings(*pSettings);
     pSettings->endGroup();
 }
 

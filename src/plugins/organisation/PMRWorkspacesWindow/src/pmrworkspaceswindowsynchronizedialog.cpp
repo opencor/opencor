@@ -255,7 +255,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QSett
 
     // Retrieve our user's settings
 
-    mWebViewer->loadSettings(mSettings);
+    mWebViewer->loadSettings(*mSettings);
 
     mWebViewerCellmlTextFormatAction->setChecked(mSettings->value(SettingsCellmlTextFormatSupport, true).toBool());
 
@@ -360,7 +360,7 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 {
     // Keep track of our user's settings
 
-    mWebViewer->saveSettings(mSettings);
+    mWebViewer->saveSettings(*mSettings);
 
     mSettings->setValue(SettingsCellmlTextFormatSupport,
                         mWebViewerCellmlTextFormatAction->isChecked());
