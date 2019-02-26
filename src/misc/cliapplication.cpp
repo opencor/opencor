@@ -65,7 +65,7 @@ CliApplication::~CliApplication()
 
     for (auto plugin : mLoadedPluginPlugins) {
         settings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&settings);
+            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
         settings.endGroup();
     }
 
@@ -116,7 +116,7 @@ void CliApplication::loadPlugins()
 
     for (auto plugin : mLoadedPluginPlugins) {
         settings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(&settings);
+            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
         settings.endGroup();
     }
 

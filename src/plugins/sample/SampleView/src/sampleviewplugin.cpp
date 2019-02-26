@@ -215,7 +215,7 @@ void SampleViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void SampleViewPlugin::loadSettings(QSettings *pSettings)
+void SampleViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -224,7 +224,7 @@ void SampleViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SampleViewPlugin::saveSettings(QSettings *pSettings) const
+void SampleViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

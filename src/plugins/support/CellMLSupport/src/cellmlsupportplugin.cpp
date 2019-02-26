@@ -216,7 +216,7 @@ void CellMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLSupportPlugin::loadSettings(QSettings *pSettings)
+void CellMLSupportPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -225,7 +225,7 @@ void CellMLSupportPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CellMLSupportPlugin::saveSettings(QSettings *pSettings) const
+void CellMLSupportPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

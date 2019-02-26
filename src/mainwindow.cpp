@@ -710,7 +710,7 @@ void MainWindow::loadSettings()
 
     for (auto plugin : mLoadedPluginPlugins) {
         mSettings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(&mSettings);
+            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(mSettings);
         mSettings.endGroup();
     }
 
@@ -764,7 +764,7 @@ void MainWindow::saveSettings()
 
     for (auto plugin : mLoadedPluginPlugins) {
         mSettings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&mSettings);
+            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(mSettings);
         mSettings.endGroup();
     }
 

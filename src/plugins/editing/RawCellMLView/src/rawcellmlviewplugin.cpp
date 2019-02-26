@@ -261,24 +261,24 @@ void RawCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
+void RawCellMLViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Raw CellML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(*pSettings);
-    pSettings->endGroup();
+    pSettings.beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
+void RawCellMLViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Raw CellML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(*pSettings);
-    pSettings->endGroup();
+    pSettings.beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings.endGroup();
 }
 
 //==============================================================================

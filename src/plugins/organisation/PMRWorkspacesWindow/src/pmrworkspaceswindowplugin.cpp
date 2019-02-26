@@ -126,24 +126,24 @@ void PMRWorkspacesWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins
 
 //==============================================================================
 
-void PMRWorkspacesWindowPlugin::loadSettings(QSettings *pSettings)
+void PMRWorkspacesWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our PMR Workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
-        mPmrWorkspacesWindowWindow->loadSettings(*pSettings);
-    pSettings->endGroup();
+    pSettings.beginGroup(mPmrWorkspacesWindowWindow->objectName());
+        mPmrWorkspacesWindowWindow->loadSettings(pSettings);
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void PMRWorkspacesWindowPlugin::saveSettings(QSettings *pSettings) const
+void PMRWorkspacesWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our PMR Workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
-        mPmrWorkspacesWindowWindow->saveSettings(*pSettings);
-    pSettings->endGroup();
+    pSettings.beginGroup(mPmrWorkspacesWindowWindow->objectName());
+        mPmrWorkspacesWindowWindow->saveSettings(pSettings);
+    pSettings.endGroup();
 }
 
 //==============================================================================
