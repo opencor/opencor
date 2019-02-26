@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QMainWindow>
 #include <QMap>
+#include <QSettings>
 #include <QTranslator>
 #include <QUrl>
 
@@ -39,10 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Ui {
     class MainWindow;
 }   // namespace Ui
-
-//==============================================================================
-
-class QSettings;
 
 //==============================================================================
 
@@ -86,7 +83,7 @@ private:
 
     QString mApplicationDate;
 
-    QSettings *mSettings;
+    QSettings mSettings;
 
     PluginManager *mPluginManager;
 
@@ -121,7 +118,7 @@ private:
     void initializeGuiPlugin(Plugin *pPlugin);
 
     void loadSettings();
-    void saveSettings() const;
+    void saveSettings();
 
     void setLocale(const QString &pRawLocale = QString(),
                    bool pForceSetting = false);
@@ -130,7 +127,7 @@ private:
 
     void updateViewWindowsMenu(QAction *pAction);
 
-    void restart(bool pSaveSettings) const;
+    void restart(bool pSaveSettings);
 
     void showPreferencesDialog(const QString &pPluginName = QString());
 

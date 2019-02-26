@@ -53,7 +53,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLocale>
 #include <QRect>
 #include <QScreen>
-#include <QSettings>
 #include <QShortcut>
 #include <QTimer>
 #include <QUrl>
@@ -124,10 +123,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Register our OpenCOR URL scheme
 
     registerOpencorUrlScheme();
-
-    // Create our settings object
-
-    mSettings = new QSettings();
 
     // Create our plugin manager (which will automatically load our various
     // plugins)
@@ -350,7 +345,6 @@ MainWindow::~MainWindow()
     // Delete some internal objects
 
     delete mPluginManager;
-    delete mSettings;
 
     // Delete the GUI
 
@@ -685,8 +679,8 @@ void MainWindow::loadSettings()
 
     // Retrieve the geometry and state of the main window
 
-    if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
-        || !restoreState(mSettings->value(SettingsState).toByteArray())) {
+    if (   !restoreGeometry(mSettings.value(SettingsGeometry).toByteArray())
+        || !restoreState(mSettings.value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be retrieved,
         // so go with some default settings
 
@@ -704,23 +698,23 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the docked windows are to be shown
 
-    showDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
+    showDockedWindows(mSettings.value(SettingsDockedWindowsVisible, true).toBool(), true);
 
     // Retrieve the state of the docked windows
 
-    mDockedWindowsState = mSettings->value(SettingsDockedWindowsState, QByteArray()).toByteArray();
+    mDockedWindowsState = mSettings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
 
     // Retrieve the settings of our various plugins
 
-    mSettings->beginGroup(SettingsPlugins);
+    mSettings.beginGroup(SettingsPlugins);
 
     for (auto plugin : mLoadedPluginPlugins) {
-        mSettings->beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(mSettings);
-        mSettings->endGroup();
+        mSettings.beginGroup(plugin->name());
+            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(&mSettings);
+        mSettings.endGroup();
     }
 
-    mSettings->endGroup();
+    mSettings.endGroup();
 
     // Let our core plugin know that all of the plugins have loaded their
     // settings
@@ -739,42 +733,42 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the status bar is to be shown
 
-    mGui->actionStatusBar->setChecked(mSettings->value(SettingsStatusBarVisible, true).toBool());
+    mGui->actionStatusBar->setChecked(mSettings.value(SettingsStatusBarVisible, true).toBool());
 }
 
 //==============================================================================
 
-void MainWindow::saveSettings() const
+void MainWindow::saveSettings()
 {
     // Keep track of the geometry and state of the main window
 
-    mSettings->setValue(SettingsGeometry, saveGeometry());
-    mSettings->setValue(SettingsState, saveState());
+    mSettings.setValue(SettingsGeometry, saveGeometry());
+    mSettings.setValue(SettingsState, saveState());
 
     // Keep track of whether the docked windows are to be shown
 
-    mSettings->setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
+    mSettings.setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
 
     // Keep track of the state of the docked windows
 
-    mSettings->setValue(SettingsDockedWindowsState, mDockedWindowsState);
+    mSettings.setValue(SettingsDockedWindowsState, mDockedWindowsState);
 
     // Keep track of whether the status bar is to be shown
 
-    mSettings->setValue(SettingsStatusBarVisible,
-                        mGui->statusBar->isVisible());
+    mSettings.setValue(SettingsStatusBarVisible,
+                       mGui->statusBar->isVisible());
 
     // Keep track of the settings of our various plugins
 
-    mSettings->beginGroup(SettingsPlugins);
+    mSettings.beginGroup(SettingsPlugins);
 
     for (auto plugin : mLoadedPluginPlugins) {
-        mSettings->beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(mSettings);
-        mSettings->endGroup();
+        mSettings.beginGroup(plugin->name());
+            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&mSettings);
+        mSettings.endGroup();
     }
 
-    mSettings->endGroup();
+    mSettings.endGroup();
 }
 
 //==============================================================================
@@ -1185,11 +1179,11 @@ void MainWindow::actionPluginsTriggered()
     if (mPluginManager->plugins().count()) {
         // There are some plugins, so we can show the plugins dialog
 
-        mSettings->beginGroup("PluginsDialog");
-            PluginsDialog pluginsDialog(mSettings, mPluginManager, this);
+        mSettings.beginGroup("PluginsDialog");
+            PluginsDialog pluginsDialog(&mSettings, mPluginManager, this);
 
             pluginsDialog.exec();
-        mSettings->endGroup();
+        mSettings.endGroup();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
@@ -1208,12 +1202,12 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 {
     // Show the preferences dialog
 
-    mSettings->beginGroup("PreferencesDialog");
-        PreferencesDialog preferencesDialog(mSettings, mPluginManager,
+    mSettings.beginGroup("PreferencesDialog");
+        PreferencesDialog preferencesDialog(&mSettings, mPluginManager,
                                             pPluginName, this);
 
         preferencesDialog.exec();
-    mSettings->endGroup();
+    mSettings.endGroup();
 
     // Let people know about the plugins that had their preferences changed, if
     // any and if requested
@@ -1253,11 +1247,11 @@ void MainWindow::actionCheckForUpdatesTriggered()
 {
     // Show the check for updates dialog
 
-    mSettings->beginGroup(SettingsCheckForUpdatesDialog);
-        CheckForUpdatesDialog checkForUpdatesDialog(mSettings, mApplicationDate, this);
+    mSettings.beginGroup(SettingsCheckForUpdatesDialog);
+        CheckForUpdatesDialog checkForUpdatesDialog(&mSettings, mApplicationDate, this);
 
         checkForUpdatesDialog.exec();
-    mSettings->endGroup();
+    mSettings.endGroup();
 }
 
 //==============================================================================
@@ -1275,7 +1269,7 @@ void MainWindow::actionAboutTriggered()
 
 //==============================================================================
 
-void MainWindow::restart(bool pSaveSettings) const
+void MainWindow::restart(bool pSaveSettings)
 {
     // Restart OpenCOR after saving its settings, if required
     // Note: the closeEvent method won't get called when exiting OpenCOR and
