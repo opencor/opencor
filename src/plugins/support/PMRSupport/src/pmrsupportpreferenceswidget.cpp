@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // PMR support preferences widget
 //==============================================================================
 
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 
 //==============================================================================
