@@ -71,7 +71,7 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(const QString &pGroupName,
+DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
                                  DataStore *pDataStore, bool pIncludeVoi,
                                  const QMap<int, QIcon> &pIcons,
                                  QWidget *pParent) :
@@ -83,7 +83,7 @@ DataStoreDialog::DataStoreDialog(const QString &pGroupName,
     // Customise our settings
 
     mSettings.beginGroup(SettingsPlugins);
-    mSettings.beginGroup(pGroupName);
+    mSettings.beginGroup(pDataStoreName);
     mSettings.beginGroup("DataStoreDialog");
 
     // Set up the GUI
