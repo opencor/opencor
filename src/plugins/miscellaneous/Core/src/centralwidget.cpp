@@ -342,7 +342,7 @@ static const auto SettingsFileModeView         = QStringLiteral("FileModeView%1%
 
 void CentralWidget::loadSettings(QSettings &pSettings)
 {
-    // Initialise our settings group with that of given settings
+    // Keep track of the given settings' group
 
     mSettingsGroup = pSettings.group();
 

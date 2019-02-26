@@ -238,7 +238,7 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
 {
-    // Keep track of our settings' group
+    // Keep track of the given settings' group
 
     mSettingsGroup = pSettings.group();
 
