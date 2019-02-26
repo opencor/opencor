@@ -1577,12 +1577,7 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
         if (   (    workspace->isOwned()
                 && (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged))
             || (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)) {
-            QSettings settings;
-
-            settings.beginGroup(mSettingsGroup);
-            settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
-
-            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(settings, workspace, mTimer, Core::mainWindow());
+            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(workspace, mTimer, Core::mainWindow());
 
             synchronizeDialog.exec();
 

@@ -466,12 +466,7 @@ void PmrWorkspacesWindowWindow::actionNewTriggered()
 {
     // Create a new (owned) workspace
 
-    QSettings settings;
-
-    settings.beginGroup(mSettingsGroup);
-    settings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
-
-    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(settings, Core::mainWindow());
+    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
 
     if (newWorkspaceDialog.exec() == QDialog::Accepted) {
         // Ask the PMR web service to create a new workspace, resulting in the
