@@ -58,9 +58,7 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     mWebViewer(nullptr),
     mWebViewerUsed(false)
 {
-    // Create our 'special' settings
-    // Note: special in the sense that we don't retrieve them from the plugin
-    //       itself since this is not a view, a window or anything like that...
+    // Customise our settings
 
     mSettings.beginGroup(SettingsPlugins);
     mSettings.beginGroup(PluginName);

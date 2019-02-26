@@ -50,6 +50,8 @@ namespace Preferences {
 PreferencesWidget::PreferencesWidget(const QString &pName, QWidget *pParent) :
     QWidget(pParent)
 {
+    // Customise our settings
+
     if (pName.compare(GeneralPreferences)) {
         mSettings.beginGroup(SettingsPlugins);
         mSettings.beginGroup(pName);
