@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class QSettings;
+#include <QSettings>
 
 //==============================================================================
 
@@ -67,7 +67,6 @@ class PmrWebServiceManager : public QNetworkAccessManager
 public:
     explicit PmrWebServiceManager(const QString &pPmrUrl,
                                   PmrWebService *pPmrWebService);
-    ~PmrWebServiceManager() override;
 
     bool isAuthenticated() const;
     void authenticate(bool pAuthenticate);
@@ -79,7 +78,7 @@ public:
     void update(const QString &pPmrUrl);
 
 private:
-    QSettings *mSettings;
+    QSettings mSettings;
 
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
