@@ -157,8 +157,6 @@ private:
 
     QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
 
-    QMap<QString, QWidget *> mViews;
-
     Plugin * viewPlugin(int pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 
