@@ -151,8 +151,10 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Retrieve our Core plugin's interface, should the Core plugin be loaded
 
-    if (mPluginManager->corePlugin())
-        mCoreInterface = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance());
+    Plugin *corePlugin = mPluginManager->corePlugin();
+
+    if (corePlugin)
+        mCoreInterface = qobject_cast<CoreInterface *>(corePlugin->instance());
 
     // Set up the GUI
 
