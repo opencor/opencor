@@ -625,28 +625,12 @@
         <translation>la courbe demandée (%1) n&apos;a pas pu être spécifiée (la variable %2 dans le composant %3 n&apos;a pas pu être trouvée)</translation>
     </message>
     <message>
-        <source>Simulation time:</source>
-        <translation>Temps de simulation :</translation>
-    </message>
-    <message>
-        <source>%1 using %2</source>
-        <translation>%1 avec %2</translation>
-    </message>
-    <message>
-        <source>Data Import</source>
-        <translation>Importation Données</translation>
-    </message>
-    <message>
-        <source>Import some data</source>
-        <translation>Importer des données</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;est pas un fichier de données.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
-    </message>
-    <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; is not a data file.</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;est pas un fichier de données.</translation>
     </message>
     <message>
         <source>the file could not be accessed</source>
@@ -655,6 +639,14 @@
     <message>
         <source>the memory needed to store the data could not be allocated</source>
         <translation>la mémoire nécessaire pour stocker les données n&apos;a pas pu être allouée</translation>
+    </message>
+    <message>
+        <source>Simulation time:</source>
+        <translation>Temps de simulation :</translation>
+    </message>
+    <message>
+        <source>%1 using %2</source>
+        <translation>%1 avec %2</translation>
     </message>
 </context>
 </TS>
