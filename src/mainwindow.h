@@ -115,7 +115,7 @@ private:
     void initializeGuiPlugin(Plugin *pPlugin);
 
     void loadSettings();
-    void saveSettings();
+    void saveSettings() const;
 
     void setLocale(const QString &pRawLocale = QString(),
                    bool pForceSetting = false);
@@ -124,7 +124,7 @@ private:
 
     void updateViewWindowsMenu(QAction *pAction);
 
-    void restart(bool pSaveSettings);
+    void restart(bool pSaveSettings) const;
 
     void showPreferencesDialog(const QString &pPluginName = QString());
 

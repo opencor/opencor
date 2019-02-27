@@ -741,7 +741,7 @@ void MainWindow::loadSettings()
 
 //==============================================================================
 
-void MainWindow::saveSettings()
+void MainWindow::saveSettings() const
 {
     // Keep track of the geometry and state of the main window
 
@@ -1266,7 +1266,7 @@ void MainWindow::actionAboutTriggered()
 
 //==============================================================================
 
-void MainWindow::restart(bool pSaveSettings)
+void MainWindow::restart(bool pSaveSettings) const
 {
     // Restart OpenCOR after saving its settings, if required
     // Note: the closeEvent method won't get called when exiting OpenCOR and
