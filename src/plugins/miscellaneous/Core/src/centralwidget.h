@@ -91,8 +91,8 @@ public:
     explicit CentralWidget(QWidget *pParent);
     ~CentralWidget() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void settingsLoaded(const Plugins &pLoadedPlugins);
 
@@ -132,8 +132,6 @@ private:
     };
 
     State mState;
-
-    QSettings *mSettings;
 
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedFileTypePlugins;

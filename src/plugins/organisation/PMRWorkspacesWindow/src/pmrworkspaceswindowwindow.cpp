@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "i18ninterface.h"
 #include "toolbarwidget.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
@@ -59,7 +60,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mInitialized(false),
-    mSettingsGroup(QString()),
     mFirstTimeRetrievingWorkspaces(true),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
@@ -157,12 +157,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
-    // Initialise (update) our PMR URL
-
-    update(PreferencesInterface::preference(PMRSupport::PluginName,
-                                            PMRSupport::SettingsPreferencesPmrUrl,
-                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
-
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
 
@@ -170,9 +164,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
     // Some connections to process responses from our PMR web service
-
-    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWorkspacesWindowWindow::showInformation);
@@ -236,28 +227,40 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
+void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
 {
-    // Keep track of our settings' group
-
-    mSettingsGroup = pSettings->group();
-
     // Retrieve the settings of the workspaces window widget
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
+
+    // Initialise (update) our PMR URL
+    // Note: we do it here rather than in our constructor because we need
+    //       mPmrWorkspacesWindowWidget to be fully initialised...
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
+
+    // A connection to show ourselves busy when our PMR web service is
+    // Note: we do it here rather than in our constructor otherwise our main
+    //       window won't properly resize upon startup, in case we are floating
+    //       (as opposed to being docked)...
+
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
+void PmrWorkspacesWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the settings of the workspaces window widget
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
@@ -466,12 +469,7 @@ void PmrWorkspacesWindowWindow::actionNewTriggered()
 {
     // Create a new (owned) workspace
 
-    QSettings settings;
-
-    settings.beginGroup(mSettingsGroup);
-    settings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
-
-    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(&settings, Core::mainWindow());
+    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
 
     if (newWorkspaceDialog.exec() == QDialog::Accepted) {
         // Ask the PMR web service to create a new workspace, resulting in the

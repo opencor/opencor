@@ -71,19 +71,19 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
+void RawCellmlViewWidget::loadSettings(QSettings &pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
     // our settings' group and load them when initialising ourselves (see
     // initialize())...
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 }
 
 //==============================================================================
 
-void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
+void RawCellmlViewWidget::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
     // Note: our view is such that our settings are actually saved when calling
@@ -147,7 +147,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
             settings.beginGroup(mSettingsGroup);
 
-            editingWidget->loadSettings(&settings);
+            editingWidget->loadSettings(settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -193,7 +193,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 
             settings.beginGroup(mSettingsGroup);
 
-            editingWidget->saveSettings(&settings);
+            editingWidget->saveSettings(settings);
 
             mNeedLoadingSettings = true;
             mEditingWidget = nullptr;

@@ -138,22 +138,22 @@ static const auto SettingsEditorWidgetZoomLevel = QStringLiteral("EditorWidgetZo
 
 //==============================================================================
 
-void EditorWidget::loadSettings(QSettings *pSettings)
+void EditorWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve our settings
 
-    setWordWrap(pSettings->value(SettingsEditorWidgetWordWrap, false).toBool());
-    setZoomLevel(pSettings->value(SettingsEditorWidgetZoomLevel, 0).toInt());
+    setWordWrap(pSettings.value(SettingsEditorWidgetWordWrap, false).toBool());
+    setZoomLevel(pSettings.value(SettingsEditorWidgetZoomLevel, 0).toInt());
 }
 
 //==============================================================================
 
-void EditorWidget::saveSettings(QSettings *pSettings) const
+void EditorWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our settings
 
-    pSettings->setValue(SettingsEditorWidgetWordWrap, wordWrap());
-    pSettings->setValue(SettingsEditorWidgetZoomLevel, zoomLevel());
+    pSettings.setValue(SettingsEditorWidgetWordWrap, wordWrap());
+    pSettings.setValue(SettingsEditorWidgetZoomLevel, zoomLevel());
 }
 
 //==============================================================================

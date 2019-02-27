@@ -42,10 +42,6 @@ namespace Ui {
 
 //==============================================================================
 
-class QSettings;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -86,8 +82,6 @@ private:
     Ui::MainWindow *mGui;
 
     QString mApplicationDate;
-
-    QSettings *mSettings;
 
     PluginManager *mPluginManager;
 

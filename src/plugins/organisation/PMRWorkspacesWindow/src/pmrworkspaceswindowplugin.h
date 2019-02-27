@@ -42,6 +42,10 @@ PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo();
 
 //==============================================================================
 
+static const auto PluginName = QStringLiteral("PMRWorkspacesWindow");
+
+//==============================================================================
+
 class PmrWorkspacesWindowWindow;
 
 //==============================================================================

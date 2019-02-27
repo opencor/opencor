@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "file.h"
 #include "i18ninterface.h"
 #include "pmrworkspace.h"
+#include "pmrworkspaceswindowplugin.h"
 #include "pmrworkspaceswindowsynchronizedialog.h"
 #include "splitterwidget.h"
 #include "toolbarwidget.h"
@@ -92,11 +93,10 @@ static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSpli
 
 //==============================================================================
 
-PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QSettings *pSettings,
-                                                                           PMRSupport::PmrWorkspace *pWorkspace,
+PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
                                                                            QTimer *pTimer,
                                                                            QWidget *pParent) :
-    Core::Dialog(pSettings, pParent),
+    Core::Dialog(pParent),
     mWorkspace(pWorkspace),
     mSha1s(QMap<QString, QString>()),
     mDiffHtmls(QMap<QString, QString>()),
@@ -106,6 +106,12 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QSett
     mInvalidCellmlCode(QStringList()),
     mNeedUpdateDiffInformation(false)
 {
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup(PluginName);
+    mSettings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
+
     // Set both our object name and title
 
     setWindowTitle(tr("Synchronise With PMR"));
@@ -257,11 +263,11 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(QSett
 
     mWebViewer->loadSettings(mSettings);
 
-    mWebViewerCellmlTextFormatAction->setChecked(mSettings->value(SettingsCellmlTextFormatSupport, true).toBool());
+    mWebViewerCellmlTextFormatAction->setChecked(mSettings.value(SettingsCellmlTextFormatSupport, true).toBool());
 
-    mHorizontalSplitter->setSizes(qVariantListToIntList(mSettings->value(SettingsHorizontalSplitterSizes).toList()));
-    mVerticalSplitter->setSizes(qVariantListToIntList(mSettings->value(SettingsVerticalSplitterSizes,
-                                                                       QVariantList() << 222 << 555).toList()));
+    mHorizontalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsHorizontalSplitterSizes).toList()));
+    mVerticalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsVerticalSplitterSizes,
+                                                                      QVariantList() << 222 << 555).toList()));
 
     // Add some dialog buttons
 
@@ -362,13 +368,13 @@ PmrWorkspacesWindowSynchronizeDialog::~PmrWorkspacesWindowSynchronizeDialog()
 
     mWebViewer->saveSettings(mSettings);
 
-    mSettings->setValue(SettingsCellmlTextFormatSupport,
-                        mWebViewerCellmlTextFormatAction->isChecked());
+    mSettings.setValue(SettingsCellmlTextFormatSupport,
+                       mWebViewerCellmlTextFormatAction->isChecked());
 
-    mSettings->setValue(SettingsHorizontalSplitterSizes,
-                        qIntListToVariantList(mHorizontalSplitter->sizes()));
-    mSettings->setValue(SettingsVerticalSplitterSizes,
-                        qIntListToVariantList(mVerticalSplitter->sizes()));
+    mSettings.setValue(SettingsHorizontalSplitterSizes,
+                       qIntListToVariantList(mHorizontalSplitter->sizes()));
+    mSettings.setValue(SettingsVerticalSplitterSizes,
+                       qIntListToVariantList(mVerticalSplitter->sizes()));
 }
 
 //==============================================================================

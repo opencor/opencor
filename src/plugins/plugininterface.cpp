@@ -33,7 +33,7 @@ extern "C" Q_DECL_EXPORT int pluginInterfaceVersion()
 {
     // Version of the plugin interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================

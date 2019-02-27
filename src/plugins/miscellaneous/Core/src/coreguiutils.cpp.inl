@@ -26,9 +26,8 @@ static const auto SettingsSize     = QStringLiteral("Size");
 
 //==============================================================================
 
-Dialog::Dialog(QSettings *pSettings, QWidget *pParent) :
-    QDialog(pParent),
-    mSettings(pSettings)
+Dialog::Dialog(QWidget *pParent) :
+    QDialog(pParent)
 {
 }
 
@@ -51,8 +50,8 @@ int Dialog::exec()
 {
     // Retrieve our position and size, if possible
 
-    QPoint position = mSettings->value(SettingsPosition).toPoint();
-    QSize size = mSettings->value(SettingsSize).toSize();
+    QPoint position = mSettings.value(SettingsPosition).toPoint();
+    QSize size = mSettings.value(SettingsSize).toSize();
 
     if (!position.isNull() && !size.isNull()) {
         move(position);
@@ -65,8 +64,8 @@ int Dialog::exec()
 
     // Keep track of our position and size, if possible
 
-    mSettings->setValue(SettingsPosition, pos());
-    mSettings->setValue(SettingsSize, Dialog::size());
+    mSettings.setValue(SettingsPosition, pos());
+    mSettings.setValue(SettingsSize, QDialog::size());
 
     // Return the result of our execution
 
@@ -79,8 +78,8 @@ bool Dialog::hasPositionAndSize()
 {
     // Return whether we already have a position and size, if possible
 
-    return    !mSettings->value(SettingsPosition).toPoint().isNull()
-           && !mSettings->value(SettingsSize).toSize().isNull();
+    return    !mSettings.value(SettingsPosition).toPoint().isNull()
+           && !mSettings.value(SettingsSize).toSize().isNull();
 }
 
 //==============================================================================

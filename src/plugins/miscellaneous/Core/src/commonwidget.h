@@ -35,11 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QColor>
+#include <QSettings>
 #include <QString>
 
 //==============================================================================
 
-class QSettings;
 class QSize;
 
 //==============================================================================
@@ -59,8 +59,8 @@ public:
     explicit CommonWidget(QWidget *pParent);
     virtual ~CommonWidget();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    virtual void loadSettings(QSettings &pSettings);
+    virtual void saveSettings(QSettings &pSettings) const;
 
     virtual void retranslateUi();
 

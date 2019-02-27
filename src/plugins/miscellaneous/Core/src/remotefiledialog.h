@@ -43,8 +43,7 @@ class RemoteFileDialog : public Dialog
     Q_OBJECT
 
 public:
-    explicit RemoteFileDialog(QSettings *pSettings, const QString &pTitle,
-                              QWidget *pParent);
+    explicit RemoteFileDialog(const QString &pTitle, QWidget *pParent);
 
     QString url() const;
 

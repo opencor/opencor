@@ -120,7 +120,7 @@ void ZincWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void ZincWindowPlugin::loadSettings(QSettings *pSettings)
+void ZincWindowPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -129,7 +129,7 @@ void ZincWindowPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void ZincWindowPlugin::saveSettings(QSettings *pSettings) const
+void ZincWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

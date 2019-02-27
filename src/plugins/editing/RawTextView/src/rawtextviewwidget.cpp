@@ -50,19 +50,19 @@ RawTextViewWidget::RawTextViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void RawTextViewWidget::loadSettings(QSettings *pSettings)
+void RawTextViewWidget::loadSettings(QSettings &pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
     // our settings' group and load them when initialising ourselves (see
     // initialize())...
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 }
 
 //==============================================================================
 
-void RawTextViewWidget::saveSettings(QSettings *pSettings) const
+void RawTextViewWidget::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
     // Note: our view is such that our settings are actually saved when calling
@@ -118,7 +118,7 @@ void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
             settings.beginGroup(mSettingsGroup);
 
-            newEditor->loadSettings(&settings);
+            newEditor->loadSettings(settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -159,7 +159,7 @@ void RawTextViewWidget::finalize(const QString &pFileName)
 
             settings.beginGroup(mSettingsGroup);
 
-            editor->saveSettings(&settings);
+            editor->saveSettings(settings);
 
             mNeedLoadingSettings = true;
             mEditor = nullptr;

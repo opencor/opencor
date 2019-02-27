@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // PMR support preferences widget
 //==============================================================================
 
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 
 //==============================================================================
@@ -67,9 +68,9 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mPmrUrl = mSettings->value(SettingsPreferencesPmrUrl, SettingsPreferencesPmrUrlDefault).toString();
-    mName = mSettings->value(SettingsPreferencesName, SettingsPreferencesNameDefault).toString();
-    mEmail = mSettings->value(SettingsPreferencesEmail, SettingsPreferencesEmailDefault).toString();
+    mPmrUrl = mSettings.value(SettingsPreferencesPmrUrl, SettingsPreferencesPmrUrlDefault).toString();
+    mName = mSettings.value(SettingsPreferencesName, SettingsPreferencesNameDefault).toString();
+    mEmail = mSettings.value(SettingsPreferencesEmail, SettingsPreferencesEmailDefault).toString();
 
     mGui->pmrUrlValue->setCurrentText(mPmrUrl);
     mGui->nameValue->setText(mName);
@@ -115,9 +116,9 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-    mSettings->setValue(SettingsPreferencesPmrUrl, mGui->pmrUrlValue->currentText());
-    mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
-    mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
+    mSettings.setValue(SettingsPreferencesPmrUrl, mGui->pmrUrlValue->currentText());
+    mSettings.setValue(SettingsPreferencesName, mGui->nameValue->text());
+    mSettings.setValue(SettingsPreferencesEmail, mGui->emailValue->text());
 }
 
 //==============================================================================

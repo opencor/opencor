@@ -238,24 +238,24 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
 
 //==============================================================================
 
-void SimulationExperimentViewPlugin::loadSettings(QSettings *pSettings)
+void SimulationExperimentViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Simulation Experiment view settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void SimulationExperimentViewPlugin::saveSettings(QSettings *pSettings) const
+void SimulationExperimentViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Simulation Experiment view settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

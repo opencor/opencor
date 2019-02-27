@@ -40,10 +40,13 @@ namespace Core {
 
 //==============================================================================
 
-RemoteFileDialog::RemoteFileDialog(QSettings *pSettings, const QString &pTitle,
-                                   QWidget *pParent) :
-    Dialog(pSettings, pParent)
+RemoteFileDialog::RemoteFileDialog(const QString &pTitle, QWidget *pParent) :
+    Dialog(pParent)
 {
+    // Customise our settings
+
+    mSettings.beginGroup("RemoteFileDialog");
+
     // Customise ourselves
 //---OPENCOR--- THE ORIGINAL PLAN WAS TO HAVE A REGULAR EXPRESSION TO VALIDATE A
 //              URL, BUT IT LOOKS LIKE THERE MIGHT BE AN ISSUE WITH

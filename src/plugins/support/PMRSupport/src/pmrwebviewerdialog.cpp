@@ -18,78 +18,93 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Preferences interface
+// PMR web viewer dialog
 //==============================================================================
 
-#pragma once
+#include "plugin.h"
+#include "pmrsupportplugin.h"
+#include "pmrwebviewerdialog.h"
+#include "progressbarwidget.h"
+#include "webviewerwidget.h"
 
 //==============================================================================
 
-#include <QSettings>
-#include <QVariant>
-#include <QWidget>
+#include <QMainWindow>
+#include <QVBoxLayout>
+#include <QWebView>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Preferences {
+namespace PMRSupport {
 
 //==============================================================================
 
-static const auto SettingsPreferences = QStringLiteral("Preferences");
-
-//==============================================================================
-
-static const auto GeneralPreferences = QStringLiteral("General");
-
-//==============================================================================
-
-class PreferencesWidget : public QWidget
+PmrWebViewerDialog::PmrWebViewerDialog(QWidget *pParent) :
+    Core::Dialog(pParent)
 {
-    Q_OBJECT
+    // Customise our settings
 
-public:
-    explicit PreferencesWidget(const QString &pName, QWidget *pParent);
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup(PluginName);
+    mSettings.beginGroup("PmrWebViewerDialog");
+qDebug(">>> %s", qPrintable(mSettings.group()));
 
-    virtual bool preferencesChanged() const = 0;
+    // Customise ourselves
 
-    virtual void resetPreferences() = 0;
-    virtual void savePreferences() = 0;
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-protected:
-    QSettings mSettings;
-};
+    layout->setContentsMargins(QMargins());
+
+    setLayout(layout);
+
+    mWebViewer = new WebViewerWidget::WebViewerWidget(this);
+
+    mWebViewer->webView()->setContextMenuPolicy(Qt::NoContextMenu);
+
+    mWebViewer->showProgressBar();
+
+    layout->addWidget(mWebViewer);
+
+    QMainWindow *mainWindow = Core::mainWindow();
+
+    resize(int(0.7*mainWindow->width()),
+           int(0.7*mainWindow->height()));
+
+    retranslateUi();
+}
 
 //==============================================================================
 
-}   // namespace Preferences
-
-//==============================================================================
-
-extern "C" Q_DECL_EXPORT int preferencesInterfaceVersion();
-
-//==============================================================================
-
-class PreferencesInterface
+void PmrWebViewerDialog::retranslateUi()
 {
-public:
-    virtual ~PreferencesInterface();
+    // Retranslate ourselves
 
-#define INTERFACE_DEFINITION
-    #include "preferencesinterface.inl"
-#undef INTERFACE_DEFINITION
-
-    static QVariant preference(const QString &pName, const QString &pKey,
-                               const QVariant &pDefaultValue = QVariant());
-};
+    setWindowTitle(tr("PMR Authentication"));
+}
 
 //==============================================================================
 
+bool PmrWebViewerDialog::isLoadFinished() const
+{
+    // Return whether our loading is finished
+
+    return qFuzzyIsNull(mWebViewer->progressBarWidget()->value());
+}
+
+//==============================================================================
+
+void PmrWebViewerDialog::load(const QUrl &pUrl)
+{
+    // Get our web viewer to load the given URL
+
+    mWebViewer->webView()->load(pUrl);
+}
+
+//==============================================================================
+
+}   // namespace PMRSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::PreferencesInterface, "OpenCOR::PreferencesInterface")
 
 //==============================================================================
 // End of file

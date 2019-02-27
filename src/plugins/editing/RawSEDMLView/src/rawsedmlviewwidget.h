@@ -61,8 +61,8 @@ class RawSedmlViewWidget : public Core::ViewWidget
 public:
     explicit RawSedmlViewWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
 
