@@ -77,6 +77,9 @@ protected:
     QSettings mSettings;
 
     void resizeEvent(QResizeEvent *pEvent) override;
+
+public slots:
+    int exec() override;
 };
 
 //==============================================================================
