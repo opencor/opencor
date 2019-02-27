@@ -26,16 +26,6 @@ static const auto SettingsSize     = QStringLiteral("Size");
 
 //==============================================================================
 
-Dialog::Dialog(QSettings &pSettings, QWidget *pParent) :
-    QDialog(pParent)
-{
-    // Initialise our settings
-
-    mSettings.beginGroup(pSettings.group());
-}
-
-//==============================================================================
-
 Dialog::Dialog(QWidget *pParent) :
     QDialog(pParent)
 {
@@ -60,14 +50,12 @@ int Dialog::exec()
 {
     // Retrieve our position and size, if possible
 
-    if (!mSettings.group().isEmpty()) {
-        QPoint position = mSettings.value(SettingsPosition).toPoint();
-        QSize size = mSettings.value(SettingsSize).toSize();
+    QPoint position = mSettings.value(SettingsPosition).toPoint();
+    QSize size = mSettings.value(SettingsSize).toSize();
 
-        if (!position.isNull() && !size.isNull()) {
-            move(position);
-            resize(size);
-        }
+    if (!position.isNull() && !size.isNull()) {
+        move(position);
+        resize(size);
     }
 
     // Execute ourselves
@@ -76,10 +64,8 @@ int Dialog::exec()
 
     // Keep track of our position and size, if possible
 
-    if (!mSettings.group().isEmpty()) {
-        mSettings.setValue(SettingsPosition, pos());
-        mSettings.setValue(SettingsSize, size());
-    }
+    mSettings.setValue(SettingsPosition, pos());
+    mSettings.setValue(SettingsSize, QDialog::size());
 
     // Return the result of our execution
 
@@ -88,27 +74,12 @@ int Dialog::exec()
 
 //==============================================================================
 
-int Dialog::exec(QSettings &pSettings)
-{
-    // Keep track of the given settings' group
-
-    mSettings.beginGroup(pSettings.group());
-
-    return exec();
-}
-
-//==============================================================================
-
 bool Dialog::hasPositionAndSize()
 {
     // Return whether we already have a position and size, if possible
 
-    if (mSettings.group().isEmpty()) {
-        return false;
-    } else {
-        return    !mSettings.value(SettingsPosition).toPoint().isNull()
-               && !mSettings.value(SettingsSize).toSize().isNull();
-    }
+    return    !mSettings.value(SettingsPosition).toPoint().isNull()
+           && !mSettings.value(SettingsSize).toSize().isNull();
 }
 
 //==============================================================================

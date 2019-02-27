@@ -69,10 +69,7 @@ class CORE_EXPORT Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(QSettings &pSettings, QWidget *pParent);
     explicit Dialog(QWidget *pParent);
-
-    int exec(QSettings &pSettings);
 
     bool hasPositionAndSize();
 
