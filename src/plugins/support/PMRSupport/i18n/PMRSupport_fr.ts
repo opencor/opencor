@@ -82,6 +82,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRSupport::PmrWebViewerDialog</name>
+    <message>
+        <source>PMR Authentication</source>
+        <translation>Authentification PMR</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRSupport::PmrWorkspace</name>
     <message>
         <source>An error occurred while trying to clone the workspace.</source>

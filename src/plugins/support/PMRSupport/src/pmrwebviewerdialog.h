@@ -18,79 +18,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// PMR web service manager
+// PMR web viewer dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include <QJsonDocument>
-#include <QNetworkAccessManager>
+#include "coreguiutils.h"
 
 //==============================================================================
 
-#include <QSettings>
+class QDialogButtonBox;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
+
+//==============================================================================
+
 namespace PMRSupport {
 
 //==============================================================================
 
-class PmrAuthentication;
-class PmrWebService;
-class PmrWebServiceResponse;
-class PmrWebViewerDialog;
-
-//==============================================================================
-
-class PmrWebServiceManager : public QNetworkAccessManager
+class PmrWebViewerDialog : public Core::Dialog
 {
     Q_OBJECT
 
 public:
-    explicit PmrWebServiceManager(const QString &pPmrUrl,
-                                  PmrWebService *pPmrWebService);
+    explicit PmrWebViewerDialog(QWidget *pParent);
 
-    bool isAuthenticated() const;
-    void authenticate(bool pAuthenticate);
+    void retranslateUi();
 
-    PmrWebServiceResponse * request(const QString &pUrl, bool pSecureRequest,
-                                    bool pUsePost = false,
-                                    const QJsonDocument &pJsonDocument = QJsonDocument());
+    bool isLoadFinished() const;
 
-    void update(const QString &pPmrUrl);
+    void load(const QUrl &pUrl);
 
 private:
-    QSettings mSettings;
-
-    PmrWebService *mPmrWebService;
-    PmrAuthentication *mPmrAuthentication;
-
-    PmrWebViewerDialog *mWebViewerDialog;
-
-    bool mWebViewerDialogUsed;
-
-signals:
-    void busy(bool pBusy);
-    void authenticated(bool pAuthenticated);
-
-    void error(const QString &pErrorMessage);
-
-    void authenticationCancelled();
-
-private slots:
-    void authenticationSucceeded();
-    void authenticationFailed();
-
-    void openBrowser(const QUrl &pUrl);
-    void startCloseBrowser();
-    void closeBrowser();
-
-    void ignoreSslErrors(QNetworkReply *pNetworkReply,
-                         const QList<QSslError> &pSslErrors);
+    WebViewerWidget::WebViewerWidget *mWebViewer;
 };
 
 //==============================================================================

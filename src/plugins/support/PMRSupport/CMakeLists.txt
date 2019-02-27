@@ -16,6 +16,7 @@ add_plugin(PMRSupport
         src/pmrwebservice.cpp
         src/pmrwebservicemanager.cpp
         src/pmrwebserviceresponse.cpp
+        src/pmrwebviewerdialog.cpp
         src/pmrworkspace.cpp
         src/pmrworkspacefilenode.cpp
         src/pmrworkspacemanager.cpp
@@ -29,6 +30,7 @@ add_plugin(PMRSupport
         src/pmrwebservice.h
         src/pmrwebservicemanager.h
         src/pmrwebserviceresponse.h
+        src/pmrwebviewerdialog.h
         src/pmrworkspace.h
         src/pmrworkspacefilenode.h
         src/pmrworkspacemanager.h
