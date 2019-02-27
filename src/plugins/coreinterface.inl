@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     virtual void settingsLoaded(const Plugins &pLoadedPlugins) PURE;
 
-    virtual void handleArguments(const QStringList &pArguments) PURE;
+    virtual void openFile(const QString &pFileNameOrUrl) PURE;
 
     virtual bool canClose() PURE;
 

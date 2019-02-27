@@ -93,14 +93,13 @@ void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CorePlugin::handleArguments(const QStringList &pArguments)
+void CorePlugin::openFile(const QString &pFileNameOrUrl)
 {
-    // All the arguments are files to open, so open them as if they were remote
-    // files since if they are not then CentralWidget::openRemoteFile() will
-    // open them as normal files
+    // Open the given file as if it was a remote file
+    // Note: if it is not then CentralWidget::openRemoteFile() will open it as
+    //       a normal file...
 
-    for (const auto &argument : pArguments)
-        mCentralWidget->openRemoteFile(argument);
+    mCentralWidget->openRemoteFile(pFileNameOrUrl);
 }
 
 //==============================================================================

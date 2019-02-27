@@ -33,7 +33,7 @@ extern "C" Q_DECL_EXPORT int coreInterfaceVersion()
 {
     // Version of the core interface
 
-    return 1;
+    return 2;
 }
 
 //==============================================================================

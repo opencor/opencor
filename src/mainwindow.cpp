@@ -1018,8 +1018,10 @@ void MainWindow::handleArguments(const QStringList &pArguments)
             arguments << stringFromPercentEncoding(argument);
     }
 
-    if (!arguments.isEmpty() && mCoreInterface)
-        mCoreInterface->handleArguments(arguments);
+    if (mCoreInterface && !arguments.isEmpty()) {
+        for (const auto &argument : arguments)
+            mCoreInterface->openFile(argument);
+    }
 
     // Make sure that our status bar is shown/hidden, depending on its action's
     // status
