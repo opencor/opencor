@@ -66,15 +66,6 @@ public:
 
     bool isBusyWidgetVisible() const;
 
-    void showBusyWidget();
-    void showProgressBusyWidget();
-
-    void hideBusyWidget(bool pForceHiding = false);
-
-    void resizeBusyWidget();
-
-    void setBusyWidgetProgress(double pProgress);
-
     void processEvents();
 
 protected:
@@ -88,6 +79,16 @@ private:
     int mCounter;
 
     void showBusyWidget(double pProgress);
+
+public slots:
+    void showBusyWidget();
+    void showProgressBusyWidget();
+
+    void hideBusyWidget(bool pForceHiding = false);
+
+    void resizeBusyWidget();
+
+    void setBusyWidgetProgress(double pProgress);
 };
 
 //==============================================================================
