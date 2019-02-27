@@ -47,9 +47,15 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
                                                                    double pMinY,
                                                                    double pMaxY,
                                                                    QWidget *pParent) :
-    Core::Dialog(new QSettings(), pParent),
+    Core::Dialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
 {
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup("GraphPanelWidget");
+    mSettings.beginGroup("GraphPanelWidgetCustomAxesDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -67,14 +73,6 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
             this, &GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted);
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &GraphPanelWidgetCustomAxesDialog::reject);
-
-    // Customise our 'special' settings
-    // Note: special in the sense that we don't retrieve them from the plugin
-    //       itself since this is not a view, a window or anything like that...
-
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup("GraphPanelWidget");
-    mSettings->beginGroup("GraphPanelWidgetCustomAxesDialog");
 
     // Only allow double numbers
 
@@ -101,10 +99,6 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
 
 GraphPanelWidgetCustomAxesDialog::~GraphPanelWidgetCustomAxesDialog()
 {
-    // Delete some internal objects
-
-    delete mSettings;
-
     // Delete the GUI
 
     delete mGui;

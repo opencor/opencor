@@ -86,7 +86,7 @@ static const auto SettingsSortOrder   = QStringLiteral("SortOrder");
 
 //==============================================================================
 
-void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
+void FileBrowserWindowWidget::loadSettings(QSettings &pSettings)
 {
     // We are about to begin loading the settings, so we don't want to keep
     // track of the change of item
@@ -102,22 +102,19 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
         columnWidthKey = SettingsColumnWidth.arg(i);
 
         mNeedDefColWidth =     mNeedDefColWidth
-                           && !pSettings->contains(columnWidthKey);
+                           && !pSettings.contains(columnWidthKey);
 
-        setColumnWidth(i, pSettings->value(columnWidthKey,
-                                           columnWidth(i)).toInt());
+        setColumnWidth(i, pSettings.value(columnWidthKey, columnWidth(i)).toInt());
     }
 
     // Retrieve the sorting information
 
-    sortByColumn(pSettings->value(SettingsSortColumn, 0).toInt(),
-                 Qt::SortOrder(pSettings->value(SettingsSortOrder,
-                                                Qt::AscendingOrder).toInt()));
+    sortByColumn(pSettings.value(SettingsSortColumn, 0).toInt(),
+                 Qt::SortOrder(pSettings.value(SettingsSortOrder, Qt::AscendingOrder).toInt()));
 
     // Retrieve the initial path
 
-    mInitPath = pSettings->value(SettingsInitialPath,
-                                 QDir::homePath()).toString();
+    mInitPath = pSettings.value(SettingsInitialPath, QDir::homePath()).toString();
 
     QFileInfo initPathFileInfo = mInitPath;
 
@@ -204,23 +201,21 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileBrowserWindowWidget::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the width of each column
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i)
-        pSettings->setValue(SettingsColumnWidth.arg(i), columnWidth(i));
+        pSettings.setValue(SettingsColumnWidth.arg(i), columnWidth(i));
 
     // Keep track of the sorting information
 
-    pSettings->setValue(SettingsSortColumn,
-                        header()->sortIndicatorSection());
-    pSettings->setValue(SettingsSortOrder, header()->sortIndicatorOrder());
+    pSettings.setValue(SettingsSortColumn, header()->sortIndicatorSection());
+    pSettings.setValue(SettingsSortOrder, header()->sortIndicatorOrder());
 
     // Keep track of what will be our future initial folder/file path
 
-    pSettings->setValue(SettingsInitialPath,
-                        mModel->filePath(currentIndex()));
+    pSettings.setValue(SettingsInitialPath, mModel->filePath(currentIndex()));
 }
 
 //==============================================================================

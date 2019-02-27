@@ -147,24 +147,24 @@ void FileOrganiserWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::loadSettings(QSettings *pSettings)
+void FileOrganiserWindowWindow::loadSettings(QSettings &pSettings)
 {
     // Retrieve the settings of the file organiser widget
 
-    pSettings->beginGroup(mFileOrganiserWindowWidget->objectName());
+    pSettings.beginGroup(mFileOrganiserWindowWidget->objectName());
         mFileOrganiserWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::saveSettings(QSettings *pSettings) const
+void FileOrganiserWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the settings of the file organiser widget
 
-    pSettings->beginGroup(mFileOrganiserWindowWidget->objectName());
+    pSettings.beginGroup(mFileOrganiserWindowWidget->objectName());
         mFileOrganiserWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

@@ -18,71 +18,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// File Organiser window
+// Remote file dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "organisationwidget.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
-#include <QAbstractItemModel>
-
-//==============================================================================
-
-namespace Ui {
-    class FileOrganiserWindowWindow;
-}   // namespace Ui
-
-//==============================================================================
-
-class QMenu;
+class QDialogButtonBox;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiserWindow {
+namespace Core {
 
 //==============================================================================
 
-class FileOrganiserWindowWidget;
-
-//==============================================================================
-
-class FileOrganiserWindowWindow : public Core::OrganisationWidget
+class RemoteFileDialog : public Dialog
 {
     Q_OBJECT
 
 public:
-    explicit FileOrganiserWindowWindow(QWidget *pParent);
-    ~FileOrganiserWindowWindow() override;
+    explicit RemoteFileDialog(const QString &pTitle, QWidget *pParent);
 
-    void retranslateUi() override;
-
-    void loadSettings(QSettings &pSettings) override;
-    void saveSettings(QSettings &pSettings) const override;
+    QString url() const;
 
 private:
-    Ui::FileOrganiserWindowWindow *mGui;
-
-    FileOrganiserWindowWidget *mFileOrganiserWindowWidget;
-
-    QMenu *mContextMenu;
+    QLabel *mUrlLabel;
+    QLineEdit *mUrlValue;
+    QDialogButtonBox *mButtonBox;
 
 private slots:
-    void actionNewTriggered();
-    void actionDeleteTriggered();
-
-    void showCustomContextMenu() const;
-    void itemDoubleClicked(const QModelIndex &pItemIndex);
+    void changed();
 };
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

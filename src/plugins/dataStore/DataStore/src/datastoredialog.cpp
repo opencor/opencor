@@ -71,24 +71,20 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(const QString &pGroupName,
+DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
                                  DataStore *pDataStore, bool pIncludeVoi,
                                  const QMap<int, QIcon> &pIcons,
                                  QWidget *pParent) :
-    Core::Dialog(new QSettings(), pParent),
+    Core::Dialog(pParent),
     mGui(new Ui::DataStoreDialog),
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
     mNbOfData(0)
 {
-    // Customise our 'special' settings
-    // Note: special in the sense that we use our own settings (the one we
-    //       created and passed to our parent) as opposed to the one we would
-    //       normally retrieve from a plugin since our plugin is not a view, a
-    //       window or anything like that...
+    // Customise our settings
 
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup(pGroupName);
-    mSettings->beginGroup("DataStoreDialog");
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup(pDataStoreName);
+    mSettings.beginGroup("DataStoreDialog");
 
     // Set up the GUI
 
@@ -209,10 +205,6 @@ DataStoreDialog::DataStoreDialog(const QString &pGroupName,
 
 DataStoreDialog::~DataStoreDialog()
 {
-    // Delete some internal objects
-
-    delete mSettings;
-
     // Delete the GUI
 
     delete mGui;

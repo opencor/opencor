@@ -164,15 +164,18 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 
 //==============================================================================
 
-CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
-                                             const QString &pApplicationDate,
+CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
                                              CheckForUpdatesEngine *pEngine,
                                              QWidget *pParent) :
-    Dialog(pSettings, pParent)
+    Dialog(pParent)
 {
     // We are not yet initialised
 
     mInitialized = false;
+
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsCheckForUpdatesDialog);
 
     // Set up the GUI
 
@@ -203,8 +206,8 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 
     // Retrieve and set some properties
 
-    mGui->checkForUpdatesAtStartupCheckBox->setChecked(mSettings->value(SettingsCheckForUpdatesAtStartup, true).toBool());
-    mGui->includeSnapshotsCheckBox->setChecked(mSettings->value(SettingsIncludeSnapshots, false).toBool());
+    mGui->checkForUpdatesAtStartupCheckBox->setChecked(mSettings.value(SettingsCheckForUpdatesAtStartup, true).toBool());
+    mGui->includeSnapshotsCheckBox->setChecked(mSettings.value(SettingsIncludeSnapshots, false).toBool());
 
     // Update our GUI
 
@@ -215,18 +218,16 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 
 //==============================================================================
 
-CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
-                                             const QString &pApplicationDate,
+CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
                                              QWidget *pParent) :
-    CheckForUpdatesDialog(pSettings, pApplicationDate, nullptr, pParent)
+    CheckForUpdatesDialog(pApplicationDate, nullptr, pParent)
 {
 }
 
 //==============================================================================
 
-CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
-                                             CheckForUpdatesEngine *pEngine) :
-    CheckForUpdatesDialog(pSettings, QString(), pEngine, nullptr)
+CheckForUpdatesDialog::CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine) :
+    CheckForUpdatesDialog(QString(), pEngine, nullptr)
 {
 }
 
@@ -338,8 +339,8 @@ void CheckForUpdatesDialog::checkForUpdatesAtStartupCheckBoxToggled(bool pChecke
 
     // Keep track of our property
 
-    mSettings->setValue(SettingsCheckForUpdatesAtStartup,
-                        mGui->checkForUpdatesAtStartupCheckBox->isChecked());
+    mSettings.setValue(SettingsCheckForUpdatesAtStartup,
+                       mGui->checkForUpdatesAtStartupCheckBox->isChecked());
 }
 
 //==============================================================================
@@ -350,8 +351,8 @@ void CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled(bool pChecked)
 
     // Keep track of our property
 
-    mSettings->setValue(SettingsIncludeSnapshots,
-                        mGui->includeSnapshotsCheckBox->isChecked());
+    mSettings.setValue(SettingsIncludeSnapshots,
+                       mGui->includeSnapshotsCheckBox->isChecked());
 
     updateGui();
 }

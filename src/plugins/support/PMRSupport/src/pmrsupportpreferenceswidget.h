@@ -40,10 +40,6 @@ namespace PMRSupport {
 
 //==============================================================================
 
-static const auto PluginName = QStringLiteral("PMRSupport");
-
-//==============================================================================
-
 static const auto SettingsPreferencesPmrUrl = QStringLiteral("PmrUrl");
 static const auto SettingsPreferencesName   = QStringLiteral("Name");
 static const auto SettingsPreferencesEmail  = QStringLiteral("Email");

@@ -171,7 +171,7 @@ void COMBINESupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void COMBINESupportPlugin::loadSettings(QSettings *pSettings)
+void COMBINESupportPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -180,7 +180,7 @@ void COMBINESupportPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void COMBINESupportPlugin::saveSettings(QSettings *pSettings) const
+void COMBINESupportPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

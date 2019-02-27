@@ -239,24 +239,24 @@ void RawTextViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void RawTextViewPlugin::loadSettings(QSettings *pSettings)
+void RawTextViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Raw Text view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void RawTextViewPlugin::saveSettings(QSettings *pSettings) const
+void RawTextViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Raw Text view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

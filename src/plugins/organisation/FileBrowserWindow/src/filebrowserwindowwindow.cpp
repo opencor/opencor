@@ -138,24 +138,24 @@ void FileBrowserWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::loadSettings(QSettings *pSettings)
+void FileBrowserWindowWindow::loadSettings(QSettings &pSettings)
 {
     // Retrieve the settings of the file browser widget
 
-    pSettings->beginGroup(mFileBrowserWindowWidget->objectName());
+    pSettings.beginGroup(mFileBrowserWindowWidget->objectName());
         mFileBrowserWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void FileBrowserWindowWindow::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the settings of the file browser widget
 
-    pSettings->beginGroup(mFileBrowserWindowWidget->objectName());
+    pSettings.beginGroup(mFileBrowserWindowWidget->objectName());
         mFileBrowserWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

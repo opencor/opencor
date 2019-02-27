@@ -72,8 +72,8 @@ public:
 
     void retranslateUi() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     Ui::PmrWorkspacesWindowWindow * gui() const;
 
@@ -86,8 +86,6 @@ private:
     Ui::PmrWorkspacesWindowWindow *mGui;
 
     bool mInitialized;
-
-    QString mSettingsGroup;
 
     QLabel *mPmrInstanceLabel;
 

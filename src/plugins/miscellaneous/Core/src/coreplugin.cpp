@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMainWindow>
 #include <QMenu>
 #include <QPalette>
-#include <QSettings>
 
 //==============================================================================
 
@@ -614,7 +613,7 @@ static const auto SettingsRecentFiles = QStringLiteral("RecentFiles");
 
 //==============================================================================
 
-void CorePlugin::loadSettings(QSettings *pSettings)
+void CorePlugin::loadSettings(QSettings &pSettings)
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -627,20 +626,20 @@ void CorePlugin::loadSettings(QSettings *pSettings)
     //       central widget settings since mRecentFiles gets updated as a result
     //       of opening/closing a file...
 
-    mRecentFiles = pSettings->value(SettingsRecentFiles).toStringList();
+    mRecentFiles = pSettings.value(SettingsRecentFiles).toStringList();
 
     updateFileReopenMenu();
 
     // Retrieve the central widget settings
 
-    pSettings->beginGroup(mCentralWidget->objectName());
+    pSettings.beginGroup(mCentralWidget->objectName());
         mCentralWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void CorePlugin::saveSettings(QSettings *pSettings) const
+void CorePlugin::saveSettings(QSettings &pSettings) const
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -650,13 +649,13 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
     // Keep track of our recent files
 
-    pSettings->setValue(SettingsRecentFiles, mRecentFiles);
+    pSettings.setValue(SettingsRecentFiles, mRecentFiles);
 
     // Keep track of the central widget settings
 
-    pSettings->beginGroup(mCentralWidget->objectName());
+    pSettings.beginGroup(mCentralWidget->objectName());
         mCentralWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

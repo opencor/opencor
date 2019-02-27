@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "guiinterface.h"
 #include "interfaces.h"
+#include "remotefiledialog.h"
 #include "tabbarwidget.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
@@ -52,7 +53,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 #include <QRect>
 #include <QScreen>
-#include <QSettings>
 #include <QSizePolicy>
 #include <QStackedWidget>
 #include <QStatusBar>
@@ -135,7 +135,6 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mState(Starting),
-    mSettings(nullptr),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -269,43 +268,6 @@ CentralWidget::CentralWidget(QWidget *pParent) :
         connect(mode->viewTabs(), &TabBarWidget::currentChanged,
                 this, &CentralWidget::updateFileTabIcons);
     }
-
-    // Create our remote file dialog
-//---OPENCOR--- THE ORIGINAL PLAN WAS TO HAVE A REGULAR EXPRESSION TO VALIDATE A
-//              URL, BUT IT LOOKS LIKE THERE MIGHT BE AN ISSUE WITH
-//              QRegularExpressionValidator, SO WE SIMPLY ALLOW FREE TEXT FOR
-//              NOW (SEE https://bugreports.qt.io/browse/QTBUG-38034)...
-
-    mRemoteFileDialog = new Dialog(this);
-    QGridLayout *dialogLayout = new QGridLayout(mRemoteFileDialog);
-
-    mRemoteFileDialog->setLayout(dialogLayout);
-
-    mRemoteFileDialogUrlLabel = new QLabel(mRemoteFileDialog);
-    mRemoteFileDialogUrlValue = new QLineEdit(mRemoteFileDialog);
-
-    mRemoteFileDialogUrlValue->setMinimumWidth(qApp->primaryScreen()->availableGeometry().width()/5);
-
-    dialogLayout->addWidget(mRemoteFileDialogUrlLabel, 0, 0);
-    dialogLayout->addWidget(mRemoteFileDialogUrlValue, 0, 1);
-
-    mRemoteFileDialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
-
-    dialogLayout->addWidget(mRemoteFileDialogButtonBox, 1, 0, 1, 2);
-
-    dialogLayout->setSizeConstraint(QLayout::SetFixedSize);
-
-    openRemoteFileChanged();
-
-    // Some connections to handle our remote file dialog
-
-    connect(mRemoteFileDialogUrlValue, &QLineEdit::textChanged,
-            this, &CentralWidget::openRemoteFileChanged);
-
-    connect(mRemoteFileDialogButtonBox, &QDialogButtonBox::accepted,
-            this, &CentralWidget::doOpenRemoteFile);
-    connect(mRemoteFileDialogButtonBox, &QDialogButtonBox::rejected,
-            this, &CentralWidget::cancelOpenRemoteFile);
 }
 
 //==============================================================================
@@ -341,12 +303,8 @@ static const auto SettingsFileModeView         = QStringLiteral("FileModeView%1%
 
 //==============================================================================
 
-void CentralWidget::loadSettings(QSettings *pSettings)
+void CentralWidget::loadSettings(QSettings &pSettings)
 {
-    // Keep track of our settings
-
-    mSettings = pSettings;
-
     // Some connections to handle an external change in the state of a file
     // Note: we do it here because we want other plugins to get a chance to
     //       handle our file manager's signals before us. Indeed, in the case of
@@ -388,10 +346,10 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve and open the files that were previously opened
 
-    QStringList fileNamesOrUrls = pSettings->value(SettingsFileNamesOrUrls).toStringList();
+    QStringList fileNamesOrUrls = pSettings.value(SettingsFileNamesOrUrls).toStringList();
 
     for (const auto &fileNameOrUrl : fileNamesOrUrls) {
-        if (pSettings->value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool())
+        if (pSettings.value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool())
             openRemoteFile(fileNameOrUrl, false);
         else
             openFile(fileNameOrUrl);
@@ -403,7 +361,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
                                     fileManagerInstance->url(fileName):
                                     fileName;
-        ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings->value(SettingsFileMode.arg(fileNameOrUrl)).toString());
+        ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings.value(SettingsFileMode.arg(fileNameOrUrl)).toString());
 
         if (fileMode != ViewInterface::UnknownMode)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
@@ -413,8 +371,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
 
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl)
-                                                                          .arg(ViewInterface::modeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings.value(SettingsFileModeView.arg(fileNameOrUrl)
+                                                                         .arg(ViewInterface::modeAsString(fileMode))).toString();
             Plugins viewPlugins = mModes.value(fileMode)->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins.count(); j < jMax; ++j) {
@@ -432,8 +390,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Select the previously selected file, if it still exists, by pretending to
     // open it (which, in turn, will select the file)
 
-    QString crtFileNameOrUrl = pSettings->value(SettingsCurrentFileNameOrUrl).toString();
-    QString crtFileName = pSettings->value(SettingsFileIsRemote.arg(crtFileNameOrUrl)).toBool()?
+    QString crtFileNameOrUrl = pSettings.value(SettingsCurrentFileNameOrUrl).toString();
+    QString crtFileName = pSettings.value(SettingsFileIsRemote.arg(crtFileNameOrUrl)).toBool()?
                               fileManagerInstance->fileName(crtFileNameOrUrl):
                               crtFileNameOrUrl;
 
@@ -449,7 +407,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Retrieve the seleted modes and views, in case there are no files
 
     if (mFileNames.isEmpty()) {
-        ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings->value(SettingsFileMode.arg(QString())).toString());
+        ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings.value(SettingsFileMode.arg(QString())).toString());
 
         if (fileMode != ViewInterface::UnknownMode)
             setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(fileMode));
@@ -458,8 +416,8 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             fileMode = mModeTabIndexModes.value(i);
 
             CentralWidgetMode *mode = mModes.value(fileMode);
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(QString())
-                                                                          .arg(ViewInterface::modeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings.value(SettingsFileModeView.arg(QString())
+                                                                         .arg(ViewInterface::modeAsString(fileMode))).toString();
             Plugins viewPlugins = mode->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins.count(); j < jMax; ++j) {
@@ -475,7 +433,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CentralWidget::saveSettings(QSettings *pSettings) const
+void CentralWidget::saveSettings(QSettings &pSettings) const
 {
     // Remove all the settings related to previously opened files
 
@@ -484,11 +442,11 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     static const QString SettingsFileModeViewHeader = SettingsFileModeView.arg(QString())
                                                                           .arg(QString());
 
-    for (const auto &key : pSettings->allKeys()) {
+    for (const auto &key : pSettings.allKeys()) {
         if (   key.startsWith(SettingsFileIsRemoteHeader)
             || key.startsWith(SettingsFileModeHeader)
             || key.startsWith(SettingsFileModeViewHeader)) {
-            pSettings->remove(key);
+            pSettings.remove(key);
         }
     }
 
@@ -512,11 +470,11 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
             fileNames << fileName;
 
-            pSettings->setValue(SettingsFileIsRemote.arg(fileNamesOrUrls.last()), fileIsRemote);
+            pSettings.setValue(SettingsFileIsRemote.arg(fileNamesOrUrls.last()), fileIsRemote);
         }
     }
 
-    pSettings->setValue(SettingsFileNamesOrUrls, fileNamesOrUrls);
+    pSettings.setValue(SettingsFileNamesOrUrls, fileNamesOrUrls);
 
     // Keep track of the selected modes and views of our different files
 
@@ -525,17 +483,17 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
                                     fileManagerInstance->url(fileName):
                                     fileName;
 
-        pSettings->setValue(SettingsFileMode.arg(fileNameOrUrl),
-                            ViewInterface::modeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
+        pSettings.setValue(SettingsFileMode.arg(fileNameOrUrl),
+                           ViewInterface::modeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
 
         QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
 
-            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl)
-                                                    .arg(ViewInterface::modeAsString(fileMode)),
-                                mModes.value(fileMode)->viewPlugins()[modeViewTabIndexes.value(i)]->name());
+            pSettings.setValue(SettingsFileModeView.arg(fileNameOrUrl)
+                                                   .arg(ViewInterface::modeAsString(fileMode)),
+                               mModes.value(fileMode)->viewPlugins()[modeViewTabIndexes.value(i)]->name());
         }
     }
 
@@ -555,21 +513,21 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
         }
     }
 
-    pSettings->setValue(SettingsCurrentFileNameOrUrl, crtFileNameOrUrl);
+    pSettings.setValue(SettingsCurrentFileNameOrUrl, crtFileNameOrUrl);
 
     // Keep track of the selected modes and views, should there be no files the
     // next time we use OpenCOR
 
-    pSettings->setValue(SettingsFileMode.arg(QString()),
-                        ViewInterface::modeAsString(mModeTabIndexModes.value(mModeTabs->currentIndex())));
+    pSettings.setValue(SettingsFileMode.arg(QString()),
+                       ViewInterface::modeAsString(mModeTabIndexModes.value(mModeTabs->currentIndex())));
 
     for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
         ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
         CentralWidgetMode *mode = mModes.value(fileMode);
 
-        pSettings->setValue(SettingsFileModeView.arg(QString())
-                                                .arg(ViewInterface::modeAsString(fileMode)),
-                            mode->viewPlugins()[mode->viewTabs()->currentIndex()]->name());
+        pSettings.setValue(SettingsFileModeView.arg(QString())
+                                               .arg(ViewInterface::modeAsString(fileMode)),
+                           mode->viewPlugins()[mode->viewTabs()->currentIndex()]->name());
     }
 }
 
@@ -648,11 +606,6 @@ void CentralWidget::retranslateUi()
     // Retranslate our no view widget message
 
     updateNoViewMsg();
-
-    // Retranslate our remote file dialog
-
-    mRemoteFileDialog->setWindowTitle(tr("Open Remote File"));
-    mRemoteFileDialogUrlLabel->setText(tr("URL:"));
 }
 
 //==============================================================================
@@ -899,45 +852,16 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
 //==============================================================================
 
-void CentralWidget::openRemoteFileChanged()
-{
-    // Enable/disable the open button depending on whether we have some text for
-    // the remote file
-
-    mRemoteFileDialogButtonBox->button(QDialogButtonBox::Open)->setEnabled(!mRemoteFileDialogUrlValue->text().isEmpty());
-}
-
-//==============================================================================
-
-void CentralWidget::doOpenRemoteFile()
-{
-    // Open the remote file
-
-    mRemoteFileDialog->accept();
-
-    openRemoteFile(mRemoteFileDialogUrlValue->text());
-}
-
-//==============================================================================
-
-void CentralWidget::cancelOpenRemoteFile()
-{
-    // Cancel the opening of a remote file
-
-    mRemoteFileDialog->reject();
-}
-
-//==============================================================================
-
 void CentralWidget::openRemoteFile()
 {
     // Ask for the URL of the remote file that is to be opened
 
-    mRemoteFileDialogUrlValue->setText(QString());
+    RemoteFileDialog remoteFileDialog(tr("Open Remote File"), this);
 
-    mSettings->beginGroup("RemoteFileDialog");
-        mRemoteFileDialog->exec(mSettings);
-    mSettings->endGroup();
+    remoteFileDialog.exec();
+
+    if (remoteFileDialog.result() == QMessageBox::Accepted)
+        openRemoteFile(remoteFileDialog.url());
 }
 
 //==============================================================================

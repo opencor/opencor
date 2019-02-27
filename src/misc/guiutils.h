@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QColor>
 #include <QMessageBox>
+#include <QSettings>
 #include <QStyledItemDelegate>
 
 //==============================================================================
@@ -57,15 +58,12 @@ class CORE_EXPORT Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(QSettings *pSettings, QWidget *pParent);
     explicit Dialog(QWidget *pParent);
-
-    int exec(QSettings *pSettings);
 
     bool hasPositionAndSize();
 
 protected:
-    QSettings *mSettings;
+    QSettings mSettings;
 
     void resizeEvent(QResizeEvent *pEvent) override;
 

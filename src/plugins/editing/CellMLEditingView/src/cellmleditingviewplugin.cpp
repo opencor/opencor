@@ -296,7 +296,7 @@ void CellMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLEditingViewPlugin::loadSettings(QSettings *pSettings)
+void CellMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -305,7 +305,7 @@ void CellMLEditingViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CellMLEditingViewPlugin::saveSettings(QSettings *pSettings) const
+void CellMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

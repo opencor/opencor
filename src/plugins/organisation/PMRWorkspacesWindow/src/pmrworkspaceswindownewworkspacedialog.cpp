@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "pmrsupport.h"
 #include "pmrworkspace.h"
+#include "pmrworkspaceswindowplugin.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
 
 //==============================================================================
@@ -44,10 +45,16 @@ namespace PMRWorkspacesWindow {
 
 //==============================================================================
 
-PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings, QWidget *pParent) :
-    Core::Dialog(pSettings, pParent),
+PmrWorkspacesWindowNewWorkspaceDialog::PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent) :
+    Core::Dialog(pParent),
     mGui(new Ui::PmrWorkspacesWindowNewWorkspaceDialog)
 {
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup(PluginName);
+    mSettings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);

@@ -199,7 +199,7 @@ void HelpWindowWidget::retranslateUi()
 
 //==============================================================================
 
-void HelpWindowWidget::loadSettings(QSettings *pSettings)
+void HelpWindowWidget::loadSettings(QSettings &pSettings)
 {
     // Default handling of the event
 
@@ -208,7 +208,7 @@ void HelpWindowWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void HelpWindowWidget::saveSettings(QSettings *pSettings) const
+void HelpWindowWidget::saveSettings(QSettings &pSettings) const
 {
     // Default handling of the event
 

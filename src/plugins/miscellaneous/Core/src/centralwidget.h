@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "file.h"
-#include "guiinterface.h"
 #include "widget.h"
 #include "viewinterface.h"
 
@@ -38,9 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class QDialogButtonBox;
-class QLabel;
-class QLineEdit;
 class QStackedWidget;
 
 //==============================================================================
@@ -58,7 +54,6 @@ namespace Core {
 //==============================================================================
 
 class CentralWidget;
-class Dialog;
 class UserMessageWidget;
 class TabBarWidget;
 
@@ -96,8 +91,8 @@ public:
     explicit CentralWidget(QWidget *pParent);
     ~CentralWidget() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void settingsLoaded(const Plugins &pLoadedPlugins);
 
@@ -136,8 +131,6 @@ private:
 
     State mState;
 
-    QSettings *mSettings;
-
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedFileTypePlugins;
     Plugins mLoadedGuiPlugins;
@@ -161,11 +154,6 @@ private:
     UserMessageWidget *mNoViewMsg;
 
     QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
-
-    Dialog *mRemoteFileDialog;
-    QLabel *mRemoteFileDialogUrlLabel;
-    QLineEdit *mRemoteFileDialogUrlValue;
-    QDialogButtonBox *mRemoteFileDialogButtonBox;
 
     QMap<QString, QWidget *> mViews;
 
@@ -229,10 +217,6 @@ public slots:
 
 private slots:
     void updateGui();
-
-    void openRemoteFileChanged();
-    void doOpenRemoteFile();
-    void cancelOpenRemoteFile();
 
     void fileChanged(const QString &pFileName, bool pFileChanged,
                      bool pDependenciesChanged);

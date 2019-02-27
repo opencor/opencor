@@ -404,7 +404,7 @@ void EditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void EditingViewPlugin::loadSettings(QSettings *pSettings)
+void EditingViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -413,7 +413,7 @@ void EditingViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void EditingViewPlugin::saveSettings(QSettings *pSettings) const
+void EditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

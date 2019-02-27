@@ -232,7 +232,7 @@ void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLToolsPlugin::loadSettings(QSettings *pSettings)
+void CellMLToolsPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -241,7 +241,7 @@ void CellMLToolsPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CellMLToolsPlugin::saveSettings(QSettings *pSettings) const
+void CellMLToolsPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

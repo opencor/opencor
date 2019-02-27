@@ -180,7 +180,7 @@ void SampleToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void SampleToolsPlugin::loadSettings(QSettings *pSettings)
+void SampleToolsPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -189,7 +189,7 @@ void SampleToolsPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SampleToolsPlugin::saveSettings(QSettings *pSettings) const
+void SampleToolsPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

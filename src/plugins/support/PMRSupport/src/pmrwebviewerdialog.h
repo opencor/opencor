@@ -18,71 +18,55 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// File Organiser window
+// PMR web viewer dialog
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "organisationwidget.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
-#include <QAbstractItemModel>
-
-//==============================================================================
-
-namespace Ui {
-    class FileOrganiserWindowWindow;
-}   // namespace Ui
-
-//==============================================================================
-
-class QMenu;
+class QDialogButtonBox;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiserWindow {
 
 //==============================================================================
 
-class FileOrganiserWindowWidget;
+namespace WebViewerWidget {
+    class WebViewerWidget;
+}   // namespace WebViewerWidget
 
 //==============================================================================
 
-class FileOrganiserWindowWindow : public Core::OrganisationWidget
+namespace PMRSupport {
+
+//==============================================================================
+
+class PmrWebViewerDialog : public Core::Dialog
 {
     Q_OBJECT
 
 public:
-    explicit FileOrganiserWindowWindow(QWidget *pParent);
-    ~FileOrganiserWindowWindow() override;
+    explicit PmrWebViewerDialog(QWidget *pParent);
 
-    void retranslateUi() override;
+    void retranslateUi();
 
-    void loadSettings(QSettings &pSettings) override;
-    void saveSettings(QSettings &pSettings) const override;
+    bool isLoadFinished() const;
+
+    void load(const QUrl &pUrl);
 
 private:
-    Ui::FileOrganiserWindowWindow *mGui;
-
-    FileOrganiserWindowWidget *mFileOrganiserWindowWidget;
-
-    QMenu *mContextMenu;
-
-private slots:
-    void actionNewTriggered();
-    void actionDeleteTriggered();
-
-    void showCustomContextMenu() const;
-    void itemDoubleClicked(const QModelIndex &pItemIndex);
+    WebViewerWidget::WebViewerWidget *mWebViewer;
 };
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
+}   // namespace PMRSupport
 }   // namespace OpenCOR
 
 //==============================================================================

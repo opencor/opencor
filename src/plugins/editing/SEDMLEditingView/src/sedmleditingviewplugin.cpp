@@ -290,7 +290,7 @@ void SEDMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void SEDMLEditingViewPlugin::loadSettings(QSettings *pSettings)
+void SEDMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -299,7 +299,7 @@ void SEDMLEditingViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SEDMLEditingViewPlugin::saveSettings(QSettings *pSettings) const
+void SEDMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 
