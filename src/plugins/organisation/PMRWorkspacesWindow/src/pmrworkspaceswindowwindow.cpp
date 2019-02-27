@@ -60,7 +60,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mInitialized(false),
-    mSettingsGroup(QString()),
     mFirstTimeRetrievingWorkspaces(true),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
@@ -230,10 +229,6 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
 {
-    // Keep track of the given settings' group
-
-    mSettingsGroup = pSettings.group();
-
     // Retrieve the settings of the workspaces window widget
 
     pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());

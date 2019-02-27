@@ -131,8 +131,6 @@ private:
 
     State mState;
 
-    QString mSettingsGroup;
-
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedFileTypePlugins;
     Plugins mLoadedGuiPlugins;

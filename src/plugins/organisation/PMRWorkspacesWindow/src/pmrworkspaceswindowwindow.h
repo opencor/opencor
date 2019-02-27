@@ -87,8 +87,6 @@ private:
 
     bool mInitialized;
 
-    QString mSettingsGroup;
-
     QLabel *mPmrInstanceLabel;
 
     PMRSupport::PmrWebService *mPmrWebService;

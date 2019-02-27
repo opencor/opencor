@@ -135,7 +135,6 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
     mState(Starting),
-    mSettingsGroup(QString()),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -306,10 +305,6 @@ static const auto SettingsFileModeView         = QStringLiteral("FileModeView%1%
 
 void CentralWidget::loadSettings(QSettings &pSettings)
 {
-    // Keep track of the given settings' group
-
-    mSettingsGroup = pSettings.group();
-
     // Some connections to handle an external change in the state of a file
     // Note: we do it here because we want other plugins to get a chance to
     //       handle our file manager's signals before us. Indeed, in the case of
