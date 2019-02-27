@@ -64,8 +64,6 @@ public:
     void update(const QString &pPmrUrl);
 
 private:
-    QSettings mSettings;
-
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
 

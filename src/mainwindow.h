@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QMainWindow>
 #include <QMap>
-#include <QSettings>
 #include <QTranslator>
 #include <QUrl>
 
@@ -82,8 +81,6 @@ private:
     Ui::MainWindow *mGui;
 
     QString mApplicationDate;
-
-    QSettings mSettings;
 
     PluginManager *mPluginManager;
 

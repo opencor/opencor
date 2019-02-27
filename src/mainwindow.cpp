@@ -680,8 +680,10 @@ void MainWindow::loadSettings()
 
     // Retrieve the geometry and state of the main window
 
-    if (   !restoreGeometry(mSettings.value(SettingsGeometry).toByteArray())
-        || !restoreState(mSettings.value(SettingsState).toByteArray())) {
+    QSettings settings;
+
+    if (   !restoreGeometry(settings.value(SettingsGeometry).toByteArray())
+        || !restoreState(settings.value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be retrieved,
         // so go with some default settings
 
@@ -699,23 +701,23 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the docked windows are to be shown
 
-    showDockedWindows(mSettings.value(SettingsDockedWindowsVisible, true).toBool(), true);
+    showDockedWindows(settings.value(SettingsDockedWindowsVisible, true).toBool(), true);
 
     // Retrieve the state of the docked windows
 
-    mDockedWindowsState = mSettings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
+    mDockedWindowsState = settings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
 
     // Retrieve the settings of our various plugins
 
-    mSettings.beginGroup(SettingsPlugins);
+    settings.beginGroup(SettingsPlugins);
 
     for (auto plugin : mLoadedPluginPlugins) {
-        mSettings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(mSettings);
-        mSettings.endGroup();
+        settings.beginGroup(plugin->name());
+            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
+        settings.endGroup();
     }
 
-    mSettings.endGroup();
+    settings.endGroup();
 
     // Let our core plugin know that all of the plugins have loaded their
     // settings
@@ -734,7 +736,7 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the status bar is to be shown
 
-    mGui->actionStatusBar->setChecked(mSettings.value(SettingsStatusBarVisible, true).toBool());
+    mGui->actionStatusBar->setChecked(settings.value(SettingsStatusBarVisible, true).toBool());
 }
 
 //==============================================================================
@@ -743,33 +745,34 @@ void MainWindow::saveSettings()
 {
     // Keep track of the geometry and state of the main window
 
-    mSettings.setValue(SettingsGeometry, saveGeometry());
-    mSettings.setValue(SettingsState, saveState());
+    QSettings settings;
+
+    settings.setValue(SettingsGeometry, saveGeometry());
+    settings.setValue(SettingsState, saveState());
 
     // Keep track of whether the docked windows are to be shown
 
-    mSettings.setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
+    settings.setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
 
     // Keep track of the state of the docked windows
 
-    mSettings.setValue(SettingsDockedWindowsState, mDockedWindowsState);
-
-    // Keep track of whether the status bar is to be shown
-
-    mSettings.setValue(SettingsStatusBarVisible,
-                       mGui->statusBar->isVisible());
+    settings.setValue(SettingsDockedWindowsState, mDockedWindowsState);
 
     // Keep track of the settings of our various plugins
 
-    mSettings.beginGroup(SettingsPlugins);
+    settings.beginGroup(SettingsPlugins);
 
     for (auto plugin : mLoadedPluginPlugins) {
-        mSettings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(mSettings);
-        mSettings.endGroup();
+        settings.beginGroup(plugin->name());
+            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
+        settings.endGroup();
     }
 
-    mSettings.endGroup();
+    settings.endGroup();
+
+    // Keep track of whether the status bar is to be shown
+
+    settings.setValue(SettingsStatusBarVisible, mGui->statusBar->isVisible());
 }
 
 //==============================================================================

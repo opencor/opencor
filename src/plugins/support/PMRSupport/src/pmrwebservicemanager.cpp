@@ -59,12 +59,6 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     mWebViewerDialog(nullptr),
     mWebViewerDialogUsed(false)
 {
-    // Customise our settings
-
-    mSettings.beginGroup(SettingsPlugins);
-    mSettings.beginGroup(PluginName);
-    mSettings.beginGroup("WebViewerDialog");
-
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
 
