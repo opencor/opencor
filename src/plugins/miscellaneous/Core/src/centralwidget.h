@@ -107,8 +107,6 @@ public:
 
     void openFile(const QString &pFileName, File::Type pType = File::Local,
                   const QString &pUrl = QString());
-    void openFiles(const QStringList &pFileNames);
-
     void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     void importFile(const QString &pFileNameOrUrl);
@@ -161,6 +159,8 @@ private:
     Plugin * viewPlugin(const QString &pFileName) const;
 
     void updateNoViewMsg();
+
+    void openFiles(const QStringList &pFileNames);
 
     bool saveFile(int pIndex, bool pNeedNewFileName = false);
 
