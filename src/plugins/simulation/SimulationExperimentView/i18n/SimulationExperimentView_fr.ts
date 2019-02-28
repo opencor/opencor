@@ -445,6 +445,30 @@
         <translation>Exporter la simulation vers SED-ML en utilisant une archive COMBINE</translation>
     </message>
     <message>
+        <source>Data Import</source>
+        <translation>Importation Données</translation>
+    </message>
+    <message>
+        <source>Import some data</source>
+        <translation>Importer des données</translation>
+    </message>
+    <message>
+        <source>Local...</source>
+        <translation>Locales...</translation>
+    </message>
+    <message>
+        <source>Import some local data</source>
+        <translation>Importer des données locales</translation>
+    </message>
+    <message>
+        <source>Remote...</source>
+        <translation>À Distance...</translation>
+    </message>
+    <message>
+        <source>Import some remote data</source>
+        <translation>Importer des données à distance</translation>
+    </message>
+    <message>
         <source>Simulation Results Export</source>
         <translation>Exporter Résultats Simulation</translation>
     </message>

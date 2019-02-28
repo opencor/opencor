@@ -60,6 +60,17 @@ SampleViewPlugin::SampleViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool SampleViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SampleViewPlugin::saveFile(const QString &pOldFileName,
                                 const QString &pNewFileName,
                                 bool &pNeedFeedback)

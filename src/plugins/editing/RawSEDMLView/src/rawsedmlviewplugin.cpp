@@ -92,6 +92,17 @@ bool RawSEDMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileName
 // File handling interface
 //==============================================================================
 
+bool RawSEDMLViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
                                   const QString &pNewFileName,
                                   bool &pNeedFeedback)

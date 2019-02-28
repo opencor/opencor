@@ -66,6 +66,17 @@ SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool SEDMLEditingViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SEDMLEditingViewPlugin::saveFile(const QString &pOldFileName,
                                       const QString &pNewFileName,
                                       bool &pNeedFeedback)

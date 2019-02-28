@@ -530,12 +530,12 @@ bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
 {
     // Retrieve a temporary file name for our new file
 
-    QString fileName = temporaryFileName();
+    QString temporaryFileName = Core::temporaryFileName();
 
     // Create a new file with the given contents
 
-    if (writeFile(fileName, pContents)) {
-        pFileName = fileName;
+    if (writeFile(temporaryFileName, pContents)) {
+        pFileName = temporaryFileName;
 
         return true;
     } else {

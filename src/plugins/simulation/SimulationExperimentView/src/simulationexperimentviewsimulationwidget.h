@@ -215,6 +215,8 @@ private:
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
     QAction *mDataImportAction;
+    QAction *mLocalDataImportAction;
+    QAction *mRemoteDataImportAction;
     QAction *mSimulationResultsExportAction;
     QAction *mPreferencesAction;
 
@@ -325,6 +327,8 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
+    void dataImport(const QStringList &pFileNames);
+
 signals:
     void splitterMoved(const QIntList &pSizes);
 
@@ -350,7 +354,9 @@ private slots:
 
     void emitSplitterMoved();
 
-    void dataImport();
+    void localDataImport();
+    void remoteDataImport();
+
     void simulationResultsExport();
 
     void updateDelayValue(double pDelayValue);

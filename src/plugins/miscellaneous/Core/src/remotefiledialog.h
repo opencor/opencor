@@ -38,7 +38,7 @@ namespace Core {
 
 //==============================================================================
 
-class RemoteFileDialog : public Dialog
+class CORE_EXPORT RemoteFileDialog : public Dialog
 {
     Q_OBJECT
 

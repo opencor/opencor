@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "graphpanelswidget.h"
 #include "interfaces.h"
 #include "progressbarwidget.h"
+#include "remotefiledialog.h"
 #include "sedmlinterface.h"
 #include "sedmlsupport.h"
 #include "sedmlsupportplugin.h"
@@ -190,6 +191,8 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
                                            nullptr;
     mDataImportAction = Core::newAction(QIcon(":/oxygen/actions/document-import.png"),
                                         mToolBarWidget);
+    mLocalDataImportAction = Core::newAction(mToolBarWidget);
+    mRemoteDataImportAction = Core::newAction(mToolBarWidget);
     mSimulationResultsExportAction = Core::newAction(QIcon(":/oxygen/actions/document-export.png"),
                                                      mToolBarWidget);
     mPreferencesAction = Core::newAction(QIcon(":/oxygen/categories/preferences-system.png"),
@@ -236,7 +239,11 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     }
 
     connect(mDataImportAction, &QAction::triggered,
-            this, &SimulationExperimentViewSimulationWidget::dataImport);
+            this, &SimulationExperimentViewSimulationWidget::localDataImport);
+    connect(mLocalDataImportAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::localDataImport);
+    connect(mRemoteDataImportAction, &QAction::triggered,
+            this, &SimulationExperimentViewSimulationWidget::remoteDataImport);
     connect(mPreferencesAction, &QAction::triggered,
             this, &SimulationExperimentViewSimulationWidget::preferences);
 
@@ -329,6 +336,16 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     if (mSedmlExportCombineArchiveAction)
         sedmlExportDropDownMenu->addAction(mSedmlExportCombineArchiveAction);
 
+    QToolButton *dataImportToolButton = new QToolButton(mToolBarWidget);
+    QMenu *dataImportDropDownMenu = new QMenu(dataImportToolButton);
+
+    dataImportToolButton->setDefaultAction(mDataImportAction);
+    dataImportToolButton->setMenu(dataImportDropDownMenu);
+    dataImportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+
+    dataImportDropDownMenu->addAction(mLocalDataImportAction);
+    dataImportDropDownMenu->addAction(mRemoteDataImportAction);
+
     QToolButton *simulationResultsExportToolButton = new QToolButton(mToolBarWidget);
 
     mSimulationResultsExportDropDownMenu = new QMenu(simulationResultsExportToolButton);
@@ -374,7 +391,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(sedmlExportToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mDataImportAction);
+    mToolBarWidget->addWidget(dataImportToolButton);
     mToolBarWidget->addWidget(simulationResultsExportToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addAction(mPreferencesAction);
@@ -588,6 +605,10 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
 
     I18nInterface::retranslateAction(mDataImportAction, tr("Data Import"),
                                      tr("Import some data"));
+    I18nInterface::retranslateAction(mLocalDataImportAction, tr("Local..."),
+                                     tr("Import some local data"));
+    I18nInterface::retranslateAction(mRemoteDataImportAction, tr("Remote..."),
+                                     tr("Import some remote data"));
     I18nInterface::retranslateAction(mSimulationResultsExportAction, tr("Simulation Results Export"),
                                      tr("Export the simulation results"));
 
@@ -3272,8 +3293,8 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
     // data store interface
     // Note: we check whether mFileTypeInterfaces contains an entry for the
     //       given file (which would mean that the file was dropped on us) and
-    //       if not (i.e. we want to import a file using our main menu) then
-    //       check whether the file is a data file...
+    //       if not (i.e. we want to import a file using our main menu or our
+    //       URI scheme) then check whether the file is a data file...
 
     FileTypeInterface *fileTypeInterface = mFileTypeInterfaces.value(pFileName);
 
@@ -3380,17 +3401,36 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
 
 //==============================================================================
 
-void SimulationExperimentViewSimulationWidget::dataImport()
+void SimulationExperimentViewSimulationWidget::dataImport(const QStringList &pFileNames)
 {
-    // Ask for the data files to be imported
+    // Import the one or several files
 
-    QStringList fileNames = Core::getOpenFileNames(tr("Data Import"),
-                                                   Core::filters(Core::dataStoreFileTypeInterfaces()));
-
-    // Import the one or several data files
-
-    for (const auto &fileName : fileNames)
+    for (const auto &fileName : pFileNames)
         import(fileName);
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::localDataImport()
+{
+    // Ask for the data files to be imported and import them
+
+    dataImport(Core::getOpenFileNames(tr("Data Import"),
+                                      Core::filters(Core::dataStoreFileTypeInterfaces())));
+}
+
+//==============================================================================
+
+void SimulationExperimentViewSimulationWidget::remoteDataImport()
+{
+    // Ask for the URL of the remote file that is to be imported
+
+    Core::RemoteFileDialog remoteFileDialog(tr("Data Import"), this);
+
+    remoteFileDialog.exec();
+
+    if (remoteFileDialog.result() == QMessageBox::Accepted)
+        QDesktopServices::openUrl("opencor://importFile/"+remoteFileDialog.url());
 }
 
 //==============================================================================

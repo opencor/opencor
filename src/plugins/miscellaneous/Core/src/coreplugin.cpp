@@ -115,6 +115,22 @@ bool CorePlugin::canClose()
 // File handling interface
 //==============================================================================
 
+bool CorePlugin::importFile(const QString &pFileName)
+{
+    // We rely on this interface not to import the given file as such, but to
+    // get the current view to import it, if it can, or open it as any normal
+    // file, if the current view cannot import it
+    // Note: we call CentralWidget::importRemoteFile() because pFileName can
+    //       actually be a remote file. If it isn't then the file will be
+    //       imported as a normal file...
+
+    mCentralWidget->importRemoteFile(pFileName);
+
+    return false;
+}
+
+//==============================================================================
+
 bool CorePlugin::saveFile(const QString &pOldFileName,
                           const QString &pNewFileName,
                           bool &pNeedFeedback)

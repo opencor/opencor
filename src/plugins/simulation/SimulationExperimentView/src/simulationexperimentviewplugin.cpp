@@ -61,6 +61,15 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool SimulationExperimentViewPlugin::importFile(const QString &pFileName)
+{
+    // Let our view widget know that we want to import a file
+
+    return mViewWidget->importFile(pFileName);
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewPlugin::saveFile(const QString &pOldFileName,
                                               const QString &pNewFileName,
                                               bool &pNeedFeedback)
