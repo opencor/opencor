@@ -335,7 +335,7 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void allImportsDone();
+    void importDone();
 
 private slots:
     void runPauseResumeSimulation();

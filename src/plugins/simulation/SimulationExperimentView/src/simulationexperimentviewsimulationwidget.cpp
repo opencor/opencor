@@ -3292,8 +3292,8 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
     // data store interface
     // Note: we check whether mFileTypeInterfaces contains an entry for the
     //       given file (which would mean that the file was dropped on us) and
-    //       if not (i.e. we want to import file using our main menu or our URI
-    //       scheme) then check whether the file is a data file...
+    //       if not (i.e. we want to import a file using our main menu or our
+    //       URI scheme) then check whether the file is a data file...
 
     FileTypeInterface *fileTypeInterface = mFileTypeInterfaces.value(pFileName);
 
@@ -3374,14 +3374,14 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
         connect(dataStoreImporter, &DataStore::DataStoreImporter::done,
                 this, &SimulationExperimentViewSimulationWidget::dataStoreImportDone,
                 Qt::UniqueConnection);
-        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
+        connect(this, &SimulationExperimentViewSimulationWidget::importDone,
                 dataStoreImportData, &DataStore::DataStoreImportData::deleteLater);
 
         dataStoreImporter->importData(dataStoreImportData);
 
         QEventLoop waitLoop;
 
-        connect(this, &SimulationExperimentViewSimulationWidget::allImportsDone,
+        connect(this, &SimulationExperimentViewSimulationWidget::importDone,
                 &waitLoop, &QEventLoop::quit);
 
         waitLoop.exec();
@@ -4384,7 +4384,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
                                                                                      .arg(Core::formatMessage(pErrorMessage, true)));
     }
 
-    emit allImportsDone();
+    emit importDone();
 }
 
 //==============================================================================
