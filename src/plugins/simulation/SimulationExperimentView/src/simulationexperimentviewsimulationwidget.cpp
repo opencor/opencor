@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "graphpanelswidget.h"
 #include "interfaces.h"
 #include "progressbarwidget.h"
+#include "remotefiledialog.h"
 #include "sedmlinterface.h"
 #include "sedmlsupport.h"
 #include "sedmlsupportplugin.h"
@@ -3422,8 +3423,14 @@ void SimulationExperimentViewSimulationWidget::localDataImport()
 
 void SimulationExperimentViewSimulationWidget::remoteDataImport()
 {
-//---ISSUE2000--- TO BE DONE...
-qDebug("Remote data import...");
+    // Ask for the URL of the remote file that is to be imported
+
+    Core::RemoteFileDialog remoteFileDialog(tr("Data Import"), this);
+
+    remoteFileDialog.exec();
+
+    if (remoteFileDialog.result() == QMessageBox::Accepted)
+        QDesktopServices::openUrl("opencor://importFile/"+remoteFileDialog.url());
 }
 
 //==============================================================================

@@ -682,6 +682,81 @@ void CentralWidget::updateFileTab(int pIndex, bool pIconOnly)
 
 //==============================================================================
 
+void CentralWidget::importFile(const QString &pFileName)
+{
+    // Try to get our current view to import the given file and if it cannot
+    // then just open it as a normal file
+
+    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
+
+    if (   !fileHandlingInterface
+        || !fileHandlingInterface->importFile(pFileName)) {
+        openFile(pFileName);
+    }
+}
+
+//==============================================================================
+
+void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
+{
+    // Check whether pFileNameOrUrl refers to a remote or a local file and if it
+    // is the latter then import it directly
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    checkFileNameOrUrl(pFileNameOrUrl, isLocalFile, fileNameOrUrl);
+
+    if (isLocalFile) {
+        importFile(fileNameOrUrl);
+
+        return;
+    }
+
+    // We are dealing with a remote file, so download its contents
+
+    QByteArray fileContents;
+    QString errorMessage;
+
+    showBusyWidget();
+        bool remoteFileDownloaded = readFile(fileNameOrUrl, fileContents, &errorMessage);
+    hideBusyWidget();
+
+    if (remoteFileDownloaded) {
+        // We were able to retrieve the contents of our remote file, so save it
+        // to a temporary file and then import it
+
+        QString temporaryFileName = Core::temporaryFileName();
+
+        if (writeFile(temporaryFileName, fileContents)) {
+            FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
+
+            if (   !fileHandlingInterface
+                || !fileHandlingInterface->importFile(temporaryFileName)) {
+                // The remote file couldn't be imported, so open it as a remote
+                // file
+
+                openRemoteFile(fileNameOrUrl);
+            }
+        } else {
+            warningMessageBox(tr("Import Remote File"),
+                              tr("<strong>%1</strong> could not be saved locally (%2).").arg(fileNameOrUrl)
+                                                                                        .arg(formatMessage(errorMessage)));
+        }
+
+        QFile::remove(temporaryFileName);
+    } else {
+        // We were not able to retrieve the contents of the remote file, so let
+        // the user know about it
+
+        warningMessageBox(tr("Import Remote File"),
+                          tr("<strong>%1</strong> could not be imported (%2).").arg(fileNameOrUrl)
+                                                                               .arg(formatMessage(errorMessage)));
+    }
+}
+
+//==============================================================================
+
 void CentralWidget::openFile(const QString &pFileName, File::Type pType,
                              const QString &pUrl)
 {
@@ -846,24 +921,6 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         }
     } else {
         openFile(fileName, File::Remote, fileNameOrUrl);
-    }
-}
-
-//==============================================================================
-
-void CentralWidget::importFile(const QString &pFileNameOrUrl)
-{
-    // Try to get our current view to import the given file and it cannot then
-    // just open it
-
-    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(viewPlugin(mFileTabs->currentIndex())->instance());
-
-    if (   !fileHandlingInterface
-        || !fileHandlingInterface->importFile(pFileNameOrUrl)) {
-        // The current view doesn't support the import of files or can't import
-        // it, so open the file as a normal file
-
-        openRemoteFile(pFileNameOrUrl);
     }
 }
 

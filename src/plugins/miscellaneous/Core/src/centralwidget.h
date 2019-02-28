@@ -105,11 +105,11 @@ public:
 
     QString currentFileName() const;
 
+    void importRemoteFile(const QString &pFileNameOrUrl);
+
     void openFile(const QString &pFileName, File::Type pType = File::Local,
                   const QString &pUrl = QString());
     void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
-
-    void importFile(const QString &pFileNameOrUrl);
 
     bool canClose();
 
@@ -159,6 +159,8 @@ private:
     Plugin * viewPlugin(const QString &pFileName) const;
 
     void updateNoViewMsg();
+
+    void importFile(const QString &pFileName);
 
     void openFiles(const QStringList &pFileNames);
 
