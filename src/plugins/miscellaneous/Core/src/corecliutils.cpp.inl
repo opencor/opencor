@@ -234,12 +234,12 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
         // Download the contents of the remote file
 
         QNetworkReply *networkReply = networkAccessManager.get(QNetworkRequest(pUrl));
-        QEventLoop eventLoop;
+        QEventLoop waitLoop;
 
         connect(networkReply, &QNetworkReply::finished,
-                &eventLoop, &QEventLoop::quit);
+                &waitLoop, &QEventLoop::quit);
 
-        eventLoop.exec();
+        waitLoop.exec();
 
         // Check whether we were able to retrieve the contents of the file
 

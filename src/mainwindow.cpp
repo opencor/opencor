@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
+#include "coreinterface.h"
 #include "guiapplication.h"
 #include "guiinterface.h"
 #include "guiutils.h"
@@ -151,8 +152,10 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Retrieve our Core plugin's interface, should the Core plugin be loaded
 
-    if (mPluginManager->corePlugin())
-        mCoreInterface = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance());
+    Plugin *corePlugin = mPluginManager->corePlugin();
+
+    if (corePlugin)
+        mCoreInterface = qobject_cast<CoreInterface *>(corePlugin->instance());
 
     // Set up the GUI
 
@@ -1018,8 +1021,10 @@ void MainWindow::handleArguments(const QStringList &pArguments)
             arguments << stringFromPercentEncoding(argument);
     }
 
-    if (!arguments.isEmpty() && mCoreInterface)
-        mCoreInterface->handleArguments(arguments);
+    if (mCoreInterface && !arguments.isEmpty()) {
+        for (const auto &argument : arguments)
+            mCoreInterface->openFile(argument);
+    }
 
     // Make sure that our status bar is shown/hidden, depending on its action's
     // status

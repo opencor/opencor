@@ -141,6 +141,7 @@ public:
 
     QIcon fileTabIcon() const;
 
+    bool import(const QString &pFileName, bool pShowWarning = true);
     bool save(const QString &pFileName);
 
     void filePermissionsChanged();
@@ -256,10 +257,7 @@ private:
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
 
-    QMap<DataStore::DataStoreImportData *, double> mDataImportProgresses;
-    QMap<DataStore::DataStoreImportData *, QString> mDataImportErrorMessages;
-
-    QMap<QString, FileTypeInterface *> mDataStoreFiles;
+    QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
     void output(const QString &pMessage);
 
@@ -327,15 +325,13 @@ private:
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
-    void importDataFiles(const QStringList &pFileNames);
-
 signals:
     void splitterMoved(const QIntList &pSizes);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void allImportsDone();
+    void importDone();
 
 private slots:
     void runPauseResumeSimulation();

@@ -155,8 +155,6 @@ private:
 
     QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
 
-    QMap<QString, QWidget *> mViews;
-
     Plugin * viewPlugin(int pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 
@@ -169,8 +167,6 @@ private:
     void updateFileTab(int pIndex, bool pIconOnly = false);
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
-
-    QString viewKey(int pMode, int pView, const QString &pFileName);
 
     void fileReloadedOrSaved(const QString &pFileName, bool pFileReloaded);
 
