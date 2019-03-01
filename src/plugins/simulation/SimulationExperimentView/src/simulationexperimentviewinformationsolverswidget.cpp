@@ -349,7 +349,7 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mNlaSolverData, voiUnit);
 
-    // Initialise our simulation's NLA solver's properties, so that we can then
+    // Initialise our simulation's NLA solver's properties, so that we can
     // properly reset our simulation the first time round
 
     if (mNlaSolverData) {
