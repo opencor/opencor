@@ -506,12 +506,9 @@ bool Plugin::load(const QString &pName)
     QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
-        settings.beginGroup(pName);
-            bool res = settings.value(SettingsLoad, true).toBool();
-        settings.endGroup();
-    settings.endGroup();
+    settings.beginGroup(pName);
 
-    return res;
+    return settings.value(SettingsLoad, true).toBool();
 }
 
 //==============================================================================
@@ -524,10 +521,9 @@ void Plugin::setLoad(const QString &pName, bool pToBeLoaded)
     QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
-        settings.beginGroup(pName);
-            settings.setValue(SettingsLoad, pToBeLoaded);
-        settings.endGroup();
-    settings.endGroup();
+    settings.beginGroup(pName);
+
+    settings.setValue(SettingsLoad, pToBeLoaded);
 }
 
 //==============================================================================

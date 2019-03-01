@@ -40,6 +40,10 @@ PLUGININFO_FUNC PMRSupportPluginInfo();
 
 //==============================================================================
 
+static const auto PluginName = QStringLiteral("PMRSupport");
+
+//==============================================================================
+
 class PMRSupportPlugin : public QObject, public I18nInterface,
                          public PreferencesInterface
 {

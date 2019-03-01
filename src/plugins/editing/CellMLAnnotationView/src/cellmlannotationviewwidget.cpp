@@ -61,7 +61,7 @@ static const auto SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes = QStri
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::loadSettings(QSettings *pSettings)
+void CellmlAnnotationViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve the sizes of our editing widget and of its metadata details
     // Note: we would normally do this in CellmlAnnotationViewEditingWidget, but
@@ -76,18 +76,18 @@ void CellmlAnnotationViewWidget::loadSettings(QSettings *pSettings)
                                                                     << 0.25*availableGeometry.height()
                                                                     << 0.50*availableGeometry.height();
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
-    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
+    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::saveSettings(QSettings *pSettings) const
+void CellmlAnnotationViewWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the sizes of our editing widget and of its metadata details
 
-    pSettings->setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
-    pSettings->setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, qIntListToVariantList(mMetadataDetailsWidgetSizes));
+    pSettings.setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
+    pSettings.setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, qIntListToVariantList(mMetadataDetailsWidgetSizes));
 }
 
 //==============================================================================

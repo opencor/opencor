@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "file.h"
-#include "guiinterface.h"
 #include "widget.h"
 #include "viewinterface.h"
 
@@ -38,9 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class QDialogButtonBox;
-class QLabel;
-class QLineEdit;
 class QStackedWidget;
 
 //==============================================================================
@@ -58,7 +54,6 @@ namespace Core {
 //==============================================================================
 
 class CentralWidget;
-class Dialog;
 class UserMessageWidget;
 class TabBarWidget;
 
@@ -96,8 +91,8 @@ public:
     explicit CentralWidget(QWidget *pParent);
     ~CentralWidget() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void settingsLoaded(const Plugins &pLoadedPlugins);
 
@@ -110,10 +105,10 @@ public:
 
     QString currentFileName() const;
 
+    void importRemoteFile(const QString &pFileNameOrUrl);
+
     void openFile(const QString &pFileName, File::Type pType = File::Local,
                   const QString &pUrl = QString());
-    void openFiles(const QStringList &pFileNames);
-
     void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
@@ -135,8 +130,6 @@ private:
     };
 
     State mState;
-
-    QSettings *mSettings;
 
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedFileTypePlugins;
@@ -162,17 +155,14 @@ private:
 
     QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
 
-    Dialog *mRemoteFileDialog;
-    QLabel *mRemoteFileDialogUrlLabel;
-    QLineEdit *mRemoteFileDialogUrlValue;
-    QDialogButtonBox *mRemoteFileDialogButtonBox;
-
-    QMap<QString, QWidget *> mViews;
-
     Plugin * viewPlugin(int pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 
     void updateNoViewMsg();
+
+    void importFile(const QString &pFileName);
+
+    void openFiles(const QStringList &pFileNames);
 
     bool saveFile(int pIndex, bool pNeedNewFileName = false);
 
@@ -181,8 +171,6 @@ private:
     void updateFileTab(int pIndex, bool pIconOnly = false);
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
-
-    QString viewKey(int pMode, int pView, const QString &pFileName);
 
     void fileReloadedOrSaved(const QString &pFileName, bool pFileReloaded);
 
@@ -229,10 +217,6 @@ public slots:
 
 private slots:
     void updateGui();
-
-    void openRemoteFileChanged();
-    void doOpenRemoteFile();
-    void cancelOpenRemoteFile();
 
     void fileChanged(const QString &pFileName, bool pFileChanged,
                      bool pDependenciesChanged);

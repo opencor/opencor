@@ -321,6 +321,27 @@ QString sha1(const QString &pString)
 
 //==============================================================================
 
+QString fileSha1(const QString &pFileName)
+{
+    // Return the SHA-1 value of the given file
+
+    QString res = QString();
+    QFile file(pFileName);
+
+    if (file.open(QFile::ReadOnly)) {
+        QCryptographicHash hash(QCryptographicHash::Sha1);
+
+        if (hash.addData(&file))
+            res = hash.result().toHex();
+
+        file.close();
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
                                 int pPosition, int &pLine, int &pColumn)
 {

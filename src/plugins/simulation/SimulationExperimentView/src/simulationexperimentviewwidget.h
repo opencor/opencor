@@ -64,8 +64,8 @@ public:
                                             const Plugins &pCellmlSimulationViewPlugins,
                                             QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
 
@@ -74,6 +74,7 @@ public:
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
+    bool importFile(const QString &pFileName);
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
     void fileOpened(const QString &pFileName);

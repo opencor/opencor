@@ -121,24 +121,24 @@ void WebBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void WebBrowserWindowPlugin::loadSettings(QSettings *pSettings)
+void WebBrowserWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Web Browser window settings
 
-    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+    pSettings.beginGroup(mWebBrowserWindowWindow->objectName());
         mWebBrowserWindowWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void WebBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
+void WebBrowserWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Web Browser window settings
 
-    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+    pSettings.beginGroup(mWebBrowserWindowWindow->objectName());
         mWebBrowserWindowWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

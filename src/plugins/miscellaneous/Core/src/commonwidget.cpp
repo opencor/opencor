@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QPen>
 #include <QScreen>
-#include <QSettings>
 
 //==============================================================================
 
@@ -71,7 +70,7 @@ QSize CommonWidget::defaultSize(double pRatio) const
 
 //==============================================================================
 
-void CommonWidget::loadSettings(QSettings *pSettings)
+void CommonWidget::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -80,7 +79,7 @@ void CommonWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CommonWidget::saveSettings(QSettings *pSettings) const
+void CommonWidget::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

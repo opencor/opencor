@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "borderedwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrwindowwidget.h"

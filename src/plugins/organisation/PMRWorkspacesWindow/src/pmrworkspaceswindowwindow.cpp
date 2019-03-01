@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "filemanager.h"
 #include "i18ninterface.h"
 #include "toolbarwidget.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspacemanager.h"
@@ -42,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDesktopServices>
 #include <QDir>
-#include <QGraphicsColorizeEffect>
 #include <QLabel>
 #include <QMainWindow>
 #include <QSettings>
@@ -60,7 +60,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mInitialized(false),
-    mSettingsGroup(QString()),
     mFirstTimeRetrievingWorkspaces(true),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
@@ -89,17 +88,14 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
     static const QIcon UserIcon = QIcon(":/oxygen/apps/preferences-desktop-user-password.png");
 
-    static const int UserIconWidth = UserIcon.availableSizes().first().width();
-    static const int UserIconHeight = UserIcon.availableSizes().first().height();
-
     Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
     QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
     int plusIconSize = int(0.57*folderIconSize);
     int scaledIconSize = devicePixelRatio()*toolBarWidget->iconSize().width();
     // Note: we scale the icon in case we are on a non-HiDPI screen, in which
-    //       case the icon would be smaller than the what we need for our tool
-    //       bar widget...
+    //       case the icon would be smaller than what we need for our tool bar
+    //       widget...
 
     mGui->actionNew->setIcon(Core::scaledIcon(Core::overlayedIcon(folderIcon, PlusIcon,
                                                                   folderIconSize, folderIconSize,
@@ -122,8 +118,8 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addWidget(spacer);
     toolBarWidget->addAction(mGui->actionPmr);
 
-    mLoggedOnIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkGreen);
-    mLoggedOffIcon = Core::tintedIcon(UserIcon, UserIconWidth, UserIconHeight, Qt::darkRed);
+    mLoggedOnIcon = Core::tintedIcon(UserIcon, Qt::darkGreen);
+    mLoggedOffIcon = Core::tintedIcon(UserIcon, Qt::darkRed);
 
     mGui->layout->addWidget(toolBarWidget);
 
@@ -161,12 +157,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
-    // Initialise (update) our PMR URL
-
-    update(PreferencesInterface::preference(PMRSupport::PluginName,
-                                            PMRSupport::SettingsPreferencesPmrUrl,
-                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
-
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
 
@@ -174,9 +164,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
     // Some connections to process responses from our PMR web service
-
-    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWorkspacesWindowWindow::showInformation);
@@ -240,28 +227,40 @@ void PmrWorkspacesWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::loadSettings(QSettings *pSettings)
+void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
 {
-    // Keep track of our settings' group
-
-    mSettingsGroup = pSettings->group();
-
     // Retrieve the settings of the workspaces window widget
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
+
+    // Initialise (update) our PMR URL
+    // Note: we do it here rather than in our constructor because we need
+    //       mPmrWorkspacesWindowWidget to be fully initialised...
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
+
+    // A connection to show ourselves busy when our PMR web service is
+    // Note: we do it here rather than in our constructor otherwise our main
+    //       window won't properly resize upon startup, in case we are floating
+    //       (as opposed to being docked)...
+
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWindow::saveSettings(QSettings *pSettings) const
+void PmrWorkspacesWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the settings of the workspaces window widget
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWidget->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWidget->objectName());
         mPmrWorkspacesWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
@@ -470,22 +469,16 @@ void PmrWorkspacesWindowWindow::actionNewTriggered()
 {
     // Create a new (owned) workspace
 
-    QSettings settings;
+    PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(Core::mainWindow());
 
-    settings.beginGroup(mSettingsGroup);
-        settings.beginGroup("PmrWorkspacesWindowNewWorkspaceDialog");
-            PmrWorkspacesWindowNewWorkspaceDialog newWorkspaceDialog(&settings, Core::mainWindow());
+    if (newWorkspaceDialog.exec() == QDialog::Accepted) {
+        // Ask the PMR web service to create a new workspace, resulting in the
+        // (empty) workspace being cloned into its folder
 
-            if (newWorkspaceDialog.exec() == QDialog::Accepted) {
-                // Ask the PMR web service to create a new workspace, resulting
-                // in the (empty) workspace being cloned into its folder
-
-                mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
-                                                    newWorkspaceDialog.description(),
-                                                    newWorkspaceDialog.path());
-            }
-        settings.endGroup();
-    settings.endGroup();
+        mPmrWebService->requestNewWorkspace(newWorkspaceDialog.title(),
+                                            newWorkspaceDialog.description(),
+                                            newWorkspaceDialog.path());
+    }
 }
 
 //==============================================================================

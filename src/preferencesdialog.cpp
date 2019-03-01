@@ -133,11 +133,10 @@ void PreferencesItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-PreferencesDialog::PreferencesDialog(QSettings *pSettings,
-                                     PluginManager *pPluginManager,
+PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
                                      const QString &pPluginName,
                                      QWidget *pParent) :
-    Dialog(pSettings, pParent),
+    Dialog(pParent),
     mGui(new Ui::PreferencesDialog()),
     mPluginManager(pPluginManager),
     mCategoryItems(QMap<PluginInfo::Category, QStandardItem *>()),
@@ -146,6 +145,10 @@ PreferencesDialog::PreferencesDialog(QSettings *pSettings,
     mPreferencesWidgetPluginNames(QMap<Preferences::PreferencesWidget *, QString>()),
     mPluginNames(QStringList())
 {
+    // Customise our settings
+
+    mSettings.beginGroup("PreferencesDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);

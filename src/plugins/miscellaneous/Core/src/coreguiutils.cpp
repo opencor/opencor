@@ -524,18 +524,17 @@ QAction * newSeparator(QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
+QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 {
-    // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
-    // using a QFrame widget
+    // Create and return a line widget, i.e. one which is 1 pixel wide, using a
+    // QFrame widget
 
     QFrame *res = new QFrame(pParent);
+    QString color = borderColor().name();
 
     res->setStyleSheet(QString("QFrame {"
-                               "    border: 1px solid rgb(%1, %2, %3);"
-                               "}").arg(pColor.red())
-                                   .arg(pColor.green())
-                                   .arg(pColor.blue()));
+                               "    border: 1px solid %1;"
+                               "}").arg(color));
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -550,29 +549,11 @@ QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
-{
-    // Create and return a 'real' horizontal line widget
-
-    return newLineWidget(pHorizontal, borderColor(), pParent);
-}
-
-//==============================================================================
-
-QFrame * newLineWidget(const QColor &pColor, QWidget *pParent)
-{
-    // Create and return a 'real' horizontal line widget
-
-    return newLineWidget(true, pColor, pParent);
-}
-
-//==============================================================================
-
 QFrame * newLineWidget(QWidget *pParent)
 {
-    // Create and return a 'real' horizontal line widget
+    // Return a new horizontal line widget
 
-    return newLineWidget(true, borderColor(), pParent);
+    return newLineWidget(true, pParent);
 }
 
 //==============================================================================
@@ -580,8 +561,8 @@ QFrame * newLineWidget(QWidget *pParent)
 QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
     if (pIcon.isNull())
         return QString();
@@ -601,8 +582,8 @@ QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
     return iconDataUri(QIcon(pIcon), pWidth, pHeight, pMode);
 }
@@ -619,41 +600,46 @@ QIcon standardIcon(QStyle::StandardPixmap pStandardIcon,
 
 //==============================================================================
 
-QIcon tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
-                 const QColor &pColor)
+QIcon tintedIcon(const QIcon &pIcon, const QColor &pColor)
 {
-    // Create and return a tinted icon using the given icon and colour
+    // Create and return a tinted icon using (all the sizes of) the given icon
+    // and colour
 
-    QGraphicsScene scene(0, 0, pWidth, pHeight);
-    QGraphicsPixmapItem pixmapItem;
-    QGraphicsColorizeEffect effect;
+    QIcon res = QIcon();
 
-    effect.setColor(pColor);
+    for (const auto &size : pIcon.availableSizes()) {
+        QGraphicsScene scene(0, 0, size.width(), size.height());
+        QGraphicsPixmapItem pixmapItem;
+        QGraphicsColorizeEffect effect;
 
-    pixmapItem.setGraphicsEffect(&effect);
-    pixmapItem.setPixmap(pIcon.pixmap(pWidth, pHeight));
+        effect.setColor(pColor);
 
-    scene.addItem(&pixmapItem);
+        pixmapItem.setGraphicsEffect(&effect);
+        pixmapItem.setPixmap(pIcon.pixmap(size));
 
-    QImage image(pWidth, pHeight, QImage::Format_ARGB32_Premultiplied);
-    QPainter painter(&image);
+        scene.addItem(&pixmapItem);
 
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.fillRect(image.rect(), Qt::transparent);
+        QImage image(size, QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&image);
 
-    scene.render(&painter);
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(image.rect(), Qt::transparent);
 
-    return QPixmap::fromImage(image);
+        scene.render(&painter);
+
+        res.addPixmap(QPixmap::fromImage(image));
+    }
+
+    return res;
 }
 
 //==============================================================================
 
-QIcon tintedIcon(const QString &pIcon, int pWidth, int pHeight,
-                 const QColor &pColor)
+QIcon tintedIcon(const QString &pIcon, const QColor &pColor)
 {
-    // Create and return a tinted icon using the given icon and colour
+    // Return a tinted icon using the given icon and colour
 
-    return tintedIcon(QIcon(pIcon), pWidth, pHeight, pColor);
+    return tintedIcon(QIcon(pIcon), pColor);
 }
 
 //==============================================================================
@@ -692,8 +678,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(QIcon(pBaseIcon), pOverlayIcon, pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -705,8 +690,7 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(pBaseIcon, QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -718,8 +702,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -730,7 +713,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
                  Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
 {
-    // Create and return a scaled version of the given icon
+    // Return a scaled version of the given icon
 
     return pIcon.pixmap(pIcon.availableSizes().first()).scaled(pWidth, pHeight,
                                                                pAspectMode,
@@ -742,7 +725,7 @@ QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
 QIcon scaledIcon(const QString &pIcon, int pWidth, int pHeight,
                  Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
 {
-    // Create and return a scaled version of the given icon
+    // Return a scaled version of the given icon
 
     return scaledIcon(QIcon(pIcon), pWidth, pHeight, pAspectMode, pMode);
 }

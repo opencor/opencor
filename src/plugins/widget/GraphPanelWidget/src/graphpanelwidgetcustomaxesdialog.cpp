@@ -50,6 +50,12 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
     Core::Dialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
 {
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup("GraphPanelWidget");
+    mSettings.beginGroup("GraphPanelWidgetCustomAxesDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -67,16 +73,6 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
             this, &GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted);
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &GraphPanelWidgetCustomAxesDialog::reject);
-
-    // Create our 'special' settings
-    // Note: special in the sense that we don't retrieve them from the plugin
-    //       itself since this is not a view, a window or anything like that...
-
-    mSettings = new QSettings();
-
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup("GraphPanelWidget");
-    mSettings->beginGroup("GraphPanelWidgetCustomAxesDialog");
 
     // Only allow double numbers
 

@@ -59,8 +59,8 @@ public:
 
     void retranslateUi() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
 private:
     Ui::FileBrowserWindowWindow *mGui;

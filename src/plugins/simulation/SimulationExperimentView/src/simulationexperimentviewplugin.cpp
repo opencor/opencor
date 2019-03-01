@@ -61,6 +61,15 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool SimulationExperimentViewPlugin::importFile(const QString &pFileName)
+{
+    // Let our view widget know that we want to import a file
+
+    return mViewWidget->importFile(pFileName);
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewPlugin::saveFile(const QString &pOldFileName,
                                               const QString &pNewFileName,
                                               bool &pNeedFeedback)
@@ -229,24 +238,24 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
 
 //==============================================================================
 
-void SimulationExperimentViewPlugin::loadSettings(QSettings *pSettings)
+void SimulationExperimentViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Simulation Experiment view settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void SimulationExperimentViewPlugin::saveSettings(QSettings *pSettings) const
+void SimulationExperimentViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Simulation Experiment view settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

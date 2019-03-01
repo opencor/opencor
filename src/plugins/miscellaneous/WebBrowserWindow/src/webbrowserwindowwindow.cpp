@@ -231,34 +231,34 @@ static const auto SettingsUrl = QStringLiteral("Url");
 
 //==============================================================================
 
-void WebBrowserWindowWindow::loadSettings(QSettings *pSettings)
+void WebBrowserWindowWindow::loadSettings(QSettings &pSettings)
 {
     // Retrieve our current URL (and load it)
 
-    mUrlValue->setText(pSettings->value(SettingsUrl).toString());
+    mUrlValue->setText(pSettings.value(SettingsUrl).toString());
 
     returnPressed();
 
     // Retrieve the settings of our Web browser window widget
 
-    pSettings->beginGroup(mWebBrowserWindowWidget->objectName());
+    pSettings.beginGroup(mWebBrowserWindowWidget->objectName());
         mWebBrowserWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void WebBrowserWindowWindow::saveSettings(QSettings *pSettings) const
+void WebBrowserWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our current URL
 
-    pSettings->setValue(SettingsUrl, mUrlValue->text());
+    pSettings.setValue(SettingsUrl, mUrlValue->text());
 
     // Keep track of the settings of our Web browser window widget
 
-    pSettings->beginGroup(mWebBrowserWindowWidget->objectName());
+    pSettings.beginGroup(mWebBrowserWindowWidget->objectName());
         mWebBrowserWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

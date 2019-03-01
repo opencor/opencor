@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QProxyStyle>
 #include <QTabBar>
 
 //==============================================================================
@@ -39,30 +38,13 @@ namespace Core {
 
 //==============================================================================
 
-class TabBarStyle : public QProxyStyle
-{
-    Q_OBJECT
-
-public:
-    void drawControl(ControlElement pElement, const QStyleOption *pOption,
-                     QPainter *pPainter, const QWidget *pWidget = nullptr) const override;
-
-    QRect subElementRect(SubElement pElement, const QStyleOption *pOption,
-                         const QWidget *pWidget) const override;
-
-private:
-    void tabLayout(const QStyleOptionTab *pOption, const QWidget *pWidget,
-                   QRect *pTextRect, QRect *pIconRect) const;
-};
-
-//==============================================================================
-
 class CORE_EXPORT TabBarWidget : public QTabBar
 {
     Q_OBJECT
 
 public:
     explicit TabBarWidget(QWidget *pParent);
+    ~TabBarWidget() override;
 
     int oldIndex() const;
     void setOldIndex(int pOldIndex);

@@ -113,6 +113,17 @@ bool RawCellMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileNam
 // File handling interface
 //==============================================================================
 
+bool RawCellMLViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                    const QString &pNewFileName,
                                    bool &pNeedFeedback)
@@ -261,24 +272,24 @@ void RawCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
+void RawCellMLViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Raw CellML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
+void RawCellMLViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Raw CellML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMainWindow>
 #include <QMenu>
 #include <QPalette>
-#include <QSettings>
 
 //==============================================================================
 
@@ -94,14 +93,13 @@ void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CorePlugin::handleArguments(const QStringList &pArguments)
+void CorePlugin::openFile(const QString &pFileNameOrUrl)
 {
-    // All the arguments are files to open, so open them as if they were remote
-    // files since if they are not then CentralWidget::openRemoteFile() will
-    // open them as normal files
+    // Open the given file as if it was a remote file
+    // Note: if it is not then CentralWidget::openRemoteFile() will open it as
+    //       a normal file...
 
-    for (const auto &argument : pArguments)
-        mCentralWidget->openRemoteFile(argument);
+    mCentralWidget->openRemoteFile(pFileNameOrUrl);
 }
 
 //==============================================================================
@@ -115,6 +113,22 @@ bool CorePlugin::canClose()
 
 //==============================================================================
 // File handling interface
+//==============================================================================
+
+bool CorePlugin::importFile(const QString &pFileName)
+{
+    // We rely on this interface not to import the given file as such, but to
+    // get the current view to import it, if it can, or open it as any normal
+    // file, if the current view cannot import it
+    // Note: we call CentralWidget::importRemoteFile() because pFileName can
+    //       actually be a remote file. If it isn't then the file will be
+    //       imported as a normal file...
+
+    mCentralWidget->importRemoteFile(pFileName);
+
+    return false;
+}
+
 //==============================================================================
 
 bool CorePlugin::saveFile(const QString &pOldFileName,
@@ -550,6 +564,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // are available to us
 
     FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
+    FileTypeInterfaces dataStoreFileTypeInterfaces = FileTypeInterfaces();
     SolverInterfaces solverInterfaces = SolverInterfaces();
     DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
 
@@ -558,10 +573,15 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
         DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
 
-        // Keep track of file types
+        // Keep track of file types, but disinguish between those that are also
+        // a data store and those that are not
 
-        if (fileTypeInterface)
-            fileTypeInterfaces << fileTypeInterface;
+        if (fileTypeInterface) {
+            if (dataStoreInterface)
+                dataStoreFileTypeInterfaces << fileTypeInterface;
+            else
+                fileTypeInterfaces << fileTypeInterface;
+        }
 
         // Keep track of solvers
 
@@ -576,8 +596,8 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
     // Keep track of our various interfaces
 
-    static InterfacesData data(fileTypeInterfaces, solverInterfaces,
-                               dataStoreInterfaces);
+    static InterfacesData data(fileTypeInterfaces, dataStoreFileTypeInterfaces,
+                               solverInterfaces, dataStoreInterfaces);
 
     globalInstance(InterfacesDataSignature, &data);
 
@@ -608,7 +628,7 @@ static const auto SettingsRecentFiles = QStringLiteral("RecentFiles");
 
 //==============================================================================
 
-void CorePlugin::loadSettings(QSettings *pSettings)
+void CorePlugin::loadSettings(QSettings &pSettings)
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -621,20 +641,20 @@ void CorePlugin::loadSettings(QSettings *pSettings)
     //       central widget settings since mRecentFiles gets updated as a result
     //       of opening/closing a file...
 
-    mRecentFiles = pSettings->value(SettingsRecentFiles).toStringList();
+    mRecentFiles = pSettings.value(SettingsRecentFiles).toStringList();
 
     updateFileReopenMenu();
 
     // Retrieve the central widget settings
 
-    pSettings->beginGroup(mCentralWidget->objectName());
+    pSettings.beginGroup(mCentralWidget->objectName());
         mCentralWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void CorePlugin::saveSettings(QSettings *pSettings) const
+void CorePlugin::saveSettings(QSettings &pSettings) const
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -644,13 +664,13 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
     // Keep track of our recent files
 
-    pSettings->setValue(SettingsRecentFiles, mRecentFiles);
+    pSettings.setValue(SettingsRecentFiles, mRecentFiles);
 
     // Keep track of the central widget settings
 
-    pSettings->beginGroup(mCentralWidget->objectName());
+    pSettings.beginGroup(mCentralWidget->objectName());
         mCentralWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

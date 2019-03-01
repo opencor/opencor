@@ -56,6 +56,17 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool CellMLAnnotationViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
                                           const QString &pNewFileName,
                                           bool &pNeedFeedback)
@@ -200,24 +211,24 @@ void CellMLAnnotationViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugin
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
+void CellMLAnnotationViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our CellML Annotation view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
+void CellMLAnnotationViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our CellML Annotation view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

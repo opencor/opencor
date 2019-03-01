@@ -351,13 +351,13 @@ static const auto SettingsSelectedItem = QStringLiteral("SelectedItem");
 
 //==============================================================================
 
-void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
+void FileOrganiserWindowWidget::loadItemSettings(QSettings &pSettings,
                                                  QStandardItem *pParentItem)
 {
     // Recursively retrieve the item settings
 
     static int crtItemIndex = -1;
-    QStringList itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
+    QStringList itemInfo = pSettings.value(QString::number(++crtItemIndex)).toStringList();
 
     if (!itemInfo.isEmpty()) {
         int childItemsCount = itemInfo[2].toInt();
@@ -426,7 +426,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
+void FileOrganiserWindowWidget::loadSettings(QSettings &pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -435,13 +435,13 @@ void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the data model
 
-    pSettings->beginGroup(SettingsModel);
-        loadItemSettings(pSettings, nullptr);
-    pSettings->endGroup();
+    pSettings.beginGroup(SettingsModel);
+        loadItemSettings(pSettings);
+    pSettings.endGroup();
 
     // Retrieve the currently selected item, if any
 
-    QByteArray hierarchyData = pSettings->value(SettingsSelectedItem).toByteArray();
+    QByteArray hierarchyData = pSettings.value(SettingsSelectedItem).toByteArray();
 
     setCurrentIndex(mModel->decodeHierarchyData(hierarchyData));
 
@@ -452,7 +452,7 @@ void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
+void FileOrganiserWindowWidget::saveItemSettings(QSettings &pSettings,
                                                  QStandardItem *pItem,
                                                  int pParentItemIndex) const
 {
@@ -490,7 +490,7 @@ void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
         mFileManager->unmanage(fileName);
     }
 
-    pSettings->setValue(QString::number(++crtItemIndex), itemInfo);
+    pSettings.setValue(QString::number(++crtItemIndex), itemInfo);
 
     // Keep track of any child item
 
@@ -502,7 +502,7 @@ void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
+void FileOrganiserWindowWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the data model
     // Note: we first clear all previous settings, so that we are 100% sure that
@@ -511,11 +511,11 @@ void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
     //       first would mean that the 'old' third item would be back the next
     //       time we start OpenCOR)...
 
-    pSettings->remove(SettingsModel);
+    pSettings.remove(SettingsModel);
 
-    pSettings->beginGroup(SettingsModel);
+    pSettings.beginGroup(SettingsModel);
         saveItemSettings(pSettings, mModel->invisibleRootItem(), -1);
-    pSettings->endGroup();
+    pSettings.endGroup();
 
     // Keep track of the currently selected item, but only if it is visible
 
@@ -534,7 +534,7 @@ void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
         }
     }
 
-    pSettings->setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?currentIndex():QModelIndex()));
+    pSettings.setValue(SettingsSelectedItem, mModel->encodeHierarchyData(crtItemVisible?currentIndex():QModelIndex()));
 }
 
 //==============================================================================

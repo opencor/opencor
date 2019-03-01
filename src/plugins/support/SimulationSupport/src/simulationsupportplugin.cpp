@@ -48,6 +48,17 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool SimulationSupportPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SimulationSupportPlugin::saveFile(const QString &pOldFileName,
                                        const QString &pNewFileName,
                                        bool &pNeedFeedback)

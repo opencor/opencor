@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "i18ninterface.h"
 #include "pmrsupport.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
@@ -539,18 +540,18 @@ static const auto SettingsClonedWorkspaceFolders = QStringLiteral("ClonedWorkspa
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
+void PmrWorkspacesWindowWidget::loadSettings(QSettings &pSettings)
 {
-    // Keep track of our settings' group
+    // Keep track of the given settings' group
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 
     // Retrieve and keep track of some information about the previously cloned
     // workspace folders
     // Note: for the key, we use the PMR URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    for (const auto &clonedWorkspaceFolder : pSettings->value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
+    for (const auto &clonedWorkspaceFolder : pSettings.value(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host())).toStringList()) {
         // Retrieve the URL (i.e. remote.origin.url) of the cloned workspace
         // folder
 
@@ -597,14 +598,14 @@ void PmrWorkspacesWindowWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::saveSettings(QSettings *pSettings) const
+void PmrWorkspacesWindowWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the names of folders containing cloned workspaces
     // Note: for the key, we use the PMR URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    pSettings->setValue(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host()),
-                        QVariant(mClonedWorkspaceFolderUrls.keys()));
+    pSettings.setValue(SettingsClonedWorkspaceFolders.arg(QUrl(mPmrUrl).host()),
+                       QVariant(mClonedWorkspaceFolderUrls.keys()));
 }
 
 //==============================================================================
@@ -656,12 +657,12 @@ void PmrWorkspacesWindowWidget::update(const QString &pPmrUrl)
     QSettings settings;
 
     settings.beginGroup(mSettingsGroup);
-        saveSettings(&settings);
 
-        reset(pPmrUrl);
+    saveSettings(settings);
 
-        loadSettings(&settings);
-    settings.endGroup();
+    reset(pPmrUrl);
+
+    loadSettings(settings);
 }
 
 //==============================================================================
@@ -1577,26 +1578,20 @@ void PmrWorkspacesWindowWidget::synchronizeWorkspace()
         if (   (    workspace->isOwned()
                 && (workspaceStatus & PMRSupport::PmrWorkspace::StatusStaged))
             || (workspaceStatus & PMRSupport::PmrWorkspace::StatusUnstaged)) {
-            QSettings settings;
+            PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(workspace, mTimer, Core::mainWindow());
 
-            settings.beginGroup(mSettingsGroup);
-                settings.beginGroup("PmrWorkspacesWindowSynchronizeDialog");
-                    PmrWorkspacesWindowSynchronizeDialog synchronizeDialog(mSettingsGroup, workspace, mTimer, Core::mainWindow());
+            synchronizeDialog.exec();
 
-                    synchronizeDialog.exec(&settings);
+            if (synchronizeDialog.result() == QMessageBox::Ok) {
+                QStringList fileNames = synchronizeDialog.fileNames();
 
-                    if (synchronizeDialog.result() == QMessageBox::Ok) {
-                        QStringList fileNames = synchronizeDialog.fileNames();
+                for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+                    workspace->stageFile(fileNames[i], true);
 
-                        for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-                            workspace->stageFile(fileNames[i], true);
+                workspace->commit(synchronizeDialog.message());
 
-                        workspace->commit(synchronizeDialog.message());
-
-                        needRequestWorkspaceSynchronize = true;
-                    }
-                settings.endGroup();
-            settings.endGroup();
+                needRequestWorkspaceSynchronize = true;
+            }
         } else if (    workspace->isOwned()
                    && (workspaceStatus & PMRSupport::PmrWorkspace::StatusAhead)) {
             // Something went wrong during a previous synchronisation (and the

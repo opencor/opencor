@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QSettings>
 #include <QTextEdit>
 
 //==============================================================================
@@ -43,21 +42,12 @@ namespace BioSignalMLDataStore {
 BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDataStore,
                                                        const QMap<int, QIcon> &pIcons,
                                                        QWidget *pParent) :
-    DataStore::DataStoreDialog(pDataStore, false, pIcons, pParent)
+    DataStore::DataStoreDialog("BioSignalMLDataStore", pDataStore, false,
+                               pIcons, pParent)
 {
     // Customise our GUI
 
     setWindowTitle(tr("Export Data"));
-
-    // Create our 'special' settings
-    // Note: special in the sense that we don't retrieve them from the plugin
-    //       itself since this is not a view, a window or anything like that...
-
-    mSettings = new QSettings();
-
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup("BioSignalMLDataStore");
-    mSettings->beginGroup("DataStoreDialog");
 
     // Create a form-like widget
 

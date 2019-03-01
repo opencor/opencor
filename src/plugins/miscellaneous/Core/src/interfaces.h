@@ -45,15 +45,18 @@ class InterfacesData
 {
 public:
     explicit InterfacesData(const FileTypeInterfaces &pFileTypeInterfaces,
+                            const FileTypeInterfaces &pDataStoreFileTypeInterfaces,
                             const SolverInterfaces &pSolverInterfaces,
                             const DataStoreInterfaces &pDataStoreInterfaces);
 
     FileTypeInterfaces fileTypeInterfaces() const;
+    FileTypeInterfaces dataStoreFileTypeInterfaces() const;
     SolverInterfaces solverInterfaces() const;
     DataStoreInterfaces dataStoreInterfaces() const;
 
 private:
     FileTypeInterfaces mFileTypeInterfaces;
+    FileTypeInterfaces mDataStoreFileTypeInterfaces;
     SolverInterfaces mSolverInterfaces;
     DataStoreInterfaces mDataStoreInterfaces;
 };
@@ -61,8 +64,14 @@ private:
 //==============================================================================
 
 FileTypeInterfaces CORE_EXPORT fileTypeInterfaces();
+FileTypeInterfaces CORE_EXPORT dataStoreFileTypeInterfaces();
 SolverInterfaces CORE_EXPORT solverInterfaces();
 DataStoreInterfaces CORE_EXPORT dataStoreInterfaces();
+
+//==============================================================================
+
+FileTypeInterface CORE_EXPORT * fileTypeInterface(DataStoreInterface *pDataStoreInterface);
+DataStoreInterface CORE_EXPORT * dataStoreInterface(FileTypeInterface *pFileTypeInterface);
 
 //==============================================================================
 

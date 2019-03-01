@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QIcon>
 #include <QKeySequence>
 #include <QMessageBox>
+#include <QSettings>
 #include <QStyledItemDelegate>
 #include <QString>
 
@@ -44,7 +45,6 @@ class QLabel;
 class QMainWindow;
 class QMenu;
 class QWidget;
-class QSettings;
 
 //==============================================================================
 
@@ -69,15 +69,12 @@ class CORE_EXPORT Dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dialog(QSettings *pSettings, QWidget *pParent);
     explicit Dialog(QWidget *pParent);
-
-    int exec(QSettings *pSettings);
 
     bool hasPositionAndSize();
 
 protected:
-    QSettings *mSettings;
+    QSettings mSettings;
 
     void resizeEvent(QResizeEvent *pEvent) override;
 
@@ -154,10 +151,7 @@ QAction CORE_EXPORT * newAction(QWidget *pParent);
 
 QAction CORE_EXPORT * newSeparator(QWidget *pParent);
 
-QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, const QColor &pColor,
-                                   QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(bool pHorizontal, QWidget *pParent);
-QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
 QString CORE_EXPORT iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
@@ -169,10 +163,8 @@ QIcon CORE_EXPORT standardIcon(QStyle::StandardPixmap pStandardIcon,
                                const QStyleOption *pOption = nullptr,
                                const QWidget *pWidget = nullptr);
 
-QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
-                             const QColor &pColor);
-QIcon CORE_EXPORT tintedIcon(const QString &pIcon, int pWidth, int pHeight,
-                             const QColor &pColor);
+QIcon CORE_EXPORT tintedIcon(const QIcon &pIcon, const QColor &pColor);
+QIcon CORE_EXPORT tintedIcon(const QString &pIcon, const QColor &pColor);
 
 QIcon CORE_EXPORT overlayedIcon(const QIcon &pBaseIcon,
                                 const QIcon &pOverlayIcon,

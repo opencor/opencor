@@ -39,8 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     virtual void pluginsInitialized(const Plugins &pLoadedPlugins) PURE;
 
-    virtual void loadSettings(QSettings *pSettings) PURE;
-    virtual void saveSettings(QSettings *pSettings) const PURE;
+    virtual void loadSettings(QSettings &pSettings) PURE;
+    virtual void saveSettings(QSettings &pSettings) const PURE;
 
     virtual void handleUrl(const QUrl &pUrl) PURE;
 

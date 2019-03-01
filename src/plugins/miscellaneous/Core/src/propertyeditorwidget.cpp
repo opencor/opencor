@@ -808,15 +808,13 @@ void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
 
 //==============================================================================
 
-QVariant Property::variantValue() const
+QVariant Property::variantValue(bool pListValueIndex) const
 {
     // Return our property value as a variant
 
     switch (mType) {
     case Section:
     case String:
-    case List:
-    case Color:
         return value();
     case Integer:
     case IntegerGe0:
@@ -826,8 +824,15 @@ QVariant Property::variantValue() const
     case DoubleGe0:
     case DoubleGt0:
         return doubleValue();
+    case List:
+        if (pListValueIndex)
+            return listValueIndex();
+        else
+            return listValue();
     case Boolean:
         return booleanValue();
+    case Color:
+        return colorValue();
     }
 
     return QVariant();

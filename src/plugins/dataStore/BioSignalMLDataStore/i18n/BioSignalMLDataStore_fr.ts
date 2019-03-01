@@ -46,4 +46,11 @@
         <translation>Les données n&apos;ont pas pu être exportées vers BioSignalML (%1).</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreImporterWorker</name>
+    <message>
+        <source>The data could not be imported from BioSignalML (%1).</source>
+        <translation>Les données n&apos;ont pas pu être importées à partir de BioSignalML (%1).</translation>
+    </message>
+</context>
 </TS>

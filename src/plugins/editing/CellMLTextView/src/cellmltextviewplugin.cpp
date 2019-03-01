@@ -139,6 +139,17 @@ bool CellMLTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileNa
 // File handling interface
 //==============================================================================
 
+bool CellMLTextViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLTextViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName,
                                     bool &pNeedFeedback)
@@ -287,7 +298,7 @@ void CellMLTextViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLTextViewPlugin::loadSettings(QSettings *pSettings)
+void CellMLTextViewPlugin::loadSettings(QSettings &pSettings)
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -297,14 +308,14 @@ void CellMLTextViewPlugin::loadSettings(QSettings *pSettings)
 
     // Retrieve our CellML Text view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void CellMLTextViewPlugin::saveSettings(QSettings *pSettings) const
+void CellMLTextViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
@@ -314,9 +325,9 @@ void CellMLTextViewPlugin::saveSettings(QSettings *pSettings) const
 
     // Keep track of our generic CellML Text view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

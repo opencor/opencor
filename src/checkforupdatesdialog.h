@@ -84,11 +84,9 @@ class CheckForUpdatesDialog : public Dialog
     Q_OBJECT
 
 public:
-    explicit CheckForUpdatesDialog(QSettings *pSettings,
-                                   const QString &pApplicationDate,
+    explicit CheckForUpdatesDialog(const QString &pApplicationDate,
                                    QWidget *pParent);
-    explicit CheckForUpdatesDialog(QSettings *pSettings,
-                                   CheckForUpdatesEngine *pEngine);
+    explicit CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine);
     ~CheckForUpdatesDialog() override;
 
 private:
@@ -98,8 +96,7 @@ private:
 
     bool mInitialized;
 
-    explicit CheckForUpdatesDialog(QSettings *pSettings,
-                                   const QString &pApplicationDate,
+    explicit CheckForUpdatesDialog(const QString &pApplicationDate,
                                    CheckForUpdatesEngine *pEngine,
                                    QWidget *pParent);
 

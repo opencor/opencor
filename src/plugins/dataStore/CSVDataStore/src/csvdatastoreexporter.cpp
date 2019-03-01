@@ -116,7 +116,8 @@ void CsvDataStoreExporterWorker::run()
         // Output our header
 
         static const QString Header = "%1 (%2)%3";
-        static const QString RunNb = " | Run #%1";
+        static const QString RunNb  = " | Run #%1";
+        static const QString CrLf   = "\r\n";
 
         QString header = QString();
 
@@ -139,7 +140,7 @@ void CsvDataStoreExporterWorker::run()
             }
         }
 
-        header += '\n';
+        header += CrLf;
 
         bool res = file.write(header.toUtf8()) != -1;
 
@@ -187,7 +188,7 @@ void CsvDataStoreExporterWorker::run()
                         ++runsIndex[j];
                 }
 
-                rowData += "\n";
+                rowData += CrLf;
 
                 res = file.write(rowData.toUtf8()) != -1;
 

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrworkspaceswindowplugin.h"
 #include "pmrworkspaceswindowwindow.h"
@@ -126,24 +127,24 @@ void PMRWorkspacesWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins
 
 //==============================================================================
 
-void PMRWorkspacesWindowPlugin::loadSettings(QSettings *pSettings)
+void PMRWorkspacesWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our PMR Workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWindow->objectName());
         mPmrWorkspacesWindowWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void PMRWorkspacesWindowPlugin::saveSettings(QSettings *pSettings) const
+void PMRWorkspacesWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our PMR Workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWindow->objectName());
         mPmrWorkspacesWindowWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

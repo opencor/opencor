@@ -66,6 +66,17 @@ EditingViewPlugin::EditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool EditingViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool EditingViewPlugin::saveFile(const QString &pOldFileName,
                                  const QString &pNewFileName,
                                  bool &pNeedFeedback)
@@ -404,7 +415,7 @@ void EditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void EditingViewPlugin::loadSettings(QSettings *pSettings)
+void EditingViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -413,7 +424,7 @@ void EditingViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void EditingViewPlugin::saveSettings(QSettings *pSettings) const
+void EditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

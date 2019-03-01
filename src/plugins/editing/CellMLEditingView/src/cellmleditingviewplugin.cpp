@@ -66,6 +66,17 @@ CellMLEditingViewPlugin::CellMLEditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool CellMLEditingViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLEditingViewPlugin::saveFile(const QString &pOldFileName,
                                        const QString &pNewFileName,
                                        bool &pNeedFeedback)
@@ -296,7 +307,7 @@ void CellMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLEditingViewPlugin::loadSettings(QSettings *pSettings)
+void CellMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -305,7 +316,7 @@ void CellMLEditingViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CellMLEditingViewPlugin::saveSettings(QSettings *pSettings) const
+void CellMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

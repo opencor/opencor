@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "datastoreinterface.h"
 #include "datastoredialog.h"
+#include "plugin.h"
 
 //==============================================================================
 
@@ -32,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QPushButton>
+#include <QSettings>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -69,7 +71,8 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
+DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
+                                 DataStore *pDataStore, bool pIncludeVoi,
                                  const QMap<int, QIcon> &pIcons,
                                  QWidget *pParent) :
     Core::Dialog(pParent),
@@ -77,6 +80,12 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
     mNbOfData(0)
 {
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup(pDataStoreName);
+    mSettings.beginGroup("DataStoreDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);

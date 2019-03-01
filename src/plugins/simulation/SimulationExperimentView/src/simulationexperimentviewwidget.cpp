@@ -88,7 +88,7 @@ static const auto SettingsParametersColumnWidths = QStringLiteral("ParametersCol
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
+void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve the sizes of our simulation widget and of its contents widget
 
@@ -96,56 +96,56 @@ void SimulationExperimentViewWidget::loadSettings(QSettings *pSettings)
     QVariantList defaultContentsSizes = QVariantList() << 0.25*availableGeometryWidth
                                                        << 0.75*availableGeometryWidth;
 
-    mSimulationWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
-    mContentsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsContentsSizes, defaultContentsSizes).toList());
+    mSimulationWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSizes).toList());
+    mContentsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsContentsSizes, defaultContentsSizes).toList());
 
     // Retrieve the collapsed states of our collapsible widget
 
     static const QVariantList defaultCollapsed = QVariantList() << false << false << false;
 
-    mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings->value(SettingsCollapsed, defaultCollapsed).toList());
+    mCollapsibleWidgetCollapsed = qVariantListToBoolList(pSettings.value(SettingsCollapsed, defaultCollapsed).toList());
 
     // Retrieve our graph panel /graphs mode
 
-    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings->value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs).toInt());
+    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings.value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs).toInt());
 
     // Retrieve the columns' width of our various property editors
 
     static const QVariantList defaultThreeColumnWidths = QVariantList() << 100 << 100 << 100;
     static const QVariantList defaultTwoColumnWidths = QVariantList() << 100 << 100;
 
-    mSimulationColumnWidths = qVariantListToIntList(pSettings->value(SettingsSimulationColumnWidths, defaultThreeColumnWidths).toList());
-    mSolversColumnWidths = qVariantListToIntList(pSettings->value(SettingsSolversColumnWidths, defaultThreeColumnWidths).toList());
-    mGraphPanelColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphPanelColumnWidths, defaultTwoColumnWidths).toList());
-    mGraphsColumnWidths = qVariantListToIntList(pSettings->value(SettingsGraphsColumnWidths, defaultTwoColumnWidths).toList());
-    mParametersColumnWidths = qVariantListToIntList(pSettings->value(SettingsParametersColumnWidths, defaultThreeColumnWidths).toList());
+    mSimulationColumnWidths = qVariantListToIntList(pSettings.value(SettingsSimulationColumnWidths, defaultThreeColumnWidths).toList());
+    mSolversColumnWidths = qVariantListToIntList(pSettings.value(SettingsSolversColumnWidths, defaultThreeColumnWidths).toList());
+    mGraphPanelColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphPanelColumnWidths, defaultTwoColumnWidths).toList());
+    mGraphsColumnWidths = qVariantListToIntList(pSettings.value(SettingsGraphsColumnWidths, defaultTwoColumnWidths).toList());
+    mParametersColumnWidths = qVariantListToIntList(pSettings.value(SettingsParametersColumnWidths, defaultThreeColumnWidths).toList());
 }
 
 //==============================================================================
 
-void SimulationExperimentViewWidget::saveSettings(QSettings *pSettings) const
+void SimulationExperimentViewWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the sizes of our simulation widget and those of its
     // contents widget
 
-    pSettings->setValue(SettingsSizes, qIntListToVariantList(mSimulationWidgetSizes));
-    pSettings->setValue(SettingsContentsSizes, qIntListToVariantList(mContentsWidgetSizes));
+    pSettings.setValue(SettingsSizes, qIntListToVariantList(mSimulationWidgetSizes));
+    pSettings.setValue(SettingsContentsSizes, qIntListToVariantList(mContentsWidgetSizes));
 
     // Keep track of the collapsed states of our collapsible widget
 
-    pSettings->setValue(SettingsCollapsed, qBoolListToVariantList(mCollapsibleWidgetCollapsed));
+    pSettings.setValue(SettingsCollapsed, qBoolListToVariantList(mCollapsibleWidgetCollapsed));
 
     // Keep track of our graph panel /graphs mode
 
-    pSettings->setValue(SettingsGraphPanelGraphsMode, mGraphPanelGraphsMode);
+    pSettings.setValue(SettingsGraphPanelGraphsMode, mGraphPanelGraphsMode);
 
     // Keep track of the columns' width of our various property editors
 
-    pSettings->setValue(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationColumnWidths));
-    pSettings->setValue(SettingsSolversColumnWidths, qIntListToVariantList(mSolversColumnWidths));
-    pSettings->setValue(SettingsGraphPanelColumnWidths, qIntListToVariantList(mGraphPanelColumnWidths));
-    pSettings->setValue(SettingsGraphsColumnWidths, qIntListToVariantList(mGraphsColumnWidths));
-    pSettings->setValue(SettingsParametersColumnWidths, qIntListToVariantList(mParametersColumnWidths));
+    pSettings.setValue(SettingsSimulationColumnWidths, qIntListToVariantList(mSimulationColumnWidths));
+    pSettings.setValue(SettingsSolversColumnWidths, qIntListToVariantList(mSolversColumnWidths));
+    pSettings.setValue(SettingsGraphPanelColumnWidths, qIntListToVariantList(mGraphPanelColumnWidths));
+    pSettings.setValue(SettingsGraphsColumnWidths, qIntListToVariantList(mGraphsColumnWidths));
+    pSettings.setValue(SettingsParametersColumnWidths, qIntListToVariantList(mParametersColumnWidths));
 }
 
 //==============================================================================
@@ -279,6 +279,15 @@ QIcon SimulationExperimentViewWidget::fileTabIcon(const QString &pFileName) cons
 
         return NoIcon;
     }
+}
+
+//==============================================================================
+
+bool SimulationExperimentViewWidget::importFile(const QString &pFileName)
+{
+    // Import the given file into the current simulation widget
+
+    return mSimulationWidget->import(pFileName, false);
 }
 
 //==============================================================================

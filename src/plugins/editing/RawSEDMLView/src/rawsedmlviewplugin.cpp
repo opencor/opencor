@@ -92,6 +92,17 @@ bool RawSEDMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileName
 // File handling interface
 //==============================================================================
 
+bool RawSEDMLViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
                                   const QString &pNewFileName,
                                   bool &pNeedFeedback)
@@ -240,24 +251,24 @@ void RawSEDMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void RawSEDMLViewPlugin::loadSettings(QSettings *pSettings)
+void RawSEDMLViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Raw SED-ML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void RawSEDMLViewPlugin::saveSettings(QSettings *pSettings) const
+void RawSEDMLViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Raw SED-ML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

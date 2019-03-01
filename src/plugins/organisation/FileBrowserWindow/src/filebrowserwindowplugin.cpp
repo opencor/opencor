@@ -120,24 +120,24 @@ void FileBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
+void FileBrowserWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our File Browser window settings
 
-    pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
+    pSettings.beginGroup(mFileBrowserWindowWindow->objectName());
         mFileBrowserWindowWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our File Browser window settings
 
-    pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
+    pSettings.beginGroup(mFileBrowserWindowWindow->objectName());
         mFileBrowserWindowWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

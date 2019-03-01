@@ -79,7 +79,7 @@ public:
 
     int runsCount() const;
 
-    void addRun(quint64 pCapacity);
+    bool addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
 
     int type() const;
@@ -97,7 +97,7 @@ public:
     quint64 size(int pRun = -1) const;
 
     void addValue();
-    void addValue(double pValue);
+    void addValue(double pValue, int pRun = -1);
 
     double value(quint64 pPosition, int pRun = -1) const;
     double * values(int pRun = -1) const;
@@ -123,7 +123,80 @@ class DataStore;
 
 //==============================================================================
 
-class DataStoreExportData : public QObject
+class DataStoreData : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreData(const QString &pFileName);
+
+    QString fileName() const;
+
+protected:
+    QString mFileName;
+};
+
+//==============================================================================
+
+class DataStoreImportData : public DataStoreData
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreImportData(const QString &pFileName,
+                                 DataStore *pImportDataStore,
+                                 DataStore *pResultsDataStore,
+                                 int pNbOfVariables,
+                                 quint64 pNbOfDataPoints,
+                                 const QList<quint64> &pRunSizes);
+    ~DataStoreImportData();
+
+    bool valid() const;
+
+    DataStore * importDataStore() const;
+    DataStore * resultsDataStore() const;
+
+    QStringList hierarchy() const;
+
+    int nbOfVariables() const;
+    quint64 nbOfDataPoints() const;
+
+    double * importValues() const;
+    double * resultsValues() const;
+
+    DataStoreVariables importVariables() const;
+    DataStoreVariables resultsVariables() const;
+
+    QList<quint64> runSizes() const;
+
+    double progress();
+
+private:
+    bool mValid;
+
+    DataStore *mImportDataStore;
+    DataStore *mResultsDataStore;
+
+    QStringList mHierarchy;
+
+    int mNbOfVariables;
+    quint64 mNbOfDataPoints;
+
+    double *mImportValues;
+    double *mResultsValues;
+
+    DataStoreVariables mImportVariables;
+    DataStoreVariables mResultsVariables;
+
+    QList<quint64> mRunSizes;
+
+    quint64 mProgress;
+    double mOneOverTotalProgress;
+};
+
+//==============================================================================
+
+class DataStoreExportData : public DataStoreData
 {
     Q_OBJECT
 
@@ -132,13 +205,13 @@ public:
                                  DataStore *pDataStore,
                                  const DataStoreVariables &pVariables);
 
-    QString fileName() const;
     DataStore * dataStore() const;
+
     DataStoreVariables variables() const;
 
 private:
-    QString mFileName;
     DataStore *mDataStore;
+
     DataStoreVariables mVariables;
 };
 
@@ -165,6 +238,10 @@ public:
     DataStoreVariables voiAndVariables();
 
     DataStoreVariables addVariables(double *pValues, int pCount);
+    DataStoreVariable * addVariable(double *pValue);
+
+    void removeVariables(const DataStoreVariables &pVariables);
+    void removeVariable(DataStoreVariable *pVariable);
 
     void addValues(double pVoiValue);
 
@@ -173,6 +250,43 @@ private:
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;
+};
+
+//==============================================================================
+
+class DataStoreImporterWorker : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit DataStoreImporterWorker(DataStoreImportData *pImportData);
+
+protected:
+    DataStoreImportData *mImportData;
+
+signals:
+    void progress(DataStoreImportData *pImportData, double pProgress);
+    void done(DataStoreImportData *pImportData, const QString &pErrorMessage);
+
+public slots:
+   virtual void run() = 0;
+};
+
+//==============================================================================
+
+class DataStoreImporter : public QObject
+{
+    Q_OBJECT
+
+public:
+    void importData(DataStoreImportData *pImportData);
+
+protected:
+    virtual DataStoreImporterWorker * workerInstance(DataStoreImportData *pImportData) = 0;
+
+signals:
+    void progress(DataStoreImportData *pImportData, double pProgress);
+    void done(DataStoreImportData *pImportData, const QString &pErrorMessage);
 };
 
 //==============================================================================

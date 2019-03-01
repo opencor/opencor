@@ -42,7 +42,7 @@ extern "C" Q_DECL_EXPORT int dataStoreInterfaceVersion()
 {
     // Version of the data store interface
 
-    return 4;
+    return 5;
 }
 
 //==============================================================================
@@ -184,11 +184,17 @@ int DataStoreVariable::runsCount() const
 
 //==============================================================================
 
-void DataStoreVariable::addRun(quint64 pCapacity)
+bool DataStoreVariable::addRun(quint64 pCapacity)
 {
-    // Add a run of the given capacity
+    // Try to add a run of the given capacity
 
-    mRuns << new DataStoreVariableRun(pCapacity, mValue);
+    try {
+        mRuns << new DataStoreVariableRun(pCapacity, mValue);
+    } catch (...) {
+        return false;
+    }
+
+    return true;
 }
 
 //==============================================================================
@@ -301,13 +307,19 @@ void DataStoreVariable::addValue()
 
 //==============================================================================
 
-void DataStoreVariable::addValue(double pValue)
+void DataStoreVariable::addValue(double pValue, int pRun)
 {
     // Add the given value to our current (i.e. last) run
 
     Q_ASSERT(!mRuns.isEmpty());
 
-    mRuns.last()->addValue(pValue);
+    if (pRun == -1) {
+        mRuns.last()->addValue(pValue);
+    } else {
+        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
+
+        mRuns[pRun]->addValue(pValue);
+    }
 }
 
 //==============================================================================
@@ -345,22 +357,221 @@ double * DataStoreVariable::values(int pRun) const
 
 //==============================================================================
 
-DataStoreExportData::DataStoreExportData(const QString &pFileName,
-                                         DataStore *pDataStore,
-                                         const DataStoreVariables &pVariables) :
-    mFileName(pFileName),
-    mDataStore(pDataStore),
-    mVariables(pVariables)
+DataStoreData::DataStoreData(const QString &pFileName) :
+    mFileName(pFileName)
 {
 }
 
 //==============================================================================
 
-QString DataStoreExportData::fileName() const
+QString DataStoreData::fileName() const
 {
     // Return our file name
 
     return mFileName;
+}
+
+//==============================================================================
+
+DataStoreImportData::DataStoreImportData(const QString &pFileName,
+                                         DataStore *pImportDataStore,
+                                         DataStore *pResultsDataStore,
+                                         int pNbOfVariables,
+                                         quint64 pNbOfDataPoints,
+                                         const QList<quint64> &pRunSizes) :
+    DataStoreData(pFileName),
+    mValid(true),
+    mImportDataStore(pImportDataStore),
+    mResultsDataStore(pResultsDataStore),
+    mNbOfVariables(pNbOfVariables),
+    mNbOfDataPoints(pNbOfDataPoints),
+    mImportVariables(DataStoreVariables()),
+    mResultsVariables(DataStoreVariables()),
+    mRunSizes(pRunSizes),
+    mProgress(0),
+    mOneOverTotalProgress(1.0/pNbOfDataPoints)
+{
+    // Initialise our hierarchy
+
+    static int importNb = 0;
+
+    mHierarchy = QStringList() << "imports" << QString("import_%1").arg(++importNb);
+
+    // Allocate space for our import/results values, as well as add the required
+    // number of variables for our import/results data store and a run that will
+    // contain all of our raw/computed imported data in our import/results data
+    // store
+    // Note: we make several calls to DataStore::addVariable() rather than one
+    //       big one to DataStore::addVariables() in case we can't allocate
+    //       enough memory, in which case we will need to remove the variables
+    //       we have added, and a failing call to DataStore::addVariables()
+    //       wouldn't allow us to do this since that call wouldn't actually
+    //       return...
+
+    try {
+        mImportValues = new double[pNbOfVariables] {};
+        mResultsValues = new double[pNbOfVariables] {};
+
+        for (int i = 0; i < pNbOfVariables; ++i) {
+            mImportVariables << pImportDataStore->addVariable(mImportValues+i);
+            mResultsVariables << pResultsDataStore->addVariable(mResultsValues+i);
+        }
+
+        if (!pImportDataStore->addRun(pNbOfDataPoints))
+            throw std::exception();
+
+        if (!pRunSizes.isEmpty()) {
+            for (auto runSize : pRunSizes) {
+                for (auto resultsVariables : mResultsVariables) {
+                    if (!resultsVariables->addRun(runSize))
+                        throw std::exception();
+                }
+            }
+        }
+    } catch (...) {
+        // Something went wrong, so release the memory that was directly or
+        // indirectly allocated
+
+        mValid = false;
+
+        delete mImportValues;
+        delete mResultsValues;
+
+        mImportValues = nullptr;
+        mResultsValues = nullptr;
+
+        pImportDataStore->removeVariables(mImportVariables);
+        pResultsDataStore->removeVariables(mResultsVariables);
+    }
+}
+
+//==============================================================================
+
+DataStoreImportData::~DataStoreImportData()
+{
+    // Delete some internal objects
+    // Note: we must not delete mResultsValues since it is to be deleted by
+    //       whoever used us (e.g. a Simulation object)...
+
+    delete mImportValues;
+}
+
+//==============================================================================
+
+bool DataStoreImportData::valid() const
+{
+    // Return whether we are valid
+
+    return mValid;
+}
+
+//==============================================================================
+
+DataStore * DataStoreImportData::importDataStore() const
+{
+    // Return our import data store
+
+    return mImportDataStore;
+}
+
+//==============================================================================
+
+DataStore * DataStoreImportData::resultsDataStore() const
+{
+    // Return our results data store
+
+    return mResultsDataStore;
+}
+
+//==============================================================================
+
+QStringList DataStoreImportData::hierarchy() const
+{
+    // Return our hierarchy
+
+    return mHierarchy;
+}
+
+//==============================================================================
+
+int DataStoreImportData::nbOfVariables() const
+{
+    // Return our number of variables
+
+    return mNbOfVariables;
+}
+
+//==============================================================================
+
+quint64 DataStoreImportData::nbOfDataPoints() const
+{
+    // Return our number of data points
+
+    return mNbOfDataPoints;
+}
+
+//==============================================================================
+
+double * DataStoreImportData::importValues() const
+{
+    // Return our import values
+
+    return mImportValues;
+}
+
+//==============================================================================
+
+double * DataStoreImportData::resultsValues() const
+{
+    // Return our results values
+
+    return mResultsValues;
+}
+
+//==============================================================================
+
+DataStoreVariables DataStoreImportData::importVariables() const
+{
+    // Return our import variables
+
+    return mImportVariables;
+}
+
+//==============================================================================
+
+DataStoreVariables DataStoreImportData::resultsVariables() const
+{
+    // Return our results variables
+
+    return mResultsVariables;
+}
+
+//==============================================================================
+
+QList<quint64> DataStoreImportData::runSizes() const
+{
+    // Return our run sizes
+
+    return mRunSizes;
+}
+
+//==============================================================================
+
+double DataStoreImportData::progress()
+{
+    // Increase and return our normalised progress
+
+    return (++mProgress)*mOneOverTotalProgress;
+}
+
+//==============================================================================
+
+DataStoreExportData::DataStoreExportData(const QString &pFileName, DataStore *pDataStore,
+                                         const DataStoreVariables &pVariables) :
+    DataStoreData(pFileName),
+    mDataStore(pDataStore),
+    mVariables(pVariables)
+{
 }
 
 //==============================================================================
@@ -430,10 +641,13 @@ bool DataStore::addRun(quint64 pCapacity)
     int oldRunsCount = mVoi->runsCount();
 
     try {
-        mVoi->addRun(pCapacity);
+        if (!mVoi->addRun(pCapacity))
+            throw std::exception();
 
-        for (auto variable : mVariables)
-            variable->addRun(pCapacity);
+        for (auto variable : mVariables) {
+            if (!variable->addRun(pCapacity))
+                throw std::exception();
+        }
     } catch (...) {
         // We couldn't add a run to our VOI and all our variables, so only keep
         // the number of runs we used to have
@@ -498,11 +712,7 @@ DataStoreVariables DataStore::voiAndVariables()
 
 DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 {
-    // Add some variables to our data store, but only if we haven't already
-    // added some runs
-
-    if (mVoi->runsCount())
-        return DataStoreVariables();
+    // Add some variables to our data store
 
     DataStoreVariables variables = DataStoreVariables();
 
@@ -512,6 +722,43 @@ DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
     mVariables << variables;
 
     return variables;
+}
+
+//==============================================================================
+
+DataStoreVariable * DataStore::addVariable(double *pValue)
+{
+    // Add a variable to our data store
+
+    DataStoreVariable *variable = new DataStoreVariable(pValue);
+
+    mVariables << variable;
+
+    return variable;
+}
+
+//==============================================================================
+
+void DataStore::removeVariables(const DataStoreVariables &pVariables)
+{
+    // Remove the given variables from our data store
+
+    for (auto variable : pVariables) {
+        delete variable;
+
+        mVariables.removeOne(variable);
+    }
+}
+
+//==============================================================================
+
+void DataStore::removeVariable(DataStoreVariable *pVariable)
+{
+    // Remove the given variable from our data store
+
+    delete pVariable;
+
+    mVariables.removeOne(pVariable);
 }
 
 //==============================================================================
@@ -529,6 +776,48 @@ void DataStore::addValues(double pVoiValue)
         variable->addValue();
 
     mVoi->addValue(pVoiValue);
+}
+
+//==============================================================================
+
+DataStoreImporterWorker::DataStoreImporterWorker(DataStoreImportData *pImportData) :
+    mImportData(pImportData)
+{
+}
+
+//==============================================================================
+
+void DataStoreImporter::importData(DataStoreImportData *pImportData)
+{
+    // Create and move our worker to a thread
+    // Note: we cannot use the new connect() syntax with our worker's signals
+    //       since it's an instance of a derived class located in another
+    //       plugin...
+
+    QThread *thread = new QThread();
+    DataStoreImporterWorker *worker = workerInstance(pImportData);
+
+    worker->moveToThread(thread);
+
+    connect(thread, &QThread::started,
+            worker, &DataStoreImporterWorker::run);
+
+    connect(worker, SIGNAL(progress(DataStoreImportData *, double)),
+            this, SIGNAL(progress(DataStoreImportData *, double)));
+
+    connect(worker, SIGNAL(done(DataStoreImportData *, const QString &)),
+            this, SIGNAL(done(DataStoreImportData *, const QString &)));
+    connect(worker, SIGNAL(done(DataStoreImportData *, const QString &)),
+            thread, SLOT(quit()));
+    connect(worker, SIGNAL(done(DataStoreImportData *, const QString &)),
+            worker, SLOT(deleteLater()));
+
+    connect(thread, &QThread::finished,
+            thread, &QThread::deleteLater);
+
+    // Start our worker by starting the thread in which it is
+
+    thread->start();
 }
 
 //==============================================================================

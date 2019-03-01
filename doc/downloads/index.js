@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 11, "month": 12, "year": 2018, "type": 2, "license": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 1, "month": 2, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,13 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> upgraded to Qt 5.12.0 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1910\">#1910</a>)." },
-                       { "change": "<strong>COMBINE support:</strong> now recognise files that have a master attribute of \"1\" rather than \"true\" (see issue <a href=\"https://github.com/opencor/opencor/issues/1912\">#1912</a>)." },
-                       { "change": "<strong>Graph Panel widget:</strong> fixed a small problem with the scale range of an axis in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1941\">#1941</a>)." },
-                       { "change": "<strong>CellML Annotation view:</strong> prevent OpenCOR from crashing after a CellML file has been rendered invalid (see issue <a href=\"https://github.com/opencor/opencor/issues/1958\">#1958</a>)." },
-                       { "change": "<strong>CellML Text view:</strong> improved Unicode support (see issue <a href=\"https://github.com/opencor/opencor/issues/1926\">#1926</a>)." },
-                       { "change": "<strong>Simulation Experiment view:</strong> ensure that graph panels are always properly aligned (see issue <a href=\"https://github.com/opencor/opencor/issues/1956\">#1956</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1917\">#1917</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 4.0.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/1960\">#1960</a>). Upgraded the <a href=\"http://qwt.sourceforge.net/\">Qwt</a> library to version 6.1.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1933\">#1933</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 18.2.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1945\">#1945</a>)." }
+                       { "change": "<strong>General:</strong> enforce the use of Light Mode on <a href=\"https://en.wikipedia.org/wiki/MacOS\">macOS</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/1991\">#1991</a>). Added the <code>importFile</code> and <code>importFiles</code> commands to OpenCOR's <a href=\"https://en.wikipedia.org/wiki/Uniform_Resource_Identifier\">URI scheme</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2000\">#2000</a>)." },
+                       { "change": "<strong>Simulation Experiment view:</strong> fixed an issue with a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> being considered modified after changing languages (see issue <a href=\"https://github.com/opencor/opencor/issues/2001\">#2001</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"https://riverbankcomputing.com/software/qscintilla/intro\">QScintilla</a> to version 2.11.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1983\">#1983</a>). Upgraded <a href=\"https://libgit2.github.com/\">libgit2</a> to version 0.28.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1993\">#1993</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 18.3.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1994\">#1994</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 4.1.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/1995\">#1995</a>). Upgraded the <a href=\"https://www.openssl.org/\">OpenSSL</a> library to version 1.0.2r (see issue <a href=\"https://github.com/opencor/opencor/issues/2009\">#2009</a>). Upgraded <a href=\"https://katex.org/\">KaTeX</a> to version 0.10.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/2014\">#2014</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,
