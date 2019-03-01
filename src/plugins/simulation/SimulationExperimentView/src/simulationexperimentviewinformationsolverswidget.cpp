@@ -349,15 +349,19 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
     setPropertiesUnit(mOdeSolverData, voiUnit);
     setPropertiesUnit(mNlaSolverData, voiUnit);
 
-    // Initialise our simulation's NLA solver's properties, so that we can then
+    // Initialise our simulation's NLA solver's properties, so that we can
     // properly reset our simulation the first time round
 
     if (mNlaSolverData) {
         pSimulation->data()->setNlaSolverName(mNlaSolverData->solversListProperty()->value(), false);
 
         for (auto property : mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName())) {
+            // Note: we pass false to variantValue() because we want to retrieve
+            //       the value of list properties as a string rather than an
+            //       index...
+
             pSimulation->data()->addNlaSolverProperty(property->id(),
-                                                      property->variantValue(),
+                                                      property->variantValue(false),
                                                       false);
         }
     }

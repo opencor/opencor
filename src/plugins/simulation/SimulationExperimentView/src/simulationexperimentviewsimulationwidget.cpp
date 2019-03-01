@@ -2452,7 +2452,12 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needOdeSolverGuiUpdate) {
             for (auto property : solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addOdeSolverProperty(property->id(), property->variantValue());
+                    // Note: we pass false to variantValue() because we want to
+                    //       retrieve the value of list properties as a string
+                    //       rather than an index...
+
+                    mSimulation->data()->addOdeSolverProperty(property->id(),
+                                                              property->variantValue(false));
 
                     needOdeSolverGuiUpdate = true;
 
@@ -2484,7 +2489,13 @@ void SimulationExperimentViewSimulationWidget::updateSolversProperties(Core::Pro
         if (!pProperty || !needNlaSolverGuiUpdate) {
             for (auto property : solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (!pProperty || (pProperty == property)) {
-                    mSimulation->data()->addNlaSolverProperty(property->id(), property->variantValue(), pResetNlaSolver);
+                    // Note: we pass false to variantValue() because we want to
+                    //       retrieve the value of list properties as a string
+                    //       rather than an index...
+
+                    mSimulation->data()->addNlaSolverProperty(property->id(),
+                                                              property->variantValue(false),
+                                                              pResetNlaSolver);
 
                     needNlaSolverGuiUpdate = true;
 
