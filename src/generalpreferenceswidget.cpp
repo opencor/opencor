@@ -53,7 +53,7 @@ GeneralPreferencesWidget::GeneralPreferencesWidget(QWidget *pParent) :
 
     mGui->styleValue->addItems(styles);
 
-    mStyle = mSettings->value(SettingsPreferencesStyle, SettingsPreferencesStyleDefault).toString();
+    mStyle = mSettings.value(SettingsPreferencesStyle, SettingsPreferencesStyleDefault).toString();
 
     mGui->styleValue->setCurrentText(mStyle);
 
@@ -95,7 +95,7 @@ void GeneralPreferencesWidget::savePreferences()
 
     QString style = mGui->styleValue->currentText();
 
-    mSettings->setValue(SettingsPreferencesStyle, style);
+    mSettings.setValue(SettingsPreferencesStyle, style);
 
     // Update our style
 

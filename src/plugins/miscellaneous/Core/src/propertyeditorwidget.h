@@ -285,7 +285,7 @@ public:
     void setValue(const QString &pValue, bool pForce = false,
                   bool pEmitSignal = true);
 
-    QVariant variantValue() const;
+    QVariant variantValue(bool pListValueIndex = true) const;
     QString stringValue() const;
 
     int integerValue() const;

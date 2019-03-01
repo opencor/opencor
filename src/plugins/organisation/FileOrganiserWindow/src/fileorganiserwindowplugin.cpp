@@ -120,24 +120,24 @@ void FileOrganiserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins
 
 //==============================================================================
 
-void FileOrganiserWindowPlugin::loadSettings(QSettings *pSettings)
+void FileOrganiserWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our File Organiser window settings
 
-    pSettings->beginGroup(mFileOrganiserWindowWindow->objectName());
+    pSettings.beginGroup(mFileOrganiserWindowWindow->objectName());
         mFileOrganiserWindowWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
+void FileOrganiserWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our File Organiser window settings
 
-    pSettings->beginGroup(mFileOrganiserWindowWindow->objectName());
+    pSettings.beginGroup(mFileOrganiserWindowWindow->objectName());
         mFileOrganiserWindowWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

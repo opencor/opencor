@@ -116,7 +116,7 @@ void SampleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void SampleWindowPlugin::loadSettings(QSettings *pSettings)
+void SampleWindowPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -125,7 +125,7 @@ void SampleWindowPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SampleWindowPlugin::saveSettings(QSettings *pSettings) const
+void SampleWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

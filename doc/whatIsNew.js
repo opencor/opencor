@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 11, "month": 12, "year": 2018,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 1, "month": 2, "year": 2019,
                      "categories": [
                        { "name": "Editing",
                          "entries": [
@@ -19,8 +19,11 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "Simulation Experiment view",
                              "entries": [
+                               { "type": "added", "description": "Basic support for the import of external data." },
                                { "type": "improved", "description": "Rendering of the <a href=\"https://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
-                               { "type": "improved", "description": "Plotting of simulations." }
+                               { "type": "improved", "description": "Plotting of simulations." },
+                               { "type": "fixed", "description": "Various issues with saving a file under a new name." },
+                               { "type": "fixed", "description": "Issue with a <a href=\"https://sed-ml.github.io/\">SED-ML</a> file / <a href=\"https://co.mbine.org/documents/archive\">COMBINE archive</a> being considered modified after changing languages." }
                              ]
                            }
                          ]
@@ -30,6 +33,15 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "COMBINE support",
                              "entries": [
                                { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Tools",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML tools",
+                             "entries": [
+                               { "type": "added", "description": "Validation of a <a href=\"https://www.cellml.org/\">CellML</a> file from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." }
                              ]
                            }
                          ]

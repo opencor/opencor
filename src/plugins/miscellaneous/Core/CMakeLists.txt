@@ -2,6 +2,11 @@ project(CorePlugin)
 
 # Add the plugin
 
+if(APPLE)
+    set(TABBARWIDGETMACSTYLE_CPP src/tabbarwidgetmacstyle.cpp)
+    set(TABBARWIDGETMACSTYLE_H src/tabbarwidgetmacstyle.h)
+endif()
+
 add_plugin(Core
     SOURCES
         ../../cliinterface.cpp
@@ -20,6 +25,8 @@ add_plugin(Core
         ../../viewinterface.cpp
         ../../windowinterface.cpp
 
+        ${TABBARWIDGETMACSTYLE_CPP}
+
         src/borderedwidget.cpp
         src/busywidget.cpp
         src/centralwidget.cpp
@@ -35,6 +42,7 @@ add_plugin(Core
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
+        src/remotefiledialog.cpp
         src/splitterwidget.cpp
         src/tabbarwidget.cpp
         src/toolbarwidget.cpp
@@ -51,6 +59,8 @@ add_plugin(Core
         ../../preferencesinterface.h
         ../../solverinterface.h
 
+        ${TABBARWIDGETMACSTYLE_H}
+
         src/borderedwidget.h
         src/busywidget.h
         src/centralwidget.h
@@ -63,6 +73,7 @@ add_plugin(Core
         src/organisationwidget.h
         src/progressbarwidget.h
         src/propertyeditorwidget.h
+        src/remotefiledialog.h
         src/tabbarwidget.h
         src/toolbarwidget.h
         src/treeviewwidget.h

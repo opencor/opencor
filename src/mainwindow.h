@@ -42,15 +42,12 @@ namespace Ui {
 
 //==============================================================================
 
-class QSettings;
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
 
 class CoreInterface;
+class FileHandlingInterface;
 class PluginManager;
 
 //==============================================================================
@@ -86,8 +83,6 @@ private:
 
     QString mApplicationDate;
 
-    QSettings *mSettings;
-
     PluginManager *mPluginManager;
 
     Plugins mLoadedPluginPlugins;
@@ -97,6 +92,7 @@ private:
     Plugins mLoadedWindowPlugins;
 
     CoreInterface *mCoreInterface;
+    FileHandlingInterface *mFileHandlingInterface;
 
     QString mRawLocale;
 

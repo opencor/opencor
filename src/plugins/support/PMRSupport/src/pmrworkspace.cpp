@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrworkspace.h"
@@ -379,7 +380,7 @@ bool PmrWorkspace::commit(const QString &pMessage)
         emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide a message)."));
     }
 
-    git_buf_free(&message);
+    git_buf_dispose(&message);
 
     return res;
 }
@@ -902,7 +903,7 @@ void PmrWorkspace::stageFile(const QString &pPath, bool pStage)
                     git_tree *headTree;
 
                     if (!git_reference_peel(reinterpret_cast<git_object **>(&headTree),
-                                            head, GIT_OBJ_TREE)) {
+                                            head, GIT_OBJECT_TREE)) {
                         git_tree_entry *headEntry;
 
                         if (!git_tree_entry_bypath(&headEntry, headTree,
@@ -1138,7 +1139,7 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
 
                     const git_oid *commitId = git_commit_id(commit);
 
-                    if (git_reference_type(headReference) == GIT_REF_OID) {
+                    if (git_reference_type(headReference) == GIT_REFERENCE_DIRECT) {
                         res = !git_reference_set_target(&newHeadReference,
                                                         headReference,
                                                         commitId, LogMessage);
@@ -1346,7 +1347,7 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 {
     // Let people know, through a warning, about our Git error
 
-    const git_error *gitError = giterr_last();
+    const git_error *gitError = git_error_last();
 
     if (gitError) {
         emit warning(tr("%1\n\nGit message: %2.").arg(pMessage)

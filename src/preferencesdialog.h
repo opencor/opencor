@@ -93,8 +93,7 @@ class PreferencesDialog : public Dialog
     Q_OBJECT
 
 public:
-    explicit PreferencesDialog(QSettings *pSettings,
-                               PluginManager *pPluginManager,
+    explicit PreferencesDialog(PluginManager *pPluginManager,
                                const QString &pPluginName, QWidget *pParent);
     ~PreferencesDialog() override;
 

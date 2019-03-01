@@ -24,10 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "pmrauthentication.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
 #include "pmrwebservicemanager.h"
 #include "pmrwebserviceresponse.h"
+#include "pmrwebviewerdialog.h"
 #include "progressbarwidget.h"
 #include "webviewerwidget.h"
 
@@ -35,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QLayout>
 #include <QMainWindow>
-#include <QSettings>
 #include <QTimer>
 #include <QWebView>
 
@@ -56,19 +57,8 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     mPmrWebService(pPmrWebService),
     mPmrAuthentication(nullptr),
     mWebViewerDialog(nullptr),
-    mWebViewer(nullptr),
-    mWebViewerUsed(false)
+    mWebViewerDialogUsed(false)
 {
-    // Create our 'special' settings
-    // Note: special in the sense that we don't retrieve them from the plugin
-    //       itself since this is not a view, a window or anything like that...
-
-    mSettings = new QSettings();
-
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup(PluginName);
-    mSettings->beginGroup("WebViewerDialog");
-
     // Make sure that we get told when there are SSL errors (which would happen
     // if the website's certificate is invalid, e.g. it has expired)
 
@@ -78,15 +68,6 @@ PmrWebServiceManager::PmrWebServiceManager(const QString &pPmrUrl,
     // Create, by updating ourselves, our PMR authentication object
 
     update(pPmrUrl);
-}
-
-//==============================================================================
-
-PmrWebServiceManager::~PmrWebServiceManager()
-{
-    // Delete some interal objects
-
-    delete mSettings;
 }
 
 //==============================================================================
@@ -104,7 +85,7 @@ void PmrWebServiceManager::authenticate(bool pAuthenticate)
 {
     // Authenticate ourselves to PMR
 
-    mWebViewerUsed = false;
+    mWebViewerDialogUsed = false;
 
     if (pAuthenticate)
         mPmrAuthentication->link();
@@ -128,7 +109,7 @@ void PmrWebServiceManager::authenticationFailed()
     // Let the user know if s/he tried to authenticate him/herself but was just
     // not able to do so
 
-    if (!mWebViewerUsed) {
+    if (!mWebViewerDialogUsed) {
         Core::warningMessageBox(tr("PMR Authentication"),
                                  tr("PMR Authentication could not be performed.")+"<br/><br/>"
                                 +tr("<strong>Note:</strong> you might want to check that your system time is correct."));
@@ -145,41 +126,36 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
     // Open the given URL in a temporary web browser of ours
 
-    mWebViewerUsed = true;
+    mWebViewerDialogUsed = true;
 
     if (!mWebViewerDialog) {
-        mWebViewerDialog = new Core::Dialog(mSettings, Core::mainWindow());
+        mWebViewerDialog = new PmrWebViewerDialog(Core::mainWindow());
 
         connect(mWebViewerDialog, &Core::Dialog::rejected,
                 this, &PmrWebServiceManager::authenticationCancelled);
-
-        mWebViewer = new WebViewerWidget::WebViewerWidget(mWebViewerDialog);
-
-        mWebViewer->webView()->setContextMenuPolicy(Qt::NoContextMenu);
-
-        mWebViewer->showProgressBar();
-
-        QVBoxLayout *layout = new QVBoxLayout(mWebViewerDialog);
-
-        layout->setContentsMargins(QMargins());
-
-        layout->addWidget(mWebViewer);
-
-        mWebViewerDialog->setLayout(layout);
     } else {
-        mWebViewer->goToHomePage();
+        mWebViewerDialog->retranslateUi();
     }
 
-    mWebViewerDialog->setWindowTitle(tr("PMR Authentication"));
-
-    QMainWindow *mainWindow = Core::mainWindow();
-
-    mWebViewerDialog->resize(int(0.7*mainWindow->width()),
-                             int(0.7*mainWindow->height()));
-
-    mWebViewer->webView()->load(pUrl);
+    mWebViewerDialog->load(pUrl);
 
     mWebViewerDialog->exec();
+}
+
+//==============================================================================
+
+void PmrWebServiceManager::startCloseBrowser()
+{
+    // Close our temporary web browser after a slight delay
+    // Note: the whole idea is that granting/denying access resuts in a new
+    //       (empty) page being loaded, so we want to wait until that page is
+    //       loaded before actually closing our temporary web browser. So, here,
+    //       we have a short delay to give time to our temporary web browser to
+    //       start loading that new (empty) page. Then, in closeBrowser(), we
+    //       checking whether the loading is finished and, if so, close our
+    //       temporary web browser otherwise check again in a bit...
+
+    QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);
 }
 
 //==============================================================================
@@ -189,7 +165,7 @@ void PmrWebServiceManager::closeBrowser()
     // Close our temporary web browser, but only if the current page has
     // finished loading otherwise try again in a bit
 
-    if (qFuzzyIsNull(mWebViewer->progressBarWidget()->value()))
+    if (mWebViewerDialog->isLoadFinished())
         mWebViewerDialog->close();
     else
         QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);
@@ -299,7 +275,7 @@ void PmrWebServiceManager::update(const QString &pPmrUrl)
     connect(mPmrAuthentication, &PmrAuthentication::openBrowser,
             this, &PmrWebServiceManager::openBrowser);
     connect(mPmrAuthentication, &PmrAuthentication::closeBrowser,
-            this, &PmrWebServiceManager::closeBrowser);
+            this, &PmrWebServiceManager::startCloseBrowser);
 }
 
 //==============================================================================

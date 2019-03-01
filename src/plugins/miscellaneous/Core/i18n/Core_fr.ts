@@ -24,10 +24,6 @@
         <translation>Ouvrir Fichier À Distance</translation>
     </message>
     <message>
-        <source>URL:</source>
-        <translation>URL :</translation>
-    </message>
-    <message>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
@@ -158,6 +154,18 @@
     <message>
         <source>The file is being edited, so switching views is not possible for now</source>
         <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
+    </message>
+    <message>
+        <source>Import Remote File</source>
+        <translation>Importer Fichier À Distance</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved locally (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé localement (%2).</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be imported (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être importé (%2).</translation>
     </message>
 </context>
 <context>
@@ -319,6 +327,13 @@
     <message>
         <source>Unit</source>
         <translation>Unité</translation>
+    </message>
+</context>
+<context>
+    <name>OpenCOR::Core::RemoteFileDialog</name>
+    <message>
+        <source>URL:</source>
+        <translation>URL :</translation>
     </message>
 </context>
 <context>

@@ -84,13 +84,9 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
 
     subWidget->setLayout(subLayout);
 
-    QColor winColor = windowColor();
-
     setStyleSheet(QString("QWidget {"
-                          "    background: rgb(%1, %2, %3);"
-                          "}").arg(winColor.red())
-                              .arg(winColor.green())
-                              .arg(winColor.blue()));
+                          "    background-color: %1;"
+                          "}").arg(windowColor().name()));
 
     // Create and customise our button and title
 
@@ -132,8 +128,8 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
     // Note: we keep track of our top and bottom separators since we may need
     //       to hide them in some cases/circumstances...
 
-    mTopSeparator = newLineWidget(borderColor(), this);
-    mBottomSeparator = newLineWidget(borderColor(), this);
+    mTopSeparator = newLineWidget(this);
+    mBottomSeparator = newLineWidget(this);
 
     layout->addWidget(mTopSeparator);
     layout->addWidget(subWidget);

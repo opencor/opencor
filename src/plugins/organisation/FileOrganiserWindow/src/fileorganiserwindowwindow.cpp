@@ -71,8 +71,8 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     int plusIconSize = int(0.57*folderIconSize);
     int scaledIconSize = devicePixelRatio()*toolBarWidget->iconSize().width();
     // Note: we scale the icon in case we are on a non-HiDPI screen, in which
-    //       case the icon would be smaller than the what we need for our tool
-    //       bar widget...
+    //       case the icon would be smaller than what we need for our tool bar
+    //       widget...
 
     mGui->actionNew->setIcon(Core::scaledIcon(Core::overlayedIcon(folderIcon, PlusIcon,
                                                                   folderIconSize, folderIconSize,
@@ -147,24 +147,24 @@ void FileOrganiserWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::loadSettings(QSettings *pSettings)
+void FileOrganiserWindowWindow::loadSettings(QSettings &pSettings)
 {
     // Retrieve the settings of the file organiser widget
 
-    pSettings->beginGroup(mFileOrganiserWindowWidget->objectName());
+    pSettings.beginGroup(mFileOrganiserWindowWidget->objectName());
         mFileOrganiserWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::saveSettings(QSettings *pSettings) const
+void FileOrganiserWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the settings of the file organiser widget
 
-    pSettings->beginGroup(mFileOrganiserWindowWidget->objectName());
+    pSettings.beginGroup(mFileOrganiserWindowWidget->objectName());
         mFileOrganiserWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

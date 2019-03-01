@@ -215,7 +215,7 @@ void SEDMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void SEDMLSupportPlugin::loadSettings(QSettings *pSettings)
+void SEDMLSupportPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -224,7 +224,7 @@ void SEDMLSupportPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SEDMLSupportPlugin::saveSettings(QSettings *pSettings) const
+void SEDMLSupportPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

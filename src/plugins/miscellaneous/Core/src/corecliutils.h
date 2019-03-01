@@ -128,6 +128,7 @@ QString CORE_EXPORT formatTime(qint64 pTime);
 
 QString CORE_EXPORT sha1(const QByteArray &pByteArray);
 QString CORE_EXPORT sha1(const QString &pString);
+QString CORE_EXPORT fileSha1(const QString &pFileName);
 
 void CORE_EXPORT stringPositionAsLineColumn(const QString &pString,
                                             const QString &pEol, int pPosition,

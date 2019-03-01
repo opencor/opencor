@@ -30,26 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-class QSettings;
+#include <QSettings>
 
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class Dialog;
-}   // namespace Core
-
-//==============================================================================
-
-namespace WebViewerWidget {
-    class WebViewerWidget;
-}   // namespace WebViewerWidget
-
-//==============================================================================
-
 namespace PMRSupport {
 
 //==============================================================================
@@ -57,6 +42,7 @@ namespace PMRSupport {
 class PmrAuthentication;
 class PmrWebService;
 class PmrWebServiceResponse;
+class PmrWebViewerDialog;
 
 //==============================================================================
 
@@ -67,7 +53,6 @@ class PmrWebServiceManager : public QNetworkAccessManager
 public:
     explicit PmrWebServiceManager(const QString &pPmrUrl,
                                   PmrWebService *pPmrWebService);
-    ~PmrWebServiceManager() override;
 
     bool isAuthenticated() const;
     void authenticate(bool pAuthenticate);
@@ -79,15 +64,12 @@ public:
     void update(const QString &pPmrUrl);
 
 private:
-    QSettings *mSettings;
-
     PmrWebService *mPmrWebService;
     PmrAuthentication *mPmrAuthentication;
 
-    Core::Dialog *mWebViewerDialog;
-    WebViewerWidget::WebViewerWidget *mWebViewer;
+    PmrWebViewerDialog *mWebViewerDialog;
 
-    bool mWebViewerUsed;
+    bool mWebViewerDialogUsed;
 
 signals:
     void busy(bool pBusy);
@@ -102,6 +84,7 @@ private slots:
     void authenticationFailed();
 
     void openBrowser(const QUrl &pUrl);
+    void startCloseBrowser();
     void closeBrowser();
 
     void ignoreSslErrors(QNetworkReply *pNetworkReply,

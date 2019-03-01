@@ -319,7 +319,7 @@ int QScintillaWidget::findTextInRange(int pStartRange, int pEndRange,
 
     QByteArray byteArray = pText.toUtf8();
 
-    int res = int(SendScintilla(SCI_SEARCHINTARGET, ulong(byteArray.length()), byteArray.constData()));
+    int res = int(SendScintilla(SCI_SEARCHINTARGET, uintptr_t(byteArray.length()), byteArray.constData()));
 
     // Retrieve the start and end of the current target
 

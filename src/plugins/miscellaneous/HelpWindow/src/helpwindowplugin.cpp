@@ -121,24 +121,24 @@ void HelpWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void HelpWindowPlugin::loadSettings(QSettings *pSettings)
+void HelpWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Help window settings
 
-    pSettings->beginGroup(mHelpWindow->objectName());
+    pSettings.beginGroup(mHelpWindow->objectName());
         mHelpWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
+void HelpWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Help window settings
 
-    pSettings->beginGroup(mHelpWindow->objectName());
+    pSettings.beginGroup(mHelpWindow->objectName());
         mHelpWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

@@ -134,8 +134,8 @@ class CellmlTextViewWidget : public Core::ViewWidget
 public:
     explicit CellmlTextViewWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
 

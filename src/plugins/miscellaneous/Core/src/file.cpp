@@ -144,15 +144,9 @@ File::Status File::check()
 
 QString File::sha1(const QString &pFileName)
 {
-    // Compute the SHA-1 value for the given file, if it still exists and can be
-    // opened
+    // Return the SHA-1 value of the given file
 
-    QByteArray fileContents;
-
-    if (readFile(pFileName, fileContents))
-        return Core::sha1(fileContents);
-    else
-        return QString();
+    return Core::fileSha1(pFileName);
 }
 
 //==============================================================================
@@ -200,7 +194,7 @@ bool File::isDifferent(const QString &pFileContents) const
 {
     // Return whether we are different from the given file contents by comparing
     // our respective SHA-1 values
-    // Note: if we are considered as modified, then we want to compare the given
+    // Note: if we are considered modified, then we want to compare the given
     //       file contents against our corresponding physical version otherwise
     //       our internal SHA-1 value...
 
@@ -292,7 +286,7 @@ bool File::setModified(bool pModified)
         // Note: indeed, say that you are editing a file in the Raw Text view
         //       and that the file gets modified outside of OpenCOR and that you
         //       decline reloading it. In that case, the file will be rightly
-        //       considered as modified. Then, if you modify it so that it now
+        //       considered modified. Then, if you modify it so that it now
         //       corresponds to the physical version of the file, the Raw Text
         //       view will update the modified state of the file, but the SHA-1
         //       value will be out-of-date, hence we need to update it...

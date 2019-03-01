@@ -21,11 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Main
 //==============================================================================
 
-#include "checkforupdatesdialog.h"
 #include "cliapplication.h"
 #include "cliutils.h"
 #include "guiapplication.h"
-#include "guiutils.h"
 #include "mainwindow.h"
 
 #ifdef Q_OS_MAC
@@ -33,16 +31,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifndef QT_DEBUG
+    #include "checkforupdatesdialog.h"
     #include "splashscreenwindow.h"
 #endif
 
 //==============================================================================
 
-#include <QDir>
-#include <QLocale>
 #include <QProcess>
 #include <QSettings>
-#include <QVariant>
 
 #if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     #include <QWebSettings>
@@ -132,7 +128,7 @@ int main(int pArgC, char *pArgV[])
         // Try to run the CLI version of OpenCOR
 
         int res;
-        bool runCliApplication = cliApp->run(&res);
+        bool runCliApplication = cliApp->run(res);
 
         delete cliApp;
 
@@ -192,52 +188,52 @@ int main(int pArgC, char *pArgV[])
     QSettings settings;
 
     settings.beginGroup(OpenCOR::SettingsCheckForUpdatesDialog);
-        bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
-        bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
 
-        if (checkForUpdatesAtStartup) {
-            OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
+    bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
+    bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
 
-            checkForUpdatesEngine->check();
+    if (checkForUpdatesAtStartup) {
+        OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
 
-            if (   ( includeSnapshots && checkForUpdatesEngine->hasNewerVersion())
-                || (!includeSnapshots && checkForUpdatesEngine->hasNewerOfficialVersion())) {
-                // Retrieve the language to be used to show the check for
-                // updates window
+        checkForUpdatesEngine->check();
 
-                QString locale = OpenCOR::locale();
+        if (   ( includeSnapshots && checkForUpdatesEngine->hasNewerVersion())
+            || (!includeSnapshots && checkForUpdatesEngine->hasNewerOfficialVersion())) {
+            // Retrieve the language to be used to show the check for updates
+            // window
 
-                QLocale::setDefault(QLocale(locale));
+            QString locale = OpenCOR::locale();
 
-                QTranslator qtBaseTranslator;
-                QTranslator qtHelpTranslator;
-                QTranslator qtXmlPatternsTranslator;
-                QTranslator appTranslator;
+            QLocale::setDefault(QLocale(locale));
 
-                qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtBaseTranslator);
+            QTranslator qtBaseTranslator;
+            QTranslator qtHelpTranslator;
+            QTranslator qtXmlPatternsTranslator;
+            QTranslator appTranslator;
 
-                qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtHelpTranslator);
+            qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtBaseTranslator);
 
-                qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtXmlPatternsTranslator);
+            qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtHelpTranslator);
 
-                appTranslator.load(":/app_"+locale);
-                guiApp->installTranslator(&appTranslator);
+            qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
+            guiApp->installTranslator(&qtXmlPatternsTranslator);
 
-                // Show the check for updates window
-                // Note: checkForUpdatesEngine gets deleted by
-                //       checkForUpdatesDialog...
+            appTranslator.load(":/app_"+locale);
+            guiApp->installTranslator(&appTranslator);
 
-                OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(&settings, checkForUpdatesEngine);
+            // Show the check for updates window
+            // Note: checkForUpdatesEngine gets deleted by
+            //       checkForUpdatesDialog...
 
-                checkForUpdatesDialog.exec();
-            } else {
-                delete checkForUpdatesEngine;
-            }
+            OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(checkForUpdatesEngine);
+
+            checkForUpdatesDialog.exec();
+        } else {
+            delete checkForUpdatesEngine;
         }
-    settings.endGroup();
+    }
 #endif
 
     // Create and show our splash screen, if we are not in debug mode

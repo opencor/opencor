@@ -422,19 +422,19 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void CellmlTextViewWidget::loadSettings(QSettings *pSettings)
+void CellmlTextViewWidget::loadSettings(QSettings &pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
     // our settings' group and load them when initialising ourselves (see
     // initialize())...
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 }
 
 //==============================================================================
 
-void CellmlTextViewWidget::saveSettings(QSettings *pSettings) const
+void CellmlTextViewWidget::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
     // Note: our view is such that our settings are actually saved when calling
@@ -577,8 +577,8 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                newEditingWidget->loadSettings(&settings);
-            settings.endGroup();
+
+            newEditingWidget->loadSettings(settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -635,8 +635,8 @@ void CellmlTextViewWidget::finalize(const QString &pFileName)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editingWidget->saveSettings(&settings);
-            settings.endGroup();
+
+            editingWidget->saveSettings(settings);
 
             mNeedLoadingSettings = true;
             mEditingWidget = nullptr;
@@ -743,8 +743,8 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
 
     if (data) {
         if (Core::FileManager::instance()->isModified(pFileName)) {
-            // The given file is considered as modified, so we need to retrieve
-            // the contents of its physical version
+            // The given file is considered modified, so we need to retrieve the
+            // contents of its physical version
 
             QString fileContents;
 
@@ -771,8 +771,8 @@ bool CellmlTextViewWidget::isEditorWidgetContentsModified(const QString &pFileNa
 
             return Core::sha1(data->editingWidget()->editorWidget()->contents()).compare(Core::sha1(data->convertedFileContents()));
         } else {
-            // The given file is not considered as modified, so simply compare
-            // the SHA-1 value of our editor's contents with our internal one
+            // The given file is not considered modified, so simply compare the
+            // SHA-1 value of our editor's contents with our internal one
 
             return Core::sha1(data->editingWidget()->editorWidget()->contents()).compare(data->sha1());
         }

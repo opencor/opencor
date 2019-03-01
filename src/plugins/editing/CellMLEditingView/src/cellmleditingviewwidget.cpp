@@ -108,7 +108,7 @@ static const auto SettingsCellmlEditingViewWidgetSizes = QStringLiteral("CellmlE
 
 //==============================================================================
 
-void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
+void CellmlEditingViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve and set our sizes
     // Note #1: the MathML viewer and editor list widgets' default height is 19%
@@ -125,38 +125,38 @@ void CellmlEditingViewWidget::loadSettings(QSettings *pSettings)
                                                                       << availableGeometryHeight
                                                                       << 0.13*availableGeometryHeight;
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlEditingViewWidgetSizes, defaultCellmlEditingViewWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlEditingViewWidgetSizes, defaultCellmlEditingViewWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 
     // Retrieve our MathML viewer and editor widgets' settings
 
-    pSettings->beginGroup(mMathmlViewerWidget->objectName());
+    pSettings.beginGroup(mMathmlViewerWidget->objectName());
         mMathmlViewerWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 
-    pSettings->beginGroup(mEditorWidget->objectName());
+    pSettings.beginGroup(mEditorWidget->objectName());
         mEditorWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void CellmlEditingViewWidget::saveSettings(QSettings *pSettings) const
+void CellmlEditingViewWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our sizes
 
-    pSettings->setValue(SettingsCellmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
+    pSettings.setValue(SettingsCellmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
     // Keep track of our MathML viewer and editor widgets' settings
 
-    pSettings->beginGroup(mMathmlViewerWidget->objectName());
+    pSettings.beginGroup(mMathmlViewerWidget->objectName());
         mMathmlViewerWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 
-    pSettings->beginGroup(mEditorWidget->objectName());
+    pSettings.beginGroup(mEditorWidget->objectName());
         mEditorWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================

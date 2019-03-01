@@ -40,15 +40,22 @@ void Tests::helpTests()
 
     QStringList help = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/help.out"));
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools"),
-             help);
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help"),
-             help);
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools", mOutput));
+    QCOMPARE(mOutput, help);
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help", mOutput));
+    QCOMPARE(mOutput, help);
+
+    // Try a known command, but with the wrong number of arguments
+
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "argument", mOutput));
+    QCOMPARE(mOutput, help);
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << "argument" << "argument", mOutput));
+    QCOMPARE(mOutput, help);
 
     // Try an unknown command, resulting in the help being shown
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::unknown"),
-             help);
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::unknown", mOutput));
+    QCOMPARE(mOutput, help);
 }
 
 //==============================================================================
@@ -60,8 +67,8 @@ void Tests::exportToUserDefinedFormatTests()
 
     QString fileName = OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "non_existing_user_defined_format_file"),
-             QStringList() << "The user-defined format file could not be found." << QString());
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "non_existing_user_defined_format_file", mOutput));
+    QCOMPARE(mOutput, QStringList() << "The user-defined format file could not be found." << QString());
 
     // Try to export a local file to a user-defined (MATLAB) format, which file
     // description exists
@@ -69,11 +76,11 @@ void Tests::exportToUserDefinedFormatTests()
     QString matlabFormatFileName = OpenCOR::fileName("formats/MATLAB.xml");
 
 #ifdef Q_OS_WIN
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << matlabFormatFileName),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_windows.out")));
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << matlabFormatFileName, mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_windows.out")));
 #else
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << matlabFormatFileName),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_non_windows.out")));
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << matlabFormatFileName, mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/matlab_format_export_on_non_windows.out")));
 #endif
 }
 
@@ -85,20 +92,61 @@ void Tests::exportToCellml10Tests()
 
     QString fileName = OpenCOR::fileName("models/noble_model_1962.cellml");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
-             QStringList() << "The file must be a CellML 1.1 file." << QString());
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0", mOutput));
+    QCOMPARE(mOutput, QStringList() << "The file must be a CellML 1.1 file." << QString());
 
     // Export a CellML 1.1 file to CellML 1.0
 
     fileName = OpenCOR::fileName("models/tests/cellml/cellml_1_1/experiments/periodic-stimulus.xml");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << fileName << "cellml_1_0", mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/cellml_1_0_export.out")) << QString());
 
     // Try to export a non-existing CellML file to CellML 1.0
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_file" << "cellml_1_0"),
-             QStringList() << "The file could not be found." << QString());
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_file" << "cellml_1_0", mOutput));
+    QCOMPARE(mOutput, QStringList() << "The file could not be found." << QString());
+}
+
+//==============================================================================
+
+void Tests::validateCellmlFiles()
+{
+    // Validate a valid CellML file
+
+    QString fileName = OpenCOR::fileName("models/noble_model_1962.cellml");
+
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName, mOutput));
+    QCOMPARE(mOutput, QStringList() << QString());
+
+    // Try to validate some CellML files with error and/or warning issues
+
+    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/representation_error_issue.cellml");
+
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName, mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/representation_error_issue.cellml.out")));
+
+    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_warning_issues.cellml");
+
+    QVERIFY(!OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName, mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_warning_issues.cellml.out")));
+
+    fileName = OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_error_and_warning_issues.cellml");
+
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName, mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/semantic_error_and_warning_issues.cellml.out")));
+
+    // Try to validate a non-CellML file
+
+    fileName = OpenCOR::fileName("models/tests/sedml/noble_1962_local.sedml");
+
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << fileName, mOutput));
+    QCOMPARE(mOutput, OpenCOR::fileContents(OpenCOR::fileName("src/plugins/tools/CellMLTools/tests/data/noble_1962_local.sedml.out")));
+
+    // Try to validate a non-existing CellML file
+
+    QVERIFY(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::validate" << "non_existing_file", mOutput));
+    QCOMPARE(mOutput, QStringList() << "The file could not be found." << QString());
 }
 
 //==============================================================================

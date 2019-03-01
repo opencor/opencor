@@ -66,6 +66,17 @@ SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool SEDMLEditingViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SEDMLEditingViewPlugin::saveFile(const QString &pOldFileName,
                                       const QString &pNewFileName,
                                       bool &pNeedFeedback)
@@ -290,7 +301,7 @@ void SEDMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void SEDMLEditingViewPlugin::loadSettings(QSettings *pSettings)
+void SEDMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -299,7 +310,7 @@ void SEDMLEditingViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SEDMLEditingViewPlugin::saveSettings(QSettings *pSettings) const
+void SEDMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

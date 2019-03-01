@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreinterface.h"
+#include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
@@ -40,17 +41,26 @@ PLUGININFO_FUNC CSVDataStorePluginInfo();
 
 //==============================================================================
 
+static const auto CsvMimeType      = QStringLiteral("text/csv");
+static const auto CsvFileExtension = QStringLiteral("csv");
+
+//==============================================================================
+
 class CSVDataStorePlugin : public QObject, public DataStoreInterface,
-                           public I18nInterface
+                           public FileTypeInterface, public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CSVDataStorePlugin" FILE "csvdatastoreplugin.json")
 
+    Q_INTERFACES(OpenCOR::FileTypeInterface)
     Q_INTERFACES(OpenCOR::DataStoreInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
+    explicit CSVDataStorePlugin();
+
+#include "filetypeinterface.inl"
 #include "datastoreinterface.inl"
 #include "i18ninterface.inl"
 };

@@ -46,7 +46,9 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mSimulation(nullptr),
     mNeedClearing(false),
-    mVoiAccessible(false)
+    mVoiAccessible(false),
+    mImportComponent(nullptr),
+    mImportMenu(nullptr)
 {
     // Create our context menu
 
@@ -147,6 +149,11 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
     populateModel(runtime);
     populateContextMenu(runtime);
 
+    // Reset our import information, if we are reloading ourselves
+
+    if (pReloadingView)
+        mImportComponent = nullptr;
+
     // Keep track of when some of the model's data has changed
 
     connect(pSimulation->data(), &SimulationSupport::SimulationData::updated,
@@ -166,6 +173,77 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
     mParameters.clear();
     mParameterActions.clear();
+}
+
+//==============================================================================
+
+void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportData *pImportData)
+{
+    // Create our general import "component", if needed
+
+    if (!mImportComponent)
+        mImportComponent = addSectionProperty("imports");
+
+    // Create our import "sub-component"
+
+    Core::Property *importSubComponent = addSectionProperty(pImportData->hierarchy().last(), mImportComponent);
+
+    // Add the given data to our model
+
+    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()));
+
+    for (auto parameter : parameters) {
+        Core::Property *property = addDoubleProperty(importSubComponent);
+
+        property->setEditable(false);
+        property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
+        property->setName(parameter->formattedName(), false);
+
+        // Keep track of the link between our property value and parameter
+
+        mParameters.insert(property, parameter);
+    }
+
+    // Update (well, set for our imported data) the extra info of all our
+    // properties
+
+    updateExtraInfos();
+
+    // Expand our import component and sub-component
+
+    expand(mImportComponent->index());
+    expand(importSubComponent->index());
+
+    // Create our general import menu, if needed
+
+    if (!mImportMenu) {
+        mImportMenu = new QMenu("imports", mPlotAgainstMenu);
+
+        mPlotAgainstMenu->addMenu(mImportMenu);
+    }
+
+    // Create our import sub-menu
+
+    QMenu *importSubMenu = new QMenu(pImportData->hierarchy().last(), mImportMenu);
+
+    mImportMenu->addMenu(importSubMenu);
+
+    // Populate our import sub-menu with the given data
+
+    for (auto parameter : parameters) {
+        QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
+                                                            parameter->formattedName());
+
+        // Create a connection to handle the graph requirement against our
+        // parameter
+
+        connect(parameterAction, &QAction::triggered,
+                this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
+
+        // Keep track of the parameter associated with our parameter action
+
+        mParameterActions.insert(parameterAction, parameter);
+    }
 }
 
 //==============================================================================
@@ -198,6 +276,10 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
                 property->setDoubleValue(mSimulation->data()->algebraic()[parameter->index()], false);
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Data:
+                property->setDoubleValue(parameter->data()[parameter->index()], false);
 
                 break;
             default:
@@ -529,6 +611,10 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
                 break;
             case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
                 parameterType = tr("algebraic");
+
+                break;
+            case CellMLSupport::CellmlFileRuntimeParameter::Data:
+                parameterType = tr("data");
 
                 break;
             default:

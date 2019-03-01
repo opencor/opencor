@@ -80,6 +80,7 @@ namespace Core {
 
 namespace DataStore {
     class DataStoreExportData;
+    class DataStoreImportData;
 }   // namespace DataStore
 
 //==============================================================================
@@ -140,6 +141,7 @@ public:
 
     QIcon fileTabIcon() const;
 
+    bool import(const QString &pFileName, bool pShowWarning = true);
     bool save(const QString &pFileName);
 
     void filePermissionsChanged();
@@ -163,6 +165,11 @@ public:
                                  quint64 pSimulationResultsSize, Task pTask);
 
     void resetSimulationProgress();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *pEvent) override;
+    void dragMoveEvent(QDragMoveEvent *pEvent) override;
+    void dropEvent(QDropEvent *pEvent) override;
 
 private:
     enum ErrorType {
@@ -207,6 +214,9 @@ private:
     QAction *mSedmlExportAction;
     QAction *mSedmlExportSedmlFileAction;
     QAction *mSedmlExportCombineArchiveAction;
+    QAction *mDataImportAction;
+    QAction *mLocalDataImportAction;
+    QAction *mRemoteDataImportAction;
     QAction *mSimulationResultsExportAction;
     QAction *mPreferencesAction;
 
@@ -230,10 +240,10 @@ private:
     GraphPanelWidget::GraphPanelPlotWidgets mPlots;
     QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool> mUpdatablePlotViewports;
 
-    QStringList mSimulationProperties;
-    QStringList mSolversProperties;
-    QMap<Core::PropertyEditorWidget *, QStringList> mGraphPanelProperties;
-    QMap<Core::PropertyEditorWidget *, QStringList> mGraphsProperties;
+    QVariantList mSimulationProperties;
+    QVariantList mSolversProperties;
+    QMap<Core::PropertyEditorWidget *, QVariantList> mGraphPanelProperties;
+    QMap<Core::PropertyEditorWidget *, QVariantList> mGraphsProperties;
 
     bool mSimulationPropertiesModified;
     bool mSolversPropertiesModified;
@@ -248,6 +258,8 @@ private:
     bool mNeedUpdatePlots;
 
     QMap<GraphPanelWidget::GraphPanelPlotGraph *, quint64> mOldDataSizes;
+
+    QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
     void output(const QString &pMessage);
 
@@ -282,6 +294,8 @@ private:
     CellMLSupport::CellmlFileRuntimeParameter * runtimeParameter(libsedml::SedVariable *pSedmlVariable,
                                                                  QString &pCellmlComponent,
                                                                  QString &pCellmlVariable);
+    bool isRuntimeDataParameter(const QString &pComponent,
+                                const QString &pVariable);
 
     bool furtherInitialize();
     void initializeGui(bool pValidSimulationEnvironment);
@@ -304,20 +318,24 @@ private:
     bool createSedmlFile(SEDMLSupport::SedmlFile *pSedmlFile,
                          const QString &pFileName, const QString &pModelSource);
 
-    QStringList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
+    QVariantList allPropertyValues(Core::PropertyEditorWidget *pPropertyEditor) const;
 
-    void updateFileModifiedStatus();
+    void updateSedmlFileOrCombineArchiveModifiedStatus();
 
     void simulationError(const QString &pMessage, ErrorType pErrorType);
 
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
 
+    void dataImport(const QStringList &pFileNames);
+
 signals:
     void splitterMoved(const QIntList &pSizes);
 
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
+
+    void importDone();
 
 private slots:
     void runPauseResumeSimulation();
@@ -335,6 +353,9 @@ private slots:
     void preferences();
 
     void emitSplitterMoved();
+
+    void localDataImport();
+    void remoteDataImport();
 
     void simulationResultsExport();
 
@@ -372,6 +393,11 @@ private slots:
     void openCellmlFile();
 
     void plotAxesChanged();
+
+    void dataStoreImportProgress(DataStore::DataStoreImportData *pImportData,
+                                 double pProgress);
+    void dataStoreImportDone(DataStore::DataStoreImportData *pImportData,
+                             const QString &pErrorMessage);
 
     void dataStoreExportProgress(DataStore::DataStoreExportData *pDataStoreData,
                                  double pProgress);

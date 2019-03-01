@@ -60,6 +60,17 @@ SampleViewPlugin::SampleViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool SampleViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SampleViewPlugin::saveFile(const QString &pOldFileName,
                                 const QString &pNewFileName,
                                 bool &pNeedFeedback)
@@ -215,7 +226,7 @@ void SampleViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void SampleViewPlugin::loadSettings(QSettings *pSettings)
+void SampleViewPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -224,7 +235,7 @@ void SampleViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void SampleViewPlugin::saveSettings(QSettings *pSettings) const
+void SampleViewPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

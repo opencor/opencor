@@ -170,26 +170,26 @@ static const auto SettingsMathmlViewerWidgetDigitGroupingEnabled    = QStringLit
 
 //==============================================================================
 
-void MathmlViewerWidget::loadSettings(QSettings *pSettings)
+void MathmlViewerWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve our settings
 
-    setOptimizeFontSize(pSettings->value(SettingsMathmlViewerWidgetOptimizeFontSizeEnabled, true).toBool());
-    setSubscripts(pSettings->value(SettingsMathmlViewerWidgetSubscriptsEnabled, true).toBool());
-    setGreekSymbols(pSettings->value(SettingsMathmlViewerWidgetGreekSymbolsEnabled, true).toBool());
-    setDigitGrouping(pSettings->value(SettingsMathmlViewerWidgetDigitGroupingEnabled, true).toBool());
+    setOptimizeFontSize(pSettings.value(SettingsMathmlViewerWidgetOptimizeFontSizeEnabled, true).toBool());
+    setSubscripts(pSettings.value(SettingsMathmlViewerWidgetSubscriptsEnabled, true).toBool());
+    setGreekSymbols(pSettings.value(SettingsMathmlViewerWidgetGreekSymbolsEnabled, true).toBool());
+    setDigitGrouping(pSettings.value(SettingsMathmlViewerWidgetDigitGroupingEnabled, true).toBool());
 }
 
 //==============================================================================
 
-void MathmlViewerWidget::saveSettings(QSettings *pSettings) const
+void MathmlViewerWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our settings
 
-    pSettings->setValue(SettingsMathmlViewerWidgetOptimizeFontSizeEnabled, optimizeFontSize());
-    pSettings->setValue(SettingsMathmlViewerWidgetSubscriptsEnabled, subscripts());
-    pSettings->setValue(SettingsMathmlViewerWidgetGreekSymbolsEnabled, greekSymbols());
-    pSettings->setValue(SettingsMathmlViewerWidgetDigitGroupingEnabled, digitGrouping());
+    pSettings.setValue(SettingsMathmlViewerWidgetOptimizeFontSizeEnabled, optimizeFontSize());
+    pSettings.setValue(SettingsMathmlViewerWidgetSubscriptsEnabled, subscripts());
+    pSettings.setValue(SettingsMathmlViewerWidgetGreekSymbolsEnabled, greekSymbols());
+    pSettings.setValue(SettingsMathmlViewerWidgetDigitGroupingEnabled, digitGrouping());
 }
 
 //==============================================================================

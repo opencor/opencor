@@ -32,9 +32,11 @@ namespace Core {
 //==============================================================================
 
 InterfacesData::InterfacesData(const FileTypeInterfaces &pFileTypeInterfaces,
+                               const FileTypeInterfaces &pDataStoreFileTypeInterfaces,
                                const SolverInterfaces &pSolverInterfaces,
                                const DataStoreInterfaces &pDataStoreInterfaces) :
     mFileTypeInterfaces(pFileTypeInterfaces),
+    mDataStoreFileTypeInterfaces(pDataStoreFileTypeInterfaces),
     mSolverInterfaces(pSolverInterfaces),
     mDataStoreInterfaces(pDataStoreInterfaces)
 {
@@ -47,6 +49,15 @@ FileTypeInterfaces InterfacesData::fileTypeInterfaces() const
     // Return our file type interfaces
 
     return mFileTypeInterfaces;
+}
+
+//==============================================================================
+
+FileTypeInterfaces InterfacesData::dataStoreFileTypeInterfaces() const
+{
+    // Return our data store file type interfaces
+
+    return mDataStoreFileTypeInterfaces;
 }
 
 //==============================================================================
@@ -78,6 +89,15 @@ FileTypeInterfaces fileTypeInterfaces()
 
 //==============================================================================
 
+FileTypeInterfaces dataStoreFileTypeInterfaces()
+{
+    // Return our data store file type interfaces
+
+    return static_cast<InterfacesData *>(globalInstance(InterfacesDataSignature))->dataStoreFileTypeInterfaces();
+}
+
+//==============================================================================
+
 SolverInterfaces solverInterfaces()
 {
     // Return our solver interfaces
@@ -92,6 +112,26 @@ DataStoreInterfaces dataStoreInterfaces()
     // Return our data store interfaces
 
     return static_cast<InterfacesData *>(globalInstance(InterfacesDataSignature))->dataStoreInterfaces();
+}
+
+//==============================================================================
+
+FileTypeInterface * fileTypeInterface(DataStoreInterface *pDataStoreInterface)
+{
+    // Return the file type interface corresponding to the given data store
+    // interface
+
+    return dataStoreFileTypeInterfaces()[dataStoreInterfaces().indexOf(pDataStoreInterface)];
+}
+
+//==============================================================================
+
+DataStoreInterface * dataStoreInterface(FileTypeInterface *pFileTypeInterface)
+{
+    // Return the data store interface corresponding to the given file type
+    // interface
+
+    return dataStoreInterfaces()[dataStoreFileTypeInterfaces().indexOf(pFileTypeInterface)];
 }
 
 //==============================================================================

@@ -182,8 +182,8 @@ HelpWindowWidget::~HelpWindowWidget()
 
     // Delete the help files
 
-    QFile(mQchFileName).remove();
-    QFile(mQhcFileName).remove();
+    QFile::remove(mQchFileName);
+    QFile::remove(mQhcFileName);
 }
 
 //==============================================================================
@@ -199,7 +199,7 @@ void HelpWindowWidget::retranslateUi()
 
 //==============================================================================
 
-void HelpWindowWidget::loadSettings(QSettings *pSettings)
+void HelpWindowWidget::loadSettings(QSettings &pSettings)
 {
     // Default handling of the event
 
@@ -208,7 +208,7 @@ void HelpWindowWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void HelpWindowWidget::saveSettings(QSettings *pSettings) const
+void HelpWindowWidget::saveSettings(QSettings &pSettings) const
 {
     // Default handling of the event
 

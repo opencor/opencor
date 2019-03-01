@@ -24,13 +24,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "biosignalmldatastoredata.h"
 #include "biosignalmldatastoredialog.h"
 #include "biosignalmldatastoreexporter.h"
+#include "biosignalmldatastoreimporter.h"
 #include "biosignalmldatastoreplugin.h"
+#include "biosignalmlinterface.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 
 //==============================================================================
 
 #include <QMainWindow>
+
+//==============================================================================
+
+#include "biosignalml/data/hdf5.h"
 
 //==============================================================================
 
@@ -52,6 +58,17 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo()
 }
 
 //==============================================================================
+
+BioSignalMLDataStorePlugin::BioSignalMLDataStorePlugin()
+{
+    // Keep track of our file type interface
+
+    static BiosignalmlInterfaceData data(qobject_cast<FileTypeInterface *>(this));
+
+    Core::globalInstance(BiosignalmlInterfaceDataSignature, &data);
+}
+
+//==============================================================================
 // Data store interface
 //==============================================================================
 
@@ -60,6 +77,36 @@ QString BioSignalMLDataStorePlugin::dataStoreName() const
     // Return the name of the data store
 
     return "BioSignalML";
+}
+
+//==============================================================================
+
+DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const QString &pFileName,
+                                                                           DataStore::DataStore *pImportDataStore,
+                                                                           DataStore::DataStore *pResultsDataStore,
+                                                                           const QList<quint64> &pRunSizes) const
+{
+    // Determine the number of variables in our BioSignalML file
+
+    DataStore::DataStoreImportData *res = nullptr;
+
+    try {
+        bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(pFileName.toStdString(), true);
+        res = new DataStore::DataStoreImportData(pFileName, pImportDataStore,
+                                                 pResultsDataStore,
+                                                 int(recording->get_signal_uris().size()),
+                                                 recording->get_clock(recording->get_clock_uris().front())->read().size(),
+                                                 pRunSizes);
+
+        recording->close();
+
+        delete recording;
+    } catch (...) {
+    }
+
+    // Return some information about the data we want to import
+
+    return res;
 }
 
 //==============================================================================
@@ -76,11 +123,12 @@ DataStore::DataStoreExportData * BioSignalMLDataStorePlugin::getExportData(const
         // Now that we have the information we need, we can ask for the name of
         // the BioSignalML file where to do the export
 
-        QString biosignalmlFilter = tr("BioSignalML File")+" (*.biosignalml)";
+        QStringList biosignalmlFilters = Core::filters(FileTypeInterfaces() << fileTypeInterface());
+        QString firstBiosignalmlFilter = biosignalmlFilters.first();
         QString fileName = Core::getSaveFileName(tr("Export To BioSignalML"),
-                                                 Core::newFileName(pFileName, tr("Data"), false, "biosignalml"),
-                                                 QStringList() << biosignalmlFilter,
-                                                 &biosignalmlFilter);
+                                                 Core::newFileName(pFileName, tr("Data"), false, BiosignalmlFileExtension),
+                                                 biosignalmlFilters,
+                                                 &firstBiosignalmlFilter);
 
         if (!fileName.isEmpty()) {
             return new BiosignalmlDataStoreData(fileName,
@@ -100,6 +148,18 @@ DataStore::DataStoreExportData * BioSignalMLDataStorePlugin::getExportData(const
 
 //==============================================================================
 
+DataStore::DataStoreImporter * BioSignalMLDataStorePlugin::dataStoreImporterInstance() const
+{
+    // Return the 'global' instance of our BioSignalML data store importer
+
+    static BiosignalmlDataStoreImporter instance;
+
+    return static_cast<BiosignalmlDataStoreImporter *>(Core::globalInstance("OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreImporter::instance()",
+                                                                            &instance));
+}
+
+//==============================================================================
+
 DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::dataStoreExporterInstance() const
 {
     // Return the 'global' instance of our BioSignalML data store exporter
@@ -108,6 +168,69 @@ DataStore::DataStoreExporter * BioSignalMLDataStorePlugin::dataStoreExporterInst
 
     return static_cast<BiosignalmlDataStoreExporter *>(Core::globalInstance("OpenCOR::BioSignalMLDataStore::BiosignalmlDataStoreExporter::instance()",
                                                                             &instance));
+}
+
+//==============================================================================
+// File interface
+//==============================================================================
+
+bool BioSignalMLDataStorePlugin::isFile(const QString &pFileName) const
+{
+    // Return whether the given file is of the type that we support
+
+    bsml::HDF5::Recording *recording = nullptr;
+
+    try {
+        recording = new bsml::HDF5::Recording(pFileName.toStdString(), true);
+    } catch (...) {
+        // Something went wrong, so clearly not a BioSignalML file
+
+        return false;
+    }
+
+    if (recording) {
+        recording->close();
+
+        delete recording;
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+QString BioSignalMLDataStorePlugin::mimeType() const
+{
+    // Return the MIME type we support
+
+    return BiosignalmlMimeType;
+}
+
+//==============================================================================
+
+QString BioSignalMLDataStorePlugin::fileExtension() const
+{
+    // Return the extension of the type of file we support
+
+    return BiosignalmlFileExtension;
+}
+
+//==============================================================================
+
+QString BioSignalMLDataStorePlugin::fileTypeDescription() const
+{
+    // Return the description of the type of file we support
+
+    return tr("BioSignalML File");
+}
+
+//==============================================================================
+
+QStringList BioSignalMLDataStorePlugin::fileTypeDefaultViews() const
+{
+    // Return the default views to use for the type of file we support
+
+    return QStringList();
 }
 
 //==============================================================================

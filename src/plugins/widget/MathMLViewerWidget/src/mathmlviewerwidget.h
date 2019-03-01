@@ -56,8 +56,8 @@ class MATHMLVIEWERWIDGET_EXPORT MathmlViewerWidget : public Core::Widget
 public:
     explicit MathmlViewerWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
 

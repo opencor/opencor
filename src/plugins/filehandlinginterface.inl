@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     // Note: make sure to update fileHandlingInterfaceVersion() whenever you
     //       update this interface...
 
+    virtual bool importFile(const QString &pFileName) PURE;
     virtual bool saveFile(const QString &pOldFileName,
                           const QString &pNewFileName,
                           bool &pNeedFeedback) PURE;

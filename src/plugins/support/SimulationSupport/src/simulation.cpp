@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "combinefilemanager.h"
+#include "filemanager.h"
 #include "interfaces.h"
 #include "sedmlfilemanager.h"
 #include "simulation.h"
@@ -31,11 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QtMath>
-
-//==============================================================================
-
-#include <QEventLoop>
 #include <QThread>
 
 //==============================================================================
@@ -72,7 +68,8 @@ SimulationData::SimulationData(Simulation *pSimulation) :
     mDaeSolverName(QString()),
     mDaeSolverProperties(Solver::Solver::Properties()),
     mNlaSolverName(QString()),
-    mNlaSolverProperties(Solver::Solver::Properties())
+    mNlaSolverProperties(Solver::Solver::Properties()),
+    mData(QMap<DataStore::DataStore *, double *>())
 {
     // Create our various arrays
 
@@ -132,6 +129,24 @@ double * SimulationData::algebraic() const
     // Return our algebraic array
 
     return mAlgebraic;
+}
+
+//==============================================================================
+
+double * SimulationData::data(DataStore::DataStore *pDataStore) const
+{
+    // Return our corresponding data array
+
+    return mData.value(pDataStore);
+}
+
+//==============================================================================
+
+void SimulationData::importData(DataStore::DataStoreImportData *pImportData)
+{
+    // Associate an array of doubles to the given data store
+
+    mData.insert(pImportData->importDataStore(), pImportData->resultsValues());
 }
 
 //==============================================================================
@@ -406,10 +421,8 @@ void SimulationData::reset(bool pInitialize, bool pAll)
 
     // Keep track of our various initial values
 
-    if (pInitialize) {
-        memcpy(mInitialConstants, mConstants, size_t(runtime->constantsCount()*Solver::SizeOfDouble));
-        memcpy(mInitialStates, mStates, size_t(runtime->statesCount()*Solver::SizeOfDouble));
-    }
+    if (pInitialize)
+        updateInitialValues();
 
     // Use our "current" constants, if needed
 
@@ -432,8 +445,8 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         Solver::unsetNlaSolver(runtime->address());
     }
 
-    // Let people know whether our data is 'cleaned', i.e. not modified, and ask
-    // our simulation worker to reset itself
+    // Let people know whether our data is clean, i.e. not modified, and ask our
+    // simulation worker to reset itself
 
     if (!pInitialize) {
         emit modified(isModified());
@@ -441,6 +454,16 @@ void SimulationData::reset(bool pInitialize, bool pAll)
         if (mSimulation->worker())
             mSimulation->worker()->reset();
     }
+}
+
+//==============================================================================
+
+void SimulationData::updateInitialValues()
+{
+    // Update our initial constants and states
+
+    memcpy(mInitialConstants, mConstants, size_t(mSimulation->runtime()->constantsCount()*Solver::SizeOfDouble));
+    memcpy(mInitialStates, mStates, size_t(mSimulation->runtime()->statesCount()*Solver::SizeOfDouble));
 }
 
 //==============================================================================
@@ -559,6 +582,11 @@ void SimulationData::deleteArrays()
 {
     // Delete our various arrays
 
+    for (auto data : mData.values())
+        delete[] data;
+
+    mData.clear();
+
     delete[] mConstants;
     delete[] mRates;
     delete[] mStates;
@@ -578,7 +606,9 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mConstants(DataStore::DataStoreVariables()),
     mRates(DataStore::DataStoreVariables()),
     mStates(DataStore::DataStoreVariables()),
-    mAlgebraic(DataStore::DataStoreVariables())
+    mAlgebraic(DataStore::DataStoreVariables()),
+    mData(QMap<double *, DataStore::DataStoreVariables>()),
+    mDataDataStores(QMap<double *, DataStore::DataStore *>())
 {
     // Create our data store
 
@@ -621,7 +651,7 @@ void SimulationResults::createDataStore()
 
     SimulationData *data = mSimulation->data();
 
-    mDataStore = new DataStore::DataStore(runtime->cellmlFile()->xmlBase());
+    mDataStore = new DataStore::DataStore(mSimulation->cellmlFile()->xmlBase());
 
     mPoints = mDataStore->voi();
 
@@ -675,6 +705,27 @@ void SimulationResults::createDataStore()
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
         }
     }
+
+    // Reimport our data, if any, and update their array so that it contains the
+    // computed values for our start point
+
+    for (auto data : mDataDataStores.keys()) {
+        DataStore::DataStore *importDataStore = mDataDataStores.value(data);
+        DataStore::DataStoreVariables variables = mDataStore->addVariables(data, importDataStore->variables().count());
+
+        mData.insert(data, variables);
+
+        DataStore::DataStoreVariable *importVoi = importDataStore->voi();
+        DataStore::DataStoreVariables importVariables = importDataStore->variables();
+
+        for (int i = 0, iMax = importVariables.count(); i < iMax; ++i)
+            data[i] = realValue(mSimulation->currentPoint(), importVoi, importVariables[i]);
+    }
+
+    // Let people know that our (imported) data, if any, has been updated
+
+    if (mDataDataStores.count())
+        emit data->updated(mSimulation->currentPoint());
 }
 
 //==============================================================================
@@ -696,13 +747,19 @@ void SimulationResults::deleteDataStore()
     mRates = DataStore::DataStoreVariables();
     mStates = DataStore::DataStoreVariables();
     mAlgebraic = DataStore::DataStoreVariables();
+
+    mData.clear();
 }
 
 //==============================================================================
 
 void SimulationResults::reload()
 {
-    // Reload ourselves by resetting ourselves
+    // Reload ourselves by resetting ourselves, this after having cleared all of
+    // our imported data stores (since we don't keep track of imported data when
+    // reloading a file)
+
+    mDataDataStores.clear();
 
     reset();
 }
@@ -715,6 +772,76 @@ void SimulationResults::reset()
 
     deleteDataStore();
     createDataStore();
+}
+
+//==============================================================================
+
+void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
+{
+    // Make sure that we have a runtime and a VOI
+
+    CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
+
+    if (!runtime || !runtime->voi())
+        return;
+
+    // Ask our data and results objects to import the given data
+
+    DataStore::DataStore *importDataStore = pImportData->importDataStore();
+    double *resultsValues = pImportData->resultsValues();
+    DataStore::DataStoreVariables resultsVariables = pImportData->resultsVariables();
+
+    mData.insert(resultsValues, resultsVariables);
+    mDataDataStores.insert(resultsValues, importDataStore);
+
+    // Customise our imported data
+
+    for (auto parameter : runtime->dataParameters(resultsValues)) {
+        DataStore::DataStoreVariable *variable = mData.value(parameter->data())[parameter->index()];
+
+        variable->setType(parameter->type());
+        variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
+        variable->setLabel(parameter->formattedName());
+        variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
+    }
+
+    // Compute the values of our imported data, so we can plot it straightaway
+    // along our other simulation results, if any
+
+    int runsCount = pImportData->runSizes().count();
+    DataStore::DataStoreVariable *importVoi = importDataStore->voi();
+    DataStore::DataStoreVariables importVariables = pImportData->importVariables();
+
+    if (runsCount) {
+        DataStore::DataStoreVariable *resultsVoi = pImportData->resultsDataStore()->voi();
+
+        for (int i = 0; i < runsCount; ++i) {
+            // Add the value of our imported data to our the corresponding run
+
+            double *voiValues = resultsVoi->values(i);
+
+            for (quint64 j = 0, jMax = resultsVoi->size(i); j < jMax; ++j) {
+                double realPoint = SimulationResults::realPoint(voiValues[j], i);
+
+                for (int k = 0, kMax = resultsVariables.count(); k < kMax; ++k)
+                    resultsVariables[k]->addValue(realValue(realPoint, importVoi, importVariables[k]), i);
+            }
+        }
+
+        // Update our imported data array so that it contains our latest
+        // computed values
+
+        quint64 lastPosition = size()-1;
+
+        for (int i = 0, iMax = resultsVariables.count(); i < iMax; ++i)
+            resultsValues[i] = resultsVariables[i]->value(lastPosition);
+    } else {
+        // There are no runs, so update our imported data array so that it
+        // contains the computed values for our start point
+
+        for (int i = 0, iMax = importVariables.count(); i < iMax; ++i)
+            resultsValues[i] = realValue(mSimulation->currentPoint(), importVoi, importVariables[i]);
+    }
 }
 
 //==============================================================================
@@ -744,11 +871,91 @@ bool SimulationResults::addRun()
 
 //==============================================================================
 
+double SimulationResults::realPoint(double pPoint, int pRun) const
+{
+    // Determine the real value of the given point, if we didn't have several
+    // runs, but only one
+
+    double res = 0.0;
+
+    for (int i = 0, iMax = (pRun == -1)?runsCount()-1:pRun; i < iMax; ++i) {
+        if (mDataStore->voi()->size(i))
+            res += mDataStore->voi()->value(mDataStore->voi()->size(i)-1, i);
+    }
+
+    res += pPoint;
+
+    return res;
+}
+
+//==============================================================================
+
+double SimulationResults::realValue(double pPoint,
+                                    DataStore::DataStoreVariable *pVoi,
+                                    DataStore::DataStoreVariable *pVariable) const
+{
+    // Return the value of the given variable at the given point, doing a linear
+    // interpolation, if needed
+
+    quint64 first = 0;
+    quint64 last = pVoi->size()-1;
+
+    if (   (pPoint < pVoi->value(first))
+        || (pPoint > pVoi->value(last))) {
+        return qQNaN();
+    } else {
+        quint64 middle = 0;
+        double middleVoiValue = 0.0;
+
+        while (first <= last) {
+            middle = (first+last) >> 1;
+            middleVoiValue = pVoi->value(middle);
+
+            if (middleVoiValue < pPoint)
+                first = middle+1;
+            else if (middleVoiValue > pPoint)
+                last = middle-1;
+            else
+                break;
+        }
+
+        if (middleVoiValue < pPoint) {
+            double afterVoiValue = pVoi->value(middle+1);
+            double afterDataValue = pVariable->value(middle+1);
+
+            return afterDataValue-(afterVoiValue-pPoint)*(afterDataValue-pVariable->value(middle))/(afterVoiValue-middleVoiValue);
+        } else if (middleVoiValue > pPoint) {
+            double beforeVoiValue = pVoi->value(middle-1);
+            double beforeDataValue = pVariable->value(middle-1);
+
+            return beforeDataValue+(pPoint-beforeVoiValue)*(pVariable->value(middle)-beforeDataValue)/(middleVoiValue-beforeVoiValue);
+        } else {
+            return pVariable->value(middle);
+        }
+    }
+}
+
+//==============================================================================
+
 void SimulationResults::addPoint(double pPoint)
 {
     // Make sure that all our variables are up to date
 
     mSimulation->data()->recomputeVariables(pPoint);
+
+    // Make sure that we have the correct imported data values for the given
+    // point, keeping in mind that we may have several runs
+
+    double realPoint = SimulationResults::realPoint(pPoint);
+
+    for (auto data : mDataDataStores.keys()) {
+        DataStore::DataStore *dataStore = mDataDataStores.value(data);
+        DataStore::DataStoreVariable *voi = dataStore->voi();
+        DataStore::DataStoreVariables variables = dataStore->variables();
+
+        for (int i = 0, iMax = variables.count(); i < iMax; ++i)
+            data[i] = realValue(realPoint, voi, variables[i]);
+    }
 
     // Now that we are all set, we can add the data to our data store
 
@@ -820,6 +1027,49 @@ double * SimulationResults::algebraic(int pIndex, int pRun) const
 
 //==============================================================================
 
+double * SimulationResults::data(double *pData, int pIndex, int pRun) const
+{
+    // Return our algebraic data at the given index and for the given run
+
+    DataStore::DataStoreVariables data = mData.value(pData);
+
+    return data.isEmpty()?nullptr:data[pIndex]->values(pRun);
+}
+
+//==============================================================================
+
+SimulationImportData::SimulationImportData(Simulation *pSimulation) :
+    SimulationObject(pSimulation),
+    mDataStores(QList<DataStore::DataStore *>())
+{
+}
+
+//==============================================================================
+
+SimulationImportData::~SimulationImportData()
+{
+    // Delete some internal objects
+
+    for (auto dataStore : mDataStores)
+        delete dataStore;
+}
+
+//==============================================================================
+
+DataStore::DataStore * SimulationImportData::addDataStore()
+{
+    // Add a data store to our list and return it
+
+    DataStore::DataStore *dataStore = new DataStore::DataStore();
+
+    if (dataStore)
+        mDataStores << dataStore;
+
+    return dataStore;
+}
+
+//==============================================================================
+
 Simulation::Simulation(const QString &pFileName) :
     mFileName(pFileName),
     mRuntime(nullptr),
@@ -833,11 +1083,17 @@ Simulation::Simulation(const QString &pFileName) :
 
     mData = new SimulationData(this);
     mResults = new SimulationResults(this);
+    mImportData = new SimulationImportData(this);
 
     // Keep track of any error occurring in our data
 
     connect(mData, &SimulationData::error,
             this, &Simulation::error);
+
+    // Keep track of files being managed
+
+    connect(Core::FileManager::instance(), &Core::FileManager::fileManaged,
+            this, &Simulation::fileManaged);
 }
 
 //==============================================================================
@@ -852,6 +1108,7 @@ Simulation::~Simulation()
 
     delete mRuntime;
 
+    delete mImportData;
     delete mResults;
     delete mData;
 }
@@ -882,12 +1139,17 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     if (mSedmlFile)
         mCellmlFile = mSedmlFile->cellmlFile();
 
-    // Get a (new) runtime, if possible
+    // Get a (new) runtime or update it, if possible
+    // Note: updating our runtime is essential when saving a file under a new
+    //       name...
 
     if (pRecreateRuntime) {
         delete mRuntime;
 
         mRuntime = mCellmlFile?mCellmlFile->runtime(true):nullptr;
+    } else {
+        if (mCellmlFile)
+            mRuntime->update(mCellmlFile, false);
     }
 }
 
@@ -919,6 +1181,14 @@ void Simulation::save()
         mData->reload();
         mResults->reload();
     }
+
+    // Make sure that our initial values are up to date and check for
+    // modifications (which results in people being told that there are no
+    // modifications, meaning that a view like the Simulation Experiment view
+    // will disable its reset buttons)
+
+    mData->updateInitialValues();
+    mData->checkForModifications();
 }
 
 //==============================================================================
@@ -1024,11 +1294,52 @@ SimulationResults * Simulation::results() const
 
 //==============================================================================
 
+SimulationImportData * Simulation::importData() const
+{
+    // Return our imported data
+
+    return mImportData;
+}
+
+//==============================================================================
+
+void Simulation::importData(DataStore::DataStoreImportData *pImportData)
+{
+    // Make sure that we have a runtime
+
+    if (!mRuntime)
+        return;
+
+    // Ask our data and results objects to import the given data
+
+    mData->importData(pImportData);
+    mResults->importData(pImportData);
+
+    // Ask our runtime to import the given data
+
+    QStringList hierarchy = pImportData->hierarchy();
+    double *resultsValues = pImportData->resultsValues();
+
+    for (int i = 0, iMax = pImportData->nbOfVariables(); i < iMax; ++i)
+        mRuntime->importData(QString("data_%1").arg(i+1), hierarchy, i, resultsValues);
+}
+
+//==============================================================================
+
 int Simulation::runsCount() const
 {
     // Return the number of runs held by our results
 
     return mResults?mResults->runsCount():0;
+}
+
+//==============================================================================
+
+quint64 Simulation::runSize(int pRun) const
+{
+    // Return the size of the data store for the given run
+
+    return mResults?mResults->size(pRun):0;
 }
 
 //==============================================================================
@@ -1208,6 +1519,19 @@ void Simulation::reset(bool pAll)
 
     if (mWorker)
         mWorker->reset();
+}
+
+//==============================================================================
+
+void Simulation::fileManaged(const QString &pFileName)
+{
+    // A file is being managed, so update our internals by retrieving our file
+    // details, if we are that file
+    // Note: this will happen when saving a file under a new name, in which case
+    //       we need to update our internals...
+
+    if (!pFileName.compare(mFileName))
+        retrieveFileDetails(false);
 }
 
 //==============================================================================
