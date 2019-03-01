@@ -163,8 +163,12 @@ void CommonWidget::hideBusyWidget(bool pForceHiding)
 
     // Enable ourselves (or OpenCOR itself in case we are the central widget)
     // and hide our busy widget by deleting it
+    // Note: we call QCoreApplication::processEvents() in case we have a
+    //       progress busy widget, so that we can see its final state...
 
     if (--mCounter == 0) {
+        QCoreApplication::processEvents();
+
         if (mParent == centralWidget())
             mainWindow()->setEnabled(true);
         else
