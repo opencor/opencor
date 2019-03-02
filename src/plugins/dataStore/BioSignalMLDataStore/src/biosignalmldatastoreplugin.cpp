@@ -92,6 +92,7 @@ DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const
 
     try {
         bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(pFileName.toStdString(), true);
+
         res = new DataStore::DataStoreImportData(pFileName, pImportDataStore,
                                                  pResultsDataStore,
                                                  int(recording->get_signal_uris().size()),
@@ -182,16 +183,14 @@ bool BioSignalMLDataStorePlugin::isFile(const QString &pFileName) const
 
     try {
         recording = new bsml::HDF5::Recording(pFileName.toStdString(), true);
+
+        recording->close();
+
+        delete recording;
     } catch (...) {
         // Something went wrong, so clearly not a BioSignalML file
 
         return false;
-    }
-
-    if (recording) {
-        recording->close();
-
-        delete recording;
     }
 
     return true;
