@@ -182,14 +182,17 @@ bool CSVDataStorePlugin::isFile(const QString &pFileName) const
     // Return whether the given file is of the type that we support
 
     QFile file(pFileName);
+    int nbOfFields = 0;
+    int nbOfLines = 0;
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         QTextStream in(&file);
         bool emptyLine = false;
         bool needNbOfFields = true;
-        int nbOfFields = 0;
 
         while (!in.atEnd()) {
+            ++nbOfLines;
+
             QString line = in.readLine().trimmed();
 
             if (line.isEmpty()) {
@@ -197,13 +200,13 @@ bool CSVDataStorePlugin::isFile(const QString &pFileName) const
                 // line of the file
 
                 if (emptyLine)
-                    return false;
+                    break;
                 else
                     emptyLine = true;
             } else if (line.endsWith(",")) {
                 // The line ends with a comma, which is not allowed
 
-                return false;
+                break;
             } else {
                 // Make sure that the line has the same number of fields (and at
                 // least two of them) as the other lines (with the fields being
@@ -215,21 +218,23 @@ bool CSVDataStorePlugin::isFile(const QString &pFileName) const
                     nbOfFields = crtNbOfFields;
 
                     if (nbOfFields == 1)
-                        return false;
+                        break;
 
                     needNbOfFields = false;
                 } else if (crtNbOfFields != nbOfFields) {
-                    return false;
+                    break;
                 }
             }
         }
 
         file.close();
-
-        return true;
-    } else {
-        return false;
     }
+
+    // We currently assume a CSV file to have both a header and some VOI data,
+    // so consider the given file to be a CSV file if it has more than one line
+    // and one field
+
+    return (nbOfLines > 1) && (nbOfFields > 1);
 }
 
 //==============================================================================
