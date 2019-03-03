@@ -751,27 +751,20 @@ QString SimulationExperimentViewSimulationWidget::styledOutput()
     // Return a styled version of our output
 
     static const QString DefaultOutputMessage = "<style>"
-                                                "    body {"
+                                                "    span.good {"
                                                 "        color: %1;"
                                                 "    }"
                                                 ""
-                                                "    span.good {"
-                                                "        background-color: %2;"
-                                                "        color: %3;"
-                                                "    }"
-                                                ""
                                                 "    span.info {"
-                                                "        background-color: %4;"
-                                                "        color: %5;"
+                                                "        color: %2;"
                                                 "    }"
                                                 ""
                                                 "    span.bad {"
-                                                "        background-color: %6;"
-                                                "        color: %7;"
+                                                "        color: %3;"
                                                 "    }"
                                                 "</style>"
                                                 "<body>"
-                                                "    %8"
+                                                "    %4"
                                                 "</body>";
 
     if (isEnabled()) {
@@ -779,22 +772,12 @@ QString SimulationExperimentViewSimulationWidget::styledOutput()
         static const QString GreenColor = QColor(Qt::darkGreen).name();
         static const QString BlueColor  = QColor(Qt::darkBlue).name();
 
-        QString windowTextColor = Core::windowTextColor().name();
-        QString baseColor = Core::baseColor().name();
-
-        return DefaultOutputMessage.arg(windowTextColor,
-                                        baseColor, GreenColor,
-                                        baseColor, BlueColor,
-                                        baseColor, RedColor,
+        return DefaultOutputMessage.arg(GreenColor, BlueColor, RedColor,
                                         mOutputMessage);
     } else {
-        QString windowTextColor = Core::windowTextColor(QPalette::Disabled).name();
-        QString baseColor = Core::baseColor(QPalette::Disabled).name();
+        QString windowTextColor = Core::windowTextColor(QPalette::Disabled).name(QColor::HexArgb);
 
-        return DefaultOutputMessage.arg(windowTextColor,
-                                        baseColor, windowTextColor,
-                                        baseColor, windowTextColor,
-                                        baseColor, windowTextColor,
+        return DefaultOutputMessage.arg(windowTextColor, windowTextColor, windowTextColor,
                                         mOutputMessage);
     }
 }
