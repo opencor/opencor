@@ -1168,7 +1168,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     pPainter->fillRect(coordinatesRect, pBackgroundColor);
 
-    // Draw the text for the coordinates, using a white pen
+    // Draw the text for the coordinates
 
     pen.setColor(pForegroundColor);
 
