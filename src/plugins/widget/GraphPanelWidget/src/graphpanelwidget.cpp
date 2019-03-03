@@ -175,7 +175,7 @@ void GraphPanelWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
-    Widget::changeEvent(pEvent);
+    Core::Widget::changeEvent(pEvent);
 
     // Check whether the palette or our enabled state has changed and if so then
     // update the colour used to highlight the active graph panel
