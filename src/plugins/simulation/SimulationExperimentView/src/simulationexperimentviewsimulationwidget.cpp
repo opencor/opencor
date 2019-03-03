@@ -60,6 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QMimeData>
 #include <QScreen>
+#include <QScrollBar>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
@@ -108,6 +109,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mProgress(-1),
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
+    mOutputMessage(QString()),
     mErrorType(General),
     mValidSimulationEnvironment(false),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
@@ -654,6 +656,29 @@ void SimulationExperimentViewSimulationWidget::retranslateUi()
 
 //==============================================================================
 
+void SimulationExperimentViewSimulationWidget::changeEvent(QEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::Widget::changeEvent(pEvent);
+
+    // Check whether we are becoming enabled/disabled, in which case we want to
+    // update our output widget while keeping its scrollbars, if any, still at
+    // the same position
+
+    if (pEvent->type() == QEvent::EnabledChange) {
+        int horizontalSliderPosition = mOutputWidget->horizontalScrollBar()->sliderPosition();
+        int verticalSliderPosition = mOutputWidget->verticalScrollBar()->sliderPosition();
+
+        mOutputWidget->setHtml(styledOutput());
+
+        mOutputWidget->horizontalScrollBar()->setSliderPosition(horizontalSliderPosition);
+        mOutputWidget->verticalScrollBar()->setSliderPosition(verticalSliderPosition);
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if it refers to one or
@@ -721,18 +746,70 @@ void SimulationExperimentViewSimulationWidget::updateDataStoreActions()
 
 //==============================================================================
 
+QString SimulationExperimentViewSimulationWidget::styledOutput()
+{
+    // Return a styled version of our output
+
+    static const QString DefaultOutputMessage = "<style>"
+                                                "    body {"
+                                                "        color: %1;"
+                                                "    }"
+                                                ""
+                                                "    span.good {"
+                                                "        background-color: %2;"
+                                                "        color: %3;"
+                                                "    }"
+                                                ""
+                                                "    span.info {"
+                                                "        background-color: %4;"
+                                                "        color: %5;"
+                                                "    }"
+                                                ""
+                                                "    span.bad {"
+                                                "        background-color: %6;"
+                                                "        color: %7;"
+                                                "    }"
+                                                "</style>"
+                                                "<body>"
+                                                "    %8"
+                                                "</body>";
+
+    if (isEnabled()) {
+        static const QString RedColor   = QColor(Qt::darkRed).name();
+        static const QString GreenColor = QColor(Qt::darkGreen).name();
+        static const QString BlueColor  = QColor(Qt::darkBlue).name();
+
+        QString windowTextColor = Core::windowTextColor().name();
+        QString baseColor = Core::baseColor().name();
+
+        return DefaultOutputMessage.arg(windowTextColor,
+                                        baseColor, GreenColor,
+                                        baseColor, BlueColor,
+                                        baseColor, RedColor,
+                                        mOutputMessage);
+    } else {
+        QString windowTextColor = Core::windowTextColor(QPalette::Disabled).name();
+        QString baseColor = Core::baseColor(QPalette::Disabled).name();
+
+        return DefaultOutputMessage.arg(windowTextColor,
+                                        baseColor, windowTextColor,
+                                        baseColor, windowTextColor,
+                                        baseColor, windowTextColor,
+                                        mOutputMessage);
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewSimulationWidget::output(const QString &pMessage)
 {
-    // Move to the end of the output
-    // Note: this is just in case the user clicked somewhere in the output and
-    //       we are therefore not at the end of it anymore...
+    // Update and set our output message after styling it
+
+    mOutputMessage += pMessage;
+
+    mOutputWidget->setHtml(styledOutput());
 
     mOutputWidget->moveCursor(QTextCursor::End);
-
-    // Output the message and make sure that it's visible
-
-    mOutputWidget->insertHtml(pMessage);
-    mOutputWidget->ensureCursorVisible();
 }
 
 //==============================================================================
@@ -812,9 +889,9 @@ void SimulationExperimentViewSimulationWidget::updateInvalidModelMessageWidget()
 //==============================================================================
 
 static const auto OutputTab  = QStringLiteral("&nbsp;&nbsp;&nbsp;&nbsp;");
-static const auto OutputGood = QStringLiteral(" style=\"color: green;\"");
-static const auto OutputInfo = QStringLiteral(" style=\"color: navy;\"");
-static const auto OutputBad  = QStringLiteral(" style=\"color: maroon;\"");
+static const auto OutputGood = QStringLiteral(" class=\"good\"");
+static const auto OutputInfo = QStringLiteral(" class=\"info\"");
+static const auto OutputBad  = QStringLiteral(" class=\"bad\"");
 static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 //==============================================================================
@@ -856,7 +933,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
         // Clean up our output, if needed
 
         if (pReloadingView)
-            mOutputWidget->document()->clear();
+            mOutputMessage = QString();
 
         // Output some information about our CellML file
 
