@@ -31,6 +31,8 @@ void CORE_EXPORT adjustWidgetSize(QWidget *pWidget);
 void CORE_EXPORT showEnableAction(QAction *pAction, bool pVisible,
                                   bool pEnabled = true);
 
+QColor CORE_EXPORT opaqueColor(const QColor &pColor, const QColor &pBackgroundColor);
+
 QColor CORE_EXPORT baseColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
 QColor CORE_EXPORT borderColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
 QColor CORE_EXPORT highlightColor(QPalette::ColorGroup pColorGroup = QPalette::Current);

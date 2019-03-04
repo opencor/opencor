@@ -246,6 +246,28 @@ void showEnableAction(QAction *pAction, bool pVisible, bool pEnabled)
 
 //==============================================================================
 
+QColor opaqueColor(const QColor &pColor, const QColor &pBackgroundColor)
+{
+    // Make sure that our background colour is opaque and if it isn't then make
+    // it so using a white background
+
+    QColor backgroundColor = pBackgroundColor;
+
+    if (backgroundColor.alpha() != 255)
+        backgroundColor = opaqueColor(backgroundColor, Qt::white);
+
+    // Return an opaque version of the given colour using the (opaque version)
+    // of the given background colour
+
+    double alpha = pColor.alphaF();
+
+    return QColor(int((1.0-alpha)*backgroundColor.red()+alpha*pColor.red()),
+                  int((1.0-alpha)*backgroundColor.green()+alpha*pColor.green()),
+                  int((1.0-alpha)*backgroundColor.blue()+alpha*pColor.blue()));
+}
+
+//==============================================================================
+
 QColor baseColor(QPalette::ColorGroup pColorGroup)
 {
     // Return the base colour

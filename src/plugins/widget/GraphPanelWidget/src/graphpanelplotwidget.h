@@ -582,6 +582,9 @@ private:
 
     GraphPanelPlotGraphs mGraphs;
 
+    QMap<GraphPanelPlotGraph *, QBrush> mEnabledGraphBrushes;
+    QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphPens;
+
     Action mAction;
 
     QPoint mOriginPoint;

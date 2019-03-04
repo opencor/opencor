@@ -1549,6 +1549,8 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mLogAxisX(false),
     mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
+    mEnabledGraphBrushes(QMap<GraphPanelPlotGraph *, QBrush>()),
+    mEnabledGraphPens(QMap<GraphPanelPlotGraph *, QPen>()),
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
@@ -1819,6 +1821,20 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                 setSurroundingAreaBackgroundColor(mEnabledSurroundingAreaBackgroundColor);
                 setSurroundingAreaForegroundColor(mEnabledSurroundingAreaForegroundColor);
+
+                for (auto graph : mGraphs) {
+                    const QwtSymbol *graphSymbol = graph->symbol();
+                    QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
+                    QSize graphSymbolSize = graphSymbol->size();
+
+                    graph->setSymbol(graphSymbolStyle,
+                                     mEnabledGraphBrushes.value(graph),
+                                     mEnabledGraphPens.value(graph),
+                                     graphSymbolSize);
+                }
+
+                mEnabledGraphBrushes.clear();
+                mEnabledGraphPens.clear();
             } else {
                 mEnabledBackgroundColor = mBackgroundColor;
                 mEnabledForegroundColor = mForegroundColor;
@@ -1834,6 +1850,36 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
                 setSurroundingAreaBackgroundColor(windowColor);
                 setSurroundingAreaForegroundColor(windowTextColor);
+
+                for (auto graph : mGraphs) {
+                    const QwtSymbol *graphSymbol = graph->symbol();
+
+                    mEnabledGraphBrushes.insert(graph, graphSymbol->brush());
+                    mEnabledGraphPens.insert(graph, graphSymbol->pen());
+                }
+
+                // Used a disabled version of the symbol's brush and pen colours
+                // Note: we first need to retrieve an opaque version of the
+                //       colours we want to use (since their alpha value may not
+                //       correspond to an opaque value), so that we can then use
+                //       alpha value of the original colour...
+
+                QColor graphBrushColor = Core::opaqueColor(windowTextColor, windowColor);
+                QColor graphPenColor = Core::opaqueColor(Core::shadowColor(QPalette::Disabled), windowColor);
+
+                for (auto graph : mGraphs) {
+                    const QwtSymbol *graphSymbol = graph->symbol();
+                    QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
+                    QSize graphSymbolSize = graphSymbol->size();
+
+                    graphBrushColor.setAlpha(graphSymbol->brush().color().alpha());
+                    graphPenColor.setAlpha(graphSymbol->pen().color().alpha());
+
+                    graph->setSymbol(graphSymbolStyle,
+                                     QBrush(graphBrushColor),
+                                     QPen(graphPenColor),
+                                     graphSymbolSize);
+                }
             }
         setUpdatesEnabled(true);
     }
