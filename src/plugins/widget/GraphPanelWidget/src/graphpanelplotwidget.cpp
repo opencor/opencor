@@ -1546,6 +1546,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mZoomRegionFontColor(Qt::white),
     mZoomRegionFilled(true),
     mZoomRegionFillColor(QColor()),
+    mEnabledGridLinesColor(QColor()),
     mLogAxisX(false),
     mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
@@ -1817,11 +1818,15 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
     if (pEvent->type() == QEvent::EnabledChange) {
         setUpdatesEnabled(false);
             if (isEnabled()) {
+                // Use the original colour of different things
+
                 setBackgroundColor(mEnabledBackgroundColor);
                 setForegroundColor(mEnabledForegroundColor);
 
                 setSurroundingAreaBackgroundColor(mEnabledSurroundingAreaBackgroundColor);
                 setSurroundingAreaForegroundColor(mEnabledSurroundingAreaForegroundColor);
+
+                setGridLinesColor(mEnabledGridLinesColor);
 
                 for (auto graph : mGraphs) {
                     const QwtSymbol *graphSymbol = graph->symbol();
@@ -1835,15 +1840,31 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                                      graphSymbolSize);
                 }
 
+                // Reset some trackers
+
                 mEnabledGraphPens.clear();
                 mEnabledGraphSymbolBrushes.clear();
                 mEnabledGraphSymbolPens.clear();
             } else {
+                // Keep track of various original colours
+
                 mEnabledBackgroundColor = mBackgroundColor;
                 mEnabledForegroundColor = mForegroundColor;
 
                 mEnabledSurroundingAreaBackgroundColor = mSurroundingAreaBackgroundColor;
                 mEnabledSurroundingAreaForegroundColor = mSurroundingAreaForegroundColor;
+
+                mEnabledGridLinesColor = gridLinesColor();
+
+                for (auto graph : mGraphs) {
+                    const QwtSymbol *graphSymbol = graph->symbol();
+
+                    mEnabledGraphPens.insert(graph, graph->pen());
+                    mEnabledGraphSymbolBrushes.insert(graph, graphSymbol->brush());
+                    mEnabledGraphSymbolPens.insert(graph, graphSymbol->pen());
+                }
+
+                // Use a disabled looking colour for different things
 
                 QColor windowColor = Core::windowColor(QPalette::Disabled);
                 QColor windowTextColor = Core::windowTextColor(QPalette::Disabled);
@@ -1854,17 +1875,11 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 setSurroundingAreaBackgroundColor(windowColor);
                 setSurroundingAreaForegroundColor(windowTextColor);
 
-                for (auto graph : mGraphs) {
-                    const QwtSymbol *graphSymbol = graph->symbol();
-
-                    mEnabledGraphPens.insert(graph, graph->pen());
-                    mEnabledGraphSymbolBrushes.insert(graph, graphSymbol->brush());
-                    mEnabledGraphSymbolPens.insert(graph, graphSymbol->pen());
-                }
-
                 QColor opaqueWindowTextColor = Core::opaqueColor(windowTextColor, windowColor);
                 QBrush symbolBrush = opaqueWindowTextColor;
                 QPen symbolPen = opaqueWindowTextColor.darker();
+
+                setGridLinesColor(opaqueWindowTextColor);
 
                 for (auto graph : mGraphs) {
                     QPen pen = graph->pen();

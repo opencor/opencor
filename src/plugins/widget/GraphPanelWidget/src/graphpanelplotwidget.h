@@ -577,6 +577,8 @@ private:
     bool mZoomRegionFilled;
     QColor mZoomRegionFillColor;
 
+    QColor mEnabledGridLinesColor;
+
     bool mLogAxisX;
     bool mLogAxisY;
 
