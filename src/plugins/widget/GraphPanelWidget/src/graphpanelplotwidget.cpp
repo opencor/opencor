@@ -1530,6 +1530,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mOwner(pParent),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
+    mEnabledBackgroundColor(QColor()),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
@@ -1794,6 +1795,29 @@ void GraphPanelPlotWidget::retranslateUi()
 
     mAxisX->retranslateUi();
     mAxisY->retranslateUi();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
+{
+    // Default handling of the event
+
+    QwtPlot::changeEvent(pEvent);
+
+    // Check whether our enabled state has changed and if so then update the colour used to highlight the active graph panel
+
+    if (pEvent->type() == QEvent::EnabledChange) {
+        setUpdatesEnabled(false);
+            if (isEnabled()) {
+                setBackgroundColor(mEnabledBackgroundColor);
+            } else {
+                mEnabledBackgroundColor = mBackgroundColor;
+
+                setBackgroundColor(Core::windowColor(QPalette::Disabled));
+            }
+        setUpdatesEnabled(true);
+    }
 }
 
 //==============================================================================

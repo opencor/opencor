@@ -529,6 +529,7 @@ public:
     void updateGui(bool pSingleShot = false, bool pForceAlignment = false);
 
 protected:
+    void changeEvent(QEvent *pEvent) override;
     bool event(QEvent *pEvent) override;
     bool eventFilter(QObject *pObject, QEvent *pEvent) override;
     void mouseMoveEvent(QMouseEvent *pEvent) override;
@@ -554,6 +555,8 @@ private:
 
     QColor mBackgroundColor;
     QColor mForegroundColor;
+
+    QColor mEnabledBackgroundColor;
 
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;
