@@ -1388,14 +1388,15 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::updateGraphIn
     bool graphSymbolUpdated = !oldGraphSymbol;
     Core::Properties symbolProperties = properties[5]->properties();
     QwtSymbol::Style symbolStyle = SEDMLSupport::symbolStyle(symbolProperties[0]->listValueIndex());
-    int symbolSize = symbolProperties[1]->integerValue();
+    int symbolSizeValue = symbolProperties[1]->integerValue();
+    QSize symbolSize = QSize(symbolSizeValue, symbolSizeValue);
     QPen symbolColor = QPen(symbolProperties[2]->colorValue());
     bool symbolFill = symbolProperties[3]->booleanValue();
     QBrush symbolFillColor = symbolFill?QBrush(symbolProperties[4]->colorValue()):QBrush();
 
     if (oldGraphSymbol) {
         graphSymbolUpdated =    (oldGraphSymbol->style() != symbolStyle)
-                             || (oldGraphSymbol->size().width() != symbolSize)
+                             || (oldGraphSymbol->size() != symbolSize)
                              || (oldGraphSymbol->pen() != symbolColor)
                              || (oldGraphSymbol->brush() != symbolFillColor);
     }

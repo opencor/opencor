@@ -210,7 +210,7 @@ public:
 
     const QwtSymbol * symbol() const;
     void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
-                   const QPen &pPen, int pSize);
+                   const QPen &pPen, const QSize &pSize);
 
     QString title() const;
     void setTitle(const QString &pTitle);
@@ -529,6 +529,7 @@ public:
     void updateGui(bool pSingleShot = false, bool pForceAlignment = false);
 
 protected:
+    void changeEvent(QEvent *pEvent) override;
     bool event(QEvent *pEvent) override;
     bool eventFilter(QObject *pObject, QEvent *pEvent) override;
     void mouseMoveEvent(QMouseEvent *pEvent) override;
@@ -555,6 +556,9 @@ private:
     QColor mBackgroundColor;
     QColor mForegroundColor;
 
+    QColor mEnabledBackgroundColor;
+    QColor mEnabledForegroundColor;
+
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;
     QColor mPointCoordinatesColor;
@@ -563,6 +567,9 @@ private:
     QColor mSurroundingAreaBackgroundColor;
     QColor mSurroundingAreaForegroundColor;
 
+    QColor mEnabledSurroundingAreaBackgroundColor;
+    QColor mEnabledSurroundingAreaForegroundColor;
+
     Qt::PenStyle mZoomRegionStyle;
     int mZoomRegionWidth;
     QColor mZoomRegionColor;
@@ -570,10 +577,16 @@ private:
     bool mZoomRegionFilled;
     QColor mZoomRegionFillColor;
 
+    QColor mEnabledGridLinesColor;
+
     bool mLogAxisX;
     bool mLogAxisY;
 
     GraphPanelPlotGraphs mGraphs;
+
+    QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphPens;
+    QMap<GraphPanelPlotGraph *, QBrush> mEnabledGraphSymbolBrushes;
+    QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphSymbolPens;
 
     Action mAction;
 

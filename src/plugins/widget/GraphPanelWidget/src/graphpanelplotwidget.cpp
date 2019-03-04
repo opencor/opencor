@@ -260,16 +260,16 @@ void GraphPanelPlotGraphRun::drawLines(QPainter *pPainter,
 {
     // Draw our lines
 
-    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
-        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
-            int from = (   (pFrom >= mValidData[i].first)
-                        && (pFrom <= mValidData[i].second))?
+    for (const auto &validData : mValidData) {
+        if ((pFrom <= validData.first) || (pTo >= validData.second)) {
+            int from = (   (pFrom >= validData.first)
+                        && (pFrom <= validData.second))?
                            pFrom:
-                           mValidData[i].first;
-            int to = (   (pTo >= mValidData[i].first)
-                      && (pTo <= mValidData[i].second))?
+                           validData.first;
+            int to = (   (pTo >= validData.first)
+                      && (pTo <= validData.second))?
                          pTo:
-                         mValidData[i].second;
+                         validData.second;
 
             QwtPlotCurve::drawLines(pPainter, pMapX, pMapY,
                                     pCanvasRect, from, to);
@@ -288,16 +288,16 @@ void GraphPanelPlotGraphRun::drawSymbols(QPainter *pPainter,
 {
     // Draw our symbols
 
-    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
-        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
-            int from = (   (pFrom >= mValidData[i].first)
-                        && (pFrom <= mValidData[i].second))?
+    for (const auto &validData : mValidData) {
+        if ((pFrom <= validData.first) || (pTo >= validData.second)) {
+            int from = (   (pFrom >= validData.first)
+                        && (pFrom <= validData.second))?
                            pFrom:
-                           mValidData[i].first;
-            int to = (   (pTo >= mValidData[i].first)
-                      && (pTo <= mValidData[i].second))?
+                           validData.first;
+            int to = (   (pTo >= validData.first)
+                      && (pTo <= validData.second))?
                          pTo:
-                         mValidData[i].second;
+                         validData.second;
 
             QwtPlotCurve::drawSymbols(pPainter, pSymbol, pMapX, pMapY,
                                       pCanvasRect, from, to);
@@ -592,16 +592,16 @@ const QwtSymbol * GraphPanelPlotGraph::symbol() const
 
 void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
                                     const QBrush &pBrush, const QPen &pPen,
-                                    int pSize)
+                                    const QSize &pSize)
 {
     // Set the symbol of our different runs
 
     Q_ASSERT(mDummyRun);
 
-    mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
+    mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
 
     for (auto run : mRuns)
-        run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
+        run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
 }
 
 //==============================================================================
@@ -1168,7 +1168,7 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     pPainter->fillRect(coordinatesRect, pBackgroundColor);
 
-    // Draw the text for the coordinates, using a white pen
+    // Draw the text for the coordinates
 
     pen.setColor(pForegroundColor);
 
@@ -1530,21 +1530,29 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mOwner(pParent),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
+    mEnabledBackgroundColor(QColor()),
+    mEnabledForegroundColor(QColor()),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
     mPointCoordinatesFontColor(Qt::white),
     mSurroundingAreaBackgroundColor(QColor()),
     mSurroundingAreaForegroundColor(QColor()),
+    mEnabledSurroundingAreaBackgroundColor(QColor()),
+    mEnabledSurroundingAreaForegroundColor(QColor()),
     mZoomRegionStyle(Qt::SolidLine),
     mZoomRegionWidth(1),
     mZoomRegionColor(QColor()),
     mZoomRegionFontColor(Qt::white),
     mZoomRegionFilled(true),
     mZoomRegionFillColor(QColor()),
+    mEnabledGridLinesColor(QColor()),
     mLogAxisX(false),
     mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
+    mEnabledGraphPens(QMap<GraphPanelPlotGraph *, QPen>()),
+    mEnabledGraphSymbolBrushes(QMap<GraphPanelPlotGraph *, QBrush>()),
+    mEnabledGraphSymbolPens(QMap<GraphPanelPlotGraph *, QPen>()),
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
@@ -1794,6 +1802,99 @@ void GraphPanelPlotWidget::retranslateUi()
 
     mAxisX->retranslateUi();
     mAxisY->retranslateUi();
+}
+
+//==============================================================================
+
+void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
+{
+    // Default handling of the event
+
+    QwtPlot::changeEvent(pEvent);
+
+    // Check whether our enabled state has changed and if so then update our
+    // background colour
+
+    if (pEvent->type() == QEvent::EnabledChange) {
+        setUpdatesEnabled(false);
+            if (isEnabled()) {
+                // Use the original colour of different things
+
+                setBackgroundColor(mEnabledBackgroundColor);
+                setForegroundColor(mEnabledForegroundColor);
+
+                setSurroundingAreaBackgroundColor(mEnabledSurroundingAreaBackgroundColor);
+                setSurroundingAreaForegroundColor(mEnabledSurroundingAreaForegroundColor);
+
+                setGridLinesColor(mEnabledGridLinesColor);
+
+                for (auto graph : mGraphs) {
+                    const QwtSymbol *graphSymbol = graph->symbol();
+                    QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
+                    QSize graphSymbolSize = graphSymbol->size();
+
+                    graph->setPen(mEnabledGraphPens.value(graph));
+                    graph->setSymbol(graphSymbolStyle,
+                                     mEnabledGraphSymbolBrushes.value(graph),
+                                     mEnabledGraphSymbolPens.value(graph),
+                                     graphSymbolSize);
+                }
+
+                // Reset some trackers
+
+                mEnabledGraphPens.clear();
+                mEnabledGraphSymbolBrushes.clear();
+                mEnabledGraphSymbolPens.clear();
+            } else {
+                // Keep track of various original colours
+
+                mEnabledBackgroundColor = mBackgroundColor;
+                mEnabledForegroundColor = mForegroundColor;
+
+                mEnabledSurroundingAreaBackgroundColor = mSurroundingAreaBackgroundColor;
+                mEnabledSurroundingAreaForegroundColor = mSurroundingAreaForegroundColor;
+
+                mEnabledGridLinesColor = gridLinesColor();
+
+                for (auto graph : mGraphs) {
+                    const QwtSymbol *graphSymbol = graph->symbol();
+
+                    mEnabledGraphPens.insert(graph, graph->pen());
+                    mEnabledGraphSymbolBrushes.insert(graph, graphSymbol->brush());
+                    mEnabledGraphSymbolPens.insert(graph, graphSymbol->pen());
+                }
+
+                // Use a disabled looking colour for different things
+
+                QColor windowColor = Core::windowColor(QPalette::Disabled);
+                QColor windowTextColor = Core::windowTextColor(QPalette::Disabled);
+
+                setBackgroundColor(windowColor);
+                setForegroundColor(windowTextColor);
+
+                setSurroundingAreaBackgroundColor(windowColor);
+                setSurroundingAreaForegroundColor(windowTextColor);
+
+                QColor opaqueWindowTextColor = Core::opaqueColor(windowTextColor, windowColor);
+                QBrush symbolBrush = opaqueWindowTextColor;
+                QPen symbolPen = opaqueWindowTextColor.darker();
+
+                setGridLinesColor(opaqueWindowTextColor);
+
+                for (auto graph : mGraphs) {
+                    QPen pen = graph->pen();
+                    const QwtSymbol *graphSymbol = graph->symbol();
+                    QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
+                    QSize graphSymbolSize = graphSymbol->size();
+
+                    pen.setColor(opaqueWindowTextColor);
+
+                    graph->setPen(pen);
+                    graph->setSymbol(graphSymbolStyle, symbolBrush, symbolPen, graphSymbolSize);
+                }
+            }
+        setUpdatesEnabled(true);
+    }
 }
 
 //==============================================================================

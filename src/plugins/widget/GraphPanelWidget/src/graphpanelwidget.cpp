@@ -175,13 +175,15 @@ void GraphPanelWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
-    Widget::changeEvent(pEvent);
+    Core::Widget::changeEvent(pEvent);
 
-    // Check whether the palette has changed and if so then update the colour
-    // used to highlight the active graph panel
+    // Check whether the palette or our enabled state has changed and if so then
+    // update the colour used to highlight the active graph panel
 
-    if (pEvent->type() == QEvent::PaletteChange)
+    if (   (pEvent->type() == QEvent::PaletteChange)
+        || (pEvent->type() == QEvent::EnabledChange)) {
         updateMarkerColor();
+    }
 }
 
 //==============================================================================
@@ -271,8 +273,12 @@ void GraphPanelWidget::updateMarkerColor()
     mMarker->setStyleSheet(QString("QFrame {"
                                    "    color: %1;"
                                    "}").arg(mActive?
-                                                Core::highlightColor().name():
-                                                Core::windowColor().name()));
+                                                isEnabled()?
+                                                    Core::highlightColor().name():
+                                                    Core::highlightColor(QPalette::Disabled).name(QColor::HexArgb):
+                                                isEnabled()?
+                                                    Core::windowColor().name():
+                                                    Core::windowColor(QPalette::Disabled).name(QColor::HexArgb)));
 }
 
 //==============================================================================

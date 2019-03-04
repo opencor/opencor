@@ -246,16 +246,38 @@ void showEnableAction(QAction *pAction, bool pVisible, bool pEnabled)
 
 //==============================================================================
 
-QColor baseColor()
+QColor opaqueColor(const QColor &pColor, const QColor &pBackgroundColor)
 {
-    // Return the base colour
+    // Make sure that our background colour is opaque and if it isn't then make
+    // it so using a white background
 
-    return qApp->palette().color(QPalette::Base);
+    QColor backgroundColor = pBackgroundColor;
+
+    if (backgroundColor.alpha() != 255)
+        backgroundColor = opaqueColor(backgroundColor, Qt::white);
+
+    // Return an opaque version of the given colour using the (opaque version)
+    // of the given background colour
+
+    double alpha = pColor.alphaF();
+
+    return QColor(int((1.0-alpha)*backgroundColor.red()+alpha*pColor.red()),
+                  int((1.0-alpha)*backgroundColor.green()+alpha*pColor.green()),
+                  int((1.0-alpha)*backgroundColor.blue()+alpha*pColor.blue()));
 }
 
 //==============================================================================
 
-QColor borderColor()
+QColor baseColor(QPalette::ColorGroup pColorGroup)
+{
+    // Return the base colour
+
+    return qApp->palette().color(pColorGroup, QPalette::Base);
+}
+
+//==============================================================================
+
+QColor borderColor(QPalette::ColorGroup pColorGroup)
 {
     // Return the mid colour, which we consider as the colour to be used for a
     // 'normal' border
@@ -267,34 +289,43 @@ QColor borderColor()
     //       retrieving the size of its main window. Not only that, but we can
     //       still see the 'hidden' widget...
 
-    return qApp->palette().color(QPalette::Mid);
+    return qApp->palette().color(pColorGroup, QPalette::Mid);
 }
 
 //==============================================================================
 
-QColor highlightColor()
+QColor highlightColor(QPalette::ColorGroup pColorGroup)
 {
     // Return the highlight colour
 
-    return qApp->palette().color(QPalette::Highlight);
+    return qApp->palette().color(pColorGroup, QPalette::Highlight);
 }
 
 //==============================================================================
 
-QColor shadowColor()
+QColor shadowColor(QPalette::ColorGroup pColorGroup)
 {
     // Return the shadow colour
 
-    return qApp->palette().color(QPalette::Shadow);
+    return qApp->palette().color(pColorGroup, QPalette::Shadow);
 }
 
 //==============================================================================
 
-QColor windowColor()
+QColor windowColor(QPalette::ColorGroup pColorGroup)
 {
     // Return the window colour
 
-    return qApp->palette().color(QPalette::Window);
+    return qApp->palette().color(pColorGroup, QPalette::Window);
+}
+
+//==============================================================================
+
+QColor windowTextColor(QPalette::ColorGroup pColorGroup)
+{
+    // Return the window text colour
+
+    return qApp->palette().color(pColorGroup, QPalette::WindowText);
 }
 
 //==============================================================================
