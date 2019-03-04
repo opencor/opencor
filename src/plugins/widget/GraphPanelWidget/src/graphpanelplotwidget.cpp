@@ -260,16 +260,16 @@ void GraphPanelPlotGraphRun::drawLines(QPainter *pPainter,
 {
     // Draw our lines
 
-    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
-        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
-            int from = (   (pFrom >= mValidData[i].first)
-                        && (pFrom <= mValidData[i].second))?
+    for (const auto &validData : mValidData) {
+        if ((pFrom <= validData.first) || (pTo >= validData.second)) {
+            int from = (   (pFrom >= validData.first)
+                        && (pFrom <= validData.second))?
                            pFrom:
-                           mValidData[i].first;
-            int to = (   (pTo >= mValidData[i].first)
-                      && (pTo <= mValidData[i].second))?
+                           validData.first;
+            int to = (   (pTo >= validData.first)
+                      && (pTo <= validData.second))?
                          pTo:
-                         mValidData[i].second;
+                         validData.second;
 
             QwtPlotCurve::drawLines(pPainter, pMapX, pMapY,
                                     pCanvasRect, from, to);
@@ -288,16 +288,16 @@ void GraphPanelPlotGraphRun::drawSymbols(QPainter *pPainter,
 {
     // Draw our symbols
 
-    for (int i = 0, iMax = mValidData.count(); i < iMax; ++i) {
-        if ((pFrom <= mValidData[i].first) || (pTo >= mValidData[i].second)) {
-            int from = (   (pFrom >= mValidData[i].first)
-                        && (pFrom <= mValidData[i].second))?
+    for (const auto &validData : mValidData) {
+        if ((pFrom <= validData.first) || (pTo >= validData.second)) {
+            int from = (   (pFrom >= validData.first)
+                        && (pFrom <= validData.second))?
                            pFrom:
-                           mValidData[i].first;
-            int to = (   (pTo >= mValidData[i].first)
-                      && (pTo <= mValidData[i].second))?
+                           validData.first;
+            int to = (   (pTo >= validData.first)
+                      && (pTo <= validData.second))?
                          pTo:
-                         mValidData[i].second;
+                         validData.second;
 
             QwtPlotCurve::drawSymbols(pPainter, pSymbol, pMapX, pMapY,
                                       pCanvasRect, from, to);
