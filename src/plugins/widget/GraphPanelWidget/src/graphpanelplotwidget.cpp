@@ -1858,27 +1858,16 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                     mEnabledGraphPens.insert(graph, graphSymbol->pen());
                 }
 
-                // Used a disabled version of the symbol's brush and pen colours
-                // Note: we first need to retrieve an opaque version of the
-                //       colours we want to use (since their alpha value may not
-                //       correspond to an opaque value), so that we can then use
-                //       alpha value of the original colour...
-
-                QColor graphBrushColor = Core::opaqueColor(windowTextColor, windowColor);
-                QColor graphPenColor = Core::opaqueColor(Core::shadowColor(QPalette::Disabled), windowColor);
+                QColor opaqueWindowTextColor = Core::opaqueColor(windowTextColor, windowColor);
+                QBrush symbolBrush = opaqueWindowTextColor;
+                QPen symbolPen = opaqueWindowTextColor.darker();
 
                 for (auto graph : mGraphs) {
                     const QwtSymbol *graphSymbol = graph->symbol();
                     QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
                     QSize graphSymbolSize = graphSymbol->size();
 
-                    graphBrushColor.setAlpha(graphSymbol->brush().color().alpha());
-                    graphPenColor.setAlpha(graphSymbol->pen().color().alpha());
-
-                    graph->setSymbol(graphSymbolStyle,
-                                     QBrush(graphBrushColor),
-                                     QPen(graphPenColor),
-                                     graphSymbolSize);
+                    graph->setSymbol(graphSymbolStyle, symbolBrush, symbolPen, graphSymbolSize);
                 }
             }
         setUpdatesEnabled(true);
