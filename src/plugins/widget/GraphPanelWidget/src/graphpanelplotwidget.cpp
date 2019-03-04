@@ -1805,7 +1805,8 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
 
     QwtPlot::changeEvent(pEvent);
 
-    // Check whether our enabled state has changed and if so then update the colour used to highlight the active graph panel
+    // Check whether our enabled state has changed and if so then update our
+    // background colour
 
     if (pEvent->type() == QEvent::EnabledChange) {
         setUpdatesEnabled(false);
