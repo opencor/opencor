@@ -210,7 +210,7 @@ public:
 
     const QwtSymbol * symbol() const;
     void setSymbol(const QwtSymbol::Style &pStyle, const QBrush &pBrush,
-                   const QPen &pPen, int pSize);
+                   const QPen &pPen, const QSize &pSize);
 
     QString title() const;
     void setTitle(const QString &pTitle);

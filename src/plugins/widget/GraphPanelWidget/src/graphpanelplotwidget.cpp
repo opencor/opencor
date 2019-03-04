@@ -592,16 +592,16 @@ const QwtSymbol * GraphPanelPlotGraph::symbol() const
 
 void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
                                     const QBrush &pBrush, const QPen &pPen,
-                                    int pSize)
+                                    const QSize &pSize)
 {
     // Set the symbol of our different runs
 
     Q_ASSERT(mDummyRun);
 
-    mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
+    mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
 
     for (auto run : mRuns)
-        run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, QSize(pSize, pSize)));
+        run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
 }
 
 //==============================================================================
