@@ -566,6 +566,8 @@ private:
     QColor mSurroundingAreaBackgroundColor;
     QColor mSurroundingAreaForegroundColor;
 
+    QColor mEnabledSurroundingAreaBackgroundColor;
+
     Qt::PenStyle mZoomRegionStyle;
     int mZoomRegionWidth;
     QColor mZoomRegionColor;

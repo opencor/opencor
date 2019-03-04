@@ -1537,6 +1537,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mPointCoordinatesFontColor(Qt::white),
     mSurroundingAreaBackgroundColor(QColor()),
     mSurroundingAreaForegroundColor(QColor()),
+    mEnabledSurroundingAreaBackgroundColor(QColor()),
     mZoomRegionStyle(Qt::SolidLine),
     mZoomRegionWidth(1),
     mZoomRegionColor(QColor()),
@@ -1812,10 +1813,15 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
         setUpdatesEnabled(false);
             if (isEnabled()) {
                 setBackgroundColor(mEnabledBackgroundColor);
+                setSurroundingAreaBackgroundColor(mEnabledSurroundingAreaBackgroundColor);
             } else {
                 mEnabledBackgroundColor = mBackgroundColor;
+                mEnabledSurroundingAreaBackgroundColor = mSurroundingAreaBackgroundColor;
 
-                setBackgroundColor(Core::windowColor(QPalette::Disabled));
+                QColor windowColor = Core::windowColor(QPalette::Disabled);
+
+                setBackgroundColor(windowColor);
+                setSurroundingAreaBackgroundColor(windowColor);
             }
         setUpdatesEnabled(true);
     }
