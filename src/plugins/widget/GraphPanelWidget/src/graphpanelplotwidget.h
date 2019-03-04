@@ -557,6 +557,7 @@ private:
     QColor mForegroundColor;
 
     QColor mEnabledBackgroundColor;
+    QColor mEnabledForegroundColor;
 
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;
@@ -567,6 +568,7 @@ private:
     QColor mSurroundingAreaForegroundColor;
 
     QColor mEnabledSurroundingAreaBackgroundColor;
+    QColor mEnabledSurroundingAreaForegroundColor;
 
     Qt::PenStyle mZoomRegionStyle;
     int mZoomRegionWidth;

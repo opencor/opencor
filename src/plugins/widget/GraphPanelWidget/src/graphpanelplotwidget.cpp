@@ -1531,6 +1531,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
     mEnabledBackgroundColor(QColor()),
+    mEnabledForegroundColor(QColor()),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
@@ -1538,6 +1539,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mSurroundingAreaBackgroundColor(QColor()),
     mSurroundingAreaForegroundColor(QColor()),
     mEnabledSurroundingAreaBackgroundColor(QColor()),
+    mEnabledSurroundingAreaForegroundColor(QColor()),
     mZoomRegionStyle(Qt::SolidLine),
     mZoomRegionWidth(1),
     mZoomRegionColor(QColor()),
@@ -1813,15 +1815,25 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
         setUpdatesEnabled(false);
             if (isEnabled()) {
                 setBackgroundColor(mEnabledBackgroundColor);
+                setForegroundColor(mEnabledForegroundColor);
+
                 setSurroundingAreaBackgroundColor(mEnabledSurroundingAreaBackgroundColor);
+                setSurroundingAreaForegroundColor(mEnabledSurroundingAreaForegroundColor);
             } else {
                 mEnabledBackgroundColor = mBackgroundColor;
+                mEnabledForegroundColor = mForegroundColor;
+
                 mEnabledSurroundingAreaBackgroundColor = mSurroundingAreaBackgroundColor;
+                mEnabledSurroundingAreaForegroundColor = mSurroundingAreaForegroundColor;
 
                 QColor windowColor = Core::windowColor(QPalette::Disabled);
+                QColor windowTextColor = Core::windowTextColor(QPalette::Disabled);
 
                 setBackgroundColor(windowColor);
+                setForegroundColor(windowTextColor);
+
                 setSurroundingAreaBackgroundColor(windowColor);
+                setSurroundingAreaForegroundColor(windowTextColor);
             }
         setUpdatesEnabled(true);
     }
