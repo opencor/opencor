@@ -1549,8 +1549,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mLogAxisX(false),
     mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
-    mEnabledGraphBrushes(QMap<GraphPanelPlotGraph *, QBrush>()),
     mEnabledGraphPens(QMap<GraphPanelPlotGraph *, QPen>()),
+    mEnabledGraphSymbolBrushes(QMap<GraphPanelPlotGraph *, QBrush>()),
+    mEnabledGraphSymbolPens(QMap<GraphPanelPlotGraph *, QPen>()),
     mAction(None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
@@ -1827,14 +1828,16 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                     QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
                     QSize graphSymbolSize = graphSymbol->size();
 
+                    graph->setPen(mEnabledGraphPens.value(graph));
                     graph->setSymbol(graphSymbolStyle,
-                                     mEnabledGraphBrushes.value(graph),
-                                     mEnabledGraphPens.value(graph),
+                                     mEnabledGraphSymbolBrushes.value(graph),
+                                     mEnabledGraphSymbolPens.value(graph),
                                      graphSymbolSize);
                 }
 
-                mEnabledGraphBrushes.clear();
                 mEnabledGraphPens.clear();
+                mEnabledGraphSymbolBrushes.clear();
+                mEnabledGraphSymbolPens.clear();
             } else {
                 mEnabledBackgroundColor = mBackgroundColor;
                 mEnabledForegroundColor = mForegroundColor;
@@ -1854,8 +1857,9 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 for (auto graph : mGraphs) {
                     const QwtSymbol *graphSymbol = graph->symbol();
 
-                    mEnabledGraphBrushes.insert(graph, graphSymbol->brush());
-                    mEnabledGraphPens.insert(graph, graphSymbol->pen());
+                    mEnabledGraphPens.insert(graph, graph->pen());
+                    mEnabledGraphSymbolBrushes.insert(graph, graphSymbol->brush());
+                    mEnabledGraphSymbolPens.insert(graph, graphSymbol->pen());
                 }
 
                 QColor opaqueWindowTextColor = Core::opaqueColor(windowTextColor, windowColor);
@@ -1863,10 +1867,14 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
                 QPen symbolPen = opaqueWindowTextColor.darker();
 
                 for (auto graph : mGraphs) {
+                    QPen pen = graph->pen();
                     const QwtSymbol *graphSymbol = graph->symbol();
                     QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
                     QSize graphSymbolSize = graphSymbol->size();
 
+                    pen.setColor(opaqueWindowTextColor);
+
+                    graph->setPen(pen);
                     graph->setSymbol(graphSymbolStyle, symbolBrush, symbolPen, graphSymbolSize);
                 }
             }
