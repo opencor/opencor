@@ -165,6 +165,9 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 
     // Some connections to process responses from our PMR web service
 
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
+
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWorkspacesWindowWindow::showInformation);
     connect(mPmrWebService, &PMRSupport::PmrWebService::warning,
@@ -195,8 +198,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Retranslate our GUI
 
     retranslateUi();
-
-    mInitialized = true;
 }
 
 //==============================================================================
@@ -243,13 +244,7 @@ void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
                                             PMRSupport::SettingsPreferencesPmrUrl,
                                             PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
 
-    // A connection to show ourselves busy when our PMR web service is
-    // Note: we do it here rather than in our constructor otherwise our main
-    //       window won't properly resize upon startup, in case we are floating
-    //       (as opposed to being docked)...
-
-    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
+    mInitialized = true;
 }
 
 //==============================================================================
@@ -349,9 +344,11 @@ void PmrWorkspacesWindowWindow::busy(bool pBusy, bool pResetCounter)
 
 void PmrWorkspacesWindowWindow::busy(bool pBusy)
 {
-    // Show ourselves as busy or not busy anymore
+    // Show ourselves as busy or not busy anymore, but only if we are
+    // initialised
 
-    busy(pBusy, false);
+    if (mInitialized)
+        busy(pBusy, false);
 }
 
 //==============================================================================
