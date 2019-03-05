@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "borderedwidget.h"
 #include "corecliutils.h"
-#include "helpwindowwindow.h"
 #include "helpwindowwidget.h"
+#include "helpwindowwindow.h"
 #include "toolbarwidget.h"
 
 //==============================================================================

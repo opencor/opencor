@@ -61,6 +61,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mInitialized(false),
     mFirstTimeRetrievingWorkspaces(true),
+    mPmrUrl(QString()),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
 {
@@ -157,6 +158,12 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
+    // Initialise (update) our PMR URL
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
+
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
 
@@ -164,6 +171,9 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
     // Some connections to process responses from our PMR web service
+
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWorkspacesWindowWindow::showInformation);
@@ -195,8 +205,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Retranslate our GUI
 
     retranslateUi();
-
-    mInitialized = true;
 }
 
 //==============================================================================
@@ -235,21 +243,9 @@ void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
     pSettings.endGroup();
 
-    // Initialise (update) our PMR URL
-    // Note: we do it here rather than in our constructor because we need
-    //       mPmrWorkspacesWindowWidget to be fully initialised...
+    // We are fully initialised now
 
-    update(PreferencesInterface::preference(PMRSupport::PluginName,
-                                            PMRSupport::SettingsPreferencesPmrUrl,
-                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
-
-    // A connection to show ourselves busy when our PMR web service is
-    // Note: we do it here rather than in our constructor otherwise our main
-    //       window won't properly resize upon startup, in case we are floating
-    //       (as opposed to being docked)...
-
-    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
+    mInitialized = true;
 }
 
 //==============================================================================
@@ -320,7 +316,11 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
 void PmrWorkspacesWindowWindow::busy(bool pBusy, bool pResetCounter)
 {
-    // Show ourselves as busy or not busy anymore
+    // Show ourselves as busy or not busy anymore, but only if we are
+    // initialised
+
+    if (!mInitialized)
+        return;
 
     static int counter = 0;
 

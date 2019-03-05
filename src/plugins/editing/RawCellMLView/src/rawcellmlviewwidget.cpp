@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //       to updating the viewer (e.g. see the XSL transformation)...
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "cellmleditingviewwidget.h"
+#include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "editorlistwidget.h"
 #include "editorwidgeteditorwidget.h"

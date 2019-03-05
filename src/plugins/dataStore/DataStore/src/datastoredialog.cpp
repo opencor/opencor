@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "datastoreinterface.h"
 #include "datastoredialog.h"
+#include "datastoreinterface.h"
 #include "plugin.h"
 
 //==============================================================================

@@ -23,14 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "borderedwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
-#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
+#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "filemanager.h"
-#include "usermessagewidget.h"
 #include "progressbarwidget.h"
+#include "usermessagewidget.h"
 #include "webviewerwidget.h"
 
 //==============================================================================

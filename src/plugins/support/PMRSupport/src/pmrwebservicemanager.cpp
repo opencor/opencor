@@ -124,7 +124,7 @@ void PmrWebServiceManager::authenticationFailed()
 
 void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 {
-    // Open the given URL in a temporary web browser of ours
+    // Open the given URL in our web browser
 
     mWebViewerDialogUsed = true;
 
@@ -134,6 +134,11 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
         connect(mWebViewerDialog, &Core::Dialog::rejected,
                 this, &PmrWebServiceManager::authenticationCancelled);
     } else {
+        mWebViewerDialog->load(QString());
+        // Note: this is in case we used our web brower before, in which case it
+        //       will contain something, which we don't want to see when
+        //       reopening it...
+
         mWebViewerDialog->retranslateUi();
     }
 
