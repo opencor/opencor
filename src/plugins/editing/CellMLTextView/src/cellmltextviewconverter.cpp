@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "corecliutils.h"
 #include "cellmltextviewconverter.h"
+#include "corecliutils.h"
 
 //==============================================================================
 

@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "centralwidget.h"
-#include "corecliutils.h"
 #include "commonwidget.h"
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 
