@@ -48,7 +48,6 @@ PmrWebViewerDialog::PmrWebViewerDialog(QWidget *pParent) :
     mSettings.beginGroup(SettingsPlugins);
     mSettings.beginGroup(PluginName);
     mSettings.beginGroup("PmrWebViewerDialog");
-qDebug(">>> %s", qPrintable(mSettings.group()));
 
     // Customise ourselves
 

@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // File Browser window
 //==============================================================================
 
-#include "filebrowserwindowwindow.h"
 #include "filebrowserwindowwidget.h"
+#include "filebrowserwindowwindow.h"
 #include "toolbarwidget.h"
 
 //==============================================================================

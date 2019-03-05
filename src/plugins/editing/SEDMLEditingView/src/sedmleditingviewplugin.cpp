@@ -23,10 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "sedmleditingviewplugin.h"
 #include "editingviewinterface.h"
 #include "filemanager.h"
 #include "sedmleditingviewinterface.h"
+#include "sedmleditingviewplugin.h"
 
 //==============================================================================
 
