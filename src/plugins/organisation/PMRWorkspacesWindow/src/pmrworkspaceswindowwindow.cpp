@@ -61,6 +61,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mInitialized(false),
     mFirstTimeRetrievingWorkspaces(true),
+    mPmrUrl(QString()),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
 {
