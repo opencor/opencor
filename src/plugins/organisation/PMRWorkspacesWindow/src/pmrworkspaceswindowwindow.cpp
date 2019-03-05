@@ -158,6 +158,12 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     #error Unsupported platform
 #endif
 
+    // Initialise (update) our PMR URL
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
+
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
 
@@ -237,13 +243,7 @@ void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
     pSettings.endGroup();
 
-    // Initialise (update) our PMR URL
-    // Note: we do it here rather than in our constructor because we need
-    //       mPmrWorkspacesWindowWidget to be fully initialised...
-
-    update(PreferencesInterface::preference(PMRSupport::PluginName,
-                                            PMRSupport::SettingsPreferencesPmrUrl,
-                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
+    // We are fully initialised now
 
     mInitialized = true;
 }
