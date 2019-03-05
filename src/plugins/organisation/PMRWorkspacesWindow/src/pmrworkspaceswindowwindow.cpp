@@ -316,7 +316,11 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
 void PmrWorkspacesWindowWindow::busy(bool pBusy, bool pResetCounter)
 {
-    // Show ourselves as busy or not busy anymore
+    // Show ourselves as busy or not busy anymore, but only if we are
+    // initialised
+
+    if (!mInitialized)
+        return;
 
     static int counter = 0;
 
@@ -345,11 +349,9 @@ void PmrWorkspacesWindowWindow::busy(bool pBusy, bool pResetCounter)
 
 void PmrWorkspacesWindowWindow::busy(bool pBusy)
 {
-    // Show ourselves as busy or not busy anymore, but only if we are
-    // initialised
+    // Show ourselves as busy or not busy anymore
 
-    if (mInitialized)
-        busy(pBusy, false);
+    busy(pBusy, false);
 }
 
 //==============================================================================
