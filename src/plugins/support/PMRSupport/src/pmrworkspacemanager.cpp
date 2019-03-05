@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // PMR workspace manager
 //==============================================================================
 
-#include "pmrworkspacemanager.h"
 #include "corecliutils.h"
+#include "pmrworkspacemanager.h"
 
 //==============================================================================
 
