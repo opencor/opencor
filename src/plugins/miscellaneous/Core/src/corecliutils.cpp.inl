@@ -219,7 +219,7 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
 
     pContents = QByteArray();
 
-    if (internetConnectionAvailable()) {
+    if (hasInternetConnection()) {
         // Create a network access manager so that we can retrieve the contents
         // of the remote file
 
@@ -314,7 +314,7 @@ int exec(const QString &pProgram, const QStringList &pArgs)
 
 //==============================================================================
 
-bool internetConnectionAvailable()
+bool hasInternetConnection()
 {
     // Check whether an Internet connection is available, this by going through
     // all of our network interfaces and checking whether one of them is both
@@ -341,7 +341,7 @@ bool internetConnectionAvailable()
 
 //==============================================================================
 
-QString noInternetConnectionAvailableMessage()
+QString noInternetConnectionMessage()
 {
     // Return a typical message about no Internet connection being available
 

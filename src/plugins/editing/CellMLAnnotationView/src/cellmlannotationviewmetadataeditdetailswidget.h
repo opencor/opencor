@@ -136,7 +136,7 @@ private:
 
     bool mLookUpTerm;
     QString mErrorMessage;
-    bool mInternetConnectionAvailable;
+    bool mHasInternetConnection;
 
     Core::Widget *mOutput;
     Core::UserMessageWidget *mOutputMessage;
@@ -170,14 +170,14 @@ private:
 
     void upudateOutputMessage(bool pLookUpTerm,
                               const QString &pErrorMessage,
-                              bool pInternetConnectionAvailable,
+                              bool pHasInternetConnection,
                               bool *pShowBusyWidget = nullptr);
     void updateOutputHeaders();
 
     void updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
                         bool pLookUpTerm,
                         const QString &pErrorMessage = QString(),
-                        bool pInternetConnectionAvailable = true);
+                        bool pHasInternetConnection = true);
 
     void genericLookUp(const QString &pItemInformation = QString(),
                        InformationType pInformationType = None);
