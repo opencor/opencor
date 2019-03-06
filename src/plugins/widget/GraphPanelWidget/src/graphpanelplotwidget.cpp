@@ -1530,27 +1530,26 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mOwner(pParent),
     mBackgroundColor(QColor()),
     mForegroundColor(QColor()),
+    mEnabledBackgroundColor(QColor()),
+    mEnabledForegroundColor(QColor()),
     mPointCoordinatesStyle(Qt::DashLine),
     mPointCoordinatesWidth(1),
     mPointCoordinatesColor(QColor()),
     mPointCoordinatesFontColor(Qt::white),
     mSurroundingAreaBackgroundColor(QColor()),
     mSurroundingAreaForegroundColor(QColor()),
+    mEnabledSurroundingAreaBackgroundColor(QColor()),
+    mEnabledSurroundingAreaForegroundColor(QColor()),
     mZoomRegionStyle(Qt::SolidLine),
     mZoomRegionWidth(1),
     mZoomRegionColor(QColor()),
     mZoomRegionFontColor(Qt::white),
     mZoomRegionFilled(true),
     mZoomRegionFillColor(QColor()),
+    mEnabledGridLinesColor(QColor()),
     mLogAxisX(false),
     mLogAxisY(false),
     mGraphs(GraphPanelPlotGraphs()),
-    mHasEnabledSettings(false),
-    mEnabledBackgroundColor(QColor()),
-    mEnabledForegroundColor(QColor()),
-    mEnabledSurroundingAreaBackgroundColor(QColor()),
-    mEnabledSurroundingAreaForegroundColor(QColor()),
-    mEnabledGridLinesColor(QColor()),
     mEnabledGraphPens(QMap<GraphPanelPlotGraph *, QPen>()),
     mEnabledGraphSymbolBrushes(QMap<GraphPanelPlotGraph *, QBrush>()),
     mEnabledGraphSymbolPens(QMap<GraphPanelPlotGraph *, QPen>()),
@@ -1819,42 +1818,35 @@ void GraphPanelPlotWidget::changeEvent(QEvent *pEvent)
     if (pEvent->type() == QEvent::EnabledChange) {
         setUpdatesEnabled(false);
             if (isEnabled()) {
-                // Use the original colour of different things, but only if they
-                // have been set, i.e. if we were disabled and now enabled
+                // Use the original colour of different things
 
-                if (mHasEnabledSettings) {
-                    setBackgroundColor(mEnabledBackgroundColor);
-                    setForegroundColor(mEnabledForegroundColor);
+                setBackgroundColor(mEnabledBackgroundColor);
+                setForegroundColor(mEnabledForegroundColor);
 
-                    setSurroundingAreaBackgroundColor(mEnabledSurroundingAreaBackgroundColor);
-                    setSurroundingAreaForegroundColor(mEnabledSurroundingAreaForegroundColor);
+                setSurroundingAreaBackgroundColor(mEnabledSurroundingAreaBackgroundColor);
+                setSurroundingAreaForegroundColor(mEnabledSurroundingAreaForegroundColor);
 
-                    setGridLinesColor(mEnabledGridLinesColor);
+                setGridLinesColor(mEnabledGridLinesColor);
 
-                    for (auto graph : mGraphs) {
-                        const QwtSymbol *graphSymbol = graph->symbol();
-                        QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
-                        QSize graphSymbolSize = graphSymbol->size();
+                for (auto graph : mGraphs) {
+                    const QwtSymbol *graphSymbol = graph->symbol();
+                    QwtSymbol::Style graphSymbolStyle = graphSymbol->style();
+                    QSize graphSymbolSize = graphSymbol->size();
 
-                        graph->setPen(mEnabledGraphPens.value(graph));
-                        graph->setSymbol(graphSymbolStyle,
-                                         mEnabledGraphSymbolBrushes.value(graph),
-                                         mEnabledGraphSymbolPens.value(graph),
-                                         graphSymbolSize);
-                    }
-
-                    // Reset a few things
-
-                    mHasEnabledSettings = false;
-
-                    mEnabledGraphPens.clear();
-                    mEnabledGraphSymbolBrushes.clear();
-                    mEnabledGraphSymbolPens.clear();
+                    graph->setPen(mEnabledGraphPens.value(graph));
+                    graph->setSymbol(graphSymbolStyle,
+                                     mEnabledGraphSymbolBrushes.value(graph),
+                                     mEnabledGraphSymbolPens.value(graph),
+                                     graphSymbolSize);
                 }
+
+                // Reset some trackers
+
+                mEnabledGraphPens.clear();
+                mEnabledGraphSymbolBrushes.clear();
+                mEnabledGraphSymbolPens.clear();
             } else {
                 // Keep track of various original colours
-
-                mHasEnabledSettings = true;
 
                 mEnabledBackgroundColor = mBackgroundColor;
                 mEnabledForegroundColor = mForegroundColor;
