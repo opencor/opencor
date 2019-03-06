@@ -296,7 +296,6 @@ CentralWidget::~CentralWidget()
 
 static const auto SettingsFileNamesOrUrls      = QStringLiteral("FileNamesOrUrls");
 static const auto SettingsCurrentFileNameOrUrl = QStringLiteral("CurrentFileNameOrUrl");
-static const auto SettingsFileIsRemote         = QStringLiteral("FileIsRemote%1");
 static const auto SettingsFileMode             = QStringLiteral("FileMode%1");
 static const auto SettingsFileModeView         = QStringLiteral("FileModeView%1%2");
 
@@ -343,16 +342,15 @@ void CentralWidget::loadSettings(QSettings &pSettings)
     emit atLeastOneFile(false);
     emit atLeastTwoFiles(false);
 
-    // Retrieve and open the files that were previously opened
+    // Retrieve and open the files that were previously opened and as if they
+    // were remote files
+    // Note: if a file is not a remote file then openRemoteFile() will open it
+    //       as a normal file...
 
     QStringList fileNamesOrUrls = pSettings.value(SettingsFileNamesOrUrls).toStringList();
 
-    for (const auto &fileNameOrUrl : fileNamesOrUrls) {
-        if (pSettings.value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool())
-            openRemoteFile(fileNameOrUrl, false);
-        else
-            openFile(fileNameOrUrl);
-    }
+    for (const auto &fileNameOrUrl : fileNamesOrUrls)
+        openRemoteFile(fileNameOrUrl, false);
 
     // Retrieve the selected modes and views of our different files
 
@@ -387,12 +385,16 @@ void CentralWidget::loadSettings(QSettings &pSettings)
     }
 
     // Select the previously selected file, if it still exists, by pretending to
-    // open it (which, in turn, will select the file)
+    // open it (which, in turn, will select it)
 
     QString crtFileNameOrUrl = pSettings.value(SettingsCurrentFileNameOrUrl).toString();
-    QString crtFileName = pSettings.value(SettingsFileIsRemote.arg(crtFileNameOrUrl)).toBool()?
-                              fileManagerInstance->fileName(crtFileNameOrUrl):
-                              crtFileNameOrUrl;
+    bool isLocalFile;
+
+    checkFileNameOrUrl(crtFileNameOrUrl, isLocalFile, crtFileNameOrUrl);
+
+    QString crtFileName = isLocalFile?
+                              crtFileNameOrUrl:
+                              fileManagerInstance->fileName(crtFileNameOrUrl);
 
     if (mFileNames.contains(crtFileName)) {
         openFile(crtFileName);
@@ -436,14 +438,12 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
 {
     // Remove all the settings related to previously opened files
 
-    static const QString SettingsFileIsRemoteHeader = SettingsFileIsRemote.arg(QString());
     static const QString SettingsFileModeHeader = SettingsFileMode.arg(QString());
     static const QString SettingsFileModeViewHeader = SettingsFileModeView.arg(QString())
                                                                           .arg(QString());
 
     for (const auto &key : pSettings.allKeys()) {
-        if (   key.startsWith(SettingsFileIsRemoteHeader)
-            || key.startsWith(SettingsFileModeHeader)
+        if (   key.startsWith(SettingsFileModeHeader)
             || key.startsWith(SettingsFileModeViewHeader)) {
             pSettings.remove(key);
         }
@@ -457,8 +457,7 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
 
     for (const auto &fileName : mFileNames) {
         if (!fileManagerInstance->isNew(fileName)) {
-            // The file is not new, so keep track of it, as well as of whether
-            // it's a remote file
+            // The file is not new, so keep track of it
 
             bool fileIsRemote = fileManagerInstance->isRemote(fileName);
 
@@ -468,8 +467,6 @@ void CentralWidget::saveSettings(QSettings &pSettings) const
                 fileNamesOrUrls << fileName;
 
             fileNames << fileName;
-
-            pSettings.setValue(SettingsFileIsRemote.arg(fileNamesOrUrls.last()), fileIsRemote);
         }
     }
 
@@ -733,8 +730,7 @@ void CentralWidget::importRemoteFile(const QString &pFileNameOrUrl)
 
             if (   !fileHandlingInterface
                 || !fileHandlingInterface->importFile(temporaryFileName)) {
-                // The remote file couldn't be imported, so open it as a remote
-                // file
+                // The remote file couldn't be imported, so just open it
 
                 openRemoteFile(fileNameOrUrl);
             }
@@ -799,9 +795,8 @@ void CentralWidget::openFile(const QString &pFileName, File::Type pType,
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
     // Note #1: mFileNames is, for example, used to retrieve the name of a file,
-    //          which we want to close (see CentralWidget::closeFile()), so we
-    //          must make sure that the order of its contents matches that of
-    //          the tabs...
+    //          which we want to close (see closeFile()), so we must make sure
+    //          that the order of its contents matches that of the tabs...
     // Note #2: rather than using mFileNames, we could have used a tab's tool
     //          tip, but this makes it a bit tricky to handle with regards to
     //          connections and therefore with regards to some events triggering
