@@ -251,8 +251,11 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
 
             QUrl redirectedUrl = networkReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
 
-            if (!redirectedUrl.isEmpty())
+            if (!redirectedUrl.isEmpty()) {
+                networkReply->deleteLater();
+
                 return download(redirectedUrl.toString(), pContents, pErrorMessage);
+            }
 
             pContents = networkReply->readAll();
 
@@ -261,8 +264,6 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
         } else if (pErrorMessage) {
             *pErrorMessage = networkReply->errorString();
         }
-
-        // Delete (later) the network reply
 
         networkReply->deleteLater();
 
