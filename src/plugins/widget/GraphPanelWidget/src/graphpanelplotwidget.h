@@ -556,9 +556,6 @@ private:
     QColor mBackgroundColor;
     QColor mForegroundColor;
 
-    QColor mEnabledBackgroundColor;
-    QColor mEnabledForegroundColor;
-
     Qt::PenStyle mPointCoordinatesStyle;
     int mPointCoordinatesWidth;
     QColor mPointCoordinatesColor;
@@ -567,9 +564,6 @@ private:
     QColor mSurroundingAreaBackgroundColor;
     QColor mSurroundingAreaForegroundColor;
 
-    QColor mEnabledSurroundingAreaBackgroundColor;
-    QColor mEnabledSurroundingAreaForegroundColor;
-
     Qt::PenStyle mZoomRegionStyle;
     int mZoomRegionWidth;
     QColor mZoomRegionColor;
@@ -577,12 +571,20 @@ private:
     bool mZoomRegionFilled;
     QColor mZoomRegionFillColor;
 
-    QColor mEnabledGridLinesColor;
-
     bool mLogAxisX;
     bool mLogAxisY;
 
     GraphPanelPlotGraphs mGraphs;
+
+    bool mHasEnabledSettings;
+
+    QColor mEnabledBackgroundColor;
+    QColor mEnabledForegroundColor;
+
+    QColor mEnabledSurroundingAreaBackgroundColor;
+    QColor mEnabledSurroundingAreaForegroundColor;
+
+    QColor mEnabledGridLinesColor;
 
     QMap<GraphPanelPlotGraph *, QPen> mEnabledGraphPens;
     QMap<GraphPanelPlotGraph *, QBrush> mEnabledGraphSymbolBrushes;

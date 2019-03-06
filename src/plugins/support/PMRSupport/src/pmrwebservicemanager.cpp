@@ -196,8 +196,8 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
 {
     // Check that we are connected to the Internet
 
-    if (!Core::internetConnectionAvailable()) {
-        emit error(Core::noInternetConnectionAvailableMessage());
+    if (!Core::hasInternetConnection()) {
+        emit error(Core::noInternetConnectionMessage());
 
         return nullptr;
     }

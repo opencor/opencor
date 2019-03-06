@@ -141,7 +141,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mItems(CellmlAnnotationViewMetadataEditDetailsItems()),
     mLookUpTerm(false),
     mErrorMessage(QString()),
-    mInternetConnectionAvailable(true),
+    mHasInternetConnection(true),
     mInformationType(None),
     mLookUpInformation(false),
     mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
@@ -364,8 +364,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     // Retranslate our output message
 
-    upudateOutputMessage(mLookUpTerm, mErrorMessage,
-                         mInternetConnectionAvailable);
+    upudateOutputMessage(mLookUpTerm, mErrorMessage, mHasInternetConnection);
 
     // Retranslate our output headers
 
@@ -458,7 +457,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pLookUpTerm,
                                                                          const QString &pErrorMessage,
-                                                                         bool pInternetConnectionAvailable,
+                                                                         bool pHasInternetConnection,
                                                                          bool *pShowBusyWidget)
 {
     // Update our output message
@@ -477,7 +476,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pL
 
         if (pShowBusyWidget)
             *pShowBusyWidget = true;
-    } else if (pInternetConnectionAvailable && pErrorMessage.isEmpty()) {
+    } else if (pHasInternetConnection && pErrorMessage.isEmpty()) {
         if (isDirectTerm(mTermValue->text())) {
             if (mAddTermButton->isEnabled()) {
                 mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
@@ -495,9 +494,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pL
         }
     } else {
         mOutputMessage->setIconMessage(":/oxygen/emblems/emblem-important.png",
-                                       Core::formatMessage(pInternetConnectionAvailable?
+                                       Core::formatMessage(pHasInternetConnection?
                                                                pErrorMessage:
-                                                               Core::noInternetConnectionAvailableMessage(),
+                                                               Core::noInternetConnectionMessage(),
                                                            false, true));
     }
 }
@@ -527,13 +526,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
                                                                    bool pLookUpTerm,
                                                                    const QString &pErrorMessage,
-                                                                   bool pInternetConnectionAvailable)
+                                                                   bool pHasInternetConnection)
 {
     // Keep track of some information
 
     mLookUpTerm = pLookUpTerm;
     mErrorMessage = pErrorMessage;
-    mInternetConnectionAvailable = pInternetConnectionAvailable;
+    mHasInternetConnection = pHasInternetConnection;
 
     // Reset various properties
     // Note: we might only do that before adding new items, but then again there
@@ -607,9 +606,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
         // No items to show, so either there is no data available or an error
         // occurred, so update our output message
 
-        upudateOutputMessage(pLookUpTerm, pErrorMessage,
-                             pInternetConnectionAvailable,
-                             &showBusyWidget);
+        upudateOutputMessage(pLookUpTerm, pErrorMessage, pHasInternetConnection, &showBusyWidget);
 
         // Pretend that we don't want to look anything up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
@@ -930,7 +927,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
     // Now, retrieve some ontological terms, but only if we are connected to the
     // Internet
 
-    if (Core::internetConnectionAvailable()) {
+    if (Core::hasInternetConnection()) {
         QString term = mTerms.first();
 
         mTerms.removeFirst();
@@ -953,7 +950,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     // Retrieve the list of terms, should there be a network reply
 
     QString errorMessage = QString();
-    bool internetConnectionAvailable = true;
+    bool hasInternetConnection = true;
 
     if (pNetworkReply) {
         // Ignore the network reply if it got cancelled
@@ -1005,7 +1002,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
             errorMessage = pNetworkReply->errorString();
         }
     } else {
-        internetConnectionAvailable = false;
+        hasInternetConnection = false;
     }
 
     // Update our GUI with the results of the look up after having sorted them
@@ -1013,7 +1010,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     std::sort(mItems.begin(), mItems.end(), CellmlAnnotationViewMetadataEditDetailsItem::compare);
 
-    updateItemsGui(mItems, false, errorMessage, internetConnectionAvailable);
+    updateItemsGui(mItems, false, errorMessage, hasInternetConnection);
 
     // Update our GUI (incl. its enabled state)
 

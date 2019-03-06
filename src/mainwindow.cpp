@@ -1135,20 +1135,18 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
 
 void MainWindow::handleUrl(const QUrl &pUrl)
 {
-    // Handle the action that was passed to OpenCOR
-    // Note: we want to make sure that we are visible before handling a URL,
-    //       hence we do this through a single shot. Indeed, otherwise to start
-    //       OpenCOR through our URL scheme (e.g. opencor://openAboutDialog)
-    //       will result in the dialog appearing before we become visible, which
-    //       doesn't look neat. Not only that, but it might in some cases (e.g.
-    //       opencor://openPreferencesDialog) result in some GUI problems (see
-    //       issue #1802). When it comes to opening a file / files through our
-    //       URL scheme, it's kind of the same in the sense that without a
-    //       single shot, the file/s will get opened in the "background", which
-    //       is not neat either...
+    // Handle the action that was passed to OpenCOR, but only once we are
+    // visible
+    // Note: indeed, otherwise to start OpenCOR through our URL scheme (e.g.
+    //       opencor://openAboutDialog) will result in the dialog appearing
+    //       before we become visible, which doesn't look neat. Not only that,
+    //       but it might in some cases (e.g. opencor://openPreferencesDialog)
+    //       result in some GUI problems (see issue #1802). When it comes to
+    //       opening a file / files through our URL scheme, it's kind of the
+    //       same in the sense that without a single shot, the file/s will get
+    //       opened in the "background", which is not neat either...
 
-    QTimer::singleShot(0, this, std::bind(&MainWindow::doHandleUrl,
-                                          this, pUrl));
+    QTimer::singleShot(0, this, std::bind(&MainWindow::doHandleUrl, this, pUrl));
 }
 
 //==============================================================================
