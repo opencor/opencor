@@ -80,7 +80,9 @@ namespace Core {
 
 namespace DataStore {
     class DataStoreExportData;
+    class DataStoreExporter;
     class DataStoreImportData;
+    class DataStoreImporter;
 }   // namespace DataStore
 
 //==============================================================================
@@ -338,7 +340,8 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void importDone();
+    void importDone(DataStore::DataStoreImporter *pDataStoreImporter);
+    void exportDone(DataStore::DataStoreExporter *pDataStoreExporter);
 
 private slots:
     void runPauseResumeSimulation();
@@ -412,6 +415,9 @@ private slots:
     void checkGraphPanelsAndGraphs();
 
     void finalFurtherInitialize();
+
+    void resetDataStoreImporterConnections(DataStore::DataStoreImporter *pDataStoreImporter);
+    void resetDataStoreExporterConnections(DataStore::DataStoreExporter *pDataStoreExporter);
 };
 
 //==============================================================================
