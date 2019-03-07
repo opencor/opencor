@@ -459,25 +459,29 @@ void setActiveDirectory(const QString &pDirName)
 
 bool isDirectory(const QString &pDirName)
 {
-    // Return whether the given directory exists
+    // Return whether the given directory exists and is writable
 
-    return !pDirName.isEmpty() && QDir(pDirName).exists();
+    if (!pDirName.isEmpty()) {
+        QFileInfo fileInfo(pDirName);
+
+        return fileInfo.exists() && fileInfo.isDir() && fileInfo.isWritable();
+    }
+
+    return false;
 }
 
 //==============================================================================
 
 bool isEmptyDirectory(const QString &pDirName)
 {
-    // Return whether the given directory exists and is empty
+    // Return whether the given directory exists, is empty and is writable
 
-    if (pDirName.isEmpty()) {
-        return false;
-    } else {
-        QDir dir(pDirName);
-
-        return     dir.exists()
-               && !dir.entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
+    if (!pDirName.isEmpty()) {
+        return     isDirectory(pDirName)
+               && !QDir(pDirName).entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
     }
+
+    return false;
 }
 
 //==============================================================================
