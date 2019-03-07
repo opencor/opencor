@@ -686,9 +686,32 @@ void MainWindow::loadSettings()
 
     setLocale(rawLocale(), true);
 
-    // Retrieve the geometry and state of the main window
+    // Have our various plugins load their settings
 
     QSettings settings;
+
+    settings.beginGroup(SettingsPlugins);
+        for (auto plugin : mLoadedPluginPlugins) {
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
+            settings.endGroup();
+        }
+    settings.endGroup();
+
+    // Let our Core plugin know that all of the plugins have loaded their
+    // settings
+    // Note: this is similar to initializePlugin() vs. pluginsInitialized()...
+
+    if (mCoreInterface)
+        mCoreInterface->settingsLoaded(mPluginManager->loadedPlugins());
+
+    // Retrieve the geometry and state of the main window
+    // Note: we must do this after our various plugins have loaded their
+    //       settings. Indeed, as part of this process, the Core plugin loads
+    //       previously laoded files, which in the case of remote files involves
+    //       relying on SynchronousFileDownloader, which in turn relies on using
+    //       a QEventLoop object to wait for the file to be downloaded and, on
+    //       macOS, this prevents the geometry from being properly applied...
 
     if (   !restoreGeometry(settings.value(SettingsGeometry).toByteArray())
         || !restoreState(settings.value(SettingsState).toByteArray())) {
@@ -714,23 +737,6 @@ void MainWindow::loadSettings()
     // Retrieve the state of the docked windows
 
     mDockedWindowsState = settings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
-
-    // Retrieve the settings of our various plugins
-
-    settings.beginGroup(SettingsPlugins);
-        for (auto plugin : mLoadedPluginPlugins) {
-            settings.beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
-            settings.endGroup();
-        }
-    settings.endGroup();
-
-    // Let our core plugin know that all of the plugins have loaded their
-    // settings
-    // Note: this is similar to initializePlugin() vs. pluginsInitialized()...
-
-    if (mCoreInterface)
-        mCoreInterface->settingsLoaded(mPluginManager->loadedPlugins());
 
     // Remove the File menu when on macOS, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on macOS
