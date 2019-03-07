@@ -69,6 +69,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+    extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -459,12 +465,22 @@ void setActiveDirectory(const QString &pDirName)
 
 bool isDirectory(const QString &pDirName)
 {
-    // Return whether the given directory exists and is writable
+    // Return whether the given directory exists
 
-    if (!pDirName.isEmpty()) {
-        QFileInfo fileInfo(pDirName);
+    if (!pDirName.isEmpty() && QDir(pDirName).exists()) {
+        // Check whether the directory is writable
 
-        return fileInfo.exists() && fileInfo.isDir() && fileInfo.isWritable();
+#ifdef Q_OS_WIN
+        ++qt_ntfs_permission_lookup;
+#endif
+
+        bool res = QFileInfo(pDirName).isWritable();
+
+#ifdef Q_OS_WIN
+        --qt_ntfs_permission_lookup;
+#endif
+
+        return res;
     }
 
     return false;
