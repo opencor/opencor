@@ -297,7 +297,16 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
 
             setActiveDirectory(res);
 
-            // Check whether the directory should be empty
+            // Check whether the directory is writable
+
+            if (!Core::isDirectory(res)) {
+                Core::warningMessageBox(pCaption,
+                                        QObject::tr("Please choose a writable directory."));
+
+                continue;
+            }
+
+            // Check whether the directory should be and is empty
 
             if (pEmptyDir && !isEmptyDirectory(res)) {
                 warningMessageBox(pCaption,
