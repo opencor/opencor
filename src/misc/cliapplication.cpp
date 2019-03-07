@@ -62,12 +62,12 @@ CliApplication::~CliApplication()
     QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
-
-    for (auto plugin : mLoadedPluginPlugins) {
-        settings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
-        settings.endGroup();
-    }
+        for (auto plugin : mLoadedPluginPlugins) {
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
+            settings.endGroup();
+        }
+    settings.endGroup();
 
     // Finalise our loaded plugins, if any
 
@@ -113,13 +113,11 @@ void CliApplication::loadPlugins()
     QSettings settings;
 
     settings.beginGroup(SettingsPlugins);
-
-    for (auto plugin : mLoadedPluginPlugins) {
-        settings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
-        settings.endGroup();
-    }
-
+        for (auto plugin : mLoadedPluginPlugins) {
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
+            settings.endGroup();
+        }
     settings.endGroup();
 }
 
