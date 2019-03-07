@@ -718,13 +718,11 @@ void MainWindow::loadSettings()
     // Retrieve the settings of our various plugins
 
     settings.beginGroup(SettingsPlugins);
-
-    for (auto plugin : mLoadedPluginPlugins) {
-        settings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
-        settings.endGroup();
-    }
-
+        for (auto plugin : mLoadedPluginPlugins) {
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
+            settings.endGroup();
+        }
     settings.endGroup();
 
     // Let our core plugin know that all of the plugins have loaded their
@@ -769,13 +767,11 @@ void MainWindow::saveSettings() const
     // Keep track of the settings of our various plugins
 
     settings.beginGroup(SettingsPlugins);
-
-    for (auto plugin : mLoadedPluginPlugins) {
-        settings.beginGroup(plugin->name());
-            qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
-        settings.endGroup();
-    }
-
+        for (auto plugin : mLoadedPluginPlugins) {
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
+            settings.endGroup();
+        }
     settings.endGroup();
 
     // Keep track of whether the status bar is to be shown
