@@ -71,6 +71,15 @@ QString getNonGitDirectory()
 
             Core::setActiveDirectory(res);
 
+            // Check whether the directory is writable
+
+            if (!Core::isDirectory(res)) {
+                Core::warningMessageBox(QObject::tr("Select Directory"),
+                                        QObject::tr("Please choose a writable directory."));
+
+                continue;
+            }
+
             // Check whether the directory is a Git directory
 
             if (isGitDirectory(res)) {

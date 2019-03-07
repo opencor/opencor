@@ -507,6 +507,10 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
     </message>
     <message>
+        <source>Please choose a writable directory.</source>
+        <translation>Veuillez choisir un répertoire accessible en écriture.</translation>
+    </message>
+    <message>
         <source>Please choose an empty directory.</source>
         <translation>Veuillez choisir un répertoire vide.</translation>
     </message>

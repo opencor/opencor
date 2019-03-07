@@ -69,6 +69,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+    extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -461,23 +467,34 @@ bool isDirectory(const QString &pDirName)
 {
     // Return whether the given directory exists
 
-    return !pDirName.isEmpty() && QDir(pDirName).exists();
+    if (!pDirName.isEmpty() && QDir(pDirName).exists()) {
+        // Check whether the directory is writable
+
+#ifdef Q_OS_WIN
+        ++qt_ntfs_permission_lookup;
+#endif
+
+        bool res = QFileInfo(pDirName).isWritable();
+
+#ifdef Q_OS_WIN
+        --qt_ntfs_permission_lookup;
+#endif
+
+        return res;
+    }
+
+    return false;
 }
 
 //==============================================================================
 
 bool isEmptyDirectory(const QString &pDirName)
 {
-    // Return whether the given directory exists and is empty
+    // Return whether the given directory is really a directory and an empty one
+    // at that
 
-    if (pDirName.isEmpty()) {
-        return false;
-    } else {
-        QDir dir(pDirName);
-
-        return     dir.exists()
-               && !dir.entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
-    }
+    return     isDirectory(pDirName)
+           && !QDir(pDirName).entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
 }
 
 //==============================================================================
