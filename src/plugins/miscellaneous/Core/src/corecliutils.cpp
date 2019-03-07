@@ -474,14 +474,11 @@ bool isDirectory(const QString &pDirName)
 
 bool isEmptyDirectory(const QString &pDirName)
 {
-    // Return whether the given directory exists, is empty and is writable
+    // Return whether the given directory is really a directory and an empty one
+    // at that
 
-    if (!pDirName.isEmpty()) {
-        return     isDirectory(pDirName)
-               && !QDir(pDirName).entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
-    }
-
-    return false;
+    return     isDirectory(pDirName)
+           && !QDir(pDirName).entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
 }
 
 //==============================================================================
