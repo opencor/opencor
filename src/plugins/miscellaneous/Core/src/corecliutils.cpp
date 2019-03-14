@@ -50,7 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 #include <QTemporaryDir>
 #include <QTemporaryFile>
-#include <QTextStream>
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
 #include <QXmlStreamReader>
@@ -955,9 +954,7 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     // Serialise our 'reduced' DOM document
 
-    QTextStream textStream(&res, QIODevice::WriteOnly);
-
-    domDocument.save(textStream, 4);
+    res = domDocument.toByteArray(4);
 
     // Manually serialise the elements' attributes
 
