@@ -50,7 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 #include <QTemporaryDir>
 #include <QTemporaryFile>
-#include <QTextStream>
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
 #include <QXmlStreamReader>
@@ -574,7 +573,7 @@ QString formatXml(const QString &pXml)
 
 //==============================================================================
 
-void cleanContentMathml(QDomElement pDomElement)
+void cleanContentMathml(QDomElement &pDomElement)
 {
     // Clean up the current element
     // Note: the idea is to remove all the attributes that are not in the
@@ -611,7 +610,10 @@ QString cleanContentMathml(const QString &pContentMathml)
     QDomDocument domDocument;
 
     if (domDocument.setContent(pContentMathml, true)) {
-        cleanContentMathml(domDocument.documentElement());
+        for (QDomElement childElement = domDocument.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            cleanContentMathml(childElement);
+        }
 
         return domDocument.toString(-1);
     } else {
@@ -621,7 +623,7 @@ QString cleanContentMathml(const QString &pContentMathml)
 
 //==============================================================================
 
-void cleanPresentationMathml(QDomElement pDomElement)
+void cleanPresentationMathml(QDomElement &pDomElement)
 {
     // Merge successive child mrow elements, as long as their parent is not an
     // element that requires a specific number of arguments (which could become
@@ -707,7 +709,10 @@ QString cleanPresentationMathml(const QString &pPresentationMathml)
     QDomDocument domDocument;
 
     if (domDocument.setContent(pPresentationMathml)) {
-        cleanPresentationMathml(domDocument.documentElement());
+        for (QDomElement childElement = domDocument.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            cleanPresentationMathml(childElement);
+        }
 
         return domDocument.toString(-1);
     } else {
@@ -949,9 +954,7 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     // Serialise our 'reduced' DOM document
 
-    QTextStream textStream(&res, QIODevice::WriteOnly);
-
-    domDocument.save(textStream, 4);
+    res = domDocument.toByteArray(4);
 
     // Manually serialise the elements' attributes
 

@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QRegularExpression>
 #include <QTemporaryDir>
-#include <QTextStream>
 
 //==============================================================================
 
