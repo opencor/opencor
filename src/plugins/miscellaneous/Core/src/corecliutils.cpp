@@ -574,7 +574,7 @@ QString formatXml(const QString &pXml)
 
 //==============================================================================
 
-void cleanContentMathml(QDomElement pDomElement)
+void cleanContentMathml(QDomElement &pDomElement)
 {
     // Clean up the current element
     // Note: the idea is to remove all the attributes that are not in the
@@ -611,7 +611,10 @@ QString cleanContentMathml(const QString &pContentMathml)
     QDomDocument domDocument;
 
     if (domDocument.setContent(pContentMathml, true)) {
-        cleanContentMathml(domDocument.documentElement());
+        for (QDomElement childElement = domDocument.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            cleanContentMathml(childElement);
+        }
 
         return domDocument.toString(-1);
     } else {
@@ -621,7 +624,7 @@ QString cleanContentMathml(const QString &pContentMathml)
 
 //==============================================================================
 
-void cleanPresentationMathml(QDomElement pDomElement)
+void cleanPresentationMathml(QDomElement &pDomElement)
 {
     // Merge successive child mrow elements, as long as their parent is not an
     // element that requires a specific number of arguments (which could become
@@ -707,7 +710,10 @@ QString cleanPresentationMathml(const QString &pPresentationMathml)
     QDomDocument domDocument;
 
     if (domDocument.setContent(pPresentationMathml)) {
-        cleanPresentationMathml(domDocument.documentElement());
+        for (QDomElement childElement = domDocument.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            cleanPresentationMathml(childElement);
+        }
 
         return domDocument.toString(-1);
     } else {
