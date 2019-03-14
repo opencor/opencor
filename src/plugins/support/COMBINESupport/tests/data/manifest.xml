@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <omexManifest xmlns="http://identifiers.org/combine.specifications/omex-manifest">
     <content location="." format="http://identifiers.org/combine.specifications/omex"/>
     <content location="dir01/file01.txt" format="http://identifiers.org/combine.specifications/cellml" master="true"/>
