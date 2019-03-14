@@ -295,7 +295,7 @@ bool CombineArchive::save(const QString &pFileName)
     ZIPSupport::QZipWriter zipWriter(pFileName.isEmpty()?mFileName:pFileName);
 
     zipWriter.addFile(ManifestFileName,
-                       "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                       "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n"
                        "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
                        "    <content location=\".\" format=\""+OmexFormat.toUtf8()+"\"/>\n"
                       +fileList
