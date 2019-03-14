@@ -956,6 +956,13 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     res = domDocument.toByteArray(4);
 
+    // Replace <?xml version='1.0'?> with <?xml version='1.0' encoding='UTF-8'?>
+    // Note: indeed, by default QDomDocument uses UTF-8 and when it gets
+    //       serialised it doesn't specify it while we want it specified (so as
+    //       to be consistent with SED-ML for example)...
+
+    res.replace("<?xml version='1.0'?>", "<?xml version='1.0' encoding='UTF-8'?>");
+
     // Manually serialise the elements' attributes
 
     for (const auto &elementAttribute : elementsAttributes.keys())
