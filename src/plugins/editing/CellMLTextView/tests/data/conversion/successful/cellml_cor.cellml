@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <model name="cellml_1_0" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <units base_units="yes" name="my_base_unit1"/>
     <units base_units="yes" name="my_base_unit2"/>
