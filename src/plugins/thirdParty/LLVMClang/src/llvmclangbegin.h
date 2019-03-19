@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma warning(disable: 4267)
     #pragma warning(disable: 4291)
 #elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic push
     #if defined(__GNUC__) && (__GNUC__ >= 8)
         #pragma GCC diagnostic ignored "-Wclass-memaccess"
     #endif
@@ -35,7 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 #elif defined(Q_OS_MAC)
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wunused-parameter"
 #else
     #error Unsupported platform
 #endif
