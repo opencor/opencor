@@ -42,7 +42,7 @@ endif()
 # Make sure that we are using the compiler we support
 
 if(WIN32)
-    string(REPLACE "." ";" 
+    string(REPLACE "." ";"
            CMAKE_CXX_COMPILER_VERSION_LIST "${CMAKE_CXX_COMPILER_VERSION}")
 
     list(GET CMAKE_CXX_COMPILER_VERSION_LIST 0 CMAKE_CXX_COMPILER_VERSION_MAJOR)
