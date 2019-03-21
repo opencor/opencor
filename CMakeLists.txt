@@ -42,12 +42,9 @@ endif()
 # Make sure that we are using the compiler we support
 
 if(WIN32)
-    string(REGEX REPLACE "\\..*$" ""
-           CMAKE_CXX_COMPILER_VERSION_MAJOR "${CMAKE_CXX_COMPILER_VERSION}")
-
     if(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-       OR NOT CMAKE_CXX_COMPILER_VERSION_MAJOR VERSION_EQUAL "19")
-        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2015 on Windows...")
+       OR NOT CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "19.16")
+        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using MSVC 2017 Update 9 on Windows...")
     endif()
 elseif(APPLE)
     if(    NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
