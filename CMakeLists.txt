@@ -1112,48 +1112,41 @@ else()
         #       up. So, by copying them over, we are sure that the release/debug
         #       version of OpenCOR will work fine...
 
-        set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/redist")
-
-        if(NOT RELEASE_MODE)
-            set(MSVC_DIRNAME "${MSVC_DIRNAME}/Debug_NonRedist")
-        endif()
-
-        set(MSVC_DIRNAME "${MSVC_DIRNAME}/x64")
-
         if(RELEASE_MODE)
-            set(ADDITIONAL_FILES
-                ${MSVC_DIRNAME}/Microsoft.VC140.CRT/msvcp140.dll
-                ${MSVC_DIRNAME}/Microsoft.VC140.CRT/vcruntime140.dll
-            )
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/x64/Microsoft.VC141.CRT")
+            set(DEBUG_TAG)
         else()
-            set(ADDITIONAL_FILES
-                ${MSVC_DIRNAME}/Microsoft.VC140.DebugCRT/msvcp140d.dll
-                ${MSVC_DIRNAME}/Microsoft.VC140.DebugCRT/vcruntime140d.dll
-            )
+            set(MSVC_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Redist/MSVC/14.16.27012/debug_nonredist/x64/Microsoft.VC141.DebugCRT")
+            set(DEBUG_TAG d)
         endif()
 
-        set(WINDOWS_KIT_DIRNAME "C:/Program Files (x86)/Windows Kits/10/Redist/ucrt/DLLs/x64")
+        set(ADDITIONAL_FILES
+            ${MSVC_DIRNAME}/msvcp140${DEBUG_TAG}.dll
+            ${MSVC_DIRNAME}/vcruntime140${DEBUG_TAG}.dll
+        )
+
+        set(REMOTE_DEBUGGER_DIRNAME "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/Remote Debugger/x64")
 
         list(APPEND ADDITIONAL_FILES
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-file-l1-2-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-file-l2-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-localization-l1-2-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-processthreads-l1-1-1.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-synch-l1-2-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-core-timezone-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-convert-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-environment-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-filesystem-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-heap-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-locale-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-math-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-multibyte-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-runtime-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-stdio-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-string-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-time-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/api-ms-win-crt-utility-l1-1-0.dll
-            ${WINDOWS_KIT_DIRNAME}/ucrtbase.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-file-l2-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-localization-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-processthreads-l1-1-1.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-synch-l1-2-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-core-timezone-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-convert-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-environment-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-filesystem-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-heap-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-locale-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-math-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-multibyte-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-runtime-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-stdio-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-string-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-time-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/api-ms-win-crt-utility-l1-1-0.dll
+            ${REMOTE_DEBUGGER_DIRNAME}/ucrtbase.dll
         )
 
         foreach(ADDITIONAL_FILE ${ADDITIONAL_FILES})
