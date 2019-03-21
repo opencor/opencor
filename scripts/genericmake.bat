@@ -27,7 +27,7 @@ IF "!CMakeBuildType!" == "Release" (
 
 TITLE Making OpenCOR!TitleTests! (using !Generator!)...
 
-CALL "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
+CALL "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 CD build
 
