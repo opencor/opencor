@@ -164,36 +164,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
                     "\n"
                    +pCode;
 
-    // Determine our target triple
-    // Note: normally, we would call llvm::sys::getProcessTriple(), but this
-    //       returns the information about the system on which LLVM was built.
-    //       In most cases it is fine, but on macOS it may be a problem. Indeed,
-    //       with OS X 10.9, Apple decided to extend the C standard by adding
-    //       some functions (e.g. __exp10()). So, if the given code needs one of
-    //       those functions, then OpenCOR will crash if run on an 'old' version
-    //       of macOS. So, to avoid this issue, we set the target triple
-    //       ourselves, based on the system on which OpenCOR is to be used...
-
-    std::string targetTriple;
-
-#if defined(Q_OS_WIN)
-    targetTriple = "x86_64-pc-windows-msvc-elf";
-    // Note: MCJIT currently works only through the ELF object format, hence we
-    //       are appending "-elf"...
-#elif defined(Q_OS_LINUX)
-    targetTriple = "x86_64-pc-linux-gnu";
-#elif defined(Q_OS_MAC)
-    targetTriple = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
-#else
-    #error Unsupported platform
-#endif
-
     // Get a driver to compile our code
 
     llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagnosticOptions = new clang::DiagnosticOptions();
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions);
-    clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
+    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), diagnosticsEngine);
 
     driver.setCheckInputsExist(false);
 
@@ -247,7 +223,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create a compiler invocation using our command's arguments
 
-    const clang::driver::ArgStringList &commandArguments = command.getArguments();
+    const llvm::opt::ArgStringList &commandArguments = command.getArguments();
     std::unique_ptr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
@@ -290,6 +266,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Retrieve the LLVM bitcode module
 
     std::unique_ptr<llvm::Module> module = codeGenerationAction->takeModule();
+
+    if (!module) {
+        mError = tr("the bitcode module could not be retrieved");
+
+        return false;
+    }
 
     // Initialise the native target (and its ASM printer), so not only can we
     // then create an execution engine, but more importantly its data layout
