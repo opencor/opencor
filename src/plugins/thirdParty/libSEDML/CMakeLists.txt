@@ -14,9 +14,10 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.4.4)
 
 set(GIT_TAG 0.4.4)
 
-# Package repository
+# Package repository and release tag
 
 set(PACKAGE_REPOSITORY libSEDML)
+SET(RELEASE_TAG 0.4.4)
 
 # Specify where our local package will be installed
 
@@ -65,6 +66,7 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 18fc2673869ca6f40d3cb6e17aec123a2dccca37
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES 7ab5c523e8eb1e11f6ef865526ffbdd5ed01beea
                                               404fd98fef8cabea7757f60d9de9eb6672fe006a)
@@ -72,6 +74,7 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 98dd0a19f02a45f2e164d9e2090db7fe29e3a5e2
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                                  RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
                                   SHA1_VALUES af5d225115778e213f6577d4fa2b9364196c51d6
                                               404fd98fef8cabea7757f60d9de9eb6672fe006a)
@@ -80,12 +83,14 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 7be2e5c00149b3351d03d3ba26194125493c9e66
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES f1fb831e5cf1f3ddc7d674c2ab832f91cc9c38ab)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                               ${RELATIVE_PROJECT_SOURCE_DIR} 5c8c9681b5f76e6eefa4e345d28fae297df9e80e
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                              RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
                               SHA1_VALUES 730ac3c50ce494a29b454d1e050f2b9b6dc81952)
     endif()
@@ -179,6 +184,7 @@ else()
     create_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                         ${LOCAL_EXTERNAL_PACKAGE_DIR}
                         PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
+                        RELEASE_TAG ${RELEASE_TAG}
                         PACKAGED_FILES include ${SHA1_FILES}
                         SHA1_FILES ${SHA1_FILES}
                         TARGET ${PACKAGE_BUILD})
