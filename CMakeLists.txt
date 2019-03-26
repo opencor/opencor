@@ -59,9 +59,9 @@ elseif(APPLE)
         message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on macOS...")
     endif()
 else()
-    if(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
-       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5")
-        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x and later on Linux...")
+    if(    NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU"
+       AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ on Linux...")
     endif()
 endif()
 
