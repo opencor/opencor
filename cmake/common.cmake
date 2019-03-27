@@ -86,6 +86,19 @@ endmacro()
 
 #===============================================================================
 
+macro(strip_file PROJECT_TARGET FILENAME)
+    # Strip the given file of all its local symbols
+
+    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+        execute_process(COMMAND strip -x ${FILENAME})
+    else()
+        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND strip -x ${FILENAME})
+    endif()
+endmacro()
+
+#===============================================================================
+
 macro(add_plugin PLUGIN_NAME)
     # Various initialisations
 
@@ -251,12 +264,7 @@ macro(add_plugin PLUGIN_NAME)
             # Strip the external library of all its local symbols, if possible
 
             if(NOT WIN32 AND RELEASE_MODE)
-                if(${COPY_TARGET} STREQUAL "DIRECT")
-                    execute_process(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
-                                       COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                endif()
+                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
             # Link the plugin to the external library
@@ -659,12 +667,7 @@ macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
     # Strip the Qt library of all its local symbols
 
     if(RELEASE_MODE)
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-        endif()
+        strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
     endif()
 
     # Deploy the Qt library
@@ -692,7 +695,7 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
         # Strip the Qt plugin of all its local symbols
 
         if(RELEASE_MODE)
-            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         endif()
 
         # Deploy the Qt plugin
@@ -729,12 +732,7 @@ macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
     set(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
     if(RELEASE_MODE)
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND strip -x ${FULL_FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND strip -x ${FULL_FILENAME})
-        endif()
+        strip_file(${PROJECT_TARGET} ${FULL_FILENAME})
     endif()
 
     # Clean up the file's id
