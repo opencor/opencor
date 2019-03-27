@@ -90,7 +90,7 @@ macro(strip_file PROJECT_TARGET FILENAME)
     # Strip the given file of all its local symbols
 
     if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        execute_process(COMMAND strip -x ${FILENAME})
+        execute_process(COMMAND strip -x ${FILENAME} ERROR_QUIET)
     else()
         add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND strip -x ${FILENAME})
