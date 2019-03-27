@@ -168,6 +168,21 @@ else()
                                                                        ${QWTMATHML_SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyQwtmathmlLibrary)
+        else()
+            # Note: we wouldn't normally strip the library here since it's done
+            #       elsewhere in our build process, but it happens that there is
+            #       an issue with the system version of patchelf that prevents
+            #       the library from being stripped afterwards...
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
+                                     COMMAND strip -x ${QWT_SHARED_LIBRARY}
+                                     COMMAND patchelf --remove-rpath ${QWT_SHARED_LIBRARY}
+                                     COMMAND patchelf --set-rpath $ORIGIN --force-rpath ${QWT_SHARED_LIBRARY}
+                                     COMMAND strip -x ${QWTMATHML_SHARED_LIBRARY}
+                                     COMMAND patchelf --remove-rpath ${QWTMATHML_SHARED_LIBRARY}
+                                     COMMAND patchelf --set-rpath $ORIGIN --force-rpath ${QWTMATHML_SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES copyQwtmathmlLibrary)
         endif()
     endif()
 

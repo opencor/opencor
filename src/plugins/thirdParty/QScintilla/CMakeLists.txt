@@ -143,6 +143,18 @@ else()
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyLibrary)
+        else()
+            # Note: we wouldn't normally strip the library here since it's done
+            #       elsewhere in our build process, but it happens that there is
+            #       an issue with the system version of patchelf that prevents
+            #       the library from being stripped afterwards...
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
+                                     COMMAND strip -x ${SHARED_LIBRARY}
+                                     COMMAND patchelf --remove-rpath ${SHARED_LIBRARY}
+                                     COMMAND patchelf --set-rpath $ORIGIN --force-rpath ${SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES copyLibrary)
         endif()
     endif()
 
