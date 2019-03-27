@@ -366,7 +366,7 @@ macro(add_plugin PLUGIN_NAME)
     if(APPLE)
         macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
     elseif(NOT WIN32)
-        runpath2rpath(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+        runpath2rpath(${PROJECT_NAME} ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
     endif()
 
     # Package the plugin, but only if we are not on macOS since it will have

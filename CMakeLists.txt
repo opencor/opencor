@@ -1171,7 +1171,7 @@ else()
     else()
         # Make sure that OpenCOR uses RPATH rather than RUNPATH
 
-        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME})
+        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
     endif()
 endif()
 
