@@ -161,9 +161,7 @@ else()
 
         if(APPLE)
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
-                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWT_SHARED_LIBRARY}
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWT_SHARED_LIBRARY}
-                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWTMATHML_SHARED_LIBRARY}
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWTMATHML_SHARED_LIBRARY}
                                      COMMAND install_name_tool -change ${QWT_SHARED_LIBRARY}
                                                                        @rpath/${QWT_SHARED_LIBRARY}
