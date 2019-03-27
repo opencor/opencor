@@ -1216,7 +1216,8 @@ if(WIN32)
 
     # Install both the GUI and CLI versions of OpenCOR
 
-    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
+    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME
+            DESTINATION bin)
     install(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
             DESTINATION bin)
 
@@ -1318,7 +1319,8 @@ else()
 
     # OpenCOR itself
 
-    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
+    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME
+            DESTINATION bin)
 
     # Libraries needed on Ubuntu 16.04 LTS
 
