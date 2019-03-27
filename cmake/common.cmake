@@ -1119,8 +1119,8 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
         else()
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
-            # Note: this is in case we had an HTTP error of sorts, in which case
-            #       we would end up with an empty file...
+            # Note: this is in case we had an HTTP/S error of sorts, in which
+            #       case we would end up with an empty file...
 
             message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved from '${PACKAGE_URL}'...")
         endif()
