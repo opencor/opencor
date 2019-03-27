@@ -285,7 +285,7 @@ macro(add_plugin PLUGIN_NAME)
                 if(${COPY_TARGET} STREQUAL "DIRECT")
                     execute_process(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                    add_custom_command(TARGET ${COPY_TARGET} POST_BUILD
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
