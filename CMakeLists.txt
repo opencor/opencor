@@ -1322,18 +1322,6 @@ else()
     install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME
             DESTINATION bin)
 
-    # Libraries needed on Ubuntu 16.04 LTS
-
-    foreach(LIBRARY app base interfaces pbutils reamer video)
-        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
-
-        get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-        if(EXISTS ${REAL_FULL_LIBRARY})
-            linux_deploy_system_library(${REAL_FULL_LIBRARY} ${FULL_LIBRARY})
-        endif()
-    endforeach()
-
     # Mesa library
 
     install(FILES ${MESA_LIBRARY}
