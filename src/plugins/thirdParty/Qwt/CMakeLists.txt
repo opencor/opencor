@@ -157,9 +157,9 @@ else()
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        if(APPLE)
-            # Fix the RPATH information
+        # Fix the RPATH information
 
+        if(APPLE)
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
                                      COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWT_SHARED_LIBRARY}
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWT_SHARED_LIBRARY}
