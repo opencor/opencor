@@ -899,7 +899,7 @@ foreach(SHA1_FILE IN LISTS SHA1_FILES)
     endif()
 
     if(NOT WIN32 AND RELEASE_MODE)
-        execute_process(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
+        execute_process(COMMAND ${PROJECT_BUILD_DIR}/scripts/strip -x \$\{REAL_SHA1_FILENAME\})
     endif()
 
     file(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
