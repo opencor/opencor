@@ -88,12 +88,16 @@ endmacro()
 
 macro(strip_file PROJECT_TARGET FILENAME)
     # Strip the given file of all its local symbols
+    # Note: to strip QScintilla and Qwt when building them on Linux results in
+    #       an error due to patchelf having been used on them. So, we use a
+    #       wrapper that ignores errors and returns 0, so that our build doesn't
+    #       break...
 
     if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-        execute_process(COMMAND strip -x ${FILENAME} ERROR_QUIET)
+        execute_process(COMMAND ${PROJECT_BUILD_DIR}/scripts/strip -x ${FILENAME})
     else()
         add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND strip -x ${FILENAME})
+                           COMMAND ${PROJECT_BUILD_DIR}/scripts/strip -x ${FILENAME})
     endif()
 endmacro()
 
