@@ -86,6 +86,23 @@ endmacro()
 
 #===============================================================================
 
+macro(strip_file PROJECT_TARGET FILENAME)
+    # Strip the given file of all its local symbols
+    # Note: to strip QScintilla and Qwt when building them on Linux results in
+    #       an error due to patchelf having been used on them. So, we use a
+    #       wrapper that ignores errors and returns 0, so that our build doesn't
+    #       break...
+
+    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+    else()
+        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+    endif()
+endmacro()
+
+#===============================================================================
+
 macro(add_plugin PLUGIN_NAME)
     # Various initialisations
 
@@ -251,12 +268,7 @@ macro(add_plugin PLUGIN_NAME)
             # Strip the external library of all its local symbols, if possible
 
             if(NOT WIN32 AND RELEASE_MODE)
-                if(${COPY_TARGET} STREQUAL "DIRECT")
-                    execute_process(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
-                                       COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                endif()
+                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
             # Link the plugin to the external library
@@ -282,10 +294,10 @@ macro(add_plugin PLUGIN_NAME)
             # and that it references the correct Qt libraries, if any at all
 
             if(APPLE)
-                if(${COPY_TARGET} STREQUAL "DIRECT")
+                if("${COPY_TARGET}" STREQUAL "DIRECT")
                     execute_process(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                    add_custom_command(TARGET ${COPY_TARGET} POST_BUILD
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
@@ -366,7 +378,7 @@ macro(add_plugin PLUGIN_NAME)
     if(APPLE)
         macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
     elseif(NOT WIN32)
-        runpath2rpath(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+        runpath2rpath(${PROJECT_NAME} ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
     endif()
 
     # Package the plugin, but only if we are not on macOS since it will have
@@ -659,12 +671,7 @@ macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
     # Strip the Qt library of all its local symbols
 
     if(RELEASE_MODE)
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-        endif()
+        strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
     endif()
 
     # Deploy the Qt library
@@ -692,7 +699,7 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
         # Strip the Qt plugin of all its local symbols
 
         if(RELEASE_MODE)
-            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         endif()
 
         # Deploy the Qt plugin
@@ -729,12 +736,7 @@ macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
     set(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
     if(RELEASE_MODE)
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND strip -x ${FULL_FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND strip -x ${FULL_FILENAME})
-        endif()
+        strip_file(${PROJECT_TARGET} ${FULL_FILENAME})
     endif()
 
     # Clean up the file's id
@@ -897,7 +899,7 @@ foreach(SHA1_FILE IN LISTS SHA1_FILES)
     endif()
 
     if(NOT WIN32 AND RELEASE_MODE)
-        execute_process(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
+        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x \$\{REAL_SHA1_FILENAME\})
     endif()
 
     file(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
@@ -1121,8 +1123,8 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
         else()
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
-            # Note: this is in case we had an HTTP error of sorts, in which case
-            #       we would end up with an empty file...
+            # Note: this is in case we had an HTTP/S error of sorts, in which
+            #       case we would end up with an empty file...
 
             message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved from '${PACKAGE_URL}'...")
         endif()

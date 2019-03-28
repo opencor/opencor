@@ -59,9 +59,9 @@ elseif(APPLE)
         message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using (Apple) Clang on macOS...")
     endif()
 else()
-    if(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
-       OR CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5")
-        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ 5.x and later on Linux...")
+    if(    NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU"
+       AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        message(FATAL_ERROR "${CMAKE_PROJECT_NAME} can only be built using GCC/G++ on Linux...")
     endif()
 endif()
 
@@ -1171,7 +1171,7 @@ else()
     else()
         # Make sure that OpenCOR uses RPATH rather than RUNPATH
 
-        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME})
+        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
     endif()
 endif()
 
@@ -1216,7 +1216,8 @@ if(WIN32)
 
     # Install both the GUI and CLI versions of OpenCOR
 
-    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
+    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME
+            DESTINATION bin)
     install(FILES ${PROJECT_BUILD_DIR}/bin/${CMAKE_PROJECT_NAME}.com
             DESTINATION bin)
 
@@ -1318,19 +1319,8 @@ else()
 
     # OpenCOR itself
 
-    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
-
-    # Libraries needed on Ubuntu 16.04 LTS
-
-    foreach(LIBRARY app base interfaces pbutils reamer video)
-        set(FULL_LIBRARY ${CMAKE_SHARED_LIBRARY_PREFIX}gst${LIBRARY}-0.10${CMAKE_SHARED_LIBRARY_SUFFIX}.0)
-
-        get_filename_component(REAL_FULL_LIBRARY /usr/lib/x86_64-linux-gnu/${FULL_LIBRARY} REALPATH)
-
-        if(EXISTS ${REAL_FULL_LIBRARY})
-            linux_deploy_system_library(${REAL_FULL_LIBRARY} ${FULL_LIBRARY})
-        endif()
-    endforeach()
+    install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME
+            DESTINATION bin)
 
     # Mesa library
 
