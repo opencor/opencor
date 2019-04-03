@@ -516,10 +516,13 @@ macro(add_plugin PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
-                # Clean up our plugin's tests, if we are on macOS
+                # Clean up our plugin's tests, if we are on macOS, our make sure
+                # that it uses RPATH rather than RUNPATH on Linux
 
                 if(APPLE)
                     macos_clean_up_file_with_qt_dependencies(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
+                elseif(NOT WIN32)
+                    runpath2rpath(${TEST_NAME} ${DEST_TESTS_DIR}/${TEST_FILENAME})
                 endif()
             else()
                 message(AUTHOR_WARNING "The '${ARG_TEST}' test for the '${PLUGIN_NAME}' plugin does not exist...")
