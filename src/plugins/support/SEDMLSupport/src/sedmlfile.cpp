@@ -156,10 +156,10 @@ bool SedmlFile::load()
 
     mLoadingNeeded = false;
 
-    // Create a new SED-ML document, if needed, or try to load our file
+    // Create a new L1V3 SED-ML document, if needed, or try to load our file
 
     mSedmlDocument = mNew?
-                         new libsedml::SedDocument():
+                         new libsedml::SedDocument(1, 3):
                          libsedml::readSedML(mFileName.toUtf8().constData());
 
     return    !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
