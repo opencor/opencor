@@ -821,10 +821,13 @@ if(ENABLE_TESTS)
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
-    # Clean up our test program, if we are on macOS
+    # Clean up our test program, if we are on macOS, our make sure that it uses
+    # RPATH rather than RUNPATH on Linux
 
     if(APPLE)
         macos_clean_up_file_with_qt_dependencies(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+    elseif(NOT WIN32)
+        runpath2rpath(${RUNTESTS_NAME} ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
     endif()
 endif()
 
@@ -1081,6 +1084,12 @@ if(APPLE)
     macos_deploy_qt_plugin(sqldrivers qsqlite)
     macos_deploy_qt_plugin(styles qmacstyle)
 else()
+    # Make sure that OpenCOR uses RPATH rather than RUNPATH on Linux
+
+    if(NOT WIN32 AND NOT APPLE)
+        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
+    endif()
+
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
     copy_file_to_build_dir(${CMAKE_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
@@ -1168,10 +1177,6 @@ else()
 
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} . ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
         copy_file_to_build_dir(DIRECT ${QT_BINARY_DIR} bin ${ORIG_MESA_FILENAME} ${DEST_MESA_FILENAME})
-    else()
-        # Make sure that OpenCOR uses RPATH rather than RUNPATH
-
-        runpath2rpath(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME})
     endif()
 endif()
 
