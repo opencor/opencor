@@ -145,14 +145,23 @@ libsedml::SedDocument * SedmlFile::sedmlDocument()
 
 //==============================================================================
 
+bool SedmlFile::hasErrors() const
+{
+    // Return whether our current SED-ML document has errors, be they normal
+    // errors or fatal errors
+
+    return    mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
+           || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
+}
+
+//==============================================================================
+
 bool SedmlFile::load()
 {
     // Check whether the file is already loaded and without any (fatal) errors
 
-    if (!mLoadingNeeded) {
-        return    !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
-               && !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
-    }
+    if (!mLoadingNeeded)
+        return !hasErrors();
 
     mLoadingNeeded = false;
 
@@ -162,8 +171,7 @@ bool SedmlFile::load()
                          new libsedml::SedDocument(1, 3):
                          libsedml::readSedML(mFileName.toUtf8().constData());
 
-    return    !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
-           && !mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
+    return !hasErrors();
 }
 
 //==============================================================================
@@ -172,11 +180,8 @@ bool SedmlFile::save(const QString &pFileName)
 {
     // Make sure that we are properly loaded and have no (fatal) errors
 
-    if (   mLoadingNeeded
-        || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
-        || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL)) {
+    if (mLoadingNeeded || hasErrors())
         return false;
-    }
 
     // Save ourselves, after having reformatted ourselves, and stop considering
     // ourselves as new anymore (in case we were), if the saving went fine
@@ -299,8 +304,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     // Only consider our SED-ML document valid if it has no (fatal) errors
 
-    bool res =    !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
-               && !sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
+    bool res = !hasErrors();
 
     if (!pFileContents.isEmpty())
         delete sedmlDocument;

@@ -147,6 +147,8 @@ private:
 
     void reset() override;
 
+    bool hasErrors() const;
+
     bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                 const QString &pPropertyNodeValue,
                                 const QString &pPropertyName,
