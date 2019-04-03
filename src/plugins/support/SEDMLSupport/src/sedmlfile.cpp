@@ -264,10 +264,8 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
         file.close();
     }
 
-    libsedml::SedErrorLog *errorLog = sedmlDocument->getErrorLog();
-
-    for (uint i = 0, iMax = errorLog->getNumErrors(); i < iMax; ++i) {
-        const libsedml::SedError *error = errorLog->getError(i);
+    for (uint i = 0, iMax = sedmlDocument->getNumErrors(); i < iMax; ++i) {
+        const libsedml::SedError *error = sedmlDocument->getError(i);
         SedmlFileIssue::Type issueType = SedmlFileIssue::Unknown;
 
         switch (error->getSeverity()) {
