@@ -884,9 +884,9 @@ bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
             if (hasError) {
                 return false;
             } else if (!equation.isEmpty()) {
-                // Note: should one or several warnings be generated, then it may be
-                //       possible that no equation has been generated, hence our
-                //       check...
+                // Note: should one or several warnings be generated, then it
+                //       may be possible that no equation has been generated, 
+                //       hence our check...
 
                 if (   (mLastOutputType == Comment)
                     || (mLastOutputType == DefBaseUnit)
