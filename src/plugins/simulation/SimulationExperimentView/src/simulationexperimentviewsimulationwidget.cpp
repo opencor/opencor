@@ -1014,10 +1014,10 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                     information += QString(OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(sedmlFileIssue.line())
                                                                                                                             .arg(sedmlFileIssue.column())
                                                                                                                             .arg(issueType)
-                                                                                                                            .arg(Core::formatMessage(sedmlFileIssue.message()));
+                                                                                                                            .arg(Core::formatMessage(sedmlFileIssue.message().toHtmlEscaped()));
                 } else {
                     information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
-                                                                                                                    .arg(Core::formatMessage(sedmlFileIssue.message()));
+                                                                                                                    .arg(Core::formatMessage(sedmlFileIssue.message().toHtmlEscaped()));
                 }
             }
         }
