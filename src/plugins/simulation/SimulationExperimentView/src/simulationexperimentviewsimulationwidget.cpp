@@ -2426,10 +2426,8 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
         // Let the user know about any error that may have occurred
 
-        if (!errorMessage.isEmpty()) {
-            Core::warningMessageBox(tr("Export To COMBINE Archive"),
-                                    errorMessage);
-        }
+        if (!errorMessage.isEmpty())
+            Core::warningMessageBox(tr("Export To COMBINE Archive"), errorMessage);
 
         // Reinitialise our trackers, if we are neither dealing with a CellML
         // file nor a SED-ML file
