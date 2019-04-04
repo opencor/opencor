@@ -48,6 +48,18 @@ SedmlFileIssue::SedmlFileIssue(Type pType, const QString &pMessage) :
 
 //==============================================================================
 
+bool SedmlFileIssue::operator==(const SedmlFileIssue &pIssue) const
+{
+    // Return whether we are the same as the given issue
+
+    return     (mType == pIssue.mType)
+           &&  (mLine == pIssue.mLine)
+           &&  (mColumn == pIssue.mColumn)
+           && !mMessage.compare(pIssue.mMessage);
+}
+
+//==============================================================================
+
 SedmlFileIssue::Type SedmlFileIssue::type() const
 {
     // Return the issue's type

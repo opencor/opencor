@@ -306,14 +306,20 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
             break;
         }
 
+        // Add the issue to our list, but only if it's not already in there
+        // Note: indeed, for some reasons, libSEDML may generate several copies
+        //       of the same error...
+
         static const QRegularExpression TrailingEmptyLinesRegEx = QRegularExpression("[\\n]*$");
 
         QString errorMessage = QString::fromStdString(error->getMessage()).remove(TrailingEmptyLinesRegEx);
+        SedmlFileIssue issue = SedmlFileIssue(issueType,
+                                              int(error->getLine()),
+                                              int(error->getColumn()),
+                                              errorMessage);
 
-        pIssues << SedmlFileIssue(issueType,
-                                  int(error->getLine()),
-                                  int(error->getColumn()),
-                                  errorMessage);
+        if (!pIssues.contains(issue))
+            pIssues << issue;
     }
 
     // Only consider our SED-ML document valid if it has no (fatal) errors
