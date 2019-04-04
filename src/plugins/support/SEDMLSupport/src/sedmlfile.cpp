@@ -522,7 +522,8 @@ bool SedmlFile::isSupported()
         }
 
         // Make sure that the first simulation algorithm annotation, if any,
-        // contains at least the kind of information we would expect
+        // contains at least the kind of information we would expect, i.e.
+        // solver properties that somehow don't have KiSAO ids
 
         annotation = firstSimulationAlgorithm->getAnnotation();
 
