@@ -1148,7 +1148,7 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
 
         mRuntime = mCellmlFile?mCellmlFile->runtime(true):nullptr;
     } else {
-        if (mCellmlFile)
+        if (mCellmlFile && mRuntime)
             mRuntime->update(mCellmlFile, false);
     }
 }
@@ -1185,10 +1185,13 @@ void Simulation::save()
     // Make sure that our initial values are up to date and check for
     // modifications (which results in people being told that there are no
     // modifications, meaning that a view like the Simulation Experiment view
-    // will disable its reset buttons)
+    // will disable its reset buttons), but only if we have / still have a
+    // runtime
 
-    mData->updateInitialValues();
-    mData->checkForModifications();
+    if (mRuntime) {
+        mData->updateInitialValues();
+        mData->checkForModifications();
+    }
 }
 
 //==============================================================================
