@@ -147,6 +147,8 @@ private:
 
     void reset() override;
 
+    bool isSedmlFile() const;
+
     bool hasErrors() const;
 
     bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
