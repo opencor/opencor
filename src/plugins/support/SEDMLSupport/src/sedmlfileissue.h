@@ -57,6 +57,8 @@ public:
                             const QString &pMessage);
     explicit SedmlFileIssue(Type pType, const QString &pMessage);
 
+    bool operator==(const SedmlFileIssue &pIssue) const;
+
     Type type() const;
     int line() const;
     int column() const;
