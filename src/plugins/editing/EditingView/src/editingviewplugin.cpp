@@ -230,7 +230,7 @@ Gui::Menus EditingViewPlugin::guiMenus() const
 {
     // Return our menus
 
-    return Gui::Menus() << Gui::Menu(Gui::Menu::View, mEditMenu);
+    return Gui::Menus() << Gui::Menu(Gui::Menu::Type::View, mEditMenu);
 }
 
 //==============================================================================

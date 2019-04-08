@@ -44,7 +44,7 @@ namespace CellMLTextView {
 class CellmlTextViewParserMessage
 {
 public:
-    enum Type {
+    enum class Type {
         Error,
         Warning
     };
@@ -87,7 +87,7 @@ class CellmlTextViewParser : public QObject
     Q_OBJECT
 
 public:
-    enum StatementType {
+    enum class StatementType {
         Unknown,
         Normal,
         PiecewiseSel,

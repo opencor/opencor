@@ -216,10 +216,10 @@ Gui::MenuActions SEDMLEditingViewPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationSeparator);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsSedmlValidationAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsSedmlValidationSeparator);
 }
 
 //==============================================================================

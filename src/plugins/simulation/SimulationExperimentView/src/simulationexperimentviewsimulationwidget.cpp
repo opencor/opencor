@@ -2802,7 +2802,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
 
                 switch (solverProperty->type()) {
-                case Core::Property::Section:
+                case Core::Property::Type::Section:
                     // We should never come here...
 
 #ifdef QT_DEBUG
@@ -2810,31 +2810,31 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 #else
                     break;
 #endif
-                case Core::Property::String:
+                case Core::Property::Type::String:
                     solverProperty->setValue(solverPropertyValue.toString());
 
                     break;
-                case Core::Property::Integer:
-                case Core::Property::IntegerGe0:
-                case Core::Property::IntegerGt0:
+                case Core::Property::Type::Integer:
+                case Core::Property::Type::IntegerGe0:
+                case Core::Property::Type::IntegerGt0:
                     solverProperty->setIntegerValue(solverPropertyValue.toInt());
 
                     break;
-                case Core::Property::Double:
-                case Core::Property::DoubleGe0:
-                case Core::Property::DoubleGt0:
+                case Core::Property::Type::Double:
+                case Core::Property::Type::DoubleGe0:
+                case Core::Property::Type::DoubleGt0:
                     solverProperty->setDoubleValue(solverPropertyValue.toDouble());
 
                     break;
-                case Core::Property::List:
+                case Core::Property::Type::List:
                     solverProperty->setListValue(solverPropertyValue.toString());
 
                     break;
-                case Core::Property::Boolean:
+                case Core::Property::Type::Boolean:
                     solverProperty->setBooleanValue(solverPropertyValue.toBool());
 
                     break;
-                case Core::Property::Color:
+                case Core::Property::Type::Color:
                     // We should never come here...
 
 #ifdef QT_DEBUG
@@ -2844,7 +2844,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 #endif
                 }
 
-                propertySet = solverProperty->type() != Core::Property::Section;
+                propertySet = solverProperty->type() != Core::Property::Type::Section;
 
                 break;
             }
@@ -4121,11 +4121,11 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
     // Optimise our axes' values before setting them and replotting our plot, if
     // needed
 
-    pPlot->optimizeAxisX(minX, maxX, GraphPanelWidget::GraphPanelPlotWidget::Linear);
-    pPlot->optimizeAxisY(minY, maxY, GraphPanelWidget::GraphPanelPlotWidget::Linear);
+    pPlot->optimizeAxisX(minX, maxX, GraphPanelWidget::GraphPanelPlotWidget::Optimization::Linear);
+    pPlot->optimizeAxisY(minY, maxY, GraphPanelWidget::GraphPanelPlotWidget::Optimization::Linear);
 
-    pPlot->optimizeAxisX(minLogX, maxLogX, GraphPanelWidget::GraphPanelPlotWidget::Logarithmic);
-    pPlot->optimizeAxisY(minLogY, maxLogY, GraphPanelWidget::GraphPanelPlotWidget::Logarithmic);
+    pPlot->optimizeAxisX(minLogX, maxLogX, GraphPanelWidget::GraphPanelPlotWidget::Optimization::Logarithmic);
+    pPlot->optimizeAxisY(minLogY, maxLogY, GraphPanelWidget::GraphPanelPlotWidget::Optimization::Logarithmic);
 
     pPlot->setDefaultAxesValues(minX, maxX, minLogX, maxLogX,
                                 minY, maxY, minLogY, maxLogY);

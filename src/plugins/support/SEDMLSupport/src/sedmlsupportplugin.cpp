@@ -137,7 +137,7 @@ Gui::MenuActions SEDMLSupportPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewSedmlFileAction);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::FileNew, mFileNewSedmlFileAction);
 }
 
 //==============================================================================

@@ -109,8 +109,8 @@ Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mAddTwoNumbersAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, Core::newSeparator(Core::mainWindow()));
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mAddTwoNumbersAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================

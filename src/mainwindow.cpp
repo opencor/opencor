@@ -520,7 +520,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         Gui::Menus guiMenus = guiInterface->guiMenus();
 
         for (int i = guiMenus.count()-1; i >= 0; --i) {
-            if (guiMenus[i].type() == Gui::Menu::View) {
+            if (guiMenus[i].type() == Gui::Menu::Type::View) {
                 QMenu *newMenu = guiMenus[i].menu();
                 QString newMenuName = newMenu->objectName();
 
@@ -562,9 +562,9 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
             QMenu *menu = nullptr;
 
-            if (guiMenuActions[i].type() == Gui::MenuAction::File)
+            if (guiMenuActions[i].type() == Gui::MenuAction::Type::File)
                 menu = mGui->menuFile;
-            else if (guiMenuActions[i].type() == Gui::MenuAction::Tools)
+            else if (guiMenuActions[i].type() == Gui::MenuAction::Type::Tools)
                 menu = mGui->menuTools;
 
             if (menu) {
@@ -581,7 +581,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         if (menuFile) {
             for (const auto &guiMenu : guiMenus) {
-                if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
+                if (guiMenu.action() && (guiMenu.type() == Gui::Menu::Type::File))
                     menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
             }
         }
@@ -591,7 +591,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         static QString pluginForFileNewMenu = QString();
 
         for (const auto &guiMenuAction : guiMenuActions) {
-            if (guiMenuAction.type() == Gui::MenuAction::FileNew) {
+            if (guiMenuAction.type() == Gui::MenuAction::Type::FileNew) {
                 // Check whether the File|New menu has been created and if not,
                 // then create it
 

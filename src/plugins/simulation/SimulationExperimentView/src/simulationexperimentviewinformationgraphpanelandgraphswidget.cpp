@@ -661,7 +661,7 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(
 {
     // Return whether the given property is a root property
 
-    return    (pProperty->type() == Core::Property::Section)
+    return    (pProperty->type() == Core::Property::Type::Section)
            && !pProperty->parentProperty() && pProperty->isCheckable();
 }
 
@@ -991,7 +991,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphPane
     Core::Property *crtProperty = mGraphPanelPropertyEditor->currentProperty();
 
     if (    crtProperty
-            && (crtProperty->type() == Core::Property::Color)) {
+            && (crtProperty->type() == Core::Property::Type::Color)) {
         mGraphPanelContextMenu->exec(QCursor::pos());
     }
 }
@@ -1028,7 +1028,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
     mUnselectAllGraphsAction->setEnabled(canUnselectAllGraphs);
 
     mSelectGraphColorAction->setVisible(    crtProperty
-                                        && (crtProperty->type() == Core::Property::Color));
+                                        && (crtProperty->type() == Core::Property::Type::Color));
 
     // Show the graph context menu, or not, depending on the type of property we
     // are dealing with, if any

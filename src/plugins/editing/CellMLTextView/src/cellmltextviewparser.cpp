@@ -248,15 +248,15 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
                                                                                  .arg("endsel"),
                       TokenTypes)) {
             if (mScanner.tokenType() == CellmlTextViewScanner::CaseToken) {
-                mStatementType = PiecewiseCase;
+                mStatementType = StatementType::PiecewiseCase;
 
                 return true;
             } else if (mScanner.tokenType() == CellmlTextViewScanner::OtherwiseToken) {
-                mStatementType = PiecewiseOtherwise;
+                mStatementType = StatementType::PiecewiseOtherwise;
 
                 return true;
             } if (mScanner.tokenType() == CellmlTextViewScanner::EndSelToken) {
-                mStatementType = PiecewiseEndSel;
+                mStatementType = StatementType::PiecewiseEndSel;
 
                 return true;
             }
@@ -329,7 +329,7 @@ void CellmlTextViewParser::initialize(const QString &pCellmlText)
 
     mNamespaces.clear();
 
-    mStatementType = Unknown;
+    mStatementType = StatementType::Unknown;
 }
 
 //==============================================================================
@@ -339,7 +339,7 @@ void CellmlTextViewParser::addUnexpectedTokenErrorMessage(const QString &pExpect
 {
     // Add an error message for the given unexpected token
 
-    mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+    mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Type::Error,
                                              mScanner.tokenLine(),
                                              mScanner.tokenColumn(),
                                              tr("%1 is expected, but %2 was found instead.").arg(pExpectedString)
@@ -534,7 +534,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
         // so, generate a warning for it
 
         if (!mScanner.tokenComment().isEmpty()) {
-            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Warning,
+            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Type::Warning,
                                                      mScanner.tokenLine(),
                                                      mScanner.tokenColumn(),
                                                      mScanner.tokenComment());
@@ -544,7 +544,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
     } else if (mScanner.tokenType() == CellmlTextViewScanner::InvalidToken) {
         // This is the token we were expecting, but it is invalid
 
-        mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+        mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Type::Error,
                                                  mScanner.tokenLine(),
                                                  mScanner.tokenColumn(),
                                                  mScanner.tokenComment());
@@ -1481,7 +1481,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
             // attribute
 
             if (unitAttributesDefined.contains(mScanner.tokenType())) {
-                mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Type::Error,
                                                          mScanner.tokenLine(),
                                                          mScanner.tokenColumn(),
                                                          tr("The '%1' attribute has already been specified.").arg(mScanner.tokenString()));
@@ -1786,7 +1786,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
             // attribute
 
             if (variableAttributesDefined.contains(mScanner.tokenType())) {
-                mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Type::Error,
                                                          mScanner.tokenLine(),
                                                          mScanner.tokenColumn(),
                                                          tr("The '%1' attribute has already been specified.").arg(mScanner.tokenString()));
@@ -1943,7 +1943,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
     // At this stage, we are done when it comes to partial parsing
 
     if (!pFullParsing) {
-        mStatementType = (mScanner.tokenType() == CellmlTextViewScanner::SelToken)?PiecewiseSel:Normal;
+        mStatementType = (mScanner.tokenType() == CellmlTextViewScanner::SelToken)?StatementType::PiecewiseSel:StatementType::Normal;
 
         return true;
     }
@@ -3041,7 +3041,7 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
             if (conditionElement.isNull())
                 return QDomElement();
         } else if (hasOtherwiseClause) {
-            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Type::Error,
                                                      mScanner.tokenLine(),
                                                      mScanner.tokenColumn(),
                                                      tr("There can only be one 'otherwise' clause."));

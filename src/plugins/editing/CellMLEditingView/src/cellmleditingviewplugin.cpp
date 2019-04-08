@@ -216,10 +216,10 @@ Gui::MenuActions CellMLEditingViewPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationSeparator);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsCellmlValidationAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsCellmlValidationSeparator);
 }
 
 //==============================================================================

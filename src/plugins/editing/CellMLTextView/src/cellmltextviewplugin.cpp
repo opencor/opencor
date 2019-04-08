@@ -498,7 +498,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
                 errorMessage = "The file could not be exported:";
 
                 for (const auto &message : parser.messages()) {
-                    if (message.type() == CellmlTextViewParserMessage::Error) {
+                    if (message.type() == CellmlTextViewParserMessage::Type::Error) {
                         errorMessage += QString("\n [%1:%2] %3").arg(message.line())
                                                                 .arg(message.column())
                                                                 .arg(message.message());

@@ -135,8 +135,8 @@ Gui::MenuActions CellMLToolsPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mCellmlFileExportToMenu->menuAction())
-                              << Gui::MenuAction(Gui::MenuAction::Tools, Core::newSeparator(Core::mainWindow()));
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mCellmlFileExportToMenu->menuAction())
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================

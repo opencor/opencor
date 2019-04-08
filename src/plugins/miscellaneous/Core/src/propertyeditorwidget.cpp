@@ -334,39 +334,39 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     Property *property = static_cast<PropertyItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex))->owner();
 
     switch (property->type()) {
-    case Property::Section:
+    case Property::Type::Section:
         // A section, so no editor
 
         return nullptr;
-    case Property::String:
+    case Property::Type::String:
         editor = textEditor = new TextEditorWidget(pParent);
 
         break;
-    case Property::Integer:
+    case Property::Type::Integer:
         editor = textEditor = new IntegerEditorWidget(pParent);
 
         break;
-    case Property::IntegerGe0:
+    case Property::Type::IntegerGe0:
         editor = textEditor = new IntegerGe0EditorWidget(pParent);
 
         break;
-    case Property::IntegerGt0:
+    case Property::Type::IntegerGt0:
         editor = textEditor = new IntegerGt0EditorWidget(pParent);
 
         break;
-    case Property::Double:
+    case Property::Type::Double:
         editor = textEditor = new DoubleEditorWidget(pParent);
 
         break;
-    case Property::DoubleGe0:
+    case Property::Type::DoubleGe0:
         editor = textEditor = new DoubleGe0EditorWidget(pParent);
 
         break;
-    case Property::DoubleGt0:
+    case Property::Type::DoubleGt0:
         editor = textEditor = new DoubleGt0EditorWidget(pParent);
 
         break;
-    case Property::List: {
+    case Property::Type::List: {
         editor = listEditor = new ListEditorWidget(pParent);
 
         // Add the value items to our list, keeping in mind separators
@@ -380,12 +380,12 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         break;
     }
-    case Property::Boolean: {
+    case Property::Type::Boolean: {
         editor = listEditor = new BooleanEditorWidget(pParent);
 
         break;
     }
-    case Property::Color:
+    case Property::Type::Color:
         editor = textEditor = new ColorEditorWidget(pParent);
 
         break;
@@ -394,22 +394,22 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     // Propagate a few signals
 
     switch (property->type()) {
-    case Property::String:
-    case Property::Integer:
-    case Property::IntegerGe0:
-    case Property::IntegerGt0:
-    case Property::Double:
-    case Property::DoubleGe0:
-    case Property::DoubleGt0:
-    case Property::Color:
+    case Property::Type::String:
+    case Property::Type::Integer:
+    case Property::Type::IntegerGe0:
+    case Property::Type::IntegerGt0:
+    case Property::Type::Double:
+    case Property::Type::DoubleGe0:
+    case Property::Type::DoubleGt0:
+    case Property::Type::Color:
         connect(textEditor, &TextEditorWidget::goToPreviousPropertyRequested,
                 this, &PropertyItemDelegate::goToPreviousPropertyRequested);
         connect(textEditor, &TextEditorWidget::goToNextPropertyRequested,
                 this, &PropertyItemDelegate::goToNextPropertyRequested);
 
         break;
-    case Property::List:
-    case Property::Boolean:
+    case Property::Type::List:
+    case Property::Type::Boolean:
         connect(listEditor, QOverload<const QString &>::of(&ListEditorWidget::currentIndexChanged),
                 this, &PropertyItemDelegate::listPropertyChanged);
 
@@ -459,7 +459,7 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (property->type() == Property::Section) {
+    if (property->type() == Property::Type::Section) {
         // Make our section item bold
 
         option.font.setBold(true);
@@ -786,7 +786,7 @@ void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
     if (pValue.compare(oldValue) || pForce) {
         mValue->setText(pValue);
 
-        if (mType == Color) {
+        if (mType == Type::Color) {
             QPixmap colorPixmap = QPixmap(48, 48);
             QColor color;
 
@@ -813,25 +813,25 @@ QVariant Property::variantValue(bool pListValueIndex) const
     // Return our property value as a variant
 
     switch (mType) {
-    case Section:
-    case String:
+    case Type::Section:
+    case Type::String:
         return value();
-    case Integer:
-    case IntegerGe0:
-    case IntegerGt0:
+    case Type::Integer:
+    case Type::IntegerGe0:
+    case Type::IntegerGt0:
         return integerValue();
-    case Double:
-    case DoubleGe0:
-    case DoubleGt0:
+    case Type::Double:
+    case Type::DoubleGe0:
+    case Type::DoubleGt0:
         return doubleValue();
-    case List:
+    case Type::List:
         if (pListValueIndex)
             return listValueIndex();
         else
             return listValue();
-    case Boolean:
+    case Type::Boolean:
         return booleanValue();
-    case Color:
+    case Type::Color:
         return colorValue();
     }
 
@@ -847,18 +847,18 @@ QString Property::stringValue() const
     // Return our property value as a string
 
     switch (mType) {
-    case Section:
-    case String:
-    case Integer:
-    case IntegerGe0:
-    case IntegerGt0:
-    case Double:
-    case DoubleGe0:
-    case DoubleGt0:
-    case List:
-    case Color:
+    case Type::Section:
+    case Type::String:
+    case Type::Integer:
+    case Type::IntegerGe0:
+    case Type::IntegerGt0:
+    case Type::Double:
+    case Type::DoubleGe0:
+    case Type::DoubleGt0:
+    case Type::List:
+    case Type::Color:
         return value();
-    case Boolean:
+    case Type::Boolean:
         return QVariant(booleanValue()).toString();
     }
 
@@ -882,11 +882,11 @@ void Property::setIntegerValue(int pIntegerValue, bool pEmitSignal)
 {
     // Set our value, should it be of integer type
 
-    if (mType == Integer)
+    if (mType == Type::Integer)
         setValue(QString::number(pIntegerValue), false, pEmitSignal);
-    else if (mType == IntegerGe0)
+    else if (mType == Type::IntegerGe0)
         setValue(QString::number((pIntegerValue >= 0)?pIntegerValue:1), false, pEmitSignal);
-    else if (mType == IntegerGt0)
+    else if (mType == Type::IntegerGt0)
         setValue(QString::number((pIntegerValue > 0)?pIntegerValue:1), false, pEmitSignal);
 }
 
@@ -907,11 +907,11 @@ void Property::setDoubleValue(double pDoubleValue, bool pEmitSignal)
     // Note: we want as much precision as possible, hence we use a precision of
     //       15 decimals (see http://en.wikipedia.org/wiki/Double_precision)...
 
-    if (mType == Double)
+    if (mType == Type::Double)
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
-    else if (mType == DoubleGe0)
+    else if (mType == Type::DoubleGe0)
         setValue(QString::number((pDoubleValue >= 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
-    else if (mType == DoubleGt0)
+    else if (mType == Type::DoubleGt0)
         setValue(QString::number((pDoubleValue > 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
 }
 
@@ -921,7 +921,7 @@ QStringList Property::listValues() const
 {
     // Return our list values, if any
 
-    return (mType == List)?mListValues:QStringList();
+    return (mType == Type::List)?mListValues:QStringList();
 }
 
 //==============================================================================
@@ -930,7 +930,7 @@ void Property::setListValues(const QStringList &pListValues, bool pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
 
-    if (mType != List)
+    if (mType != Type::List)
         return;
 
     // Set our list values, if appropriate
@@ -967,7 +967,7 @@ void Property::setListValue(const QString &pListValue)
 {
     // Set our list value, if appropriate
 
-    if (    (mType == List)
+    if (    (mType == Type::List)
         && !mListValues.isEmpty() && listValue().compare(pListValue)) {
         int listValueIndex = mListValues.indexOf(pListValue);
 
@@ -991,7 +991,7 @@ void Property::setListValueIndex(int pListValueIndex)
 {
     // Set our list value, if appropriate
 
-    if (    (mType == List)
+    if (    (mType == Type::List)
         && !mListValues.isEmpty()
         && (pListValueIndex >= 0)
         && (pListValueIndex < mListValues.count())
@@ -1015,7 +1015,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
 {
     // Set our empty list value, if appropriate
 
-    if ((mType == List) && pEmptyListValue.compare(mEmptyListValue)) {
+    if ((mType == Type::List) && pEmptyListValue.compare(mEmptyListValue)) {
         mEmptyListValue = pEmptyListValue;
 
         // Keep our current value, if our list is not empty, otherwise update it
@@ -1040,7 +1040,7 @@ void Property::setBooleanValue(bool pBooleanValue)
 {
     // Set our value, should it be of boolean type
 
-    if (mType == Boolean)
+    if (mType == Type::Boolean)
         setValue(pBooleanValue?TrueValue:FalseValue);
 }
 
@@ -1063,7 +1063,7 @@ void Property::setColorValue(const QColor &pColorValue)
 {
     // Set our value, should it be of color type
 
-    if (mType == Color) {
+    if (mType == Type::Color) {
         QString colorValueName = pColorValue.name(QColor::HexArgb);
 
         if (colorValueName.startsWith("#ff"))
@@ -1080,7 +1080,7 @@ void Property::setColorValue(const QPoint &pPoint)
     // Make sure that we are of colour type and that the given point is either
     // null or over our colour value icon
 
-    if (mType == Color) {
+    if (mType == Type::Color) {
         if (!pPoint.isNull()) {
             // The given point is not null, so determine the position and size
             // of our colour value icon
@@ -1140,7 +1140,7 @@ void Property::setUnit(const QString &pUnit, bool pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
-    if (mUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
+    if (mUnit && (mType != Type::Section) && pUnit.compare(mUnit->text())) {
         mUnit->setText(pUnit);
 
         if (pUpdateToolTip)
@@ -1230,10 +1230,10 @@ void Property::updateToolTip()
 
     QString toolTip = mName->text();
 
-    if (mType != Section) {
+    if (mType != Type::Section) {
         toolTip += tr(": ");
 
-        if (value().isEmpty() && (mType != String))
+        if (value().isEmpty() && (mType != Type::String))
             toolTip += UnknownValue;
         else
             toolTip += value();
@@ -1247,7 +1247,7 @@ void Property::updateToolTip()
 
     mName->setToolTip(toolTip);
 
-    if (mType != Section) {
+    if (mType != Type::Section) {
         mValue->setToolTip(toolTip);
 
         if (mUnit)
@@ -1355,7 +1355,7 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
     Property *currentProperty = property(pItem->index());
 
     if (    currentProperty
-        && (currentProperty->type() == Property::List)
+        && (currentProperty->type() == Property::Type::List)
         &&  currentProperty->listValues().isEmpty()) {
         currentProperty->setValue(currentProperty->emptyListValue());
     }
@@ -1502,7 +1502,7 @@ Property * PropertyEditorWidget::addProperty(Property::Type pType,
 
     // Span ourselves if we are of section type
 
-    if (pType == Property::Section) {
+    if (pType == Property::Type::Section) {
         setFirstColumnSpanned(res->row(),
                               pParent?pParent->index():mModel->invisibleRootItem()->index(),
                               true);
@@ -1536,7 +1536,7 @@ Property * PropertyEditorWidget::addSectionProperty(const QString &pName,
 {
     // Add a section property and return its information
 
-    Property *res = addProperty(Property::Section, pParent);
+    Property *res = addProperty(Property::Type::Section, pParent);
 
     res->setName(pName);
 
@@ -1559,7 +1559,7 @@ Property * PropertyEditorWidget::addStringProperty(const QString &pString,
 {
     // Add a string property and return its information
 
-    Property *res = addProperty(Property::String, pParent);
+    Property *res = addProperty(Property::Type::String, pParent);
 
     res->setValue(pString);
 
@@ -1582,7 +1582,7 @@ Property * PropertyEditorWidget::addIntegerProperty(int pValue,
 {
     // Add an integer property and return its information
 
-    Property *res = addProperty(Property::Integer, pParent);
+    Property *res = addProperty(Property::Type::Integer, pParent);
 
     res->setIntegerValue(pValue);
 
@@ -1606,7 +1606,7 @@ Property * PropertyEditorWidget::addIntegerGe0Property(int pValue,
     // Add a zero or strictly positive integer property and return its
     // information
 
-    Property *res = addProperty(Property::IntegerGe0, pParent);
+    Property *res = addProperty(Property::Type::IntegerGe0, pParent);
 
     res->setIntegerValue(pValue);
 
@@ -1630,7 +1630,7 @@ Property * PropertyEditorWidget::addIntegerGt0Property(int pValue,
 {
     // Add a strictly positive integer property and return its information
 
-    Property *res = addProperty(Property::IntegerGt0, pParent);
+    Property *res = addProperty(Property::Type::IntegerGt0, pParent);
 
     res->setIntegerValue(pValue);
 
@@ -1653,7 +1653,7 @@ Property * PropertyEditorWidget::addDoubleProperty(double pValue,
 {
     // Add a double property and return its information
 
-    Property *res = addProperty(Property::Double, pParent);
+    Property *res = addProperty(Property::Type::Double, pParent);
 
     res->setDoubleValue(pValue);
 
@@ -1677,7 +1677,7 @@ Property * PropertyEditorWidget::addDoubleGe0Property(double pValue,
     // Add a zero or strictly positive double property and return its
     // information
 
-    Property *res = addProperty(Property::DoubleGe0, pParent);
+    Property *res = addProperty(Property::Type::DoubleGe0, pParent);
 
     res->setDoubleValue(pValue);
 
@@ -1701,7 +1701,7 @@ Property * PropertyEditorWidget::addDoubleGt0Property(double pValue,
 {
     // Add a strictly positive double property and return its information
 
-    Property *res = addProperty(Property::DoubleGt0, pParent);
+    Property *res = addProperty(Property::Type::DoubleGt0, pParent);
 
     res->setDoubleValue(pValue);
 
@@ -1726,7 +1726,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
     // Add a list property and return its information
     // Note: a list property is necessarily editable...
 
-    Property *res = addProperty(Property::List, pParent);
+    Property *res = addProperty(Property::Type::List, pParent);
 
     res->setListValues(pValues);
     res->setValue(pDefaultValue);
@@ -1760,7 +1760,7 @@ Property * PropertyEditorWidget::addBooleanProperty(bool pValue,
 {
     // Add a boolean property and return its information
 
-    Property *res = addProperty(Property::Boolean, pParent);
+    Property *res = addProperty(Property::Type::Boolean, pParent);
 
     res->setBooleanValue(pValue);
 
@@ -1783,7 +1783,7 @@ Property * PropertyEditorWidget::addColorProperty(const QColor &pValue,
 {
     // Add a colour property and return its information
 
-    Property *res = addProperty(Property::Color, pParent);
+    Property *res = addProperty(Property::Type::Color, pParent);
 
     res->setColorValue(pValue);
 
@@ -1865,7 +1865,7 @@ void PropertyEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
     Property *crtProperty = property(indexAt(pEvent->pos()));
 
-    if (crtProperty && (crtProperty->type() == Property::Color))
+    if (crtProperty && (crtProperty->type() == Property::Type::Color))
         crtProperty->setColorValue(pEvent->pos());
 }
 
@@ -2022,7 +2022,7 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     // edit a list item, then its original value gets properly set
     // Note: indeed, by default the first list item will be selected...
 
-    if (mProperty->type() == Property::List) {
+    if (mProperty->type() == Property::Type::List) {
         QString propertyValue = mProperty->value();
         QStringList propertyListValues = mProperty->listValues();
         ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
@@ -2067,8 +2067,8 @@ void PropertyEditorWidget::editorClosed()
     //          (through QTreeView) while Property::setValue() will do a few
     //          more things (e.g. update the tool tip)...
 
-    if (   (mProperty->type() != Property::List)
-        && (mProperty->type() != Property::Boolean)) {
+    if (   (mProperty->type() != Property::Type::List)
+        && (mProperty->type() != Property::Type::Boolean)) {
         mProperty->setValue(mProperty->value(), true);
     }
 
@@ -2118,13 +2118,13 @@ void PropertyEditorWidget::editProperty(Property *pProperty, bool pCommitData)
 
             Property::Type propertyType = mProperty->type();
 
-            if (   (propertyType == Property::Integer)
-                || (propertyType == Property::IntegerGe0)
-                || (propertyType == Property::IntegerGt0)
-                || (propertyType == Property::Double)
-                || (propertyType == Property::DoubleGe0)
-                || (propertyType == Property::DoubleGt0)
-                || (propertyType == Property::Color)) {
+            if (   (propertyType == Property::Type::Integer)
+                || (propertyType == Property::Type::IntegerGe0)
+                || (propertyType == Property::Type::IntegerGt0)
+                || (propertyType == Property::Type::Double)
+                || (propertyType == Property::Type::DoubleGe0)
+                || (propertyType == Property::Type::DoubleGt0)
+                || (propertyType == Property::Type::Color)) {
                 TextEditorWidget *propertyEditor = static_cast<TextEditorWidget *>(mPropertyEditor);
                 QString propertyValue = propertyEditor->text();
                 int dummy;

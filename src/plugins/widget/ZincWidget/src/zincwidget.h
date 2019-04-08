@@ -75,7 +75,7 @@ class ZINCWIDGET_EXPORT ZincWidget : public QOpenGLWidget,
     Q_OBJECT
 
 public:
-    enum ProjectionMode {
+    enum class ProjectionMode {
         Invalid,
         Parallel,
         Perspective

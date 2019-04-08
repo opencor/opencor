@@ -103,7 +103,7 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 
     // Make sure that our current property is not a section
 
-    if (crtProperty->type() == Core::Property::Section)
+    if (crtProperty->type() == Core::Property::Type::Section)
         return;
 
     // Generate and show the context menu
@@ -380,7 +380,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                         Core::Property *property = qobject_cast<Core::Property *>(object);
 
                         if (    property
-                            &&  (property->type() == Core::Property::Section)
+                            &&  (property->type() == Core::Property::Type::Section)
                             && !property->name().compare(component)) {
                             sectionProperty = property;
 
@@ -392,7 +392,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                     // properties and retrieve the one for our current component
 
                     for (auto property : properties()) {
-                        if (    (property->type() == Core::Property::Section)
+                        if (    (property->type() == Core::Property::Type::Section)
                             && !property->name().compare(component)) {
                             sectionProperty = property;
 
