@@ -77,7 +77,7 @@ class CELLMLSUPPORT_EXPORT CellmlFile : public StandardSupport::StandardFile
     Q_OBJECT
 
 public:
-    enum Version {
+    enum class Version {
         Unknown,
         Cellml_1_0,
         Cellml_1_1

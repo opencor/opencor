@@ -185,7 +185,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
     Version cellmlVersion = modelVersion(pModel);
 
     if (   ((pModel != mModel) || mFullInstantiationNeeded)
-        && (cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
+        && (cellmlVersion != Version::Unknown)
+        && (cellmlVersion != Version::Cellml_1_0)) {
         QStringList dependencies = QStringList();
 
         try {
@@ -1028,15 +1029,15 @@ bool CellmlFile::exportTo(const QString &pFileName, Version pVersion,
         CellmlFile::Version modelVersion = CellmlFile::modelVersion(mModel);
 
         switch (pVersion) {
-        case Unknown:
-        case Cellml_1_1:
+        case Version::Unknown:
+        case Version::Cellml_1_1:
             // We cannot export to an unknown or CellML 1.1 format
 
             return false;
-        case Cellml_1_0:
+        case Version::Cellml_1_0:
             // To export to CellML 1.0, the model must be in a CellML 1.1 format
 
-            if (modelVersion != Cellml_1_1)
+            if (modelVersion != Version::Cellml_1_1)
                 return false;
 
             break;
@@ -1145,7 +1146,7 @@ CellmlFile::Version CellmlFile::version()
     if (load())
         return modelVersion(mModel);
     else
-        return CellmlFile::Unknown;
+        return Version::Unknown;
 }
 
 //==============================================================================
@@ -1155,18 +1156,18 @@ CellmlFile::Version CellmlFile::modelVersion(iface::cellml_api::Model *pModel)
     // Return the version of the given CellML model, if any
 
     if (!pModel)
-        return Unknown;
+        return Version::Unknown;
 
     QString cellmlVersion = QString::fromStdWString(pModel->cellmlVersion());
 
     if (!cellmlVersion.compare(CellMLSupport::Cellml_1_0)) {
-        return Cellml_1_0;
+        return Version::Cellml_1_0;
     } else if (!cellmlVersion.compare(CellMLSupport::Cellml_1_1)) {
-        return Cellml_1_1;
+        return Version::Cellml_1_1;
     } else {
         qWarning("WARNING | %s:%d: a CellML version should not be unknown.", __FILE__, __LINE__);
 
-        return Unknown;
+        return Version::Unknown;
     }
 }
 
@@ -1183,7 +1184,7 @@ CellmlFile::Version CellmlFile::fileVersion(const QString &pFileName)
     try {
         model = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
     } catch (...) {
-        return Unknown;
+        return Version::Unknown;
     }
 
     return modelVersion(model);
@@ -1202,7 +1203,7 @@ CellmlFile::Version CellmlFile::fileContentsVersion(const QString &pFileContents
     try {
         model = modelLoader->createFromText(pFileContents.toStdWString());
     } catch (...) {
-        return Unknown;
+        return Version::Unknown;
     }
 
     return modelVersion(model);
@@ -1215,11 +1216,11 @@ QString CellmlFile::versionAsString(Version pVersion)
     // Return the string corresponding to the given version
 
     switch (pVersion) {
-    case Unknown:
+    case Version::Unknown:
         return "???";
-    case Cellml_1_0:
+    case Version::Cellml_1_0:
         return "CellML 1.0";
-    case Cellml_1_1:
+    case Version::Cellml_1_1:
         return "CellML 1.1";
     }
 

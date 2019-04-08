@@ -290,8 +290,8 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   Core::FileManager::instance()->isNew(pFileName)
-        || (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1))) {
+        || (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1))) {
         return nullptr;
     }
 

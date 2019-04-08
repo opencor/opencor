@@ -389,8 +389,8 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   !Core::FileManager::instance()->isNew(pFileName)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
         return nullptr;
     }
 
@@ -471,8 +471,8 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     if (errorMessage.isEmpty() && pImport) {
         CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileContentsVersion(fileContents);
 
-        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
             errorMessage = QString("Only CellML 1.0/1.1 files can be imported.");
         }
     }
@@ -494,7 +494,7 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
         } else {
             CellmlTextViewParser parser;
 
-            if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
+            if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";
 
                 for (const auto &message : parser.messages()) {

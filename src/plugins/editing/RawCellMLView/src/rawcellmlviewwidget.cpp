@@ -350,7 +350,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
-        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
             && cellmlFile->model() && cellmlFile->model()->imports()->length()
             && nbOfReportedIssues) {
             editorList->addItem(EditorWidget::EditorListItem::Information,
@@ -379,8 +379,8 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         // Provide some extra information in case, if we are dealing with a
         // CellML 1.0/1.1 files and are therefore using the CellML API
 
-        if (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-            || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)) {
+        if (   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
             pExtra = tr("the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
         }
 

@@ -1851,7 +1851,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
                                                                                                    mSimulation->cellmlFile()->model():
                                                                                                    nullptr);
 
-    namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
+    namespaces->add((cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)?
                         CellMLSupport::Cellml_1_0_Namespace.toStdString():
                         CellMLSupport::Cellml_1_1_Namespace.toStdString(),
                     "cellml");
@@ -1861,7 +1861,7 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
     libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
 
     sedmlModel->setId("model");
-    sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
+    sedmlModel->setLanguage((cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)?
                                 SEDMLSupport::Language::Cellml_1_0.toStdString():
                                 SEDMLSupport::Language::Cellml_1_1.toStdString());
     sedmlModel->setSource(pModelSource.toStdString());
@@ -2381,7 +2381,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
             CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
             if (combineArchive->addFile(localCellmlFileName, modelSource,
-                                        (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
+                                        (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)?
                                             COMBINESupport::CombineArchiveFile::Cellml_1_0:
                                             COMBINESupport::CombineArchiveFile::Cellml_1_1)) {
                 for (const auto &importedFileName : cellmlFile->importedFileNames()) {

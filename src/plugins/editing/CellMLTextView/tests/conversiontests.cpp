@@ -54,7 +54,7 @@ void ConversionTests::successfulConversionTests()
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join('\n'),
-                           OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+                           OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QVERIFY(!parser.domDocument().isNull());
 
     QCOMPARE(QString(OpenCOR::Core::serialiseDomDocument(parser.domDocument())).split('\n'),

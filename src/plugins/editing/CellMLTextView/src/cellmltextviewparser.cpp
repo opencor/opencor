@@ -85,7 +85,7 @@ QString CellmlTextViewParserMessage::message() const
 //==============================================================================
 
 CellmlTextViewParser::CellmlTextViewParser() :
-    mCellmlVersion(CellMLSupport::CellmlFile::Cellml_1_0),
+    mCellmlVersion(CellMLSupport::CellmlFile::Version::Cellml_1_0),
     mDomDocument(QDomDocument()),
     mModelElement(QDomElement()),
     mMessages(CellmlTextViewParserMessages()),
@@ -182,7 +182,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     // Next, add the CellML namespace to our document element
 
-    if (mCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1) {
+    if (mCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1) {
         mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
         mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
     } else {
@@ -321,7 +321,7 @@ void CellmlTextViewParser::initialize(const QString &pCellmlText)
 
     mScanner.setText(pCellmlText);
 
-    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
+    mCellmlVersion = CellMLSupport::CellmlFile::Version::Cellml_1_0;
 
     mDomDocument = QDomDocument(QString());
 
@@ -1167,7 +1167,7 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
     // Set the URL, after having kept track of the fact that we need CellML 1.1
     // and the XLink namespace
 
-    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1;
+    mCellmlVersion = CellMLSupport::CellmlFile::Version::Cellml_1_1;
 
     mNamespaces.insert("xlink", CellMLSupport::XlinkNamespace);
 
@@ -1841,7 +1841,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                         // of the fact that we need CellML 1.1
 
                         if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierOrCmetaIdToken)
-                            mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1;
+                            mCellmlVersion = CellMLSupport::CellmlFile::Version::Cellml_1_1;
                     }
                 } else {
                     // Expect "in", "out" or "none"

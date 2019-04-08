@@ -544,7 +544,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
         // successful)
 
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
-                                                               CellMLSupport::CellmlFile::Cellml_1_0:
+                                                               CellMLSupport::CellmlFile::Version::Cellml_1_0:
                                                                CellMLSupport::CellmlFile::fileVersion(pFileName);
 
         data = new CellmlTextViewWidgetData(editingWidget,
@@ -801,7 +801,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // and, if so, ask the user whether it's OK to use that higher
             // version
 
-            if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
+            if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Version::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
                 && (Core::questionMessageBox(tr("Save File"),
                                              tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName))
@@ -959,8 +959,8 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra,
         // Provide some extra information in case, if we are dealing with a
         // CellML 1.0/1.1 files and are therefore using the CellML API
 
-        if (   (data->cellmlVersion() == CellMLSupport::CellmlFile::Cellml_1_0)
-            || (data->cellmlVersion() == CellMLSupport::CellmlFile::Cellml_1_1)) {
+        if (   (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            || (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
             pExtra = tr("the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML validation service</a> cannot be used in this view, so only validation against the <a href=\"http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.");
         }
 
