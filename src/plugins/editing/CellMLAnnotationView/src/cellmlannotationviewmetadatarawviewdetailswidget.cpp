@@ -86,7 +86,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 
     for (auto rdfTriple : mCellmlFile->rdfTriples(pElement)) {
         mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
+                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::Type::UriReference)?
                                                                                                  rdfTriple->metadataId():
                                                                                                  rdfTriple->subject()->asString())
                                                                         << new QStandardItem(rdfTriple->predicate()->asString())

@@ -57,7 +57,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
         // The rdf_api::URIReference interface is supported, so initialise the
         // triple element using that interface
 
-        mType = UriReference;
+        mType = Type::UriReference;
 
         mUriReference = QString::fromStdWString(uriReference->URI()).trimmed();
     } else {
@@ -67,7 +67,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
             // The rdf_api::PlainLiteral interface is supported, so initialise
             // the triple element using that interface
 
-            mType = PlainLiteral;
+            mType = Type::PlainLiteral;
 
             mLexicalForm = QString::fromStdWString(plainLiteral->lexicalForm()).trimmed();
             mLanguage = QString::fromStdWString(plainLiteral->language()).trimmed();
@@ -78,7 +78,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
                 // The rdf_api::TypedLiteral interface is supported, so
                 // initialise the triple element using that interface
 
-                mType = TypedLiteral;
+                mType = Type::TypedLiteral;
 
                 mLexicalForm = QString::fromStdWString(typedLiteral->lexicalForm()).trimmed();
                 mDataTypeUri = QString::fromStdWString(typedLiteral->datatypeURI()).trimmed();
@@ -98,7 +98,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
 
                 QString id = QString::fromStdString(pRdfNode->objid()).trimmed();
 
-                mType = Id;
+                mType = Type::Id;
 
                 mId = ids.value(id);
 
@@ -118,19 +118,19 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
     // on its type
 
     switch (mType) {
-    case Id:
+    case Type::Id:
         mAsString = mId;
 
         break;
-    case UriReference:
+    case Type::UriReference:
         mAsString = mUriReference;
 
         break;
-    case PlainLiteral:
+    case Type::PlainLiteral:
         mAsString = mLexicalForm+" ["+mLanguage+"]";
 
         break;
-    case TypedLiteral:
+    case Type::TypedLiteral:
         mAsString = mLexicalForm+" ["+mDataTypeUri+"]";
 
         break;
@@ -140,7 +140,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
 //==============================================================================
 
 CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(const QString &pUriReference) :
-    mType(UriReference),
+    mType(Type::UriReference),
     mId(QString()),
     mUriReference(pUriReference),
     mLexicalForm(QString()),

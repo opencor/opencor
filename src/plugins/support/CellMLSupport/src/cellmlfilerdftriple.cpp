@@ -262,7 +262,7 @@ QString CellmlFileRdfTriple::metadataId() const
 {
     // Return the RDF triple's metadata id, if its subject is a URI reference
 
-    if (mSubject->type() == CellmlFileRdfTripleElement::UriReference) {
+    if (mSubject->type() == CellmlFileRdfTripleElement::Type::UriReference) {
         QString uriReference = mSubject->uriReference();
         int hashPosition = uriReference.lastIndexOf('#');
 
