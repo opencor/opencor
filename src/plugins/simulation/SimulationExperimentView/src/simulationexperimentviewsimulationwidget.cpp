@@ -110,7 +110,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
     mOutputMessage(QString()),
-    mErrorType(General),
+    mErrorType(ErrorType::General),
     mValidSimulationEnvironment(false),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
@@ -863,7 +863,7 @@ void SimulationExperimentViewSimulationWidget::updateInvalidModelMessageWidget()
 {
     // Update our invalid model message
 
-    mInvalidModelMessageWidget->setMessage((mErrorType == InvalidCellmlFile)?
+    mInvalidModelMessageWidget->setMessage((mErrorType == ErrorType::InvalidCellmlFile)?
                                                tr("The <strong>%1</strong> view requires a valid CellML file to work...").arg(mPlugin->viewName()):
                                                tr("The <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPlugin->viewName()),
                                            tr("See below for more information."));
@@ -1044,7 +1044,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 //       shouldn't consider the runtime to be valid, hence we
                 //       handle this case here...
 
-                mErrorType = InvalidCellmlFile;
+                mErrorType = ErrorType::InvalidCellmlFile;
 
                 updateInvalidModelMessageWidget();
 
@@ -1124,20 +1124,20 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                     if (solversWidget->nlaSolvers().isEmpty()) {
                         if (solversWidget->odeSolvers().isEmpty()) {
                             simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
-                                            InvalidSimulationEnvironment);
+                                            ErrorType::InvalidSimulationEnvironment);
                         } else {
                             simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                            InvalidSimulationEnvironment);
+                                            ErrorType::InvalidSimulationEnvironment);
                         }
                     } else if (solversWidget->odeSolvers().isEmpty()) {
                         simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
-                                        InvalidSimulationEnvironment);
+                                        ErrorType::InvalidSimulationEnvironment);
                     } else {
                         mValidSimulationEnvironment = true;
                     }
                 } else if (solversWidget->odeSolvers().isEmpty()) {
                     simulationError(tr("the model needs an ODE solver, but none is available"),
-                                    InvalidSimulationEnvironment);
+                                    ErrorType::InvalidSimulationEnvironment);
                 } else {
                     mValidSimulationEnvironment = true;
                 }
@@ -1488,7 +1488,7 @@ void SimulationExperimentViewSimulationWidget::runPauseResumeSimulation()
             // case we were able to allocate all the memory we need
 
             if (runSimulation) {
-                mViewWidget->checkSimulationResults(mSimulation->fileName(), AddRun);
+                mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::AddRun);
 
                 mSimulation->run();
             } else {
@@ -1547,7 +1547,7 @@ void SimulationExperimentViewSimulationWidget::clearSimulationResults()
 
         updateSimulationMode();
 
-        mViewWidget->checkSimulationResults(mSimulation->fileName(), ResetRuns);
+        mViewWidget->checkSimulationResults(mSimulation->fileName(), Task::ResetRuns);
     setUpdatesEnabled(true);
 }
 
@@ -2786,7 +2786,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     if (!odeSolverInterface) {
         simulationError(tr("the requested solver (%1) could not be found").arg(kisaoId),
-                        InvalidSimulationEnvironment);
+                        ErrorType::InvalidSimulationEnvironment);
 
         return false;
     }
@@ -2852,7 +2852,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
         if (!propertySet) {
             simulationError(tr("the requested solver property (%1) could not be set").arg(kisaoId),
-                            InvalidSimulationEnvironment);
+                            ErrorType::InvalidSimulationEnvironment);
 
             return false;
         }
@@ -2887,7 +2887,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                         if (!propertySet) {
                             simulationError(tr("the requested solver property (%1) could not be set").arg(id),
-                                            InvalidSimulationEnvironment);
+                                            ErrorType::InvalidSimulationEnvironment);
 
                             return false;
                         }
@@ -2949,7 +2949,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                             if (!propertySet) {
                                 simulationError(tr("the requested solver property (%1) could not be set").arg(id),
-                                                InvalidSimulationEnvironment);
+                                                ErrorType::InvalidSimulationEnvironment);
 
                                 return false;
                             }
@@ -2963,7 +2963,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
         if (mustHaveNlaSolver && !hasNlaSolver) {
             simulationError(tr("the requested NLA solver (%1) could not be set").arg(nlaSolverName),
-                            InvalidSimulationEnvironment);
+                            ErrorType::InvalidSimulationEnvironment);
 
             return false;
         }
@@ -3183,14 +3183,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                                                                                                                                                             .arg(xCellmlComponent)
                                                                                                                                                                             .arg(yCellmlVariable)
                                                                                                                                                                             .arg(yCellmlComponent),
-                                    InvalidSimulationEnvironment);
+                                    ErrorType::InvalidSimulationEnvironment);
 
                     return false;
                 } else {
                     simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
                                                                                                                                         .arg(xCellmlVariable)
                                                                                                                                         .arg(xCellmlComponent),
-                                    InvalidSimulationEnvironment);
+                                    ErrorType::InvalidSimulationEnvironment);
 
                     return false;
                 }
@@ -3198,7 +3198,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
                                                                                                                                     .arg(yCellmlVariable)
                                                                                                                                     .arg(yCellmlComponent),
-                                InvalidSimulationEnvironment);
+                                ErrorType::InvalidSimulationEnvironment);
 
                 return false;
             }
@@ -3730,7 +3730,7 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 {
     // Output the simulation error
 
-    simulationError(pMessage, General);
+    simulationError(pMessage, ErrorType::General);
 }
 
 //==============================================================================
@@ -4257,7 +4257,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         // be able to update our plot's viewport if needed (i.e. a graph segment
         // doesn't fit within our plot's current viewport anymore)
 
-        if (pTask != None)
+        if (pTask != Task::None)
             mUpdatablePlotViewports.insert(plot, true);
 
         // Now we are ready to actually update all the graphs of all our plots
@@ -4270,14 +4270,14 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
 
         for (auto graph : plot->graphs()) {
             if (!graph->fileName().compare(pSimulationWidget->simulation()->fileName())) {
-                if (pTask != None)
+                if (pTask != Task::None)
                     mOldDataSizes.remove(graph);
 
                 // Reset our runs or a add new one, if needed
 
-                if (pTask == ResetRuns)
+                if (pTask == Task::ResetRuns)
                     graph->removeRuns();
-                else if (pTask == AddRun)
+                else if (pTask == Task::AddRun)
                     graph->addRun();
 
                 // Update our graph's data and keep track of our new old data
@@ -4389,7 +4389,7 @@ void SimulationExperimentViewSimulationWidget::updateSimulationResults(Simulatio
         QString simulationFileName = mSimulation->fileName();
         double simulationProgress = double(mViewWidget->simulationResultsSize(simulationFileName))/simulation->size();
 
-        if ((pTask != None) || visible) {
+        if ((pTask != Task::None) || visible) {
             mProgressBarWidget->setValue(simulationProgress);
         } else {
             // We are not visible, so create an icon that shows our simulation's

@@ -525,7 +525,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     int simulationRunsCount = simulation->runsCount();
 
-    if (   (pTask == SimulationExperimentViewSimulationWidget::AddRun)
+    if (   (pTask == SimulationExperimentViewSimulationWidget::Task::AddRun)
         && (simulationRunsCount > 1)) {
         quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
 
@@ -534,7 +534,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
                 currentSimulationWidget->updateSimulationResults(simulationWidget,
                                                                  previousSimulationResultsSize,
                                                                  simulationRunsCount-2,
-                                                                 SimulationExperimentViewSimulationWidget::None);
+                                                                 SimulationExperimentViewSimulationWidget::Task::None);
             }
         }
     }
@@ -546,7 +546,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     quint64 simulationResultsSize = simulation->results()->size();
 
-    if (   (pTask != SimulationExperimentViewSimulationWidget::None)
+    if (   (pTask != SimulationExperimentViewSimulationWidget::Task::None)
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
@@ -565,7 +565,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         || (simulationResultsSize != simulation->results()->size())) {
         QTimer::singleShot(0, this, std::bind(&SimulationExperimentViewWidget::checkSimulationResults,
                                               this, pFileName,
-                                              SimulationExperimentViewSimulationWidget::None));
+                                              SimulationExperimentViewSimulationWidget::Task::None));
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
         // the simulation progress of the given file

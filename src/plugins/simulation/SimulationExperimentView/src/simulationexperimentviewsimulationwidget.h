@@ -120,7 +120,7 @@ class SimulationExperimentViewSimulationWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    enum Task {
+    enum class Task {
         None,
         ResetRuns,
         AddRun
@@ -175,7 +175,7 @@ protected:
     void dropEvent(QDropEvent *pEvent) override;
 
 private:
-    enum ErrorType {
+    enum class ErrorType {
         General,
         InvalidCellmlFile,
         InvalidSimulationEnvironment
