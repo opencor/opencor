@@ -318,11 +318,11 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 
         for (const auto &sedmlFileIssue : sedmlFileIssues) {
             if (   !pOnlyErrors
-                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
+                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Type::Error)) {
                 EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Unknown;
 
                 switch (sedmlFileIssue.type()) {
-                case SEDMLSupport::SedmlFileIssue::Unknown:
+                case SEDMLSupport::SedmlFileIssue::Type::Unknown:
                     // We should never come here...
 
 #ifdef QT_DEBUG
@@ -330,19 +330,19 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 #else
                     break;
 #endif
-                case SEDMLSupport::SedmlFileIssue::Information:
+                case SEDMLSupport::SedmlFileIssue::Type::Information:
                     issueType = EditorWidget::EditorListItem::Information;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Error:
+                case SEDMLSupport::SedmlFileIssue::Type::Error:
                     issueType = EditorWidget::EditorListItem::Error;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Warning:
+                case SEDMLSupport::SedmlFileIssue::Type::Warning:
                     issueType = EditorWidget::EditorListItem::Warning;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Fatal:
+                case SEDMLSupport::SedmlFileIssue::Type::Fatal:
                     issueType = EditorWidget::EditorListItem::Fatal;
 
                     break;

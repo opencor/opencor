@@ -980,7 +980,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 QString issueType;
 
                 switch (sedmlFileIssue.type()) {
-                case SEDMLSupport::SedmlFileIssue::Unknown:
+                case SEDMLSupport::SedmlFileIssue::Type::Unknown:
                     // We should never come here...
 
 #ifdef QT_DEBUG
@@ -988,21 +988,21 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 #else
                     break;
 #endif
-                case SEDMLSupport::SedmlFileIssue::Information:
+                case SEDMLSupport::SedmlFileIssue::Type::Information:
                     issueType = tr("Information:");
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Error:
+                case SEDMLSupport::SedmlFileIssue::Type::Error:
                     issueType = tr("Error:");
 
                     atLeastOneBlockingSedmlIssue = true;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Warning:
+                case SEDMLSupport::SedmlFileIssue::Type::Warning:
                     issueType = tr("Warning:");
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Fatal:
+                case SEDMLSupport::SedmlFileIssue::Type::Fatal:
                     issueType = tr("Fatal:");
 
                     atLeastOneBlockingSedmlIssue = true;
