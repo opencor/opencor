@@ -44,7 +44,7 @@ class CORE_EXPORT Widget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    enum LayoutType {
+    enum class LayoutType {
         VerticalLayout,
         HorizontalLayout,
         FormLayout,
@@ -55,7 +55,7 @@ public:
     explicit Widget(const QSize &pSizeHint, QWidget *pParent);
     explicit Widget(QWidget *pParent);
 
-    QLayout * createLayout(LayoutType pLayoutType = VerticalLayout);
+    QLayout * createLayout(LayoutType pLayoutType = LayoutType::VerticalLayout);
 
 protected:
     void resizeEvent(QResizeEvent *pEvent) override;
