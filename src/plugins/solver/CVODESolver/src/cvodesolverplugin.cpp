@@ -140,7 +140,7 @@ Solver::Type CVODESolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Ode;
+    return Solver::Type::Ode;
 }
 
 //==============================================================================

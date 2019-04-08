@@ -112,7 +112,7 @@ Solver::Type KINSOLSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Nla;
+    return Solver::Type::Nla;
 }
 
 //==============================================================================

@@ -93,8 +93,8 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Add properties for our different solvers
 
-    mOdeSolverData = addSolverProperties(Solver::Ode);
-    mNlaSolverData = addSolverProperties(Solver::Nla);
+    mOdeSolverData = addSolverProperties(Solver::Type::Ode);
+    mNlaSolverData = addSolverProperties(Solver::Type::Nla);
 
     // Show/hide the relevant properties
 

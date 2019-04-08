@@ -121,7 +121,7 @@ void unsetNlaSolver(const QString &pRuntimeAddress);
 
 //==============================================================================
 
-enum Type {
+enum class Type {
     Nla,
     Ode
 };
