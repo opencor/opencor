@@ -257,28 +257,28 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
 
         if (parameter) {
             switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
                 property->setDoubleValue(pCurrentPoint, false);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant:
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::ComputedConstant:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
                 property->setDoubleValue(mSimulation->data()->constants()[parameter->index()], false);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Rate:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Rate:
                 property->setDoubleValue(mSimulation->data()->rates()[parameter->index()], false);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
                 property->setDoubleValue(mSimulation->data()->states()[parameter->index()], false);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Algebraic:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic:
                 property->setDoubleValue(mSimulation->data()->algebraic()[parameter->index()], false);
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Data:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Data:
                 property->setDoubleValue(parameter->data()[parameter->index()], false);
 
                 break;
@@ -305,11 +305,11 @@ void SimulationExperimentViewInformationParametersWidget::propertyChanged(Core::
 
     if (parameter) {
         switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
             mSimulation->data()->constants()[parameter->index()] = pProperty->doubleValue();
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
             mSimulation->data()->states()[parameter->index()] = pProperty->doubleValue();
 
             break;
@@ -423,24 +423,24 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         double propertyValue = 0.0;
 
         switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
             propertyValue = mSimulation->data()->startingPoint();
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant:
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::ComputedConstant:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
             propertyValue = mSimulation->data()->constants()[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Rate:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Rate:
             propertyValue = mSimulation->data()->rates()[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
             propertyValue = mSimulation->data()->states()[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Algebraic:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic:
             propertyValue = mSimulation->data()->algebraic()[parameter->index()];
 
             break;
@@ -452,8 +452,8 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
         Core::Property *property = addDoubleProperty(propertyValue, sectionProperty);
 
-        property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant)
-                              || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State));
+        property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
+                              || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State));
         property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
@@ -589,31 +589,31 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
             QString parameterType = QString();
 
             switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
                 parameterType = tr("variable of integration");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
                 parameterType = tr("constant");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::ComputedConstant:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
                 parameterType = tr("computed constant");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Rate:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Rate:
                 parameterType = tr("rate");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
                 parameterType = tr("state");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Algebraic:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic:
                 parameterType = tr("algebraic");
 
                 break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Data:
+            case CellMLSupport::CellmlFileRuntimeParameter::Type::Data:
                 parameterType = tr("data");
 
                 break;

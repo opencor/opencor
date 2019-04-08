@@ -667,7 +667,7 @@ void SimulationResults::createDataStore()
         DataStore::DataStoreVariable *variable = nullptr;
 
         switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
             mPoints->setType(int(parameter->type()));
             mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
                                 runtime->voi()->name()));
@@ -675,20 +675,20 @@ void SimulationResults::createDataStore()
             mPoints->setUnit(runtime->voi()->unit());
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant:
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::ComputedConstant:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
             variable = mConstants[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Rate:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Rate:
             variable = mRates[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
             variable = mStates[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Algebraic:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic:
             variable = mAlgebraic[parameter->index()];
 
             break;
