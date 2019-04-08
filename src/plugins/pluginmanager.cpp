@@ -177,7 +177,7 @@ PluginManager::PluginManager(bool pGuiMode) :
 
         mPlugins << plugin;
 
-        if (plugin->status() == Plugin::Loaded) {
+        if (plugin->status() == Plugin::Status::Loaded) {
             mLoadedPlugins << plugin;
 
             if (!pluginName.compare(CorePluginName))

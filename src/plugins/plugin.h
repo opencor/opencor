@@ -68,7 +68,7 @@ class Plugin : public QObject
     Q_OBJECT
 
 public:
-    enum Status {
+    enum class Status {
         NotWanted,
         NotNeeded,
         Loaded,

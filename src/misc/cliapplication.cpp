@@ -398,48 +398,48 @@ void CliApplication::status() const
         // Retrieve the plugin's status
 
         switch (plugin->status()) {
-        case Plugin::NotWanted:
+        case Plugin::Status::NotWanted:
             pluginInfo += "the plugin is not wanted.";
 
             break;
-        case Plugin::NotNeeded:
+        case Plugin::Status::NotNeeded:
             pluginInfo += "the plugin is not needed.";
 
             break;
-        case Plugin::Loaded:
+        case Plugin::Status::Loaded:
 
             pluginInfo += "the plugin is loaded and fully functional.";
 
             break;
-        case Plugin::NotLoaded:
+        case Plugin::Status::NotLoaded:
             pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(plugin->statusErrors()));
 
             break;
-        case Plugin::NotPlugin:
+        case Plugin::Status::NotPlugin:
             pluginInfo += "this is not a plugin.";
 
             break;
-        case Plugin::OldPlugin:
+        case Plugin::Status::OldPlugin:
             pluginInfo += "the plugin could not be loaded (one or several of the interfaces it supports are too old).";
 
             break;
-        case Plugin::NotCorePlugin:
+        case Plugin::Status::NotCorePlugin:
             pluginInfo += "the plugin claims to be the core plugin, but it is not.";
 
             break;
-        case Plugin::InvalidCorePlugin:
+        case Plugin::Status::InvalidCorePlugin:
             pluginInfo += "the plugin should be the core plugin, but it does not support the core interface.";
 
             break;
-        case Plugin::NotCliPluginNoCliSupport:
+        case Plugin::Status::NotCliPluginNoCliSupport:
             pluginInfo += "the plugin supports the CLI interface, but it does not claim to be CLI-capable.";
 
             break;
-        case Plugin::NotCliPluginNoCliInterface:
+        case Plugin::Status::NotCliPluginNoCliInterface:
             pluginInfo += "the plugin claims to be CLI-capable, but it does not support the CLI interface.";
 
             break;
-        case Plugin::MissingOrInvalidDependencies:
+        case Plugin::Status::MissingOrInvalidDependencies:
             if (plugin->statusErrorsCount() == 1)
                 pluginInfo += QString("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(plugin->statusErrors());
             else
