@@ -62,7 +62,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          iface::rdf_api::Triple *pRdfTriple) :
-    CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Unknown, ModelUnknown,
+    CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Type::Unknown, ModelUnknown,
                         BioUnknown, QString(), QString())
 {
     // Retrieve the RDF triple's subject, predicate and object information
@@ -110,7 +110,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
         if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(ModelRegEx)))) {
             // It looks like we might be dealing with a model qualifier
 
-            mType = BioModelsDotNetQualifier;
+            mType = Type::BioModelsDotNetQualifier;
 
             mModelQualifier = ModelQualifier(i);
 
@@ -118,12 +118,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
         }
     }
 
-    if (mType == Unknown) {
+    if (mType == Type::Unknown) {
         for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i) {
             if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(BioRegEx)))) {
                 // It looks like we might be dealing with a model qualifier
 
-                mType = BioModelsDotNetQualifier;
+                mType = Type::BioModelsDotNetQualifier;
 
                 mBioQualifier = BioQualifier(i);
 
@@ -132,7 +132,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
         }
     }
 
-    if (mType == BioModelsDotNetQualifier) {
+    if (mType == Type::BioModelsDotNetQualifier) {
         // We seem to be dealing with either a model or a bio(logy) qualifier,
         // so try to decode its object, which should be either a valid MIRIAM
         // URN or a valid identifiers.org URI
@@ -142,7 +142,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
             // identifiers.org URI, which means that the RDF triple is not a
             // valid model/bio(logy) qualifier
 
-            mType = Unknown;
+            mType = Type::Unknown;
 
             mModelQualifier = ModelUnknown;
             mBioQualifier = BioUnknown;
@@ -157,7 +157,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          ModelQualifier pModelQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
-    CellmlFileRdfTriple(pCellmlFile, nullptr, BioModelsDotNetQualifier,
+    CellmlFileRdfTriple(pCellmlFile, nullptr, Type::BioModelsDotNetQualifier,
                         pModelQualifier, BioUnknown, pResource, pId)
 {
     // Create our RDF triple elements
@@ -177,7 +177,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          BioQualifier pBioQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
-    CellmlFileRdfTriple(pCellmlFile, nullptr, BioModelsDotNetQualifier,
+    CellmlFileRdfTriple(pCellmlFile, nullptr, Type::BioModelsDotNetQualifier,
                         ModelUnknown, pBioQualifier, pResource, pId)
 {
     // Create our RDF triple elements
@@ -453,7 +453,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
     //       type is considered to be unknown
 
     if (isEmpty()) {
-        return CellmlFileRdfTriple::Empty;
+        return CellmlFileRdfTriple::Type::Empty;
     } else {
         // There is at least one RDF triple, so retrieve the subject and type of
         // the first RDF triple and consider its type as the default type for
@@ -474,7 +474,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
                 // different from that of the first RDF triple, so consider the
                 // overall type of the RDF triples to be unknown
 
-                return CellmlFileRdfTriple::Unknown;
+                return CellmlFileRdfTriple::Type::Unknown;
             }
         }
 
