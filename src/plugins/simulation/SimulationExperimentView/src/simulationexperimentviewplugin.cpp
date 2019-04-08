@@ -207,13 +207,13 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (   viewInterface
-            && (   (viewInterface->viewMode() == EditingMode)
-                || (viewInterface->viewMode() == SimulationMode))) {
+            && (   (viewInterface->viewMode() == ViewInterface::Mode::EditingMode)
+                || (viewInterface->viewMode() == ViewInterface::Mode::SimulationMode))) {
             QStringList viewMimeTypes = viewInterface->viewMimeTypes();
 
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
-                if (viewInterface->viewMode() == EditingMode)
+                if (viewInterface->viewMode() == ViewInterface::Mode::EditingMode)
                     cellmlEditingViewPlugins << plugin;
                 else
                     cellmlSimulationViewPlugins << plugin;
@@ -295,7 +295,7 @@ ViewInterface::Mode SimulationExperimentViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return SimulationMode;
+    return ViewInterface::Mode::SimulationMode;
 }
 
 //==============================================================================

@@ -243,7 +243,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
     QByteArray findText = mFindReplace->findText().toUtf8();
 
-    if (pAction == HighlightAll) {
+    if (pAction == Action::HighlightAll) {
         // Clear any previous hihghlighting
 
         clearHighlighting();
@@ -312,7 +312,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
             // Either highlight or replace our found text
 
-            if (pAction == HighlightAll) {
+            if (pAction == Action::HighlightAll) {
                 SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
                 SendScintilla(SCI_INDICATORFILLRANGE, ulong(findTextPos), foundTextLen);
 
@@ -335,7 +335,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
     // Some post-processing, based on the given action
 
-    if (pAction == HighlightAll) {
+    if (pAction == Action::HighlightAll) {
         // Get our vertical scroll-bar to update itself, if we have some lines
         // to highlight
 
@@ -364,7 +364,7 @@ void EditorWidgetEditorWidget::highlightAll()
 {
     // Highlight all the occurences of the text
 
-    processAll(HighlightAll);
+    processAll(Action::HighlightAll);
 }
 
 //==============================================================================
@@ -373,7 +373,7 @@ void EditorWidgetEditorWidget::replaceAll()
 {
     // Replace all the occurences of the text
 
-    processAll(ReplaceAll);
+    processAll(Action::ReplaceAll);
 }
 
 //==============================================================================

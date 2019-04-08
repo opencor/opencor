@@ -259,7 +259,7 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return SampleMode;
+    return ViewInterface::Mode::SampleMode;
 }
 
 //==============================================================================

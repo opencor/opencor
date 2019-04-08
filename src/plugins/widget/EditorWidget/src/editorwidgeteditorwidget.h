@@ -69,7 +69,7 @@ protected:
     void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
-    enum Action {
+    enum class Action {
         HighlightAll,
         ReplaceAll
     };

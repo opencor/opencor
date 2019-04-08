@@ -287,7 +287,7 @@ ViewInterface::Mode RawTextViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::EditingMode;
 }
 
 //==============================================================================

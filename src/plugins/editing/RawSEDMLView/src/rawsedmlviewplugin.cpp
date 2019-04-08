@@ -311,7 +311,7 @@ ViewInterface::Mode RawSEDMLViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::EditingMode;
 }
 
 //==============================================================================
