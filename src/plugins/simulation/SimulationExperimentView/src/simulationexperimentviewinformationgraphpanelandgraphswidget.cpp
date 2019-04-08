@@ -58,7 +58,7 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
                                                                                                                            QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(this),
-    mMode(Graphs),
+    mMode(Mode::Graphs),
     mViewWidget(pViewWidget),
     mSimulationWidget(pSimulationWidget),
     mSimulation(nullptr),
@@ -432,7 +432,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
     // active
 
     if (pActive)
-        setCurrentWidget((mMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
+        setCurrentWidget((mMode == Mode::GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
 
     // Update our graphs information
     // Note: this is in case the user changed the locale and then switched to a
@@ -908,7 +908,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(Mode 
         // Set our graph panel or graphs property editor as our current widget,
         // if we have one (i.e. the model could be compiled)
 
-        Core::PropertyEditorWidget *propertyEditor = (pMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor;
+        Core::PropertyEditorWidget *propertyEditor = (pMode == Mode::GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor;
 
         if (propertyEditor)
             setCurrentWidget(propertyEditor);
