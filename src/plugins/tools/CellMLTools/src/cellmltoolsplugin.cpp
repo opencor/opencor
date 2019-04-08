@@ -439,7 +439,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 
                     for (const auto &cellmlFileIssue : cellmlFileIssues) {
                         output += QString("%1[%2] [%3:%4] %5").arg(output.isEmpty()?QString():"\n")
-                                                              .arg((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning")
+                                                              .arg((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?"Error":"Warning")
                                                               .arg(cellmlFileIssue.line())
                                                               .arg(cellmlFileIssue.column())
                                                               .arg(Core::plainString(cellmlFileIssue.formattedMessage()));

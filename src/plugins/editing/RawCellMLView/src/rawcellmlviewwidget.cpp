@@ -345,7 +345,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         for (const auto &cellmlFileIssue : cellmlFileIssues) {
             nbOfReportedIssues +=    !pOnlyErrors
-                                  ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
+                                  ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error);
         }
 
         CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
@@ -364,8 +364,8 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         for (const auto &cellmlFileIssue : cellmlFileIssues) {
             if (   !pOnlyErrors
-                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
-                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
+                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)) {
+                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?
                                         EditorWidget::EditorListItem::Error:
                                         EditorWidget::EditorListItem::Warning,
                                     cellmlFileIssue.line(),

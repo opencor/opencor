@@ -466,7 +466,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                         //       (!?), as is for example the case with
                         //       [CellMLSupport]/tests/data/bond_graph_model_old.cellml...
 
-                        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                                    tr("a model can have only one variable of integration"));
                     }
                 }
@@ -541,10 +541,10 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
     // compute it and check that everything went fine
 
     if (modelCode.contains("defint(func")) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    tr("definite integrals are not yet supported"));
     } else if (!mCompilerEngine->compileCode(modelCode)) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    mCompilerEngine->error());
     }
 
@@ -571,7 +571,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
         if (   !mInitializeConstants || !mComputeComputedConstants
             || !mComputeVariables || !mComputeRates) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("an unexpected problem occurred while trying to retrieve the model functions"));
 
             reset(true, false, true);
@@ -789,7 +789,7 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues,
 
 void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo)
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                tr("the model code could not be generated (%1)").arg(pExtraInfo));
 }
 
@@ -797,7 +797,7 @@ void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo
 
 void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                tr("an unknown problem occurred while trying to generate the model code"));
 }
 
@@ -817,17 +817,17 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
         } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
         } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
         }
     } else {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage)));
     }
 }

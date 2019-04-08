@@ -1070,7 +1070,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                                                      mSimulation->cellmlFile()?
                                                          mSimulation->cellmlFile()->issues():
                                                          CellMLSupport::CellmlFileIssues()) {
-                            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"))
+                            information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?tr("Error:"):tr("Warning:"))
                                                                                                                             .arg(issue.message());
                         }
                     }
