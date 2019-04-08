@@ -324,8 +324,8 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 {
     // Make sure that we have the correct number of arguments
 
-    if (   ((pCommand == Export)   && (pArguments.count() != 2))
-        || ((pCommand == Validate) && (pArguments.count() != 1))) {
+    if (   ((pCommand == Command::Export)   && (pArguments.count() != 2))
+        || ((pCommand == Command::Validate) && (pArguments.count() != 1))) {
         runHelpCommand();
 
         return -1;
@@ -371,7 +371,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 
         if (!fileExists) {
             output = "The file could not be found.";
-        } else if (    (pCommand == Export)
+        } else if (    (pCommand == Command::Export)
                    && !CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName)) {
             output = "The file is not a CellML file.";
         } else {
@@ -389,7 +389,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
                 CellMLSupport::CellmlFile *cellmlFile = new CellMLSupport::CellmlFile(fileName);
 
                 switch (pCommand) {
-                case Export:
+                case Command::Export:
                     if (!cellmlFile->load()) {
                         output = "The file could not be loaded.";
                     } else {
@@ -430,7 +430,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
                     }
 
                     break;
-                case Validate:
+                case Command::Validate:
                     // Validate our file and report all errors and warnings
 
                     validFile = cellmlFile->isValid();
@@ -470,8 +470,8 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
     if (!output.isEmpty())
         std::cout << output.toStdString() << std::endl;
 
-    return (   ((pCommand == Export) && output.isEmpty())
-            || ((pCommand == Validate) && validFile))?
+    return (   ((pCommand == Command::Export) && output.isEmpty())
+            || ((pCommand == Command::Validate) && validFile))?
                 0:
                -1;
 }
@@ -483,7 +483,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Export an existing file to the console using a given format as the
     // destination format
 
-    return runCommand(Export, pArguments);
+    return runCommand(Command::Export, pArguments);
 }
 
 //==============================================================================
@@ -492,7 +492,7 @@ int CellMLToolsPlugin::runValidateCommand(const QStringList &pArguments)
 {
     // Validate an existing file
 
-    return runCommand(Validate, pArguments);
+    return runCommand(Command::Validate, pArguments);
 }
 
 //==============================================================================

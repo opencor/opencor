@@ -257,7 +257,7 @@ class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
     Q_OBJECT
 
 public:
-    enum FileType {
+    enum class FileType {
         CellmlFile,
         SedmlFile,
         CombineArchive

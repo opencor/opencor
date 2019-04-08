@@ -333,7 +333,7 @@ QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support, based on the file type of
     // our simulation
 
-    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::CellmlFile)?
+    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::FileType::CellmlFile)?
                CellMLSupport::CellmlFileExtension:
                SEDMLSupport::SedmlFileExtension;
 }

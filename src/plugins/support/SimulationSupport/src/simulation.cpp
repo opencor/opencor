@@ -1125,7 +1125,11 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
 
     // Determine the type of our file
 
-    mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
+    mFileType = mCellmlFile?
+                    FileType::CellmlFile:
+                    mSedmlFile?
+                        FileType::SedmlFile:
+                        FileType::CombineArchive;
 
     // We have a COMBINE archive, so we need to retrieve its corresponding
     // SED-ML file
