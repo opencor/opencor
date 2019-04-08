@@ -158,7 +158,7 @@ class PmrWorkspacesWindowWidget : public Core::TreeViewWidget
     Q_OBJECT
 
 public:
-    enum MessageType {
+    enum class MessageType {
         None,
         Information,
         Error,

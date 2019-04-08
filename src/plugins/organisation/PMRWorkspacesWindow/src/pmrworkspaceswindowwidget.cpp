@@ -678,7 +678,7 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
     mInitialized = false;
 
-    mMessageType = None;
+    mMessageType = MessageType::None;
     mMessage = QString();
     mAuthenticated = false;
 }
@@ -702,17 +702,17 @@ void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
         }
     } else {
         switch (mMessageType) {
-        case Information:
+        case MessageType::Information:
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                Core::formatMessage(mMessage, false, true));
 
             break;
-        case Error:
+        case MessageType::Error:
             mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
                                                Core::formatMessage(mMessage, false, true));
 
             break;
-        case Warning:
+        case MessageType::Warning:
             mUserMessageWidget->setIconMessage(":/oxygen/status/task-attention.png",
                                                Core::formatMessage(mMessage, false, true));
 
@@ -828,7 +828,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 {
     // Initialise ourselves using the given workspaces
 
-    initialize(pWorkspaces, None, QString(), true);
+    initialize(pWorkspaces, MessageType::None, QString(), true);
 }
 
 //==============================================================================
@@ -837,7 +837,7 @@ void PmrWorkspacesWindowWidget::initialize()
 {
     // Initialise ourselves
 
-    initialize(PMRSupport::PmrWorkspaces(), None, QString(), false);
+    initialize(PMRSupport::PmrWorkspaces(), MessageType::None, QString(), false);
 }
 
 //==============================================================================
