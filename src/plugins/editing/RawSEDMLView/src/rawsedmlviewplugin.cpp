@@ -47,7 +47,7 @@ PLUGININFO_FUNC RawSEDMLViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.sed-ml.org/\">SED-ML</a> files using an <a href=\"https://www.w3.org/XML/\">XML</a> editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.sed-ml.org/\">SED-ML</a> à l'aide d'un éditeur <a href=\"https://www.w3.org/XML/\">XML</a>."));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "SEDMLEditingView",
                           descriptions);
 }

@@ -37,7 +37,7 @@ PLUGININFO_FUNC EditorWidgetPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit and display text."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et afficher du texte."));
 
-    return new PluginInfo(PluginInfo::Widget, false, false,
+    return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           QStringList() << "QScintillaSupport",
                           descriptions);
 }

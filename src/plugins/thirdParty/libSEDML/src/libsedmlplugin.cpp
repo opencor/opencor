@@ -37,7 +37,7 @@ PLUGININFO_FUNC libSEDMLPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList() << "libNuML" << "libSBML",
                           descriptions);
 }

@@ -52,7 +52,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit and run a simulation experiment."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
 
-    return new PluginInfo(PluginInfo::Simulation, true, false,
+    return new PluginInfo(PluginInfo::Category::Simulation, true, false,
                           QStringList() << "GraphPanelWidget" << "SimulationSupport",
                           descriptions);
 }

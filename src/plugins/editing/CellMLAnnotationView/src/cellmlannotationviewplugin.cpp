@@ -47,7 +47,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to annotate <a href=\"http://www.cellml.org/\">CellML</a> files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "CellMLSupport" << "WebViewerWidget",
                           descriptions);
 }

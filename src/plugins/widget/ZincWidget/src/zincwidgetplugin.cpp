@@ -37,7 +37,7 @@ PLUGININFO_FUNC ZincWidgetPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to visualise a <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> scene."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser une scène <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a>."));
 
-    return new PluginInfo(PluginInfo::Widget, false, false,
+    return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           QStringList() << "Core" << "Zinc",
                           descriptions);
 }

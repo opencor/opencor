@@ -43,7 +43,7 @@ PLUGININFO_FUNC ZincWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to test the <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> library."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour tester la librairie <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a>."));
 
-    return new PluginInfo(PluginInfo::Test, true, false,
+    return new PluginInfo(PluginInfo::Category::Test, true, false,
                           QStringList() << "ZincWidget",
                           descriptions);
 }

@@ -190,7 +190,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
             // We are either dealing with a library that is not a plugin or with
             // a plugin that is too old, so add it to the Invalid category
 
-            pluginCategoryItem(PluginInfo::Invalid)->appendRow(pluginItem);
+            pluginCategoryItem(PluginInfo::Category::Invalid)->appendRow(pluginItem);
         }
     }
 
