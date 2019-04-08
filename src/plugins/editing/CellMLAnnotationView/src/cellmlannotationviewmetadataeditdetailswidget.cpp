@@ -142,7 +142,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mLookUpTerm(false),
     mErrorMessage(QString()),
     mHasInternetConnection(true),
-    mInformationType(None),
+    mInformationType(InformationType::None),
     mLookUpInformation(false),
     mItemsMapping(QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem>()),
     mEnabledItems(QMap<QString, bool>()),
@@ -612,7 +612,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
         // Note: this is in case a resource or id used to be looked up, in which
         //       case we don't want it to be anymore...
 
-        if (mLookUpInformation && (mInformationType != Qualifier))
+        if (mLookUpInformation && (mInformationType != InformationType::Qualifier))
             genericLookUp();
     }
 
@@ -637,9 +637,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     // Retrieve the information
 
     QStringList itemInformation = pItemInformation.split('|');
-    QString qualifier = (pInformationType != Qualifier)?QString():pItemInformation;
-    QString resource = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformation[0];
-    QString id = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformation[1];
+    QString qualifier = (pInformationType != InformationType::Qualifier)?QString():pItemInformation;
+    QString resource = (pItemInformation.isEmpty() || (pInformationType == InformationType::Qualifier))?QString():itemInformation[0];
+    QString id = (pItemInformation.isEmpty() || (pInformationType == InformationType::Qualifier))?QString():itemInformation[1];
 
     // Toggle the look up button, if needed
     // Note: we don't want nested generic look ups, hence we temporarily disable
@@ -648,7 +648,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     //       mTextContent being reset (see below), which may not be what we want
     //       (e.g. if we came here after clicking on a resource/id link)...
 
-    if ((pInformationType != Qualifier) && mLookUpQualifierButton->isChecked()) {
+    if (   (pInformationType != InformationType::Qualifier)
+        && mLookUpQualifierButton->isChecked()) {
         disconnect(mLookUpQualifierButton, &QPushButton::toggled,
                    this, &CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier);
 
@@ -660,7 +661,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     // Reset some internal properties, if needed
 
-    if ((pInformationType != Resource) && (pInformationType != Id)) {
+    if (   (pInformationType != InformationType::Resource)
+        && (pInformationType != InformationType::Id)) {
         mLink = QString();
         mTextContent = QString();
     }
@@ -677,27 +679,27 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
         if (!mItemInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(mItemInformationSha1)).removeClass(Highlighted);
 
-            if (mInformationType == Resource)
+            if (mInformationType == InformationType::Resource)
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(mItemInformationSha1)).removeClass(Selected);
-            else if (mInformationType == Id)
+            else if (mInformationType == InformationType::Id)
                 documentElement.findFirst(QString("td[id=id_%1]").arg(mItemInformationSha1)).removeClass(Selected);
         }
 
         if (!itemInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1)).addClass(Highlighted);
 
-            if (pInformationType == Resource)
+            if (pInformationType == InformationType::Resource)
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).addClass(Selected);
-            else if (pInformationType == Id)
+            else if (pInformationType == InformationType::Id)
                 documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).addClass(Selected);
         }
 
         mItemInformationSha1 = itemInformationSha1;
     } else if (!itemInformationSha1.isEmpty()) {
-        if (pInformationType == Resource) {
+        if (pInformationType == InformationType::Resource) {
             documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).addClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).removeClass(Selected);
-        } else if (pInformationType == Id) {
+        } else if (pInformationType == InformationType::Id) {
             documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).addClass(Selected);
         }
@@ -713,19 +715,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     // Let people know that we want to look something up
 
     switch (pInformationType) {
-    case None:
+    case InformationType::None:
         emit noLookUpRequested();
 
         break;
-    case Qualifier:
+    case InformationType::Qualifier:
         emit qualifierLookUpRequested(qualifier);
 
         break;
-    case Resource:
+    case InformationType::Resource:
         emit resourceLookUpRequested(resource);
 
         break;
-    case Id:
+    case InformationType::Id:
         emit idLookUpRequested(resource, id);
 
         break;
@@ -758,7 +760,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
         // Call our generic look up function
 
-        genericLookUp(pQualifier, Qualifier);
+        genericLookUp(pQualifier, InformationType::Qualifier);
     }
 
     // Update our GUI (incl. its enabled state)
@@ -779,7 +781,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier()
     if (mLookUpQualifierButton->isChecked()) {
         // We want to look something up
 
-        genericLookUp(mQualifierValue->currentText(), Qualifier);
+        genericLookUp(mQualifierValue->currentText(), InformationType::Qualifier);
     } else {
         // We don't want to look anything up anymore
 
@@ -839,8 +841,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         genericLookUp(mLink,
                       mUrls.contains(mTextContent)?
-                          Resource:
-                          Id);
+                          InformationType::Resource:
+                          InformationType::Id);
     }
 }
 
