@@ -225,13 +225,13 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
     // Initialise the mapping, if needed
 
     if (Icons.isEmpty()) {
-        Icons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
-        Icons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
-        Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Data, DataIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::ParameterType::Voi), VoiIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::ParameterType::Constant), ConstantIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::ParameterType::ComputedConstant), ComputedConstantIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::ParameterType::Rate), RateIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::ParameterType::State), StateIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::ParameterType::Algebraic), AlgebraicIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::ParameterType::Data), DataIcon);
     }
 
     return Icons;
@@ -243,7 +243,7 @@ QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
 {
     // Return our corresponding icon
 
-    return icons().value(pParameterType);
+    return icons().value(int(pParameterType));
 }
 
 //==============================================================================
@@ -370,11 +370,11 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
             // Determine the type of our computation target
 
-            CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::Unknown;
+            CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::ParameterType::Unknown;
 
             switch (computationTarget->type()) {
             case iface::cellml_services::VARIABLE_OF_INTEGRATION:
-                parameterType = CellmlFileRuntimeParameter::Voi;
+                parameterType = CellmlFileRuntimeParameter::ParameterType::Voi;
 
                 break;
             case iface::cellml_services::CONSTANT:
@@ -393,23 +393,23 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                     // The computed target doesn't have an initial value, so it
                     // must be a 'computed' constant
 
-                    parameterType = CellmlFileRuntimeParameter::ComputedConstant;
+                    parameterType = CellmlFileRuntimeParameter::ParameterType::ComputedConstant;
                 } else if (computationTarget->degree()) {
                     // The computed target has a degree, so it is effectively a
                     // rate
 
-                    parameterType = CellmlFileRuntimeParameter::Rate;
+                    parameterType = CellmlFileRuntimeParameter::ParameterType::Rate;
                 } else {
                     // The computed target has an initial value, so it must be a
                     // 'proper' constant
 
-                    parameterType = CellmlFileRuntimeParameter::Constant;
+                    parameterType = CellmlFileRuntimeParameter::ParameterType::Constant;
                 }
 
                 break;
             case iface::cellml_services::STATE_VARIABLE:
             case iface::cellml_services::PSEUDOSTATE_VARIABLE:
-                parameterType = CellmlFileRuntimeParameter::State;
+                parameterType = CellmlFileRuntimeParameter::ParameterType::State;
 
                 break;
             case iface::cellml_services::ALGEBRAIC:
@@ -420,17 +420,17 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                 //       are dealing with a rate variable...
 
                 if (computationTarget->degree())
-                    parameterType = CellmlFileRuntimeParameter::Rate;
+                    parameterType = CellmlFileRuntimeParameter::ParameterType::Rate;
                 else
-                    parameterType = CellmlFileRuntimeParameter::Algebraic;
+                    parameterType = CellmlFileRuntimeParameter::ParameterType::Algebraic;
 
                 break;
             case iface::cellml_services::FLOATING:
-                parameterType = CellmlFileRuntimeParameter::Floating;
+                parameterType = CellmlFileRuntimeParameter::ParameterType::Floating;
 
                 break;
             case iface::cellml_services::LOCALLY_BOUND:
-                parameterType = CellmlFileRuntimeParameter::LocallyBound;
+                parameterType = CellmlFileRuntimeParameter::ParameterType::LocallyBound;
 
                 break;
             }
@@ -438,8 +438,8 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
             // Keep track of our computation target, should its type be of
             // interest
 
-            if (   (parameterType != CellmlFileRuntimeParameter::Floating)
-                && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
+            if (   (parameterType != CellmlFileRuntimeParameter::ParameterType::Floating)
+                && (parameterType != CellmlFileRuntimeParameter::ParameterType::LocallyBound)) {
                 CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
                                                                                        int(computationTarget->degree()),
                                                                                        QString::fromStdWString(realVariable->unitsName()),
@@ -447,7 +447,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                                                                                        parameterType,
                                                                                        int(computationTarget->assignedIndex()));
 
-                if (parameterType == CellmlFileRuntimeParameter::Voi) {
+                if (parameterType == CellmlFileRuntimeParameter::ParameterType::Voi) {
                     if (!mVoi) {
                         mVoi = parameter;
 
@@ -614,7 +614,7 @@ void CellmlFileRuntime::importData(const QString &pName,
 {
     mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
                                                   pComponentHierarchy,
-                                                  CellmlFileRuntimeParameter::Data,
+                                                  CellmlFileRuntimeParameter::ParameterType::Data,
                                                   pIndex, pData);
 }
 
@@ -717,7 +717,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pData) con
     CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
 
     for (auto parameter : mParameters) {
-        if (   (parameter->type() == CellmlFileRuntimeParameter::Data)
+        if (   (parameter->type() == CellmlFileRuntimeParameter::ParameterType::Data)
             && (!pData || (parameter->data() == pData))) {
             res << parameter;
         }

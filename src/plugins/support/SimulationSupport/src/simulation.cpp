@@ -667,28 +667,28 @@ void SimulationResults::createDataStore()
         DataStore::DataStoreVariable *variable = nullptr;
 
         switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setType(parameter->type());
+        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi:
+            mPoints->setType(int(parameter->type()));
             mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
                                 runtime->voi()->name()));
             mPoints->setLabel(runtime->voi()->name());
             mPoints->setUnit(runtime->voi()->unit());
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant:
+        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::ComputedConstant:
             variable = mConstants[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Rate:
             variable = mRates[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::State:
+        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State:
             variable = mStates[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+        case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Algebraic:
             variable = mAlgebraic[parameter->index()];
 
             break;
@@ -699,7 +699,7 @@ void SimulationResults::createDataStore()
         }
 
         if (variable) {
-            variable->setType(parameter->type());
+            variable->setType(int(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
@@ -799,7 +799,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
     for (auto parameter : runtime->dataParameters(resultsValues)) {
         DataStore::DataStoreVariable *variable = mData.value(parameter->data())[parameter->index()];
 
-        variable->setType(parameter->type());
+        variable->setType(int(parameter->type()));
         variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
         variable->setLabel(parameter->formattedName());
         variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));

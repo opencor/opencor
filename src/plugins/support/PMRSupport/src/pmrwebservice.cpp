@@ -664,7 +664,7 @@ void PmrWebService::requestExposureFiles(const QString &pUrl)
 
     if (pmrResponse) {
         pmrResponse->setProperty(ExposureProperty, QVariant::fromValue(reinterpret_cast<void *>(exposure)));
-        pmrResponse->setProperty(NextActionProperty, RequestExposureFiles);
+        pmrResponse->setProperty(NextActionProperty, int(Action::RequestExposureFiles));
 
         connect(pmrResponse, &PmrWebServiceResponse::response,
                 this, &PmrWebService::exposureInformationResponse);
@@ -712,13 +712,13 @@ void PmrWebService::exposureInformationResponse(const QJsonDocument &pJsonDocume
         } else {
             Action action = Action(sender()->property(NextActionProperty).toInt());
 
-            if (action == CloneExposureWorkspace) {
+            if (action == Action::CloneExposureWorkspace) {
                 // Retrieve some information about the workspace and then clone
                 // it
 
                 requestWorkspaceInformation(workspaceUrl, QString(), exposure);
             } else if (   exposureFileUrls.isEmpty()
-                       && (action == RequestExposureFiles)) {
+                       && (action == Action::RequestExposureFiles)) {
                 emitInformation(tr("No exposure files could be found for %1.").arg(exposure->toHtml()));
             }
         }
@@ -774,7 +774,7 @@ void PmrWebService::requestExposureWorkspaceClone(const QString &pUrl)
 
         if (pmrResponse) {
             pmrResponse->setProperty(ExposureProperty, QVariant::fromValue(reinterpret_cast<void *>(exposure)));
-            pmrResponse->setProperty(NextActionProperty, CloneExposureWorkspace);
+            pmrResponse->setProperty(NextActionProperty, int(Action::CloneExposureWorkspace));
 
             connect(pmrResponse, &PmrWebServiceResponse::response,
                     this, &PmrWebService::exposureInformationResponse);

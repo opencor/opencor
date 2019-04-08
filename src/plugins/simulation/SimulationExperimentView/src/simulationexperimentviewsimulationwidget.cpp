@@ -1337,8 +1337,8 @@ bool SimulationExperimentViewSimulationWidget::save(const QString &pFileName)
         for (auto property : parameters.keys()) {
             CellMLSupport::CellmlFileRuntimeParameter *parameter = parameters.value(property);
 
-            if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-                || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
+            if (   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State)
+                || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant)) {
                 ObjRef<iface::cellml_api::CellMLComponent> component = components->getComponent(parameter->componentHierarchy().last().toStdWString());
                 ObjRef<iface::cellml_api::CellMLVariableSet>  variables = component->variables();
                 ObjRef<iface::cellml_api::CellMLVariable> variable = variables->getVariable(property->name().toStdWString());
@@ -4080,7 +4080,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
             if (startingPoint > endingPoint)
                 std::swap(startingPoint, endingPoint);
 
-            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterX())->type() == CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi) {
                 if (!hasData && needInitialisationX) {
                     minX = startingPoint;
                     maxX = endingPoint;
@@ -4098,7 +4098,7 @@ bool SimulationExperimentViewSimulationWidget::updatePlot(GraphPanelWidget::Grap
                 }
             }
 
-            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
+            if (static_cast<CellMLSupport::CellmlFileRuntimeParameter *>(graph->parameterY())->type() == CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi) {
                 if (!hasData && needInitialisationY) {
                     minY = startingPoint;
                     maxY = endingPoint;
@@ -4155,18 +4155,18 @@ double * SimulationExperimentViewSimulationWidget::data(SimulationSupport::Simul
     // Return the array of data points associated with the given parameter
 
     switch (pParameter->type()) {
-    case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+    case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Voi:
         return pSimulation->results()->points(pRun);
-    case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-    case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+    case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Constant:
+    case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::ComputedConstant:
         return pSimulation->results()->constants(pParameter->index(), pRun);
-    case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+    case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Rate:
         return pSimulation->results()->rates(pParameter->index(), pRun);
-    case CellMLSupport::CellmlFileRuntimeParameter::State:
+    case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::State:
         return pSimulation->results()->states(pParameter->index(), pRun);
-    case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+    case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Algebraic:
         return pSimulation->results()->algebraic(pParameter->index(), pRun);
-    case CellMLSupport::CellmlFileRuntimeParameter::Data:
+    case CellMLSupport::CellmlFileRuntimeParameter::ParameterType::Data:
         return pSimulation->results()->data(pParameter->data(),
                                             pParameter->index(), pRun);
     default:
