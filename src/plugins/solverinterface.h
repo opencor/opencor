@@ -131,7 +131,7 @@ enum class Type {
 class Property
 {
 public:
-    enum Type {
+    enum class Type {
         Boolean,
         Integer,
         IntegerGt0,

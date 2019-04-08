@@ -219,17 +219,17 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     QStringList PreconditionerListValues = QStringList() << NoPreconditioner
                                                          << BandedPreconditioner;
 
-    return Solver::Properties() << Solver::Property(Solver::Property::DoubleGe0, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
-                                << Solver::Property(Solver::Property::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
-                                << Solver::Property(Solver::Property::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::DoubleGe0, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
-                                << Solver::Property(Solver::Property::DoubleGt0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
-                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
+    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGe0, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::DoubleGe0, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::DoubleGt0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
 }
 
 //==============================================================================

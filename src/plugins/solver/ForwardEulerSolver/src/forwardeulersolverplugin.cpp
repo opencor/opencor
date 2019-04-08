@@ -123,7 +123,7 @@ Solver::Properties ForwardEulerSolverPlugin::solverProperties() const
     stepDescriptions.insert("en", QString::fromUtf8("Step"));
     stepDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
+    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
 }
 
 //==============================================================================
