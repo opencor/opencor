@@ -476,7 +476,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             break;
         default:
-            // Not a type that we can retranslate, so do nothing...
+            // Not a type that we can retranslate, so do nothing
 
             ;
         }
@@ -494,7 +494,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateDataItem(CellmlAnnotationV
 
             break;
         default:
-            // Not a sub-type that we can retranslate, so do nothing...
+            // Not a sub-type that we can retranslate, so do nothing
 
             ;
         }
