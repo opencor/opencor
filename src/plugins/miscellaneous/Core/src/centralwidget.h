@@ -123,7 +123,7 @@ protected:
     void dropEvent(QDropEvent *pEvent) override;
 
 private:
-    enum State {
+    enum class State {
         Starting,
         Idling,
         UpdatingGui,

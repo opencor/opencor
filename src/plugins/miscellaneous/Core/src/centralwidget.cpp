@@ -134,7 +134,7 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
-    mState(Starting),
+    mState(State::Starting),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -277,7 +277,7 @@ CentralWidget::~CentralWidget()
     // we may get a segmentation fault (should there be a need to switch from
     // one view to another)
 
-    mState = Stopping;
+    mState = State::Stopping;
 
     // Close all the files
     // Note: we force the closing of all the files since canClose() will have
@@ -549,7 +549,7 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
     // Update our state now that our plugins  are fully ready
 
-    mState = Idling;
+    mState = State::Idling;
 
     // Update the GUI
 
@@ -1293,7 +1293,7 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 {
     // Make sure that we are not updating the GUI
 
-    if (mState == UpdatingGui)
+    if (mState == State::UpdatingGui)
         return false;
 
     // Close the file at the given tab index or the current tab index, if no tab
@@ -1606,14 +1606,14 @@ void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
     // temporarily disabled its handling of the currentChanged() signal, if
     // needed
 
-    if (mState == UpdatingGui) {
+    if (mState == State::UpdatingGui) {
         disconnect(pTabBar, &TabBarWidget::currentChanged,
                    this, &CentralWidget::updateGui);
     }
 
     pTabBar->setCurrentIndex(pIndex);
 
-    if (mState == UpdatingGui) {
+    if (mState == State::UpdatingGui) {
         connect(pTabBar, &TabBarWidget::currentChanged,
                 this, &CentralWidget::updateGui);
     }
@@ -1663,7 +1663,7 @@ void CentralWidget::updateGui()
 
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
 
-    if (mState != Idling) {
+    if (mState != State::Idling) {
         if (tabBar)
             setTabBarCurrentIndex(tabBar, tabBar->oldIndex());
 
@@ -1672,7 +1672,7 @@ void CentralWidget::updateGui()
 
     // Update our state to reflect the fact that we are updating the GUI
 
-    mState = UpdatingGui;
+    mState = State::UpdatingGui;
 
     // Keep track of our future old tab index, if possible
 
@@ -1914,7 +1914,7 @@ void CentralWidget::updateGui()
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);
 
-    mState = Idling;
+    mState = State::Idling;
 }
 
 //==============================================================================
