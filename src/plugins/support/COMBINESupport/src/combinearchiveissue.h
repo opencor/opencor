@@ -42,7 +42,7 @@ namespace COMBINESupport {
 class COMBINESUPPORT_EXPORT CombineArchiveIssue
 {
 public:
-    enum Type {
+    enum class Type {
         Information,
         Error,
         Warning,

@@ -945,21 +945,21 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 QString issueType;
 
                 switch (combineArchiveIssue.type()) {
-                case COMBINESupport::CombineArchiveIssue::Information:
+                case COMBINESupport::CombineArchiveIssue::Type::Information:
                     issueType = tr("Information:");
 
                     break;
-                case COMBINESupport::CombineArchiveIssue::Error:
+                case COMBINESupport::CombineArchiveIssue::Type::Error:
                     issueType = tr("Error:");
 
                     atLeastOneBlockingCombineIssue = true;
 
                     break;
-                case COMBINESupport::CombineArchiveIssue::Warning:
+                case COMBINESupport::CombineArchiveIssue::Type::Warning:
                     issueType = tr("Warning:");
 
                     break;
-                case COMBINESupport::CombineArchiveIssue::Fatal:
+                case COMBINESupport::CombineArchiveIssue::Type::Fatal:
                     issueType = tr("Fatal:");
 
                     atLeastOneBlockingCombineIssue = true;
