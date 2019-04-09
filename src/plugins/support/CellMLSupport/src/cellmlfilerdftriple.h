@@ -63,7 +63,7 @@ public:
         Empty
     };
 
-    enum ModelQualifier {
+    enum class ModelQualifier {
         ModelUnknown,
         ModelIs,
         ModelIsDerivedFrom,

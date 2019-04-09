@@ -279,7 +279,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     ++mItemsCount;
 
-    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                             pRdfTriple->modelQualifierAsString():
                             pRdfTriple->bioQualifierAsString();
     QString rdfTripleInformation = qualifier+"|"+pRdfTriple->resource()+"|"+pRdfTriple->id();
@@ -480,7 +480,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(mLink);
 
-        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                                 rdfTriple->modelQualifierAsString():
                                 rdfTriple->bioQualifierAsString();
         QString rdfTripleInformation = qualifier+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
@@ -511,7 +511,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
             static const QRegularExpression ItemRegEx = QRegularExpression("^item_");
 
             CellMLSupport::CellmlFileRdfTriple *newRdfTriple = mRdfTriplesMapping.value(newRdfTripleEment.attribute("id").remove(ItemRegEx));
-            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                                        newRdfTriple->modelQualifierAsString():
                                        newRdfTriple->bioQualifierAsString();
 
