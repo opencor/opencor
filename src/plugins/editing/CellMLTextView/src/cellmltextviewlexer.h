@@ -43,7 +43,7 @@ class CellmlTextViewLexer : public QsciLexerCustom
     Q_OBJECT
 
 public:
-    enum {
+    enum class Style {
         Default,
         SingleLineComment,
         MultilineComment,

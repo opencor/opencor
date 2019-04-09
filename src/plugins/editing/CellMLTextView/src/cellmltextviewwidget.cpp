@@ -999,8 +999,8 @@ bool CellmlTextViewWidget::isComment(int pPosition) const
 
     int style = mEditingWidget->editorWidget()->styleAt(pPosition);
 
-    return    (style == CellmlTextViewLexer::SingleLineComment)
-           || (style == CellmlTextViewLexer::MultilineComment);
+    return    (style == int(CellmlTextViewLexer::Style::SingleLineComment))
+           || (style == int(CellmlTextViewLexer::Style::MultilineComment));
 }
 
 //==============================================================================
@@ -1026,14 +1026,14 @@ QString CellmlTextViewWidget::partialStatement(int pPosition,
     do {
         prevAsPos = editor->findTextInRange(prevAsPos, 0, AsTag, false, true, true);
     } while (   (prevAsPos != -1)
-             && (editor->styleAt(prevAsPos) != CellmlTextViewLexer::Keyword));
+             && (editor->styleAt(prevAsPos) != int(CellmlTextViewLexer::Style::Keyword)));
 
     int prevSemiColonPos = pPosition;
 
     do {
         prevSemiColonPos = editor->findTextInRange(prevSemiColonPos, 0, SemiColonTag, false, false, false);
     } while (   (prevSemiColonPos != -1)
-             && (editor->styleAt(prevSemiColonPos) != CellmlTextViewLexer::Default));
+             && (editor->styleAt(prevSemiColonPos) != int(CellmlTextViewLexer::Style::Default)));
 
     // Look for "as" and ";" after the given position
 
@@ -1042,14 +1042,14 @@ QString CellmlTextViewWidget::partialStatement(int pPosition,
     do {
         nextAsPos = editor->findTextInRange(nextAsPos+1, editorContentsSize, AsTag, false, true, true);
     } while (   (nextAsPos != -1)
-             && (editor->styleAt(nextAsPos) != CellmlTextViewLexer::Keyword));
+             && (editor->styleAt(nextAsPos) != int(CellmlTextViewLexer::Style::Keyword)));
 
     int nextSemiColonPos = pPosition-SemiColonTag.length();
 
     do {
         nextSemiColonPos = editor->findTextInRange(nextSemiColonPos+1, editorContentsSize, SemiColonTag, false, false, false);
     } while (   (nextSemiColonPos != -1)
-             && (editor->styleAt(nextSemiColonPos) != CellmlTextViewLexer::Default));
+             && (editor->styleAt(nextSemiColonPos) != int(CellmlTextViewLexer::Style::Default)));
 
     nextAsPos = (nextAsPos == -1)?editorContentsSize:nextAsPos;
     nextSemiColonPos = (nextSemiColonPos == -1)?editorContentsSize:nextSemiColonPos;
