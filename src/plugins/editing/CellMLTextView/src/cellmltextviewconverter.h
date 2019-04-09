@@ -81,7 +81,7 @@ public:
     QDomDocument rdfNodes() const;
 
 private:
-    enum class OutputType {
+    enum class Output {
         None,
         EmptyLine,
         DefModel,
@@ -115,7 +115,7 @@ private:
     QString mPrevIndent;
     QString mIndent;
 
-    OutputType mLastOutputType;
+    Output mLastOutput;
 
     QString mErrorMessage;
     int mErrorLine;
@@ -143,7 +143,7 @@ private:
     void indent(bool pForceTracking = true);
     void unindent();
 
-    void outputString(OutputType pOutputType = OutputType::EmptyLine,
+    void outputString(Output pOutputType = Output::EmptyLine,
                       const QString &pString = QString());
 
     bool rdfNode(const QDomNode &pDomNode) const;
