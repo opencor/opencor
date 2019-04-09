@@ -41,7 +41,7 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mCharType(EofChar),
     mCharLine(1),
     mCharColumn(0),
-    mTokenType(TokenType::UnknownToken),
+    mTokenType(Token::Unknown),
     mTokenLine(0),
     mTokenColumn(0),
     mTokenString(QString()),
@@ -50,162 +50,162 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
 {
     // Our various CellML Text keywords
 
-    mKeywords.insert("and", TokenType::AndToken);
-    mKeywords.insert("as", TokenType::AsToken);
-    mKeywords.insert("between", TokenType::BetweenToken);
-    mKeywords.insert("case", TokenType::CaseToken);
-    mKeywords.insert("comp", TokenType::CompToken);
-    mKeywords.insert("def", TokenType::DefToken);
-    mKeywords.insert("endcomp", TokenType::EndCompToken);
-    mKeywords.insert("enddef", TokenType::EndDefToken);
-    mKeywords.insert("endsel", TokenType::EndSelToken);
-    mKeywords.insert("for", TokenType::ForToken);
-    mKeywords.insert("group", TokenType::GroupToken);
-    mKeywords.insert("import", TokenType::ImportToken);
-    mKeywords.insert("incl", TokenType::InclToken);
-    mKeywords.insert("map", TokenType::MapToken);
-    mKeywords.insert("model", TokenType::ModelToken);
-    mKeywords.insert("otherwise", TokenType::OtherwiseToken);
-    mKeywords.insert("sel", TokenType::SelToken);
-    mKeywords.insert("unit", TokenType::UnitToken);
-    mKeywords.insert("using", TokenType::UsingToken);
-    mKeywords.insert("var", TokenType::VarToken);
-    mKeywords.insert("vars", TokenType::VarsToken);
+    mKeywords.insert("and", Token::And);
+    mKeywords.insert("as", Token::As);
+    mKeywords.insert("between", Token::Between);
+    mKeywords.insert("case", Token::Case);
+    mKeywords.insert("comp", Token::Comp);
+    mKeywords.insert("def", Token::Def);
+    mKeywords.insert("endcomp", Token::EndComp);
+    mKeywords.insert("enddef", Token::EndDef);
+    mKeywords.insert("endsel", Token::EndSel);
+    mKeywords.insert("for", Token::For);
+    mKeywords.insert("group", Token::Group);
+    mKeywords.insert("import", Token::Import);
+    mKeywords.insert("incl", Token::Incl);
+    mKeywords.insert("map", Token::Map);
+    mKeywords.insert("model", Token::Model);
+    mKeywords.insert("otherwise", Token::Otherwise);
+    mKeywords.insert("sel", Token::Sel);
+    mKeywords.insert("unit", Token::Unit);
+    mKeywords.insert("using", Token::Using);
+    mKeywords.insert("var", Token::Var);
+    mKeywords.insert("vars", Token::Vars);
 
-    mKeywords.insert("abs", TokenType::AbsToken);
-    mKeywords.insert("ceil", TokenType::CeilToken);
-    mKeywords.insert("exp", TokenType::ExpToken);
-    mKeywords.insert("fact", TokenType::FactToken);
-    mKeywords.insert("floor", TokenType::FloorToken);
-    mKeywords.insert("ln", TokenType::LnToken);
-    mKeywords.insert("log", TokenType::LogToken);
-    mKeywords.insert("pow", TokenType::PowToken);
-    mKeywords.insert("rem", TokenType::RemToken);
-    mKeywords.insert("root", TokenType::RootToken);
-    mKeywords.insert("sqr", TokenType::SqrToken);
-    mKeywords.insert("sqrt", TokenType::SqrtToken);
+    mKeywords.insert("abs", Token::Abs);
+    mKeywords.insert("ceil", Token::Ceil);
+    mKeywords.insert("exp", Token::Exp);
+    mKeywords.insert("fact", Token::Fact);
+    mKeywords.insert("floor", Token::Floor);
+    mKeywords.insert("ln", Token::Ln);
+    mKeywords.insert("log", Token::Log);
+    mKeywords.insert("pow", Token::Pow);
+    mKeywords.insert("rem", Token::Rem);
+    mKeywords.insert("root", Token::Root);
+    mKeywords.insert("sqr", Token::Sqr);
+    mKeywords.insert("sqrt", Token::Sqrt);
 
-//    mKeywords.insert("and", TokenType::AndToken);
-    mKeywords.insert("or", TokenType::OrToken);
-    mKeywords.insert("xor", TokenType::XorToken);
-    mKeywords.insert("not", TokenType::NotToken);
+//    mKeywords.insert("and", TokenType::And);
+    mKeywords.insert("or", Token::Or);
+    mKeywords.insert("xor", Token::Xor);
+    mKeywords.insert("not", Token::Not);
 
-    mKeywords.insert("ode", TokenType::OdeToken);
+    mKeywords.insert("ode", Token::Ode);
 
-    mKeywords.insert("min", TokenType::MinToken);
-    mKeywords.insert("max", TokenType::MaxToken);
+    mKeywords.insert("min", Token::Min);
+    mKeywords.insert("max", Token::Max);
 
-    mKeywords.insert("gcd", TokenType::GcdToken);
-    mKeywords.insert("lcm", TokenType::LcmToken);
+    mKeywords.insert("gcd", Token::Gcd);
+    mKeywords.insert("lcm", Token::Lcm);
 
-    mKeywords.insert("sin", TokenType::SinToken);
-    mKeywords.insert("cos", TokenType::CosToken);
-    mKeywords.insert("tan", TokenType::TanToken);
-    mKeywords.insert("sec", TokenType::SecToken);
-    mKeywords.insert("csc", TokenType::CscToken);
-    mKeywords.insert("cot", TokenType::CotToken);
-    mKeywords.insert("sinh", TokenType::SinhToken);
-    mKeywords.insert("cosh", TokenType::CoshToken);
-    mKeywords.insert("tanh", TokenType::TanhToken);
-    mKeywords.insert("sech", TokenType::SechToken);
-    mKeywords.insert("csch", TokenType::CschToken);
-    mKeywords.insert("coth", TokenType::CothToken);
-    mKeywords.insert("asin", TokenType::AsinToken);
-    mKeywords.insert("acos", TokenType::AcosToken);
-    mKeywords.insert("atan", TokenType::AtanToken);
-    mKeywords.insert("asec", TokenType::AsecToken);
-    mKeywords.insert("acsc", TokenType::AcscToken);
-    mKeywords.insert("acot", TokenType::AcotToken);
-    mKeywords.insert("asinh", TokenType::AsinhToken);
-    mKeywords.insert("acosh", TokenType::AcoshToken);
-    mKeywords.insert("atanh", TokenType::AtanhToken);
-    mKeywords.insert("asech", TokenType::AsechToken);
-    mKeywords.insert("acsch", TokenType::AcschToken);
-    mKeywords.insert("acoth", TokenType::AcothToken);
+    mKeywords.insert("sin", Token::Sin);
+    mKeywords.insert("cos", Token::Cos);
+    mKeywords.insert("tan", Token::Tan);
+    mKeywords.insert("sec", Token::Sec);
+    mKeywords.insert("csc", Token::Csc);
+    mKeywords.insert("cot", Token::Cot);
+    mKeywords.insert("sinh", Token::Sinh);
+    mKeywords.insert("cosh", Token::Cosh);
+    mKeywords.insert("tanh", Token::Tanh);
+    mKeywords.insert("sech", Token::Sech);
+    mKeywords.insert("csch", Token::Csch);
+    mKeywords.insert("coth", Token::Coth);
+    mKeywords.insert("asin", Token::Asin);
+    mKeywords.insert("acos", Token::Acos);
+    mKeywords.insert("atan", Token::Atan);
+    mKeywords.insert("asec", Token::Asec);
+    mKeywords.insert("acsc", Token::Acsc);
+    mKeywords.insert("acot", Token::Acot);
+    mKeywords.insert("asinh", Token::Asinh);
+    mKeywords.insert("acosh", Token::Acosh);
+    mKeywords.insert("atanh", Token::Atanh);
+    mKeywords.insert("asech", Token::Asech);
+    mKeywords.insert("acsch", Token::Acsch);
+    mKeywords.insert("acoth", Token::Acoth);
 
-    mKeywords.insert("true", TokenType::TrueToken);
-    mKeywords.insert("false", TokenType::FalseToken);
-    mKeywords.insert("nan", TokenType::NanToken);
-    mKeywords.insert("pi", TokenType::PiToken);
-    mKeywords.insert("inf", TokenType::InfToken);
-    mKeywords.insert("e", TokenType::EToken);
+    mKeywords.insert("true", Token::True);
+    mKeywords.insert("false", Token::False);
+    mKeywords.insert("nan", Token::Nan);
+    mKeywords.insert("pi", Token::Pi);
+    mKeywords.insert("inf", Token::Inf);
+    mKeywords.insert("e", Token::E);
 
-    mKeywords.insert("base", TokenType::BaseToken);
-    mKeywords.insert("encapsulation", TokenType::EncapsulationToken);
-    mKeywords.insert("containment", TokenType::ContainmentToken);
+    mKeywords.insert("base", Token::Base);
+    mKeywords.insert("encapsulation", Token::Encapsulation);
+    mKeywords.insert("containment", Token::Containment);
 
     // Our various CellML Text SI unit keywords
 
-    mSiUnitKeywords.insert("ampere", TokenType::AmpereToken);
-    mSiUnitKeywords.insert("becquerel", TokenType::BecquerelToken);
-    mSiUnitKeywords.insert("candela", TokenType::CandelaToken);
-    mSiUnitKeywords.insert("celsius", TokenType::CelsiusToken);
-    mSiUnitKeywords.insert("coulomb", TokenType::CoulombToken);
-    mSiUnitKeywords.insert("dimensionless", TokenType::DimensionlessToken);
-    mSiUnitKeywords.insert("farad", TokenType::FaradToken);
-    mSiUnitKeywords.insert("gram", TokenType::GramToken);
-    mSiUnitKeywords.insert("gray", TokenType::GrayToken);
-    mSiUnitKeywords.insert("henry", TokenType::HenryToken);
-    mSiUnitKeywords.insert("hertz", TokenType::HertzToken);
-    mSiUnitKeywords.insert("joule", TokenType::JouleToken);
-    mSiUnitKeywords.insert("katal", TokenType::KatalToken);
-    mSiUnitKeywords.insert("kelvin", TokenType::KelvinToken);
-    mSiUnitKeywords.insert("kilogram", TokenType::KilogramToken);
-    mSiUnitKeywords.insert("liter", TokenType::LiterToken);
-    mSiUnitKeywords.insert("litre", TokenType::LitreToken);
-    mSiUnitKeywords.insert("lumen", TokenType::LumenToken);
-    mSiUnitKeywords.insert("lux", TokenType::LuxToken);
-    mSiUnitKeywords.insert("meter", TokenType::MeterToken);
-    mSiUnitKeywords.insert("metre", TokenType::MetreToken);
-    mSiUnitKeywords.insert("mole", TokenType::MoleToken);
-    mSiUnitKeywords.insert("newton", TokenType::NewtonToken);
-    mSiUnitKeywords.insert("ohm", TokenType::OhmToken);
-    mSiUnitKeywords.insert("pascal", TokenType::PascalToken);
-    mSiUnitKeywords.insert("radian", TokenType::RadianToken);
-    mSiUnitKeywords.insert("second", TokenType::SecondToken);
-    mSiUnitKeywords.insert("siemens", TokenType::SiemensToken);
-    mSiUnitKeywords.insert("sievert", TokenType::SievertToken);
-    mSiUnitKeywords.insert("steradian", TokenType::SteradianToken);
-    mSiUnitKeywords.insert("tesla", TokenType::TeslaToken);
-    mSiUnitKeywords.insert("volt", TokenType::VoltToken);
-    mSiUnitKeywords.insert("watt", TokenType::WattToken);
-    mSiUnitKeywords.insert("weber", TokenType::WeberToken);
+    mSiUnitKeywords.insert("ampere", Token::Ampere);
+    mSiUnitKeywords.insert("becquerel", Token::Becquerel);
+    mSiUnitKeywords.insert("candela", Token::Candela);
+    mSiUnitKeywords.insert("celsius", Token::Celsius);
+    mSiUnitKeywords.insert("coulomb", Token::Coulomb);
+    mSiUnitKeywords.insert("dimensionless", Token::Dimensionless);
+    mSiUnitKeywords.insert("farad", Token::Farad);
+    mSiUnitKeywords.insert("gram", Token::Gram);
+    mSiUnitKeywords.insert("gray", Token::Gray);
+    mSiUnitKeywords.insert("henry", Token::Henry);
+    mSiUnitKeywords.insert("hertz", Token::Hertz);
+    mSiUnitKeywords.insert("joule", Token::Joule);
+    mSiUnitKeywords.insert("katal", Token::Katal);
+    mSiUnitKeywords.insert("kelvin", Token::Kelvin);
+    mSiUnitKeywords.insert("kilogram", Token::Kilogram);
+    mSiUnitKeywords.insert("liter", Token::Liter);
+    mSiUnitKeywords.insert("litre", Token::Litre);
+    mSiUnitKeywords.insert("lumen", Token::Lumen);
+    mSiUnitKeywords.insert("lux", Token::Lux);
+    mSiUnitKeywords.insert("meter", Token::Meter);
+    mSiUnitKeywords.insert("metre", Token::Metre);
+    mSiUnitKeywords.insert("mole", Token::Mole);
+    mSiUnitKeywords.insert("newton", Token::Newton);
+    mSiUnitKeywords.insert("ohm", Token::Ohm);
+    mSiUnitKeywords.insert("pascal", Token::Pascal);
+    mSiUnitKeywords.insert("radian", Token::Radian);
+    mSiUnitKeywords.insert("second", Token::Second);
+    mSiUnitKeywords.insert("siemens", Token::Siemens);
+    mSiUnitKeywords.insert("sievert", Token::Sievert);
+    mSiUnitKeywords.insert("steradian", Token::Steradian);
+    mSiUnitKeywords.insert("tesla", Token::Tesla);
+    mSiUnitKeywords.insert("volt", Token::Volt);
+    mSiUnitKeywords.insert("watt", Token::Watt);
+    mSiUnitKeywords.insert("weber", Token::Weber);
 
     // Our various CellML Text parameter keywords
 
-    mParameterKeywords.insert("pref", TokenType::PrefToken);
-    mParameterKeywords.insert("expo", TokenType::ExpoToken);
-    mParameterKeywords.insert("mult", TokenType::MultToken);
-    mParameterKeywords.insert("off", TokenType::OffToken);
+    mParameterKeywords.insert("pref", Token::Pref);
+    mParameterKeywords.insert("expo", Token::Expo);
+    mParameterKeywords.insert("mult", Token::Mult);
+    mParameterKeywords.insert("off", Token::Off);
 
-    mParameterKeywords.insert("init", TokenType::InitToken);
-    mParameterKeywords.insert("pub", TokenType::PubToken);
-    mParameterKeywords.insert("priv", TokenType::PrivToken);
+    mParameterKeywords.insert("init", Token::Init);
+    mParameterKeywords.insert("pub", Token::Pub);
+    mParameterKeywords.insert("priv", Token::Priv);
 
-    mParameterKeywords.insert("yotta", TokenType::YottaToken);
-    mParameterKeywords.insert("zetta", TokenType::ZettaToken);
-    mParameterKeywords.insert("exa", TokenType::ExaToken);
-    mParameterKeywords.insert("peta", TokenType::PetaToken);
-    mParameterKeywords.insert("tera", TokenType::TeraToken);
-    mParameterKeywords.insert("giga", TokenType::GigaToken);
-    mParameterKeywords.insert("mega", TokenType::MegaToken);
-    mParameterKeywords.insert("kilo", TokenType::KiloToken);
-    mParameterKeywords.insert("hecto", TokenType::HectoToken);
-    mParameterKeywords.insert("deka", TokenType::DekaToken);
-    mParameterKeywords.insert("deci", TokenType::DeciToken);
-    mParameterKeywords.insert("centi", TokenType::CentiToken);
-    mParameterKeywords.insert("milli", TokenType::MilliToken);
-    mParameterKeywords.insert("micro", TokenType::MicroToken);
-    mParameterKeywords.insert("nano", TokenType::NanoToken);
-    mParameterKeywords.insert("pico", TokenType::PicoToken);
-    mParameterKeywords.insert("femto", TokenType::FemtoToken);
-    mParameterKeywords.insert("atto", TokenType::AttoToken);
-    mParameterKeywords.insert("zepto", TokenType::ZeptoToken);
-    mParameterKeywords.insert("yocto", TokenType::YoctoToken);
+    mParameterKeywords.insert("yotta", Token::Yotta);
+    mParameterKeywords.insert("zetta", Token::Zetta);
+    mParameterKeywords.insert("exa", Token::Exa);
+    mParameterKeywords.insert("peta", Token::Peta);
+    mParameterKeywords.insert("tera", Token::Tera);
+    mParameterKeywords.insert("giga", Token::Giga);
+    mParameterKeywords.insert("mega", Token::Mega);
+    mParameterKeywords.insert("kilo", Token::Kilo);
+    mParameterKeywords.insert("hecto", Token::Hecto);
+    mParameterKeywords.insert("deka", Token::Deka);
+    mParameterKeywords.insert("deci", Token::Deci);
+    mParameterKeywords.insert("centi", Token::Centi);
+    mParameterKeywords.insert("milli", Token::Milli);
+    mParameterKeywords.insert("micro", Token::Micro);
+    mParameterKeywords.insert("nano", Token::Nano);
+    mParameterKeywords.insert("pico", Token::Pico);
+    mParameterKeywords.insert("femto", Token::Femto);
+    mParameterKeywords.insert("atto", Token::Atto);
+    mParameterKeywords.insert("zepto", Token::Zepto);
+    mParameterKeywords.insert("yocto", Token::Yocto);
 
-    mParameterKeywords.insert("in", TokenType::InToken);
-    mParameterKeywords.insert("out", TokenType::OutToken);
-    mParameterKeywords.insert("none", TokenType::NoneToken);
+    mParameterKeywords.insert("in", Token::In);
+    mParameterKeywords.insert("out", Token::Out);
+    mParameterKeywords.insert("none", Token::None);
 }
 
 //==============================================================================
@@ -222,7 +222,7 @@ void CellmlTextViewScanner::setText(const QString &pText)
     mCharLine = 1;
     mCharColumn = 0;
 
-    mTokenType = TokenType::UnknownToken;
+    mTokenType = Token::Unknown;
     mTokenLine = 0;
     mTokenColumn = 0;
     mTokenString = QString();
@@ -235,7 +235,7 @@ void CellmlTextViewScanner::setText(const QString &pText)
 
 //==============================================================================
 
-CellmlTextViewScanner::TokenType CellmlTextViewScanner::tokenType() const
+CellmlTextViewScanner::Token CellmlTextViewScanner::tokenType() const
 {
     // Return our token type
 
@@ -417,7 +417,7 @@ void CellmlTextViewScanner::getSingleLineComment()
 {
     // Retrieve a single line comment by looking for the end of the current line
 
-    mTokenType = TokenType::SingleLineCommentToken;
+    mTokenType = Token::SingleLineComment;
     mTokenString = QString();
 
     forever {
@@ -452,7 +452,7 @@ void CellmlTextViewScanner::getMultilineComment()
             if (mCharType == DivideChar) {
                 getNextChar();
 
-                mTokenType = TokenType::MultilineCommentToken;
+                mTokenType = Token::MultilineComment;
 
                 return;
             } else {
@@ -470,7 +470,7 @@ void CellmlTextViewScanner::getMultilineComment()
         }
     }
 
-    mTokenType = TokenType::InvalidToken;
+    mTokenType = Token::Invalid;
     mTokenComment = tr("The comment is incomplete.");
 }
 
@@ -495,14 +495,14 @@ void CellmlTextViewScanner::getWord()
     // keyword, a parameter keyword, an identifier or something else
 
     if (mWithinParameterBlock)
-        mTokenType = mParameterKeywords.value(mTokenString, TokenType::UnknownToken);
+        mTokenType = mParameterKeywords.value(mTokenString, Token::Unknown);
     else
-        mTokenType = mKeywords.value(mTokenString, TokenType::UnknownToken);
+        mTokenType = mKeywords.value(mTokenString, Token::Unknown);
 
-    if (mTokenType == TokenType::UnknownToken)
-        mTokenType = mSiUnitKeywords.value(mTokenString, TokenType::UnknownToken);
+    if (mTokenType == Token::Unknown)
+        mTokenType = mSiUnitKeywords.value(mTokenString, Token::Unknown);
 
-    if (mTokenType == TokenType::UnknownToken) {
+    if (mTokenType == Token::Unknown) {
         // We are not dealing with a keyword, but it might still be an
         // identifier or cmeta:id, as long as it doesn't only consist of
         // underscores, hyphens and periods
@@ -512,9 +512,9 @@ void CellmlTextViewScanner::getWord()
 
         if (!QString(mTokenString).remove(UnderscoresHyphensOrPeriodsRegEx).isEmpty()) {
             if (mTokenString.contains(HyphensOrPeriodsRegEx))
-                mTokenType = TokenType::ProperCmetaIdToken;
+                mTokenType = Token::ProperCmetaId;
             else
-                mTokenType = TokenType::IdentifierOrCmetaIdToken;
+                mTokenType = Token::IdentifierOrCmetaId;
         }
     }
 }
@@ -569,7 +569,7 @@ void CellmlTextViewScanner::getNumber()
             // We started a number with a full stop, but it's not followed by
             // digits, so it's not a number after all
 
-            mTokenType = TokenType::UnknownToken;
+            mTokenType = Token::Unknown;
 
             return;
         }
@@ -607,7 +607,7 @@ void CellmlTextViewScanner::getNumber()
         } else {
             // We started an exponent part, but it isn't followed by digits
 
-            mTokenType = TokenType::InvalidToken;
+            mTokenType = Token::Invalid;
             mTokenComment = tr("The exponent has no digits.");
 
             return;
@@ -620,7 +620,7 @@ void CellmlTextViewScanner::getNumber()
 
     mTokenString.toDouble(&validNumber);
 
-    mTokenType = TokenType::NumberToken;
+    mTokenType = Token::Number;
 
     if (!validNumber)
         mTokenComment = tr("The number is not valid (e.g. too big, too small).");
@@ -647,11 +647,11 @@ void CellmlTextViewScanner::getString()
     }
 
     if (mCharType == DoubleQuoteChar) {
-        mTokenType = TokenType::StringToken;
+        mTokenType = Token::String;
 
         getNextChar();
     } else {
-        mTokenType = TokenType::InvalidToken;
+        mTokenType = Token::Invalid;
         mTokenComment = tr("The string is incomplete.");
     }
 }
@@ -693,55 +693,55 @@ void CellmlTextViewScanner::getNextToken()
 
         break;
     case EqChar:
-        mTokenType = TokenType::EqToken;
+        mTokenType = Token::Eq;
 
         getNextChar();
 
         if (mCharType == EqChar) {
             mTokenString += *mChar;
 
-            mTokenType = TokenType::EqEqToken;
+            mTokenType = Token::EqEq;
 
             getNextChar();
         }
 
         break;
     case LtChar:
-        mTokenType = TokenType::LtToken;
+        mTokenType = Token::Lt;
 
         getNextChar();
 
         if (mCharType == EqChar) {
             mTokenString += *mChar;
 
-            mTokenType = TokenType::LeqToken;
+            mTokenType = Token::Leq;
 
             getNextChar();
         } else if (mCharType == GtChar) {
             mTokenString += *mChar;
 
-            mTokenType = TokenType::NeqToken;
+            mTokenType = Token::Neq;
 
             getNextChar();
         }
 
         break;
     case GtChar:
-        mTokenType = TokenType::GtToken;
+        mTokenType = Token::Gt;
 
         getNextChar();
 
         if (mCharType == EqChar) {
             mTokenString += *mChar;
 
-            mTokenType = TokenType::GeqToken;
+            mTokenType = Token::Geq;
 
             getNextChar();
         }
 
         break;
     case DivideChar:
-        mTokenType = TokenType::DivideToken;
+        mTokenType = Token::Divide;
 
         getNextChar();
 
@@ -754,30 +754,30 @@ void CellmlTextViewScanner::getNextToken()
     case OpeningCurlyBracketChar:
     case ClosingCurlyBracketChar:
         mTokenType = (mCharType == OpeningCurlyBracketChar)?
-                         TokenType::OpeningCurlyBracketToken:
-                         TokenType::ClosingCurlyBracketToken;
+                         Token::OpeningCurlyBracket:
+                         Token::ClosingCurlyBracket;
         mWithinParameterBlock = mCharType == OpeningCurlyBracketChar;
 
         getNextChar();
 
         break;
     case EofChar:
-        mTokenType = TokenType::EofToken;
+        mTokenType = Token::Eof;
         mTokenString = tr("the end of the file");
 
         break;
     default:
         switch (mCharType) {
-        case QuoteChar:          mTokenType = TokenType::QuoteToken;          break;
-        case CommaChar:          mTokenType = TokenType::CommaToken;          break;
-        case PlusChar:           mTokenType = TokenType::PlusToken;           break;
-        case MinusChar:          mTokenType = TokenType::MinusToken;          break;
-        case TimesChar:          mTokenType = TokenType::TimesToken;          break;
-        case ColonChar:          mTokenType = TokenType::ColonToken;          break;
-        case SemiColonChar:      mTokenType = TokenType::SemiColonToken;      break;
-        case OpeningBracketChar: mTokenType = TokenType::OpeningBracketToken; break;
-        case ClosingBracketChar: mTokenType = TokenType::ClosingBracketToken; break;
-        default:                 mTokenType = TokenType::UnknownToken;
+        case QuoteChar:          mTokenType = Token::Quote;          break;
+        case CommaChar:          mTokenType = Token::Comma;          break;
+        case PlusChar:           mTokenType = Token::Plus;           break;
+        case MinusChar:          mTokenType = Token::Minus;          break;
+        case TimesChar:          mTokenType = Token::Times;          break;
+        case ColonChar:          mTokenType = Token::Colon;          break;
+        case SemiColonChar:      mTokenType = Token::SemiColon;      break;
+        case OpeningBracketChar: mTokenType = Token::OpeningBracket; break;
+        case ClosingBracketChar: mTokenType = Token::ClosingBracket; break;
+        default:                 mTokenType = Token::Unknown;
         }
 
         getNextChar();
