@@ -132,7 +132,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
     if (QFile::exists(fileName)) {
         if (file(fileName)) {
-            return AlreadyManaged;
+            return Status::AlreadyManaged;
         } else {
             // The file isn't already managed, so add it to our list of managed
             // files and let people know about it being now managed
@@ -147,10 +147,10 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
             emit fileManaged(fileName);
 
-            return Added;
+            return Status::Added;
         }
     } else {
-        return DoesNotExist;
+        return Status::DoesNotExist;
     }
 }
 
@@ -175,9 +175,9 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
         emit fileUnmanaged(fileName);
 
-        return Removed;
+        return Status::Removed;
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 
@@ -463,13 +463,13 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
             emitFilePermissionsChanged(fileName);
 
         if (status == File::Status::LockedNotNeeded)
-            return LockedNotNeeded;
+            return Status::LockedNotNeeded;
         else if (status == File::Status::LockedSet)
-            return LockedSet;
+            return Status::LockedSet;
         else
-            return LockedNotSet;
+            return Status::LockedNotSet;
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 
@@ -559,9 +559,9 @@ FileManager::Status FileManager::create(const QString &pUrl,
 
         emit fileCreated(fileName, pUrl);
 
-        return Created;
+        return Status::Created;
     } else {
-        return NotCreated;
+        return Status::NotCreated;
     }
 }
 
@@ -597,12 +597,12 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
 
             emit fileRenamed(oldFileName, newFileName);
 
-            return Renamed;
+            return Status::Renamed;
         } else {
-            return RenamingNotNeeded;
+            return Status::RenamingNotNeeded;
         }
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 
@@ -630,15 +630,15 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
                 emit fileDuplicated(fileName);
 
-                return Duplicated;
+                return Status::Duplicated;
             } else {
-                return NotDuplicated;
+                return Status::NotDuplicated;
             }
         } else {
-            return NotDuplicated;
+            return Status::NotDuplicated;
         }
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 

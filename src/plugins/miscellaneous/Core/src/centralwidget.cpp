@@ -899,7 +899,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             fileManagerInstance->create(fileNameOrUrl, fileContents);
 
 #ifdef QT_DEBUG
-            if (status != FileManager::Created)
+            if (status != FileManager::Status::Created)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
         } else {
@@ -1025,7 +1025,7 @@ void CentralWidget::duplicateFile()
     fileManagerInstance->duplicate(fileName);
 
 #ifdef QT_DEBUG
-    if (status != FileManager::Duplicated)
+    if (status != FileManager::Status::Duplicated)
         qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated.", __FILE__, __LINE__, qPrintable(fileName));
 #endif
 }
@@ -1046,7 +1046,7 @@ void CentralWidget::toggleLockedFile()
 
     bool fileLocked = fileManagerInstance->isLocked(fileName);
 
-    if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet) {
+    if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::Status::LockedNotSet) {
         warningMessageBox(fileLocked?
                               tr("Unlock File"):
                               tr("Lock File"),
@@ -1161,7 +1161,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         fileManagerInstance->rename(oldFileName, newFileName);
 
 #ifdef QT_DEBUG
-        if (status != FileManager::Renamed)
+        if (status != FileManager::Status::Renamed)
             qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'.", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
     }
@@ -1187,7 +1187,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         fileManagerInstance->unmanage(newFileName);
 
 #ifdef QT_DEBUG
-        if (status != FileManager::Removed)
+        if (status != FileManager::Status::Removed)
             qFatal("FATAL ERROR | %s:%d: '%s' did not get unmanaged.", __FILE__, __LINE__, qPrintable(newFileName));
 
         status =
@@ -1195,7 +1195,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         fileManagerInstance->manage(newFileName);
 
 #ifdef QT_DEBUG
-        if (status != FileManager::Added)
+        if (status != FileManager::Status::Added)
             qFatal("FATAL ERROR | %s:%d: '%s' did not get managed.", __FILE__, __LINE__, qPrintable(newFileName));
 #endif
     }

@@ -383,7 +383,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
                                                 Core::File::Type::Remote,
                                             isLocalFile?
                                                 QString():
-                                                fileNameOrUrl) != Core::FileManager::Added) {
+                                                fileNameOrUrl) != Core::FileManager::Status::Added) {
                 output = "The file could not be managed.";
             } else {
                 CellMLSupport::CellmlFile *cellmlFile = new CellMLSupport::CellmlFile(fileName);

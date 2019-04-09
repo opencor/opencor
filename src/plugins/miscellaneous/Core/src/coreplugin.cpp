@@ -709,7 +709,7 @@ void CorePlugin::newFile()
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != FileManager::Created)
+    if (createStatus != FileManager::Status::Created)
         qFatal("FATAL ERROR | %s:%d: the new file did not get created.", __FILE__, __LINE__);
 #endif
 }
