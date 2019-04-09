@@ -53,7 +53,7 @@ PmrWindowItem::PmrWindowItem(Type pType, const QString &pText,
 {
     // Customise ourselves
 
-    QStandardItem::setIcon((pType == Exposure)?
+    QStandardItem::setIcon((pType == Type::Exposure)?
                                QFileIconProvider().icon(QFileIconProvider::Folder):
                                QFileIconProvider().icon(QFileIconProvider::File));
 
@@ -66,7 +66,7 @@ int PmrWindowItem::type() const
 {
     // Return our type
 
-    return mType;
+    return int(mType);
 }
 
 //==============================================================================
@@ -197,7 +197,7 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
         PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
 
-        if (item->type() == PmrWindowItem::Exposure) {
+        if (item->type() == int(PmrWindowItem::Type::Exposure)) {
             exposureFileUrls = QStringList();
 
             break;
@@ -264,7 +264,7 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     for (int i = 0, iMax = pExposures.count(); i < iMax; ++i) {
         QString exposureName = pExposures[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
-        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Exposure,
+        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Type::Exposure,
                                                 exposureName,
                                                 pExposures[i]->url());
 
@@ -351,7 +351,7 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
         static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
         for (const auto &exposureFile : sortedExposureFiles) {
-            item->appendRow(new PmrWindowItem(PmrWindowItem::ExposureFile,
+            item->appendRow(new PmrWindowItem(PmrWindowItem::Type::ExposureFile,
                                               QString(exposureFile).remove(FilePathRegEx),
                                               exposureFile));
         }
@@ -395,7 +395,7 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
     if (item) {
         // We are over an item, so update our context menu and show it
 
-        mMakeLocalCopyAction->setVisible(item->type() == PmrWindowItem::Exposure);
+        mMakeLocalCopyAction->setVisible(item->type() == int(PmrWindowItem::Type::Exposure));
 
         bool onlyOneItem = selectionModel()->selectedIndexes().count() == 1;
 
@@ -421,7 +421,7 @@ void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
 
     PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
-    if (item->type() == PmrWindowItem::Exposure) {
+    if (item->type() == int(PmrWindowItem::Type::Exposure)) {
         if (!item->hasChildren())
             emit exposureFilesRequested(item->url());
     } else {
