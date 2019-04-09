@@ -38,7 +38,7 @@ namespace CellMLTextView {
 CellmlTextViewScanner::CellmlTextViewScanner() :
     mText(QString()),
     mChar(nullptr),
-    mCharType(EofChar),
+    mCharType(CharType::EofChar),
     mCharLine(1),
     mCharColumn(0),
     mToken(Token::Unknown),
@@ -218,7 +218,7 @@ void CellmlTextViewScanner::setText(const QString &pText)
 
     mChar = mText.constData()-1;
 
-    mCharType = EofChar;
+    mCharType = CharType::EofChar;
     mCharLine = 1;
     mCharColumn = 0;
 
@@ -286,123 +286,123 @@ void CellmlTextViewScanner::getNextChar()
 
     switch ((++mChar)->unicode()) {
     case 0:
-        mCharType = EofChar;
+        mCharType = CharType::EofChar;
 
         break;
     case 9:
-        mCharType = TabChar;
+        mCharType = CharType::TabChar;
 
         break;
     case 10:
-        mCharType = LfChar;
+        mCharType = CharType::LfChar;
 
         break;
     case 13:
-        mCharType = CrChar;
+        mCharType = CharType::CrChar;
 
         break;
     case 32:
-        mCharType = SpaceChar;
+        mCharType = CharType::SpaceChar;
 
         break;
     case 34:
-        mCharType = DoubleQuoteChar;
+        mCharType = CharType::DoubleQuoteChar;
 
         break;
     case 39:
-        mCharType = QuoteChar;
+        mCharType = CharType::QuoteChar;
 
         break;
     case 40:
-        mCharType = OpeningBracketChar;
+        mCharType = CharType::OpeningBracketChar;
 
         break;
     case 41:
-        mCharType = ClosingBracketChar;
+        mCharType = CharType::ClosingBracketChar;
 
         break;
     case 42:
-        mCharType = TimesChar;
+        mCharType = CharType::TimesChar;
 
         break;
     case 43:
-        mCharType = PlusChar;
+        mCharType = CharType::PlusChar;
 
         break;
     case 44:
-        mCharType = CommaChar;
+        mCharType = CharType::CommaChar;
 
         break;
     case 45:
-        mCharType = MinusChar;
+        mCharType = CharType::MinusChar;
 
         break;
     case 46:
-        mCharType = FullStopChar;
+        mCharType = CharType::FullStopChar;
 
         break;
     case 47:
-        mCharType = DivideChar;
+        mCharType = CharType::DivideChar;
 
         break;
     case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:
     case 56: case 57:
-        mCharType = DigitChar;
+        mCharType = CharType::DigitChar;
 
         break;
     case 58:
-        mCharType = ColonChar;
+        mCharType = CharType::ColonChar;
 
         break;
     case 59:
-        mCharType = SemiColonChar;
+        mCharType = CharType::SemiColonChar;
 
         break;
     case 60:
-        mCharType = LtChar;
+        mCharType = CharType::LtChar;
 
         break;
     case 61:
-        mCharType = EqChar;
+        mCharType = CharType::EqChar;
 
         break;
     case 62:
-        mCharType = GtChar;
+        mCharType = CharType::GtChar;
 
         break;
     case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72:
     case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80:
     case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88:
     case 89: case 90:
-        mCharType = LetterChar;
+        mCharType = CharType::LetterChar;
 
         break;
     case 95:
-        mCharType = UnderscoreChar;
+        mCharType = CharType::UnderscoreChar;
 
         break;
     case 97: case 98: case 99: case 100: case 101: case 102: case 103:
     case 104: case 105: case 106: case 107: case 108: case 109: case 110:
     case 111: case 112: case 113: case 114: case 115: case 116: case 117:
     case 118: case 119: case 120: case 121: case 122:
-        mCharType = LetterChar;
+        mCharType = CharType::LetterChar;
 
         break;
     case 123:
-        mCharType = OpeningCurlyBracketChar;
+        mCharType = CharType::OpeningCurlyBracketChar;
 
         break;
     case 125:
-        mCharType = ClosingCurlyBracketChar;
+        mCharType = CharType::ClosingCurlyBracketChar;
 
         break;
     default:
-        mCharType = OtherChar;
+        mCharType = CharType::OtherChar;
     }
 
     // Update our token line and/or column numbers
 
-    if (mCharType == LfChar) {
+    if (mCharType == CharType::LfChar) {
         mCharColumn = 0;
 
         ++mCharLine;
@@ -423,8 +423,8 @@ void CellmlTextViewScanner::getSingleLineComment()
     forever {
         getNextChar();
 
-        if (   (mCharType == CrChar) || (mCharType == LfChar)
-            || (mCharType == EofChar)) {
+        if (   (mCharType == CharType::CrChar) || (mCharType == CharType::LfChar)
+            || (mCharType == CharType::EofChar)) {
             break;
         } else {
             mString += *mChar;
@@ -444,12 +444,12 @@ void CellmlTextViewScanner::getMultilineComment()
     forever {
         getNextChar();
 
-        if (mCharType == TimesChar) {
+        if (mCharType == CharType::TimesChar) {
             QChar timesChar = *mChar;
 
             getNextChar();
 
-            if (mCharType == DivideChar) {
+            if (mCharType == CharType::DivideChar) {
                 getNextChar();
 
                 mToken = Token::MultilineComment;
@@ -458,12 +458,12 @@ void CellmlTextViewScanner::getMultilineComment()
             } else {
                 mString += timesChar;
 
-                if (mCharType == EofChar)
+                if (mCharType == CharType::EofChar)
                     break;
                 else
                     mString += *mChar;
             }
-        } else if (mCharType == EofChar) {
+        } else if (mCharType == CharType::EofChar) {
             break;
         } else {
             mString += *mChar;
@@ -483,8 +483,8 @@ void CellmlTextViewScanner::getWord()
     forever {
         getNextChar();
 
-        if (   (mCharType == LetterChar) || (mCharType == DigitChar) || (mCharType == UnderscoreChar)
-            || (mWithinParameterBlock && ((mCharType == MinusChar) || (mCharType == FullStopChar)))) {
+        if (   (mCharType == CharType::LetterChar) || (mCharType == CharType::DigitChar) || (mCharType == CharType::UnderscoreChar)
+            || (mWithinParameterBlock && ((mCharType == CharType::MinusChar) || (mCharType == CharType::FullStopChar)))) {
             mString += *mChar;
         } else {
             break;
@@ -525,7 +525,7 @@ void CellmlTextViewScanner::getNumber()
 {
     // Retrieve a number from our text
 
-    bool fullStopFirstChar = mCharType == FullStopChar;
+    bool fullStopFirstChar = mCharType == CharType::FullStopChar;
 
     if (fullStopFirstChar) {
         // We started a number with a full stop, so reset mTokenString since it
@@ -538,7 +538,7 @@ void CellmlTextViewScanner::getNumber()
         forever {
             getNextChar();
 
-            if (mCharType == DigitChar)
+            if (mCharType == CharType::DigitChar)
                 mString += *mChar;
             else
                 break;
@@ -547,20 +547,20 @@ void CellmlTextViewScanner::getNumber()
 
     // Look for the fractional part, if any
 
-    if (mCharType == FullStopChar) {
+    if (mCharType == CharType::FullStopChar) {
         mString += *mChar;
 
         getNextChar();
 
         // Check whether the full stop is followed by some digits
 
-        if (mCharType == DigitChar) {
+        if (mCharType == CharType::DigitChar) {
             mString += *mChar;
 
             forever {
                 getNextChar();
 
-                if (mCharType == DigitChar)
+                if (mCharType == CharType::DigitChar)
                     mString += *mChar;
                 else
                     break;
@@ -577,7 +577,7 @@ void CellmlTextViewScanner::getNumber()
 
     // Check whether we have an exponent part
 
-    if (   (mCharType == LetterChar)
+    if (   (mCharType == CharType::LetterChar)
         && ((*mChar == QChar('e')) || (*mChar == QChar('E')))) {
         mString += *mChar;
 
@@ -585,7 +585,7 @@ void CellmlTextViewScanner::getNumber()
 
         // Check whether we have a + or - sign
 
-        if ((mCharType == PlusChar) || (mCharType == MinusChar)) {
+        if ((mCharType == CharType::PlusChar) || (mCharType == CharType::MinusChar)) {
             mString += *mChar;
 
             getNextChar();
@@ -593,13 +593,13 @@ void CellmlTextViewScanner::getNumber()
 
         // Check whether we have some digits
 
-        if (mCharType == DigitChar) {
+        if (mCharType == CharType::DigitChar) {
             mString += *mChar;
 
             forever {
                 getNextChar();
 
-                if (mCharType == DigitChar)
+                if (mCharType == CharType::DigitChar)
                     mString += *mChar;
                 else
                     break;
@@ -637,16 +637,16 @@ void CellmlTextViewScanner::getString()
     forever {
         getNextChar();
 
-        if (   (mCharType == DoubleQuoteChar)
-            || (mCharType == CrChar) || (mCharType == LfChar)
-            || (mCharType == EofChar)) {
+        if (   (mCharType == CharType::DoubleQuoteChar)
+            || (mCharType == CharType::CrChar) || (mCharType == CharType::LfChar)
+            || (mCharType == CharType::EofChar)) {
             break;
         } else {
             mString += *mChar;
         }
     }
 
-    if (mCharType == DoubleQuoteChar) {
+    if (mCharType == CharType::DoubleQuoteChar) {
         mToken = Token::String;
 
         getNextChar();
@@ -663,8 +663,8 @@ void CellmlTextViewScanner::getNextToken()
     // Get the next token in our text by first skipping all the spaces and
     // special characters
 
-    while (   (mCharType == SpaceChar) || (mCharType == TabChar)
-           || (mCharType == CrChar) || (mCharType == LfChar)) {
+    while (   (mCharType == CharType::SpaceChar) || (mCharType == CharType::TabChar)
+           || (mCharType == CharType::CrChar) || (mCharType == CharType::LfChar)) {
         getNextChar();
     }
 
@@ -678,26 +678,26 @@ void CellmlTextViewScanner::getNextToken()
     mComment = QString();
 
     switch (mCharType) {
-    case LetterChar:
-    case UnderscoreChar:
+    case CharType::LetterChar:
+    case CharType::UnderscoreChar:
         getWord();
 
         break;
-    case DigitChar:
-    case FullStopChar:
+    case CharType::DigitChar:
+    case CharType::FullStopChar:
         getNumber();
 
         break;
-    case DoubleQuoteChar:
+    case CharType::DoubleQuoteChar:
         getString();
 
         break;
-    case EqChar:
+    case CharType::EqChar:
         mToken = Token::Eq;
 
         getNextChar();
 
-        if (mCharType == EqChar) {
+        if (mCharType == CharType::EqChar) {
             mString += *mChar;
 
             mToken = Token::EqEq;
@@ -706,18 +706,18 @@ void CellmlTextViewScanner::getNextToken()
         }
 
         break;
-    case LtChar:
+    case CharType::LtChar:
         mToken = Token::Lt;
 
         getNextChar();
 
-        if (mCharType == EqChar) {
+        if (mCharType == CharType::EqChar) {
             mString += *mChar;
 
             mToken = Token::Leq;
 
             getNextChar();
-        } else if (mCharType == GtChar) {
+        } else if (mCharType == CharType::GtChar) {
             mString += *mChar;
 
             mToken = Token::Neq;
@@ -726,12 +726,12 @@ void CellmlTextViewScanner::getNextToken()
         }
 
         break;
-    case GtChar:
+    case CharType::GtChar:
         mToken = Token::Gt;
 
         getNextChar();
 
-        if (mCharType == EqChar) {
+        if (mCharType == CharType::EqChar) {
             mString += *mChar;
 
             mToken = Token::Geq;
@@ -740,43 +740,43 @@ void CellmlTextViewScanner::getNextToken()
         }
 
         break;
-    case DivideChar:
+    case CharType::DivideChar:
         mToken = Token::Divide;
 
         getNextChar();
 
-        if (mCharType == DivideChar)
+        if (mCharType == CharType::DivideChar)
             getSingleLineComment();
-        else if (mCharType == TimesChar)
+        else if (mCharType == CharType::TimesChar)
             getMultilineComment();
 
         break;
-    case OpeningCurlyBracketChar:
-    case ClosingCurlyBracketChar:
-        mToken = (mCharType == OpeningCurlyBracketChar)?
+    case CharType::OpeningCurlyBracketChar:
+    case CharType::ClosingCurlyBracketChar:
+        mToken = (mCharType == CharType::OpeningCurlyBracketChar)?
                      Token::OpeningCurlyBracket:
                      Token::ClosingCurlyBracket;
-        mWithinParameterBlock = mCharType == OpeningCurlyBracketChar;
+        mWithinParameterBlock = mCharType == CharType::OpeningCurlyBracketChar;
 
         getNextChar();
 
         break;
-    case EofChar:
+    case CharType::EofChar:
         mToken = Token::Eof;
         mString = tr("the end of the file");
 
         break;
     default:
         switch (mCharType) {
-        case QuoteChar:          mToken = Token::Quote;          break;
-        case CommaChar:          mToken = Token::Comma;          break;
-        case PlusChar:           mToken = Token::Plus;           break;
-        case MinusChar:          mToken = Token::Minus;          break;
-        case TimesChar:          mToken = Token::Times;          break;
-        case ColonChar:          mToken = Token::Colon;          break;
-        case SemiColonChar:      mToken = Token::SemiColon;      break;
-        case OpeningBracketChar: mToken = Token::OpeningBracket; break;
-        case ClosingBracketChar: mToken = Token::ClosingBracket; break;
+        case CharType::QuoteChar:          mToken = Token::Quote;          break;
+        case CharType::CommaChar:          mToken = Token::Comma;          break;
+        case CharType::PlusChar:           mToken = Token::Plus;           break;
+        case CharType::MinusChar:          mToken = Token::Minus;          break;
+        case CharType::TimesChar:          mToken = Token::Times;          break;
+        case CharType::ColonChar:          mToken = Token::Colon;          break;
+        case CharType::SemiColonChar:      mToken = Token::SemiColon;      break;
+        case CharType::OpeningBracketChar: mToken = Token::OpeningBracket; break;
+        case CharType::ClosingBracketChar: mToken = Token::ClosingBracket; break;
         default:                 mToken = Token::Unknown;
         }
 

@@ -140,7 +140,7 @@ public:
     void getNextToken();
 
 private:
-    enum CharType {
+    enum class CharType {
         OtherChar,
         LetterChar, DigitChar, UnderscoreChar,
         DoubleQuoteChar, QuoteChar, CommaChar,
