@@ -110,7 +110,7 @@ SimulationExperimentViewSimulationWidget::SimulationExperimentViewSimulationWidg
     mLockedDevelopmentMode(false),
     mRunActionEnabled(true),
     mOutputMessage(QString()),
-    mErrorType(ErrorType::General),
+    mError(Error::General),
     mValidSimulationEnvironment(false),
     mPlots(GraphPanelWidget::GraphPanelPlotWidgets()),
     mUpdatablePlotViewports(QMap<GraphPanelWidget::GraphPanelPlotWidget *, bool>()),
@@ -863,7 +863,7 @@ void SimulationExperimentViewSimulationWidget::updateInvalidModelMessageWidget()
 {
     // Update our invalid model message
 
-    mInvalidModelMessageWidget->setMessage((mErrorType == ErrorType::InvalidCellmlFile)?
+    mInvalidModelMessageWidget->setMessage((mError == Error::InvalidCellmlFile)?
                                                tr("The <strong>%1</strong> view requires a valid CellML file to work...").arg(mPlugin->viewName()):
                                                tr("The <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPlugin->viewName()),
                                            tr("See below for more information."));
@@ -1044,7 +1044,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 //       shouldn't consider the runtime to be valid, hence we
                 //       handle this case here...
 
-                mErrorType = ErrorType::InvalidCellmlFile;
+                mError = Error::InvalidCellmlFile;
 
                 updateInvalidModelMessageWidget();
 
@@ -1124,20 +1124,20 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                     if (solversWidget->nlaSolvers().isEmpty()) {
                         if (solversWidget->odeSolvers().isEmpty()) {
                             simulationError(tr("the model needs both an ODE and an NLA solver, but none are available"),
-                                            ErrorType::InvalidSimulationEnvironment);
+                                            Error::InvalidSimulationEnvironment);
                         } else {
                             simulationError(tr("the model needs both an ODE and an NLA solver, but no NLA solver is available"),
-                                            ErrorType::InvalidSimulationEnvironment);
+                                            Error::InvalidSimulationEnvironment);
                         }
                     } else if (solversWidget->odeSolvers().isEmpty()) {
                         simulationError(tr("the model needs both an ODE and an NLA solver, but no ODE solver is available"),
-                                        ErrorType::InvalidSimulationEnvironment);
+                                        Error::InvalidSimulationEnvironment);
                     } else {
                         mValidSimulationEnvironment = true;
                     }
                 } else if (solversWidget->odeSolvers().isEmpty()) {
                     simulationError(tr("the model needs an ODE solver, but none is available"),
-                                    ErrorType::InvalidSimulationEnvironment);
+                                    Error::InvalidSimulationEnvironment);
                 } else {
                     mValidSimulationEnvironment = true;
                 }
@@ -2786,7 +2786,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
     if (!odeSolverInterface) {
         simulationError(tr("the requested solver (%1) could not be found").arg(kisaoId),
-                        ErrorType::InvalidSimulationEnvironment);
+                        Error::InvalidSimulationEnvironment);
 
         return false;
     }
@@ -2852,7 +2852,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
         if (!propertySet) {
             simulationError(tr("the requested solver property (%1) could not be set").arg(kisaoId),
-                            ErrorType::InvalidSimulationEnvironment);
+                            Error::InvalidSimulationEnvironment);
 
             return false;
         }
@@ -2887,7 +2887,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                         if (!propertySet) {
                             simulationError(tr("the requested solver property (%1) could not be set").arg(id),
-                                            ErrorType::InvalidSimulationEnvironment);
+                                            Error::InvalidSimulationEnvironment);
 
                             return false;
                         }
@@ -2949,7 +2949,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
                             if (!propertySet) {
                                 simulationError(tr("the requested solver property (%1) could not be set").arg(id),
-                                                ErrorType::InvalidSimulationEnvironment);
+                                                Error::InvalidSimulationEnvironment);
 
                                 return false;
                             }
@@ -2963,7 +2963,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
 
         if (mustHaveNlaSolver && !hasNlaSolver) {
             simulationError(tr("the requested NLA solver (%1) could not be set").arg(nlaSolverName),
-                            ErrorType::InvalidSimulationEnvironment);
+                            Error::InvalidSimulationEnvironment);
 
             return false;
         }
@@ -3183,14 +3183,14 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                                                                                                                                                                             .arg(xCellmlComponent)
                                                                                                                                                                             .arg(yCellmlVariable)
                                                                                                                                                                             .arg(yCellmlComponent),
-                                    ErrorType::InvalidSimulationEnvironment);
+                                    Error::InvalidSimulationEnvironment);
 
                     return false;
                 } else {
                     simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
                                                                                                                                         .arg(xCellmlVariable)
                                                                                                                                         .arg(xCellmlComponent),
-                                    ErrorType::InvalidSimulationEnvironment);
+                                    Error::InvalidSimulationEnvironment);
 
                     return false;
                 }
@@ -3198,7 +3198,7 @@ bool SimulationExperimentViewSimulationWidget::furtherInitialize()
                 simulationError(tr("the requested curve (%1) could not be set (the variable %2 in component %3 could not be found)").arg(QString::fromStdString(sedmlCurve->getId()))
                                                                                                                                     .arg(yCellmlVariable)
                                                                                                                                     .arg(yCellmlComponent),
-                                ErrorType::InvalidSimulationEnvironment);
+                                Error::InvalidSimulationEnvironment);
 
                 return false;
             }
@@ -3713,11 +3713,11 @@ void SimulationExperimentViewSimulationWidget::resetSimulationProgress()
 //==============================================================================
 
 void SimulationExperimentViewSimulationWidget::simulationError(const QString &pMessage,
-                                                               ErrorType pErrorType)
+                                                               Error pError)
 {
     // Output the simulation error
 
-    mErrorType = pErrorType;
+    mError = pError;
 
     updateInvalidModelMessageWidget();
 
@@ -3730,7 +3730,7 @@ void SimulationExperimentViewSimulationWidget::simulationError(const QString &pM
 {
     // Output the simulation error
 
-    simulationError(pMessage, ErrorType::General);
+    simulationError(pMessage, Error::General);
 }
 
 //==============================================================================

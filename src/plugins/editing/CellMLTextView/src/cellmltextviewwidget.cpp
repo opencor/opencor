@@ -1088,7 +1088,7 @@ QString CellmlTextViewWidget::beginningOfPiecewiseStatement(int &pPosition) cons
         pPosition = localFromPosition;
 
         if (parser.execute(localCurrentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseSel)
+            if (parser.statement() == CellmlTextViewParser::Statement::PiecewiseSel)
                 break;
         } else {
             break;
@@ -1120,7 +1120,7 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
         pPosition = localToPosition;
 
         if (parser.execute(localCurrentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseEndSel)
+            if (parser.statement() == CellmlTextViewParser::Statement::PiecewiseEndSel)
                 break;
         } else {
             break;
@@ -1162,18 +1162,18 @@ void CellmlTextViewWidget::updateViewer()
         CellmlTextViewParser parser;
 
         if (parser.execute(currentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseSel) {
+            if (parser.statement() == CellmlTextViewParser::Statement::PiecewiseSel) {
                 // We are at the beginning of a piecewise statement, so retrieve
                 // its end
 
                 currentStatement += endOfPiecewiseStatement(toPosition);
-            } else if (   (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseCase)
-                       || (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseOtherwise)) {
+            } else if (   (parser.statement() == CellmlTextViewParser::Statement::PiecewiseCase)
+                       || (parser.statement() == CellmlTextViewParser::Statement::PiecewiseOtherwise)) {
                 // We are in the middle of a piecewise statement, so retrieve
                 // both its beginning and end
 
                 currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement+endOfPiecewiseStatement(toPosition);
-            } else if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseEndSel) {
+            } else if (parser.statement() == CellmlTextViewParser::Statement::PiecewiseEndSel) {
                 // We are at the beginning of a piecewise statement, so retrieve
                 // its beginning
 

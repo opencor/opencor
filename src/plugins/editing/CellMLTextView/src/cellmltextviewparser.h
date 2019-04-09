@@ -87,7 +87,7 @@ class CellmlTextViewParser : public QObject
     Q_OBJECT
 
 public:
-    enum class StatementType {
+    enum class Statement {
         Unknown,
         Normal,
         PiecewiseSel,
@@ -109,7 +109,7 @@ public:
 
     CellmlTextViewParserMessages messages() const;
 
-    StatementType statementType() const;
+    Statement statement() const;
 
 private:
     CellmlTextViewScanner mScanner;
@@ -123,7 +123,7 @@ private:
 
     QMap<QString, QString> mNamespaces;
 
-    StatementType mStatementType;
+    Statement mStatement;
 
     void initialize(const QString &pCellmlText);
 

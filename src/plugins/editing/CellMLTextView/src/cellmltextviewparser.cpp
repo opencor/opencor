@@ -248,15 +248,15 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
                                                                                  .arg("endsel"),
                       Tokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::Case) {
-                mStatementType = StatementType::PiecewiseCase;
+                mStatement = Statement::PiecewiseCase;
 
                 return true;
             } else if (mScanner.token() == CellmlTextViewScanner::Token::Otherwise) {
-                mStatementType = StatementType::PiecewiseOtherwise;
+                mStatement = Statement::PiecewiseOtherwise;
 
                 return true;
             } if (mScanner.token() == CellmlTextViewScanner::Token::EndSel) {
-                mStatementType = StatementType::PiecewiseEndSel;
+                mStatement = Statement::PiecewiseEndSel;
 
                 return true;
             }
@@ -306,11 +306,11 @@ CellmlTextViewParserMessages CellmlTextViewParser::messages() const
 
 //==============================================================================
 
-CellmlTextViewParser::StatementType CellmlTextViewParser::statementType() const
+CellmlTextViewParser::Statement CellmlTextViewParser::statement() const
 {
     // Return our statement type
 
-    return mStatementType;
+    return mStatement;
 }
 
 //==============================================================================
@@ -329,7 +329,7 @@ void CellmlTextViewParser::initialize(const QString &pCellmlText)
 
     mNamespaces.clear();
 
-    mStatementType = StatementType::Unknown;
+    mStatement = Statement::Unknown;
 }
 
 //==============================================================================
@@ -1943,7 +1943,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
     // At this stage, we are done when it comes to partial parsing
 
     if (!pFullParsing) {
-        mStatementType = (mScanner.token() == CellmlTextViewScanner::Token::Sel)?StatementType::PiecewiseSel:StatementType::Normal;
+        mStatement = (mScanner.token() == CellmlTextViewScanner::Token::Sel)?Statement::PiecewiseSel:Statement::Normal;
 
         return true;
     }

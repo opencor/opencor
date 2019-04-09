@@ -175,7 +175,7 @@ protected:
     void dropEvent(QDropEvent *pEvent) override;
 
 private:
-    enum class ErrorType {
+    enum class Error {
         General,
         InvalidCellmlFile,
         InvalidSimulationEnvironment
@@ -237,7 +237,7 @@ private:
     QTextEdit *mOutputWidget;
     QString mOutputMessage;
 
-    ErrorType mErrorType;
+    Error mError;
 
     bool mValidSimulationEnvironment;
 
@@ -327,7 +327,7 @@ private:
 
     void updateSedmlFileOrCombineArchiveModifiedStatus();
 
-    void simulationError(const QString &pMessage, ErrorType pErrorType);
+    void simulationError(const QString &pMessage, Error pError);
 
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);

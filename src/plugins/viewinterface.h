@@ -42,15 +42,15 @@ class ViewInterface
 {
 public:
     enum class Mode {
-        UnknownMode,
+        Unknown,
 #ifdef ENABLE_SAMPLE_PLUGINS
-        SampleMode,
+        Sample,
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-        TestMode,
+        Test,
 #endif
-        EditingMode,
-        SimulationMode
+        Editing,
+        Simulation
     };
 
     virtual ~ViewInterface();
