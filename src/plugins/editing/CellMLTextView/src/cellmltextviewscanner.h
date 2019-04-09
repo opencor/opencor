@@ -140,23 +140,23 @@ public:
     void getNextToken();
 
 private:
-    enum class CharType {
-        OtherChar,
-        LetterChar, DigitChar, UnderscoreChar,
-        DoubleQuoteChar, QuoteChar, CommaChar,
-        EqChar, LtChar, GtChar,
-        PlusChar, MinusChar, TimesChar, DivideChar,
-        FullStopChar, ColonChar, SemiColonChar,
-        OpeningBracketChar, ClosingBracketChar,
-        OpeningCurlyBracketChar, ClosingCurlyBracketChar,
-        SpaceChar, TabChar, CrChar, LfChar, EofChar
+    enum class Char {
+        Other,
+        Letter, Digit, Underscore,
+        DoubleQuote, Quote, Comma,
+        Eq, Lt, Gt,
+        Plus, Minus, Times, Divide,
+        FullStop, Colon, SemiColon,
+        OpeningBracket, ClosingBracket,
+        OpeningCurlyBracket, ClosingCurlyBracket,
+        Space, Tab, Cr, Lf, Eof
     };
 
     QString mText;
 
     const QChar *mChar;
 
-    CharType mCharType;
+    Char mCharType;
     int mCharLine;
     int mCharColumn;
 
