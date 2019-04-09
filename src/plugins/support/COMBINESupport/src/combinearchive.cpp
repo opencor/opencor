@@ -104,17 +104,17 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
     // Return the effective format associated with the given format
 
     if (!pFormat.compare(CellmlFormat))
-        return Cellml;
+        return Format::Cellml;
     else if (!pFormat.compare(Cellml_1_0_Format))
-        return Cellml_1_0;
+        return Format::Cellml_1_0;
     else if (!pFormat.compare(Cellml_1_1_Format))
-        return Cellml_1_1;
+        return Format::Cellml_1_1;
     else if (!pFormat.compare(OmexFormat))
-        return Omex;
+        return Format::Omex;
     else if (!pFormat.compare(SedmlFormat))
-        return Sedml;
+        return Format::Sedml;
     else
-        return Unknown;
+        return Format::Unknown;
 }
 
 //==============================================================================
@@ -257,25 +257,25 @@ bool CombineArchive::save(const QString &pFileName)
 
     for (const auto &file : mFiles) {
         switch (file.format()) {
-        case CombineArchiveFile::Unknown:
+        case CombineArchiveFile::Format::Unknown:
             return false;
-        case CombineArchiveFile::Cellml:
+        case CombineArchiveFile::Format::Cellml:
             fileFormat = CellmlFormat;
 
             break;
-        case CombineArchiveFile::Cellml_1_0:
+        case CombineArchiveFile::Format::Cellml_1_0:
             fileFormat = Cellml_1_0_Format;
 
             break;
-        case CombineArchiveFile::Cellml_1_1:
+        case CombineArchiveFile::Format::Cellml_1_1:
             fileFormat = Cellml_1_1_Format;
 
             break;
-        case CombineArchiveFile::Omex:
+        case CombineArchiveFile::Format::Omex:
             fileFormat = OmexFormat;
 
             break;
-        case CombineArchiveFile::Sedml:
+        case CombineArchiveFile::Format::Sedml:
             fileFormat = SedmlFormat;
 
             break;
@@ -423,7 +423,7 @@ bool CombineArchive::isValid()
         const CombineArchiveFile &file = mFiles[i];
 
         if (   !file.location().compare(".")
-            &&  (file.format() == CombineArchiveFile::Omex)
+            &&  (file.format() == CombineArchiveFile::Format::Omex)
             && !file.isMaster()) {
             combineArchiveReferenceFound = true;
 
@@ -509,7 +509,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     // Make sure that the format is known
 
-    if (pFormat == CombineArchiveFile::Unknown)
+    if (pFormat == CombineArchiveFile::Format::Unknown)
         return false;
 
     // Add the given file to our list

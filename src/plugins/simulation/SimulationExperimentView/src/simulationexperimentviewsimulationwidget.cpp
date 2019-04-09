@@ -2377,13 +2377,13 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
         combineArchive->forceNew();
 
         if (combineArchive->addFile(sedmlFileName, sedmlFileLocation,
-                                    COMBINESupport::CombineArchiveFile::Sedml, true)) {
+                                    COMBINESupport::CombineArchiveFile::Format::Sedml, true)) {
             CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
             if (combineArchive->addFile(localCellmlFileName, modelSource,
                                         (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)?
-                                            COMBINESupport::CombineArchiveFile::Cellml_1_0:
-                                            COMBINESupport::CombineArchiveFile::Cellml_1_1)) {
+                                            COMBINESupport::CombineArchiveFile::Format::Cellml_1_0:
+                                            COMBINESupport::CombineArchiveFile::Format::Cellml_1_1)) {
                 for (const auto &importedFileName : cellmlFile->importedFileNames()) {
                     QString realImportedFileName = remoteCellmlFile?
                                                        remoteImportedFileNames.value(importedFileName):
@@ -2392,7 +2392,7 @@ void SimulationExperimentViewSimulationWidget::sedmlExportCombineArchive(const Q
 
                     if (!combineArchive->addFile(realImportedFileName,
                                                  relativeImportedFileName,
-                                                 COMBINESupport::CombineArchiveFile::Cellml)) {
+                                                 COMBINESupport::CombineArchiveFile::Format::Cellml)) {
                         errorMessage = tr("The simulation could not be exported to <strong>%1</strong>%2.").arg(combineArchiveName)
                                                                                                            .arg(" ("+tr("<strong>%1</strong> could not be added").arg(relativeImportedFileName)+").");
 
