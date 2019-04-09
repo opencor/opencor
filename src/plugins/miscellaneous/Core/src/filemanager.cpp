@@ -459,12 +459,12 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
     if (file) {
         File::Status status = file->setLocked(pLocked);
 
-        if (status == File::LockedSet)
+        if (status == File::Status::LockedSet)
             emitFilePermissionsChanged(fileName);
 
-        if (status == File::LockedNotNeeded)
+        if (status == File::Status::LockedNotNeeded)
             return LockedNotNeeded;
-        else if (status == File::LockedSet)
+        else if (status == File::Status::LockedSet)
             return LockedSet;
         else
             return LockedNotSet;
@@ -729,18 +729,18 @@ void FileManager::checkFiles()
         File::Status fileStatus = file->check();
 
         switch (fileStatus) {
-        case File::Changed:
-        case File::DependenciesChanged:
-        case File::AllChanged:
+        case File::Status::Changed:
+        case File::Status::DependenciesChanged:
+        case File::Status::AllChanged:
             // The file and/or one or several of its dependencies has changed,
             // so let people know about it
 
             emit fileChanged(fileName,
-                             (fileStatus == File::Changed) || (fileStatus == File::AllChanged),
-                             (fileStatus == File::DependenciesChanged) || (fileStatus == File::AllChanged));
+                             (fileStatus == File::Status::Changed) || (fileStatus == File::Status::AllChanged),
+                             (fileStatus == File::Status::DependenciesChanged) || (fileStatus == File::Status::AllChanged));
 
             break;
-        case File::Unchanged:
+        case File::Status::Unchanged:
             // The file has neither changed nor been deleted, so check whether
             // its permissions have changed
 
@@ -752,7 +752,7 @@ void FileManager::checkFiles()
             }
 
             break;
-        case File::Deleted:
+        case File::Status::Deleted:
             // The file has been deleted, so let people know about it
 
             emit fileDeleted(fileName);

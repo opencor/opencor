@@ -47,7 +47,7 @@ public:
         Remote
     };
 
-    enum Status {
+    enum class Status {
         // As a result of checking a file
 
         Changed,
