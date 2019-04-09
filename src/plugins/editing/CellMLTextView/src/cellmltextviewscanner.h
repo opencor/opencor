@@ -131,11 +131,11 @@ public:
 
     void setText(const QString &pText);
 
-    Token tokenType() const;
-    int tokenLine() const;
-    int tokenColumn() const;
-    QString tokenString() const;
-    QString tokenComment() const;
+    Token token() const;
+    int line() const;
+    int column() const;
+    QString string() const;
+    QString comment() const;
 
     void getNextToken();
 
@@ -160,11 +160,11 @@ private:
     int mCharLine;
     int mCharColumn;
 
-    Token mTokenType;
-    int mTokenLine;
-    int mTokenColumn;
-    QString mTokenString;
-    QString mTokenComment;
+    Token mToken;
+    int mLine;
+    int mColumn;
+    QString mString;
+    QString mComment;
 
     QMap<QString, Token> mKeywords;
     QMap<QString, Token> mSiUnitKeywords;

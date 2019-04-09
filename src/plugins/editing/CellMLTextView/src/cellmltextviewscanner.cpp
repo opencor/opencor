@@ -41,11 +41,11 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mCharType(EofChar),
     mCharLine(1),
     mCharColumn(0),
-    mTokenType(Token::Unknown),
-    mTokenLine(0),
-    mTokenColumn(0),
-    mTokenString(QString()),
-    mTokenComment(QString()),
+    mToken(Token::Unknown),
+    mLine(0),
+    mColumn(0),
+    mString(QString()),
+    mComment(QString()),
     mWithinParameterBlock(false)
 {
     // Our various CellML Text keywords
@@ -222,10 +222,10 @@ void CellmlTextViewScanner::setText(const QString &pText)
     mCharLine = 1;
     mCharColumn = 0;
 
-    mTokenType = Token::Unknown;
-    mTokenLine = 0;
-    mTokenColumn = 0;
-    mTokenString = QString();
+    mToken = Token::Unknown;
+    mLine = 0;
+    mColumn = 0;
+    mString = QString();
 
     mWithinParameterBlock = false;
 
@@ -235,47 +235,47 @@ void CellmlTextViewScanner::setText(const QString &pText)
 
 //==============================================================================
 
-CellmlTextViewScanner::Token CellmlTextViewScanner::tokenType() const
+CellmlTextViewScanner::Token CellmlTextViewScanner::token() const
 {
     // Return our token type
 
-    return mTokenType;
+    return mToken;
 }
 
 //==============================================================================
 
-int CellmlTextViewScanner::tokenLine() const
+int CellmlTextViewScanner::line() const
 {
     // Return our token line
 
-    return mTokenLine;
+    return mLine;
 }
 
 //==============================================================================
 
-int CellmlTextViewScanner::tokenColumn() const
+int CellmlTextViewScanner::column() const
 {
     // Return our token column
 
-    return mTokenColumn;
+    return mColumn;
 }
 
 //==============================================================================
 
-QString CellmlTextViewScanner::tokenString() const
+QString CellmlTextViewScanner::string() const
 {
     // Return our token as a string
 
-    return mTokenString;
+    return mString;
 }
 
 //==============================================================================
 
-QString CellmlTextViewScanner::tokenComment() const
+QString CellmlTextViewScanner::comment() const
 {
     // Return our token comment
 
-    return mTokenComment;
+    return mComment;
 }
 
 //==============================================================================
@@ -417,8 +417,8 @@ void CellmlTextViewScanner::getSingleLineComment()
 {
     // Retrieve a single line comment by looking for the end of the current line
 
-    mTokenType = Token::SingleLineComment;
-    mTokenString = QString();
+    mToken = Token::SingleLineComment;
+    mString = QString();
 
     forever {
         getNextChar();
@@ -427,7 +427,7 @@ void CellmlTextViewScanner::getSingleLineComment()
             || (mCharType == EofChar)) {
             break;
         } else {
-            mTokenString += *mChar;
+            mString += *mChar;
         }
     }
 }
@@ -439,7 +439,7 @@ void CellmlTextViewScanner::getMultilineComment()
     // Retrieve a multiline comment from our text by looking for the first
     // occurrence of "*/"
 
-    mTokenString = QString();
+    mString = QString();
 
     forever {
         getNextChar();
@@ -452,26 +452,26 @@ void CellmlTextViewScanner::getMultilineComment()
             if (mCharType == DivideChar) {
                 getNextChar();
 
-                mTokenType = Token::MultilineComment;
+                mToken = Token::MultilineComment;
 
                 return;
             } else {
-                mTokenString += timesChar;
+                mString += timesChar;
 
                 if (mCharType == EofChar)
                     break;
                 else
-                    mTokenString += *mChar;
+                    mString += *mChar;
             }
         } else if (mCharType == EofChar) {
             break;
         } else {
-            mTokenString += *mChar;
+            mString += *mChar;
         }
     }
 
-    mTokenType = Token::Invalid;
-    mTokenComment = tr("The comment is incomplete.");
+    mToken = Token::Invalid;
+    mComment = tr("The comment is incomplete.");
 }
 
 //==============================================================================
@@ -485,7 +485,7 @@ void CellmlTextViewScanner::getWord()
 
         if (   (mCharType == LetterChar) || (mCharType == DigitChar) || (mCharType == UnderscoreChar)
             || (mWithinParameterBlock && ((mCharType == MinusChar) || (mCharType == FullStopChar)))) {
-            mTokenString += *mChar;
+            mString += *mChar;
         } else {
             break;
         }
@@ -495,14 +495,14 @@ void CellmlTextViewScanner::getWord()
     // keyword, a parameter keyword, an identifier or something else
 
     if (mWithinParameterBlock)
-        mTokenType = mParameterKeywords.value(mTokenString, Token::Unknown);
+        mToken = mParameterKeywords.value(mString, Token::Unknown);
     else
-        mTokenType = mKeywords.value(mTokenString, Token::Unknown);
+        mToken = mKeywords.value(mString, Token::Unknown);
 
-    if (mTokenType == Token::Unknown)
-        mTokenType = mSiUnitKeywords.value(mTokenString, Token::Unknown);
+    if (mToken == Token::Unknown)
+        mToken = mSiUnitKeywords.value(mString, Token::Unknown);
 
-    if (mTokenType == Token::Unknown) {
+    if (mToken == Token::Unknown) {
         // We are not dealing with a keyword, but it might still be an
         // identifier or cmeta:id, as long as it doesn't only consist of
         // underscores, hyphens and periods
@@ -510,11 +510,11 @@ void CellmlTextViewScanner::getWord()
         static const QRegularExpression UnderscoresHyphensOrPeriodsRegEx = QRegularExpression("_|-|\\.");
         static const QRegularExpression HyphensOrPeriodsRegEx = QRegularExpression("-|\\.");
 
-        if (!QString(mTokenString).remove(UnderscoresHyphensOrPeriodsRegEx).isEmpty()) {
-            if (mTokenString.contains(HyphensOrPeriodsRegEx))
-                mTokenType = Token::ProperCmetaId;
+        if (!QString(mString).remove(UnderscoresHyphensOrPeriodsRegEx).isEmpty()) {
+            if (mString.contains(HyphensOrPeriodsRegEx))
+                mToken = Token::ProperCmetaId;
             else
-                mTokenType = Token::IdentifierOrCmetaId;
+                mToken = Token::IdentifierOrCmetaId;
         }
     }
 }
@@ -531,7 +531,7 @@ void CellmlTextViewScanner::getNumber()
         // We started a number with a full stop, so reset mTokenString since it
         // is going to be updated with our full stop
 
-        mTokenString = QString();
+        mString = QString();
     } else {
         // We started a number with a digit, so look for additional ones
 
@@ -539,7 +539,7 @@ void CellmlTextViewScanner::getNumber()
             getNextChar();
 
             if (mCharType == DigitChar)
-                mTokenString += *mChar;
+                mString += *mChar;
             else
                 break;
         }
@@ -548,20 +548,20 @@ void CellmlTextViewScanner::getNumber()
     // Look for the fractional part, if any
 
     if (mCharType == FullStopChar) {
-        mTokenString += *mChar;
+        mString += *mChar;
 
         getNextChar();
 
         // Check whether the full stop is followed by some digits
 
         if (mCharType == DigitChar) {
-            mTokenString += *mChar;
+            mString += *mChar;
 
             forever {
                 getNextChar();
 
                 if (mCharType == DigitChar)
-                    mTokenString += *mChar;
+                    mString += *mChar;
                 else
                     break;
             }
@@ -569,7 +569,7 @@ void CellmlTextViewScanner::getNumber()
             // We started a number with a full stop, but it's not followed by
             // digits, so it's not a number after all
 
-            mTokenType = Token::Unknown;
+            mToken = Token::Unknown;
 
             return;
         }
@@ -579,14 +579,14 @@ void CellmlTextViewScanner::getNumber()
 
     if (   (mCharType == LetterChar)
         && ((*mChar == QChar('e')) || (*mChar == QChar('E')))) {
-        mTokenString += *mChar;
+        mString += *mChar;
 
         getNextChar();
 
         // Check whether we have a + or - sign
 
         if ((mCharType == PlusChar) || (mCharType == MinusChar)) {
-            mTokenString += *mChar;
+            mString += *mChar;
 
             getNextChar();
         }
@@ -594,21 +594,21 @@ void CellmlTextViewScanner::getNumber()
         // Check whether we have some digits
 
         if (mCharType == DigitChar) {
-            mTokenString += *mChar;
+            mString += *mChar;
 
             forever {
                 getNextChar();
 
                 if (mCharType == DigitChar)
-                    mTokenString += *mChar;
+                    mString += *mChar;
                 else
                     break;
             }
         } else {
             // We started an exponent part, but it isn't followed by digits
 
-            mTokenType = Token::Invalid;
-            mTokenComment = tr("The exponent has no digits.");
+            mToken = Token::Invalid;
+            mComment = tr("The exponent has no digits.");
 
             return;
         }
@@ -618,12 +618,12 @@ void CellmlTextViewScanner::getNumber()
 
     bool validNumber;
 
-    mTokenString.toDouble(&validNumber);
+    mString.toDouble(&validNumber);
 
-    mTokenType = Token::Number;
+    mToken = Token::Number;
 
     if (!validNumber)
-        mTokenComment = tr("The number is not valid (e.g. too big, too small).");
+        mComment = tr("The number is not valid (e.g. too big, too small).");
 }
 
 //==============================================================================
@@ -632,7 +632,7 @@ void CellmlTextViewScanner::getString()
 {
     // Retrieve a string from our text by looking for a double quote
 
-    mTokenString = QString();
+    mString = QString();
 
     forever {
         getNextChar();
@@ -642,17 +642,17 @@ void CellmlTextViewScanner::getString()
             || (mCharType == EofChar)) {
             break;
         } else {
-            mTokenString += *mChar;
+            mString += *mChar;
         }
     }
 
     if (mCharType == DoubleQuoteChar) {
-        mTokenType = Token::String;
+        mToken = Token::String;
 
         getNextChar();
     } else {
-        mTokenType = Token::Invalid;
-        mTokenComment = tr("The string is incomplete.");
+        mToken = Token::Invalid;
+        mComment = tr("The string is incomplete.");
     }
 }
 
@@ -670,12 +670,12 @@ void CellmlTextViewScanner::getNextToken()
 
     // Determine the type of our next token
 
-    mTokenLine = mCharLine;
-    mTokenColumn = mCharColumn;
+    mLine = mCharLine;
+    mColumn = mCharColumn;
 
-    mTokenString = *mChar;
+    mString = *mChar;
 
-    mTokenComment = QString();
+    mComment = QString();
 
     switch (mCharType) {
     case LetterChar:
@@ -693,55 +693,55 @@ void CellmlTextViewScanner::getNextToken()
 
         break;
     case EqChar:
-        mTokenType = Token::Eq;
+        mToken = Token::Eq;
 
         getNextChar();
 
         if (mCharType == EqChar) {
-            mTokenString += *mChar;
+            mString += *mChar;
 
-            mTokenType = Token::EqEq;
+            mToken = Token::EqEq;
 
             getNextChar();
         }
 
         break;
     case LtChar:
-        mTokenType = Token::Lt;
+        mToken = Token::Lt;
 
         getNextChar();
 
         if (mCharType == EqChar) {
-            mTokenString += *mChar;
+            mString += *mChar;
 
-            mTokenType = Token::Leq;
+            mToken = Token::Leq;
 
             getNextChar();
         } else if (mCharType == GtChar) {
-            mTokenString += *mChar;
+            mString += *mChar;
 
-            mTokenType = Token::Neq;
+            mToken = Token::Neq;
 
             getNextChar();
         }
 
         break;
     case GtChar:
-        mTokenType = Token::Gt;
+        mToken = Token::Gt;
 
         getNextChar();
 
         if (mCharType == EqChar) {
-            mTokenString += *mChar;
+            mString += *mChar;
 
-            mTokenType = Token::Geq;
+            mToken = Token::Geq;
 
             getNextChar();
         }
 
         break;
     case DivideChar:
-        mTokenType = Token::Divide;
+        mToken = Token::Divide;
 
         getNextChar();
 
@@ -753,31 +753,31 @@ void CellmlTextViewScanner::getNextToken()
         break;
     case OpeningCurlyBracketChar:
     case ClosingCurlyBracketChar:
-        mTokenType = (mCharType == OpeningCurlyBracketChar)?
-                         Token::OpeningCurlyBracket:
-                         Token::ClosingCurlyBracket;
+        mToken = (mCharType == OpeningCurlyBracketChar)?
+                     Token::OpeningCurlyBracket:
+                     Token::ClosingCurlyBracket;
         mWithinParameterBlock = mCharType == OpeningCurlyBracketChar;
 
         getNextChar();
 
         break;
     case EofChar:
-        mTokenType = Token::Eof;
-        mTokenString = tr("the end of the file");
+        mToken = Token::Eof;
+        mString = tr("the end of the file");
 
         break;
     default:
         switch (mCharType) {
-        case QuoteChar:          mTokenType = Token::Quote;          break;
-        case CommaChar:          mTokenType = Token::Comma;          break;
-        case PlusChar:           mTokenType = Token::Plus;           break;
-        case MinusChar:          mTokenType = Token::Minus;          break;
-        case TimesChar:          mTokenType = Token::Times;          break;
-        case ColonChar:          mTokenType = Token::Colon;          break;
-        case SemiColonChar:      mTokenType = Token::SemiColon;      break;
-        case OpeningBracketChar: mTokenType = Token::OpeningBracket; break;
-        case ClosingBracketChar: mTokenType = Token::ClosingBracket; break;
-        default:                 mTokenType = Token::Unknown;
+        case QuoteChar:          mToken = Token::Quote;          break;
+        case CommaChar:          mToken = Token::Comma;          break;
+        case PlusChar:           mToken = Token::Plus;           break;
+        case MinusChar:          mToken = Token::Minus;          break;
+        case TimesChar:          mToken = Token::Times;          break;
+        case ColonChar:          mToken = Token::Colon;          break;
+        case SemiColonChar:      mToken = Token::SemiColon;      break;
+        case OpeningBracketChar: mToken = Token::OpeningBracket; break;
+        case ClosingBracketChar: mToken = Token::ClosingBracket; break;
+        default:                 mToken = Token::Unknown;
         }
 
         getNextChar();
