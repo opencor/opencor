@@ -45,7 +45,7 @@ class CellmlTextViewScanner : public QObject
     Q_OBJECT
 
 public:
-    enum TokenType {
+    enum class TokenType {
         UnknownToken, SingleLineCommentToken, MultilineCommentToken,
         StringToken, IdentifierOrCmetaIdToken, ProperCmetaIdToken, NumberToken,
         InvalidToken,
