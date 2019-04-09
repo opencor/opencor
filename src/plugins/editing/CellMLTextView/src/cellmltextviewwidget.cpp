@@ -481,7 +481,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             for (const auto &warning : mConverter.warnings()) {
-                editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
+                editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Type::Warning,
                                                            successfulConversion?
                                                                -1:
                                                                warning.lineNumber(),
@@ -528,11 +528,11 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
             //       same as above, but this will take a wee bit of time while
             //       we want it done straightaway...
 
-            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Error,
+            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Type::Error,
                                                        mConverter.errorLine(),
                                                        mConverter.errorColumn(),
                                                        tr("%1.").arg(Core::formatMessage(mConverter.errorMessage(), false)));
-            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Hint,
+            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Type::Hint,
                                                        tr("You might want to use the Raw (CellML) view to edit the file."));
 
             // Apply an XML lexer to our editor
@@ -947,8 +947,8 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra,
             if (   !pOnlyErrors
                 || (message.type() == CellmlTextViewParserMessage::Type::Error)) {
                 editingWidget->editorListWidget()->addItem((message.type() == CellmlTextViewParserMessage::Type::Error)?
-                                                               EditorWidget::EditorListItem::Error:
-                                                               EditorWidget::EditorListItem::Warning,
+                                                               EditorWidget::EditorListItem::Type::Error:
+                                                               EditorWidget::EditorListItem::Type::Warning,
                                                            message.line(), message.column(),
                                                            message.message());
             }

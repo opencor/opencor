@@ -353,7 +353,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         if (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
             && cellmlFile->model() && cellmlFile->model()->imports()->length()
             && nbOfReportedIssues) {
-            editorList->addItem(EditorWidget::EditorListItem::Information,
+            editorList->addItem(EditorWidget::EditorListItem::Type::Information,
                                 (nbOfReportedIssues == 1)?
                                     tr("The issue reported below may be related to this CellML file or to one of its (in)directly imported CellML files."):
                                     tr("The issues reported below may be related to this CellML file and/or to one or several of its (in)directly imported CellML files."));
@@ -366,8 +366,8 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
             if (   !pOnlyErrors
                 || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)) {
                 editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?
-                                        EditorWidget::EditorListItem::Error:
-                                        EditorWidget::EditorListItem::Warning,
+                                        EditorWidget::EditorListItem::Type::Error:
+                                        EditorWidget::EditorListItem::Type::Warning,
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
                                     qPrintable(cellmlFileIssue.formattedMessage()));

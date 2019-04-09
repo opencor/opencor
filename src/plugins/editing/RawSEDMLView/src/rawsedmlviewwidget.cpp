@@ -319,7 +319,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
         for (const auto &sedmlFileIssue : sedmlFileIssues) {
             if (   !pOnlyErrors
                 || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Type::Error)) {
-                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Unknown;
+                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Type::Unknown;
 
                 switch (sedmlFileIssue.type()) {
                 case SEDMLSupport::SedmlFileIssue::Type::Unknown:
@@ -331,19 +331,19 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
                     break;
 #endif
                 case SEDMLSupport::SedmlFileIssue::Type::Information:
-                    issueType = EditorWidget::EditorListItem::Information;
+                    issueType = EditorWidget::EditorListItem::Type::Information;
 
                     break;
                 case SEDMLSupport::SedmlFileIssue::Type::Error:
-                    issueType = EditorWidget::EditorListItem::Error;
+                    issueType = EditorWidget::EditorListItem::Type::Error;
 
                     break;
                 case SEDMLSupport::SedmlFileIssue::Type::Warning:
-                    issueType = EditorWidget::EditorListItem::Warning;
+                    issueType = EditorWidget::EditorListItem::Type::Warning;
 
                     break;
                 case SEDMLSupport::SedmlFileIssue::Type::Fatal:
-                    issueType = EditorWidget::EditorListItem::Fatal;
+                    issueType = EditorWidget::EditorListItem::Type::Fatal;
 
                     break;
                 }
