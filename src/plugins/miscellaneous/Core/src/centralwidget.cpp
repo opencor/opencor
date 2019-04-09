@@ -165,13 +165,13 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our modes
 
-    mModes.insert(ViewInterface::Mode::EditingMode, new CentralWidgetMode(this));
-    mModes.insert(ViewInterface::Mode::SimulationMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::Editing, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::Simulation, new CentralWidgetMode(this));
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModes.insert(ViewInterface::Mode::SampleMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::Sample, new CentralWidgetMode(this));
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModes.insert(ViewInterface::Mode::TestMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::Test, new CentralWidgetMode(this));
 #endif
     // Note: these will be deleted in CentralWidget's destructor...
 
@@ -360,7 +360,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
                                     fileName;
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings.value(SettingsFileMode.arg(fileNameOrUrl)).toString());
 
-        if (fileMode != ViewInterface::Mode::UnknownMode)
+        if (fileMode != ViewInterface::Mode::Unknown)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
 
         QMap<int, int> modeViewTabIndexes = QMap<int, int>();
@@ -410,7 +410,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
     if (mFileNames.isEmpty()) {
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings.value(SettingsFileMode.arg(QString())).toString());
 
-        if (fileMode != ViewInterface::Mode::UnknownMode)
+        if (fileMode != ViewInterface::Mode::Unknown)
             setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(fileMode));
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
@@ -573,16 +573,16 @@ void CentralWidget::retranslateUi()
 {
     // Retranslate our modes tab bar
 
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::EditingMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::Editing, -1),
                           tr("Editing"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::SimulationMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::Simulation, -1),
                           tr("Simulation"));
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::SampleMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::Sample, -1),
                           tr("Sample"));
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::TestMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::Test, -1),
                           tr("Test"));
 #endif
 
@@ -1431,7 +1431,7 @@ bool CentralWidget::selectMode(const QString &pModeName)
 
     ViewInterface::Mode mode = ViewInterface::modeFromString(pModeName);
 
-    if (mode != ViewInterface::Mode::UnknownMode) {
+    if (mode != ViewInterface::Mode::Unknown) {
         setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(mode));
 
         return true;
@@ -1765,26 +1765,26 @@ void CentralWidget::updateGui()
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-    mModes.value(ViewInterface::Mode::EditingMode)->viewTabs()->hide();
-    mModes.value(ViewInterface::Mode::SimulationMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::Editing)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::Simulation)->viewTabs()->hide();
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModes.value(ViewInterface::Mode::SampleMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::Sample)->viewTabs()->hide();
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModes.value(ViewInterface::Mode::TestMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::Test)->viewTabs()->hide();
 #endif
 
-    if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::EditingMode))
-        mModes.value(ViewInterface::Mode::EditingMode)->viewTabs()->show();
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::SimulationMode))
-        mModes.value(ViewInterface::Mode::SimulationMode)->viewTabs()->show();
+    if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::Editing))
+        mModes.value(ViewInterface::Mode::Editing)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::Simulation))
+        mModes.value(ViewInterface::Mode::Simulation)->viewTabs()->show();
 #ifdef ENABLE_SAMPLE_PLUGINS
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::SampleMode))
-        mModes.value(ViewInterface::Mode::SampleMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::Sample))
+        mModes.value(ViewInterface::Mode::Sample)->viewTabs()->show();
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::TestMode))
-        mModes.value(ViewInterface::Mode::TestMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::Test))
+        mModes.value(ViewInterface::Mode::Test)->viewTabs()->show();
 #endif
 
     // Ask the GUI interface for the widget to use the current file (should

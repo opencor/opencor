@@ -365,7 +365,7 @@ void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
     //       workspaces at startup...
 
     if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::MessageType::Information, pMessage);
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Message::Information, pMessage);
     else
         Core::informationMessageBox(windowTitle(), pMessage);
 }
@@ -381,7 +381,7 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
     //       startup...
 
     if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::MessageType::Warning, pMessage);
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Message::Warning, pMessage);
     else
         Core::warningMessageBox(windowTitle(), pMessage);
 }
@@ -398,7 +398,7 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       startup...
 
     if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::MessageType::Error, pMessage);
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Message::Error, pMessage);
     else
         Core::criticalMessageBox(windowTitle(), pMessage);
 }

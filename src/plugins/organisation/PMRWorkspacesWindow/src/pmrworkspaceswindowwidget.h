@@ -158,7 +158,7 @@ class PmrWorkspacesWindowWidget : public Core::TreeViewWidget
     Q_OBJECT
 
 public:
-    enum class MessageType {
+    enum class Message {
         None,
         Information,
         Error,
@@ -178,7 +178,7 @@ public:
     void update(const QString &pPmrUrl);
 
     void initialize();
-    void initialize(MessageType pMessageType, const QString &pMessage);
+    void initialize(Message pMessage, const QString &pString);
 
     using QTreeView::reset;
 
@@ -196,8 +196,8 @@ private:
 
     bool mInitialized;
 
-    MessageType mMessageType;
-    QString mMessage;
+    Message mMessage;
+    QString mString;
     bool mAuthenticated;
 
     QTimer *mTimer;
@@ -265,7 +265,7 @@ private:
     QIcon mWuFileIcon;
 
     void initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
-                    MessageType pMessageType, const QString &pMessage,
+                    Message pMessage, const QString &pString,
                     bool pAuthenticated);
 
     void reset(const QString &pPmrUrl);

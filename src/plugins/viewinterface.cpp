@@ -61,18 +61,18 @@ QString ViewInterface::modeAsString(Mode pMode)
     // Return the mode corresponding to the given mode string
 
     switch (pMode) {
-    case Mode::UnknownMode:
+    case Mode::Unknown:
         return ViewModeUnknown;
-    case Mode::EditingMode:
+    case Mode::Editing:
         return ViewModeEditing;
-    case Mode::SimulationMode:
+    case Mode::Simulation:
         return ViewModeSimulation;
 #ifdef ENABLE_SAMPLE_PLUGINS
-    case Mode::SampleMode:
+    case Mode::Sample:
         return ViewModeSample;
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    case Mode::TestMode:
+    case Mode::Test:
         return ViewModeTest;
 #endif
     }
@@ -89,19 +89,19 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
     // Return the mode string corresponding to the given mode
 
     if (!pMode.compare(ViewModeEditing))
-        return Mode::EditingMode;
+        return Mode::Editing;
     else if (!pMode.compare(ViewModeSimulation))
-        return Mode::SimulationMode;
+        return Mode::Simulation;
 #ifdef ENABLE_SAMPLE_PLUGINS
     else if (!pMode.compare(ViewModeSample))
-        return Mode::SampleMode;
+        return Mode::Sample;
 #endif
 #ifdef ENABLE_TEST_PLUGINS
     else if (!pMode.compare(ViewModeTest))
-        return Mode::TestMode;
+        return Mode::Test;
 #endif
 
-    return Mode::UnknownMode;
+    return Mode::Unknown;
 }
 
 //==============================================================================

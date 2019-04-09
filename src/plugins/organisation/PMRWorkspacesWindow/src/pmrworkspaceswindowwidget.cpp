@@ -678,8 +678,8 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
     mInitialized = false;
 
-    mMessageType = MessageType::None;
-    mMessage = QString();
+    mMessage = Message::None;
+    mString = QString();
     mAuthenticated = false;
 }
 
@@ -693,7 +693,7 @@ void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
         mUserMessageWidget->setIconMessage(":/oxygen/actions/help-hint.png",
                                            tr("Authenticate yourself..."),
                                            tr("Click on the top-right button."));
-    } else if (mMessage.isEmpty()) {
+    } else if (mString.isEmpty()) {
         if (!PMRSupport::PmrWorkspaceManager::instance()->count()) {
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("No workspaces were found..."));
@@ -701,20 +701,20 @@ void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
             mUserMessageWidget->resetMessage();
         }
     } else {
-        switch (mMessageType) {
-        case MessageType::Information:
+        switch (mMessage) {
+        case Message::Information:
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
-                                               Core::formatMessage(mMessage, false, true));
+                                               Core::formatMessage(mString, false, true));
 
             break;
-        case MessageType::Error:
+        case Message::Error:
             mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
-                                               Core::formatMessage(mMessage, false, true));
+                                               Core::formatMessage(mString, false, true));
 
             break;
-        case MessageType::Warning:
+        case Message::Warning:
             mUserMessageWidget->setIconMessage(":/oxygen/status/task-attention.png",
-                                               Core::formatMessage(mMessage, false, true));
+                                               Core::formatMessage(mString, false, true));
 
             break;
         default:
@@ -733,8 +733,8 @@ void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
 //==============================================================================
 
 void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWorkspaces,
-                                           MessageType pMessageType,
-                                           const QString &pMessage,
+                                           Message pMessage,
+                                           const QString &pString,
                                            bool pAuthenticated)
 {
     // Initialise / keep track of some properties
@@ -743,11 +743,11 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 
     workspaceManager->clearWorkspaces();
 
-    mMessageType = pMessageType;
     mMessage = pMessage;
+    mString = pString;
     mAuthenticated = pAuthenticated;
 
-    if (pMessage.isEmpty() && pAuthenticated) {
+    if (pString.isEmpty() && pAuthenticated) {
         // Reconcile the URLs of my-workspaces (on PMR) with those from our
         // workspace folders (in doing so, folders/URLs that don't correspond to
         // an actual PMR workspace are pruned from the relevant maps)
@@ -817,7 +817,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
         addWorkspace(workspace);
 
     updateGui(   (pWorkspaces == PMRSupport::PmrWorkspaces())
-              && pMessage.isEmpty() && !pAuthenticated);
+              && pString.isEmpty() && !pAuthenticated);
 
     mInitialized = true;
 }
@@ -828,7 +828,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 {
     // Initialise ourselves using the given workspaces
 
-    initialize(pWorkspaces, MessageType::None, QString(), true);
+    initialize(pWorkspaces, Message::None, QString(), true);
 }
 
 //==============================================================================
@@ -837,17 +837,17 @@ void PmrWorkspacesWindowWidget::initialize()
 {
     // Initialise ourselves
 
-    initialize(PMRSupport::PmrWorkspaces(), MessageType::None, QString(), false);
+    initialize(PMRSupport::PmrWorkspaces(), Message::None, QString(), false);
 }
 
 //==============================================================================
 
-void PmrWorkspacesWindowWidget::initialize(MessageType pMessageType,
-                                           const QString &pMessage)
+void PmrWorkspacesWindowWidget::initialize(Message pMessage,
+                                           const QString &pString)
 {
     // Initialise ourselves using the given message
 
-    initialize(PMRSupport::PmrWorkspaces(), pMessageType, pMessage, true);
+    initialize(PMRSupport::PmrWorkspaces(), pMessage, pString, true);
 }
 
 //==============================================================================
