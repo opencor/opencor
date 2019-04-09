@@ -141,11 +141,11 @@ private:
     QDomElement newMathematicalFunctionElement(CellmlTextViewScanner::Token pTokenType,
                                                const QList<QDomElement> &pArgumentElements);
 
-    CellmlTextViewScanner::TokenTypes rangeOfTokenTypes(CellmlTextViewScanner::Token pFromTokenType,
-                                                        CellmlTextViewScanner::Token pToTokenType);
+    CellmlTextViewScanner::Tokens rangeOfTokens(CellmlTextViewScanner::Token pFromTokenType,
+                                                CellmlTextViewScanner::Token pToTokenType);
 
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
-                   const CellmlTextViewScanner::TokenTypes &pTokenTypes);
+                   const CellmlTextViewScanner::Tokens &pTokens);
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
                    CellmlTextViewScanner::Token pTokenType);
     bool isTokenType(QDomNode &pDomNode,
@@ -205,7 +205,7 @@ private:
     QDomElement parseParenthesizedMathematicalExpression(QDomNode &pDomNode);
 
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,
-                                                   const CellmlTextViewScanner::TokenTypes &pTokenTypes,
+                                                   const CellmlTextViewScanner::Tokens &pTokens,
                                                    ParseNormalMathematicalExpressionFunction pFunction);
     QDomElement parseNormalMathematicalExpression(QDomNode &pDomNode);
     QDomElement parseNormalMathematicalExpression2(QDomNode &pDomNode);

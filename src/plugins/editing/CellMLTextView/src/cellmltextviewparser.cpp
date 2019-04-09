@@ -217,11 +217,11 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     if (pFullParsing) {
         // Parse a mathematical expression
 
-        static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
-                                                                                                        << CellmlTextViewScanner::Token::Ode;
+        static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
+                                                                                            << CellmlTextViewScanner::Token::Ode;
 
         if (tokenType(mDomDocument, tr("An identifier or '%1'").arg("ode"),
-                      TokenTypes)) {
+                      Tokens)) {
             if (!parseMathematicalExpression(mDomDocument))
                 return false;
         } else {
@@ -236,17 +236,17 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     } else {
         // Partially parse a mathematical expression
 
-        static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
-                                                                                                        << CellmlTextViewScanner::Token::Ode
-                                                                                                        << CellmlTextViewScanner::Token::Case
-                                                                                                        << CellmlTextViewScanner::Token::Otherwise
-                                                                                                        << CellmlTextViewScanner::Token::EndSel;
+        static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
+                                                                                            << CellmlTextViewScanner::Token::Ode
+                                                                                            << CellmlTextViewScanner::Token::Case
+                                                                                            << CellmlTextViewScanner::Token::Otherwise
+                                                                                            << CellmlTextViewScanner::Token::EndSel;
 
         if (tokenType(mDomDocument, tr("An identifier, '%1', '%2', '%3' or '%4'").arg("ode")
                                                                                  .arg("case")
                                                                                  .arg("otherwise")
                                                                                  .arg("endsel"),
-                      TokenTypes)) {
+                      Tokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::Case) {
                 mStatementType = StatementType::PiecewiseCase;
 
@@ -501,27 +501,27 @@ QDomElement CellmlTextViewParser::newMathematicalFunctionElement(CellmlTextViewS
 
 //==============================================================================
 
-CellmlTextViewScanner::TokenTypes CellmlTextViewParser::rangeOfTokenTypes(CellmlTextViewScanner::Token pFromTokenType,
-                                                                          CellmlTextViewScanner::Token pToTokenType)
+CellmlTextViewScanner::Tokens CellmlTextViewParser::rangeOfTokens(CellmlTextViewScanner::Token pFromTokenType,
+                                                                  CellmlTextViewScanner::Token pToTokenType)
 {
     // Return a range of token types
 
-    CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes();
+    CellmlTextViewScanner::Tokens tokens = CellmlTextViewScanner::Tokens();
 
     for (CellmlTextViewScanner::Token tokenType = pFromTokenType;
          tokenType <= pToTokenType;
          tokenType = CellmlTextViewScanner::Token(int(tokenType)+1)) {
-        tokenTypes << tokenType;
+        tokens << tokenType;
     }
 
-    return tokenTypes;
+    return tokens;
 }
 
 //==============================================================================
 
 bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                      const QString &pExpectedString,
-                                     const CellmlTextViewScanner::TokenTypes &pTokenTypes)
+                                     const CellmlTextViewScanner::Tokens &pTokens)
 {
     // Try to parse comments, if any
 
@@ -529,7 +529,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
 
     // Check whether the current token type is the one we are after
 
-    if (pTokenTypes.contains(mScanner.token())) {
+    if (pTokens.contains(mScanner.token())) {
         // We have the correct token, so check whether a comment exists and, if
         // so, generate a warning for it
 
@@ -574,7 +574,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
     // Expect the given token
 
     return tokenType(pDomNode, pExpectedString,
-                     CellmlTextViewScanner::TokenTypes() << pTokenType);
+                     CellmlTextViewScanner::Tokens() << pTokenType);
 }
 
 //==============================================================================
@@ -757,18 +757,18 @@ bool CellmlTextViewParser::identifierOrSiUnitToken(QDomNode &pDomNode)
 {
     // Expect an identifier or an SI unit
 
-    static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes();
-    static bool needInitializeTokenTypes = true;
+    static CellmlTextViewScanner::Tokens tokens = CellmlTextViewScanner::Tokens();
+    static bool needInitializeTokens = true;
 
-    if (needInitializeTokenTypes) {
-        tokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::Token::FirstUnit,
-                                       CellmlTextViewScanner::Token::LastUnit) << CellmlTextViewScanner::Token::IdentifierOrCmetaId;
+    if (needInitializeTokens) {
+        tokens = rangeOfTokens(CellmlTextViewScanner::Token::FirstUnit,
+                               CellmlTextViewScanner::Token::LastUnit) << CellmlTextViewScanner::Token::IdentifierOrCmetaId;
 
-        needInitializeTokenTypes = false;
+        needInitializeTokens = false;
     }
 
     return tokenType(pDomNode, tr("An identifier or an SI unit (e.g. 'second')"),
-                     tokenTypes);
+                     tokens);
 }
 
 //==============================================================================
@@ -787,11 +787,11 @@ bool CellmlTextViewParser::cmetaIdToken(QDomNode &pDomNode)
 {
     // Expect a cmeta:id
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
-                                                                                                    << CellmlTextViewScanner::Token::ProperCmetaId;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
+                                                                                        << CellmlTextViewScanner::Token::ProperCmetaId;
 
     return tokenType(pDomNode, tr("A cmeta:id"),
-                     TokenTypes);
+                     Tokens);
 }
 
 //==============================================================================
@@ -1081,20 +1081,20 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 {
     // Loop while we have "def" and leave if we get "enddef"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Def
-                                                                                                    << CellmlTextViewScanner::Token::EndDef;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Def
+                                                                                        << CellmlTextViewScanner::Token::EndDef;
 
     while (tokenType(pDomNode, tr("'%1' or '%2'").arg("def")
                                                  .arg("enddef"),
-                     TokenTypes)) {
+                     Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Def) {
             // Expect a model definition
 
-            static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Import
-                                                                                                            << CellmlTextViewScanner::Token::Unit
-                                                                                                            << CellmlTextViewScanner::Token::Comp
-                                                                                                            << CellmlTextViewScanner::Token::Group
-                                                                                                            << CellmlTextViewScanner::Token::Map;
+            static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Import
+                                                                                                << CellmlTextViewScanner::Token::Unit
+                                                                                                << CellmlTextViewScanner::Token::Comp
+                                                                                                << CellmlTextViewScanner::Token::Group
+                                                                                                << CellmlTextViewScanner::Token::Map;
 
             mScanner.getNextToken();
 
@@ -1103,7 +1103,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
                                                                         .arg("comp")
                                                                         .arg("group")
                                                                         .arg("map"),
-                          TokenTypes)) {
+                          Tokens)) {
                 if (mScanner.token() == CellmlTextViewScanner::Token::Import) {
                     if (!parseImportDefinition(pDomNode))
                         return false;
@@ -1183,16 +1183,16 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
     // Expect an import definition, so loop while we have "unit" or "comp", or
     // leave if we get "enddef"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Unit
-                                                                                                    << CellmlTextViewScanner::Token::Comp
-                                                                                                    << CellmlTextViewScanner::Token::EndDef;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Unit
+                                                                                        << CellmlTextViewScanner::Token::Comp
+                                                                                        << CellmlTextViewScanner::Token::EndDef;
 
     mScanner.getNextToken();
 
     while (tokenType(importElement, tr("'%1', '%2' or '%3'").arg("unit")
                                                             .arg("comp")
                                                             .arg("enddef"),
-                     TokenTypes)) {
+                     Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Unit) {
             // We are dealing with a unit import, so create our unit import
             // element
@@ -1352,16 +1352,16 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
 
     // Expect a unit definition
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Base
-                                                                                                    << CellmlTextViewScanner::Token::Unit
-                                                                                                    << CellmlTextViewScanner::Token::EndDef;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Base
+                                                                                        << CellmlTextViewScanner::Token::Unit
+                                                                                        << CellmlTextViewScanner::Token::EndDef;
 
     mScanner.getNextToken();
 
     if (!tokenType(unitsElement, tr("'%1', '%2' or '%3'").arg("base")
                                                          .arg("unit")
                                                          .arg("enddef"),
-                   TokenTypes)) {
+                   Tokens)) {
         return false;
     }
 
@@ -1389,12 +1389,12 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
         // We are dealing with a 'normal' unit definition, so loop while we have
         // "unit" or leave if we get "enddef"
 
-        static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Unit
-                                                                                                        << CellmlTextViewScanner::Token::EndDef;
+        static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Unit
+                                                                                            << CellmlTextViewScanner::Token::EndDef;
 
         while (tokenType(unitsElement, tr("'%1' or '%2'").arg("unit")
                                                          .arg("enddef"),
-                         TokenTypes)) {
+                         Tokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::Unit) {
                 if (!parseUnitDefinition(unitsElement))
                     return false;
@@ -1443,14 +1443,14 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
     // Expect "{" or ";"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::OpeningCurlyBracket
-                                                                                                    << CellmlTextViewScanner::Token::SemiColon;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::OpeningCurlyBracket
+                                                                                        << CellmlTextViewScanner::Token::SemiColon;
 
     mScanner.getNextToken();
 
     if (!tokenType(unitElement, tr("'%1' or '%2'").arg("{")
                                                   .arg(";"),
-                   TokenTypes)) {
+                   Tokens)) {
         return false;
     }
 
@@ -1462,10 +1462,10 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
         forever {
             // Expect "pref", "expo", "mult" or "off"
 
-            static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Pref
-                                                                                                            << CellmlTextViewScanner::Token::Expo
-                                                                                                            << CellmlTextViewScanner::Token::Mult
-                                                                                                            << CellmlTextViewScanner::Token::Off;
+            static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Pref
+                                                                                                << CellmlTextViewScanner::Token::Expo
+                                                                                                << CellmlTextViewScanner::Token::Mult
+                                                                                                << CellmlTextViewScanner::Token::Off;
 
             mScanner.getNextToken();
 
@@ -1473,7 +1473,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                                                                       .arg("expo")
                                                                       .arg("mult")
                                                                       .arg("off"),
-                           TokenTypes)) {
+                           Tokens)) {
                 return false;
             }
 
@@ -1524,18 +1524,18 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
                         // Expect a number or a prefix
 
-                        static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes();
-                        static bool needInitializeTokenTypes = true;
+                        static CellmlTextViewScanner::Tokens tokens = CellmlTextViewScanner::Tokens();
+                        static bool needInitializeTokens = true;
 
-                        if (needInitializeTokenTypes) {
-                            tokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::Token::FirstPrefix,
-                                                           CellmlTextViewScanner::Token::LastPrefix) << CellmlTextViewScanner::Token::Number;
+                        if (needInitializeTokens) {
+                            tokens = rangeOfTokens(CellmlTextViewScanner::Token::FirstPrefix,
+                                                   CellmlTextViewScanner::Token::LastPrefix) << CellmlTextViewScanner::Token::Number;
 
-                            needInitializeTokenTypes = false;
+                            needInitializeTokens = false;
                         }
 
                         if (!tokenType(unitElement, tr("A number or a prefix (e.g. 'milli')"),
-                                       tokenTypes)) {
+                                       tokens)) {
                             return false;
                         }
                     }
@@ -1567,14 +1567,14 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
             // Expect "," or "}"
 
-            static const CellmlTextViewScanner::TokenTypes NextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Comma
-                                                                                                                << CellmlTextViewScanner::Token::ClosingCurlyBracket;
+            static const CellmlTextViewScanner::Tokens NextTokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Comma
+                                                                                                    << CellmlTextViewScanner::Token::ClosingCurlyBracket;
 
             mScanner.getNextToken();
 
             if (!tokenType(unitElement, tr("'%1' or '%2'").arg(",")
                                                           .arg("}"),
-                           NextTokenTypes)) {
+                           NextTokens)) {
                 return false;
             }
 
@@ -1633,11 +1633,11 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
     // Loop while we have "def", "var", an identifier or "ode", or leave if we
     // get "enddef"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Def
-                                                                                                    << CellmlTextViewScanner::Token::Var
-                                                                                                    << CellmlTextViewScanner::Token::IdentifierOrCmetaId
-                                                                                                    << CellmlTextViewScanner::Token::Ode
-                                                                                                    << CellmlTextViewScanner::Token::EndDef;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Def
+                                                                                        << CellmlTextViewScanner::Token::Var
+                                                                                        << CellmlTextViewScanner::Token::IdentifierOrCmetaId
+                                                                                        << CellmlTextViewScanner::Token::Ode
+                                                                                        << CellmlTextViewScanner::Token::EndDef;
 
     QDomElement mathElement;
     bool hasMathElement = false;
@@ -1649,7 +1649,7 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                                                                   .arg("var")
                                                                   .arg("ode")
                                                                   .arg("enddef"),
-                     TokenTypes)) {
+                     Tokens)) {
         // Move trailing comment(s), if any, from mathElement to
         // componentElement, if needed
         // Note: indeed since comments we come across while looking for anything
@@ -1750,14 +1750,14 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
     // Expect "{" or ";"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::OpeningCurlyBracket
-                                                                                                    << CellmlTextViewScanner::Token::SemiColon;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::OpeningCurlyBracket
+                                                                                        << CellmlTextViewScanner::Token::SemiColon;
 
     mScanner.getNextToken();
 
     if (!tokenType(variableElement, tr("'%1' or '%2'").arg("{")
                                                       .arg(";"),
-                   TokenTypes)) {
+                   Tokens)) {
         return false;
     }
 
@@ -1769,16 +1769,16 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
         forever {
             // Expect "init", "pub" or "priv"
 
-            static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Init
-                                                                                                            << CellmlTextViewScanner::Token::Pub
-                                                                                                            << CellmlTextViewScanner::Token::Priv;
+            static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Init
+                                                                                                << CellmlTextViewScanner::Token::Pub
+                                                                                                << CellmlTextViewScanner::Token::Priv;
 
             mScanner.getNextToken();
 
             if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("init")
                                                                     .arg("pub")
                                                                     .arg("priv"),
-                           TokenTypes)) {
+                           Tokens)) {
                 return false;
             }
 
@@ -1829,11 +1829,11 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
                         // Expect a number or an identifier
 
-                        static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Number
-                                                                                                                        << CellmlTextViewScanner::Token::IdentifierOrCmetaId;
+                        static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Number
+                                                                                                            << CellmlTextViewScanner::Token::IdentifierOrCmetaId;
 
                         if (!tokenType(variableElement, tr("A number or an identifier"),
-                                       TokenTypes)) {
+                                       Tokens)) {
                             return false;
                         }
 
@@ -1846,14 +1846,14 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                 } else {
                     // Expect "in", "out" or "none"
 
-                    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::In
-                                                                                                                    << CellmlTextViewScanner::Token::Out
-                                                                                                                    << CellmlTextViewScanner::Token::None;
+                    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::In
+                                                                                                        << CellmlTextViewScanner::Token::Out
+                                                                                                        << CellmlTextViewScanner::Token::None;
 
                     if (!tokenType(variableElement, tr("'%1', '%2' or '%3'").arg("in")
                                                                             .arg("out")
                                                                             .arg("none"),
-                                   TokenTypes)) {
+                                   Tokens)) {
                         return false;
                     }
                 }
@@ -1877,14 +1877,14 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
             // Expect "," or "}"
 
-            static const CellmlTextViewScanner::TokenTypes NextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Comma
-                                                                                                                << CellmlTextViewScanner::Token::ClosingCurlyBracket;
+            static const CellmlTextViewScanner::Tokens NextTokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Comma
+                                                                                                    << CellmlTextViewScanner::Token::ClosingCurlyBracket;
 
             mScanner.getNextToken();
 
             if (!tokenType(variableElement, tr("'%1' or '%2'").arg(",")
                                                               .arg("}"),
-                           NextTokenTypes))
+                           NextTokens))
                 return false;
 
             // Leave the loop if we got "}"
@@ -1995,14 +1995,14 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
     // Expect some group information, so loop while we have "containment" or
     // "encapsulation"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Containment
-                                                                                                    << CellmlTextViewScanner::Token::Encapsulation;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Containment
+                                                                                        << CellmlTextViewScanner::Token::Encapsulation;
 
     mScanner.getNextToken();
 
     while (tokenType(groupElement, tr("'%1' or '%2'").arg("containment")
                                                      .arg("encapsulation"),
-                     TokenTypes)) {
+                     Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Containment) {
             // Create our relationship reference and make it a containment
 
@@ -2019,13 +2019,13 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
             // Expect an identifier, "and" or "for"
 
-            static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
-                                                                                                            << CellmlTextViewScanner::Token::And
-                                                                                                            << CellmlTextViewScanner::Token::For;
+            static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::IdentifierOrCmetaId
+                                                                                                << CellmlTextViewScanner::Token::And
+                                                                                                << CellmlTextViewScanner::Token::For;
 
             if (!tokenType(groupElement, tr("An identifier, '%1' or '%2'").arg("and")
                                                                           .arg("for"),
-                           TokenTypes)) {
+                           Tokens)) {
                 return false;
             }
 
@@ -2059,12 +2059,12 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
         // Expect "and" or "for"
 
-        static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::And
-                                                                                                        << CellmlTextViewScanner::Token::For;
+        static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::And
+                                                                                            << CellmlTextViewScanner::Token::For;
 
         if (tokenType(groupElement, tr("'%1' or '%2'").arg("and")
                                                       .arg("for"),
-                      TokenTypes)) {
+                      Tokens)) {
             if (mScanner.token() == CellmlTextViewScanner::Token::For)
                 break;
             else
@@ -2076,14 +2076,14 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
     // Loop while we have "comp" or leave if we get "enddef"
 
-    static const CellmlTextViewScanner::TokenTypes NextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Comp
-                                                                                                        << CellmlTextViewScanner::Token::EndDef;
+    static const CellmlTextViewScanner::Tokens NextTokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Comp
+                                                                                            << CellmlTextViewScanner::Token::EndDef;
 
     mScanner.getNextToken();
 
     while (tokenType(groupElement, tr("'%1' or '%2'").arg("comp")
                                                      .arg("enddef"),
-                     NextTokenTypes)) {
+                     NextTokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Comp) {
             // Recursively parse our component reference
 
@@ -2127,14 +2127,14 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
 
     // Expect "incl" or ";"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Incl
-                                                                                                    << CellmlTextViewScanner::Token::SemiColon;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Incl
+                                                                                        << CellmlTextViewScanner::Token::SemiColon;
 
     mScanner.getNextToken();
 
     if (!tokenType(componentRefElement, tr("'%1' or '%2'").arg("incl")
                                                           .arg(";"),
-                   TokenTypes)) {
+                   Tokens)) {
         return false;
     }
 
@@ -2144,8 +2144,8 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
         // Expect at least one "comp", then loop while we have "comp" or leave
         // if we get "enddcomp"
 
-        static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Comp
-                                                                                                        << CellmlTextViewScanner::Token::EndComp;
+        static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Comp
+                                                                                            << CellmlTextViewScanner::Token::EndComp;
 
         bool firstTime = true;
 
@@ -2169,7 +2169,7 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
             }
         } while (tokenType(componentRefElement, tr("'%1' or '%2'").arg("comp")
                                                                   .arg("endcomp"),
-                           TokenTypes));
+                           Tokens));
 
         // Expect ";"
 
@@ -2254,14 +2254,14 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
     // Expect a mapping, so loop while we have "vars" or leave if we get
     // "enddef"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Vars
-                                                                                                    << CellmlTextViewScanner::Token::EndDef;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Vars
+                                                                                        << CellmlTextViewScanner::Token::EndDef;
 
     mScanner.getNextToken();
 
     while (tokenType(connectionElement, tr("'%1' or '%2'").arg("vars")
                                                           .arg("enddef"),
-                     TokenTypes)) {
+                     Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::Vars) {
             // Create our map variables element
 
@@ -2505,14 +2505,14 @@ QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 
     // Expect "," or ")"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Comma
-                                                                                                    << CellmlTextViewScanner::Token::ClosingBracket;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Comma
+                                                                                        << CellmlTextViewScanner::Token::ClosingBracket;
 
     mScanner.getNextToken();
 
     if (!tokenType(pDomNode, tr("'%1' or '%2'").arg(",")
                                                .arg(")"),
-                   TokenTypes)) {
+                   Tokens)) {
         return QDomElement();
     }
 
@@ -2712,7 +2712,7 @@ QDomElement CellmlTextViewParser::parseParenthesizedMathematicalExpression(QDomN
 //==============================================================================
 
 QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &pDomNode,
-                                                                     const CellmlTextViewScanner::TokenTypes &pTokenTypes,
+                                                                     const CellmlTextViewScanner::Tokens &pTokens,
                                                                      ParseNormalMathematicalExpressionFunction pFunction)
 {
     // Try to parse something of the form:
@@ -2741,7 +2741,7 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
 
         CellmlTextViewScanner::Token crtOperator = mScanner.token();
 
-        if (!pTokenTypes.contains(crtOperator))
+        if (!pTokens.contains(crtOperator))
             return res;
 
         // Expect an operand
@@ -2760,11 +2760,11 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
         // Note #2: see http://www.w3.org/TR/MathML2/chapter4.html#contm.funopqual
         //          for more information...
 
-        static const CellmlTextViewScanner::TokenTypes NaryOperators = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Plus
-                                                                                                           << CellmlTextViewScanner::Token::Times
-                                                                                                           << CellmlTextViewScanner::Token::And
-                                                                                                           << CellmlTextViewScanner::Token::Or
-                                                                                                           << CellmlTextViewScanner::Token::Xor;
+        static const CellmlTextViewScanner::Tokens NaryOperators = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Plus
+                                                                                                   << CellmlTextViewScanner::Token::Times
+                                                                                                   << CellmlTextViewScanner::Token::And
+                                                                                                   << CellmlTextViewScanner::Token::Or
+                                                                                                   << CellmlTextViewScanner::Token::Xor;
 
         if ((crtOperator == prevOperator) && NaryOperators.contains(crtOperator)) {
             res.appendChild(otherOperand);
@@ -2796,7 +2796,7 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression(QDomNode &pD
     // Look for "or"
 
     return parseMathematicalExpressionElement(pDomNode,
-                                              CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Or,
+                                              CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Or,
                                               &CellmlTextViewParser::parseNormalMathematicalExpression2);
 }
 
@@ -2807,7 +2807,7 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression2(QDomNode &p
     // Look for "and"
 
     return parseMathematicalExpressionElement(pDomNode,
-                                              CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::And,
+                                              CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::And,
                                               &CellmlTextViewParser::parseNormalMathematicalExpression3);
 }
 
@@ -2818,7 +2818,7 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression3(QDomNode &p
     // Look for "xor"
 
     return parseMathematicalExpressionElement(pDomNode,
-                                              CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Xor,
+                                              CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Xor,
                                               &CellmlTextViewParser::parseNormalMathematicalExpression4);
 }
 
@@ -2829,8 +2829,8 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression4(QDomNode &p
     // Look for "==" or "<>"
 
     return parseMathematicalExpressionElement(pDomNode,
-                                              CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::EqEq
-                                                                                  << CellmlTextViewScanner::Token::Neq,
+                                              CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::EqEq
+                                                                              << CellmlTextViewScanner::Token::Neq,
                                               &CellmlTextViewParser::parseNormalMathematicalExpression5);
 }
 
@@ -2841,10 +2841,10 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression5(QDomNode &p
     // Look for "<", ">", "<=" or ">="
 
     return parseMathematicalExpressionElement(pDomNode,
-                                              CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Lt
-                                                                                  << CellmlTextViewScanner::Token::Gt
-                                                                                  << CellmlTextViewScanner::Token::Leq
-                                                                                  << CellmlTextViewScanner::Token::Geq,
+                                              CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Lt
+                                                                              << CellmlTextViewScanner::Token::Gt
+                                                                              << CellmlTextViewScanner::Token::Leq
+                                                                              << CellmlTextViewScanner::Token::Geq,
                                               &CellmlTextViewParser::parseNormalMathematicalExpression6);
 }
 
@@ -2855,8 +2855,8 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression6(QDomNode &p
     // Look for "+" or "-"
 
     return parseMathematicalExpressionElement(pDomNode,
-                                              CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Plus
-                                                                                  << CellmlTextViewScanner::Token::Minus,
+                                              CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Plus
+                                                                              << CellmlTextViewScanner::Token::Minus,
                                               &CellmlTextViewParser::parseNormalMathematicalExpression7);
 }
 
@@ -2867,8 +2867,8 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression7(QDomNode &p
     // Look for "*" or "/"
 
     return parseMathematicalExpressionElement(pDomNode,
-                                              CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Times
-                                                                                  << CellmlTextViewScanner::Token::Divide,
+                                              CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Times
+                                                                              << CellmlTextViewScanner::Token::Divide,
                                               &CellmlTextViewParser::parseNormalMathematicalExpression8);
 }
 
@@ -2882,13 +2882,13 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression8(QDomNode &p
 
     // Look for "not", unary "+" or unary "-"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Not
-                                                                                                    << CellmlTextViewScanner::Token::Plus
-                                                                                                    << CellmlTextViewScanner::Token::Minus;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Not
+                                                                                        << CellmlTextViewScanner::Token::Plus
+                                                                                        << CellmlTextViewScanner::Token::Minus;
 
     CellmlTextViewScanner::Token crtOperator = mScanner.token();
 
-    if (TokenTypes.contains(crtOperator)) {
+    if (Tokens.contains(crtOperator)) {
         QDomElement operand;
 
         if (mScanner.token() == CellmlTextViewScanner::Token::Not) {
@@ -2927,26 +2927,26 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
 
     QDomElement res;
 
-    static CellmlTextViewScanner::TokenTypes mahematicalConstantTokenTypes = CellmlTextViewScanner::TokenTypes();
-    static CellmlTextViewScanner::TokenTypes oneArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
-    static CellmlTextViewScanner::TokenTypes oneOrTwoArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
-    static CellmlTextViewScanner::TokenTypes twoArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
-    static CellmlTextViewScanner::TokenTypes twoOrMoreArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
-    static bool needInitializeTokenTypes = true;
+    static CellmlTextViewScanner::Tokens mahematicalConstantTokens = CellmlTextViewScanner::Tokens();
+    static CellmlTextViewScanner::Tokens oneArgumentMathematicalFunctionTokens = CellmlTextViewScanner::Tokens();
+    static CellmlTextViewScanner::Tokens oneOrTwoArgumentMathematicalFunctionTokens = CellmlTextViewScanner::Tokens();
+    static CellmlTextViewScanner::Tokens twoArgumentMathematicalFunctionTokens = CellmlTextViewScanner::Tokens();
+    static CellmlTextViewScanner::Tokens twoOrMoreArgumentMathematicalFunctionTokens = CellmlTextViewScanner::Tokens();
+    static bool needInitializeTokens = true;
 
-    if (needInitializeTokenTypes) {
-        mahematicalConstantTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::Token::FirstMathematicalConstant,
-                                                          CellmlTextViewScanner::Token::LastMathematicalConstant);
-        oneArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::Token::FirstOneArgumentMathematicalFunction,
-                                                                      CellmlTextViewScanner::Token::LastOneArgumentMathematicalFunction);
-        oneOrTwoArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::Token::FirstOneOrTwoArgumentMathematicalFunction,
-                                                                           CellmlTextViewScanner::Token::LastOneOrTwoArgumentMathematicalFunction);
-        twoArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::Token::FirstTwoArgumentMathematicalFunction,
-                                                                      CellmlTextViewScanner::Token::LastTwoArgumentMathematicalFunction);
-        twoOrMoreArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::Token::FirstTwoOrMoreArgumentMathematicalFunction,
-                                                                            CellmlTextViewScanner::Token::LastTwoOrMoreArgumentMathematicalFunction);
+    if (needInitializeTokens) {
+        mahematicalConstantTokens = rangeOfTokens(CellmlTextViewScanner::Token::FirstMathematicalConstant,
+                                                  CellmlTextViewScanner::Token::LastMathematicalConstant);
+        oneArgumentMathematicalFunctionTokens = rangeOfTokens(CellmlTextViewScanner::Token::FirstOneArgumentMathematicalFunction,
+                                                              CellmlTextViewScanner::Token::LastOneArgumentMathematicalFunction);
+        oneOrTwoArgumentMathematicalFunctionTokens = rangeOfTokens(CellmlTextViewScanner::Token::FirstOneOrTwoArgumentMathematicalFunction,
+                                                                   CellmlTextViewScanner::Token::LastOneOrTwoArgumentMathematicalFunction);
+        twoArgumentMathematicalFunctionTokens = rangeOfTokens(CellmlTextViewScanner::Token::FirstTwoArgumentMathematicalFunction,
+                                                              CellmlTextViewScanner::Token::LastTwoArgumentMathematicalFunction);
+        twoOrMoreArgumentMathematicalFunctionTokens = rangeOfTokens(CellmlTextViewScanner::Token::FirstTwoOrMoreArgumentMathematicalFunction,
+                                                                    CellmlTextViewScanner::Token::LastTwoOrMoreArgumentMathematicalFunction);
 
-        needInitializeTokenTypes = false;
+        needInitializeTokens = false;
     }
 
     if (mScanner.token() == CellmlTextViewScanner::Token::IdentifierOrCmetaId) {
@@ -2961,23 +2961,23 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
         // Try to parse a number
 
         res = parseNumber(pDomNode);
-    } else if (mahematicalConstantTokenTypes.contains(mScanner.token())) {
+    } else if (mahematicalConstantTokens.contains(mScanner.token())) {
         // Create a mathematical constant element
 
         res = newMathematicalConstantElement(mScanner.token());
-    } else if (oneArgumentMathematicalFunctionTokenTypes.contains(mScanner.token())) {
+    } else if (oneArgumentMathematicalFunctionTokens.contains(mScanner.token())) {
         // Try to parse a one-argument mathematical function
 
         res = parseMathematicalFunction(pDomNode, true, false, false);
-    } else if (oneOrTwoArgumentMathematicalFunctionTokenTypes.contains(mScanner.token())) {
+    } else if (oneOrTwoArgumentMathematicalFunctionTokens.contains(mScanner.token())) {
         // Try to parse a one- or two-argument mathematical function
 
         res = parseMathematicalFunction(pDomNode, true, true, false);
-    } else if (twoArgumentMathematicalFunctionTokenTypes.contains(mScanner.token())) {
+    } else if (twoArgumentMathematicalFunctionTokens.contains(mScanner.token())) {
         // Try to parse a two-argument mathematical function
 
         res = parseMathematicalFunction(pDomNode, false, true, false);
-    } else if (twoOrMoreArgumentMathematicalFunctionTokenTypes.contains(mScanner.token())) {
+    } else if (twoOrMoreArgumentMathematicalFunctionTokens.contains(mScanner.token())) {
         // Try to parse a two-or-more argument mathematical function
 
         res = parseMathematicalFunction(pDomNode, false, true, true);
@@ -3013,9 +3013,9 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
     // Loop while we have "case" or "otherwise", or leave if we get "endsel"
 
-    static const CellmlTextViewScanner::TokenTypes TokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::Token::Case
-                                                                                                    << CellmlTextViewScanner::Token::Otherwise
-                                                                                                    << CellmlTextViewScanner::Token::EndSel;
+    static const CellmlTextViewScanner::Tokens Tokens = CellmlTextViewScanner::Tokens() << CellmlTextViewScanner::Token::Case
+                                                                                        << CellmlTextViewScanner::Token::Otherwise
+                                                                                        << CellmlTextViewScanner::Token::EndSel;
 
     bool hasOtherwiseClause = false;
 
@@ -3024,7 +3024,7 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
     while (tokenType(piecewiseElement, tr("'%1', '%2' or '%3'").arg("case")
                                                                .arg("otherwise")
                                                                .arg("endsel"),
-                     TokenTypes)) {
+                     Tokens)) {
         if (mScanner.token() == CellmlTextViewScanner::Token::EndSel)
             break;
 

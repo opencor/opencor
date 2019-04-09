@@ -125,7 +125,7 @@ public:
         Eof
     };
 
-    typedef QList<Token> TokenTypes;
+    typedef QList<Token> Tokens;
 
     explicit CellmlTextViewScanner();
 
