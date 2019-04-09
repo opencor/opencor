@@ -63,8 +63,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          iface::rdf_api::Triple *pRdfTriple) :
     CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Type::Unknown,
-                        ModelQualifier::ModelUnknown, BioUnknown, QString(),
-                        QString())
+                        ModelQualifier::ModelUnknown, BioQualifier::BioUnknown,
+                        QString(), QString())
 {
     // Retrieve the RDF triple's subject, predicate and object information
 
@@ -120,7 +120,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     }
 
     if (mType == Type::Unknown) {
-        for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i) {
+        for (int i = int(BioQualifier::FirstBioQualifier); i <= int(BioQualifier::LastBioQualifier); ++i) {
             if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(BioRegEx)))) {
                 // It looks like we might be dealing with a model qualifier
 
@@ -146,7 +146,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
             mType = Type::Unknown;
 
             mModelQualifier = ModelQualifier::ModelUnknown;
-            mBioQualifier = BioUnknown;
+            mBioQualifier = BioQualifier::BioUnknown;
         }
     }
 }
@@ -159,7 +159,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          const QString &pResource,
                                          const QString &pId) :
     CellmlFileRdfTriple(pCellmlFile, nullptr, Type::BioModelsDotNetQualifier,
-                        pModelQualifier, BioUnknown, pResource, pId)
+                        pModelQualifier, BioQualifier::BioUnknown, pResource,
+                        pId)
 {
     // Create our RDF triple elements
 
@@ -285,7 +286,7 @@ QString CellmlFileRdfTriple::qualifierAsString() const
 
     return (mModelQualifier != ModelQualifier::ModelUnknown)?
                 modelQualifierAsString():
-                (mBioQualifier != BioUnknown)?
+                (mBioQualifier != BioQualifier::BioUnknown)?
                     bioQualifierAsString():
                     "unknown";
 }
@@ -359,33 +360,33 @@ QString CellmlFileRdfTriple::bioQualifierAsString(BioQualifier pBioQualifier)
     // Return the given RDF triple's bio(logy) qualifier as a string
 
     switch (pBioQualifier) {
-    case BioUnknown:
+    case BioQualifier::BioUnknown:
         return "bio:unknown";
-    case BioEncodes:
+    case BioQualifier::BioEncodes:
         return "bio:encodes";
-    case BioHasPart:
+    case BioQualifier::BioHasPart:
         return "bio:hasPart";
-    case BioHasProperty:
+    case BioQualifier::BioHasProperty:
         return "bio:hasProperty";
-    case BioHasVersion:
+    case BioQualifier::BioHasVersion:
         return "bio:hasVersion";
-    case BioIs:
+    case BioQualifier::BioIs:
         return "bio:is";
-    case BioIsDescribedBy:
+    case BioQualifier::BioIsDescribedBy:
         return "bio:isDescribedBy";
-    case BioIsEncodedBy:
+    case BioQualifier::BioIsEncodedBy:
         return "bio:isEncodedBy";
-    case BioIsHomologTo:
+    case BioQualifier::BioIsHomologTo:
         return "bio:isHomologTo";
-    case BioIsPartOf:
+    case BioQualifier::BioIsPartOf:
         return "bio:isPartOf";
-    case BioIsPropertyOf:
+    case BioQualifier::BioIsPropertyOf:
         return "bio:isPropertyOf";
-    case BioIsVersionOf:
+    case BioQualifier::BioIsVersionOf:
         return "bio:isVersionOf";
-    case BioOccursIn:
+    case BioQualifier::BioOccursIn:
         return "bio:occursIn";
-    case BioHasTaxon:
+    case BioQualifier::BioHasTaxon:
         return "bio:hasTaxon";
     }
 
@@ -400,19 +401,19 @@ QStringList CellmlFileRdfTriple::qualifiersAsStringList()
 {
     // Return (in alphabetical order) all the qualifiers which we support
 
-    return QStringList() << bioQualifierAsString(BioEncodes)
-                         << bioQualifierAsString(BioHasPart)
-                         << bioQualifierAsString(BioHasProperty)
-                         << bioQualifierAsString(BioHasVersion)
-                         << bioQualifierAsString(BioIs)
-                         << bioQualifierAsString(BioIsDescribedBy)
-                         << bioQualifierAsString(BioIsEncodedBy)
-                         << bioQualifierAsString(BioIsHomologTo)
-                         << bioQualifierAsString(BioIsPartOf)
-                         << bioQualifierAsString(BioIsPropertyOf)
-                         << bioQualifierAsString(BioIsVersionOf)
-                         << bioQualifierAsString(BioOccursIn)
-                         << bioQualifierAsString(BioHasTaxon)
+    return QStringList() << bioQualifierAsString(BioQualifier::BioEncodes)
+                         << bioQualifierAsString(BioQualifier::BioHasPart)
+                         << bioQualifierAsString(BioQualifier::BioHasProperty)
+                         << bioQualifierAsString(BioQualifier::BioHasVersion)
+                         << bioQualifierAsString(BioQualifier::BioIs)
+                         << bioQualifierAsString(BioQualifier::BioIsDescribedBy)
+                         << bioQualifierAsString(BioQualifier::BioIsEncodedBy)
+                         << bioQualifierAsString(BioQualifier::BioIsHomologTo)
+                         << bioQualifierAsString(BioQualifier::BioIsPartOf)
+                         << bioQualifierAsString(BioQualifier::BioIsPropertyOf)
+                         << bioQualifierAsString(BioQualifier::BioIsVersionOf)
+                         << bioQualifierAsString(BioQualifier::BioOccursIn)
+                         << bioQualifierAsString(BioQualifier::BioHasTaxon)
                          << modelQualifierAsString(ModelQualifier::ModelIs)
                          << modelQualifierAsString(ModelQualifier::ModelIsDerivedFrom)
                          << modelQualifierAsString(ModelQualifier::ModelIsDescribedBy)

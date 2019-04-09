@@ -74,7 +74,7 @@ public:
         LastModelQualifier = ModelHasInstance
     };
 
-    enum BioQualifier {
+    enum class BioQualifier {
         BioUnknown,
         BioEncodes,
         BioHasPart,

@@ -391,7 +391,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (termIsDirect) {
         QStringList termInformation = mTermValue->text().split('/');
 
-        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
+        if (mQualifierValue->currentIndex() < int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)) {
             mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
                                        && !mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
@@ -400,7 +400,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         } else {
             mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
                                        && !mCellmlFile->rdfTriple(mElement,
-                                                                  CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                  CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)+1),
                                                                   termInformation[0],
                                                                   termInformation[1]));
         }
@@ -432,7 +432,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         CellmlAnnotationViewMetadataEditDetailsItem item = mItemsMapping.value(itemInformationSha1);
         bool enabledButton;
 
-        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
+        if (mQualifierValue->currentIndex() < int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)) {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
@@ -440,7 +440,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         } else {
             enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
-                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)+1),
                                                        item.resource(), item.id());
         }
 
@@ -809,13 +809,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         CellMLSupport::CellmlFileRdfTriple *rdfTriple;
 
-        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
+        if (mQualifierValue->currentIndex() < int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)) {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                   item.resource(), item.id());
         } else {
             rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                                  CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                  CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)+1),
                                                   item.resource(), item.id());
         }
 
@@ -1044,13 +1044,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
     QStringList termInformation = Core::stringFromPercentEncoding(mTermValue->text()).split('/');
 
-    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier) {
+    if (mQualifierValue->currentIndex() < int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)) {
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
                                               CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                               termInformation[0], termInformation[1]);
     } else {
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)+1),
                                               termInformation[0], termInformation[1]);
     }
 
