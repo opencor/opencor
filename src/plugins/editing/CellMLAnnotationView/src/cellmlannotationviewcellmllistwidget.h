@@ -71,7 +71,7 @@ class CellmlAnnotationViewCellmlElementItem : public QObject,
     Q_OBJECT
 
 public:
-    enum Type {
+    enum class Type {
         Error                 = QStandardItem::UserType,
         Warning               = QStandardItem::UserType+1,
         Model                 = QStandardItem::UserType+2,
