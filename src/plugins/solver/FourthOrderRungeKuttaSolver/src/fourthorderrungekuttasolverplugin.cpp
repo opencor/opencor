@@ -38,7 +38,7 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that implements the fourth-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta method</a> to solve <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">ODEs</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">méthode Runge-Kutta</a> du quatrième ordre pour résoudre des <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">EDOs</a>."));
 
-    return new PluginInfo(PluginInfo::Solver, true, false,
+    return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           QStringList(),
                           descriptions);
 }
@@ -102,7 +102,7 @@ Solver::Type FourthOrderRungeKuttaSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Ode;
+    return Solver::Type::Ode;
 }
 
 //==============================================================================
@@ -125,7 +125,7 @@ Solver::Properties FourthOrderRungeKuttaSolverPlugin::solverProperties() const
     stepDescriptions.insert("en", QString::fromUtf8("Step"));
     stepDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
+    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
 }
 
 //==============================================================================

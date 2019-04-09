@@ -42,7 +42,7 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileIssue
 {
 public:
-    enum Type {
+    enum class Type {
         Error,
         Warning
     };

@@ -49,7 +49,7 @@ PLUGININFO_FUNC SampleToolsPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides an addition tool."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit un outil d'addition."));
 
-    return new PluginInfo(PluginInfo::Sample, true, true,
+    return new PluginInfo(PluginInfo::Category::Sample, true, true,
                           QStringList() << "Core" << "Sample",
                           descriptions);
 }
@@ -109,8 +109,8 @@ Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mAddTwoNumbersAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, Core::newSeparator(Core::mainWindow()));
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mAddTwoNumbersAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================

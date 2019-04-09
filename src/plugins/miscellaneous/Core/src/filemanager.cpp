@@ -132,7 +132,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
     if (QFile::exists(fileName)) {
         if (file(fileName)) {
-            return AlreadyManaged;
+            return Status::AlreadyManaged;
         } else {
             // The file isn't already managed, so add it to our list of managed
             // files and let people know about it being now managed
@@ -147,10 +147,10 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
             emit fileManaged(fileName);
 
-            return Added;
+            return Status::Added;
         }
     } else {
-        return DoesNotExist;
+        return Status::DoesNotExist;
     }
 }
 
@@ -175,9 +175,9 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
         emit fileUnmanaged(fileName);
 
-        return Removed;
+        return Status::Removed;
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 
@@ -459,17 +459,17 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
     if (file) {
         File::Status status = file->setLocked(pLocked);
 
-        if (status == File::LockedSet)
+        if (status == File::Status::LockedSet)
             emitFilePermissionsChanged(fileName);
 
-        if (status == File::LockedNotNeeded)
-            return LockedNotNeeded;
-        else if (status == File::LockedSet)
-            return LockedSet;
+        if (status == File::Status::LockedNotNeeded)
+            return Status::LockedNotNeeded;
+        else if (status == File::Status::LockedSet)
+            return Status::LockedSet;
         else
-            return LockedNotSet;
+            return Status::LockedNotSet;
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 
@@ -559,9 +559,9 @@ FileManager::Status FileManager::create(const QString &pUrl,
 
         emit fileCreated(fileName, pUrl);
 
-        return Created;
+        return Status::Created;
     } else {
-        return NotCreated;
+        return Status::NotCreated;
     }
 }
 
@@ -597,12 +597,12 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
 
             emit fileRenamed(oldFileName, newFileName);
 
-            return Renamed;
+            return Status::Renamed;
         } else {
-            return RenamingNotNeeded;
+            return Status::RenamingNotNeeded;
         }
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 
@@ -630,15 +630,15 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
                 emit fileDuplicated(fileName);
 
-                return Duplicated;
+                return Status::Duplicated;
             } else {
-                return NotDuplicated;
+                return Status::NotDuplicated;
             }
         } else {
-            return NotDuplicated;
+            return Status::NotDuplicated;
         }
     } else {
-        return NotManaged;
+        return Status::NotManaged;
     }
 }
 
@@ -729,18 +729,18 @@ void FileManager::checkFiles()
         File::Status fileStatus = file->check();
 
         switch (fileStatus) {
-        case File::Changed:
-        case File::DependenciesChanged:
-        case File::AllChanged:
+        case File::Status::Changed:
+        case File::Status::DependenciesChanged:
+        case File::Status::AllChanged:
             // The file and/or one or several of its dependencies has changed,
             // so let people know about it
 
             emit fileChanged(fileName,
-                             (fileStatus == File::Changed) || (fileStatus == File::AllChanged),
-                             (fileStatus == File::DependenciesChanged) || (fileStatus == File::AllChanged));
+                             (fileStatus == File::Status::Changed) || (fileStatus == File::Status::AllChanged),
+                             (fileStatus == File::Status::DependenciesChanged) || (fileStatus == File::Status::AllChanged));
 
             break;
-        case File::Unchanged:
+        case File::Status::Unchanged:
             // The file has neither changed nor been deleted, so check whether
             // its permissions have changed
 
@@ -752,7 +752,7 @@ void FileManager::checkFiles()
             }
 
             break;
-        case File::Deleted:
+        case File::Status::Deleted:
             // The file has been deleted, so let people know about it
 
             emit fileDeleted(fileName);

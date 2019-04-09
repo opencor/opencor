@@ -54,7 +54,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access various <a href=\"http://www.cellml.org/\">CellML</a>-related tools."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder divers outils en rapport avec <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Tools, true, true,
+    return new PluginInfo(PluginInfo::Category::Tools, true, true,
                           QStringList() << "CellMLSupport",
                           descriptions);
 }
@@ -110,10 +110,10 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
-    mExportToCellml10Action->setEnabled(cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1);
+    mExportToCellml10Action->setEnabled(cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1);
 
-    mExportToUserDefinedFormatAction->setEnabled(   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-                                                 || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1));
+    mExportToUserDefinedFormatAction->setEnabled(   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+                                                 || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1));
 
     // Keep track of the file name
 
@@ -135,8 +135,8 @@ Gui::MenuActions CellMLToolsPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mCellmlFileExportToMenu->menuAction())
-                              << Gui::MenuAction(Gui::MenuAction::Tools, Core::newSeparator(Core::mainWindow()));
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mCellmlFileExportToMenu->menuAction())
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, Core::newSeparator(Core::mainWindow()));
 }
 
 //==============================================================================
@@ -265,7 +265,7 @@ void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
 {
     // Make sure that we want to export either to CellML 1.0
 
-    if (pVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+    if (pVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
         return;
 
     // Ask for the name of the file that will contain the export
@@ -324,8 +324,8 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 {
     // Make sure that we have the correct number of arguments
 
-    if (   ((pCommand == Export)   && (pArguments.count() != 2))
-        || ((pCommand == Validate) && (pArguments.count() != 1))) {
+    if (   ((pCommand == Command::Export)   && (pArguments.count() != 2))
+        || ((pCommand == Command::Validate) && (pArguments.count() != 1))) {
         runHelpCommand();
 
         return -1;
@@ -371,7 +371,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 
         if (!fileExists) {
             output = "The file could not be found.";
-        } else if (    (pCommand == Export)
+        } else if (    (pCommand == Command::Export)
                    && !CellMLSupport::CellmlFileManager::instance()->isCellmlFile(fileName)) {
             output = "The file is not a CellML file.";
         } else {
@@ -379,17 +379,17 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 
             if (fileManagerInstance->manage(fileName,
                                             isLocalFile?
-                                                Core::File::Local:
-                                                Core::File::Remote,
+                                                Core::File::Type::Local:
+                                                Core::File::Type::Remote,
                                             isLocalFile?
                                                 QString():
-                                                fileNameOrUrl) != Core::FileManager::Added) {
+                                                fileNameOrUrl) != Core::FileManager::Status::Added) {
                 output = "The file could not be managed.";
             } else {
                 CellMLSupport::CellmlFile *cellmlFile = new CellMLSupport::CellmlFile(fileName);
 
                 switch (pCommand) {
-                case Export:
+                case Command::Export:
                     if (!cellmlFile->load()) {
                         output = "The file could not be loaded.";
                     } else {
@@ -407,14 +407,14 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
                             && !QFile::exists(formatOrFileName)) {
                             output = "The user-defined format file could not be found.";
                         } else if (   isCellml10Format
-                                   && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+                                   && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
                             output = "The file must be a CellML 1.1 file.";
                         } else {
                             // Everything seems to be fine, so attempt the
                             // export itself
 
                             if (   (isFileName && !cellmlFile->exportTo(QString(), formatOrFileName))
-                                || (isCellml10Format && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Cellml_1_0))) {
+                                || (isCellml10Format && !cellmlFile->exportTo(QString(), CellMLSupport::CellmlFile::Version::Cellml_1_0))) {
                                 output = "The file could not be exported";
 
                                 if (cellmlFile->issues().count()) {
@@ -430,7 +430,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
                     }
 
                     break;
-                case Validate:
+                case Command::Validate:
                     // Validate our file and report all errors and warnings
 
                     validFile = cellmlFile->isValid();
@@ -439,7 +439,7 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 
                     for (const auto &cellmlFileIssue : cellmlFileIssues) {
                         output += QString("%1[%2] [%3:%4] %5").arg(output.isEmpty()?QString():"\n")
-                                                              .arg((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?"Error":"Warning")
+                                                              .arg((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?"Error":"Warning")
                                                               .arg(cellmlFileIssue.line())
                                                               .arg(cellmlFileIssue.column())
                                                               .arg(Core::plainString(cellmlFileIssue.formattedMessage()));
@@ -470,8 +470,8 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
     if (!output.isEmpty())
         std::cout << output.toStdString() << std::endl;
 
-    return (   ((pCommand == Export) && output.isEmpty())
-            || ((pCommand == Validate) && validFile))?
+    return (   ((pCommand == Command::Export) && output.isEmpty())
+            || ((pCommand == Command::Validate) && validFile))?
                 0:
                -1;
 }
@@ -483,7 +483,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Export an existing file to the console using a given format as the
     // destination format
 
-    return runCommand(Export, pArguments);
+    return runCommand(Command::Export, pArguments);
 }
 
 //==============================================================================
@@ -492,7 +492,7 @@ int CellMLToolsPlugin::runValidateCommand(const QStringList &pArguments)
 {
     // Validate an existing file
 
-    return runCommand(Validate, pArguments);
+    return runCommand(Command::Validate, pArguments);
 }
 
 //==============================================================================
@@ -501,7 +501,7 @@ void CellMLToolsPlugin::exportToCellml10()
 {
     // Export the current file to CellML 1.0
 
-    exportTo(CellMLSupport::CellmlFile::Cellml_1_0);
+    exportTo(CellMLSupport::CellmlFile::Version::Cellml_1_0);
 }
 
 //==============================================================================

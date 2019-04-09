@@ -104,17 +104,17 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
     // Return the effective format associated with the given format
 
     if (!pFormat.compare(CellmlFormat))
-        return Cellml;
+        return Format::Cellml;
     else if (!pFormat.compare(Cellml_1_0_Format))
-        return Cellml_1_0;
+        return Format::Cellml_1_0;
     else if (!pFormat.compare(Cellml_1_1_Format))
-        return Cellml_1_1;
+        return Format::Cellml_1_1;
     else if (!pFormat.compare(OmexFormat))
-        return Omex;
+        return Format::Omex;
     else if (!pFormat.compare(SedmlFormat))
-        return Sedml;
+        return Format::Sedml;
     else
-        return Unknown;
+        return Format::Unknown;
 }
 
 //==============================================================================
@@ -192,7 +192,7 @@ bool CombineArchive::load()
     if (mNew) {
         return true;
     } else if (!QFile::exists(mFileName)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the archive does not exist"));
 
         return false;
@@ -209,7 +209,7 @@ bool CombineArchive::load()
     uchar signatureData[SignatureSize];
 
     if (zipReader.device()->read(reinterpret_cast<char *>(signatureData), SignatureSize) != SignatureSize) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the archive is not signed"));
 
         return false;
@@ -221,7 +221,7 @@ bool CombineArchive::load()
                      +(uint(signatureData[3]) << 24);
 
     if (signature != 0x04034b50) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the archive does not have the correct signature"));
 
         return false;
@@ -232,7 +232,7 @@ bool CombineArchive::load()
     zipReader.device()->reset();
 
     if (!zipReader.extractAll(mDirName)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the contents of the archive could not be extracted"));
 
         return false;
@@ -257,25 +257,25 @@ bool CombineArchive::save(const QString &pFileName)
 
     for (const auto &file : mFiles) {
         switch (file.format()) {
-        case CombineArchiveFile::Unknown:
+        case CombineArchiveFile::Format::Unknown:
             return false;
-        case CombineArchiveFile::Cellml:
+        case CombineArchiveFile::Format::Cellml:
             fileFormat = CellmlFormat;
 
             break;
-        case CombineArchiveFile::Cellml_1_0:
+        case CombineArchiveFile::Format::Cellml_1_0:
             fileFormat = Cellml_1_0_Format;
 
             break;
-        case CombineArchiveFile::Cellml_1_1:
+        case CombineArchiveFile::Format::Cellml_1_1:
             fileFormat = Cellml_1_1_Format;
 
             break;
-        case CombineArchiveFile::Omex:
+        case CombineArchiveFile::Format::Omex:
             fileFormat = OmexFormat;
 
             break;
-        case CombineArchiveFile::Sedml:
+        case CombineArchiveFile::Format::Sedml:
             fileFormat = SedmlFormat;
 
             break;
@@ -364,7 +364,7 @@ bool CombineArchive::isValid()
     QString manifestFileName = mDirName+"/"+ManifestFileName;
 
     if (!QFile::exists(manifestFileName)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the archive does not have a manifest"));
 
         return false;
@@ -379,7 +379,7 @@ bool CombineArchive::isValid()
     Core::readFile(":/COMBINESupport/omex.xsd", schemaContents);
 
     if (!Core::validXml(manifestContents, schemaContents)) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the manifest is not a valid OMEX file"));
 
         return false;
@@ -400,7 +400,7 @@ bool CombineArchive::isValid()
         QString fileName = mDirName+"/"+location;
 
         if (!QFile::exists(fileName)) {
-            mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+            mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                            tr("<strong>%1</strong> could not be found").arg(location));
 
             mFiles.clear();
@@ -423,7 +423,7 @@ bool CombineArchive::isValid()
         const CombineArchiveFile &file = mFiles[i];
 
         if (   !file.location().compare(".")
-            &&  (file.format() == CombineArchiveFile::Omex)
+            &&  (file.format() == CombineArchiveFile::Format::Omex)
             && !file.isMaster()) {
             combineArchiveReferenceFound = true;
 
@@ -435,7 +435,7 @@ bool CombineArchive::isValid()
     }
 
     if (!combineArchiveReferenceFound) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Error,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("no reference to the COMBINE archive itself could be found"));
 
         mFiles.clear();
@@ -458,7 +458,7 @@ bool CombineArchive::isSupported()
     // Make sure that we have only one master file
 
     if (masterFiles().count() != 1) {
-        mIssues << CombineArchiveIssue(CombineArchiveIssue::Information,
+        mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Information,
                                        tr("only COMBINE archives with one master file are supported"));
 
         return false;
@@ -509,7 +509,7 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 
     // Make sure that the format is known
 
-    if (pFormat == CombineArchiveFile::Unknown)
+    if (pFormat == CombineArchiveFile::Format::Unknown)
         return false;
 
     // Add the given file to our list

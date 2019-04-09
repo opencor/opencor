@@ -51,7 +51,7 @@ File::File(const QString &pFileName, Type pType, const QString &pUrl) :
 
     // Set our index, in case we are a new file
 
-    if (pType == New)
+    if (pType == Type::New)
         mNewIndex = ++gNewIndex;
 }
 
@@ -104,15 +104,15 @@ File::Status File::check()
     // Always consider ourselves unchanged if we are a remote file
 
     if (!mUrl.isEmpty())
-        return Unchanged;
+        return Status::Unchanged;
 
     // Check whether the file and/or one or several of its dependencies has been
     // modified
 
     if (mModified)
-        return mDependenciesModified?AllModified:Modified;
+        return mDependenciesModified?Status::AllModified:Status::Modified;
     else if (mDependenciesModified)
-        return DependenciesModified;
+        return Status::DependenciesModified;
 
     // Retrieve our 'new' SHA-1 value and that of our dependencies (if any), and
     // check whether they are different from the one(s) we currently have
@@ -128,15 +128,15 @@ File::Status File::check()
         // deleted or that we are unreadable (which, in effect, means that we
         // have been changed)
 
-        return QFile::exists(mFileName)?Changed:Deleted;
+        return QFile::exists(mFileName)?Status::Changed:Status::Deleted;
     } else {
         // Our SHA-1 value and/or that of one or several of our dependencies is
         // different from our stored value, which means that we and/or one or
         // several of our dependencies has changed
 
         return newSha1.compare(mSha1)?
-                   (newDependenciesSha1 != mDependenciesSha1)?AllChanged:Changed:
-                   (newDependenciesSha1 != mDependenciesSha1)?DependenciesChanged:Unchanged;
+                   (newDependenciesSha1 != mDependenciesSha1)?Status::AllChanged:Status::Changed:
+                   (newDependenciesSha1 != mDependenciesSha1)?Status::DependenciesChanged:Status::Unchanged;
     }
 }
 
@@ -343,7 +343,7 @@ File::Status File::setLocked(bool pLocked)
     // Set our locked status, but only if we are readable
 
     if (pLocked == isLocked())
-        return LockedNotNeeded;
+        return Status::LockedNotNeeded;
 
     QFileDevice::Permissions newPermissions = QFile::permissions(mFileName);
 
@@ -371,9 +371,9 @@ File::Status File::setLocked(bool pLocked)
     }
 
     if (QFile::setPermissions(mFileName, newPermissions))
-        return LockedSet;
+        return Status::LockedSet;
     else
-        return LockedNotSet;
+        return Status::LockedNotSet;
 }
 
 //==============================================================================

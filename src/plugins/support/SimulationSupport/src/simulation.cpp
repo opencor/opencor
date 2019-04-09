@@ -667,28 +667,28 @@ void SimulationResults::createDataStore()
         DataStore::DataStoreVariable *variable = nullptr;
 
         switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            mPoints->setType(parameter->type());
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Voi:
+            mPoints->setType(int(parameter->type()));
             mPoints->setUri(uri(runtime->voi()->componentHierarchy(),
                                 runtime->voi()->name()));
             mPoints->setLabel(runtime->voi()->name());
             mPoints->setUnit(runtime->voi()->unit());
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Constant:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant:
             variable = mConstants[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Rate:
             variable = mRates[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::State:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::State:
             variable = mStates[parameter->index()];
 
             break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+        case CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic:
             variable = mAlgebraic[parameter->index()];
 
             break;
@@ -699,7 +699,7 @@ void SimulationResults::createDataStore()
         }
 
         if (variable) {
-            variable->setType(parameter->type());
+            variable->setType(int(parameter->type()));
             variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
             variable->setLabel(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
@@ -799,7 +799,7 @@ void SimulationResults::importData(DataStore::DataStoreImportData *pImportData)
     for (auto parameter : runtime->dataParameters(resultsValues)) {
         DataStore::DataStoreVariable *variable = mData.value(parameter->data())[parameter->index()];
 
-        variable->setType(parameter->type());
+        variable->setType(int(parameter->type()));
         variable->setUri(uri(parameter->componentHierarchy(), parameter->formattedName()));
         variable->setLabel(parameter->formattedName());
         variable->setUnit(parameter->formattedUnit(runtime->voi()->unit()));
@@ -1125,7 +1125,11 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
 
     // Determine the type of our file
 
-    mFileType = mCellmlFile?CellmlFile:mSedmlFile?SedmlFile:CombineArchive;
+    mFileType = mCellmlFile?
+                    FileType::CellmlFile:
+                    mSedmlFile?
+                        FileType::SedmlFile:
+                        FileType::CombineArchive;
 
     // We have a COMBINE archive, so we need to retrieve its corresponding
     // SED-ML file

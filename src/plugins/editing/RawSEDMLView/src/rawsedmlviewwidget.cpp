@@ -318,11 +318,11 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 
         for (const auto &sedmlFileIssue : sedmlFileIssues) {
             if (   !pOnlyErrors
-                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
-                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Unknown;
+                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Type::Error)) {
+                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Type::Unknown;
 
                 switch (sedmlFileIssue.type()) {
-                case SEDMLSupport::SedmlFileIssue::Unknown:
+                case SEDMLSupport::SedmlFileIssue::Type::Unknown:
                     // We should never come here...
 
 #ifdef QT_DEBUG
@@ -330,20 +330,20 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 #else
                     break;
 #endif
-                case SEDMLSupport::SedmlFileIssue::Information:
-                    issueType = EditorWidget::EditorListItem::Information;
+                case SEDMLSupport::SedmlFileIssue::Type::Information:
+                    issueType = EditorWidget::EditorListItem::Type::Information;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Error:
-                    issueType = EditorWidget::EditorListItem::Error;
+                case SEDMLSupport::SedmlFileIssue::Type::Error:
+                    issueType = EditorWidget::EditorListItem::Type::Error;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Warning:
-                    issueType = EditorWidget::EditorListItem::Warning;
+                case SEDMLSupport::SedmlFileIssue::Type::Warning:
+                    issueType = EditorWidget::EditorListItem::Type::Warning;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Fatal:
-                    issueType = EditorWidget::EditorListItem::Fatal;
+                case SEDMLSupport::SedmlFileIssue::Type::Fatal:
+                    issueType = EditorWidget::EditorListItem::Type::Fatal;
 
                     break;
                 }

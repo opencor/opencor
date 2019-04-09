@@ -62,8 +62,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
 CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          iface::rdf_api::Triple *pRdfTriple) :
-    CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Unknown, ModelUnknown,
-                        BioUnknown, QString(), QString())
+    CellmlFileRdfTriple(pCellmlFile, pRdfTriple, Type::Unknown,
+                        ModelQualifier::ModelUnknown, BioQualifier::BioUnknown,
+                        QString(), QString())
 {
     // Retrieve the RDF triple's subject, predicate and object information
 
@@ -106,11 +107,11 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     static const QRegularExpression ModelRegEx = QRegularExpression("^model:");
     static const QRegularExpression BioRegEx = QRegularExpression("^bio:");
 
-    for (int i = FirstModelQualifier; i <= LastModelQualifier; ++i) {
+    for (int i = int(ModelQualifier::FirstModelQualifier); i <= int(ModelQualifier::LastModelQualifier); ++i) {
         if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(ModelRegEx)))) {
             // It looks like we might be dealing with a model qualifier
 
-            mType = BioModelsDotNetQualifier;
+            mType = Type::BioModelsDotNetQualifier;
 
             mModelQualifier = ModelQualifier(i);
 
@@ -118,12 +119,12 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
         }
     }
 
-    if (mType == Unknown) {
-        for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i) {
+    if (mType == Type::Unknown) {
+        for (int i = int(BioQualifier::FirstBioQualifier); i <= int(BioQualifier::LastBioQualifier); ++i) {
             if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(BioRegEx)))) {
                 // It looks like we might be dealing with a model qualifier
 
-                mType = BioModelsDotNetQualifier;
+                mType = Type::BioModelsDotNetQualifier;
 
                 mBioQualifier = BioQualifier(i);
 
@@ -132,7 +133,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
         }
     }
 
-    if (mType == BioModelsDotNetQualifier) {
+    if (mType == Type::BioModelsDotNetQualifier) {
         // We seem to be dealing with either a model or a bio(logy) qualifier,
         // so try to decode its object, which should be either a valid MIRIAM
         // URN or a valid identifiers.org URI
@@ -142,10 +143,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
             // identifiers.org URI, which means that the RDF triple is not a
             // valid model/bio(logy) qualifier
 
-            mType = Unknown;
+            mType = Type::Unknown;
 
-            mModelQualifier = ModelUnknown;
-            mBioQualifier = BioUnknown;
+            mModelQualifier = ModelQualifier::ModelUnknown;
+            mBioQualifier = BioQualifier::BioUnknown;
         }
     }
 }
@@ -157,8 +158,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          ModelQualifier pModelQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
-    CellmlFileRdfTriple(pCellmlFile, nullptr, BioModelsDotNetQualifier,
-                        pModelQualifier, BioUnknown, pResource, pId)
+    CellmlFileRdfTriple(pCellmlFile, nullptr, Type::BioModelsDotNetQualifier,
+                        pModelQualifier, BioQualifier::BioUnknown, pResource,
+                        pId)
 {
     // Create our RDF triple elements
 
@@ -177,8 +179,9 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
                                          BioQualifier pBioQualifier,
                                          const QString &pResource,
                                          const QString &pId) :
-    CellmlFileRdfTriple(pCellmlFile, nullptr, BioModelsDotNetQualifier,
-                        ModelUnknown, pBioQualifier, pResource, pId)
+    CellmlFileRdfTriple(pCellmlFile, nullptr, Type::BioModelsDotNetQualifier,
+                        ModelQualifier::ModelUnknown, pBioQualifier, pResource,
+                        pId)
 {
     // Create our RDF triple elements
 
@@ -262,7 +265,7 @@ QString CellmlFileRdfTriple::metadataId() const
 {
     // Return the RDF triple's metadata id, if its subject is a URI reference
 
-    if (mSubject->type() == CellmlFileRdfTripleElement::UriReference) {
+    if (mSubject->type() == CellmlFileRdfTripleElement::Type::UriReference) {
         QString uriReference = mSubject->uriReference();
         int hashPosition = uriReference.lastIndexOf('#');
 
@@ -281,9 +284,9 @@ QString CellmlFileRdfTriple::qualifierAsString() const
 {
     // Return the RDF triple's model or bio(logy) qualifier as a string
 
-    return (mModelQualifier != ModelUnknown)?
+    return (mModelQualifier != ModelQualifier::ModelUnknown)?
                 modelQualifierAsString():
-                (mBioQualifier != BioUnknown)?
+                (mBioQualifier != BioQualifier::BioUnknown)?
                     bioQualifierAsString():
                     "unknown";
 }
@@ -313,17 +316,17 @@ QString CellmlFileRdfTriple::modelQualifierAsString(ModelQualifier pModelQualifi
     // Return the given RDF triple's model qualifier as a string
 
     switch (pModelQualifier) {
-    case ModelUnknown:
+    case ModelQualifier::ModelUnknown:
         return "model:unknown";
-    case ModelIs:
+    case ModelQualifier::ModelIs:
         return "model:is";
-    case ModelIsDerivedFrom:
+    case ModelQualifier::ModelIsDerivedFrom:
         return "model:isDerivedFrom";
-    case ModelIsDescribedBy:
+    case ModelQualifier::ModelIsDescribedBy:
         return "model:isDescribedBy";
-    case ModelIsInstanceOf:
+    case ModelQualifier::ModelIsInstanceOf:
         return "model:isInstanceOf";
-    case ModelHasInstance:
+    case ModelQualifier::ModelHasInstance:
         return "model:hasInstance";
     }
 
@@ -357,33 +360,33 @@ QString CellmlFileRdfTriple::bioQualifierAsString(BioQualifier pBioQualifier)
     // Return the given RDF triple's bio(logy) qualifier as a string
 
     switch (pBioQualifier) {
-    case BioUnknown:
+    case BioQualifier::BioUnknown:
         return "bio:unknown";
-    case BioEncodes:
+    case BioQualifier::BioEncodes:
         return "bio:encodes";
-    case BioHasPart:
+    case BioQualifier::BioHasPart:
         return "bio:hasPart";
-    case BioHasProperty:
+    case BioQualifier::BioHasProperty:
         return "bio:hasProperty";
-    case BioHasVersion:
+    case BioQualifier::BioHasVersion:
         return "bio:hasVersion";
-    case BioIs:
+    case BioQualifier::BioIs:
         return "bio:is";
-    case BioIsDescribedBy:
+    case BioQualifier::BioIsDescribedBy:
         return "bio:isDescribedBy";
-    case BioIsEncodedBy:
+    case BioQualifier::BioIsEncodedBy:
         return "bio:isEncodedBy";
-    case BioIsHomologTo:
+    case BioQualifier::BioIsHomologTo:
         return "bio:isHomologTo";
-    case BioIsPartOf:
+    case BioQualifier::BioIsPartOf:
         return "bio:isPartOf";
-    case BioIsPropertyOf:
+    case BioQualifier::BioIsPropertyOf:
         return "bio:isPropertyOf";
-    case BioIsVersionOf:
+    case BioQualifier::BioIsVersionOf:
         return "bio:isVersionOf";
-    case BioOccursIn:
+    case BioQualifier::BioOccursIn:
         return "bio:occursIn";
-    case BioHasTaxon:
+    case BioQualifier::BioHasTaxon:
         return "bio:hasTaxon";
     }
 
@@ -398,24 +401,24 @@ QStringList CellmlFileRdfTriple::qualifiersAsStringList()
 {
     // Return (in alphabetical order) all the qualifiers which we support
 
-    return QStringList() << bioQualifierAsString(BioEncodes)
-                         << bioQualifierAsString(BioHasPart)
-                         << bioQualifierAsString(BioHasProperty)
-                         << bioQualifierAsString(BioHasVersion)
-                         << bioQualifierAsString(BioIs)
-                         << bioQualifierAsString(BioIsDescribedBy)
-                         << bioQualifierAsString(BioIsEncodedBy)
-                         << bioQualifierAsString(BioIsHomologTo)
-                         << bioQualifierAsString(BioIsPartOf)
-                         << bioQualifierAsString(BioIsPropertyOf)
-                         << bioQualifierAsString(BioIsVersionOf)
-                         << bioQualifierAsString(BioOccursIn)
-                         << bioQualifierAsString(BioHasTaxon)
-                         << modelQualifierAsString(ModelIs)
-                         << modelQualifierAsString(ModelIsDerivedFrom)
-                         << modelQualifierAsString(ModelIsDescribedBy)
-                         << modelQualifierAsString(ModelIsInstanceOf)
-                         << modelQualifierAsString(ModelHasInstance);
+    return QStringList() << bioQualifierAsString(BioQualifier::BioEncodes)
+                         << bioQualifierAsString(BioQualifier::BioHasPart)
+                         << bioQualifierAsString(BioQualifier::BioHasProperty)
+                         << bioQualifierAsString(BioQualifier::BioHasVersion)
+                         << bioQualifierAsString(BioQualifier::BioIs)
+                         << bioQualifierAsString(BioQualifier::BioIsDescribedBy)
+                         << bioQualifierAsString(BioQualifier::BioIsEncodedBy)
+                         << bioQualifierAsString(BioQualifier::BioIsHomologTo)
+                         << bioQualifierAsString(BioQualifier::BioIsPartOf)
+                         << bioQualifierAsString(BioQualifier::BioIsPropertyOf)
+                         << bioQualifierAsString(BioQualifier::BioIsVersionOf)
+                         << bioQualifierAsString(BioQualifier::BioOccursIn)
+                         << bioQualifierAsString(BioQualifier::BioHasTaxon)
+                         << modelQualifierAsString(ModelQualifier::ModelIs)
+                         << modelQualifierAsString(ModelQualifier::ModelIsDerivedFrom)
+                         << modelQualifierAsString(ModelQualifier::ModelIsDescribedBy)
+                         << modelQualifierAsString(ModelQualifier::ModelIsInstanceOf)
+                         << modelQualifierAsString(ModelQualifier::ModelHasInstance);
 }
 
 //==============================================================================
@@ -453,7 +456,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
     //       type is considered to be unknown
 
     if (isEmpty()) {
-        return CellmlFileRdfTriple::Empty;
+        return CellmlFileRdfTriple::Type::Empty;
     } else {
         // There is at least one RDF triple, so retrieve the subject and type of
         // the first RDF triple and consider its type as the default type for
@@ -474,7 +477,7 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
                 // different from that of the first RDF triple, so consider the
                 // overall type of the RDF triples to be unknown
 
-                return CellmlFileRdfTriple::Unknown;
+                return CellmlFileRdfTriple::Type::Unknown;
             }
         }
 

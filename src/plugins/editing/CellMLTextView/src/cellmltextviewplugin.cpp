@@ -47,7 +47,7 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using the CellML Text format."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide du format CellML Text."));
 
-    return new PluginInfo(PluginInfo::Editing, true, true,
+    return new PluginInfo(PluginInfo::Category::Editing, true, true,
                           QStringList() << "CellMLEditingView",
                           descriptions);
 }
@@ -347,7 +347,7 @@ ViewInterface::Mode CellMLTextViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::EditingMode;
 }
 
 //==============================================================================
@@ -389,8 +389,8 @@ QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   !Core::FileManager::instance()->isNew(pFileName)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
         return nullptr;
     }
 
@@ -471,8 +471,8 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
     if (errorMessage.isEmpty() && pImport) {
         CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileContentsVersion(fileContents);
 
-        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
             errorMessage = QString("Only CellML 1.0/1.1 files can be imported.");
         }
     }
@@ -494,11 +494,11 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
         } else {
             CellmlTextViewParser parser;
 
-            if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Cellml_1_1)) {
+            if (!parser.execute(fileContents, CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
                 errorMessage = "The file could not be exported:";
 
                 for (const auto &message : parser.messages()) {
-                    if (message.type() == CellmlTextViewParserMessage::Error) {
+                    if (message.type() == CellmlTextViewParserMessage::Type::Error) {
                         errorMessage += QString("\n [%1:%2] %3").arg(message.line())
                                                                 .arg(message.column())
                                                                 .arg(message.message());

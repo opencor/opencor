@@ -75,7 +75,7 @@ class SimulationExperimentViewInformationGraphPanelAndGraphsWidget : public QSta
     Q_OBJECT
 
 public:
-    enum Mode {
+    enum class Mode {
         GraphPanel,
         Graphs
     };

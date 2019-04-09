@@ -41,7 +41,7 @@ PLUGININFO_FUNC LibXDiffPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.xmailserver.org/xdiff-lib.html\">LibXDiff</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.xmailserver.org/xdiff-lib.html\">LibXDiff</a>."));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }

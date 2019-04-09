@@ -109,7 +109,7 @@ public:
     void filePermissionsChanged();
 
 private:
-    enum InformationType {
+    enum class InformationType {
         None,
         Qualifier,
         Resource,
@@ -180,7 +180,7 @@ private:
                         bool pHasInternetConnection = true);
 
     void genericLookUp(const QString &pItemInformation = QString(),
-                       InformationType pInformationType = None);
+                       InformationType pInformationType = InformationType::None);
 
     bool isDirectTerm(const QString &pTerm) const;
 

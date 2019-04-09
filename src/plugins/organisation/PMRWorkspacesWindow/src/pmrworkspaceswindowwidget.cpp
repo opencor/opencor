@@ -138,7 +138,7 @@ int PmrWorkspacesWindowItem::type() const
 {
     // Return our type
 
-    return mType;
+    return int(mType);
 }
 
 //==============================================================================
@@ -219,11 +219,11 @@ bool PmrWorkspacesWindowProxyModel::lessThan(const QModelIndex &pSourceLeft,
     int leftType = static_cast<PmrWorkspacesWindowItem *>(mModel->itemFromIndex(pSourceLeft))->type();
     int rightType = static_cast<PmrWorkspacesWindowItem *>(mModel->itemFromIndex(pSourceRight))->type();
 
-    if (   (leftType != PmrWorkspacesWindowItem::File)
-        && (rightType == PmrWorkspacesWindowItem::File)) {
+    if (   (leftType != int(PmrWorkspacesWindowItem::Type::File))
+        && (rightType == int(PmrWorkspacesWindowItem::Type::File))) {
         return true;
-    } else if (   (leftType == PmrWorkspacesWindowItem::File)
-               && (rightType != PmrWorkspacesWindowItem::File)) {
+    } else if (   (leftType == int(PmrWorkspacesWindowItem::Type::File))
+               && (rightType != int(PmrWorkspacesWindowItem::Type::File))) {
         return false;
     } else {
         return QSortFilterProxyModel::lessThan(pSourceLeft, pSourceRight);
@@ -626,7 +626,7 @@ void PmrWorkspacesWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     for (int i = 0, iMax = items.count(); i < iMax; ++i) {
         PmrWorkspacesWindowItem *item = static_cast<PmrWorkspacesWindowItem *>(mModel->itemFromIndex(mProxyModel->mapToSource(items[i])));
 
-        if (item->type() == PmrWorkspacesWindowItem::File) {
+        if (item->type() == int(PmrWorkspacesWindowItem::Type::File)) {
             fileNames << item->fileNode()->path();
         } else {
             fileNames = QStringList();
@@ -678,7 +678,7 @@ void PmrWorkspacesWindowWidget::reset(const QString &pPmrUrl)
 
     mInitialized = false;
 
-    mMessageType = None;
+    mMessageType = MessageType::None;
     mMessage = QString();
     mAuthenticated = false;
 }
@@ -702,17 +702,17 @@ void PmrWorkspacesWindowWidget::updateGui(bool pForceUserMessageVisibility)
         }
     } else {
         switch (mMessageType) {
-        case Information:
+        case MessageType::Information:
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                Core::formatMessage(mMessage, false, true));
 
             break;
-        case Error:
+        case MessageType::Error:
             mUserMessageWidget->setIconMessage(":/oxygen/emblems/emblem-important.png",
                                                Core::formatMessage(mMessage, false, true));
 
             break;
-        case Warning:
+        case MessageType::Warning:
             mUserMessageWidget->setIconMessage(":/oxygen/status/task-attention.png",
                                                Core::formatMessage(mMessage, false, true));
 
@@ -828,7 +828,7 @@ void PmrWorkspacesWindowWidget::initialize(const PMRSupport::PmrWorkspaces &pWor
 {
     // Initialise ourselves using the given workspaces
 
-    initialize(pWorkspaces, None, QString(), true);
+    initialize(pWorkspaces, MessageType::None, QString(), true);
 }
 
 //==============================================================================
@@ -837,7 +837,7 @@ void PmrWorkspacesWindowWidget::initialize()
 {
     // Initialise ourselves
 
-    initialize(PMRSupport::PmrWorkspaces(), None, QString(), false);
+    initialize(PMRSupport::PmrWorkspaces(), MessageType::None, QString(), false);
 }
 
 //==============================================================================
@@ -987,8 +987,8 @@ void PmrWorkspacesWindowWidget::addWorkspace(PMRSupport::PmrWorkspace *pWorkspac
     retrieveWorkspaceIcons(pWorkspace, collapsedIcon, expandedIcon);
 
     PmrWorkspacesWindowItem *item = new PmrWorkspacesWindowItem(pWorkspace->isOwned()?
-                                                                    PmrWorkspacesWindowItem::OwnedWorkspace:
-                                                                    PmrWorkspacesWindowItem::Workspace,
+                                                                    PmrWorkspacesWindowItem::Type::OwnedWorkspace:
+                                                                    PmrWorkspacesWindowItem::Type::Workspace,
                                                                 this,
                                                                 mProxyModel,
                                                                 pWorkspace,
@@ -1044,7 +1044,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
         if (fileNode->hasChildren()) {
             PmrWorkspacesWindowItem *folderItem = newItem?
                                                       newItem:
-                                                      new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Folder,
+                                                      new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Type::Folder,
                                                                                   this,
                                                                                   mProxyModel,
                                                                                   pWorkspace,
@@ -1146,7 +1146,7 @@ PmrWorkspacesWindowItems PmrWorkspacesWindowWidget::populateWorkspace(PMRSupport
             } else {
                 // We don't already have an item, so create one and add it
 
-                newItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::File,
+                newItem = new PmrWorkspacesWindowItem(PmrWorkspacesWindowItem::Type::File,
                                                       this, mProxyModel,
                                                       pWorkspace, fileNode, icon);
 
@@ -1348,7 +1348,7 @@ void PmrWorkspacesWindowWidget::itemDoubleClicked()
 
     PmrWorkspacesWindowItem *item = currentItem();
 
-    if (item->type() == PmrWorkspacesWindowItem::File)
+    if (item->type() == int(PmrWorkspacesWindowItem::Type::File))
         emit openFileRequested(item->fileNode()->path());
 }
 

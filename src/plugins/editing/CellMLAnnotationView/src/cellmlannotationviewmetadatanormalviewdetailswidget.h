@@ -64,14 +64,14 @@ class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public Core::Widget
     Q_OBJECT
 
 private:
-    enum Information {
+    enum class Information {
         No,
         First,
         Any,
         Last
     };
 
-    enum InformationType {
+    enum class InformationType {
         None,
         Qualifier,
         Resource,
@@ -86,8 +86,8 @@ public:
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
-                   InformationType pInformationType = None,
-                   Information pLookUpRdfTripleInformation = First);
+                   InformationType pInformationType = InformationType::None,
+                   Information pLookUpRdfTripleInformation = Information::First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
                       bool pNeedAdditionalGuiUpdates = true);
@@ -135,7 +135,7 @@ private:
     void updateOutputHeaders();
 
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
-                       InformationType pInformationType = None);
+                       InformationType pInformationType = InformationType::None);
 
 signals:
     void qualifierLookUpRequested(const QString &pQualifier);

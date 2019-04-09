@@ -53,30 +53,30 @@ Widget::Widget(QWidget *pParent) :
 
 //==============================================================================
 
-QLayout * Widget::createLayout(LayoutType pLayoutType)
+QLayout * Widget::createLayout(Layout pLayoutType)
 {
     // Create and set a layout
 
     QLayout *layout = nullptr;
 
     switch (pLayoutType) {
-    case VerticalLayout:
+    case Layout::Vertical:
         layout = new QVBoxLayout(this);
 
         break;
-    case HorizontalLayout:
+    case Layout::Horizontal:
         layout = new QHBoxLayout(this);
 
         break;
-    case FormLayout:
+    case Layout::Form:
         layout = new QFormLayout(this);
 
         break;
-    case GridLayout:
+    case Layout::Grid:
         layout = new QGridLayout(this);
 
         break;
-    case StackedLayout:
+    case Layout::Stacked:
         layout = new QStackedLayout(this);
 
         break;
@@ -84,7 +84,7 @@ QLayout * Widget::createLayout(LayoutType pLayoutType)
 
     layout->setContentsMargins(QMargins());
 
-    if ((pLayoutType == VerticalLayout) || (pLayoutType == HorizontalLayout))
+    if ((pLayoutType == Layout::Vertical) || (pLayoutType == Layout::Horizontal))
         layout->setSpacing(0);
 
     setLayout(layout);

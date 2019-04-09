@@ -48,7 +48,7 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides core <a href=\"http://www.cellml.org/\">CellML</a> editing view facilities."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Editing, false, false,
+    return new PluginInfo(PluginInfo::Category::Editing, false, false,
                           QStringList() << "CellMLSupport" << "EditingView" << "MathMLViewerWidget",
                           descriptions);
 }
@@ -216,10 +216,10 @@ Gui::MenuActions CellMLEditingViewPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationSeparator);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsCellmlValidationAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsCellmlValidationSeparator);
 }
 
 //==============================================================================

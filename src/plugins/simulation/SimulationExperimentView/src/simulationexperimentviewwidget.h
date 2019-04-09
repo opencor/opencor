@@ -99,7 +99,7 @@ public:
     quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::None);
+                                SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::Task::None);
 
 private:
     SimulationExperimentViewPlugin *mPlugin;

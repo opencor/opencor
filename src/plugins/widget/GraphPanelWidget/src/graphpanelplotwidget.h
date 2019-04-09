@@ -269,7 +269,7 @@ protected:
     void paintEvent(QPaintEvent *pEvent) override;
 
 private:
-    enum Position {
+    enum class Position {
         TopLeft,
         TopRight,
         BottomLeft,
@@ -379,7 +379,7 @@ class GRAPHPANELWIDGET_EXPORT GraphPanelPlotWidget : public QwtPlot,
     Q_OBJECT
 
 public:
-    enum Action {
+    enum class Action {
         None,
         Pan,
         ShowCoordinates,
@@ -387,7 +387,7 @@ public:
         ZoomRegion
     };
 
-    enum Optimization {
+    enum class Optimization {
         Default,
         Linear,
         Logarithmic
@@ -418,9 +418,9 @@ public:
     bool isOptimizedAxes() const;
 
     void optimizeAxisX(double &pMin, double &pMax,
-                       Optimization pOptimization = Default);
+                       Optimization pOptimization = Optimization::Default);
     void optimizeAxisY(double &pMin, double &pMax,
-                       Optimization pOptimization = Default);
+                       Optimization pOptimization = Optimization::Default);
 
     double minX() const;
     double maxX() const;
@@ -540,7 +540,7 @@ protected:
     void wheelEvent(QWheelEvent *pEvent) override;
 
 private:
-    enum Scaling {
+    enum class Scaling {
         NoScaling,
         ScalingIn,
         BigScalingIn,

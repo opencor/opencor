@@ -47,7 +47,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to annotate <a href=\"http://www.cellml.org/\">CellML</a> files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "CellMLSupport" << "WebViewerWidget",
                           descriptions);
 }
@@ -248,7 +248,7 @@ ViewInterface::Mode CellMLAnnotationViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::EditingMode;
 }
 
 //==============================================================================
@@ -290,8 +290,8 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   Core::FileManager::instance()->isNew(pFileName)
-        || (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1))) {
+        || (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1))) {
         return nullptr;
     }
 

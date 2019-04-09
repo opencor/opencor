@@ -121,7 +121,7 @@ void unsetNlaSolver(const QString &pRuntimeAddress);
 
 //==============================================================================
 
-enum Type {
+enum class Type {
     Nla,
     Ode
 };
@@ -131,7 +131,7 @@ enum Type {
 class Property
 {
 public:
-    enum Type {
+    enum class Type {
         Boolean,
         Integer,
         IntegerGt0,

@@ -134,7 +134,7 @@ void CentralWidgetMode::addViewPlugin(Plugin *pViewPlugin)
 
 CentralWidget::CentralWidget(QWidget *pParent) :
     Widget(pParent),
-    mState(Starting),
+    mState(State::Starting),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedFileTypePlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -165,13 +165,13 @@ CentralWidget::CentralWidget(QWidget *pParent) :
 
     // Create our modes
 
-    mModes.insert(ViewInterface::EditingMode, new CentralWidgetMode(this));
-    mModes.insert(ViewInterface::SimulationMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::EditingMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::SimulationMode, new CentralWidgetMode(this));
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModes.insert(ViewInterface::SampleMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::SampleMode, new CentralWidgetMode(this));
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModes.insert(ViewInterface::TestMode, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Mode::TestMode, new CentralWidgetMode(this));
 #endif
     // Note: these will be deleted in CentralWidget's destructor...
 
@@ -277,7 +277,7 @@ CentralWidget::~CentralWidget()
     // we may get a segmentation fault (should there be a need to switch from
     // one view to another)
 
-    mState = Stopping;
+    mState = State::Stopping;
 
     // Close all the files
     // Note: we force the closing of all the files since canClose() will have
@@ -360,7 +360,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
                                     fileName;
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings.value(SettingsFileMode.arg(fileNameOrUrl)).toString());
 
-        if (fileMode != ViewInterface::UnknownMode)
+        if (fileMode != ViewInterface::Mode::UnknownMode)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
 
         QMap<int, int> modeViewTabIndexes = QMap<int, int>();
@@ -410,7 +410,7 @@ void CentralWidget::loadSettings(QSettings &pSettings)
     if (mFileNames.isEmpty()) {
         ViewInterface::Mode fileMode = ViewInterface::modeFromString(pSettings.value(SettingsFileMode.arg(QString())).toString());
 
-        if (fileMode != ViewInterface::UnknownMode)
+        if (fileMode != ViewInterface::Mode::UnknownMode)
             setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(fileMode));
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
@@ -549,7 +549,7 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
     // Update our state now that our plugins  are fully ready
 
-    mState = Idling;
+    mState = State::Idling;
 
     // Update the GUI
 
@@ -573,16 +573,16 @@ void CentralWidget::retranslateUi()
 {
     // Retranslate our modes tab bar
 
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::EditingMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::EditingMode, -1),
                           tr("Editing"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SimulationMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::SimulationMode, -1),
                           tr("Simulation"));
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::SampleMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::SampleMode, -1),
                           tr("Sample"));
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::TestMode, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Mode::TestMode, -1),
                           tr("Test"));
 #endif
 
@@ -899,7 +899,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             fileManagerInstance->create(fileNameOrUrl, fileContents);
 
 #ifdef QT_DEBUG
-            if (status != FileManager::Created)
+            if (status != FileManager::Status::Created)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
 #endif
         } else {
@@ -915,7 +915,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             }
         }
     } else {
-        openFile(fileName, File::Remote, fileNameOrUrl);
+        openFile(fileName, File::Type::Remote, fileNameOrUrl);
     }
 }
 
@@ -1025,7 +1025,7 @@ void CentralWidget::duplicateFile()
     fileManagerInstance->duplicate(fileName);
 
 #ifdef QT_DEBUG
-    if (status != FileManager::Duplicated)
+    if (status != FileManager::Status::Duplicated)
         qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated.", __FILE__, __LINE__, qPrintable(fileName));
 #endif
 }
@@ -1046,7 +1046,7 @@ void CentralWidget::toggleLockedFile()
 
     bool fileLocked = fileManagerInstance->isLocked(fileName);
 
-    if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet) {
+    if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::Status::LockedNotSet) {
         warningMessageBox(fileLocked?
                               tr("Unlock File"):
                               tr("Lock File"),
@@ -1161,7 +1161,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         fileManagerInstance->rename(oldFileName, newFileName);
 
 #ifdef QT_DEBUG
-        if (status != FileManager::Renamed)
+        if (status != FileManager::Status::Renamed)
             qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'.", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
     }
@@ -1187,7 +1187,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         fileManagerInstance->unmanage(newFileName);
 
 #ifdef QT_DEBUG
-        if (status != FileManager::Removed)
+        if (status != FileManager::Status::Removed)
             qFatal("FATAL ERROR | %s:%d: '%s' did not get unmanaged.", __FILE__, __LINE__, qPrintable(newFileName));
 
         status =
@@ -1195,7 +1195,7 @@ bool CentralWidget::saveFile(int pIndex, bool pNeedNewFileName)
         fileManagerInstance->manage(newFileName);
 
 #ifdef QT_DEBUG
-        if (status != FileManager::Added)
+        if (status != FileManager::Status::Added)
             qFatal("FATAL ERROR | %s:%d: '%s' did not get managed.", __FILE__, __LINE__, qPrintable(newFileName));
 #endif
     }
@@ -1293,7 +1293,7 @@ bool CentralWidget::closeFile(int pIndex, bool pForceClosing)
 {
     // Make sure that we are not updating the GUI
 
-    if (mState == UpdatingGui)
+    if (mState == State::UpdatingGui)
         return false;
 
     // Close the file at the given tab index or the current tab index, if no tab
@@ -1431,7 +1431,7 @@ bool CentralWidget::selectMode(const QString &pModeName)
 
     ViewInterface::Mode mode = ViewInterface::modeFromString(pModeName);
 
-    if (mode != ViewInterface::UnknownMode) {
+    if (mode != ViewInterface::Mode::UnknownMode) {
         setTabBarCurrentIndex(mModeTabs, mModeModeTabIndexes.value(mode));
 
         return true;
@@ -1606,14 +1606,14 @@ void CentralWidget::setTabBarCurrentIndex(TabBarWidget *pTabBar, int pIndex)
     // temporarily disabled its handling of the currentChanged() signal, if
     // needed
 
-    if (mState == UpdatingGui) {
+    if (mState == State::UpdatingGui) {
         disconnect(pTabBar, &TabBarWidget::currentChanged,
                    this, &CentralWidget::updateGui);
     }
 
     pTabBar->setCurrentIndex(pIndex);
 
-    if (mState == UpdatingGui) {
+    if (mState == State::UpdatingGui) {
         connect(pTabBar, &TabBarWidget::currentChanged,
                 this, &CentralWidget::updateGui);
     }
@@ -1663,7 +1663,7 @@ void CentralWidget::updateGui()
 
     TabBarWidget *tabBar = qobject_cast<TabBarWidget *>(sender());
 
-    if (mState != Idling) {
+    if (mState != State::Idling) {
         if (tabBar)
             setTabBarCurrentIndex(tabBar, tabBar->oldIndex());
 
@@ -1672,7 +1672,7 @@ void CentralWidget::updateGui()
 
     // Update our state to reflect the fact that we are updating the GUI
 
-    mState = UpdatingGui;
+    mState = State::UpdatingGui;
 
     // Keep track of our future old tab index, if possible
 
@@ -1765,26 +1765,26 @@ void CentralWidget::updateGui()
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-    mModes.value(ViewInterface::EditingMode)->viewTabs()->hide();
-    mModes.value(ViewInterface::SimulationMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::EditingMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::SimulationMode)->viewTabs()->hide();
 #ifdef ENABLE_SAMPLE_PLUGINS
-    mModes.value(ViewInterface::SampleMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::SampleMode)->viewTabs()->hide();
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    mModes.value(ViewInterface::TestMode)->viewTabs()->hide();
+    mModes.value(ViewInterface::Mode::TestMode)->viewTabs()->hide();
 #endif
 
-    if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::EditingMode))
-        mModes.value(ViewInterface::EditingMode)->viewTabs()->show();
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SimulationMode))
-        mModes.value(ViewInterface::SimulationMode)->viewTabs()->show();
+    if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::EditingMode))
+        mModes.value(ViewInterface::Mode::EditingMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::SimulationMode))
+        mModes.value(ViewInterface::Mode::SimulationMode)->viewTabs()->show();
 #ifdef ENABLE_SAMPLE_PLUGINS
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::SampleMode))
-        mModes.value(ViewInterface::SampleMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::SampleMode))
+        mModes.value(ViewInterface::Mode::SampleMode)->viewTabs()->show();
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::TestMode))
-        mModes.value(ViewInterface::TestMode)->viewTabs()->show();
+    else if (fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Mode::TestMode))
+        mModes.value(ViewInterface::Mode::TestMode)->viewTabs()->show();
 #endif
 
     // Ask the GUI interface for the widget to use the current file (should
@@ -1914,7 +1914,7 @@ void CentralWidget::updateGui()
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);
 
-    mState = Idling;
+    mState = State::Idling;
 }
 
 //==============================================================================
@@ -2141,7 +2141,7 @@ void CentralWidget::fileCreated(const QString &pFileName, const QString &pUrl)
     // A file got created, so open it as new if no URL is provided or remote
     // otherwise
 
-    openFile(pFileName, pUrl.isEmpty()?File::New:File::Remote, pUrl);
+    openFile(pFileName, pUrl.isEmpty()?File::Type::New:File::Type::Remote, pUrl);
 }
 
 //==============================================================================
@@ -2150,7 +2150,7 @@ void CentralWidget::fileDuplicated(const QString &pFileName)
 {
     // A file got duplicated, so open it as new
 
-    openFile(pFileName, File::New);
+    openFile(pFileName, File::Type::New);
 }
 
 //==============================================================================

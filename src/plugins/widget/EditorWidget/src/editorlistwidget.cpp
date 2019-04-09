@@ -70,7 +70,7 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
     setToolTip(text());
 
     switch (pType) {
-    case Unknown:
+    case Type::Unknown:
         // We should never come here...
 
 #ifdef QT_DEBUG
@@ -78,23 +78,23 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
 #else
         break;
 #endif
-    case Error:
+    case Type::Error:
         setIcon(ErrorIcon);
 
         break;
-    case Warning:
+    case Type::Warning:
         setIcon(WarningIcon);
 
         break;
-    case Hint:
+    case Type::Hint:
         setIcon(HintIcon);
 
         break;
-    case Information:
+    case Type::Information:
         setIcon(InformationIcon);
 
         break;
-    case Fatal:
+    case Type::Fatal:
         setIcon(FatalIcon);
 
         break;
@@ -108,7 +108,7 @@ int EditorListItem::type() const
 {
     // Return the item's type
 
-    return mType;
+    return int(mType);
 }
 
 //==============================================================================
@@ -302,24 +302,26 @@ void EditorListWidget::copyToClipboard()
         EditorListItem *item = static_cast<EditorListItem *>(mModel->item(i));
         QString itemType;
 
-        switch (item->type()) {
-        case EditorListItem::Error:
+        switch (EditorListItem::Type(item->type())) {
+        case EditorListItem::Type::Unknown:
+            break;
+        case EditorListItem::Type::Error:
             itemType = tr("Error");
 
             break;
-        case EditorListItem::Warning:
+        case EditorListItem::Type::Warning:
             itemType = tr("Warning");
 
             break;
-        case EditorListItem::Hint:
+        case EditorListItem::Type::Hint:
             itemType = tr("Hint");
 
             break;
-        case EditorListItem::Information:
+        case EditorListItem::Type::Information:
             itemType = tr("Information");
 
             break;
-        case EditorListItem::Fatal:
+        case EditorListItem::Type::Fatal:
             itemType = tr("Fatal");
 
             break;

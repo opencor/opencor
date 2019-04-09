@@ -86,13 +86,13 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 
                 if (   !pluginDependency
                     || (   pluginDependency
-                        && (pluginDependency->status() != Loaded))) {
+                        && (pluginDependency->status() != Status::Loaded))) {
                     // Either the plugin dependency couldn't be found or it
                     // could be found but it isn't loaded
 
                     pluginDependenciesLoaded = false;
 
-                    mStatus = MissingOrInvalidDependencies;
+                    mStatus = Status::MissingOrInvalidDependencies;
 
                     if (!mStatusErrors.isEmpty())
                         mStatusErrors += '\n';
@@ -163,7 +163,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                         // One or several of the official interfaces used by the
                         // plugin are too old
 
-                        mStatus = OldPlugin;
+                        mStatus = Status::OldPlugin;
                     } else {
                         // Check for the Core plugin/interface and CLI support
 
@@ -171,24 +171,24 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             // We are dealing with a plugin that supports the
                             // Core interface, but it's not the Core plugin
 
-                            mStatus = NotCorePlugin;
+                            mStatus = Status::NotCorePlugin;
                         } else if (!coreInterface && !mName.compare(CorePluginName)) {
                             // We are dealing with the Core plugin, but it
                             // doesn't support the Core interface
 
-                            mStatus = InvalidCorePlugin;
+                            mStatus = Status::InvalidCorePlugin;
                         } else if (cliInterface && !pInfo->hasCliSupport()) {
                             // We are dealing with a plugin that supports the
                             // CLI interface, but it doesn't claim to have CLI
                             // support
 
-                            mStatus = NotCliPluginNoCliSupport;
+                            mStatus = Status::NotCliPluginNoCliSupport;
                         } else if (!cliInterface && pInfo->hasCliSupport()) {
                             // We are dealing with a plugin that is supposed to
                             // have CLI support, but it doesn't support the CLI
                             // interface
 
-                            mStatus = NotCliPluginNoCliInterface;
+                            mStatus = Status::NotCliPluginNoCliInterface;
                         } else {
                             // So far so good, so now check whether the plugin
                             // defines new interfaces and, if so, keep track of
@@ -218,9 +218,9 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                             if (pluginInterfacesOk) {
                                 unloadPlugin = false;
 
-                                mStatus = Loaded;
+                                mStatus = Status::Loaded;
                             } else {
-                                mStatus = OldPlugin;
+                                mStatus = Status::OldPlugin;
                             }
                         }
                     }
@@ -231,7 +231,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                         mInstance = nullptr;
                     }
                 } else {
-                    mStatus = NotLoaded;
+                    mStatus = Status::NotLoaded;
                     mStatusErrors = pluginLoader.errorString();
                 }
             }
@@ -240,9 +240,9 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
             // wanted or not needed, depending on whether it is selectable
 
             if (pInfo->isSelectable())
-                mStatus = NotWanted;
+                mStatus = Status::NotWanted;
             else
-                mStatus = NotNeeded;
+                mStatus = Status::NotNeeded;
         }
     } else {
         // What we thought was a plugin is not actually a plugin or it is a
@@ -257,9 +257,9 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         //       since we know it will only work for a plugin that uses an old
         //       version of PluginInfo...
 
-        mStatus = Plugin::info(pFileName)?OldPlugin:NotPlugin;
+        mStatus = Plugin::info(pFileName)?Status::OldPlugin:Status::NotPlugin;
 
-        if (mStatus == NotPlugin) {
+        if (mStatus == Status::NotPlugin) {
             // Apparently, we are not dealing with a plugin, so load it so that
             // we can retrieve its corresponding error
 

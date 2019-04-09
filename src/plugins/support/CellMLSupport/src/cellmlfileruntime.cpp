@@ -63,7 +63,7 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
-                                                       ParameterType pType,
+                                                       Type pType,
                                                        int pIndex,
                                                        double *pData) :
     mName(pName),
@@ -136,7 +136,7 @@ QStringList CellmlFileRuntimeParameter::componentHierarchy() const
 
 //==============================================================================
 
-CellmlFileRuntimeParameter::ParameterType CellmlFileRuntimeParameter::type() const
+CellmlFileRuntimeParameter::Type CellmlFileRuntimeParameter::type() const
 {
     // Return our type
 
@@ -225,13 +225,13 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
     // Initialise the mapping, if needed
 
     if (Icons.isEmpty()) {
-        Icons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
-        Icons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
-        Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Data, DataIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Voi), VoiIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Constant), ConstantIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::ComputedConstant), ComputedConstantIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Rate), RateIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::State), StateIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Algebraic), AlgebraicIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Data), DataIcon);
     }
 
     return Icons;
@@ -239,11 +239,11 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
 
 //==============================================================================
 
-QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
+QIcon CellmlFileRuntimeParameter::icon(Type pParameterType)
 {
     // Return our corresponding icon
 
-    return icons().value(pParameterType);
+    return icons().value(int(pParameterType));
 }
 
 //==============================================================================
@@ -370,11 +370,11 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
             // Determine the type of our computation target
 
-            CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::Unknown;
+            CellmlFileRuntimeParameter::Type parameterType = CellmlFileRuntimeParameter::Type::Unknown;
 
             switch (computationTarget->type()) {
             case iface::cellml_services::VARIABLE_OF_INTEGRATION:
-                parameterType = CellmlFileRuntimeParameter::Voi;
+                parameterType = CellmlFileRuntimeParameter::Type::Voi;
 
                 break;
             case iface::cellml_services::CONSTANT:
@@ -393,23 +393,23 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                     // The computed target doesn't have an initial value, so it
                     // must be a 'computed' constant
 
-                    parameterType = CellmlFileRuntimeParameter::ComputedConstant;
+                    parameterType = CellmlFileRuntimeParameter::Type::ComputedConstant;
                 } else if (computationTarget->degree()) {
                     // The computed target has a degree, so it is effectively a
                     // rate
 
-                    parameterType = CellmlFileRuntimeParameter::Rate;
+                    parameterType = CellmlFileRuntimeParameter::Type::Rate;
                 } else {
                     // The computed target has an initial value, so it must be a
                     // 'proper' constant
 
-                    parameterType = CellmlFileRuntimeParameter::Constant;
+                    parameterType = CellmlFileRuntimeParameter::Type::Constant;
                 }
 
                 break;
             case iface::cellml_services::STATE_VARIABLE:
             case iface::cellml_services::PSEUDOSTATE_VARIABLE:
-                parameterType = CellmlFileRuntimeParameter::State;
+                parameterType = CellmlFileRuntimeParameter::Type::State;
 
                 break;
             case iface::cellml_services::ALGEBRAIC:
@@ -420,17 +420,17 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                 //       are dealing with a rate variable...
 
                 if (computationTarget->degree())
-                    parameterType = CellmlFileRuntimeParameter::Rate;
+                    parameterType = CellmlFileRuntimeParameter::Type::Rate;
                 else
-                    parameterType = CellmlFileRuntimeParameter::Algebraic;
+                    parameterType = CellmlFileRuntimeParameter::Type::Algebraic;
 
                 break;
             case iface::cellml_services::FLOATING:
-                parameterType = CellmlFileRuntimeParameter::Floating;
+                parameterType = CellmlFileRuntimeParameter::Type::Floating;
 
                 break;
             case iface::cellml_services::LOCALLY_BOUND:
-                parameterType = CellmlFileRuntimeParameter::LocallyBound;
+                parameterType = CellmlFileRuntimeParameter::Type::LocallyBound;
 
                 break;
             }
@@ -438,8 +438,8 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
             // Keep track of our computation target, should its type be of
             // interest
 
-            if (   (parameterType != CellmlFileRuntimeParameter::Floating)
-                && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
+            if (   (parameterType != CellmlFileRuntimeParameter::Type::Floating)
+                && (parameterType != CellmlFileRuntimeParameter::Type::LocallyBound)) {
                 CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
                                                                                        int(computationTarget->degree()),
                                                                                        QString::fromStdWString(realVariable->unitsName()),
@@ -447,7 +447,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                                                                                        parameterType,
                                                                                        int(computationTarget->assignedIndex()));
 
-                if (parameterType == CellmlFileRuntimeParameter::Voi) {
+                if (parameterType == CellmlFileRuntimeParameter::Type::Voi) {
                     if (!mVoi) {
                         mVoi = parameter;
 
@@ -466,7 +466,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                         //       (!?), as is for example the case with
                         //       [CellMLSupport]/tests/data/bond_graph_model_old.cellml...
 
-                        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                                    tr("a model can have only one variable of integration"));
                     }
                 }
@@ -541,10 +541,10 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
     // compute it and check that everything went fine
 
     if (modelCode.contains("defint(func")) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    tr("definite integrals are not yet supported"));
     } else if (!mCompilerEngine->compileCode(modelCode)) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    mCompilerEngine->error());
     }
 
@@ -571,7 +571,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
         if (   !mInitializeConstants || !mComputeComputedConstants
             || !mComputeVariables || !mComputeRates) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("an unexpected problem occurred while trying to retrieve the model functions"));
 
             reset(true, false, true);
@@ -614,7 +614,7 @@ void CellmlFileRuntime::importData(const QString &pName,
 {
     mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
                                                   pComponentHierarchy,
-                                                  CellmlFileRuntimeParameter::Data,
+                                                  CellmlFileRuntimeParameter::Type::Data,
                                                   pIndex, pData);
 }
 
@@ -717,7 +717,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pData) con
     CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
 
     for (auto parameter : mParameters) {
-        if (   (parameter->type() == CellmlFileRuntimeParameter::Data)
+        if (   (parameter->type() == CellmlFileRuntimeParameter::Type::Data)
             && (!pData || (parameter->data() == pData))) {
             res << parameter;
         }
@@ -789,7 +789,7 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues,
 
 void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo)
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                tr("the model code could not be generated (%1)").arg(pExtraInfo));
 }
 
@@ -797,7 +797,7 @@ void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo
 
 void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                tr("an unknown problem occurred while trying to generate the model code"));
 }
 
@@ -817,17 +817,17 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
         } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
         } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
         }
     } else {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage)));
     }
 }

@@ -37,7 +37,7 @@ PLUGININFO_FUNC ZIPSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support the <a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> format."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter le format <a href=\"https://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a>."));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "Core" << "zlib",
                           descriptions);
 }

@@ -85,28 +85,28 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
 
     // Mappings for relational operators
 
-                                           mMathmlNodeTypes.insert("eq", EqMathmlNode);
-    mMappings.insert("neq", " <> ");       mMathmlNodeTypes.insert("neq", NeqMathmlNode);
-    mMappings.insert("lt", " < ");         mMathmlNodeTypes.insert("lt", LtMathmlNode);
-    mMappings.insert("leq", " <= ");       mMathmlNodeTypes.insert("leq", LeqMathmlNode);
-    mMappings.insert("geq", " >= ");       mMathmlNodeTypes.insert("geq", GeqMathmlNode);
-    mMappings.insert("gt", " > ");         mMathmlNodeTypes.insert("gt", GtMathmlNode);
+                                           mMathmlNodeTypes.insert("eq", MathmlNodeType::EqMathmlNode);
+    mMappings.insert("neq", " <> ");       mMathmlNodeTypes.insert("neq", MathmlNodeType::NeqMathmlNode);
+    mMappings.insert("lt", " < ");         mMathmlNodeTypes.insert("lt", MathmlNodeType::LtMathmlNode);
+    mMappings.insert("leq", " <= ");       mMathmlNodeTypes.insert("leq", MathmlNodeType::LeqMathmlNode);
+    mMappings.insert("geq", " >= ");       mMathmlNodeTypes.insert("geq", MathmlNodeType::GeqMathmlNode);
+    mMappings.insert("gt", " > ");         mMathmlNodeTypes.insert("gt", MathmlNodeType::GtMathmlNode);
 
     // Mappings for arithmetic operators
 
-    mMappings.insert("plus", "+");         mMathmlNodeTypes.insert("plus", PlusMathmlNode);
-    mMappings.insert("minus", "-");        mMathmlNodeTypes.insert("minus", MinusMathmlNode);
-    mMappings.insert("times", "*");        mMathmlNodeTypes.insert("times", TimesMathmlNode);
-    mMappings.insert("divide", "/");       mMathmlNodeTypes.insert("divide", DivideMathmlNode);
+    mMappings.insert("plus", "+");         mMathmlNodeTypes.insert("plus", MathmlNodeType::PlusMathmlNode);
+    mMappings.insert("minus", "-");        mMathmlNodeTypes.insert("minus", MathmlNodeType::MinusMathmlNode);
+    mMappings.insert("times", "*");        mMathmlNodeTypes.insert("times", MathmlNodeType::TimesMathmlNode);
+    mMappings.insert("divide", "/");       mMathmlNodeTypes.insert("divide", MathmlNodeType::DivideMathmlNode);
     mMappings.insert("ceiling", "ceil");
     mMappings.insert("floor", "floor");
     mMappings.insert("factorial", "fact");
 
     // Mappings for arithmetic operators
 
-    mMappings.insert("and", " and ");      mMathmlNodeTypes.insert("and", AndMathmlNode);
-    mMappings.insert("or", " or ");        mMathmlNodeTypes.insert("or", OrMathmlNode);
-    mMappings.insert("xor", " xor ");      mMathmlNodeTypes.insert("xor", XorMathmlNode);
+    mMappings.insert("and", " and ");      mMathmlNodeTypes.insert("and", MathmlNodeType::AndMathmlNode);
+    mMappings.insert("or", " or ");        mMathmlNodeTypes.insert("or", MathmlNodeType::OrMathmlNode);
+    mMappings.insert("xor", " xor ");      mMathmlNodeTypes.insert("xor", MathmlNodeType::XorMathmlNode);
 
     // Mappings for constants
 
@@ -260,7 +260,7 @@ void CellMLTextViewConverter::reset()
     mPrevIndent = QString();
     mIndent = QString();
 
-    mLastOutputType = None;
+    mLastOutputType = OutputType::None;
 
     mErrorMessage = QString();
     mErrorLine = -1;
@@ -312,10 +312,10 @@ void CellMLTextViewConverter::outputString(OutputType pOutputType,
     // Output the given string
 
     if (pString.isEmpty()) {
-        if (mLastOutputType != EmptyLine)
+        if (mLastOutputType != OutputType::EmptyLine)
             mOutput += '\n';
     } else {
-        if (pOutputType == Comment) {
+        if (pOutputType == OutputType::Comment) {
             // When converting a comment that is within a piecewise equation,
             // mIndent will be wrong (since it will have been 'incremented'), so
             // we need to rely on the indent that we previously used
@@ -446,10 +446,10 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 {
     // Start processing the given model node
 
-    if (mLastOutputType == Comment)
+    if (mLastOutputType == OutputType::Comment)
         outputString();
 
-    outputString(DefModel,
+    outputString(OutputType::DefModel,
                  QString("def model%1 %2 as").arg(cmetaId(pDomNode))
                                              .arg(cellmlAttributeNodeValue(pDomNode, "name")));
 
@@ -492,7 +492,7 @@ bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 
     unindent();
 
-    outputString(EndDef, "enddef;");
+    outputString(OutputType::EndDef, "enddef;");
 
     return true;
 }
@@ -541,17 +541,17 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
     // Note #2: unlike for other nodes, we don't trim its value since leading
     //          spaces may be used in a comment...
 
-    if (   (mLastOutputType == Comment)
-        || (mLastOutputType == Comp) || (mLastOutputType == DefBaseUnit)
-        || (mLastOutputType == EndComp) || (mLastOutputType == EndDef)
-        || (mLastOutputType == Equation) || (mLastOutputType == ImportComp)
-        || (mLastOutputType == ImportUnit) || (mLastOutputType == Unit)
-        || (mLastOutputType == Var) || (mLastOutputType == Vars)) {
+    if (   (mLastOutputType == OutputType::Comment)
+        || (mLastOutputType == OutputType::Comp) || (mLastOutputType == OutputType::DefBaseUnit)
+        || (mLastOutputType == OutputType::EndComp) || (mLastOutputType == OutputType::EndDef)
+        || (mLastOutputType == OutputType::Equation) || (mLastOutputType == OutputType::ImportComp)
+        || (mLastOutputType == OutputType::ImportUnit) || (mLastOutputType == OutputType::Unit)
+        || (mLastOutputType == OutputType::Var) || (mLastOutputType == OutputType::Vars)) {
         outputString();
     }
 
     for (const auto &commentLine : commentLines)
-        outputString(Comment, QString("//%1").arg(processCommentString(commentLine)));
+        outputString(OutputType::Comment, QString("//%1").arg(processCommentString(commentLine)));
 }
 
 //==============================================================================
@@ -569,12 +569,12 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 {
     // Start processing the given import node
 
-    if (   (mLastOutputType == Comment)
-        || (mLastOutputType == EndDef)) {
+    if (   (mLastOutputType == OutputType::Comment)
+        || (mLastOutputType == OutputType::EndDef)) {
         outputString();
     }
 
-    outputString(DefImport,
+    outputString(OutputType::DefImport,
                  QString("def import%1 using \"%2\" for").arg(cmetaId(pDomNode))
                                                          .arg(attributeNodeValue(pDomNode, CellMLSupport::XlinkNamespace, "href")));
 
@@ -603,7 +603,7 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 
     unindent();
 
-    outputString(EndDef, "enddef;");
+    outputString(OutputType::EndDef, "enddef;");
 
     return true;
 }
@@ -628,13 +628,13 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
     bool isBaseUnits = !baseUnits.compare("yes");
 
     if (!pInImportNode && !isBaseUnits) {
-        if (   (mLastOutputType == Comment)
-            || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
-            || (mLastOutputType == Equation) || (mLastOutputType == Var)) {
+        if (   (mLastOutputType == OutputType::Comment)
+            || (mLastOutputType == OutputType::DefBaseUnit) || (mLastOutputType == OutputType::EndDef)
+            || (mLastOutputType == OutputType::Equation) || (mLastOutputType == OutputType::Var)) {
             outputString();
         }
 
-        outputString(DefUnit,
+        outputString(OutputType::DefUnit,
                      QString("def unit%1 %2 as").arg(cmetaId(pDomNode))
                                                 .arg(cellmlAttributeNodeValue(pDomNode, "name")));
 
@@ -660,29 +660,30 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
     // Finish processing the given units node
 
     if (pInImportNode) {
-        if (   (mLastOutputType == Comment)
-            || (mLastOutputType == ImportComp)) {
+        if (   (mLastOutputType == OutputType::Comment)
+            || (mLastOutputType == OutputType::ImportComp)) {
             outputString();
         }
 
-        outputString(ImportUnit,
+        outputString(OutputType::ImportUnit,
                      QString("unit%1 %2 using unit %3;").arg(cmetaId(pDomNode))
                                                         .arg(cellmlAttributeNodeValue(pDomNode, "name"))
                                                         .arg(cellmlAttributeNodeValue(pDomNode, "units_ref")));
     } else if (isBaseUnits) {
-        if (   (mLastOutputType == Comment)
-            || (mLastOutputType == EndDef) || (mLastOutputType == Equation)
-            || (mLastOutputType == Var)) {
+        if (   (mLastOutputType == OutputType::Comment)
+            || (mLastOutputType == OutputType::EndDef)
+            || (mLastOutputType == OutputType::Equation)
+            || (mLastOutputType == OutputType::Var)) {
             outputString();
         }
 
-        outputString(DefBaseUnit,
+        outputString(OutputType::DefBaseUnit,
                      QString("def unit%1 %2 as base unit;").arg(cmetaId(pDomNode))
                                                            .arg(cellmlAttributeNodeValue(pDomNode, "name")));
     } else {
         unindent();
 
-        outputString(EndDef, "enddef;");
+        outputString(OutputType::EndDef, "enddef;");
     }
 
     return true;
@@ -730,10 +731,10 @@ bool CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
     if (!offset.isEmpty())
         parameters += (parameters.isEmpty()?QString():", ")+"off: "+offset;
 
-    if (mLastOutputType == Comment)
+    if (mLastOutputType == OutputType::Comment)
         outputString();
 
-    outputString(Unit,
+    outputString(OutputType::Unit,
                  QString("unit%1 %2%3;").arg(cmetaId(pDomNode))
                                         .arg(cellmlAttributeNodeValue(pDomNode, "units"))
                                         .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
@@ -749,12 +750,12 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
     // Start processing the given component node
 
     if (!pInImportNode) {
-        if (   (mLastOutputType == Comment)
-            || (mLastOutputType == EndDef)) {
+        if (   (mLastOutputType == OutputType::Comment)
+            || (mLastOutputType == OutputType::EndDef)) {
             outputString();
         }
 
-        outputString(DefComp,
+        outputString(OutputType::DefComp,
                      QString("def comp%1 %2 as").arg(cmetaId(pDomNode))
                                                 .arg(cellmlAttributeNodeValue(pDomNode, "name")));
 
@@ -789,19 +790,19 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
     // Finish processing the given component node
 
     if (pInImportNode) {
-        if (   (mLastOutputType == Comment)
-            || (mLastOutputType == ImportUnit)) {
+        if (   (mLastOutputType == OutputType::Comment)
+            || (mLastOutputType == OutputType::ImportUnit)) {
             outputString();
         }
 
-        outputString(ImportComp,
+        outputString(OutputType::ImportComp,
                      QString("comp%1 %2 using comp %3;").arg(cmetaId(pDomNode))
                                                         .arg(cellmlAttributeNodeValue(pDomNode, "name"))
                                                         .arg(cellmlAttributeNodeValue(pDomNode, "component_ref")));
     } else {
         unindent();
 
-        outputString(EndDef, "enddef;");
+        outputString(OutputType::EndDef, "enddef;");
     }
 
     return true;
@@ -845,13 +846,14 @@ bool CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
     if (!privateInterface.isEmpty())
         parameters += (parameters.isEmpty()?QString():", ")+"priv: "+privateInterface;
 
-    if (   (mLastOutputType == Comment)
-        || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
-        || (mLastOutputType == Equation)) {
+    if (   (mLastOutputType == OutputType::Comment)
+        || (mLastOutputType == OutputType::DefBaseUnit)
+        || (mLastOutputType == OutputType::EndDef)
+        || (mLastOutputType == OutputType::Equation)) {
         outputString();
     }
 
-    outputString(Var,
+    outputString(OutputType::Var,
                  QString("var%1 %2: %3%4;").arg(cmetaId(pDomNode))
                                            .arg(cellmlAttributeNodeValue(pDomNode, "name"))
                                            .arg(cellmlAttributeNodeValue(pDomNode, "units"))
@@ -885,19 +887,19 @@ bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
                 return false;
             } else if (!equation.isEmpty()) {
                 // Note: should one or several warnings be generated, then it
-                //       may be possible that no equation has been generated, 
+                //       may be possible that no equation has been generated,
                 //       hence our check...
 
-                if (   (mLastOutputType == Comment)
-                    || (mLastOutputType == DefBaseUnit)
-                    || (mLastOutputType == EndDef)
-                    || (mLastOutputType == Var)
+                if (   (mLastOutputType == OutputType::Comment)
+                    || (mLastOutputType == OutputType::DefBaseUnit)
+                    || (mLastOutputType == OutputType::EndDef)
+                    || (mLastOutputType == OutputType::Var)
                     ||  mPiecewiseStatementUsed
                     || (mPiecewiseStatementUsed != mOldPiecewiseStatementUsed)) {
                     outputString();
                 }
 
-                outputString(Equation, equation+";");
+                outputString(OutputType::Equation, equation+";");
             }
         }
     }
@@ -1381,7 +1383,7 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
     QDomNodeList childNodes = pDomNode.childNodes();
     QDomNode childNode = QDomNode();
     int childElementNodeNumber = 0;
-    MathmlNodeType operatorNodeType = UnknownMathmlNode;
+    MathmlNodeType operatorNodeType = MathmlNodeType::UnknownMathmlNode;
 
     if (childNodesCount(pDomNode) == 2) {
 
@@ -1399,15 +1401,15 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                     if (pHasError) {
                         return QString();
                     } else {
-                        if (operatorNodeType == PlusMathmlNode) {
+                        if (operatorNodeType == MathmlNodeType::PlusMathmlNode) {
                             res = pOperator+operand;
-                        } else if (operatorNodeType == MinusMathmlNode) {
+                        } else if (operatorNodeType == MathmlNodeType::MinusMathmlNode) {
                             // Minus node
 
                             switch (mathmlNodeType(childNode)) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case PlusMathmlNode: case MinusMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 res = pOperator+"("+operand+")";
 
                                 break;
@@ -1425,7 +1427,7 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
         }
     } else {
         QDomNode leftOperandNode = QDomNode();
-        MathmlNodeType leftOperandNodeType = UnknownMathmlNode;
+        MathmlNodeType leftOperandNodeType = MathmlNodeType::UnknownMathmlNode;
         QString leftOperand = QString();
 
         for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
@@ -1452,10 +1454,10 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                         return QString();
                     } else {
                         switch (operatorNodeType) {
-                        case PlusMathmlNode:
+                        case MathmlNodeType::PlusMathmlNode:
                             switch (leftOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
                                 break;
@@ -1464,8 +1466,8 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             switch (rightOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
                                 break;
@@ -1474,10 +1476,10 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             break;
-                        case MinusMathmlNode:
+                        case MathmlNodeType::MinusMathmlNode:
                             switch (leftOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
                                 break;
@@ -1486,13 +1488,13 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             switch (rightOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case MinusMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::MinusMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
                                 break;
-                            case PlusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode:
                                 if (childNodesCount(rightOperandNode) > 2)
                                     rightOperand = "("+rightOperand+")";
 
@@ -1502,14 +1504,14 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             break;
-                        case TimesMathmlNode:
+                        case MathmlNodeType::TimesMathmlNode:
                             switch (leftOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(leftOperandNode) > 2)
                                     leftOperand = "("+leftOperand+")";
 
@@ -1519,12 +1521,12 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             switch (rightOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(rightOperandNode) > 2)
                                     rightOperand = "("+rightOperand+")";
 
@@ -1534,14 +1536,14 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             break;
-                        case DivideMathmlNode:
+                        case MathmlNodeType::DivideMathmlNode:
                             switch (leftOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(leftOperandNode) > 2)
                                     leftOperand = "("+leftOperand+")";
 
@@ -1551,13 +1553,13 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             switch (rightOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case TimesMathmlNode: case DivideMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::TimesMathmlNode: case MathmlNodeType::DivideMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(rightOperandNode) > 2)
                                     rightOperand = "("+rightOperand+")";
 
@@ -1567,14 +1569,14 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             break;
-                        case AndMathmlNode:
+                        case MathmlNodeType::AndMathmlNode:
                             switch (leftOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(leftOperandNode) > 2)
                                     leftOperand = "("+leftOperand+")";
 
@@ -1584,12 +1586,12 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             switch (rightOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case OrMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(rightOperandNode) > 2)
                                     rightOperand = "("+rightOperand+")";
 
@@ -1599,14 +1601,14 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             break;
-                        case OrMathmlNode:
+                        case MathmlNodeType::OrMathmlNode:
                             switch (leftOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(leftOperandNode) > 2)
                                     leftOperand = "("+leftOperand+")";
 
@@ -1616,12 +1618,12 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             switch (rightOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case XorMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(rightOperandNode) > 2)
                                     rightOperand = "("+rightOperand+")";
 
@@ -1631,14 +1633,14 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             break;
-                        case XorMathmlNode:
+                        case MathmlNodeType::XorMathmlNode:
                             switch (leftOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(leftOperandNode) > 2)
                                     leftOperand = "("+leftOperand+")";
 
@@ -1648,12 +1650,12 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                             }
 
                             switch (rightOperandNodeType) {
-                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                            case AndMathmlNode: case OrMathmlNode:
+                            case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                            case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
                                 break;
-                            case PlusMathmlNode: case MinusMathmlNode:
+                            case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode:
                                 if (childNodesCount(rightOperandNode) > 2)
                                     rightOperand = "("+rightOperand+")";
 
@@ -1937,9 +1939,9 @@ QString CellMLTextViewConverter::processNotNode(const QDomNode &pDomNode,
                     return QString();
                 } else {
                     switch (mathmlNodeType(childNode)) {
-                    case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                    case PlusMathmlNode: case MinusMathmlNode: case TimesMathmlNode: case DivideMathmlNode:
-                    case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                    case MathmlNodeType::EqMathmlNode: case MathmlNodeType::NeqMathmlNode: case MathmlNodeType::GtMathmlNode: case MathmlNodeType::LtMathmlNode: case MathmlNodeType::GeqMathmlNode: case MathmlNodeType::LeqMathmlNode:
+                    case MathmlNodeType::PlusMathmlNode: case MathmlNodeType::MinusMathmlNode: case MathmlNodeType::TimesMathmlNode: case MathmlNodeType::DivideMathmlNode:
+                    case MathmlNodeType::AndMathmlNode: case MathmlNodeType::OrMathmlNode: case MathmlNodeType::XorMathmlNode:
                         res = "not("+operand+")";
 
                         break;
@@ -2112,12 +2114,12 @@ bool CellMLTextViewConverter::processGroupNode(const QDomNode &pDomNode)
 
     static const QString RelationshipRef = "___RELATIONSHIP_REF___";
 
-    if (   (mLastOutputType == Comment)
-        || (mLastOutputType == EndDef)) {
+    if (   (mLastOutputType == OutputType::Comment)
+        || (mLastOutputType == OutputType::EndDef)) {
         outputString();
     }
 
-    outputString(DefGroup,
+    outputString(OutputType::DefGroup,
                  QString("def group%1 as %2 for").arg(cmetaId(pDomNode))
                                                  .arg(RelationshipRef));
 
@@ -2150,7 +2152,7 @@ bool CellMLTextViewConverter::processGroupNode(const QDomNode &pDomNode)
 
     unindent();
 
-    outputString(EndDef, "enddef;");
+    outputString(OutputType::EndDef, "enddef;");
 
     return true;
 }
@@ -2233,11 +2235,12 @@ bool CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
     // Start processing the given component ref node
 
     if (hasComponentRefChildren) {
-        if (   (mLastOutputType == Comment)
-            || (mLastOutputType == Comp) || (mLastOutputType == EndComp))
+        if (   (mLastOutputType == OutputType::Comment)
+            || (mLastOutputType == OutputType::Comp)
+            || (mLastOutputType == OutputType::EndComp))
             outputString();
 
-        outputString(CompIncl,
+        outputString(OutputType::CompIncl,
                      QString("comp%1 %2 incl").arg(cmetaId(pDomNode))
                                               .arg(cellmlAttributeNodeValue(pDomNode, "component")));
 
@@ -2265,14 +2268,14 @@ bool CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
     if (hasComponentRefChildren) {
         unindent();
 
-        outputString(EndComp, "endcomp;");
+        outputString(OutputType::EndComp, "endcomp;");
     } else {
-        if (   (mLastOutputType == Comment)
-            || (mLastOutputType == EndComp)) {
+        if (   (mLastOutputType == OutputType::Comment)
+            || (mLastOutputType == OutputType::EndComp)) {
             outputString();
         }
 
-        outputString(Comp,
+        outputString(OutputType::Comp,
                      QString("comp%1 %2;").arg(cmetaId(pDomNode))
                                           .arg(cellmlAttributeNodeValue(pDomNode, "component")));
     }
@@ -2288,12 +2291,12 @@ bool CellMLTextViewConverter::processConnectionNode(const QDomNode &pDomNode)
 
     static const QString MapComponents = "___MAP_COMPONENTS___";
 
-    if (   (mLastOutputType == Comment)
-        || (mLastOutputType == EndDef)) {
+    if (   (mLastOutputType == OutputType::Comment)
+        || (mLastOutputType == OutputType::EndDef)) {
         outputString();
     }
 
-    outputString(DefMap,
+    outputString(OutputType::DefMap,
                  QString("def map%1 %2 for").arg(cmetaId(pDomNode))
                                             .arg(MapComponents));
 
@@ -2326,7 +2329,7 @@ bool CellMLTextViewConverter::processConnectionNode(const QDomNode &pDomNode)
 
     unindent();
 
-    outputString(EndDef, "enddef;");
+    outputString(OutputType::EndDef, "enddef;");
 
     return true;
 }
@@ -2397,10 +2400,10 @@ bool CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
 
     // Process the given unit node
 
-    if (mLastOutputType == Comment)
+    if (mLastOutputType == OutputType::Comment)
         outputString();
 
-    outputString(Vars,
+    outputString(OutputType::Vars,
                  QString("vars%1 %2 and %3;").arg(cmetaId(pDomNode))
                                              .arg(cellmlAttributeNodeValue(pDomNode, "variable_1"))
                                              .arg(cellmlAttributeNodeValue(pDomNode, "variable_2")));

@@ -927,7 +927,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     // Check whether an action is to be carried out
 
-    if (mOwner->action() == GraphPanelPlotWidget::None)
+    if (mOwner->action() == GraphPanelPlotWidget::Action::None)
         return;
 
     // Paint the overlay, if any is needed
@@ -939,7 +939,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
     painter.translate(canvasRect.x(), canvasRect.y());
 
     switch (mOwner->action()) {
-    case GraphPanelPlotWidget::ShowCoordinates: {
+    case GraphPanelPlotWidget::Action::ShowCoordinates: {
         // Draw the lines that show the coordinates
 
         QPen pen = painter.pen();
@@ -964,11 +964,11 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
                         (mOwner->pointCoordinatesStyle() == Qt::NoPen)?
                             0:
                             mOwner->pointCoordinatesWidth(),
-                        BottomRight);
+                        Position::BottomRight);
 
         break;
     }
-    case GraphPanelPlotWidget::ZoomRegion: {
+    case GraphPanelPlotWidget::Action::ZoomRegion: {
         // Draw the region to be zoomed in
 
         QRect zoomRegionRect = zoomRegion();
@@ -996,14 +996,14 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
                         (mOwner->zoomRegionStyle() == Qt::NoPen)?
                             0:
                             mOwner->zoomRegionWidth(),
-                        BottomRight, false);
+                        Position::BottomRight, false);
         drawCoordinates(&painter, zoomRegionRect.topLeft()+QPoint(zoomRegionRect.width(), zoomRegionRect.height()),
                         mOwner->zoomRegionColor(),
                         mOwner->zoomRegionFontColor(),
                         (mOwner->zoomRegionStyle() == Qt::NoPen)?
                             0:
                             mOwner->zoomRegionWidth(),
-                        TopLeft, false);
+                        Position::TopLeft, false);
 
         break;
     }
@@ -1118,22 +1118,22 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
     int minusShift = shift+!(pLineWidth%2);
 
     switch (pPosition) {
-    case TopLeft:
+    case Position::TopLeft:
         coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-minusShift,
                                pPoint.y()-coordinatesRect.height()-minusShift);
 
         break;
-    case TopRight:
+    case Position::TopRight:
         coordinatesRect.moveTo(pPoint.x()+plusShift,
                                pPoint.y()-coordinatesRect.height()-minusShift);
 
         break;
-    case BottomLeft:
+    case Position::BottomLeft:
         coordinatesRect.moveTo(pPoint.x()-coordinatesRect.width()-minusShift,
                                pPoint.y()+plusShift);
 
         break;
-    case BottomRight:
+    case Position::BottomRight:
         coordinatesRect.moveTo(pPoint.x()+plusShift,
                                pPoint.y()+plusShift);
 
@@ -1554,7 +1554,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mEnabledGraphPens(QMap<GraphPanelPlotGraph *, QPen>()),
     mEnabledGraphSymbolBrushes(QMap<GraphPanelPlotGraph *, QBrush>()),
     mEnabledGraphSymbolPens(QMap<GraphPanelPlotGraph *, QPen>()),
-    mAction(None),
+    mAction(Action::None),
     mOriginPoint(QPoint()),
     mPoint(QPoint()),
     mLegend(new GraphPanelPlotLegendWidget(this)),
@@ -1919,7 +1919,7 @@ bool GraphPanelPlotWidget::event(QEvent *pEvent)
 
             if (pinchGesture->changeFlags() & QPinchGesture::ScaleFactorChanged) {
                 scaleAxes(pinchGesture->centerPoint().toPoint(),
-                          CustomScaling, CustomScaling,
+                          Scaling::CustomScaling, Scaling::CustomScaling,
                           1.0/pinchGesture->scaleFactor());
 
                 return true;
@@ -2062,7 +2062,7 @@ void GraphPanelPlotWidget::resetAction()
 {
     // Reset our action and our overlay widget, by updating it
 
-    mAction = None;
+    mAction = Action::None;
 
     mOverlayWidget->update();
 }
@@ -2815,10 +2815,10 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
 
     // Optimise the axis' values, using either a linear or logarithmic approach
 
-    if (   (   (pOptimization == Default)
+    if (   (   (pOptimization == Optimization::Default)
             && (   ((pAxisId == QwtPlot::xBottom) && !mLogAxisX)
                 || ((pAxisId == QwtPlot::yLeft) && !mLogAxisY)))
-        || (pOptimization == Linear)) {
+        || (pOptimization == Optimization::Linear)) {
         uint base = axisScaleEngine(pAxisId)->base();
         double majorStep = QwtScaleArithmetic::divideInterval(pMax-pMin,
                                                               axisMaxMajor(pAxisId),
@@ -3148,13 +3148,13 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
     // Check whether we can scale the axis and, if so, determine what its new
     // values should be
 
-    if (   (   (    (pScaling == ScalingIn)
-                ||  (pScaling == BigScalingIn)
-                || ((pScaling == CustomScaling) && (pCustomScaling < 1.0)))
+    if (   (   (    (pScaling == Scaling::ScalingIn)
+                ||  (pScaling == Scaling::BigScalingIn)
+                || ((pScaling == Scaling::CustomScaling) && (pCustomScaling < 1.0)))
             && pCanZoomIn)
-        || (   (    (pScaling == ScalingOut)
-                ||  (pScaling == BigScalingOut)
-                || ((pScaling == CustomScaling) && (pCustomScaling > 1.0)))
+        || (   (    (pScaling == Scaling::ScalingOut)
+                ||  (pScaling == Scaling::BigScalingOut)
+                || ((pScaling == Scaling::CustomScaling) && (pCustomScaling > 1.0)))
             && pCanZoomOut)) {
         static const double ScalingInFactor     = 0.9;
         static const double ScalingOutFactor    = 1.0/ScalingInFactor;
@@ -3170,25 +3170,25 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
         //       sure that it is clamped within the [0; 1] range...
 
         switch (pScaling) {
-        case NoScaling:
+        case Scaling::NoScaling:
             break;
-        case ScalingIn:
+        case Scaling::ScalingIn:
             range *= ScalingInFactor;
 
             break;
-        case BigScalingIn:
+        case Scaling::BigScalingIn:
             range *= BigScalingInFactor;
 
             break;
-        case ScalingOut:
+        case Scaling::ScalingOut:
             range *= ScalingOutFactor;
 
             break;
-        case BigScalingOut:
+        case Scaling::BigScalingOut:
             range *= BigScalingOutFactor;
 
             break;
-        case CustomScaling:
+        case Scaling::CustomScaling:
             range *= pCustomScaling;
 
             break;
@@ -3330,11 +3330,11 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     // Carry out the action
 
     switch (mAction) {
-    case None:
+    case Action::None:
         // No action, so do nothing
 
         break;
-    case Pan: {
+    case Action::Pan: {
         // Determine the X/Y shifts for our panning
 
         int shiftX = pEvent->pos().x()-mPoint.x();
@@ -3355,13 +3355,13 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
         break;
     }
-    case ShowCoordinates:
+    case Action::ShowCoordinates:
         // Update the point of our overlay widget
 
         mOverlayWidget->setPoint(pEvent->pos());
 
         break;
-    case Zoom: {
+    case Action::Zoom: {
         // Determine our X/Y delta values
 
         int deltaX = pEvent->pos().x()-mPoint.x();
@@ -3374,18 +3374,18 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         scaleAxes(mOriginPoint,
                   deltaX?
                       (deltaX > 0)?
-                          ScalingIn:
-                          ScalingOut:
-                      NoScaling,
+                          Scaling::ScalingIn:
+                          Scaling::ScalingOut:
+                      Scaling::NoScaling,
                   deltaY?
                       (deltaY < 0)?
-                          ScalingIn:
-                          ScalingOut:
-                      NoScaling);
+                          Scaling::ScalingIn:
+                          Scaling::ScalingOut:
+                      Scaling::NoScaling);
 
         break;
     }
-    case ZoomRegion:
+    case Action::ZoomRegion:
         // Update our zoom region by updating the point of our overlay widget
 
         mOverlayWidget->setPoint(pEvent->pos());
@@ -3415,7 +3415,7 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
     // zooming in/out and then pressed on the left mouse button) and if so, then
     // cancel it by resetting our action
 
-    if (mAction != None) {
+    if (mAction != Action::None) {
         resetAction();
 
         return;
@@ -3428,7 +3428,7 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         // We want to pan, but only do this if we are not completely zoomed out
 
         if (mCanZoomOutX || mCanZoomOutY) {
-            mAction = Pan;
+            mAction = Action::Pan;
 
             mPoint = pEvent->pos();
         }
@@ -3436,14 +3436,14 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
                && (pEvent->button() == Qt::LeftButton)) {
         // We want to show the coordinates
 
-        mAction = ShowCoordinates;
+        mAction = Action::ShowCoordinates;
 
         mOverlayWidget->setPoint(pEvent->pos());
     } else if (   (pEvent->modifiers() == Qt::NoModifier)
                && (pEvent->button() == Qt::RightButton)) {
         // We want to zoom in/out
 
-        mAction = Zoom;
+        mAction = Action::Zoom;
 
         mOriginPoint = pEvent->pos();
         mPoint = pEvent->pos();
@@ -3453,7 +3453,7 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
         // fully zoomed in
 
         if (mCanZoomInX || mCanZoomInY) {
-            mAction = ZoomRegion;
+            mAction = Action::ZoomRegion;
 
             mOverlayWidget->setOriginPoint(pEvent->pos());
             mOverlayWidget->setPoint(pEvent->pos());
@@ -3475,13 +3475,13 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     // Check whether we need to carry out a action
 
-    if (mAction == None)
+    if (mAction == Action::None)
         return;
 
     // Finish carrying out the action, if needed
 
     switch (mAction) {
-    case ZoomRegion: {
+    case Action::ZoomRegion: {
         // Retrieve our zoom region
 
         QRect zoomRegionRect = mOverlayWidget->zoomRegion();
@@ -3562,16 +3562,16 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
         && canvas()->rect().contains(pEvent->pos()-canvas()->pos())) {
         // Make sure that we are not already carrying out an action
 
-        if (mAction == None) {
+        if (mAction == Action::None) {
             int delta = pEvent->delta();
-            Scaling scaling = NoScaling;
+            Scaling scaling = Scaling::NoScaling;
 
             if (delta > 0)
-                scaling = ScalingIn;
+                scaling = Scaling::ScalingIn;
             else if (delta < 0)
-                scaling = ScalingOut;
+                scaling = Scaling::ScalingOut;
 
-            if (scaling)
+            if (scaling != Scaling::NoScaling)
                 scaleAxes(pEvent->pos(), scaling, scaling);
         }
 
@@ -4002,7 +4002,7 @@ void GraphPanelPlotWidget::zoomIn()
     // Zoom in by scaling our two axes around the point where the context menu
     // was shown
 
-    scaleAxes(mOriginPoint, BigScalingIn, BigScalingIn);
+    scaleAxes(mOriginPoint, Scaling::BigScalingIn, Scaling::BigScalingIn);
 }
 
 //==============================================================================
@@ -4012,7 +4012,7 @@ void GraphPanelPlotWidget::zoomOut()
     // Zoom out by scaling our two axes around the point where the context menu
     // was shown
 
-    scaleAxes(mOriginPoint, BigScalingOut, BigScalingOut);
+    scaleAxes(mOriginPoint, Scaling::BigScalingOut, Scaling::BigScalingOut);
 }
 
 //==============================================================================

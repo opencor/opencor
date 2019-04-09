@@ -345,15 +345,15 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         for (const auto &cellmlFileIssue : cellmlFileIssues) {
             nbOfReportedIssues +=    !pOnlyErrors
-                                  ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
+                                  ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error);
         }
 
         CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
-        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
             && cellmlFile->model() && cellmlFile->model()->imports()->length()
             && nbOfReportedIssues) {
-            editorList->addItem(EditorWidget::EditorListItem::Information,
+            editorList->addItem(EditorWidget::EditorListItem::Type::Information,
                                 (nbOfReportedIssues == 1)?
                                     tr("The issue reported below may be related to this CellML file or to one of its (in)directly imported CellML files."):
                                     tr("The issues reported below may be related to this CellML file and/or to one or several of its (in)directly imported CellML files."));
@@ -364,10 +364,10 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         for (const auto &cellmlFileIssue : cellmlFileIssues) {
             if (   !pOnlyErrors
-                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
-                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
-                                        EditorWidget::EditorListItem::Error:
-                                        EditorWidget::EditorListItem::Warning,
+                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)) {
+                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?
+                                        EditorWidget::EditorListItem::Type::Error:
+                                        EditorWidget::EditorListItem::Type::Warning,
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
                                     qPrintable(cellmlFileIssue.formattedMessage()));
@@ -379,8 +379,8 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         // Provide some extra information in case, if we are dealing with a
         // CellML 1.0/1.1 files and are therefore using the CellML API
 
-        if (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-            || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)) {
+        if (   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
             pExtra = tr("the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
         }
 

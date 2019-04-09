@@ -53,7 +53,7 @@ class CORE_EXPORT FileManager : public QObject
     Q_OBJECT
 
 public:
-    enum Status {
+    enum class Status {
         // As a result of managing a file
 
         DoesNotExist,
@@ -92,7 +92,8 @@ public:
 
     static FileManager * instance();
 
-    Status manage(const QString &pFileName, File::Type pType = File::Local,
+    Status manage(const QString &pFileName,
+                  File::Type pType = File::Type::Local,
                   const QString &pUrl = QString());
     Status unmanage(const QString &pFileName);
 

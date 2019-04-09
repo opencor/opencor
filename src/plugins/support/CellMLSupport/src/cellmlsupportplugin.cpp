@@ -48,7 +48,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.cellml.org/\">CellML</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "CellMLAPI" << "Compiler" << "StandardSupport",
                           descriptions);
 }
@@ -138,7 +138,7 @@ Gui::MenuActions CellMLSupportPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellmlFileAction);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::FileNew, mFileNewCellmlFileAction);
 }
 
 //==============================================================================
@@ -262,7 +262,7 @@ void CellMLSupportPlugin::newCellmlFile()
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != Core::FileManager::Created)
+    if (createStatus != Core::FileManager::Status::Created)
         qFatal("FATAL ERROR | %s:%d: the new CellML file did not get created.", __FILE__, __LINE__);
 #endif
 }

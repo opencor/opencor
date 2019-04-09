@@ -73,7 +73,7 @@ public:
     QString siteName() const;
 
 private:
-    enum Action {
+    enum class Action {
         None,
         CloneExposureWorkspace,
         RequestExposureFiles

@@ -58,7 +58,7 @@ SimulationExperimentViewInformationGraphPanelAndGraphsWidget::SimulationExperime
                                                                                                                            QWidget *pParent) :
     QStackedWidget(pParent),
     Core::CommonWidget(this),
-    mMode(Graphs),
+    mMode(Mode::Graphs),
     mViewWidget(pViewWidget),
     mSimulationWidget(pSimulationWidget),
     mSimulation(nullptr),
@@ -432,7 +432,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::initialize(Gr
     // active
 
     if (pActive)
-        setCurrentWidget((mMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
+        setCurrentWidget((mMode == Mode::GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor);
 
     // Update our graphs information
     // Note: this is in case the user changed the locale and then switched to a
@@ -661,7 +661,7 @@ bool SimulationExperimentViewInformationGraphPanelAndGraphsWidget::rootProperty(
 {
     // Return whether the given property is a root property
 
-    return    (pProperty->type() == Core::Property::Section)
+    return    (pProperty->type() == Core::Property::Type::Section)
            && !pProperty->parentProperty() && pProperty->isCheckable();
 }
 
@@ -908,7 +908,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::setMode(Mode 
         // Set our graph panel or graphs property editor as our current widget,
         // if we have one (i.e. the model could be compiled)
 
-        Core::PropertyEditorWidget *propertyEditor = (pMode == GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor;
+        Core::PropertyEditorWidget *propertyEditor = (pMode == Mode::GraphPanel)?mGraphPanelPropertyEditor:mGraphsPropertyEditor;
 
         if (propertyEditor)
             setCurrentWidget(propertyEditor);
@@ -991,7 +991,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphPane
     Core::Property *crtProperty = mGraphPanelPropertyEditor->currentProperty();
 
     if (    crtProperty
-            && (crtProperty->type() == Core::Property::Color)) {
+            && (crtProperty->type() == Core::Property::Type::Color)) {
         mGraphPanelContextMenu->exec(QCursor::pos());
     }
 }
@@ -1028,7 +1028,7 @@ void SimulationExperimentViewInformationGraphPanelAndGraphsWidget::showGraphsCon
     mUnselectAllGraphsAction->setEnabled(canUnselectAllGraphs);
 
     mSelectGraphColorAction->setVisible(    crtProperty
-                                        && (crtProperty->type() == Core::Property::Color));
+                                        && (crtProperty->type() == Core::Property::Type::Color));
 
     // Show the graph context menu, or not, depending on the type of property we
     // are dealing with, if any

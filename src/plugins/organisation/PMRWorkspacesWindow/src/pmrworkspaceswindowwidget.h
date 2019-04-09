@@ -67,7 +67,7 @@ class PmrWorkspacesWindowProxyModel;
 class PmrWorkspacesWindowItem : public QStandardItem
 {
 public:
-    enum Type {
+    enum class Type {
         OwnedWorkspace = QStandardItem::UserType,
         Workspace      = QStandardItem::UserType+1,
         Folder         = QStandardItem::UserType+2,
@@ -158,7 +158,7 @@ class PmrWorkspacesWindowWidget : public Core::TreeViewWidget
     Q_OBJECT
 
 public:
-    enum MessageType {
+    enum class MessageType {
         None,
         Information,
         Error,

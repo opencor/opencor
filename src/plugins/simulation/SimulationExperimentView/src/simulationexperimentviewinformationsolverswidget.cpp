@@ -93,8 +93,8 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Add properties for our different solvers
 
-    mOdeSolverData = addSolverProperties(Solver::Ode);
-    mNlaSolverData = addSolverProperties(Solver::Nla);
+    mOdeSolverData = addSolverProperties(Solver::Type::Ode);
+    mNlaSolverData = addSolverProperties(Solver::Type::Nla);
 
     // Show/hide the relevant properties
 
@@ -215,42 +215,42 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
                 // Add the solver's property and set its default value
 
                 switch (solverInterfaceProperty.type()) {
-                case Solver::Property::Boolean:
+                case Solver::Property::Type::Boolean:
                     property = addBooleanProperty(solverInterfaceProperty.defaultValue().toBool(),
                                                   solversProperty);
 
                     break;
-                case Solver::Property::Integer:
+                case Solver::Property::Type::Integer:
                     property = addIntegerProperty(solverInterfaceProperty.defaultValue().toInt(),
                                                   solversProperty);
 
                     break;
-                case Solver::Property::IntegerGe0:
+                case Solver::Property::Type::IntegerGe0:
                     property = addIntegerGe0Property(solverInterfaceProperty.defaultValue().toInt(),
                                                      solversProperty);
 
                     break;
-                case Solver::Property::IntegerGt0:
+                case Solver::Property::Type::IntegerGt0:
                     property = addIntegerGt0Property(solverInterfaceProperty.defaultValue().toInt(),
                                                      solversProperty);
 
                     break;
-                case Solver::Property::Double:
+                case Solver::Property::Type::Double:
                     property = addDoubleProperty(solverInterfaceProperty.defaultValue().toDouble(),
                                                  solversProperty);
 
                     break;
-                case Solver::Property::DoubleGe0:
+                case Solver::Property::Type::DoubleGe0:
                     property = addDoubleGe0Property(solverInterfaceProperty.defaultValue().toDouble(),
                                                     solversProperty);
 
                     break;
-                case Solver::Property::DoubleGt0:
+                case Solver::Property::Type::DoubleGt0:
                     property = addDoubleGt0Property(solverInterfaceProperty.defaultValue().toDouble(),
                                                     solversProperty);
 
                     break;
-                case Solver::Property::List:
+                case Solver::Property::Type::List:
                     property = addListProperty(solverInterfaceProperty.listValues(),
                                                solverInterfaceProperty.defaultValue().toString(),
                                                solversProperty);

@@ -228,7 +228,7 @@ class CORE_EXPORT Property : public QObject
     Q_OBJECT
 
 public:
-    enum Type {
+    enum class Type {
         Section,
         String,
         Integer,

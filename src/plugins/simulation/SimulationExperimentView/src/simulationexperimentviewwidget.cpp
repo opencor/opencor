@@ -60,7 +60,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
-    mGraphPanelGraphsMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs),
+    mGraphPanelGraphsMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs),
     mSimulationColumnWidths(QIntList()),
     mSolversColumnWidths(QIntList()),
     mGraphPanelColumnWidths(QIntList()),
@@ -107,7 +107,7 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
 
     // Retrieve our graph panel /graphs mode
 
-    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings.value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs).toInt());
+    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings.value(SettingsGraphPanelGraphsMode, int(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs)).toInt());
 
     // Retrieve the columns' width of our various property editors
 
@@ -137,7 +137,7 @@ void SimulationExperimentViewWidget::saveSettings(QSettings &pSettings) const
 
     // Keep track of our graph panel /graphs mode
 
-    pSettings.setValue(SettingsGraphPanelGraphsMode, mGraphPanelGraphsMode);
+    pSettings.setValue(SettingsGraphPanelGraphsMode, int(mGraphPanelGraphsMode));
 
     // Keep track of the columns' width of our various property editors
 
@@ -525,7 +525,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     int simulationRunsCount = simulation->runsCount();
 
-    if (   (pTask == SimulationExperimentViewSimulationWidget::AddRun)
+    if (   (pTask == SimulationExperimentViewSimulationWidget::Task::AddRun)
         && (simulationRunsCount > 1)) {
         quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
 
@@ -534,7 +534,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
                 currentSimulationWidget->updateSimulationResults(simulationWidget,
                                                                  previousSimulationResultsSize,
                                                                  simulationRunsCount-2,
-                                                                 SimulationExperimentViewSimulationWidget::None);
+                                                                 SimulationExperimentViewSimulationWidget::Task::None);
             }
         }
     }
@@ -546,7 +546,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     quint64 simulationResultsSize = simulation->results()->size();
 
-    if (   (pTask != SimulationExperimentViewSimulationWidget::None)
+    if (   (pTask != SimulationExperimentViewSimulationWidget::Task::None)
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
@@ -565,7 +565,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         || (simulationResultsSize != simulation->results()->size())) {
         QTimer::singleShot(0, this, std::bind(&SimulationExperimentViewWidget::checkSimulationResults,
                                               this, pFileName,
-                                              SimulationExperimentViewSimulationWidget::None));
+                                              SimulationExperimentViewSimulationWidget::Task::None));
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
         // the simulation progress of the given file
@@ -613,7 +613,7 @@ void SimulationExperimentViewWidget::graphPanelSettingsRequested()
 {
     // Make sure that our graph panel settings are active and visible
 
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::GraphPanel);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
 }
 
@@ -623,7 +623,7 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 {
     // Make sure that our graphs settings are active and visible
 
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
 }
 

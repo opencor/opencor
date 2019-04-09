@@ -65,7 +65,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-    enum Command {
+    enum class Command {
         Export,
         Validate
     };

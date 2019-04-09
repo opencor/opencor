@@ -108,11 +108,11 @@ ZincWidget::ProjectionMode ZincWidget::projectionMode()
 
     switch (mSceneViewer.getProjectionMode()) {
     case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL:
-        return Parallel;
+        return ProjectionMode::Parallel;
     case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE:
-        return Perspective;
+        return ProjectionMode::Perspective;
     default:
-        return Invalid;
+        return ProjectionMode::Invalid;
     }
 }
 
@@ -123,11 +123,11 @@ void ZincWidget::setProjectionMode(ProjectionMode pProjectionMode)
     // Set our projection mode
 
     switch (pProjectionMode) {
-    case Parallel:
+    case ProjectionMode::Parallel:
         mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL);
 
         break;
-    case Perspective:
+    case ProjectionMode::Perspective:
         mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
 
         break;

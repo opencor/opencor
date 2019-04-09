@@ -47,7 +47,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an <a href=\"https://www.w3.org/XML/\">XML</a> editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur <a href=\"https://www.w3.org/XML/\">XML</a>."));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "CellMLEditingView",
                           descriptions);
 }
@@ -309,7 +309,7 @@ ViewInterface::Mode RawCellMLViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::EditingMode;
 }
 
 //==============================================================================
@@ -351,8 +351,8 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   !Core::FileManager::instance()->isNew(pFileName)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
         return nullptr;
     }
 

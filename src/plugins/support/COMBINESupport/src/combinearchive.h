@@ -52,7 +52,7 @@ namespace COMBINESupport {
 class COMBINESUPPORT_EXPORT CombineArchiveFile
 {
 public:
-    enum Format {
+    enum class Format {
         Unknown,
         Cellml,
         Cellml_1_0,

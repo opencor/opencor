@@ -107,7 +107,8 @@ public:
 
     void importRemoteFile(const QString &pFileNameOrUrl);
 
-    void openFile(const QString &pFileName, File::Type pType = File::Local,
+    void openFile(const QString &pFileName,
+                  File::Type pType = File::Type::Local,
                   const QString &pUrl = QString());
     void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
@@ -122,7 +123,7 @@ protected:
     void dropEvent(QDropEvent *pEvent) override;
 
 private:
-    enum State {
+    enum class State {
         Starting,
         Idling,
         UpdatingGui,

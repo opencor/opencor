@@ -87,34 +87,34 @@ QString pluginCategoryName(const PluginInfo::Category &pCategory)
 
     switch (pCategory) {
 #ifdef ENABLE_SAMPLE_PLUGINS
-    case PluginInfo::Sample:
+    case PluginInfo::Category::Sample:
         return QObject::tr("Sample");
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    case PluginInfo::Test:
+    case PluginInfo::Category::Test:
         return QObject::tr("Test");
 #endif
-    case PluginInfo::Invalid:
+    case PluginInfo::Category::Invalid:
         return QObject::tr("Invalid");
-    case PluginInfo::DataStore:
+    case PluginInfo::Category::DataStore:
         return QObject::tr("Data store");
-    case PluginInfo::Editing:
+    case PluginInfo::Category::Editing:
         return QObject::tr("Editing");
-    case PluginInfo::Miscellaneous:
+    case PluginInfo::Category::Miscellaneous:
         return QObject::tr("Miscellaneous");
-    case PluginInfo::Organisation:
+    case PluginInfo::Category::Organisation:
         return QObject::tr("Organisation");
-    case PluginInfo::Simulation:
+    case PluginInfo::Category::Simulation:
         return QObject::tr("Simulation");
-    case PluginInfo::Solver:
+    case PluginInfo::Category::Solver:
         return QObject::tr("Solver");
-    case PluginInfo::Support:
+    case PluginInfo::Category::Support:
         return QObject::tr("Support");
-    case PluginInfo::ThirdParty:
+    case PluginInfo::Category::ThirdParty:
         return QObject::tr("Third-party");
-    case PluginInfo::Tools:
+    case PluginInfo::Category::Tools:
         return QObject::tr("Tools");
-    case PluginInfo::Widget:
+    case PluginInfo::Category::Widget:
         return QObject::tr("Widget");
     }
 
@@ -131,34 +131,34 @@ QString pluginCategoryDescription(const PluginInfo::Category &pCategory)
 
     switch (pCategory) {
 #ifdef ENABLE_SAMPLE_PLUGINS
-    case PluginInfo::Sample:
+    case PluginInfo::Category::Sample:
         return QObject::tr("Plugins that illustrate various plugin-related aspects.");
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    case PluginInfo::Test:
+    case PluginInfo::Category::Test:
         return QObject::tr("Plugins to test things.");
 #endif
-    case PluginInfo::Invalid:
+    case PluginInfo::Category::Invalid:
         return QObject::tr("Plugins that are not valid.");
-    case PluginInfo::DataStore:
+    case PluginInfo::Category::DataStore:
         return QObject::tr("Plugins to store and manipulate data.");
-    case PluginInfo::Editing:
+    case PluginInfo::Category::Editing:
         return QObject::tr("Plugins to edit files.");
-    case PluginInfo::Miscellaneous:
+    case PluginInfo::Category::Miscellaneous:
         return QObject::tr("Plugins that do not fit in any other category.");
-    case PluginInfo::Organisation:
+    case PluginInfo::Category::Organisation:
         return QObject::tr("Plugins to organise files.");
-    case PluginInfo::Simulation:
+    case PluginInfo::Category::Simulation:
         return QObject::tr("Plugins to simulate files.");
-    case PluginInfo::Solver:
+    case PluginInfo::Category::Solver:
         return QObject::tr("Plugins to access various solvers.");
-    case PluginInfo::Support:
+    case PluginInfo::Category::Support:
         return QObject::tr("Plugins to support various third-party libraries.");
-    case PluginInfo::ThirdParty:
+    case PluginInfo::Category::ThirdParty:
         return QObject::tr("Plugins to access various third-party libraries.");
-    case PluginInfo::Tools:
+    case PluginInfo::Category::Tools:
         return QObject::tr("Plugins to access various tools.");
-    case PluginInfo::Widget:
+    case PluginInfo::Category::Widget:
         return QObject::tr("Plugins to access various <em>ad hoc</em> widgets.");
     }
 

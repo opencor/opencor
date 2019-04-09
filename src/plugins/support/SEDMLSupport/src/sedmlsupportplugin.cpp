@@ -47,7 +47,7 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "CellMLSupport" << "libSBML" << "libSEDML" << "Qwt",
                           descriptions);
 }
@@ -137,7 +137,7 @@ Gui::MenuActions SEDMLSupportPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewSedmlFileAction);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::FileNew, mFileNewSedmlFileAction);
 }
 
 //==============================================================================
@@ -261,7 +261,7 @@ void SEDMLSupportPlugin::newSedmlFile()
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != Core::FileManager::Created)
+    if (createStatus != Core::FileManager::Status::Created)
         qFatal("FATAL ERROR | %s:%d: the new SED-ML file did not get created.", __FILE__, __LINE__);
 #endif
 }

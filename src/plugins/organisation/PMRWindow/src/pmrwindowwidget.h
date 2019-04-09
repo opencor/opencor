@@ -56,7 +56,7 @@ namespace PMRWindow {
 class PmrWindowItem : public QStandardItem
 {
 public:
-    enum Type {
+    enum class Type {
         Exposure     = QStandardItem::UserType,
         ExposureFile = QStandardItem::UserType+1
     };

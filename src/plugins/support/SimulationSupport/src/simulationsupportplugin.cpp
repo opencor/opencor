@@ -39,7 +39,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support simulations."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter des simulations."));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "COMBINESupport",
                           descriptions);
 }

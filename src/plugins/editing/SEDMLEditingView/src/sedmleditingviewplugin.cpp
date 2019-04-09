@@ -48,7 +48,7 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides core <a href=\"http://www.sed-ml.org/\">SED-ML</a> editing view facilities."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
-    return new PluginInfo(PluginInfo::Editing, false, false,
+    return new PluginInfo(PluginInfo::Category::Editing, false, false,
                           QStringList() << "EditingView" << "SEDMLSupport",
                           descriptions);
 }
@@ -216,10 +216,10 @@ Gui::MenuActions SEDMLEditingViewPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationSeparator);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsSedmlValidationAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsSedmlValidationSeparator);
 }
 
 //==============================================================================

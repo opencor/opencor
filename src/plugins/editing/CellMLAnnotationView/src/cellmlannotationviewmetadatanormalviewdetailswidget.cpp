@@ -60,8 +60,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mItemsCount(0),
     mElement(nullptr),
     mRdfTripleInformation(QString()),
-    mInformationType(None),
-    mLookUpRdfTripleInformation(First),
+    mInformationType(InformationType::None),
+    mLookUpRdfTripleInformation(Information::First),
     mRdfTriplesMapping(QMap<QString, CellMLSupport::CellmlFileRdfTriple *>()),
     mUrls(QMap<QString, QString>()),
     mRdfTripleInformationSha1s(QStringList()),
@@ -180,19 +180,19 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(c
 
     // Request for something to be looked up, if needed
 
-    if (pLookUpRdfTripleInformation != No) {
+    if (pLookUpRdfTripleInformation != Information::No) {
         if (mItemsCount) {
             // Request for the first resource id, the last resource id or an
             // 'old' qualifier, resource or resource id to be looked up
 
-            if (pLookUpRdfTripleInformation == First) {
+            if (pLookUpRdfTripleInformation == Information::First) {
                 // Look up the first resource id
 
-                genericLookUp(mFirstRdfTripleInformation, Id);
-            } else if (pLookUpRdfTripleInformation == Last) {
+                genericLookUp(mFirstRdfTripleInformation, InformationType::Id);
+            } else if (pLookUpRdfTripleInformation == Information::Last) {
                 // Look up the last resource id
 
-                genericLookUp(mLastRdfTripleInformation, Id);
+                genericLookUp(mLastRdfTripleInformation, InformationType::Id);
             } else {
                 // Look up any 'old' qualifier, resource or resource id
 
@@ -279,7 +279,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     ++mItemsCount;
 
-    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                             pRdfTriple->modelQualifierAsString():
                             pRdfTriple->bioQualifierAsString();
     QString rdfTripleInformation = qualifier+"|"+pRdfTriple->resource()+"|"+pRdfTriple->id();
@@ -327,9 +327,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     // Do some additional GUI updates, if needed
 
     if (pNeedAdditionalGuiUpdates) {
-        mLookUpRdfTripleInformation = Last;
+        mLookUpRdfTripleInformation = Information::Last;
 
-        additionalGuiUpdates(QString(), None, mLookUpRdfTripleInformation);
+        additionalGuiUpdates(QString(), InformationType::None, mLookUpRdfTripleInformation);
     }
 }
 
@@ -361,36 +361,36 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         if (!mRdfTripleInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1)).removeClass(Highlighted);
 
-            if (mInformationType == Qualifier)
+            if (mInformationType == InformationType::Qualifier)
                 documentElement.findFirst(QString("td[id=qualifier_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
-            else if (mInformationType == Resource)
+            else if (mInformationType == InformationType::Resource)
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
-            else if (mInformationType == Id)
+            else if (mInformationType == InformationType::Id)
                 documentElement.findFirst(QString("td[id=id_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
         }
 
         if (!rdfTripleInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(rdfTripleInformationSha1)).addClass(Highlighted);
 
-            if (pInformationType == Qualifier)
+            if (pInformationType == InformationType::Qualifier)
                 documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
-            else if (pInformationType == Resource)
+            else if (pInformationType == InformationType::Resource)
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
-            else if (pInformationType == Id)
+            else if (pInformationType == InformationType::Id)
                 documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
         }
 
         mRdfTripleInformationSha1 = rdfTripleInformationSha1;
     } else if (!rdfTripleInformationSha1.isEmpty()) {
-        if (pInformationType == Qualifier) {
+        if (pInformationType == InformationType::Qualifier) {
             documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
             documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
-        } else if (pInformationType == Resource) {
+        } else if (pInformationType == InformationType::Resource) {
             documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
-        } else if (pInformationType == Id) {
+        } else if (pInformationType == InformationType::Id) {
             documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
@@ -400,11 +400,11 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     mInformationType = pInformationType;
 
     // Check whether we have something to look up
-    // Note: there is nothing nothing do for Any...
+    // Note: there is nothing do for Information::Any...
 
-    if (mLookUpRdfTripleInformation == First) {
+    if (mLookUpRdfTripleInformation == Information::First) {
         mOutputOntologicalTerms->webView()->page()->triggerAction(QWebPage::MoveToStartOfDocument);
-    } else if (mLookUpRdfTripleInformation == Last) {
+    } else if (mLookUpRdfTripleInformation == Information::Last) {
         // Note #1: normally, we would use
         //             mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToEndOfDocument);
         //          but this doesn't work...
@@ -415,26 +415,26 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         //          but this doesn't get us exactly to the bottom of the page...
 
         QTimer::singleShot(0, this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple);
-    } else if (mLookUpRdfTripleInformation == No) {
+    } else if (mLookUpRdfTripleInformation == Information::No) {
         return;
     }
 
     // Let people know that we want to look something up
 
     switch (pInformationType) {
-    case None:
+    case InformationType::None:
         emit noLookUpRequested();
 
         break;
-    case Qualifier:
+    case InformationType::Qualifier:
         emit qualifierLookUpRequested(qualifier);
 
         break;
-    case Resource:
+    case InformationType::Resource:
         emit resourceLookUpRequested(resource);
 
         break;
-    case Id:
+    case InformationType::Id:
         emit idLookUpRequested(resource, id);
 
         break;
@@ -447,7 +447,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformati
 {
     // Disable the looking up of RDF triple information
 
-    mLookUpRdfTripleInformation = No;
+    mLookUpRdfTripleInformation = Information::No;
 
     // Update the GUI by pretending to be interested in looking something up
 
@@ -480,7 +480,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(mLink);
 
-        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                                 rdfTriple->modelQualifierAsString():
                                 rdfTriple->bioQualifierAsString();
         QString rdfTripleInformation = qualifier+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
@@ -501,7 +501,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         if (!mItemsCount) {
             mRdfTripleInformation = QString();
-            mInformationType = None;
+            mInformationType = InformationType::None;
         } else if (!mLink.compare(mRdfTripleInformationSha1)) {
             QWebElement newRdfTripleEment = rdfTripleElement.nextSibling();
 
@@ -511,7 +511,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
             static const QRegularExpression ItemRegEx = QRegularExpression("^item_");
 
             CellMLSupport::CellmlFileRdfTriple *newRdfTriple = mRdfTriplesMapping.value(newRdfTripleEment.attribute("id").remove(ItemRegEx));
-            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                                        newRdfTriple->modelQualifierAsString():
                                        newRdfTriple->bioQualifierAsString();
 
@@ -530,7 +530,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         // Do some additional GUI updates
 
-        mLookUpRdfTripleInformation = Any;
+        mLookUpRdfTripleInformation = Information::Any;
 
         if (!mLink.compare(mRdfTripleInformationSha1)) {
             additionalGuiUpdates(mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
@@ -540,7 +540,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
             // Note: indeed, to look it up again would result in the web view
             //       flashing (since a 'new' web page would be loaded)...
 
-            additionalGuiUpdates(mRdfTripleInformation, mInformationType, No);
+            additionalGuiUpdates(mRdfTripleInformation, mInformationType, Information::No);
         }
 
         // Remove the RDF triple from the CellML file
@@ -554,7 +554,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
         // We have clicked on a qualifier/resource/id link, so start by enabling
         // the looking up of any RDF triple information
 
-        mLookUpRdfTripleInformation = Any;
+        mLookUpRdfTripleInformation = Information::Any;
 
         // Call our generic look up function
 
@@ -562,10 +562,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         genericLookUp(mLink,
                       (!rdfTripleInformation[0].compare(mTextContent))?
-                          Qualifier:
+                          InformationType::Qualifier:
                           !rdfTripleInformation[1].compare(mTextContent)?
-                              Resource:
-                              Id);
+                              InformationType::Resource:
+                              InformationType::Id);
     }
 }
 

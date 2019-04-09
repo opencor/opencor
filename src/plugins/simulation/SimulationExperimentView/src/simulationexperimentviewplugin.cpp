@@ -52,7 +52,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit and run a simulation experiment."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
 
-    return new PluginInfo(PluginInfo::Simulation, true, false,
+    return new PluginInfo(PluginInfo::Category::Simulation, true, false,
                           QStringList() << "GraphPanelWidget" << "SimulationSupport",
                           descriptions);
 }
@@ -207,13 +207,13 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (   viewInterface
-            && (   (viewInterface->viewMode() == EditingMode)
-                || (viewInterface->viewMode() == SimulationMode))) {
+            && (   (viewInterface->viewMode() == ViewInterface::Mode::EditingMode)
+                || (viewInterface->viewMode() == ViewInterface::Mode::SimulationMode))) {
             QStringList viewMimeTypes = viewInterface->viewMimeTypes();
 
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
-                if (viewInterface->viewMode() == EditingMode)
+                if (viewInterface->viewMode() == ViewInterface::Mode::EditingMode)
                     cellmlEditingViewPlugins << plugin;
                 else
                     cellmlSimulationViewPlugins << plugin;
@@ -295,7 +295,7 @@ ViewInterface::Mode SimulationExperimentViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return SimulationMode;
+    return ViewInterface::Mode::SimulationMode;
 }
 
 //==============================================================================
@@ -333,7 +333,7 @@ QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support, based on the file type of
     // our simulation
 
-    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::CellmlFile)?
+    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::FileType::CellmlFile)?
                CellMLSupport::CellmlFileExtension:
                SEDMLSupport::SedmlFileExtension;
 }
@@ -348,8 +348,8 @@ QWidget * SimulationExperimentViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   Core::FileManager::instance()->isNew(pFileName)
-        || (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
+        || (    (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)
             && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
             && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))) {
         return nullptr;

@@ -81,7 +81,7 @@ public:
     QDomDocument rdfNodes() const;
 
 private:
-    enum OutputType {
+    enum class OutputType {
         None,
         EmptyLine,
         DefModel,
@@ -104,7 +104,7 @@ private:
         EndDef
     };
 
-    enum MathmlNodeType {
+    enum class MathmlNodeType {
         UnknownMathmlNode,
         EqMathmlNode, NeqMathmlNode, LtMathmlNode, LeqMathmlNode, GeqMathmlNode, GtMathmlNode,
         PlusMathmlNode, MinusMathmlNode, TimesMathmlNode, DivideMathmlNode,
@@ -143,7 +143,7 @@ private:
     void indent(bool pForceTracking = true);
     void unindent();
 
-    void outputString(OutputType pOutputType = EmptyLine,
+    void outputString(OutputType pOutputType = OutputType::EmptyLine,
                       const QString &pString = QString());
 
     bool rdfNode(const QDomNode &pDomNode) const;

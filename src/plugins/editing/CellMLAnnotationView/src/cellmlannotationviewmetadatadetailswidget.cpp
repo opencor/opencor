@@ -233,7 +233,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
     // of the RDF triples is known
 
     bool isUnknownMetadata = pElement?
-                                 mCellmlFile->rdfTriples(pElement).type() == CellMLSupport::CellmlFileRdfTriple::Unknown:
+                                 mCellmlFile->rdfTriples(pElement).type() == CellMLSupport::CellmlFileRdfTriple::Type::Unknown:
                                  true;
 
     mBorderedUnsupportedMetadataMessage->setVisible(pElement && isUnknownMetadata);

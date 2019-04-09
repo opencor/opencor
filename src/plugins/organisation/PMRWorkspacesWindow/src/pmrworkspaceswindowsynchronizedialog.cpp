@@ -957,10 +957,10 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
         if (   mWebViewerCellmlTextFormatAction->isChecked()
             && !mInvalidCellmlCode.contains(oldFileContents)
             && !mInvalidCellmlCode.contains(newFileContents)
-            && (oldFileEmpty || (oldCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-                             || (oldCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1))
-            && (newFileEmpty || (newCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-                             || (newCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1))) {
+            && (oldFileEmpty || (oldCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+                             || (oldCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1))
+            && (newFileEmpty || (newCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+                             || (newCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1))) {
             // We are dealing with a CellML 1.0/1.1 file, so generate the CellML
             // Text version of the file, this for both its head and working
             // versions, and if successful then diff them

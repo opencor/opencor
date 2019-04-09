@@ -150,7 +150,7 @@ void SimulationExperimentViewInformationWidget::retranslateUi()
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));
     mCollapsibleWidget->setHeaderTitle(1, tr("Solvers"));
-    mCollapsibleWidget->setHeaderTitle(2, (mGraphPanelAndGraphsWidget->mode() == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel)?
+    mCollapsibleWidget->setHeaderTitle(2, (mGraphPanelAndGraphsWidget->mode() == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::GraphPanel)?
                                               tr("Graph Panel"):
                                               tr("Graphs"));
     mCollapsibleWidget->setHeaderTitle(3, tr("Parameters"));
@@ -238,7 +238,7 @@ void SimulationExperimentViewInformationWidget::grapPanelPropertyEditor()
 {
     // Switch to Graph Panel mode
 
-    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::GraphPanel);
 }
 
 //==============================================================================
@@ -247,7 +247,7 @@ void SimulationExperimentViewInformationWidget::graphsPropertyEditor()
 {
     // Switch to Graphs mode
 
-    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+    mGraphPanelAndGraphsWidget->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs);
 }
 
 //==============================================================================
@@ -258,8 +258,8 @@ void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(Simu
     // actions and update the title of our collapsible widget's third header's
     // title by retranslating ourselves
 
-    mGraphPanelAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
-    mGraphsAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+    mGraphPanelAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::GraphPanel);
+    mGraphsAction->setChecked(pMode == SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs);
 
     retranslateUi();
 }

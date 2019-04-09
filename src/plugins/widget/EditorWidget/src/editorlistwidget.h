@@ -43,7 +43,7 @@ namespace EditorWidget {
 class EDITORWIDGET_EXPORT EditorListItem : public QStandardItem
 {
 public:
-    enum Type {
+    enum class Type {
         Unknown     = QStandardItem::UserType,
         Error       = QStandardItem::UserType+1,
         Warning     = QStandardItem::UserType+2,

@@ -481,7 +481,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
         if (!fileIsEmpty && mConverter.hasWarnings()) {
             for (const auto &warning : mConverter.warnings()) {
-                editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Warning,
+                editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Type::Warning,
                                                            successfulConversion?
                                                                -1:
                                                                warning.lineNumber(),
@@ -528,11 +528,11 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
             //       same as above, but this will take a wee bit of time while
             //       we want it done straightaway...
 
-            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Error,
+            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Type::Error,
                                                        mConverter.errorLine(),
                                                        mConverter.errorColumn(),
                                                        tr("%1.").arg(Core::formatMessage(mConverter.errorMessage(), false)));
-            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Hint,
+            editingWidget->editorListWidget()->addItem(EditorWidget::EditorListItem::Type::Hint,
                                                        tr("You might want to use the Raw (CellML) view to edit the file."));
 
             // Apply an XML lexer to our editor
@@ -544,7 +544,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
         // successful)
 
         CellMLSupport::CellmlFile::Version cellmlVersion = fileIsEmpty?
-                                                               CellMLSupport::CellmlFile::Cellml_1_0:
+                                                               CellMLSupport::CellmlFile::Version::Cellml_1_0:
                                                                CellMLSupport::CellmlFile::fileVersion(pFileName);
 
         data = new CellmlTextViewWidgetData(editingWidget,
@@ -801,7 +801,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
             // and, if so, ask the user whether it's OK to use that higher
             // version
 
-            if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Unknown)
+            if (   (data->cellmlVersion() != CellMLSupport::CellmlFile::Version::Unknown)
                 && (mParser.cellmlVersion() > data->cellmlVersion())
                 && (Core::questionMessageBox(tr("Save File"),
                                              tr("<strong>%1</strong> requires features that are not present in %2 and should therefore be saved as a %3 file. Do you want to proceed?").arg(QDir::toNativeSeparators(pNewFileName))
@@ -945,10 +945,10 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra,
 
         for (const auto &message : mParser.messages()) {
             if (   !pOnlyErrors
-                || (message.type() == CellmlTextViewParserMessage::Error)) {
-                editingWidget->editorListWidget()->addItem((message.type() == CellmlTextViewParserMessage::Error)?
-                                                               EditorWidget::EditorListItem::Error:
-                                                               EditorWidget::EditorListItem::Warning,
+                || (message.type() == CellmlTextViewParserMessage::Type::Error)) {
+                editingWidget->editorListWidget()->addItem((message.type() == CellmlTextViewParserMessage::Type::Error)?
+                                                               EditorWidget::EditorListItem::Type::Error:
+                                                               EditorWidget::EditorListItem::Type::Warning,
                                                            message.line(), message.column(),
                                                            message.message());
             }
@@ -959,8 +959,8 @@ bool CellmlTextViewWidget::parse(const QString &pFileName, QString &pExtra,
         // Provide some extra information in case, if we are dealing with a
         // CellML 1.0/1.1 files and are therefore using the CellML API
 
-        if (   (data->cellmlVersion() == CellMLSupport::CellmlFile::Cellml_1_0)
-            || (data->cellmlVersion() == CellMLSupport::CellmlFile::Cellml_1_1)) {
+        if (   (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            || (data->cellmlVersion() == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
             pExtra = tr("the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML validation service</a> cannot be used in this view, so only validation against the <a href=\"http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.");
         }
 
@@ -999,8 +999,8 @@ bool CellmlTextViewWidget::isComment(int pPosition) const
 
     int style = mEditingWidget->editorWidget()->styleAt(pPosition);
 
-    return    (style == CellmlTextViewLexer::SingleLineComment)
-           || (style == CellmlTextViewLexer::MultilineComment);
+    return    (style == int(CellmlTextViewLexer::Style::SingleLineComment))
+           || (style == int(CellmlTextViewLexer::Style::MultilineComment));
 }
 
 //==============================================================================
@@ -1026,14 +1026,14 @@ QString CellmlTextViewWidget::partialStatement(int pPosition,
     do {
         prevAsPos = editor->findTextInRange(prevAsPos, 0, AsTag, false, true, true);
     } while (   (prevAsPos != -1)
-             && (editor->styleAt(prevAsPos) != CellmlTextViewLexer::Keyword));
+             && (editor->styleAt(prevAsPos) != int(CellmlTextViewLexer::Style::Keyword)));
 
     int prevSemiColonPos = pPosition;
 
     do {
         prevSemiColonPos = editor->findTextInRange(prevSemiColonPos, 0, SemiColonTag, false, false, false);
     } while (   (prevSemiColonPos != -1)
-             && (editor->styleAt(prevSemiColonPos) != CellmlTextViewLexer::Default));
+             && (editor->styleAt(prevSemiColonPos) != int(CellmlTextViewLexer::Style::Default)));
 
     // Look for "as" and ";" after the given position
 
@@ -1042,14 +1042,14 @@ QString CellmlTextViewWidget::partialStatement(int pPosition,
     do {
         nextAsPos = editor->findTextInRange(nextAsPos+1, editorContentsSize, AsTag, false, true, true);
     } while (   (nextAsPos != -1)
-             && (editor->styleAt(nextAsPos) != CellmlTextViewLexer::Keyword));
+             && (editor->styleAt(nextAsPos) != int(CellmlTextViewLexer::Style::Keyword)));
 
     int nextSemiColonPos = pPosition-SemiColonTag.length();
 
     do {
         nextSemiColonPos = editor->findTextInRange(nextSemiColonPos+1, editorContentsSize, SemiColonTag, false, false, false);
     } while (   (nextSemiColonPos != -1)
-             && (editor->styleAt(nextSemiColonPos) != CellmlTextViewLexer::Default));
+             && (editor->styleAt(nextSemiColonPos) != int(CellmlTextViewLexer::Style::Default)));
 
     nextAsPos = (nextAsPos == -1)?editorContentsSize:nextAsPos;
     nextSemiColonPos = (nextSemiColonPos == -1)?editorContentsSize:nextSemiColonPos;
@@ -1088,7 +1088,7 @@ QString CellmlTextViewWidget::beginningOfPiecewiseStatement(int &pPosition) cons
         pPosition = localFromPosition;
 
         if (parser.execute(localCurrentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::PiecewiseSel)
+            if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseSel)
                 break;
         } else {
             break;
@@ -1120,7 +1120,7 @@ QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
         pPosition = localToPosition;
 
         if (parser.execute(localCurrentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::PiecewiseEndSel)
+            if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseEndSel)
                 break;
         } else {
             break;
@@ -1162,18 +1162,18 @@ void CellmlTextViewWidget::updateViewer()
         CellmlTextViewParser parser;
 
         if (parser.execute(currentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::PiecewiseSel) {
+            if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseSel) {
                 // We are at the beginning of a piecewise statement, so retrieve
                 // its end
 
                 currentStatement += endOfPiecewiseStatement(toPosition);
-            } else if (   (parser.statementType() == CellmlTextViewParser::PiecewiseCase)
-                       || (parser.statementType() == CellmlTextViewParser::PiecewiseOtherwise)) {
+            } else if (   (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseCase)
+                       || (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseOtherwise)) {
                 // We are in the middle of a piecewise statement, so retrieve
                 // both its beginning and end
 
                 currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement+endOfPiecewiseStatement(toPosition);
-            } else if (parser.statementType() == CellmlTextViewParser::PiecewiseEndSel) {
+            } else if (parser.statementType() == CellmlTextViewParser::StatementType::PiecewiseEndSel) {
                 // We are at the beginning of a piecewise statement, so retrieve
                 // its beginning
 
