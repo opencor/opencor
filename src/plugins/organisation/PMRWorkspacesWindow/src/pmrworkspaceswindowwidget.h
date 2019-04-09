@@ -67,7 +67,7 @@ class PmrWorkspacesWindowProxyModel;
 class PmrWorkspacesWindowItem : public QStandardItem
 {
 public:
-    enum Type {
+    enum class Type {
         OwnedWorkspace = QStandardItem::UserType,
         Workspace      = QStandardItem::UserType+1,
         Folder         = QStandardItem::UserType+2,
