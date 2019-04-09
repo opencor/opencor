@@ -1297,7 +1297,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                 QString cellmlFileName = Core::temporaryFileName();
 
                 if (Core::writeFile(cellmlFileName, fileContents)) {
-                    fileManagerInstance->manage(cellmlFileName, Core::File::Remote, modelSource);
+                    fileManagerInstance->manage(cellmlFileName, Core::File::Type::Remote, modelSource);
 
                     mCellmlFile = new CellMLSupport::CellmlFile(cellmlFileName);
                 } else {

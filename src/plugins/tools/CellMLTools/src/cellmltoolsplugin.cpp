@@ -379,8 +379,8 @@ int CellMLToolsPlugin::runCommand(Command pCommand,
 
             if (fileManagerInstance->manage(fileName,
                                             isLocalFile?
-                                                Core::File::Local:
-                                                Core::File::Remote,
+                                                Core::File::Type::Local:
+                                                Core::File::Type::Remote,
                                             isLocalFile?
                                                 QString():
                                                 fileNameOrUrl) != Core::FileManager::Added) {

@@ -51,7 +51,7 @@ File::File(const QString &pFileName, Type pType, const QString &pUrl) :
 
     // Set our index, in case we are a new file
 
-    if (pType == New)
+    if (pType == Type::New)
         mNewIndex = ++gNewIndex;
 }
 

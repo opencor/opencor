@@ -915,7 +915,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
             }
         }
     } else {
-        openFile(fileName, File::Remote, fileNameOrUrl);
+        openFile(fileName, File::Type::Remote, fileNameOrUrl);
     }
 }
 
@@ -2141,7 +2141,7 @@ void CentralWidget::fileCreated(const QString &pFileName, const QString &pUrl)
     // A file got created, so open it as new if no URL is provided or remote
     // otherwise
 
-    openFile(pFileName, pUrl.isEmpty()?File::New:File::Remote, pUrl);
+    openFile(pFileName, pUrl.isEmpty()?File::Type::New:File::Type::Remote, pUrl);
 }
 
 //==============================================================================
@@ -2150,7 +2150,7 @@ void CentralWidget::fileDuplicated(const QString &pFileName)
 {
     // A file got duplicated, so open it as new
 
-    openFile(pFileName, File::New);
+    openFile(pFileName, File::Type::New);
 }
 
 //==============================================================================

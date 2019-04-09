@@ -41,7 +41,7 @@ namespace Core {
 class CORE_EXPORT File
 {
 public:
-    enum Type {
+    enum class Type {
         New,
         Local,
         Remote
