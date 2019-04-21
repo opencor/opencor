@@ -830,7 +830,7 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
-# Specify a target to help us build certain plugins (e.g. the Python plugin)
+# Specify a target to help us build certain plugins (e.g. our Python plugin)
 
 set(PROJECT_BUILD_TARGET ${PROJECT_NAME}Build)
 

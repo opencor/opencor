@@ -89,15 +89,10 @@ endmacro()
 
 macro(build_documentation DOCUMENTATION_NAME)
     # Build the given documentation as an external project and have it copied to
-    # our final documentation directory, but only if we Python and Sphinx are
-    # available
-    # Note: the check for Python and Sphinx is in case we are building only one
-    #       of our third-party libraries (to upgrade it to a newer version for
-    #       example), in which case we want our Python and PythonPackages
-    #       plugins will probably not be built...
+    # our final documentation directory, but only if we have a target for our
+    # Python and PythonPackages plugins (since we need both Python and Sphinx)
 
-    if(    NOT "${PYTHON_EXECUTABLE}" STREQUAL ""
-       AND NOT "${SPHINX_EXECUTABLE}" STREQUAL "")
+    if(TARGET PythonPlugin AND TARGET PythonPackagesPlugin)
         set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
 
         string(REPLACE ";" "|"
@@ -118,11 +113,9 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
-        # Add our external project as a dependency to our project build target,
-        # so that our Help window plugin can generate the help files that will
-        # be embedded in OpenCOR as a resource
+        # Make ourselves depend on our Python and PythonPackages plugins
 
-        add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+        add_dependencies(${DOCUMENTATION_BUILD} PythonPlugin PythonPackagesPlugin)
     endif()
 endmacro()
 
