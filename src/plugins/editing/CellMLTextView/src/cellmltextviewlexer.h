@@ -29,7 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "Qsci/qscilexercustom.h"
+#include "qscintillabegin.h"
+    #include "Qsci/qscilexercustom.h"
+#include "qscintillaend.h"
 
 //==============================================================================
 

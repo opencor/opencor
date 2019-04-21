@@ -48,13 +48,14 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
-                          QStringList() << "CellMLSupport" << "libSBML" << "libSEDML" << "Qwt",
+                          QStringList() << "CellMLSupport" << "libSEDML" << "Qwt",
                           descriptions);
 }
 
 //==============================================================================
 
-SEDMLSupportPlugin::SEDMLSupportPlugin()
+SEDMLSupportPlugin::SEDMLSupportPlugin() :
+    mFileNewSedmlFileAction(nullptr)
 {
     // Keep track of our file type interface
 
@@ -116,8 +117,8 @@ QStringList SEDMLSupportPlugin::fileTypeDefaultViews() const
 
 void SEDMLSupportPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pViewPlugin)
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -128,7 +129,7 @@ Gui::Menus SEDMLSupportPlugin::guiMenus() const
 {
     // We don't handle this interface...
 
-    return Gui::Menus();
+    return {};
 }
 
 //==============================================================================
@@ -168,8 +169,8 @@ bool SEDMLSupportPlugin::definesPluginInterfaces()
 bool SEDMLSupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                             QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -201,7 +202,7 @@ void SEDMLSupportPlugin::finalizePlugin()
 
 void SEDMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // Make a call to the instance of the SED-ML file manager so that it gets
     // properly set up (and therefore can start managing SED-ML files) before it
@@ -217,7 +218,7 @@ void SEDMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void SEDMLSupportPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -226,7 +227,7 @@ void SEDMLSupportPlugin::loadSettings(QSettings &pSettings)
 
 void SEDMLSupportPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -235,7 +236,7 @@ void SEDMLSupportPlugin::saveSettings(QSettings &pSettings) const
 
 void SEDMLSupportPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -261,8 +262,9 @@ void SEDMLSupportPlugin::newSedmlFile()
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != Core::FileManager::Status::Created)
+    if (createStatus != Core::FileManager::Status::Created) {
         qFatal("FATAL ERROR | %s:%d: the new SED-ML file did not get created.", __FILE__, __LINE__);
+    }
 #endif
 }
 

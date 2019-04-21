@@ -49,7 +49,7 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
 {
     // Create and set our vertical layout
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
@@ -104,21 +104,21 @@ SimulationExperimentViewInformationWidget::SimulationExperimentViewInformationWi
     //       much space as they want. Yet, we want our parameters widget to take
     //       more space since it's more 'important'...
 
-    QVBoxLayout *collapsibleWidgetLayout = static_cast<QVBoxLayout *>(mCollapsibleWidget->layout());
+    auto collapsibleWidgetLayout = static_cast<QVBoxLayout *>(mCollapsibleWidget->layout());
 
     collapsibleWidgetLayout->setStretchFactor(mGraphPanelAndGraphsWidget, 1);
     collapsibleWidgetLayout->setStretchFactor(mParametersWidget, 2);
 
     // Create and set a menu for our graph panel header
 
-    QMenu *menu = new QMenu(this);
+    auto menu = new QMenu(this);
 
     mGraphPanelAction = Core::newAction(true, graphPanelHeader);
     mGraphsAction = Core::newAction(true, graphPanelHeader);
 
     mGraphsAction->setChecked(true);
 
-    QActionGroup *settingsActionGroup = new QActionGroup(this);
+    auto settingsActionGroup = new QActionGroup(this);
 
     settingsActionGroup->addAction(mGraphPanelAction);
     settingsActionGroup->addAction(mGraphsAction);

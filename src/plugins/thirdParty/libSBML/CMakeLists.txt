@@ -214,8 +214,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libsbmlplugin.cpp
-    HEADERS_MOC
-        src/libsbmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

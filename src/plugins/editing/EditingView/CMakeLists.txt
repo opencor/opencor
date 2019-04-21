@@ -14,11 +14,6 @@ add_plugin(EditingView
 
         src/editingviewinterface.cpp
         src/editingviewplugin.cpp
-    HEADERS_MOC
-        ../../plugin.h
-        ../../pluginmanager.h
-
-        src/editingviewplugin.h
     PLUGINS
         EditorWidget
 )

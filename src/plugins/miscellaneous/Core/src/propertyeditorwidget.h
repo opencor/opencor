@@ -210,6 +210,7 @@ class PropertyItem : public QStandardItem
 {
 public:
     explicit PropertyItem(Property *pOwner);
+    ~PropertyItem() override;
 
     Property *owner() const;
 

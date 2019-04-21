@@ -15,12 +15,6 @@ add_plugin(SEDMLEditingView
         src/sedmleditingviewinterface.cpp
         src/sedmleditingviewplugin.cpp
         src/sedmleditingviewwidget.cpp
-    HEADERS_MOC
-        ../../plugin.h
-        ../../pluginmanager.h
-
-        src/sedmleditingviewplugin.h
-        src/sedmleditingviewwidget.h
     PLUGINS
         EditingView
         SEDMLSupport

@@ -84,8 +84,8 @@ bool PMRWindowPlugin::definesPluginInterfaces()
 bool PMRWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                          QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -116,7 +116,7 @@ void PMRWindowPlugin::finalizePlugin()
 
 void PMRWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -147,7 +147,7 @@ void PMRWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void PMRWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

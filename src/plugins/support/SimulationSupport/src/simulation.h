@@ -67,6 +67,7 @@ class SimulationObject : public QObject
 {
 public:
     explicit SimulationObject(Simulation *pSimulation);
+    ~SimulationObject() override;
 
     Simulation * simulation() const;
 
@@ -258,6 +259,7 @@ class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
 
 public:
     enum class FileType {
+        Unknown,
         CellmlFile,
         SedmlFile,
         CombineArchive

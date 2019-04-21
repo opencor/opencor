@@ -38,9 +38,7 @@ extern "C" Q_DECL_EXPORT int windowInterfaceVersion()
 
 //==============================================================================
 
-WindowInterface::~WindowInterface()
-{
-}
+WindowInterface::~WindowInterface() = default;
 
 //==============================================================================
 

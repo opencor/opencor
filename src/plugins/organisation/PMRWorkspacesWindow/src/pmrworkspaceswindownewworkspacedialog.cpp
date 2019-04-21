@@ -155,8 +155,9 @@ void PmrWorkspacesWindowNewWorkspaceDialog::choosePath()
 
     QString dirName = PMRSupport::getNonGitDirectory();
 
-    if (!dirName.isEmpty())
+    if (!dirName.isEmpty()) {
         mGui->folderValue->setText(QDir::toNativeSeparators(dirName));
+    }
 }
 
 //==============================================================================

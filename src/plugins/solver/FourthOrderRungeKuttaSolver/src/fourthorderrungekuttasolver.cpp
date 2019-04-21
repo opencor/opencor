@@ -152,15 +152,17 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
 
         // Compute k4 and therefore Y_n+1
 
-        for (int i = 0; i < mRatesStatesCount; ++i)
+        for (int i = 0; i < mRatesStatesCount; ++i) {
             mStates[i] += realStep*(OneOverSix*(mK1[i]+mRates[i])+OneOverThree*mK23[i]);
+        }
 
         // Advance through time
 
-        if (!qFuzzyCompare(realStep, mStep))
+        if (!qFuzzyCompare(realStep, mStep)) {
             pVoi = pVoiEnd;
-        else
+        } else {
             pVoi = voiStart+(++stepNumber)*mStep;
+        }
     }
 }
 

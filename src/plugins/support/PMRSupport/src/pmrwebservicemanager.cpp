@@ -42,7 +42,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "o2/o1requestor.h"
+#include "oauthbegin.h"
+    #include "o2/o1requestor.h"
+#include "oauthend.h"
 
 //==============================================================================
 
@@ -87,10 +89,11 @@ void PmrWebServiceManager::authenticate(bool pAuthenticate)
 
     mWebViewerDialogUsed = false;
 
-    if (pAuthenticate)
+    if (pAuthenticate) {
         mPmrAuthentication->link();
-    else
+    } else {
         mPmrAuthentication->unlink();
+    }
 }
 
 //==============================================================================
@@ -128,7 +131,7 @@ void PmrWebServiceManager::openBrowser(const QUrl &pUrl)
 
     mWebViewerDialogUsed = true;
 
-    if (!mWebViewerDialog) {
+    if (mWebViewerDialog == nullptr) {
         mWebViewerDialog = new PmrWebViewerDialog(Core::mainWindow());
 
         connect(mWebViewerDialog, &Core::Dialog::rejected,
@@ -170,10 +173,11 @@ void PmrWebServiceManager::closeBrowser()
     // Close our temporary web browser, but only if the current page has
     // finished loading otherwise try again in a bit
 
-    if (mWebViewerDialog->isLoadFinished())
+    if (mWebViewerDialog->isLoadFinished()) {
         mWebViewerDialog->close();
-    else
+    } else {
         QTimer::singleShot(169, this, &PmrWebServiceManager::closeBrowser);
+    }
 }
 
 //==============================================================================
@@ -220,7 +224,7 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
     QNetworkReply *networkReply;
 
     if (pSecureRequest && mPmrAuthentication->linked()) {
-        O1Requestor *requestor = new O1Requestor(this, mPmrAuthentication, this);
+        auto requestor = new O1Requestor(this, mPmrAuthentication, this);
 
         if (!pUsePost && pJsonDocument.isEmpty()) {
             networkReply = requestor->get(networkRequest, QList<O0RequestParameter>());
@@ -245,7 +249,7 @@ PmrWebServiceResponse * PmrWebServiceManager::request(const QString &pUrl,
         }
     }
 
-    PmrWebServiceResponse *pmrWebServiceResponse = new PmrWebServiceResponse(networkReply);
+    auto pmrWebServiceResponse = new PmrWebServiceResponse(networkReply);
 
     connect(pmrWebServiceResponse, &PmrWebServiceResponse::busy,
             mPmrWebService, &PmrWebService::busy);
@@ -263,8 +267,7 @@ void PmrWebServiceManager::update(const QString &pPmrUrl)
 {
     // Delete any previous instance of our PMR authentication object
 
-    if (mPmrAuthentication)
-        delete mPmrAuthentication;
+    delete mPmrAuthentication;
 
     // Create our PMR authentication object
 

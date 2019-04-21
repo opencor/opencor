@@ -12,9 +12,6 @@ add_plugin(SampleView
 
         src/sampleviewplugin.cpp
         src/sampleviewwidget.cpp
-    HEADERS_MOC
-        src/sampleviewplugin.h
-        src/sampleviewwidget.h
     UIS
         src/sampleviewwidget.ui
     PLUGINS

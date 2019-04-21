@@ -14,14 +14,6 @@ add_plugin(SimulationSupport
         src/simulationmanager.cpp
         src/simulationsupportplugin.cpp
         src/simulationworker.cpp
-    HEADERS_MOC
-        ../../datastoreinterface.h
-        ../../solverinterface.h
-
-        src/simulation.h
-        src/simulationmanager.h
-        src/simulationsupportplugin.h
-        src/simulationworker.h
     PLUGINS
         COMBINESupport
 )

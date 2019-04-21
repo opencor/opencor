@@ -671,8 +671,9 @@ private:
 
     void setTitleAxis(int pAxisId, const QString &pTitleAxis);
 
-    void getBorderDistances(QwtScaleDraw *pScaleDraw, QwtScaleMap pScaleMap,
-                            const QFont &pFont, int &pStart, int &pEnd);
+    void getBorderDistances(QwtScaleDraw *pScaleDraw,
+                            const QwtScaleMap &pScaleMap, const QFont &pFont,
+                            int &pStart, int &pEnd);
 
     void alignWithNeighbors(bool pCanReplot, bool pForceAlignment = false);
 

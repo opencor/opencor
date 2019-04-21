@@ -25,23 +25,6 @@ add_plugin(SimulationExperimentView
         src/simulationexperimentviewpreferenceswidget.cpp
         src/simulationexperimentviewsimulationwidget.cpp
         src/simulationexperimentviewwidget.cpp
-    HEADERS_MOC
-        ../../datastoreinterface.h
-        ../../plugin.h
-        ../../pluginmanager.h
-        ../../preferencesinterface.h
-        ../../solverinterface.h
-
-        src/simulationexperimentviewcontentswidget.h
-        src/simulationexperimentviewinformationgraphpanelandgraphswidget.h
-        src/simulationexperimentviewinformationparameterswidget.h
-        src/simulationexperimentviewinformationsimulationwidget.h
-        src/simulationexperimentviewinformationsolverswidget.h
-        src/simulationexperimentviewinformationwidget.h
-        src/simulationexperimentviewplugin.h
-        src/simulationexperimentviewpreferenceswidget.h
-        src/simulationexperimentviewsimulationwidget.h
-        src/simulationexperimentviewwidget.h
     UIS
         src/simulationexperimentviewpreferenceswidget.ui
     PLUGINS

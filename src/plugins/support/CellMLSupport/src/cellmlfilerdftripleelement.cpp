@@ -53,7 +53,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
 
     ObjRef<iface::rdf_api::URIReference> uriReference = QueryInterface(pRdfNode);
 
-    if (uriReference) {
+    if (uriReference != nullptr) {
         // The rdf_api::URIReference interface is supported, so initialise the
         // triple element using that interface
 
@@ -63,7 +63,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
     } else {
         ObjRef<iface::rdf_api::PlainLiteral> plainLiteral = QueryInterface(pRdfNode);
 
-        if (plainLiteral) {
+        if (plainLiteral != nullptr) {
             // The rdf_api::PlainLiteral interface is supported, so initialise
             // the triple element using that interface
 
@@ -74,7 +74,7 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
         } else {
             ObjRef<iface::rdf_api::TypedLiteral> typedLiteral = QueryInterface(pRdfNode);
 
-            if (typedLiteral) {
+            if (typedLiteral != nullptr) {
                 // The rdf_api::TypedLiteral interface is supported, so
                 // initialise the triple element using that interface
 

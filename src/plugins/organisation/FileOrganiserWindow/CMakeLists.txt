@@ -12,10 +12,6 @@ add_plugin(FileOrganiserWindow
         src/fileorganiserwindowplugin.cpp
         src/fileorganiserwindowwidget.cpp
         src/fileorganiserwindowwindow.cpp
-    HEADERS_MOC
-        src/fileorganiserwindowplugin.h
-        src/fileorganiserwindowwidget.h
-        src/fileorganiserwindowwindow.h
     UIS
         src/fileorganiserwindowwindow.ui
     PLUGINS

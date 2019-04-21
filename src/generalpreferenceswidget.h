@@ -49,8 +49,6 @@ static const auto SettingsPreferencesStyle = QStringLiteral("Style");
     static const auto SettingsPreferencesStyleDefault = QStringLiteral("Fusion");
 #elif defined(Q_OS_MAC)
     static const auto SettingsPreferencesStyleDefault = QStringLiteral("macintosh");
-#else
-    #error Unsupported platform
 #endif
 
 //==============================================================================

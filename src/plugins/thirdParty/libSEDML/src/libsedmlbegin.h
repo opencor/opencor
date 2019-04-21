@@ -29,9 +29,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma GCC diagnostic ignored "-Wignored-qualifiers"
 #elif defined(Q_OS_MAC)
     #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+    #pragma clang diagnostic ignored "-Wextra-semi"
+    #pragma clang diagnostic ignored "-Wheader-hygiene"
     #pragma clang diagnostic ignored "-Wignored-qualifiers"
-#else
-    #error Unsupported platform
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wshadow-field"
+    #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
+    #pragma clang diagnostic ignored "-Wundef"
 #endif
 
 //==============================================================================

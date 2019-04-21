@@ -38,9 +38,7 @@ extern "C" Q_DECL_EXPORT int cliInterfaceVersion()
 
 //==============================================================================
 
-CliInterface::~CliInterface()
-{
-}
+CliInterface::~CliInterface() = default;
 
 //==============================================================================
 

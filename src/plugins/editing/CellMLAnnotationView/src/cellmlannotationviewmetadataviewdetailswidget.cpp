@@ -69,8 +69,9 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
-    if (!pElement)
+    if (pElement == nullptr) {
         return;
+    }
 
     // Decide on which view to use and update it, if needed
 

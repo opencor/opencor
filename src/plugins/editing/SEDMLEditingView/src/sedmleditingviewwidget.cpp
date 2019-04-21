@@ -79,7 +79,7 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
 //==============================================================================
 
-static const auto SettingsSedmlEditingViewWidgetSizes = QStringLiteral("SedmlEditingViewWidgetSizes");
+static const char *SettingsSedmlEditingViewWidgetSizes = "SedmlEditingViewWidgetSizes";
 
 //==============================================================================
 
@@ -139,8 +139,9 @@ void SedmlEditingViewWidget::updateSettings(SedmlEditingViewWidget *pEditingWidg
 {
     // Make sure that we are given another editing widget
 
-    if (!pEditingWidget || (pEditingWidget == this))
+    if ((pEditingWidget == nullptr) || (pEditingWidget == this)) {
         return;
+    }
 
     // Update our sizes and editor widget's settings
 

@@ -45,6 +45,7 @@ class CellmlFileExporter : public QObject
 {
 public:
     explicit CellmlFileExporter();
+    ~CellmlFileExporter() override;
 
     bool result() const;
 

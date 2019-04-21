@@ -44,8 +44,6 @@ namespace OpenCOR {
 #elif defined(Q_OS_MAC)
     static const auto PluginPrefix    = QStringLiteral("lib");
     static const auto PluginExtension = QStringLiteral(".dylib");
-#else
-    #error Unsupported platform
 #endif
 
 //==============================================================================

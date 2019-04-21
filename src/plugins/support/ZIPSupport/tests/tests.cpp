@@ -39,9 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-static const auto CppFileName = QStringLiteral("tests.cpp");
-static const auto HFileName   = QStringLiteral("tests.h");
-static const auto TxtFileName = QStringLiteral("data/data.txt");
+static const char *CppFileName = "tests.cpp";
+static const char *HFileName   = "tests.h";
+static const char *TxtFileName = "data/data.txt";
 
 //==============================================================================
 

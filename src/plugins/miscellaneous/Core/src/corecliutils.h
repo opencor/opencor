@@ -147,7 +147,7 @@ bool CORE_EXPORT isDirectory(const QString &pDirName);
 bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
 
 void CORE_EXPORT doNothing(quint64 pMax);
-void CORE_EXPORT doNothing(const quint64 *pMax, bool *pStopped = nullptr);
+void CORE_EXPORT doNothing(const quint64 *pMax, const bool *pStopped = nullptr);
 
 QString CORE_EXPORT formatXml(const QString &pXml);
 

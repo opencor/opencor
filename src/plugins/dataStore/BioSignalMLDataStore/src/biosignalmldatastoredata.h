@@ -44,6 +44,7 @@ public:
                                       const QString &pComment,
                                       DataStore::DataStore *pDataStore,
                                       const DataStore::DataStoreVariables &pVariables);
+    ~BiosignalmlDataStoreData() override;
 
     QString name() const;
     QString author() const;

@@ -174,9 +174,9 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
 {
     // Set our message, if needed
 
-    if (   pIcon.compare(mIcon)
-        || pMessage.compare(mMessage)
-        || pExtraMessage.compare(mExtraMessage)) {
+    if (   (pIcon != mIcon)
+        || (pMessage != mMessage)
+        || (pExtraMessage != mExtraMessage)) {
         // Keep track of the new values for our icon, message and extra message
 
         mIcon = pIcon;

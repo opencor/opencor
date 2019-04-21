@@ -9,9 +9,6 @@ add_plugin(ZincWidget
 
         src/zincwidget.cpp
         src/zincwidgetplugin.cpp
-    HEADERS_MOC
-        src/zincwidget.h
-        src/zincwidgetplugin.h
     PLUGINS
         Core
         Zinc

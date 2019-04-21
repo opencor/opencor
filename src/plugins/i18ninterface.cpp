@@ -43,9 +43,7 @@ extern "C" Q_DECL_EXPORT int i18nInterfaceVersion()
 
 //==============================================================================
 
-I18nInterface::~I18nInterface()
-{
-}
+I18nInterface::~I18nInterface() = default;
 
 //==============================================================================
 

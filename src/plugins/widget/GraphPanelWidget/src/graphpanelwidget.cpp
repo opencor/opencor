@@ -83,7 +83,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 {
     // Create and set our horizontal layout
 
-    QHBoxLayout *layout = new QHBoxLayout(this);
+    auto layout = new QHBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
@@ -117,8 +117,9 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     GraphPanelPlotWidgets neighbors = GraphPanelPlotWidgets();
 
-    for (auto neighbor : pNeighbors)
+    for (auto neighbor : pNeighbors) {
         neighbors << neighbor->plot();
+    }
 
     mPlot = new GraphPanelPlotWidget(neighbors, pSynchronizeXAxisAction,
                                      pSynchronizeYAxisAction, this);
@@ -135,8 +136,9 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     // Let our plot's neighbours know about our plot
 
-    for (auto neighbor : neighbors)
+    for (auto neighbor : neighbors) {
         neighbor->addNeighbor(mPlot);
+    }
 }
 
 //==============================================================================
@@ -155,8 +157,9 @@ GraphPanelWidget::~GraphPanelWidget()
     // neighbour anymore
 
     for (auto plot : mPlot->neighbors()) {
-        if (plot != mPlot)
+        if (plot != mPlot) {
             plot->removeNeighbor(mPlot);
+        }
     }
 }
 
@@ -226,8 +229,9 @@ void GraphPanelWidget::addGraph(GraphPanelPlotGraph *pGraph,
 {
     // Add the graph to our plot
 
-    if (mPlot->addGraph(pGraph))
+    if (mPlot->addGraph(pGraph)) {
         emit graphAdded(this, pGraph, pGraphProperties);
+    }
 }
 
 //==============================================================================
@@ -239,8 +243,9 @@ void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
     GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
 
     for (auto graph : pGraphs) {
-        if (mPlot->removeGraph(graph))
+        if (mPlot->removeGraph(graph)) {
             graphs << graph;
+        }
     }
 
     emit graphsRemoved(this, graphs);
@@ -285,8 +290,9 @@ void GraphPanelWidget::updateMarkerColor()
 
 void GraphPanelWidget::setActive(bool pActive, bool pForce)
 {
-    if ((pActive == mActive) && !pForce)
+    if ((pActive == mActive) && !pForce) {
         return;
+    }
 
     // Set the graph panel's active state
 
@@ -298,10 +304,11 @@ void GraphPanelWidget::setActive(bool pActive, bool pForce)
 
     // Let people know if the graph panel has been activated or inactivated
 
-    if (pActive)
+    if (pActive) {
         emit activated(this);
-    else
+    } else {
         emit inactivated(this);
+    }
 }
 
 //==============================================================================

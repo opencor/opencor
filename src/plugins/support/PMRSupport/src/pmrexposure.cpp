@@ -102,8 +102,9 @@ void PmrExposure::addExposureFile(const QString &pFileName)
 {
     // Keep track of the given exposure file, if it's not already tracked
 
-    if (!mExposureFiles.contains(pFileName))
+    if (!mExposureFiles.contains(pFileName)) {
         mExposureFiles << pFileName;
+    }
 }
 
 //==============================================================================

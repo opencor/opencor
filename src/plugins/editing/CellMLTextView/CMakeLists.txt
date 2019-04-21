@@ -20,13 +20,6 @@ add_plugin(CellMLTextView
         src/cellmltextviewplugin.cpp
         src/cellmltextviewscanner.cpp
         src/cellmltextviewwidget.cpp
-    HEADERS_MOC
-        src/cellmltextviewconverter.h
-        src/cellmltextviewlexer.h
-        src/cellmltextviewparser.h
-        src/cellmltextviewplugin.h
-        src/cellmltextviewscanner.h
-        src/cellmltextviewwidget.h
     PLUGINS
         CellMLEditingView
     TESTS

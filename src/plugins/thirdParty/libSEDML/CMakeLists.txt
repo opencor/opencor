@@ -199,8 +199,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libsedmlplugin.cpp
-    HEADERS_MOC
-        src/libsedmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

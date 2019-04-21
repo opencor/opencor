@@ -4,7 +4,6 @@ project(CorePlugin)
 
 if(APPLE)
     set(TABBARWIDGETMACSTYLE_CPP src/tabbarwidgetmacstyle.cpp)
-    set(TABBARWIDGETMACSTYLE_H src/tabbarwidgetmacstyle.h)
 endif()
 
 add_plugin(Core
@@ -52,36 +51,6 @@ add_plugin(Core
         src/widget.cpp
         src/windowwidget.cpp
         src/xsltransformer.cpp
-    HEADERS_MOC
-        ../../datastoreinterface.h
-        ../../plugin.h
-        ../../pluginmanager.h
-        ../../preferencesinterface.h
-        ../../solverinterface.h
-
-        ${TABBARWIDGETMACSTYLE_H}
-
-        src/borderedwidget.h
-        src/busywidget.h
-        src/centralwidget.h
-        src/collapsiblewidget.h
-        src/corecliutils.h
-        src/coreguiutils.h
-        src/coreplugin.h
-        src/filemanager.h
-        src/mathmlconverter.h
-        src/organisationwidget.h
-        src/progressbarwidget.h
-        src/propertyeditorwidget.h
-        src/remotefiledialog.h
-        src/tabbarwidget.h
-        src/toolbarwidget.h
-        src/treeviewwidget.h
-        src/usermessagewidget.h
-        src/viewwidget.h
-        src/widget.h
-        src/windowwidget.h
-        src/xsltransformer.h
     QT_MODULES
         Network
         Widgets

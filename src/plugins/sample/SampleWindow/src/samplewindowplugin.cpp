@@ -77,8 +77,8 @@ bool SampleWindowPlugin::definesPluginInterfaces()
 bool SampleWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                             QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -109,7 +109,7 @@ void SampleWindowPlugin::finalizePlugin()
 
 void SampleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -118,7 +118,7 @@ void SampleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void SampleWindowPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -127,7 +127,7 @@ void SampleWindowPlugin::loadSettings(QSettings &pSettings)
 
 void SampleWindowPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -136,7 +136,7 @@ void SampleWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void SampleWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

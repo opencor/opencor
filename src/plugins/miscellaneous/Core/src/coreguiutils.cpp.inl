@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Core GUI utilities
 //==============================================================================
 
-static const auto SettingsPosition = QStringLiteral("Position");
-static const auto SettingsSize     = QStringLiteral("Size");
+static const char *SettingsPosition = "Position";
+static const char *SettingsSize     = "Size";
 
 //==============================================================================
 
@@ -103,18 +103,19 @@ QSize StyledItemDelegate::sizeHint(const QStyleOptionViewItem &pOption,
     static const QSize ZeroSize = QSize(0, 0);
     static const QSize SmallSize = QSize(0, 2);
 
-    const QStandardItemModel *standardItemModel = qobject_cast<const QStandardItemModel *>(pIndex.model());
+    auto standardItemModel = qobject_cast<const QStandardItemModel *>(pIndex.model());
 
-    if (standardItemModel) {
+    if (standardItemModel != nullptr) {
         QStandardItem *item = standardItemModel->itemFromIndex(pIndex);
 
-        res -= (item && !item->icon().isNull())?SmallSize:ZeroSize;
+        res -= ((item != nullptr) && !item->icon().isNull())?SmallSize:ZeroSize;
     }
 
-    const QFileSystemModel *fileSystemModel = qobject_cast<const QFileSystemModel *>(pIndex.model());
+    auto fileSystemModel = qobject_cast<const QFileSystemModel *>(pIndex.model());
 
-    if (fileSystemModel)
+    if (fileSystemModel != nullptr) {
         res -= SmallSize;
+    }
 #endif
 
     return res;
@@ -160,8 +161,9 @@ QSize minimumWidgetSize(QWidget *pWidget)
     // Determine the minimum size of the given widget
     // Note: this is based on QWidgetPrivate::adjustedSize()...
 
-    if (!pWidget)
-        return QSize();
+    if (pWidget == nullptr) {
+        return {};
+    }
 
     QSize minimumSize = pWidget->sizeHint();
 
@@ -169,23 +171,27 @@ QSize minimumWidgetSize(QWidget *pWidget)
         Qt::Orientations expandingDirections;
         QLayout *layout = pWidget->layout();
 
-        if (layout) {
-            if (layout->hasHeightForWidth())
+        if (layout != nullptr) {
+            if (layout->hasHeightForWidth()) {
                 minimumSize.setHeight(layout->totalHeightForWidth(minimumSize.width()));
+            }
 
             expandingDirections = layout->expandingDirections();
         } else {
-            if (pWidget->sizePolicy().hasHeightForWidth())
+            if (pWidget->sizePolicy().hasHeightForWidth()) {
                 minimumSize.setHeight(pWidget->heightForWidth(minimumSize.width()));
+            }
 
             expandingDirections = pWidget->sizePolicy().expandingDirections();
         }
 
-        if (expandingDirections & Qt::Horizontal)
+        if ((expandingDirections & Qt::Horizontal) != 0) {
             minimumSize.setWidth(qMax(minimumSize.width(), 200));
+        }
 
-        if (expandingDirections & Qt::Vertical)
+        if ((expandingDirections & Qt::Vertical) != 0) {
             minimumSize.setHeight(qMax(minimumSize.height(), 100));
+        }
 
         QRect screen = qApp->screenAt(mainWindow()->pos())->geometry();
 
@@ -196,8 +202,9 @@ QSize minimumWidgetSize(QWidget *pWidget)
     if (!minimumSize.isValid()) {
         QRect childrenRect = pWidget->childrenRect();
 
-        if (!childrenRect.isNull())
+        if (!childrenRect.isNull()) {
             minimumSize = childrenRect.size()+QSize(2*childrenRect.x(), 2*childrenRect.y());
+        }
     }
 
     return minimumSize;
@@ -212,8 +219,9 @@ void adjustWidgetSize(QWidget *pWidget)
 
     QSize minimumSize = minimumWidgetSize(pWidget);
 
-    if (!minimumSize.isValid())
+    if (!minimumSize.isValid()) {
         return;
+    }
 
     QSize oldSize = pWidget->size();
     QSize newSize = QSize(qMax(minimumSize.width(), oldSize.width()),
@@ -253,17 +261,18 @@ QColor opaqueColor(const QColor &pColor, const QColor &pBackgroundColor)
 
     QColor backgroundColor = pBackgroundColor;
 
-    if (backgroundColor.alpha() != 255)
+    if (backgroundColor.alpha() != 255) {
         backgroundColor = opaqueColor(backgroundColor, Qt::white);
+    }
 
     // Return an opaque version of the given colour using the (opaque version)
     // of the given background colour
 
     double alpha = pColor.alphaF();
 
-    return QColor(int((1.0-alpha)*backgroundColor.red()+alpha*pColor.red()),
-                  int((1.0-alpha)*backgroundColor.green()+alpha*pColor.green()),
-                  int((1.0-alpha)*backgroundColor.blue()+alpha*pColor.blue()));
+    return { int((1.0-alpha)*backgroundColor.red()+alpha*pColor.red()),
+             int((1.0-alpha)*backgroundColor.green()+alpha*pColor.green()),
+             int((1.0-alpha)*backgroundColor.blue()+alpha*pColor.blue()) };
 }
 
 //==============================================================================
@@ -345,7 +354,7 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
     messageBox.setTextInteractionFlags(pFlags);
 
-    QDialogButtonBox *buttonBox = messageBox.findChild<QDialogButtonBox*>();
+    auto buttonBox = messageBox.findChild<QDialogButtonBox*>();
 
     Q_ASSERT(buttonBox);
 
@@ -356,13 +365,15 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
 
         mask <<= 1;
 
-        if (!standardButton)
+        if (standardButton == 0) {
             continue;
+        }
 
         QPushButton *button = messageBox.addButton(QMessageBox::StandardButton(standardButton));
 
-        if (messageBox.defaultButton())
+        if (messageBox.defaultButton() != nullptr) {
             continue;
+        }
 
         if (   (   (pDefaultButton == QMessageBox::NoButton)
                 && (buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole))
@@ -380,8 +391,9 @@ QMessageBox::StandardButton showMessageBox(QWidget *pParent,
     //       glitches (e.g. a quick black flash on macOS upon reloading a file
     //       that has been modified outside of OpenCOR)...
 
-    if (res == -1)
+    if (res == -1) {
         return QMessageBox::Cancel;
+    }
 
     return messageBox.standardButton(messageBox.clickedButton());
 }
@@ -451,7 +463,7 @@ void aboutMessageBox(const QString &pTitle, const QString &pText)
 #ifdef Q_OS_MAC
     static QPointer<QMessageBox> oldMessageBox;
 
-    if (oldMessageBox && !oldMessageBox->text().compare(pText)) {
+    if ((oldMessageBox != nullptr) && (oldMessageBox->text() == pText)) {
         oldMessageBox->show();
         oldMessageBox->raise();
         oldMessageBox->activateWindow();
@@ -460,11 +472,11 @@ void aboutMessageBox(const QString &pTitle, const QString &pText)
     }
 #endif
 
-    QMessageBox *messageBox = new QMessageBox(  QMessageBox::Information, pTitle, pText, QMessageBox::NoButton, mainWindow()
+    auto messageBox = new QMessageBox(  QMessageBox::Information, pTitle, pText, QMessageBox::NoButton, mainWindow()
 #ifdef Q_OS_MAC
-                                              , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
+                                      , Qt::WindowTitleHint|Qt::WindowSystemMenuHint
 #endif
-                                             );
+                                     );
 
     messageBox->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
     messageBox->setAttribute(Qt::WA_DeleteOnClose);
@@ -477,7 +489,7 @@ void aboutMessageBox(const QString &pTitle, const QString &pText)
 #ifdef Q_OS_MAC
     oldMessageBox = messageBox;
 
-    QDialogButtonBox *buttonBox = messageBox->findChild<QDialogButtonBox*>();
+    auto buttonBox = messageBox->findChild<QDialogButtonBox*>();
 
     Q_ASSERT(buttonBox);
 

@@ -91,11 +91,11 @@ bool CellmlAnnotationViewMetadataEditDetailsItem::compare(const CellmlAnnotation
     int nameComparison = pItem1.name().compare(pItem2.name());
     int resourceComparison = pItem1.resource().compare(pItem2.resource());
 
-    return !nameComparison?
-                !resourceComparison?
-                    pItem1.id().compare(pItem2.id()) < 0:
-                    resourceComparison < 0:
-                nameComparison < 0;
+    return (nameComparison == 0)?
+               (resourceComparison == 0)?
+                   pItem1.id().compare(pItem2.id()) < 0:
+                   resourceComparison < 0:
+               nameComparison < 0;
 }
 
 //==============================================================================
@@ -182,16 +182,16 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Create a form widget that will contain our qualifier and term fields
 
-    QWidget *formWidget = new QWidget(this);
-    QFormLayout *formWidgetLayout = new QFormLayout(formWidget);
+    auto formWidget = new QWidget(this);
+    auto formWidgetLayout = new QFormLayout(formWidget);
 
     formWidget->setLayout(formWidgetLayout);
 
     // Create a widget that will contain both our qualifier value widget and a
     // button to look up the qualifier
 
-    QWidget *qualifierWidget = new QWidget(formWidget);
-    QHBoxLayout *qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
+    auto qualifierWidget = new QWidget(formWidget);
+    auto qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
 
     qualifierWidgetLayout->setContentsMargins(QMargins());
 
@@ -231,8 +231,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Create a widget that will contain both our term widget and a button to
     // add it (if it is a direct term)
 
-    QWidget *termWidget = new QWidget(formWidget);
-    QHBoxLayout *termWidgetLayout = new QHBoxLayout(termWidget);
+    auto termWidget = new QWidget(formWidget);
+    auto termWidgetLayout = new QHBoxLayout(termWidget);
 
     termWidgetLayout->setContentsMargins(QMargins());
 
@@ -384,25 +384,25 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable/disable our add term button, depending on whether the direct term
     // is already associated with the CellML element
 
-    bool fileReadableAndWritableAndNoIssues =     Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())
-                                              && !mCellmlFile->issues().count();
+    bool fileReadableAndWritableAndNoIssues =    Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())
+                                              && mCellmlFile->issues().isEmpty();
     bool termIsDirect = isDirectTerm(mTermValue->text());
 
     if (termIsDirect) {
         QStringList termInformation = mTermValue->text().split('/');
 
         if (mQualifierValue->currentIndex() < int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)) {
-            mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
-                                       && !mCellmlFile->rdfTriple(mElement,
+            mAddTermButton->setEnabled(   fileReadableAndWritableAndNoIssues
+                                       && (mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                                   termInformation[0],
-                                                                  termInformation[1]));
+                                                                  termInformation[1]) == nullptr));
         } else {
-            mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
-                                       && !mCellmlFile->rdfTriple(mElement,
+            mAddTermButton->setEnabled(   fileReadableAndWritableAndNoIssues
+                                       && (mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)+1),
                                                                   termInformation[0],
-                                                                  termInformation[1]));
+                                                                  termInformation[1]) == nullptr));
         }
     } else {
         mAddTermButton->setEnabled(false);
@@ -433,15 +433,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         bool enabledButton;
 
         if (mQualifierValue->currentIndex() < int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)) {
-            enabledButton =     fileReadableAndWritableAndNoIssues
-                            && !mCellmlFile->rdfTriple(mElement,
+            enabledButton =    fileReadableAndWritableAndNoIssues
+                            && (mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                       item.resource(), item.id());
+                                                       item.resource(), item.id()) == nullptr);
         } else {
-            enabledButton =     fileReadableAndWritableAndNoIssues
-                            && !mCellmlFile->rdfTriple(mElement,
+            enabledButton =    fileReadableAndWritableAndNoIssues
+                            && (mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-int(CellMLSupport::CellmlFileRdfTriple::BioQualifier::LastBioQualifier)+1),
-                                                       item.resource(), item.id());
+                                                       item.resource(), item.id()) == nullptr);
         }
 
         if (enabledButton != mEnabledItems.value(itemInformationSha1)) {
@@ -462,11 +462,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pL
 {
     // Update our output message
 
-    if (pShowBusyWidget)
+    if (pShowBusyWidget != nullptr) {
         *pShowBusyWidget = false;
+    }
 
     bool lockedOrIssues =    !Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())
-                          ||  mCellmlFile->issues().count();
+                          || !mCellmlFile->issues().isEmpty();
 
     if (mTermValue->text().isEmpty()) {
         mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
@@ -474,8 +475,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(bool pL
     } else if (pLookUpTerm) {
         mOutputMessage->setIconMessage(QString(), QString());
 
-        if (pShowBusyWidget)
+        if (pShowBusyWidget != nullptr) {
             *pShowBusyWidget = true;
+        }
     } else if (pHasInternetConnection && pErrorMessage.isEmpty()) {
         if (isDirectTerm(mTermValue->text())) {
             if (mAddTermButton->isEnabled()) {
@@ -515,10 +517,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 
     QWebElement countElement = documentElement.findFirst("th[id=count]");
 
-    if (mItems.count() == 1)
+    if (mItems.count() == 1) {
         countElement.setInnerXml(tr("(1 term)"));
-    else
+    } else {
         countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItems.count())));
+    }
 }
 
 //==============================================================================
@@ -550,7 +553,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
 
     bool showBusyWidget = false;
 
-    if (pItems.count()) {
+    if (!pItems.isEmpty()) {
         // Initialise our web view
 
         int iconSize = int(16/qApp->devicePixelRatio());
@@ -568,8 +571,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
             QString itemInformation = item.resource()+"|"+item.id();
             QString itemInformationSha1 = Core::sha1(itemInformation);
 
-            if (!mUrls.contains(item.resource()))
+            if (!mUrls.contains(item.resource())) {
                 mUrls.insert(item.resource(), resourceUrl(item.resource()));
+            }
 
             mUrls.insert(itemInformation, idUrl(item.resource(), item.id()));
 
@@ -612,21 +616,23 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
         // Note: this is in case a resource or id used to be looked up, in which
         //       case we don't want it to be anymore...
 
-        if (mLookUpInformation && (mInformationType != InformationType::Qualifier))
+        if (mLookUpInformation && (mInformationType != InformationType::Qualifier)) {
             genericLookUp();
+        }
     }
 
     // Show/hide our output message and output for ontological terms
 
-    mOutputMessage->setVisible(!pItems.count());
-    mOutputOntologicalTerms->setVisible(pItems.count());
+    mOutputMessage->setVisible(pItems.isEmpty());
+    mOutputOntologicalTerms->setVisible(!pItems.isEmpty());
 
     // Show our busy widget, if needed, or hide it (to be on the safe side)
 
-    if (showBusyWidget)
+    if (showBusyWidget) {
         mOutput->showBusyWidget();
-    else
+    } else {
         mOutput->hideBusyWidget(true);
+    }
 }
 
 //==============================================================================
@@ -675,23 +681,25 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
     QString itemInformationSha1 = mLink.isEmpty()?QString():Core::sha1(mLink);
 
-    if (itemInformationSha1.compare(mItemInformationSha1)) {
+    if (itemInformationSha1 != mItemInformationSha1) {
         if (!mItemInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(mItemInformationSha1)).removeClass(Highlighted);
 
-            if (mInformationType == InformationType::Resource)
+            if (mInformationType == InformationType::Resource) {
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(mItemInformationSha1)).removeClass(Selected);
-            else if (mInformationType == InformationType::Id)
+            } else if (mInformationType == InformationType::Id) {
                 documentElement.findFirst(QString("td[id=id_%1]").arg(mItemInformationSha1)).removeClass(Selected);
+            }
         }
 
         if (!itemInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1)).addClass(Highlighted);
 
-            if (pInformationType == InformationType::Resource)
+            if (pInformationType == InformationType::Resource) {
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).addClass(Selected);
-            else if (pInformationType == InformationType::Id)
+            } else if (pInformationType == InformationType::Id) {
                 documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).addClass(Selected);
+            }
         }
 
         mItemInformationSha1 = itemInformationSha1;
@@ -709,8 +717,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     // Make sure that we have something to look up
 
-    if (!mLookUpInformation)
+    if (!mLookUpInformation) {
         return;
+    }
 
     // Let people know that we want to look something up
 
@@ -864,10 +873,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered()
     QString linkToolTip = QString();
 
     if (!link.isEmpty()) {
-        if (textContent.isEmpty())
+        if (textContent.isEmpty()) {
             linkToolTip = tr("Add Term");
-        else
+        } else {
             linkToolTip = mUrls.contains(textContent)?tr("Look Up Resource"):tr("Look Up Id");
+        }
     }
 
     mOutputOntologicalTerms->setToolTip(linkToolTip);
@@ -912,7 +922,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
 //==============================================================================
 
-static const auto Pmr2RicordoUrl = QStringLiteral("https://models.physiomeproject.org/pmr2_ricordo/miriam_terms/");
+static const char *Pmr2RicordoUrl = "https://models.physiomeproject.org/pmr2_ricordo/miriam_terms/";
 
 //==============================================================================
 
@@ -920,7 +930,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
 {
     // 'Cancel' the previous request, if any
 
-    if (mNetworkReply) {
+    if (mNetworkReply != nullptr) {
         mNetworkReply->close();
 
         mNetworkReply = nullptr;
@@ -934,8 +944,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
 
         mTerms.removeFirst();
 
-        if (mTerms.isEmpty())
+        if (mTerms.isEmpty()) {
             mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+term));
+        }
     } else {
         termLookedUp();
     }
@@ -954,16 +965,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     QString errorMessage = QString();
     bool hasInternetConnection = true;
 
-    if (pNetworkReply) {
+    if (pNetworkReply != nullptr) {
         // Ignore the network reply if it got cancelled
 
         if (pNetworkReply->error() == QNetworkReply::OperationCanceledError) {
             pNetworkReply->deleteLater();
 
             return;
-        } else {
-            mNetworkReply = nullptr;
         }
+
+        mNetworkReply = nullptr;
 
         // Keep track of the term we have just looked up
 
@@ -974,7 +985,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         if (pNetworkReply->error() == QNetworkReply::NoError) {
             // Parse the JSON data
 
-            QJsonParseError jsonParseError;
+            QJsonParseError jsonParseError = QJsonParseError();
             QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
             if (jsonParseError.error == QJsonParseError::NoError) {
@@ -1020,8 +1031,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     // Delete (later) the network reply
 
-    if (pNetworkReply)
+    if (pNetworkReply != nullptr) {
         pNetworkReply->deleteLater();
+    }
 }
 
 //==============================================================================
@@ -1080,8 +1092,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu()
     // id, but only if we are over a link, i.e. if both mLink and mTextContent
     // are not empty
 
-    if (!mLink.isEmpty() && !mTextContent.isEmpty())
+    if (!mLink.isEmpty() && !mTextContent.isEmpty()) {
         mContextMenu->exec(QCursor::pos());
+    }
 }
 
 //==============================================================================
@@ -1090,10 +1103,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::copy()
 {
     // Copy the URL of the resource or id to the clipboard
 
-    if (mUrls.contains(mTextContent))
+    if (mUrls.contains(mTextContent)) {
         QApplication::clipboard()->setText(mUrls.value(mTextContent));
-    else
+    } else {
         QApplication::clipboard()->setText(mUrls.value(mLink));
+    }
 }
 
 //==============================================================================
@@ -1102,7 +1116,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::filePermissionsChanged()
 {
     // Update our GUI (incl. its enabled state)
 
-    updateGui(mElement, !mItems.count(), true);
+    updateGui(mElement, mItems.isEmpty(), true);
 }
 
 //==============================================================================

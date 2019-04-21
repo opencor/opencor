@@ -35,7 +35,22 @@ class ConversionTests : public QObject
 
 private slots:
     void successfulConversionTests();
-    void failingConversionTests();
+    void failingConversionTests01();
+    void failingConversionTests02();
+    void failingConversionTests03();
+    void failingConversionTests04();
+    void failingConversionTests05();
+    void failingConversionTests06();
+    void failingConversionTests07();
+    void failingConversionTests08();
+    void failingConversionTests09();
+    void failingConversionTests10();
+    void failingConversionTests11();
+    void failingConversionTests12();
+    void failingConversionTests13();
+    void failingConversionTests14();
+    void failingConversionTests15();
+    void failingConversionTests16();
     void warningConversionTests();
 };
 

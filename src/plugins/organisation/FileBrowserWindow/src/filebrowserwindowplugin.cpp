@@ -81,8 +81,8 @@ bool FileBrowserWindowPlugin::definesPluginInterfaces()
 bool FileBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                                  QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -113,7 +113,7 @@ void FileBrowserWindowPlugin::finalizePlugin()
 
 void FileBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -144,7 +144,7 @@ void FileBrowserWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void FileBrowserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

@@ -11,8 +11,6 @@ add_plugin(SampleTools
         ../../plugininterface.cpp
 
         src/sampletoolsplugin.cpp
-    HEADERS_MOC
-        src/sampletoolsplugin.h
     PLUGINS
         Core
         Sample

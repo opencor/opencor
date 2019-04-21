@@ -76,7 +76,7 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
 
     // Only allow double numbers
 
-    QRegularExpressionValidator *doubleRegExValidator = new QRegularExpressionValidator(QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$"), this);
+    auto doubleRegExValidator = new QRegularExpressionValidator(QRegularExpression(R"(^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$)"), this);
 
     mGui->xMinValue->setValidator(doubleRegExValidator);
     mGui->xMaxValue->setValidator(doubleRegExValidator);
@@ -158,7 +158,7 @@ void GraphPanelWidgetCustomAxesDialog::checkValue(QLineEdit *pValue)
 
 void GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our X-min value
 
@@ -169,7 +169,7 @@ void GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited(const QString &pValue
 
 void GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our X-max value
 
@@ -180,7 +180,7 @@ void GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited(const QString &pValue
 
 void GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our Y-min value
 
@@ -191,7 +191,7 @@ void GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited(const QString &pValue
 
 void GraphPanelWidgetCustomAxesDialog::yMaxValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our Y-max value
 

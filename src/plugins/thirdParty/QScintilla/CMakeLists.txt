@@ -182,8 +182,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/qscintillaplugin.cpp
-    HEADERS_MOC
-        src/qscintillaplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

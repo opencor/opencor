@@ -37,9 +37,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 #elif defined(Q_OS_MAC)
     #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wcast-align"
+    #pragma clang diagnostic ignored "-Wcomma"
+    #pragma clang diagnostic ignored "-Wconversion"
+    #pragma clang diagnostic ignored "-Wdeprecated"
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+    #pragma clang diagnostic ignored "-Wduplicate-enum"
+    #pragma clang diagnostic ignored "-Wextra-semi"
+    #pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+    #pragma clang diagnostic ignored "-Wmissing-noreturn"
+    #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wshadow"
+    #pragma clang diagnostic ignored "-Wshadow-field"
+    #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
+    #pragma clang diagnostic ignored "-Wshorten-64-to-32"
+    #pragma clang diagnostic ignored "-Wsigned-enum-bitfield"
+    #pragma clang diagnostic ignored "-Wswitch-enum"
+    #pragma clang diagnostic ignored "-Wundef"
+    #pragma clang diagnostic ignored "-Wundefined-reinterpret-cast"
     #pragma clang diagnostic ignored "-Wunused-parameter"
-#else
-    #error Unsupported platform
+    #pragma clang diagnostic ignored "-Wunused-template"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 //==============================================================================
