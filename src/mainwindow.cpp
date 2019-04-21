@@ -477,9 +477,9 @@ void MainWindow::registerOpencorUrlScheme()
     settings.setValue("opencor/Default", QString("URL:%1 link").arg(qApp->applicationName()));
     settings.setValue("opencor/Content Type", "x-scheme-handler/opencor");
     settings.setValue("opencor/URL Protocol", "");
-    settings.setValue("opencor/DefaultIcon/Default", "\""+applicationFileName+"\",1");
+    settings.setValue("opencor/DefaultIcon/Default", R"(")"+applicationFileName+R"(",1)");
     settings.setValue("opencor/shell/Default", "open");
-    settings.setValue("opencor/shell/open/command/Default", "\""+applicationFileName+R"(" "%1")");
+    settings.setValue("opencor/shell/open/command/Default", R"(")"+applicationFileName+R"(" "%1")");
 
     SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, nullptr, nullptr);
 #elif defined(Q_OS_LINUX)
