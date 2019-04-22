@@ -126,8 +126,8 @@ private:
     QStandardItemModel *mModel;
     QSortFilterProxyModel *mProxyModel;
 
-    QTextEdit *mMessageValue;
     QListView *mChangesValue;
+    QTextEdit *mMessageValue;
 
     WebViewerWidget::WebViewerWidget *mWebViewer;
     QAction *mWebViewerCellmlTextFormatAction;
