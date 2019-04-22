@@ -35,6 +35,7 @@ option(USE_PREBUILT_QSCINTILLA_PACKAGE "Use the pre-built version of the QScinti
 option(USE_PREBUILT_QWT_PACKAGE "Use the pre-built version of the Qwt package" ON)
 option(USE_PREBUILT_SUNDIALS_PACKAGE "Use the pre-built version of the SUNDIALS package" ON)
 option(USE_PREBUILT_ZLIB_PACKAGE "Use the pre-built version of the zlib package" ON)
+set(USE_PREBUILT_LIBSBML_PACKAGE OFF)
 
 if(ENABLE_TEST_PLUGINS)
     option(USE_PREBUILT_ZINC_PACKAGE "Use the pre-built version of the Zinc package" ON)
@@ -930,6 +931,9 @@ set(PLUGINS
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
     widget/WebViewerWidget
+)
+set(PLUGINS
+    thirdParty/libSBML
 )
 
 if(ENABLE_TEST_PLUGINS)
