@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
     #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
     #pragma clang diagnostic ignored "-Wextra-semi"
+    #pragma clang diagnostic ignored "-Wnewline-eof"
     #pragma clang diagnostic ignored "-Wundef"
 #endif
 
