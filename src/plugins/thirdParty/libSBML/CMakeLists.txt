@@ -3,16 +3,16 @@ project(libSBMLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libSBML)
-set(PACKAGE_VERSION 5.17.0)
+set(PACKAGE_VERSION 5.18.0)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 5)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.17.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.18.0)
 
 # Git tag for our library
 
-set(GIT_TAG v5.17.0)
+set(GIT_TAG v5.18.0)
 
 # Package repository
 
@@ -91,6 +91,8 @@ if(USE_PREBUILT_LIBSBML_PACKAGE)
     endif()
 else()
     # Download some dependencies for Windows, if needed
+    # Note: they can originally be found at
+    #       https://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/...
 
     if(WIN32)
         if(RELEASE_MODE)
@@ -99,7 +101,7 @@ else()
             set(MODE debug)
         endif()
 
-        set(DEPENDENCIES_FILENAME libSBML_dependencies_vs14_${MODE}_x64.zip)
+        set(DEPENDENCIES_FILENAME libSBML_dependencies_vs15_${MODE}_x64.zip)
         set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext/dependencies)
         set(DEPENDENCIES_MODE_DIR ${DEPENDENCIES_DIR}/${MODE})
 
