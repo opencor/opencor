@@ -197,8 +197,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

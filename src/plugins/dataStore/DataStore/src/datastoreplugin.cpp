@@ -56,8 +56,8 @@ void DataStorePlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace DataStore
-}   // namespace OpenCOR
+} // namespace DataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -336,8 +336,8 @@ QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

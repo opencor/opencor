@@ -167,7 +167,7 @@ int runCli(const QStringList &pArguments, QStringList &pOutput)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

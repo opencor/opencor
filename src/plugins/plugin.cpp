@@ -569,7 +569,7 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

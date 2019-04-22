@@ -410,8 +410,8 @@ void PmrWindowWindow::retrieveExposures(bool pVisible)
 
 //==============================================================================
 
-}   // namespace PMRWindow
-}   // namespace OpenCOR
+} // namespace PMRWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

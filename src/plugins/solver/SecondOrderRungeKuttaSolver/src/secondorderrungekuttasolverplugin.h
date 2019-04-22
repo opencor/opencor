@@ -58,8 +58,8 @@ public:
 
 //==============================================================================
 
-}   // namespace SecondOrderRungeKuttaSolver
-}   // namespace OpenCOR
+} // namespace SecondOrderRungeKuttaSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -47,8 +47,8 @@ class WebViewerWidgetPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
-}   // namespace OpenCOR
+} // namespace WebViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

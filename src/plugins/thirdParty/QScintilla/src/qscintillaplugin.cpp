@@ -44,8 +44,8 @@ PLUGININFO_FUNC QScintillaPluginInfo()
 
 //==============================================================================
 
-}   // namespace QScintilla
-}   // namespace OpenCOR
+} // namespace QScintilla
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

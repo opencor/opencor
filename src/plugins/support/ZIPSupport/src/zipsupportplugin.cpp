@@ -44,8 +44,8 @@ PLUGININFO_FUNC ZIPSupportPluginInfo()
 
 //==============================================================================
 
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

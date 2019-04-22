@@ -44,8 +44,8 @@ PLUGININFO_FUNC QwtPluginInfo()
 
 //==============================================================================
 
-}   // namespace Qwt
-}   // namespace OpenCOR
+} // namespace Qwt
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

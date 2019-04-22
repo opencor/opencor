@@ -42,7 +42,7 @@ FileHandlingInterface::~FileHandlingInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

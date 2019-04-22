@@ -735,8 +735,8 @@ bool EditorWidget::handleEditorChanges() const
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

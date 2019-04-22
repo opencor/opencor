@@ -51,7 +51,7 @@ void Tests::basicTests()
 
     static const std::string ElementName = "numl";
 
-    QCOMPARE(numlDocument->getElementName(), ElementName       );
+    QCOMPARE(numlDocument->getElementName(), ElementName);
 
     delete numlDocument;
 }

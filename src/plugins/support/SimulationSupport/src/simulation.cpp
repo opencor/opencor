@@ -1589,8 +1589,8 @@ void Simulation::fileManaged(const QString &pFileName)
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

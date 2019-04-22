@@ -151,8 +151,8 @@ void PmrSupportPreferencesWidget::noteValueLinkActivated(const QString &pLink)
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

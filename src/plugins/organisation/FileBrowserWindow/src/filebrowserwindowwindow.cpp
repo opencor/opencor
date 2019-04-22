@@ -223,8 +223,8 @@ void FileBrowserWindowWindow::itemDoubleClicked()
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
-}   // namespace OpenCOR
+} // namespace FileBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

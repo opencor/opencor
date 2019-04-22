@@ -506,7 +506,7 @@ void MainWindow::registerOpencorUrlScheme()
 #elif defined(Q_OS_MAC)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
-    LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),                                 // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+    LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),                                // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
                                     CFBundleGetIdentifier(CFBundleGetMainBundle()));
 #pragma clang diagnostic pop
 #endif
@@ -1428,7 +1428,7 @@ void MainWindow::resetAll()
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

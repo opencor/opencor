@@ -77,8 +77,8 @@ typedef QList<SedmlFileIssue> SedmlFileIssues;
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

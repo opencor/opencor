@@ -51,8 +51,8 @@ DataItemDelegate::DataItemDelegate(QObject *pParent) :
 //==============================================================================
 
 void DataItemDelegate::paint(QPainter *pPainter,
-                               const QStyleOptionViewItem &pOption,
-                               const QModelIndex &pIndex) const
+                             const QStyleOptionViewItem &pOption,
+                             const QModelIndex &pIndex) const
 {
     // Paint the item as normal unless it's a hierarchy item, in which case we
     // make it bold
@@ -390,8 +390,8 @@ void DataStoreDialog::allDataCheckBoxClicked()
 
 //==============================================================================
 
-}   // namespace DataStore
-}   // namespace OpenCOR
+} // namespace DataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

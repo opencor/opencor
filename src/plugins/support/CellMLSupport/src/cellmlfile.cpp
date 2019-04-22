@@ -1246,8 +1246,8 @@ QString CellmlFile::versionAsString(Version pVersion)
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

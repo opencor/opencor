@@ -98,8 +98,8 @@ void ForwardEulerSolver::solve(double &pVoi, double pVoiEnd) const
 
 //==============================================================================
 
-}   // namespace ForwardEulerSolver
-}   // namespace OpenCOR
+} // namespace ForwardEulerSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

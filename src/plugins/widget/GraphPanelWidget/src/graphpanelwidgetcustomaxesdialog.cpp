@@ -155,7 +155,6 @@ void GraphPanelWidgetCustomAxesDialog::checkValue(QLineEdit *pValue)
 
 //==============================================================================
 
-
 void GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited(const QString &pValue)
 {
     Q_UNUSED(pValue)
@@ -225,8 +224,8 @@ void GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted()
 
 //==============================================================================
 
-}   // namespace GraphPanelWidget
-}   // namespace OpenCOR
+} // namespace GraphPanelWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -43,7 +43,7 @@ class SedmlEditingViewInterface;
 
 namespace EditorWidget {
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -97,8 +97,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SEDMLEditingView
-}   // namespace OpenCOR
+} // namespace SEDMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

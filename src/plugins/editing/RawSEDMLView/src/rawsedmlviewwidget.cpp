@@ -369,8 +369,8 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 
 //==============================================================================
 
-}   // namespace RawSEDMLView
-}   // namespace OpenCOR
+} // namespace RawSEDMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

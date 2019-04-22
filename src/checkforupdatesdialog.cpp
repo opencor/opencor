@@ -363,7 +363,7 @@ void CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled(bool pChecked)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

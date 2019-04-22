@@ -40,7 +40,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrAuthentication: public O1
+class PmrAuthentication : public O1
 {
     Q_OBJECT
 
@@ -50,8 +50,8 @@ public:
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

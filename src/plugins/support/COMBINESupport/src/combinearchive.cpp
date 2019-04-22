@@ -599,8 +599,8 @@ CombineArchiveIssues CombineArchive::issues() const
 
 //==============================================================================
 
-}   // namespace COMBINESupport
-}   // namespace OpenCOR
+} // namespace COMBINESupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

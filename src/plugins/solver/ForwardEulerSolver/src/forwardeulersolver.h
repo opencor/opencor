@@ -61,8 +61,8 @@ private:
 
 //==============================================================================
 
-}   // namespace ForwardEulerSolver
-}   // namespace OpenCOR
+} // namespace ForwardEulerSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

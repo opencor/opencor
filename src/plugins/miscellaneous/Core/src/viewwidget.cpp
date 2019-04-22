@@ -46,8 +46,8 @@ QList<QWidget *> ViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

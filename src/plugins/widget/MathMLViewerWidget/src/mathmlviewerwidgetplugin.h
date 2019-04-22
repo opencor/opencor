@@ -53,8 +53,8 @@ public:
 
 //==============================================================================
 
-}   // namespace MathMLViewerWidget
-}   // namespace OpenCOR
+} // namespace MathMLViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

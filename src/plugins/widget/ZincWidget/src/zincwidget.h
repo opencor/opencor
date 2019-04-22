@@ -44,8 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace OpenCMISS {
 namespace Zinc {
     class Context;
-}   // namespace Zinc
-}   // namespace OpenCMISS
+} // namespace Zinc
+} // namespace OpenCMISS
 
 //==============================================================================
 
@@ -149,8 +149,8 @@ signals:
 
 //==============================================================================
 
-}   // namespace ZincWidget
-}   // namespace OpenCOR
+} // namespace ZincWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

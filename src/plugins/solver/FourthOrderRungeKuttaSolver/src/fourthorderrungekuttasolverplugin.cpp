@@ -47,7 +47,6 @@ PLUGININFO_FUNC FourthOrderRungeKuttaSolverPluginInfo()
 // I18n interface
 //==============================================================================
 
-
 void FourthOrderRungeKuttaSolverPlugin::retranslateUi()
 {
     // We don't handle this interface...
@@ -59,7 +58,6 @@ void FourthOrderRungeKuttaSolverPlugin::retranslateUi()
 //==============================================================================
 // Solver interface
 //==============================================================================
-
 
 Solver::Solver * FourthOrderRungeKuttaSolverPlugin::solverInstance() const
 {
@@ -150,8 +148,8 @@ QMap<QString, bool> FourthOrderRungeKuttaSolverPlugin::solverPropertiesVisibilit
 
 //==============================================================================
 
-}   // namespace FourthOrderRungeKuttaSolver
-}   // namespace OpenCOR
+} // namespace FourthOrderRungeKuttaSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

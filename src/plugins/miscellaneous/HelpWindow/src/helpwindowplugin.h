@@ -69,8 +69,8 @@ private:
 
 //==============================================================================
 
-}   // namespace HelpWindow
-}   // namespace OpenCOR
+} // namespace HelpWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

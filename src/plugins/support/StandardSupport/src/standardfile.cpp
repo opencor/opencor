@@ -120,8 +120,8 @@ void StandardFile::setModified(bool pModified) const
 
 //==============================================================================
 
-}   // namespace StandardSupport
-}   // namespace OpenCOR
+} // namespace StandardSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -83,7 +83,7 @@ void I18nInterface::retranslateAction(QAction *pAction,
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -510,8 +510,8 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Prope
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

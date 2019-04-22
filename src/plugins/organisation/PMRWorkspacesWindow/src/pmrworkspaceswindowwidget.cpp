@@ -1686,8 +1686,8 @@ void PmrWorkspacesWindowWidget::aboutWorkspace()
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

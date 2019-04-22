@@ -1321,8 +1321,8 @@ void CellmlTextViewWidget::mathmlConversionDone(const QString &pContentMathml,
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

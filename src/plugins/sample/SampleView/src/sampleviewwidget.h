@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class SampleViewWidget;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -62,8 +62,8 @@ private:
 
 //==============================================================================
 
-}   // namespace SampleView
-}   // namespace OpenCOR
+} // namespace SampleView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

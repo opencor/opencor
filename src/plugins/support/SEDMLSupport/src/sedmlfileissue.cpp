@@ -96,8 +96,8 @@ QString SedmlFileIssue::message() const
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

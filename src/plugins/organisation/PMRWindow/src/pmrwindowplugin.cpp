@@ -208,8 +208,8 @@ QDockWidget * PMRWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace PMRWindow
-}   // namespace OpenCOR
+} // namespace PMRWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

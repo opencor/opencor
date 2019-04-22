@@ -258,8 +258,8 @@ void ZincWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 
 //==============================================================================
 
-}   // namespace ZincWindow
-}   // namespace OpenCOR
+} // namespace ZincWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

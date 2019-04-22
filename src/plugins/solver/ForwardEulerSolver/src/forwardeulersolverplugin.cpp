@@ -148,8 +148,8 @@ QMap<QString, bool> ForwardEulerSolverPlugin::solverPropertiesVisibility(const Q
 
 //==============================================================================
 
-}   // namespace ForwardEulerSolver
-}   // namespace OpenCOR
+} // namespace ForwardEulerSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

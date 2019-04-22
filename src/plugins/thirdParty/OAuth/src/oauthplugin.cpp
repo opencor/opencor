@@ -44,8 +44,8 @@ PLUGININFO_FUNC OAuthPluginInfo()
 
 //==============================================================================
 
-}   // namespace OAuth
-}   // namespace OpenCOR
+} // namespace OAuth
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -396,8 +396,8 @@ QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace RawCellMLView
-}   // namespace OpenCOR
+} // namespace RawCellMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

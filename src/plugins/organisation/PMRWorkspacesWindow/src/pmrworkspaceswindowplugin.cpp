@@ -212,8 +212,8 @@ QDockWidget * PMRWorkspacesWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

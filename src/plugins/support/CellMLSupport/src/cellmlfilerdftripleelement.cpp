@@ -215,8 +215,8 @@ QString CellmlFileRdfTripleElement::asString() const
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

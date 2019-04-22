@@ -639,8 +639,8 @@ void RawCellmlViewWidget::mathmlConversionDone(const QString &pContentMathml,
 
 //==============================================================================
 
-}   // namespace RawCellMLView
-}   // namespace OpenCOR
+} // namespace RawCellMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

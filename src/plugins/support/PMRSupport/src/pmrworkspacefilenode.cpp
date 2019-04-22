@@ -169,8 +169,8 @@ bool PmrWorkspaceFileNode::removeChild(PmrWorkspaceFileNode *pChild)
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -34,9 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QAction>
-#include <QKeyEvent>
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -571,8 +571,8 @@ void EditorWidgetFindReplaceWidget::emitCanFindReplace()
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

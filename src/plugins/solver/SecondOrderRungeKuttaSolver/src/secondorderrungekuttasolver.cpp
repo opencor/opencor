@@ -132,8 +132,8 @@ void SecondOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
 
 //==============================================================================
 
-}   // namespace SecondOrderRungeKuttaSolver
-}   // namespace OpenCOR
+} // namespace SecondOrderRungeKuttaSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

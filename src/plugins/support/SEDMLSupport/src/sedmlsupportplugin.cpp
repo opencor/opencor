@@ -270,8 +270,8 @@ void SEDMLSupportPlugin::newSedmlFile()
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

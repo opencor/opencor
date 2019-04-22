@@ -127,8 +127,8 @@ void BorderedWidget::setRightBorderVisible(bool pVisible) const
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

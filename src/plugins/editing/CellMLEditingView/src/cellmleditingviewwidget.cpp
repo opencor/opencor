@@ -261,8 +261,8 @@ void CellmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 
 //==============================================================================
 
-}   // namespace CellMLEditingView
-}   // namespace OpenCOR
+} // namespace CellMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

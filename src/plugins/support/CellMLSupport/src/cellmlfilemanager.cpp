@@ -88,8 +88,8 @@ StandardSupport::StandardFile * CellmlFileManager::create(const QString &pFileNa
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

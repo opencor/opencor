@@ -52,8 +52,8 @@ namespace Core {
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 
@@ -175,8 +175,8 @@ QStringList CORE_EXPORT droppedFileNames(QDropEvent *pEvent);
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

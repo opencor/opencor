@@ -56,8 +56,8 @@ void MathMLViewerWidgetPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace MathMLViewerWidget
-}   // namespace OpenCOR
+} // namespace MathMLViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

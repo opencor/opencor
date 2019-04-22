@@ -2323,8 +2323,8 @@ void CentralWidget::updateStatusBarWidgets(const QList<QWidget *> &pWidgets)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

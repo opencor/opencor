@@ -38,19 +38,19 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFile;
     class CellmlFileRuntime;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
 namespace COMBINESupport {
     class CombineArchive;
-}   // namespace COMBINESupport
+} // namespace COMBINESupport
 
 //==============================================================================
 
 namespace SEDMLSupport {
     class SedmlFile;
-}   // namespace SEDMLSupport
+} // namespace SEDMLSupport
 
 //==============================================================================
 
@@ -347,8 +347,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

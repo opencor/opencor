@@ -44,8 +44,8 @@ PLUGININFO_FUNC libSEDMLPluginInfo()
 
 //==============================================================================
 
-}   // namespace libSEDML
-}   // namespace OpenCOR
+} // namespace libSEDML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

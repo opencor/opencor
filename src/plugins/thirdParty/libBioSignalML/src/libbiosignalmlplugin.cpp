@@ -44,8 +44,8 @@ PLUGININFO_FUNC libBioSignalMLPluginInfo()
 
 //==============================================================================
 
-}   // namespace libBioSignalML
-}   // namespace OpenCOR
+} // namespace libBioSignalML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
