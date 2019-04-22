@@ -27,7 +27,6 @@ Checks: >-
   -hicpp-signed-bitwise,
   -hicpp-vararg,
   llvm-*,
-  -llvm-include-order,
   misc-*,
   modernize-*,
   -modernize-pass-by-value,
