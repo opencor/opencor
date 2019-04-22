@@ -15,6 +15,15 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "subCategory", "name": "PMR Workspaces window",
+                             "entries": [
+                               { "type": "improved", "description": "Synchronisation dialog." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Simulation",
                          "entries": [
                            { "type": "subCategory", "name": "Simulation Experiment view",
