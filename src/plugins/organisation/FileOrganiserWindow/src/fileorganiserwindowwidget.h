@@ -53,6 +53,7 @@ public:
     explicit FileOrganiserWindowItem(const QIcon &pIcon,
                                      const QString &pTextOrPath,
                                      bool pFolder = false);
+    ~FileOrganiserWindowItem() override;
 
     bool isFolder() const;
 

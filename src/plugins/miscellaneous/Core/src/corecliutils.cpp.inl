@@ -27,15 +27,16 @@ QString locale()
 
     QString res = rawLocale();
 
-    if (res.isEmpty())
+    if (res.isEmpty()) {
         return QLocale::system().name().left(2);
-    else
-        return res;
+    }
+
+    return res;
 }
 
 //==============================================================================
 
-static const auto RawSettingsLocale = QStringLiteral("RawLocale");
+static const char *RawSettingsLocale = "RawLocale";
 
 //==============================================================================
 
@@ -62,10 +63,11 @@ QString shortVersion()
     QString res = QString();
     QString appVersion = qApp->applicationVersion();
 
-    if (!appVersion.contains('-'))
+    if (!appVersion.contains('-')) {
         res += "Version ";
-    else
+    } else {
         res += "Snapshot ";
+    }
 
     res += appVersion;
 
@@ -202,8 +204,9 @@ QStringList canonicalFileNames(const QStringList &pFileNames)
 
     QStringList res = QStringList();
 
-    for (const auto &fileName : pFileNames)
+    for (const auto &fileName : pFileNames) {
         res << canonicalFileName(fileName);
+    }
 
     return res;
 }
@@ -259,21 +262,23 @@ bool SynchronousFileDownloader::download(const QString &pUrl,
 
             pContents = networkReply->readAll();
 
-            if (pErrorMessage)
+            if (pErrorMessage != nullptr) {
                 *pErrorMessage = QString();
-        } else if (pErrorMessage) {
+            }
+        } else if (pErrorMessage != nullptr) {
             *pErrorMessage = networkReply->errorString();
         }
 
         networkReply->deleteLater();
 
         return res;
-    } else {
-        if (pErrorMessage)
-            *pErrorMessage = QObject::tr("No Internet connection available.");
-
-        return false;
     }
+
+    if (pErrorMessage != nullptr) {
+        *pErrorMessage = QObject::tr("No Internet connection available.");
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -368,18 +373,20 @@ QString formatMessage(const QString &pMessage, bool pLowerCase, bool pDotDotDot)
 
     QString message = pMessage.trimmed();
 
-    if (message.isEmpty())
+    if (message.isEmpty()) {
         return pDotDotDot?DotDotDot:QString();
+    }
 
     // Upper/lower the case of the first character, unless the message is one
     // character long (!!) or unless its second character is in lower case
 
     if (    (message.size() <= 1)
         || ((message.size() > 1) && message[1].isLower())) {
-        if (pLowerCase)
+        if (pLowerCase) {
             message[0] = message[0].toLower();
-        else
+        } else {
             message[0] = message[0].toUpper();
+        }
     }
 
     // Return the message after making sure that it ends with "...", if
@@ -387,8 +394,9 @@ QString formatMessage(const QString &pMessage, bool pLowerCase, bool pDotDotDot)
 
     int subsize = message.size();
 
-    while (subsize && (message[subsize-1] == '.'))
+    while ((subsize != 0) && (message[subsize-1] == '.')) {
         --subsize;
+    }
 
     return message.left(subsize)+(pDotDotDot?DotDotDot:QString());
 }
@@ -406,16 +414,16 @@ QByteArray resource(const QString &pResource)
             // The resource is compressed, so uncompress it before returning it
 
             return qUncompress(resource.data(), int(resource.size()));
-        } else {
-            // The resource is not compressed, so just return it after doing the
-            // right conversion
-
-            return QByteArray(reinterpret_cast<const char *>(resource.data()),
-                              int(resource.size()));
         }
-    } else {
-        return QByteArray();
+
+        // The resource is not compressed, so just return it after doing the
+        // right conversion
+
+        return QByteArray(reinterpret_cast<const char *>(resource.data()),
+                          int(resource.size()));
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -477,10 +485,12 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
     //          return pInFileNameOrUrl after having removed "file:///" or
     //          "file://" from it on Windows and Linux/macOS, respectively...
 
+    static const QString File = "file";
+
     QUrl fileNameOrUrl = pInFileNameOrUrl;
 
-    pOutIsLocalFile =    !fileNameOrUrl.scheme().compare("file")
-                      ||  fileNameOrUrl.host().isEmpty();
+    pOutIsLocalFile =    (fileNameOrUrl.scheme() == File)
+                      || fileNameOrUrl.host().isEmpty();
     pOutFileNameOrUrl = pOutIsLocalFile?
 #ifdef Q_OS_WIN
                             canonicalFileName(QString(pInFileNameOrUrl).remove("file:///")):
@@ -515,14 +525,14 @@ bool readFile(const QString &pFileNameOrUrl, QByteArray &pFileContents,
             file.close();
 
             return true;
-        } else {
-            return false;
         }
-    } else {
-        static SynchronousFileDownloader synchronousFileDownloader;
 
-        return synchronousFileDownloader.download(fileNameOrUrl, pFileContents, pErrorMessage);
+        return false;
     }
+
+    static SynchronousFileDownloader synchronousFileDownloader;
+
+    return synchronousFileDownloader.download(fileNameOrUrl, pFileContents, pErrorMessage);
 }
 
 //==============================================================================
@@ -563,8 +573,9 @@ bool writeFile(const QString &pFileName, const QByteArray &pFileContents)
         res = res && (dir.exists() || dir.mkpath(dir.dirName()));
 
         if (res) {
-            if (QFile::exists(pFileName))
+            if (QFile::exists(pFileName)) {
                 QFile::remove(pFileName);
+            }
 
             res = file.rename(pFileName);
         }
@@ -572,13 +583,14 @@ bool writeFile(const QString &pFileName, const QByteArray &pFileContents)
         // Remove the temporary file, if either we couldn't rename it or the
         // initial saving didn't work
 
-        if (!res)
+        if (!res) {
             file.remove();
+        }
 
         return res;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -596,10 +608,11 @@ bool writeResourceToFile(const QString &pFileName, const QString &pResource)
 {
     // Write the given resource to the given file, if possible
 
-    if (QResource(pResource).isValid())
+    if (QResource(pResource).isValid()) {
         return writeFile(pFileName, resource(pResource));
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -645,8 +658,7 @@ QString nonDiacriticString(const QString &pString)
 
     QString res = QString();
 
-    for (int i = 0, iMax = pString.length(); i < iMax; ++i) {
-        QChar letter = pString[i];
+    for (auto letter : pString) {
         int index = diacriticLetters.indexOf(letter);
 
         res.append((index < 0)?letter:nonDiacriticLetters[index]);
@@ -668,8 +680,9 @@ QString plainString(const QString &pString)
     QString res = QString();
 
     while (!string.atEnd()) {
-        if (string.readNext() == QXmlStreamReader::Characters)
+        if (string.readNext() == QXmlStreamReader::Characters) {
             res += string.text();
+        }
     }
 
     return res;

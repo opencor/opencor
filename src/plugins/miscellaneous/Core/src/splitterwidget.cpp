@@ -54,6 +54,10 @@ SplitterWidget::SplitterWidget(QWidget *pParent) :
 
 //==============================================================================
 
+SplitterWidget::~SplitterWidget() = default;
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

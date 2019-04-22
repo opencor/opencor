@@ -48,35 +48,35 @@ PLUGININFO_FUNC LibXDiffPluginInfo()
 
 //==============================================================================
 
-static void *mallocWrapper(void *pData, unsigned int pSize)
+static void * mallocWrapper(void *pData, unsigned int pSize)
 {
-    Q_UNUSED(pData);
+    Q_UNUSED(pData)
 
     // Allocate some memory
 
-    return malloc(pSize);
+    return malloc(pSize);  // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
 
 static void freeWrapper(void *pData, void *pPointer)
 {
-    Q_UNUSED(pData);
+    Q_UNUSED(pData)
 
     // Free the given memory
 
-    free(pPointer);
+    free(pPointer);  // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
 
-static void *reallocWrapper(void *pData, void *pPointer, unsigned int pSize)
+static void * reallocWrapper(void *pData, void *pPointer, unsigned int pSize)
 {
-    Q_UNUSED(pData);
+    Q_UNUSED(pData)
 
     // Reallocate some memory
 
-    return realloc(pPointer, pSize);
+    return realloc(pPointer, pSize);  // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================

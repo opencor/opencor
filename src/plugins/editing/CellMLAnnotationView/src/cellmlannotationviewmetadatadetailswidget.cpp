@@ -55,7 +55,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 {
     // Create and set our vertical layout
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
@@ -226,34 +226,36 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
     // Show/hide our category message
 
-    mBorderedCategoryMessage->setVisible(!pElement);
-    mSplitter->setVisible(pElement);
+    mBorderedCategoryMessage->setVisible(pElement == nullptr);
+    mSplitter->setVisible(pElement != nullptr);
 
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known
 
-    bool isUnknownMetadata = pElement?
+    bool isUnknownMetadata = (pElement != nullptr)?
                                  mCellmlFile->rdfTriples(pElement).type() == CellMLSupport::CellmlFileRdfTriple::Type::Unknown:
                                  true;
 
-    mBorderedUnsupportedMetadataMessage->setVisible(pElement && isUnknownMetadata);
+    mBorderedUnsupportedMetadataMessage->setVisible((pElement != nullptr) && isUnknownMetadata);
 
     // Show/hide our metadata edit details and web viewer, depending on whether
     // the type of the metadata is known
 
-    mBorderedMetadataEditDetails->setVisible(pElement && !isUnknownMetadata);
-    mBorderedWebViewer->setVisible(pElement && !isUnknownMetadata);
+    mBorderedMetadataEditDetails->setVisible((pElement != nullptr) && !isUnknownMetadata);
+    mBorderedWebViewer->setVisible((pElement != nullptr) && !isUnknownMetadata);
 
-    mBorderedMetadataViewDetails->setTopBorderVisible(pElement && !isUnknownMetadata);
-    mBorderedMetadataViewDetails->setBottomBorderVisible(pElement && !isUnknownMetadata);
+    mBorderedMetadataViewDetails->setTopBorderVisible((pElement != nullptr) && !isUnknownMetadata);
+    mBorderedMetadataViewDetails->setBottomBorderVisible((pElement != nullptr) && !isUnknownMetadata);
 
     // Update our metadata edit and view details, if needed
 
-    if (pElement && !isUnknownMetadata)
+    if ((pElement != nullptr) && !isUnknownMetadata) {
         mMetadataEditDetails->updateGui(pElement);
+    }
 
-    if (pElement)
+    if (pElement != nullptr) {
         mMetadataViewDetails->updateGui(pElement);
+    }
 }
 
 //==============================================================================

@@ -28,10 +28,6 @@ add_plugin(HelpWindow
         src/helpwindowplugin.cpp
         src/helpwindowwidget.cpp
         src/helpwindowwindow.cpp
-    HEADERS_MOC
-        src/helpwindowplugin.h
-        src/helpwindowwidget.h
-        src/helpwindowwindow.h
     UIS
         src/helpwindowwindow.ui
     PLUGINS

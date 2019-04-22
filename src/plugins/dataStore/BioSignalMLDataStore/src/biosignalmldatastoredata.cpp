@@ -47,6 +47,10 @@ BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
 
 //==============================================================================
 
+BiosignalmlDataStoreData::~BiosignalmlDataStoreData() = default;
+
+//==============================================================================
+
 QString BiosignalmlDataStoreData::name() const
 {
     // Return our short name

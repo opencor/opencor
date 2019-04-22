@@ -38,6 +38,10 @@ CellmlFileExporter::CellmlFileExporter() :
 
 //==============================================================================
 
+CellmlFileExporter::~CellmlFileExporter() = default;
+
+//==============================================================================
+
 bool CellmlFileExporter::result() const
 {
     // Return the result of the conversion

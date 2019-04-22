@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #pragma GCC diagnostic pop
 #elif defined(Q_OS_MAC)
     #pragma clang diagnostic pop
-#else
-    #error Unsupported platform
 #endif
 
 //==============================================================================

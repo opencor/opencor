@@ -55,7 +55,8 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 
 //==============================================================================
 
-CellMLSupportPlugin::CellMLSupportPlugin()
+CellMLSupportPlugin::CellMLSupportPlugin() :
+    mFileNewCellmlFileAction(nullptr)
 {
     // Keep track of our file type interface
 
@@ -117,8 +118,8 @@ QStringList CellMLSupportPlugin::fileTypeDefaultViews() const
 
 void CellMLSupportPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pViewPlugin)
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -129,7 +130,7 @@ Gui::Menus CellMLSupportPlugin::guiMenus() const
 {
     // We don't handle this interface...
 
-    return Gui::Menus();
+    return {};
 }
 
 //==============================================================================
@@ -169,8 +170,8 @@ bool CellMLSupportPlugin::definesPluginInterfaces()
 bool CellMLSupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                              QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -202,7 +203,7 @@ void CellMLSupportPlugin::finalizePlugin()
 
 void CellMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // Make a call to the instance of the CellML file manager so that it gets
     // properly set up (and therefore can start managing CellML files) before it
@@ -218,7 +219,7 @@ void CellMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void CellMLSupportPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -227,7 +228,7 @@ void CellMLSupportPlugin::loadSettings(QSettings &pSettings)
 
 void CellMLSupportPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -236,7 +237,7 @@ void CellMLSupportPlugin::saveSettings(QSettings &pSettings) const
 
 void CellMLSupportPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -262,8 +263,9 @@ void CellMLSupportPlugin::newCellmlFile()
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != Core::FileManager::Status::Created)
+    if (createStatus != Core::FileManager::Status::Created) {
         qFatal("FATAL ERROR | %s:%d: the new CellML file did not get created.", __FILE__, __LINE__);
+    }
 #endif
 }
 

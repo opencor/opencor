@@ -44,6 +44,7 @@ public:
     explicit SplitterWidget(const Qt::Orientation &pOrientation,
                             QWidget *pParent);
     explicit SplitterWidget(QWidget *pParent);
+    ~SplitterWidget() override;
 };
 
 //==============================================================================

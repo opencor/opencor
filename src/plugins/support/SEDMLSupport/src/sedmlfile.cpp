@@ -41,11 +41,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "libsedmlbegin.h"
     #include "sedml/SedAlgorithm.h"
+    #include "sedml/SedCurve.h"
     #include "sedml/SedDocument.h"
     #include "sedml/SedOneStep.h"
     #include "sedml/SedPlot2D.h"
     #include "sedml/SedReader.h"
     #include "sedml/SedRepeatedTask.h"
+    #include "sedml/SedTask.h"
     #include "sedml/SedWriter.h"
     #include "sedml/SedUniformTimeCourse.h"
     #include "sedml/SedVectorRange.h"
@@ -63,6 +65,7 @@ SedmlFile::SedmlFile(const QString &pFileName, const QString &pOwnerFileName,
     StandardSupport::StandardFile(pFileName),
     mOwnerFileName(pOwnerFileName),
     mSedmlDocument(nullptr),
+    mLoadingNeeded(true),
     mCellmlFile(nullptr),
     mUpdated(false)
 {
@@ -108,12 +111,13 @@ void SedmlFile::reset()
     // have been managed by cellmlFile() below, so that CellML 1.1 files can be
     // properly instantiated)
 
-    if (mCellmlFile) {
+    if (mCellmlFile != nullptr) {
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
         QString cellmlFileName = mCellmlFile->fileName();
 
-        if (fileManagerInstance->isRemote(cellmlFileName))
+        if (fileManagerInstance->isRemote(cellmlFileName)) {
             fileManagerInstance->unmanage(cellmlFileName);
+        }
     }
 
     // Reset all of our properties
@@ -164,8 +168,8 @@ bool SedmlFile::hasErrors() const
     // Return whether our current SED-ML document has errors, be they normal
     // errors or fatal errors
 
-    return    mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR)
-           || mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL);
+    return    (mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) != 0)
+           || (mSedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_FATAL) != 0);
 }
 
 //==============================================================================
@@ -174,8 +178,9 @@ bool SedmlFile::load()
 {
     // Check whether the file is already loaded and without any (fatal) errors
 
-    if (!mLoadingNeeded)
+    if (!mLoadingNeeded) {
         return isSedmlFile();
+    }
 
     mLoadingNeeded = false;
 
@@ -194,8 +199,9 @@ bool SedmlFile::save(const QString &pFileName)
 {
     // Make sure that we are properly loaded and have no (fatal) errors
 
-    if (mLoadingNeeded || hasErrors())
+    if (mLoadingNeeded || hasErrors()) {
         return false;
+    }
 
     // Save ourselves, after having reformatted ourselves, and stop considering
     // ourselves as new anymore (in case we were), if the saving went fine
@@ -209,9 +215,9 @@ bool SedmlFile::save(const QString &pFileName)
         mNew = false;
 
         return StandardFile::save(pFileName);
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -249,8 +255,9 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
     // Make sure that we are loaded, if the given file contents is empty (i.e.
     // we want to validate ourselves rather than some given file contents)
 
-    if (pFileContents.isEmpty())
+    if (pFileContents.isEmpty()) {
         load();
+    }
 
     // Check whether our SED-ML document or the given file contents is SED-ML
     // valid and, if not, populate pIssues with the problems found (after having
@@ -318,16 +325,18 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
                                               int(error->getColumn()),
                                               errorMessage);
 
-        if (!pIssues.contains(issue))
+        if (!pIssues.contains(issue)) {
             pIssues << issue;
+        }
     }
 
     // Only consider our SED-ML document valid if it has no (fatal) errors
 
     bool res = !hasErrors();
 
-    if (!pFileContents.isEmpty())
+    if (!pFileContents.isEmpty()) {
         delete sedmlDocument;
+    }
 
     return res;
 }
@@ -356,8 +365,9 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
         int lastValueIndex = pValuesList.count()-1;
 
         for (const auto &lineStyle : pValuesList) {
-            if (++i)
+            if (++i != 0) {
                 values += (i == lastValueIndex)?" "+tr("or")+" ":", ";
+            }
 
             values += "'"+lineStyle+"'";
         }
@@ -369,9 +379,9 @@ bool SedmlFile::validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                                                                  .arg(values));
 
         return false;
-    } else {
-        return true;
     }
+
+    return true;
 }
 
 //==============================================================================
@@ -391,9 +401,9 @@ bool SedmlFile::validColorPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                   tr("the '%1' property must have a value of '#RRGGBB' or '#AARRGGBB'").arg(pPropertyName));
 
         return false;
-    } else {
-        return true;
     }
+
+    return true;
 }
 
 //==============================================================================
@@ -402,8 +412,9 @@ bool SedmlFile::isSupported()
 {
     // Make sure that we are valid
 
-    if (!isValid())
+    if (!isValid()) {
         return false;
+    }
 
     // Make sure that there is only one model
 
@@ -419,9 +430,9 @@ bool SedmlFile::isSupported()
     libsedml::SedModel *model = mSedmlDocument->getModel(0);
     QString language = QString::fromStdString(model->getLanguage());
 
-    if (   language.compare(Language::Cellml)
-        && language.compare(Language::Cellml_1_0)
-        && language.compare(Language::Cellml_1_1)) {
+    if (   (language != Language::Cellml)
+        && (language != Language::Cellml_1_0)
+        && (language != Language::Cellml_1_1)) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                   tr("only SED-ML files with a CellML file are supported"));
 
@@ -454,7 +465,7 @@ bool SedmlFile::isSupported()
     // the output start time and output end time are different, and that the
     // number of points is greater than zero
 
-    libsedml::SedUniformTimeCourse *uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(firstSimulation);
+    auto uniformTimeCourse = static_cast<libsedml::SedUniformTimeCourse *>(firstSimulation);
     double initialTime = uniformTimeCourse->getInitialTime();
     double outputStartTime = uniformTimeCourse->getOutputStartTime();
     double outputEndTime = uniformTimeCourse->getOutputEndTime();
@@ -484,23 +495,23 @@ bool SedmlFile::isSupported()
     // Make sure that we have an algorithm for the first simulation
 
     const libsedml::SedAlgorithm *firstSimulationAlgorithm = firstSimulation->getAlgorithm();
-    libsbml::XMLNode *annotation;
+    const libsbml::XMLNode *annotation = nullptr;
 
-    if (firstSimulationAlgorithm) {
+    if (firstSimulationAlgorithm != nullptr) {
         // Make sure that the algorithm relies on an algorithm that we support
 
         SolverInterface *usedSolverInterface = nullptr;
         QString kisaoId = QString::fromStdString(firstSimulationAlgorithm->getKisaoID());
 
         for (auto solverInterface : Core::solverInterfaces()) {
-            if (!solverInterface->id(kisaoId).compare(solverInterface->solverName())) {
+            if (solverInterface->id(kisaoId) == solverInterface->solverName()) {
                 usedSolverInterface = solverInterface;
 
                 break;
             }
         }
 
-        if (!usedSolverInterface) {
+        if (usedSolverInterface == nullptr) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                       tr("unsupported algorithm (%1)").arg(kisaoId));
 
@@ -510,12 +521,12 @@ bool SedmlFile::isSupported()
         // Make sure that the algorithm parameters are also supported
 
         for (uint i = 0, iMax = firstSimulationAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
-            QString kisaoId = QString::fromStdString(firstSimulationAlgorithm->getAlgorithmParameter(i)->getKisaoID());
-            QString id = usedSolverInterface->id(kisaoId);
+            QString parameterKisaoId = QString::fromStdString(firstSimulationAlgorithm->getAlgorithmParameter(i)->getKisaoID());
+            QString id = usedSolverInterface->id(parameterKisaoId);
 
-            if (id.isEmpty() || !id.compare(usedSolverInterface->solverName())) {
+            if (id.isEmpty() || (id == usedSolverInterface->solverName())) {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
-                                          tr("unsupported algorithm parameter (%1)").arg(kisaoId));
+                                          tr("unsupported algorithm parameter (%1)").arg(parameterKisaoId));
 
                 return false;
             }
@@ -527,19 +538,19 @@ bool SedmlFile::isSupported()
 
         annotation = firstSimulationAlgorithm->getAnnotation();
 
-        if (annotation) {
+        if (annotation != nullptr) {
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
                 const libsbml::XMLNode &solverPropertiesNode = annotation->getChild(i);
 
-                if (   !QString::fromStdString(solverPropertiesNode.getURI()).compare(OpencorNamespace)
-                    && !QString::fromStdString(solverPropertiesNode.getName()).compare(SolverProperties)) {
+                if (   (QString::fromStdString(solverPropertiesNode.getURI()) == OpencorNamespace)
+                    && (QString::fromStdString(solverPropertiesNode.getName()) == SolverProperties)) {
                     bool validSolverProperties = true;
 
                     for (uint j = 0, jMax = solverPropertiesNode.getNumChildren(); j < jMax; ++j) {
                         const libsbml::XMLNode &solverPropertyNode = solverPropertiesNode.getChild(j);
 
-                        if (   !QString::fromStdString(solverPropertyNode.getURI()).compare(OpencorNamespace)
-                            && !QString::fromStdString(solverPropertyNode.getName()).compare(SolverProperty)) {
+                        if (   (QString::fromStdString(solverPropertyNode.getURI()) == OpencorNamespace)
+                            && (QString::fromStdString(solverPropertyNode.getName()) == SolverProperty)) {
                             int idIndex = solverPropertyNode.getAttrIndex(Id.toStdString());
                             int valueIndex = solverPropertyNode.getAttrIndex(Value.toStdString());
 
@@ -570,14 +581,14 @@ bool SedmlFile::isSupported()
 
         annotation = firstSimulation->getAnnotation();
 
-        if (annotation) {
+        if (annotation != nullptr) {
             bool hasNlaSolver = false;
 
             for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
                 const libsbml::XMLNode &nlaSolverNode = annotation->getChild(i);
 
-                if (   !QString::fromStdString(nlaSolverNode.getURI()).compare(OpencorNamespace)
-                    && !QString::fromStdString(nlaSolverNode.getName()).compare(NlaSolver)) {
+                if (   (QString::fromStdString(nlaSolverNode.getURI()) == OpencorNamespace)
+                    && (QString::fromStdString(nlaSolverNode.getName()) == NlaSolver)) {
                     int nameIndex = nlaSolverNode.getAttrIndex(Name.toStdString());
 
                     if ((nameIndex != -1) && !nlaSolverNode.getAttrValue(nameIndex).empty()) {
@@ -586,9 +597,9 @@ bool SedmlFile::isSupported()
                                                       tr("only one NLA solver is allowed"));
 
                             return false;
-                        } else {
-                            hasNlaSolver = true;
                         }
+
+                        hasNlaSolver = true;
                     } else {
                         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                   int(nlaSolverNode.getLine()),
@@ -611,7 +622,7 @@ bool SedmlFile::isSupported()
 
     libsedml::SedSimulation *secondSimulation = mSedmlDocument->getSimulation(1);
 
-    if (secondSimulation) {
+    if (secondSimulation != nullptr) {
         // Make sure that the second simulation is a one-step simulation
 
         if (secondSimulation->getTypeCode() != libsedml::SEDML_SIMULATION_ONESTEP) {
@@ -641,28 +652,33 @@ bool SedmlFile::isSupported()
 
         firstSimulationAlgorithm->write(firstXmlStream);
 
-        if (secondSimulationAlgorithm)
+        if (secondSimulationAlgorithm != nullptr) {
             secondSimulationAlgorithm->write(secondXmlStream);
+        }
 
-        libsbml::XMLNode *firstAnnotation = firstSimulationAlgorithm->getAnnotation();
-        libsbml::XMLNode *secondAnnotation = secondSimulationAlgorithm->getAnnotation();
+        const libsbml::XMLNode *firstAnnotation = firstSimulationAlgorithm->getAnnotation();
+        const libsbml::XMLNode *secondAnnotation = secondSimulationAlgorithm->getAnnotation();
 
-        if (firstAnnotation)
+        if (firstAnnotation != nullptr) {
             firstAnnotation->write(firstXmlStream);
+        }
 
-        if (secondAnnotation)
+        if (secondAnnotation != nullptr) {
             secondAnnotation->write(secondXmlStream);
+        }
 
         firstAnnotation = firstSimulation->getAnnotation();
         secondAnnotation = secondSimulation->getAnnotation();
 
-        if (firstAnnotation)
+        if (firstAnnotation != nullptr) {
             firstAnnotation->write(firstXmlStream);
+        }
 
-        if (secondAnnotation)
+        if (secondAnnotation != nullptr) {
             secondAnnotation->write(secondXmlStream);
+        }
 
-        if (firstStream.str().compare(secondStream.str())) {
+        if (firstStream.str() != secondStream.str()) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                       tr("only SED-ML files with two simulations with the same algorithm are supported"));
 
@@ -673,7 +689,7 @@ bool SedmlFile::isSupported()
     // Make sure that we have only one repeated task, which aim is to execute
     // each simulation (using a sub-task) once
 
-    uint totalNbOfTasks = secondSimulation?3:2;
+    uint totalNbOfTasks = (secondSimulation != nullptr)?3:2;
 
     if (mSedmlDocument->getNumTasks() != totalNbOfTasks) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
@@ -695,42 +711,43 @@ bool SedmlFile::isSupported()
     std::string secondSubTaskId = std::string();
 
     for (uint i = 0; i < totalNbOfTasks; ++i) {
-        libsedml::SedTask *task = mSedmlDocument->getTask(i);
+        auto task = static_cast<libsedml::SedTask *>(mSedmlDocument->getTask(i));
 
         if (task->getTypeCode() == libsedml::SEDML_TASK_REPEATEDTASK) {
             // Make sure that the repeated task asks for the model to be reset,
             // that it has one range, no task change and one/two sub-task/s
 
-            repeatedTask = static_cast<libsedml::SedRepeatedTask *>(task);
+            repeatedTask = reinterpret_cast<libsedml::SedRepeatedTask *>(task);
 
-            if (    repeatedTask->getResetModel()
-                &&  (repeatedTask->getNumRanges() == 1)
-                && !repeatedTask->getNumTaskChanges()
-                &&  (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
+            if (   repeatedTask->getResetModel()
+                && (repeatedTask->getNumRanges() == 1)
+                && (repeatedTask->getNumTaskChanges() == 0)
+                && (repeatedTask->getNumSubTasks() == totalNbOfTasks-1)) {
                 // Make sure that the range is a vector range and that it's the
                 // one referenced in the repeated task
 
                 libsedml::SedRange *range = repeatedTask->getRange(0);
 
                 if (    (range->getTypeCode() == libsedml::SEDML_RANGE_VECTORRANGE)
-                    && !repeatedTask->getRangeId().compare(range->getId())) {
+                    && (repeatedTask->getRangeId() == range->getId())) {
                     // Make sure that the vector range has one value that is
                     // equal to 1
 
-                    libsedml::SedVectorRange *vectorRange = static_cast<libsedml::SedVectorRange *>(range);
+                    auto vectorRange = static_cast<libsedml::SedVectorRange *>(range);
 
                     if (   (vectorRange->getNumValues() == 1)
                         && (qFuzzyCompare(vectorRange->getValues().front(), 1.0))) {
                         // Make sure that the one/two sub-tasks have the correct
                         // order and retrieve their id
 
-                        for (uint i = 0, iMax = totalNbOfTasks-1; i < iMax; ++i) {
-                            libsedml::SedSubTask *subTask = repeatedTask->getSubTask(i);
+                        for (uint j = 0, jMax = totalNbOfTasks-1; j < jMax; ++j) {
+                            libsedml::SedSubTask *subTask = repeatedTask->getSubTask(j);
 
-                            if (subTask->getOrder() == 1)
+                            if (subTask->getOrder() == 1) {
                                 repeatedTaskFirstSubTaskId = subTask->getTask();
-                            else if (subTask->getOrder() == 2)
+                            } else if (subTask->getOrder() == 2) {
                                 repeatedTaskSecondSubTaskId = subTask->getTask();
+                            }
                         }
 
                         repeatedTaskOk = true;
@@ -741,13 +758,13 @@ bool SedmlFile::isSupported()
             // Make sure the sub-task references the correct model and
             // simulation
 
-            if (   !task->getModelReference().compare(model->getId())
-                && !task->getSimulationReference().compare(firstSimulation->getId())) {
+            if (   (task->getModelReference() == model->getId())
+                && (task->getSimulationReference() == firstSimulation->getId())) {
                 firstSubTaskOk = true;
                 firstSubTaskId = task->getId();
-            } else if (   secondSimulation
-                       && !task->getModelReference().compare(model->getId())
-                       && !task->getSimulationReference().compare(secondSimulation->getId())) {
+            } else if (   (secondSimulation != nullptr)
+                       && (task->getModelReference() == model->getId())
+                       && (task->getSimulationReference() == secondSimulation->getId())) {
                 secondSubTaskOk = true;
                 secondSubTaskId = task->getId();
             }
@@ -755,9 +772,9 @@ bool SedmlFile::isSupported()
     }
 
     if (   !repeatedTaskOk
-        || !firstSubTaskOk || repeatedTaskFirstSubTaskId.compare(firstSubTaskId)
-        || (     secondSimulation
-            && (!secondSubTaskOk || repeatedTaskSecondSubTaskId.compare(secondSubTaskId)))) {
+        || !firstSubTaskOk || (repeatedTaskFirstSubTaskId != firstSubTaskId)
+        || (   (secondSimulation != nullptr)
+            && (!secondSubTaskOk || (repeatedTaskSecondSubTaskId != secondSubTaskId)))) {
         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                   tr("only SED-ML files that execute one or two simulations once are supported"));
 
@@ -772,7 +789,7 @@ bool SedmlFile::isSupported()
     for (uint i = 0, iMax = mSedmlDocument->getNumDataGenerators(); i < iMax; ++i) {
         libsedml::SedDataGenerator *dataGenerator = mSedmlDocument->getDataGenerator(i);
 
-        if ((dataGenerator->getNumVariables() != 1) || dataGenerator->getNumParameters()) {
+        if ((dataGenerator->getNumVariables() != 1) || (dataGenerator->getNumParameters() != 0)) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                       tr("only SED-ML files with data generators for one variable are supported"));
 
@@ -781,23 +798,23 @@ bool SedmlFile::isSupported()
 
         libsedml::SedVariable *variable = dataGenerator->getVariable(0);
 
-        if (variable->getSymbol().size() || variable->getModelReference().size()) {
+        if (!variable->getSymbol().empty() || !variable->getModelReference().empty()) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                       tr("only SED-ML files with data generators for one variable with a target and a task reference are supported"));
 
             return false;
         }
 
-        if (variable->getTaskReference().compare(repeatedTask->getId())) {
+        if (variable->getTaskReference() != repeatedTask->getId()) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                       tr("only SED-ML files with data generators for one variable with a reference to a repeated task are supported"));
 
             return false;
         }
 
-        static const QRegularExpression TargetStartRegEx  = QRegularExpression("^\\/cellml:model\\/cellml:component\\[@name='");
-        static const QRegularExpression TargetMiddleRegEx = QRegularExpression("']\\/cellml:variable\\[@name='");
-        static const QRegularExpression TargetEndRegEx    = QRegularExpression("'\\]$");
+        static const QRegularExpression TargetStartRegEx  = QRegularExpression(R"(^\/cellml:model\/cellml:component\[@name=')");
+        static const QRegularExpression TargetMiddleRegEx = QRegularExpression(R"(']\/cellml:variable\[@name=')");
+        static const QRegularExpression TargetEndRegEx    = QRegularExpression(R"('\]$)");
 
         bool referencingCellmlVariable = false;
         QString target = QString::fromStdString(variable->getTarget());
@@ -831,12 +848,12 @@ bool SedmlFile::isSupported()
 
         annotation = variable->getAnnotation();
 
-        if (annotation) {
-            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &variableDegreeNode = annotation->getChild(i);
+        if (annotation != nullptr) {
+            for (uint j = 0, jMax = annotation->getNumChildren(); j < jMax; ++j) {
+                const libsbml::XMLNode &variableDegreeNode = annotation->getChild(j);
 
-                if (   !QString::fromStdString(variableDegreeNode.getURI()).compare(OpencorNamespace)
-                    && !QString::fromStdString(variableDegreeNode.getName()).compare(VariableDegree)) {
+                if (   (QString::fromStdString(variableDegreeNode.getURI()) == OpencorNamespace)
+                    && (QString::fromStdString(variableDegreeNode.getName()) == VariableDegree)) {
                     bool validVariableDegree = false;
 
                     if (variableDegreeNode.getNumChildren() == 1) {
@@ -861,7 +878,7 @@ bool SedmlFile::isSupported()
         const libsbml::ASTNode *mathNode = dataGenerator->getMath();
 
         if (   (mathNode->getType() != libsbml::AST_NAME)
-            || variable->getId().compare(mathNode->getName())) {
+            || (variable->getId() != mathNode->getName())) {
             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Information,
                                       tr("only SED-ML files with data generators for one variable that is not modified are supported"));
 
@@ -887,74 +904,85 @@ bool SedmlFile::isSupported()
 
         annotation = output->getAnnotation();
 
-        if (annotation) {
-            for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
-                const libsbml::XMLNode &plot2dPropertiesNode = annotation->getChild(i);
+        if (annotation != nullptr) {
+            for (uint j = 0, jMax = annotation->getNumChildren(); j < jMax; ++j) {
+                const libsbml::XMLNode &plot2dPropertiesNode = annotation->getChild(j);
 
-                if (   !QString::fromStdString(plot2dPropertiesNode.getURI()).compare(OpencorNamespace)
-                    && !QString::fromStdString(plot2dPropertiesNode.getName()).compare(Properties)) {
-                    for (uint j = 0, jMax = plot2dPropertiesNode.getNumChildren(); j < jMax; ++j) {
+                if (   (QString::fromStdString(plot2dPropertiesNode.getURI()) == OpencorNamespace)
+                    && (QString::fromStdString(plot2dPropertiesNode.getName()) == Properties)) {
+                    for (uint k = 0, kMax = plot2dPropertiesNode.getNumChildren(); k < kMax; ++k) {
                         // Note: we don't need to check for the title since it is a
                         //       string and that it can therefore have any value...
 
-                        const libsbml::XMLNode &plot2dPropertyNode = plot2dPropertiesNode.getChild(j);
+                        const libsbml::XMLNode &plot2dPropertyNode = plot2dPropertiesNode.getChild(k);
                         QString plot2dPropertyNodeName = QString::fromStdString(plot2dPropertyNode.getName());
                         QString plot2dPropertyNodeValue = QString::fromStdString(plot2dPropertyNode.getChild(0).getCharacters());
 
-                        if (   !plot2dPropertyNodeName.compare(BackgroundColor)
+                        if (    (plot2dPropertyNodeName == BackgroundColor)
                             && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, BackgroundColor)) {
                             return false;
-                        } else if (   !plot2dPropertyNodeName.compare(FontSize)
-                                   && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
+                        }
+
+                        if (    (plot2dPropertyNodeName == FontSize)
+                            && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
                                                       tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
                             return false;
-                        } else if (   !plot2dPropertyNodeName.compare(ForegroundColor)
-                                   && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
+                        }
+
+                        if (    (plot2dPropertyNodeName == ForegroundColor)
+                            && !validColorPropertyValue(plot2dPropertyNode, plot2dPropertyNodeValue, ForegroundColor)) {
                             return false;
-                        } else if (   !plot2dPropertyNodeName.compare(Height)
-                                   && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
+                        }
+
+                        if (    (plot2dPropertyNodeName == Height)
+                            && !IntegerGt0RegEx.match(plot2dPropertyNodeValue).hasMatch()) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
                                                       tr("the '%1' property value must be an integer greater than zero").arg(plot2dPropertyNodeName));
 
                             return false;
+                        }
 
                         // Grid lines
 
-                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(GridLines)) {
-                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                                const libsbml::XMLNode &gridLinesPropertyNode = plot2dPropertyNode.getChild(k);
+                        if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                            && (QString::fromStdString(plot2dPropertyNode.getName()) == GridLines)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                const libsbml::XMLNode &gridLinesPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString gridLinesPropertyNodeName = QString::fromStdString(gridLinesPropertyNode.getName());
                                 QString gridLinesPropertyNodeValue = QString::fromStdString(gridLinesPropertyNode.getChild(0).getCharacters());
 
-                                if (   !gridLinesPropertyNodeName.compare(Style)
+                                if (    (gridLinesPropertyNodeName == Style)
                                     && !validListPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, Style, lineStyles())) {
                                     return false;
-                                } else if (   !gridLinesPropertyNodeName.compare(Width)
-                                           && !IntegerGt0RegEx.match(gridLinesPropertyNodeValue).hasMatch()) {
+                                }
+
+                                if (    (gridLinesPropertyNodeName == Width)
+                                    && !IntegerGt0RegEx.match(gridLinesPropertyNodeValue).hasMatch()) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(gridLinesPropertyNode.getLine()),
                                                               int(gridLinesPropertyNode.getColumn()),
                                                               tr("the '%1' property value must be a number greater than zero").arg(gridLinesPropertyNodeName));
 
                                     return false;
-                                } else if (   !gridLinesPropertyNodeName.compare(Color)
-                                           && !validColorPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, Color)) {
+                                }
+
+                                if (    (gridLinesPropertyNodeName == Color)
+                                    && !validColorPropertyValue(gridLinesPropertyNode, gridLinesPropertyNodeValue, Color)) {
                                     return false;
                                 }
                             }
 
                         // Legend
 
-                        } else if (   !plot2dPropertyNodeName.compare(Legend)
-                                   &&  plot2dPropertyNodeValue.compare(TrueValue)
-                                   &&  plot2dPropertyNodeValue.compare(FalseValue)) {
+                        } else if (   (plot2dPropertyNodeName == Legend)
+                                   && (plot2dPropertyNodeValue != TrueValue)
+                                   && (plot2dPropertyNodeValue != FalseValue)) {
                             mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                       int(plot2dPropertyNode.getLine()),
                                                       int(plot2dPropertyNode.getColumn()),
@@ -964,67 +992,75 @@ bool SedmlFile::isSupported()
 
                         // Point coordinates
 
-                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(PointCoordinates)) {
-                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                                const libsbml::XMLNode &pointCoordinatesPropertyNode = plot2dPropertyNode.getChild(k);
+                        } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                                   && (QString::fromStdString(plot2dPropertyNode.getName()) == PointCoordinates)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                const libsbml::XMLNode &pointCoordinatesPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString pointCoordinatesPropertyNodeName = QString::fromStdString(pointCoordinatesPropertyNode.getName());
                                 QString pointCoordinatesPropertyNodeValue = QString::fromStdString(pointCoordinatesPropertyNode.getChild(0).getCharacters());
 
-                                if (   !pointCoordinatesPropertyNodeName.compare(Style)
+                                if (    (pointCoordinatesPropertyNodeName == Style)
                                     && !validListPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, Style, lineStyles())) {
                                     return false;
-                                } else if (   !pointCoordinatesPropertyNodeName.compare(Width)
-                                           && !IntegerGt0RegEx.match(pointCoordinatesPropertyNodeValue).hasMatch()) {
+                                }
+
+                                if (    (pointCoordinatesPropertyNodeName == Width)
+                                    && !IntegerGt0RegEx.match(pointCoordinatesPropertyNodeValue).hasMatch()) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(pointCoordinatesPropertyNode.getLine()),
                                                               int(pointCoordinatesPropertyNode.getColumn()),
                                                               tr("the '%1' property value must be a number greater than zero").arg(pointCoordinatesPropertyNodeName));
 
                                     return false;
-                                } else if (   !pointCoordinatesPropertyNodeName.compare(Color)
-                                           && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, Color)) {
+                                }
+
+                                if (    (pointCoordinatesPropertyNodeName == Color)
+                                    && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, Color)) {
                                     return false;
-                                } else if (   !pointCoordinatesPropertyNodeName.compare(FontColor)
-                                           && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, FontColor)) {
+                                }
+
+                                if (    (pointCoordinatesPropertyNodeName == FontColor)
+                                    && !validColorPropertyValue(pointCoordinatesPropertyNode, pointCoordinatesPropertyNodeValue, FontColor)) {
                                     return false;
                                 }
                             }
 
                         // Surrounding area
 
-                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(SurroundingArea)) {
-                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                                const libsbml::XMLNode &surroundingAreaPropertyNode = plot2dPropertyNode.getChild(k);
+                        } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                                   && (QString::fromStdString(plot2dPropertyNode.getName()) == SurroundingArea)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                const libsbml::XMLNode &surroundingAreaPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString surroundingAreaPropertyNodeName = QString::fromStdString(surroundingAreaPropertyNode.getName());
                                 QString surroundingAreaPropertyNodeValue = QString::fromStdString(surroundingAreaPropertyNode.getChild(0).getCharacters());
 
-                                if (   !surroundingAreaPropertyNodeName.compare(BackgroundColor)
+                                if (    (surroundingAreaPropertyNodeName == BackgroundColor)
                                     && !validColorPropertyValue(surroundingAreaPropertyNode, surroundingAreaPropertyNodeValue, BackgroundColor)) {
                                     return false;
-                                } else if (   !surroundingAreaPropertyNodeName.compare(ForegroundColor)
-                                           && !validColorPropertyValue(surroundingAreaPropertyNode, surroundingAreaPropertyNodeValue, ForegroundColor)) {
+                                }
+
+                                if (    (surroundingAreaPropertyNodeName == ForegroundColor)
+                                    && !validColorPropertyValue(surroundingAreaPropertyNode, surroundingAreaPropertyNodeValue, ForegroundColor)) {
                                     return false;
                                 }
                             }
 
                         // X axis
 
-                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(XAxis)) {
-                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                        } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                                   && (QString::fromStdString(plot2dPropertyNode.getName()) == XAxis)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 // Note: we don't need to check for the title since
                                 //       it is a string and that it can therefore
                                 //       have any value...
 
-                                const libsbml::XMLNode &xAxisPropertyNode = plot2dPropertyNode.getChild(k);
+                                const libsbml::XMLNode &xAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString xAxisPropertyNodeName = QString::fromStdString(xAxisPropertyNode.getName());
                                 QString xAxisPropertyNodeValue = QString::fromStdString(xAxisPropertyNode.getChild(0).getCharacters());
 
-                                if (   !xAxisPropertyNodeName.compare(LogarithmicScale)
-                                    &&  xAxisPropertyNodeValue.compare(TrueValue)
-                                    &&  xAxisPropertyNodeValue.compare(FalseValue)) {
+                                if (   (xAxisPropertyNodeName == LogarithmicScale)
+                                    && (xAxisPropertyNodeValue != TrueValue)
+                                    && (xAxisPropertyNodeValue != FalseValue)) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(xAxisPropertyNode.getLine()),
                                                               int(xAxisPropertyNode.getColumn()),
@@ -1036,20 +1072,20 @@ bool SedmlFile::isSupported()
 
                         // Y axis
 
-                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(YAxis)) {
-                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
+                        } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                                   && (QString::fromStdString(plot2dPropertyNode.getName()) == YAxis)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
                                 // Note: we don't need to check for the title since
                                 //       it is a string and that it can therefore
                                 //       have any value...
 
-                                const libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(k);
+                                const libsbml::XMLNode &yAxisPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString yAxisPropertyNodeName = QString::fromStdString(yAxisPropertyNode.getName());
                                 QString yAxisPropertyNodeValue = QString::fromStdString(yAxisPropertyNode.getChild(0).getCharacters());
 
-                                if (   !yAxisPropertyNodeName.compare(LogarithmicScale)
-                                    &&  yAxisPropertyNodeValue.compare(TrueValue)
-                                    &&  yAxisPropertyNodeValue.compare(FalseValue)) {
+                                if (   (yAxisPropertyNodeName == LogarithmicScale)
+                                    && (yAxisPropertyNodeValue != TrueValue)
+                                    && (yAxisPropertyNodeValue != FalseValue)) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(yAxisPropertyNode.getLine()),
                                                               int(yAxisPropertyNode.getColumn()),
@@ -1061,41 +1097,51 @@ bool SedmlFile::isSupported()
 
                         // Zoom region
 
-                        } else if (   !QString::fromStdString(plot2dPropertyNode.getURI()).compare(OpencorNamespace)
-                                   && !QString::fromStdString(plot2dPropertyNode.getName()).compare(ZoomRegion)) {
-                            for (uint k = 0, kMax = plot2dPropertyNode.getNumChildren(); k < kMax; ++k) {
-                                const libsbml::XMLNode &zoomRegionPropertyNode = plot2dPropertyNode.getChild(k);
+                        } else if (   (QString::fromStdString(plot2dPropertyNode.getURI()) == OpencorNamespace)
+                                   && (QString::fromStdString(plot2dPropertyNode.getName()) == ZoomRegion)) {
+                            for (uint l = 0, lMax = plot2dPropertyNode.getNumChildren(); l < lMax; ++l) {
+                                const libsbml::XMLNode &zoomRegionPropertyNode = plot2dPropertyNode.getChild(l);
                                 QString zoomRegionPropertyNodeName = QString::fromStdString(zoomRegionPropertyNode.getName());
                                 QString zoomRegionPropertyNodeValue = QString::fromStdString(zoomRegionPropertyNode.getChild(0).getCharacters());
 
-                                if (   !zoomRegionPropertyNodeName.compare(Style)
+                                if (    (zoomRegionPropertyNodeName == Style)
                                     && !validListPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, Style, lineStyles())) {
                                     return false;
-                                } else if (   !zoomRegionPropertyNodeName.compare(Width)
-                                           && !IntegerGt0RegEx.match(zoomRegionPropertyNodeValue).hasMatch()) {
+                                }
+
+                                if (    (zoomRegionPropertyNodeName == Width)
+                                    && !IntegerGt0RegEx.match(zoomRegionPropertyNodeValue).hasMatch()) {
                                     mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                               int(zoomRegionPropertyNode.getLine()),
                                                               int(zoomRegionPropertyNode.getColumn()),
                                                               tr("the '%1' property value must be a number greater than zero").arg(zoomRegionPropertyNodeName));
 
                                     return false;
-                                } else if (   !zoomRegionPropertyNodeName.compare(Color)
-                                           && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, Color)) {
+                                }
+
+                                if (    (zoomRegionPropertyNodeName == Color)
+                                    && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, Color)) {
                                     return false;
-                                } else if (   !zoomRegionPropertyNodeName.compare(FontColor)
-                                           && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, FontColor)) {
+                                }
+
+                                if (    (zoomRegionPropertyNodeName == FontColor)
+                                    && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, FontColor)) {
                                     return false;
-                                } else if (   !zoomRegionPropertyNodeName.compare(Filled)
-                                           &&  zoomRegionPropertyNodeValue.compare(TrueValue)
-                                           &&  zoomRegionPropertyNodeValue.compare(FalseValue)) {
-                                           mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
-                                                                     int(zoomRegionPropertyNode.getLine()),
-                                                                     int(zoomRegionPropertyNode.getColumn()),
-                                                                     tr("the '%1' property must have a value of 'true' or 'false'").arg(Filled));
+                                }
+
+                                if (   (zoomRegionPropertyNodeName == Filled)
+                                    && (zoomRegionPropertyNodeValue != TrueValue)
+                                    && (zoomRegionPropertyNodeValue != FalseValue)) {
+                                    mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
+                                                              int(zoomRegionPropertyNode.getLine()),
+                                                              int(zoomRegionPropertyNode.getColumn()),
+                                                              tr("the '%1' property must have a value of 'true' or 'false'").arg(Filled));
 
                                     return false;
-                                } else if (   !zoomRegionPropertyNodeName.compare(FillColor)
-                                           && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, FillColor)) {
+                                }
+
+                                if (    (zoomRegionPropertyNodeName == FillColor)
+                                    && !validColorPropertyValue(zoomRegionPropertyNode, zoomRegionPropertyNodeValue, FillColor)) {
                                     return false;
                                 }
                             }
@@ -1108,13 +1154,13 @@ bool SedmlFile::isSupported()
         // Make sure that the curves reference listed data generators and don't
         // use logarithmic axes
 
-        libsedml::SedPlot2D *plot = static_cast<libsedml::SedPlot2D *>(output);
+        auto plot = static_cast<libsedml::SedPlot2D *>(output);
         bool initialiseLogs = true;
         bool logX = false;
         bool logY = false;
 
         for (uint j = 0, jMax = plot->getNumCurves(); j < jMax; ++j) {
-            libsedml::SedCurve *curve = plot->getCurve(j);
+            auto curve = static_cast<libsedml::SedCurve *>(plot->getCurve(j));
 
             if (initialiseLogs) {
                 initialiseLogs = false;
@@ -1130,8 +1176,8 @@ bool SedmlFile::isSupported()
                 return false;
             }
 
-            if (   !mSedmlDocument->getDataGenerator(curve->getXDataReference())
-                || !mSedmlDocument->getDataGenerator(curve->getYDataReference())) {
+            if (   (mSedmlDocument->getDataGenerator(curve->getXDataReference()) == nullptr)
+                || (mSedmlDocument->getDataGenerator(curve->getYDataReference()) == nullptr)) {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                           tr("a curve must reference existing data generators"));
 
@@ -1140,72 +1186,84 @@ bool SedmlFile::isSupported()
 
             annotation = curve->getAnnotation();
 
-            if (annotation) {
-                for (uint i = 0, iMax = annotation->getNumChildren(); i < iMax; ++i) {
+            if (annotation != nullptr) {
+                for (uint k = 0, kMax = annotation->getNumChildren(); k < kMax; ++k) {
                     // Note: we don't need to check for the title since it is a
                     //       string and that it can therefore have any value...
 
-                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(i);
+                    const libsbml::XMLNode &curvePropertiesNode = annotation->getChild(k);
 
-                    if (   !QString::fromStdString(curvePropertiesNode.getURI()).compare(OpencorNamespace)
-                        && !QString::fromStdString(curvePropertiesNode.getName()).compare(Properties)) {
-                        for (uint j = 0, jMax = curvePropertiesNode.getNumChildren(); j < jMax; ++j) {
-                            const libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(j);
+                    if (   (QString::fromStdString(curvePropertiesNode.getURI()) == OpencorNamespace)
+                        && (QString::fromStdString(curvePropertiesNode.getName()) == Properties)) {
+                        for (uint l = 0, lMax = curvePropertiesNode.getNumChildren(); l < lMax; ++l) {
+                            const libsbml::XMLNode &curvePropertyNode = curvePropertiesNode.getChild(l);
                             QString curvePropertyNodeName = QString::fromStdString(curvePropertyNode.getName());
 
-                            if (!curvePropertyNodeName.compare(Line)) {
-                                for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
-                                    const libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(k);
+                            if (curvePropertyNodeName == Line) {
+                                for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
+                                    const libsbml::XMLNode &linePropertyNode = curvePropertyNode.getChild(m);
                                     QString linePropertyNodeName = QString::fromStdString(linePropertyNode.getName());
                                     QString linePropertyNodeValue = QString::fromStdString(linePropertyNode.getChild(0).getCharacters());
 
-                                    if (   !linePropertyNodeName.compare(Style)
+                                    if (    (linePropertyNodeName == Style)
                                         && !validListPropertyValue(linePropertyNode, linePropertyNodeValue, Style, lineStyles())) {
                                         return false;
-                                    } else if (   !linePropertyNodeName.compare(Width)
-                                               && !IntegerGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
+                                    }
+
+                                    if (    (linePropertyNodeName == Width)
+                                        && !IntegerGt0RegEx.match(linePropertyNodeValue).hasMatch()) {
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                                   int(linePropertyNode.getLine()),
                                                                   int(linePropertyNode.getColumn()),
                                                                   tr("the '%1' property value must be a number greater than zero").arg(linePropertyNodeName));
 
                                         return false;
-                                    } else if (   !linePropertyNodeName.compare(Color)
-                                               && !validColorPropertyValue(linePropertyNode, linePropertyNodeValue, Color)) {
+                                    }
+
+                                    if (    (linePropertyNodeName == Color)
+                                        && !validColorPropertyValue(linePropertyNode, linePropertyNodeValue, Color)) {
                                         return false;
                                     }
                                 }
-                            } else if (!curvePropertyNodeName.compare(Symbol)) {
-                                for (uint k = 0, kMax = curvePropertyNode.getNumChildren(); k < kMax; ++k) {
-                                    const libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(k);
+                            } else if (curvePropertyNodeName == Symbol) {
+                                for (uint m = 0, mMax = curvePropertyNode.getNumChildren(); m < mMax; ++m) {
+                                    const libsbml::XMLNode &symbolPropertyNode = curvePropertyNode.getChild(m);
                                     QString symbolPropertyNodeName = QString::fromStdString(symbolPropertyNode.getName());
                                     QString symbolPropertyNodeValue = QString::fromStdString(symbolPropertyNode.getChild(0).getCharacters());
 
-                                    if (   !symbolPropertyNodeName.compare(Style)
+                                    if (    (symbolPropertyNodeName == Style)
                                         && !validListPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, Style, symbolStyles())) {
                                         return false;
-                                    } else if (   !symbolPropertyNodeName.compare(Size)
-                                               && !IntegerGt0RegEx.match(symbolPropertyNodeValue).hasMatch()) {
+                                    }
+
+                                    if (    (symbolPropertyNodeName == Size)
+                                        && !IntegerGt0RegEx.match(symbolPropertyNodeValue).hasMatch()) {
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                                   int(symbolPropertyNode.getLine()),
                                                                   int(symbolPropertyNode.getColumn()),
                                                                   tr("the '%1' property value must be an integer greater than zero").arg(symbolPropertyNodeName));
 
                                         return false;
-                                    } else if (   !symbolPropertyNodeName.compare(Color)
-                                               && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, Color)) {
+                                    }
+
+                                    if (    (symbolPropertyNodeName == Color)
+                                        && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, Color)) {
                                         return false;
-                                    } else if (   !symbolPropertyNodeName.compare(Filled)
-                                               &&  symbolPropertyNodeValue.compare(TrueValue)
-                                               &&  symbolPropertyNodeValue.compare(FalseValue)) {
+                                    }
+
+                                    if (   (symbolPropertyNodeName == Filled)
+                                        && (symbolPropertyNodeValue != TrueValue)
+                                        && (symbolPropertyNodeValue != FalseValue)) {
                                         mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,
                                                                   int(symbolPropertyNode.getLine()),
                                                                   int(symbolPropertyNode.getColumn()),
                                                                   tr("the '%1' property must have a value of 'true' or 'false'").arg(Filled));
 
                                         return false;
-                                    } else if (   !symbolPropertyNodeName.compare(FillColor)
-                                               && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, FillColor)) {
+                                    }
+
+                                    if (    (symbolPropertyNodeName == FillColor)
+                                        && !validColorPropertyValue(symbolPropertyNode, symbolPropertyNodeValue, FillColor)) {
                                         return false;
                                     }
                                 }
@@ -1226,7 +1284,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
 {
     // Return our CellML file, after having created it, if necessary
 
-    if (!mCellmlFile && isSupported()) {
+    if ((mCellmlFile == nullptr) && isSupported()) {
         // Retrieve the source of the CellML file, if any
 
         QString modelSource = QString::fromStdString(sedmlDocument()->getModel(0)->getSource());
@@ -1254,8 +1312,9 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
             // to a file on a different drive rather than to a file name
             // relative to ourselves
 
-            if (QFile::exists(modelSource))
+            if (QFile::exists(modelSource)) {
                 cellmlFileName = modelSource;
+            }
 #endif
 
             if (QFile::exists(cellmlFileName)) {
@@ -1278,8 +1337,9 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
 
             static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
 
-            if (isLocalFile)
+            if (isLocalFile) {
                 modelSource = url.remove(FileNameRegEx)+"/"+modelSource;
+            }
 
             // Retrieve the contents of our model source
 

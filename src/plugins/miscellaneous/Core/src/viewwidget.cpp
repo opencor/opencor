@@ -41,7 +41,7 @@ QList<QWidget *> ViewWidget::statusBarWidgets() const
 {
     // No status bar widgets by default
 
-    return QList<QWidget *>();
+    return {};
 }
 
 //==============================================================================

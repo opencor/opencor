@@ -47,7 +47,7 @@ void Tests::basicTests()
     // Create a SED-ML document with a model inside it, then set the name of the
     // model and check that it has been properly set
 
-    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+    auto sedmlDocument = new libsedml::SedDocument();
     libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
 
     static const std::string ModelName = "myModel";

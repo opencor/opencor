@@ -63,8 +63,9 @@ void CsvDataStoreImporterWorker::run()
 
             QStringList fields = line.split(",");
 
-            for (int j = 0; j < nbOfVariables; ++j)
+            for (int j = 0; j < nbOfVariables; ++j) {
                 importValues[j] = fields[j+1].toDouble();
+            }
 
             importDataStore->addValues(fields[0].toDouble());
 

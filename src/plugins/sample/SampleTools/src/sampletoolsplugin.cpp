@@ -63,23 +63,28 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 {
     // Run the given CLI command
 
-    if (!pCommand.compare("help")) {
+    static const QString Help = "help";
+    static const QString Add  = "add";
+
+    if (pCommand == Help) {
         // Display the commands that we support
 
         runHelpCommand();
 
         return 0;
-    } else if (!pCommand.compare("add")) {
+    }
+
+    if (pCommand == Add) {
         // Add some numbers
 
         return runAddCommand(pArguments);
-    } else {
-        // Not a CLI command that we support, so show our help and leave
-
-        runHelpCommand();
-
-        return -1;
     }
+
+    // Not a CLI command that we support, so show our help and leave
+
+    runHelpCommand();
+
+    return -1;
 }
 
 //==============================================================================
@@ -88,8 +93,8 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 
 void SampleToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pViewPlugin)
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -100,7 +105,7 @@ Gui::Menus SampleToolsPlugin::guiMenus() const
 {
     // We don't handle this interface...
 
-    return Gui::Menus();
+    return {};
 }
 
 //==============================================================================
@@ -140,8 +145,8 @@ bool SampleToolsPlugin::definesPluginInterfaces()
 bool SampleToolsPlugin::pluginInterfacesOk(const QString &pFileName,
                                            QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -173,7 +178,7 @@ void SampleToolsPlugin::finalizePlugin()
 
 void SampleToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -182,7 +187,7 @@ void SampleToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void SampleToolsPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -191,7 +196,7 @@ void SampleToolsPlugin::loadSettings(QSettings &pSettings)
 
 void SampleToolsPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -200,7 +205,7 @@ void SampleToolsPlugin::saveSettings(QSettings &pSettings) const
 
 void SampleToolsPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

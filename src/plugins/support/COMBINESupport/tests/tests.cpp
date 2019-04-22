@@ -43,9 +43,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void dummyMessageHandler(QtMsgType pType, const QMessageLogContext &pContext,
                          const QString &pMessage)
 {
-    Q_UNUSED(pType);
-    Q_UNUSED(pContext);
-    Q_UNUSED(pMessage);
+    Q_UNUSED(pType)
+    Q_UNUSED(pContext)
+    Q_UNUSED(pMessage)
 }
 
 //==============================================================================
@@ -63,7 +63,7 @@ void Tests::initTestCase()
             mCombineArchive->addFile(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
                                      QString("dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j)),
                                      OpenCOR::COMBINESupport::CombineArchiveFile::Format(1+counter%5),
-                                     !(counter%2));
+                                     counter%2 == 0);
         }
     }
 }
@@ -105,8 +105,9 @@ void Tests::basicTests(const QString &pFileName)
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/support/COMBINESupport/tests/data/manifest.xml")));
 
     for (int i = 1; i <= 3; ++i) {
-        for (int j = 1; j <= 3; ++j)
+        for (int j = 1; j <= 3; ++j) {
             QVERIFY(QFile::exists(temporaryDir.path()+QString("/dir0%1/file0%2.txt").arg(QString::number(i), QString::number(j))));
+        }
     }
 }
 
@@ -117,21 +118,21 @@ void Tests::basicTests()
     // Some basic tests to save our COMBINE archive either directly or to a
     // different file and checking that its contents is sound
 
-    QString otherFileName = OpenCOR::Core::temporaryFileName();
+    QString tempFileName = OpenCOR::Core::temporaryFileName();
 
     basicTests(QString());
-    basicTests(otherFileName);
+    basicTests(tempFileName);
 
     // Check that we can load our other COMBINE archive and save it in yet
     // another file
 
-    OpenCOR::COMBINESupport::CombineArchive otherCombineArchive(otherFileName);
+    OpenCOR::COMBINESupport::CombineArchive otherCombineArchive(tempFileName);
 
-    QString yetAnotherFileName = OpenCOR::Core::temporaryFileName();
+    QString otherTempFileName = OpenCOR::Core::temporaryFileName();
 
     QVERIFY(otherCombineArchive.load());
     QVERIFY(otherCombineArchive.isValid());
-    QVERIFY(otherCombineArchive.save(yetAnotherFileName));
+    QVERIFY(otherCombineArchive.save(otherTempFileName));
 
     // Unzip our two COMBINE archives and make sure that their contents is the
     // same
@@ -143,8 +144,8 @@ void Tests::basicTests()
     QTemporaryDir temporaryDir;
     QString otherDir = temporaryDir.path()+"/otherDir";
     QString yetAnotherDir = temporaryDir.path()+"/yetAnotherDir";
-    OpenCOR::ZIPSupport::QZipReader otherZipReader(otherFileName);
-    OpenCOR::ZIPSupport::QZipReader yetAnotherZipReader(yetAnotherFileName);
+    OpenCOR::ZIPSupport::QZipReader otherZipReader(tempFileName);
+    OpenCOR::ZIPSupport::QZipReader yetAnotherZipReader(otherTempFileName);
 
     QVERIFY(otherZipReader.extractAll(otherDir));
     QVERIFY(yetAnotherZipReader.extractAll(yetAnotherDir));
@@ -153,22 +154,22 @@ void Tests::basicTests()
                              QDir::Files, QDirIterator::Subdirectories);
 
     while (dirIterator.hasNext()) {
-        QString otherFileName = dirIterator.next();
-        QString yetAnotherFileName = otherFileName.replace(otherDir, yetAnotherDir);
+        QString fileName = dirIterator.next();
+        QString otherFileName = fileName.replace(otherDir, yetAnotherDir);
+        QByteArray fileContents;
         QByteArray otherFileContents;
-        QByteArray yetAnotherFileContents;
 
+        QVERIFY(OpenCOR::Core::readFile(fileName, fileContents));
         QVERIFY(OpenCOR::Core::readFile(otherFileName, otherFileContents));
-        QVERIFY(OpenCOR::Core::readFile(yetAnotherFileName, yetAnotherFileContents));
 
-        QCOMPARE(OpenCOR::Core::sha1(otherFileContents),
-                 OpenCOR::Core::sha1(yetAnotherFileContents));
+        QCOMPARE(OpenCOR::Core::sha1(fileContents),
+                 OpenCOR::Core::sha1(otherFileContents));
     }
 
     // Clean up after ourselves
 
-    QFile::remove(otherFileName);
-    QFile::remove(yetAnotherFileName);
+    QFile::remove(tempFileName);
+    QFile::remove(otherTempFileName);
 }
 
 //==============================================================================

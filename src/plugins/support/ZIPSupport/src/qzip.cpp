@@ -66,6 +66,18 @@
 //---OPENCOR--- BEGIN
 namespace OpenCOR {
 namespace ZIPSupport {
+
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wconversion"
+    #pragma clang diagnostic ignored "-Wcovered-switch-default"
+    #pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wshadow-field"
+    #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
+    #pragma clang diagnostic ignored "-Wshorten-64-to-32"
+    #pragma clang diagnostic ignored "-Wswitch-enum"
+#endif
 //---OPENCOR--- END
 QT_BEGIN_NAMESPACE
 
@@ -1185,8 +1197,6 @@ bool QZipReader::extractAll(const QString &destinationDir) const
     static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
 #endif
 //---OPENCOR--- END
     for (const FileInfo &fi : allFiles) {
@@ -1518,6 +1528,10 @@ void QZipWriter::close()
 
 QT_END_NAMESPACE
 //---OPENCOR--- BEGIN
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic pop
+#endif
+
 }   // namespace ZIPSupport
 }   // namespace OpenCOR
 //---OPENCOR--- END

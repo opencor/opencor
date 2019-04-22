@@ -42,7 +42,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "Qsci/qscilexerxml.h"
+#include "qscintillabegin.h"
+    #include "Qsci/qscilexerxml.h"
+#include "qscintillaend.h"
 
 //==============================================================================
 
@@ -76,7 +78,7 @@ void RawSedmlViewWidget::loadSettings(QSettings &pSettings)
 
 void RawSedmlViewWidget::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
     // Note: our view is such that our settings are actually saved when calling
     //       finalize() on the last file...
 }
@@ -87,8 +89,9 @@ void RawSedmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    for (auto editingWidget : mEditingWidgets)
+    for (auto editingWidget : mEditingWidgets) {
         editingWidget->retranslateUi();
+    }
 }
 
 //==============================================================================
@@ -99,7 +102,7 @@ void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
     SEDMLEditingView::SedmlEditingViewWidget *newEditingWidget = mEditingWidgets.value(pFileName);
 
-    if (!newEditingWidget) {
+    if (newEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
         QByteArray fileContents;
@@ -163,7 +166,7 @@ void RawSedmlViewWidget::finalize(const QString &pFileName)
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // There is an editing widget for the given file name, so save our
         // settings and reset our memory of the current editing widget, if
         // needed
@@ -196,8 +199,9 @@ void RawSedmlViewWidget::fileSaved(const QString &pFileName)
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget && !crtWidget->isVisible())
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
         fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================
@@ -228,7 +232,7 @@ void RawSedmlViewWidget::fileRenamed(const QString &pOldFileName,
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
@@ -242,7 +246,7 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFi
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editorWidget():nullptr;
+    return (editingWidget != nullptr)?editingWidget->editorWidget():nullptr;
 }
 
 //==============================================================================
@@ -260,12 +264,12 @@ QList<QWidget *> RawSedmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditingWidget) {
+    if (mEditingWidget != nullptr) {
         return QList<QWidget *>() << mEditingWidget->editorWidget()->cursorPositionWidget()
                                   << mEditingWidget->editorWidget()->editingModeWidget();
-    } else {
-        return QList<QWidget *>();
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -276,7 +280,7 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget && validate(pFileName, true)) {
+    if ((editingWidget != nullptr) && validate(pFileName, true)) {
         int line;
         int column;
 
@@ -299,7 +303,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // Clear the list of SED-ML issues
 
         EditorWidget::EditorListWidget *editorList = editingWidget->editorListWidget();
@@ -356,11 +360,11 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
         editorList->selectFirstItem();
 
         return res;
-    } else {
-        // The file doesn't exist, so it can't be validated
-
-        return false;
     }
+
+    // The file doesn't exist, so it can't be validated
+
+    return false;
 }
 
 //==============================================================================

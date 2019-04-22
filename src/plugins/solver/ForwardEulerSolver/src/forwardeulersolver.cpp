@@ -72,8 +72,9 @@ void ForwardEulerSolver::solve(double &pVoi, double pVoiEnd) const
     while (!qFuzzyCompare(pVoi, pVoiEnd)) {
         // Check that the time step is correct
 
-        if (pVoi+realStep > pVoiEnd)
+        if (pVoi+realStep > pVoiEnd) {
             realStep = pVoiEnd-pVoi;
+        }
 
         // Compute f(t_n, Y_n)
 
@@ -81,15 +82,17 @@ void ForwardEulerSolver::solve(double &pVoi, double pVoiEnd) const
 
         // Compute Y_n+1
 
-        for (int i = 0; i < mRatesStatesCount; ++i)
+        for (int i = 0; i < mRatesStatesCount; ++i) {
             mStates[i] += realStep*mRates[i];
+        }
 
         // Advance through time
 
-        if (!qFuzzyCompare(realStep, mStep))
+        if (!qFuzzyCompare(realStep, mStep)) {
             pVoi = pVoiEnd;
-        else
+        } else {
             pVoi = voiStart+(++stepNumber)*mStep;
+        }
     }
 }
 

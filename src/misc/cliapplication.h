@@ -47,7 +47,7 @@ class PluginManager;
 
 class CliApplication {
 public:
-    explicit CliApplication(int &pArgC, char **pArgV);
+    explicit CliApplication(int &pArgC, char *pArgV[]);
     ~CliApplication();
 
     bool run(int &pRes);

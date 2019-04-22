@@ -113,7 +113,7 @@ PmrWindowWidget::PmrWindowWidget(QWidget *pParent) :
 
     // Create and set ourselves a layout
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
 
@@ -175,8 +175,9 @@ void PmrWindowWidget::retranslateUi()
     // Retranslate the rest of our GUI by updating it, if we have been
     // initialised
 
-    if (mInitialized)
+    if (mInitialized) {
         updateGui();
+    }
 }
 
 //==============================================================================
@@ -195,22 +196,22 @@ void PmrWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
     for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
-        PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
+        auto item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]));
 
         if (item->type() == int(PmrWindowItem::Type::Exposure)) {
             exposureFileUrls = QStringList();
 
             break;
-        } else {
-            exposureFileUrls << item->url();
         }
+
+        exposureFileUrls << item->url();
     }
 
     // Let people know about a key having been pressed with the view of opening
     // one or several exposure files
 
-    if (   exposureFileUrls.count()
-        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
+    if (   !exposureFileUrls.isEmpty()
+        &&  ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
         // There are some exposure files that are selected and we want to open
         // them, so let people know about it
 
@@ -225,7 +226,7 @@ void PmrWindowWidget::updateGui(bool pForceUserMessageVisibility)
     // Update the message to be displayed, if any
 
     if (mErrorMessage.isEmpty()) {
-        if (!mNumberOfFilteredExposures && !mExposureNames.isEmpty()) {
+        if ((mNumberOfFilteredExposures == 0) && !mExposureNames.isEmpty()) {
             mUserMessageWidget->setIconMessage(":/oxygen/actions/help-about.png",
                                                tr("No exposures match your criteria..."));
         } else {
@@ -264,9 +265,8 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
     for (int i = 0, iMax = pExposures.count(); i < iMax; ++i) {
         QString exposureName = pExposures[i]->name();
         bool exposureDisplayed = exposureName.contains(filterRegEx);
-        QStandardItem *item = new PmrWindowItem(PmrWindowItem::Type::Exposure,
-                                                exposureName,
-                                                pExposures[i]->url());
+        auto item = new PmrWindowItem(PmrWindowItem::Type::Exposure,
+                                      exposureName, pExposures[i]->url());
 
         mTreeViewModel->invisibleRootItem()->appendRow(item);
 
@@ -275,13 +275,12 @@ void PmrWindowWidget::initialize(const PMRSupport::PmrExposures &pExposures,
 
         mExposureNames << exposureName;
 
-        mNumberOfFilteredExposures += exposureDisplayed;
+        mNumberOfFilteredExposures += int(exposureDisplayed);
     }
 
     resizeTreeViewToContents();
 
-    updateGui(   (pExposures == PMRSupport::PmrExposures())
-              && pFilter.isEmpty() && pErrorMessage.isEmpty());
+    updateGui(pExposures.isEmpty() && pFilter.isEmpty() && pErrorMessage.isEmpty());
 
     mInitialized = true;
 }
@@ -340,14 +339,15 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
     for (int i = 0, iMax = mTreeViewModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         item = static_cast<PmrWindowItem *>(mTreeViewModel->invisibleRootItem()->child(i));
 
-        if (!pUrl.compare(item->url()))
+        if (pUrl == item->url()) {
             break;
+        }
     }
 
     // Add the given exposure files to the exposure, if it could actually be
     // found, and show them
 
-    if (item) {
+    if (item != nullptr) {
         static const QRegularExpression FilePathRegEx = QRegularExpression("^.*/");
 
         for (const auto &exposureFile : sortedExposureFiles) {
@@ -356,10 +356,11 @@ void PmrWindowWidget::addAndShowExposureFiles(const QString &pUrl,
                                               exposureFile));
         }
 
-        if (mDontExpandExposures.contains(pUrl))
+        if (mDontExpandExposures.contains(pUrl)) {
             mDontExpandExposures.removeOne(pUrl);
-        else
+        } else {
             expand(item->index());
+        }
 
         resizeTreeViewToContents();
     }
@@ -392,7 +393,7 @@ void PmrWindowWidget::showCustomContextMenu(const QPoint &pPosition) const
 
     PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(indexAt(pPosition)));
 
-    if (item) {
+    if (item != nullptr) {
         // We are over an item, so update our context menu and show it
 
         mMakeLocalCopyAction->setVisible(item->type() == int(PmrWindowItem::Type::Exposure));
@@ -419,11 +420,12 @@ void PmrWindowWidget::itemDoubleClicked(const QModelIndex &pIndex)
     // Ask for exposure files to be retrieved (if it hasn't already been done)
     // or an exposure file to be opened
 
-    PmrWindowItem *item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
+    auto item = static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(pIndex));
 
     if (item->type() == int(PmrWindowItem::Type::Exposure)) {
-        if (!item->hasChildren())
+        if (!item->hasChildren()) {
             emit exposureFilesRequested(item->url());
+        }
     } else {
         emit openExposureFileRequested(item->url());
     }
@@ -437,8 +439,9 @@ void PmrWindowWidget::viewInPmr()
 
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
-    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i)
+    for (int i = 0, iMax = selectedIndexes.count(); i < iMax; ++i) {
         QDesktopServices::openUrl(static_cast<PmrWindowItem *>(mTreeViewModel->itemFromIndex(selectedIndexes[i]))->url());
+    }
 }
 
 //==============================================================================

@@ -38,9 +38,7 @@ extern "C" Q_DECL_EXPORT int coreInterfaceVersion()
 
 //==============================================================================
 
-CoreInterface::~CoreInterface()
-{
-}
+CoreInterface::~CoreInterface() = default;
 
 //==============================================================================
 

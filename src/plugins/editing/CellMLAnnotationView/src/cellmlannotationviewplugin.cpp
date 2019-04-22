@@ -58,7 +58,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 
 bool CellMLAnnotationViewPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -71,7 +71,7 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
                                           const QString &pNewFileName,
                                           bool &pNeedFeedback)
 {
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pNeedFeedback)
 
     // Save the given file
 
@@ -82,7 +82,7 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
 
 void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -100,7 +100,7 @@ void CellMLAnnotationViewPlugin::filePermissionsChanged(const QString &pFileName
 
 void CellMLAnnotationViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -137,7 +137,7 @@ void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void CellMLAnnotationViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -169,8 +169,8 @@ bool CellMLAnnotationViewPlugin::definesPluginInterfaces()
 bool CellMLAnnotationViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                                     QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -204,7 +204,7 @@ void CellMLAnnotationViewPlugin::finalizePlugin()
 
 void CellMLAnnotationViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -235,7 +235,7 @@ void CellMLAnnotationViewPlugin::saveSettings(QSettings &pSettings) const
 
 void CellMLAnnotationViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -325,7 +325,7 @@ QString CellMLAnnotationViewPlugin::viewName() const
 
 QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 

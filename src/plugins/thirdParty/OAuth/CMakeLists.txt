@@ -172,8 +172,6 @@ add_plugin(OAuth
         ../../plugininfo.cpp
 
         src/oauthplugin.cpp
-    HEADERS_MOC
-        src/oauthplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

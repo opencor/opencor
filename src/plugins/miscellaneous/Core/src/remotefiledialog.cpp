@@ -55,7 +55,7 @@ RemoteFileDialog::RemoteFileDialog(const QString &pTitle, QWidget *pParent) :
 
     setWindowTitle(pTitle);
 
-    QGridLayout *layout = new QGridLayout(this);
+    auto layout = new QGridLayout(this);
 
     setLayout(layout);
 

@@ -75,6 +75,7 @@ class PmrWorkspacesWindowSynchronizeDialogItem : public QStandardItem
 {
 public:
     explicit PmrWorkspacesWindowSynchronizeDialogItem(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    ~PmrWorkspacesWindowSynchronizeDialogItem() override;
 
     PMRSupport::PmrWorkspaceFileNode * fileNode() const;
 

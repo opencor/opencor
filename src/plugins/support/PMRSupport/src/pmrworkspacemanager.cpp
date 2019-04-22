@@ -26,7 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "git2/global.h"
+#include "libgit2begin.h"
+    #include "git2/global.h"
+#include "libgit2end.h"
 
 //==============================================================================
 
@@ -81,8 +83,9 @@ PmrWorkspaces PmrWorkspaceManager::workspaces() const
 
     PmrWorkspaces res = PmrWorkspaces();
 
-    for (auto workspace : mUrlWorkspaces.values())
+    for (auto workspace : mUrlWorkspaces.values()) {
         res << workspace;
+    }
 
     return res;
 }
@@ -120,8 +123,9 @@ void PmrWorkspaceManager::addWorkspace(PmrWorkspace *pWorkspace)
 {
     // Keep track of the given workspace, if any
 
-    if (pWorkspace)
+    if (pWorkspace != nullptr) {
         mUrlWorkspaces.insert(pWorkspace->url(), pWorkspace);
+    }
 }
 
 //==============================================================================
@@ -130,7 +134,7 @@ void PmrWorkspaceManager::removeWorkspace(PmrWorkspace *pWorkspace)
 {
     // Stop tracking the given workspace, if any
 
-    if (pWorkspace) {
+    if (pWorkspace != nullptr) {
         pWorkspace->close();
 
         mUrlWorkspaces.remove(pWorkspace->url());
@@ -143,8 +147,9 @@ void PmrWorkspaceManager::clearWorkspaces()
 {
     // Stop tracking all of our workspaces
 
-    for (auto workspace : mUrlWorkspaces.values())
+    for (auto workspace : mUrlWorkspaces.values()) {
         workspace->close();
+    }
 
     mUrlWorkspaces.clear();
 }

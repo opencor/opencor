@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QDomElement>
+#include <QException>
 #include <QMap>
 
 //==============================================================================
@@ -56,19 +57,6 @@ static const auto CmetaIdNamespace     = QStringLiteral("http://www.cellml.org/m
 static const auto MathmlNamespace      = QStringLiteral("http://www.w3.org/1998/Math/MathML");
 static const auto RdfNamespace         = QStringLiteral("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 static const auto XlinkNamespace       = QStringLiteral("http://www.w3.org/1999/xlink");
-
-//==============================================================================
-
-class CellmlFileException
-{
-public:
-    CellmlFileException(const QString &pMessage);
-
-    QString message() const;
-
-private:
-    QString mMessage;
-};
 
 //==============================================================================
 

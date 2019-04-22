@@ -81,7 +81,7 @@ void SampleViewWidget::retranslateUi()
 
 QWidget * SampleViewWidget::widget(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // Return the requested (self) widget
 

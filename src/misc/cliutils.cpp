@@ -65,8 +65,11 @@ void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
     //       it worked for us in the past, it doesn't seem to work anymore,
     //       hence our filtering it out...
 
-    if (pMessage.compare("libpng warning: iCCP: known incorrect sRGB profile"))
+    static const QString LibpngMessage = "libpng warning: iCCP: known incorrect sRGB profile";
+
+    if (pMessage != LibpngMessage) {
         gDefaultMessageHandler(pType, pContext, pMessage);
+    }
 }
 #endif
 
@@ -90,19 +93,41 @@ void initQtMessagePattern()
 
 //==============================================================================
 
-void initPluginsPath(int pArgC, char *pArgV[])
+void initApplication(QString *pAppDate)
 {
-    // Initialise the plugins path
-    // Note: a user might have set the OpenCOR path in his/her PATH environment
-    //       variable, so that s/he could then start OpenCOR from the command
-    //       line by simply typing OpenCOR (see issue #1688). However, in that
-    //       case, pArgV[0] won't contain the full path to OpenCOR, just its
-    //       basename. So, we need to use a temporary QCoreApplication object to
-    //       determine the full path to OpenCOR and, as a result, to its plugins
-    //       directory, thus making it possible to run OpenCOR (and load its
-    //       various plugins)...
+    // Use the system's proxy settings
 
-    QFileInfo appFileInfo = QCoreApplication(pArgC, pArgV).applicationFilePath();
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
+
+    // Ignore SSL-related warnings
+    // Note #1: this is to address an issue with QSslSocket not being able to
+    //          resolve some methods...
+    // Note #2: see issue #516 for more information...
+
+    qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
+
+    // Set the organisation and application names of our application
+
+    qApp->setOrganizationName("Physiome");
+    qApp->setApplicationName("OpenCOR");
+
+    // Retrieve and set the version of the application
+
+    QString versionData;
+
+    readFile(":/app_versiondate", versionData);
+
+    QStringList versionDataList = versionData.split(eolString());
+
+    qApp->setApplicationVersion(versionDataList.first());
+
+    if (pAppDate != nullptr) {
+        *pAppDate = versionDataList.last();
+    }
+
+    // Initialise the plugins path
+
+    QFileInfo appFileInfo = QCoreApplication::applicationFilePath();
     QString appDir;
 
 #ifdef Q_OS_WIN
@@ -138,45 +163,9 @@ void initPluginsPath(int pArgC, char *pArgV[])
     }
 #elif defined(Q_OS_MAC)
     pluginsDir = appDir+"/../PlugIns";
-#else
-    #error Unsupported platform
 #endif
 
     QCoreApplication::setLibraryPaths(QStringList() << canonicalDirName(pluginsDir));
-}
-
-//==============================================================================
-
-void initApplication(QString *pAppDate)
-{
-    // Use the system's proxy settings
-
-    QNetworkProxyFactory::setUseSystemConfiguration(true);
-
-    // Ignore SSL-related warnings
-    // Note #1: this is to address an issue with QSslSocket not being able to
-    //          resolve some methods...
-    // Note #2: see issue #516 for more information...
-
-    qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
-
-    // Set the organisation and application names of our application
-
-    qApp->setOrganizationName("Physiome");
-    qApp->setApplicationName("OpenCOR");
-
-    // Retrieve and set the version of the application
-
-    QString versionData;
-
-    readFile(":/app_versiondate", versionData);
-
-    QStringList versionDataList = versionData.split(eolString());
-
-    qApp->setApplicationVersion(versionDataList.first());
-
-    if (pAppDate)
-        *pAppDate = versionDataList.last();
 }
 
 //==============================================================================

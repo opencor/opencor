@@ -9,9 +9,6 @@ add_plugin(WebViewerWidget
 
         src/webviewerwidget.cpp
         src/webviewerwidgetplugin.cpp
-    HEADERS_MOC
-        src/webviewerwidget.h
-        src/webviewerwidgetplugin.h
     PLUGINS
         Core
     QT_MODULES

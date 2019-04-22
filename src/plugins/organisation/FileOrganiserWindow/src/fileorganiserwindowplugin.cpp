@@ -81,8 +81,8 @@ bool FileOrganiserWindowPlugin::definesPluginInterfaces()
 bool FileOrganiserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                                    QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -113,7 +113,7 @@ void FileOrganiserWindowPlugin::finalizePlugin()
 
 void FileOrganiserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -144,7 +144,7 @@ void FileOrganiserWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void FileOrganiserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

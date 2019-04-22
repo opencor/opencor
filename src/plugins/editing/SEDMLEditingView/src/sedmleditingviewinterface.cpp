@@ -38,9 +38,7 @@ extern "C" Q_DECL_EXPORT int sedmlEditingViewInterfaceVersion()
 
 //==============================================================================
 
-SedmlEditingViewInterface::~SedmlEditingViewInterface()
-{
-}
+SedmlEditingViewInterface::~SedmlEditingViewInterface() = default;
 
 //==============================================================================
 

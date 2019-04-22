@@ -1,3 +1,45 @@
+macro(configure_clang_and_clang_tidy TARGET_NAME)
+    # Configure Cland and Clang-Tidy for the given target
+
+    if(APPLE)
+        # Note #1: the full list of diagnostic flags for Clang can be found at
+        #          https://clang.llvm.org/docs/DiagnosticsReference.html...
+        # Note #2: besides C++98 compatibility, which we are not after, some
+        #          warnings are disabled so that Qt-related files can be
+        #          compiled without any problems...
+
+        set(COMPILE_OPTIONS
+            -Weverything
+            -Wno-c++98-compat
+            -Wno-c++98-compat-pedantic
+            -Wno-documentation
+            -Wno-exit-time-destructors
+            -Wno-extra-semi-stmt
+            -Wno-global-constructors
+            -Wno-header-hygiene
+            -Wno-missing-prototypes
+            -Wno-padded
+            -Wno-redundant-parens
+            -Wno-sign-conversion
+            -Wno-unknown-warning-option
+            -Wno-used-but-marked-unused
+            -Wno-zero-as-null-pointer-constant
+        )
+
+        set_target_properties(${TARGET_NAME} PROPERTIES
+            COMPILE_OPTIONS "${COMPILE_OPTIONS}"
+        )
+    endif()
+
+    if(ENABLE_CLANG_TIDY)
+        set_target_properties(${TARGET_NAME} PROPERTIES
+            CXX_CLANG_TIDY "${CLANG_TIDY}"
+        )
+    endif()
+endmacro()
+
+#===============================================================================
+
 macro(track_files)
     # Keep track of the given files
     # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
@@ -47,15 +89,10 @@ endmacro()
 
 macro(build_documentation DOCUMENTATION_NAME)
     # Build the given documentation as an external project and have it copied to
-    # our final documentation directory, but only if we Python and Sphinx are
-    # available
-    # Note: the check for Python and Sphinx is in case we are building only one
-    #       of our third-party libraries (to upgrade it to a newer version for
-    #       example), in which case we want our Python and PythonPackages
-    #       plugins will probably not be built...
+    # our final documentation directory, but only if we have a target for our
+    # Python and PythonPackages plugins (since we need both Python and Sphinx)
 
-    if(    NOT "${PYTHON_EXECUTABLE}" STREQUAL ""
-       AND NOT "${SPHINX_EXECUTABLE}" STREQUAL "")
+    if(TARGET PythonPlugin AND TARGET PythonPackagesPlugin)
         set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
 
         string(REPLACE ";" "|"
@@ -76,11 +113,9 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
-        # Add our external project as a dependency to our project build target,
-        # so that our Help window plugin can generate the help files that will
-        # be embedded in OpenCOR as a resource
+        # Make ourselves depend on our Python and PythonPackages plugins
 
-        add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+        add_dependencies(${DOCUMENTATION_BUILD} PythonPlugin PythonPackagesPlugin)
     endif()
 endmacro()
 
@@ -116,7 +151,6 @@ macro(add_plugin PLUGIN_NAME)
     )
     set(MULTI_VALUE_KEYWORDS
         SOURCES
-        HEADERS_MOC
         UIS
         DEFINITIONS
         PLUGINS
@@ -153,7 +187,7 @@ macro(add_plugin PLUGIN_NAME)
         # Update the translation (.ts) files and generate the language (.qm)
         # files, which will later on be embedded in the plugin
 
-        update_language_files(${PLUGIN_NAME} ${ARG_SOURCES} ${ARG_HEADERS_MOC} ${ARG_UIS})
+        update_language_files(${PLUGIN_NAME} ${ARG_SOURCES} ${ARG_UIS})
     endif()
 
     if(EXISTS ${UI_QRC_FILENAME})
@@ -181,22 +215,12 @@ macro(add_plugin PLUGIN_NAME)
 
     # Generate and add the different files needed by the plugin
 
-    if(NOT "${ARG_HEADERS_MOC}" STREQUAL "")
-        qt5_wrap_cpp(SOURCES_MOC ${ARG_HEADERS_MOC})
-    endif()
-
-    if(NOT "${ARG_UIS}" STREQUAL "")
-        qt5_wrap_ui(SOURCES_UIS ${ARG_UIS})
-    endif()
-
     if(NOT "${RESOURCES}" STREQUAL "")
         qt5_add_resources(SOURCES_RCS ${RESOURCES})
     endif()
 
     add_library(${PROJECT_NAME} SHARED
         ${ARG_SOURCES}
-        ${SOURCES_MOC}
-        ${SOURCES_UIS}
         ${SOURCES_RCS}
     )
 
@@ -204,6 +228,8 @@ macro(add_plugin PLUGIN_NAME)
         OUTPUT_NAME ${PLUGIN_NAME}
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
+
+    configure_clang_and_clang_tidy(${PROJECT_NAME})
 
     # OpenCOR plugins
 
@@ -402,10 +428,10 @@ macro(add_plugin PLUGIN_NAME)
             set(TEST_NAME ${PLUGIN_NAME}_${ARG_TEST})
 
             set(TEST_SOURCE tests/${ARG_TEST}.cpp)
-            set(TEST_HEADER_MOC tests/${ARG_TEST}.h)
+            set(TEST_HEADER tests/${ARG_TEST}.h)
 
             if(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE}
-               AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC})
+               AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER})
                 # The test exists, so build it, but first set the RPATH and
                 # RPATH link values to use by the test, if on Linux
 
@@ -414,26 +440,15 @@ macro(add_plugin PLUGIN_NAME)
                            LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
                 endif()
 
-
-                set(TEST_SOURCES_MOC)
-                # Note: we need to initialise TEST_SOURCES_MOC in case there is
-                #       more than just one test. Indeed, if we were not to
-                #       initialise it, then it would include the information of
-                #       all the tests up to the one we want to build...
-
-                qt5_wrap_cpp(TEST_SOURCES_MOC ${TEST_HEADER_MOC})
                 qt5_add_resources(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
                 add_executable(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
 
                     ${ARG_SOURCES}
-                    ${SOURCES_MOC}
-                    ${SOURCES_UIS}
                     ${SOURCES_RCS}
 
                     ${TEST_SOURCE}
-                    ${TEST_SOURCES_MOC}
                     ${TEST_SOURCES_RCS}
                 )
 
@@ -441,6 +456,8 @@ macro(add_plugin PLUGIN_NAME)
                     OUTPUT_NAME ${TEST_NAME}
                     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
                 )
+
+                configure_clang_and_clang_tidy(${TEST_NAME})
 
                 # OpenCOR plugins
 

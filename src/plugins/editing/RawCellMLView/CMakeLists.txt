@@ -15,9 +15,6 @@ add_plugin(RawCellMLView
 
         src/rawcellmlviewplugin.cpp
         src/rawcellmlviewwidget.cpp
-    HEADERS_MOC
-        src/rawcellmlviewplugin.h
-        src/rawcellmlviewwidget.h
     PLUGINS
         CellMLEditingView
 )

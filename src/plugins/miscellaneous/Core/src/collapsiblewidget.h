@@ -70,7 +70,7 @@ public:
     explicit CollapsibleHeaderWidget(bool pCollapsible, QWidget *pParent);
 
     void setFirstHeader(bool pFirstHeader);
-    void setLastHeader(bool pFirstHeader);
+    void setLastHeader(bool pLastHeader);
 
     bool isCollapsable() const;
 

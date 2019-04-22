@@ -82,8 +82,8 @@ bool WebBrowserWindowPlugin::definesPluginInterfaces()
 bool WebBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                                 QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -114,7 +114,7 @@ void WebBrowserWindowPlugin::finalizePlugin()
 
 void WebBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -145,7 +145,7 @@ void WebBrowserWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void WebBrowserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

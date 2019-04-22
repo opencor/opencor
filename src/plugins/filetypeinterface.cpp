@@ -38,9 +38,7 @@ extern "C" Q_DECL_EXPORT int fileTypeInterfaceVersion()
 
 //==============================================================================
 
-FileTypeInterface::~FileTypeInterface()
-{
-}
+FileTypeInterface::~FileTypeInterface() = default;
 
 //==============================================================================
 

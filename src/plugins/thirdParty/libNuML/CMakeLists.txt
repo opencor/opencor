@@ -188,8 +188,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libnumlplugin.cpp
-    HEADERS_MOC
-        src/libnumlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

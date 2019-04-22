@@ -38,9 +38,7 @@ extern "C" Q_DECL_EXPORT int editingViewInterfaceVersion()
 
 //==============================================================================
 
-EditingViewInterface::~EditingViewInterface()
-{
-}
+EditingViewInterface::~EditingViewInterface() = default;
 
 //==============================================================================
 

@@ -72,12 +72,18 @@ QString SecondOrderRungeKuttaSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000381"))
-        return solverName();
-    else if (!pKisaoId.compare("KISAO:0000483"))
-        return StepId;
+    static const QString Kisao0000381 = "KISAO:0000381";
+    static const QString Kisao0000483 = "KISAO:0000483";
 
-    return QString();
+    if (pKisaoId == Kisao0000381) {
+        return solverName();
+    }
+
+    if (pKisaoId == Kisao0000483) {
+        return StepId;
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -88,12 +94,15 @@ QString SecondOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
     // Note: our second-order Runge-Kutta method is effectively the midpoint
     //       method...
 
-    if (!pId.compare(solverName()))
+    if (pId == solverName()) {
         return "KISAO:0000381";
-    else if (!pId.compare(StepId))
-        return "KISAO:0000483";
+    }
 
-    return QString();
+    if (pId == StepId) {
+        return "KISAO:0000483";
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -132,11 +141,11 @@ Solver::Properties SecondOrderRungeKuttaSolverPlugin::solverProperties() const
 
 QMap<QString, bool> SecondOrderRungeKuttaSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
-    Q_UNUSED(pSolverPropertiesValues);
+    Q_UNUSED(pSolverPropertiesValues)
 
     // We don't handle this interface...
 
-    return QMap<QString, bool>();
+    return {};
 }
 
 //==============================================================================

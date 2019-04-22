@@ -35,8 +35,8 @@ PLUGININFO_FUNC HeunSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that implements the <a href=\"http://en.wikipedia.org/wiki/Heun's_method\">Heun's method</a> to solve <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">ODEs</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Heun's_method\">méthode de Heun</a> pour résoudre des <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">EDOs</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that implements the <a href="http://en.wikipedia.org/wiki/Heun's_method">Heun's method</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui implémente la <a href="http://en.wikipedia.org/wiki/Heun's_method">méthode de Heun</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           QStringList(),
@@ -74,12 +74,18 @@ QString HeunSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000301"))
-        return solverName();
-    else if (!pKisaoId.compare("KISAO:0000483"))
-        return StepId;
+    static const QString Kisao0000301 = "KISAO:0000301";
+    static const QString Kisao0000483 = "KISAO:0000483";
 
-    return QString();
+    if (pKisaoId == Kisao0000301) {
+        return solverName();
+    }
+
+    if (pKisaoId == Kisao0000483) {
+        return StepId;
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -88,12 +94,15 @@ QString HeunSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
-    if (!pId.compare(solverName()))
+    if (pId == solverName()) {
         return "KISAO:0000301";
-    else if (!pId.compare(StepId))
-        return "KISAO:0000483";
+    }
 
-    return QString();
+    if (pId == StepId) {
+        return "KISAO:0000483";
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -132,11 +141,11 @@ Solver::Properties HeunSolverPlugin::solverProperties() const
 
 QMap<QString, bool> HeunSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
-    Q_UNUSED(pSolverPropertiesValues);
+    Q_UNUSED(pSolverPropertiesValues)
 
     // We don't handle this interface...
 
-    return QMap<QString, bool>();
+    return {};
 }
 
 //==============================================================================

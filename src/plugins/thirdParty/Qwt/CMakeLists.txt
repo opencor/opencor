@@ -216,8 +216,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/qwtplugin.cpp
-    HEADERS_MOC
-        src/qwtplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

@@ -11,9 +11,6 @@ add_plugin(ZincWindow
 
         src/zincwindowplugin.cpp
         src/zincwindowwindow.cpp
-    HEADERS_MOC
-        src/zincwindowplugin.h
-        src/zincwindowwindow.h
     UIS
         src/zincwindowwindow.ui
     PLUGINS

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <float.h>
+#include <cfloat>
 
 //==============================================================================
 
@@ -60,7 +60,7 @@ TextEditorWidget::TextEditorWidget(QWidget *pParent) :
 #ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
-    setFrame(QFrame::NoFrame);
+    setFrame(false);
 }
 
 //==============================================================================
@@ -133,7 +133,7 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
 {
     // Set a validator that accepts any double
 
-    static const QRegularExpression DoubleRegEx = QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$");
+    static const QRegularExpression DoubleRegEx = QRegularExpression(R"(^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$)");
 
     setValidator(new QRegularExpressionValidator(DoubleRegEx, this));
 }
@@ -145,7 +145,7 @@ DoubleGe0EditorWidget::DoubleGe0EditorWidget(QWidget *pParent) :
 {
     // Set a validator that accepts zero or any strictly positive double
 
-    static const QRegularExpression DoubleGe0RegEx = QRegularExpression("^[+]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$");
+    static const QRegularExpression DoubleGe0RegEx = QRegularExpression(R"(^[+]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$)");
 
     setValidator(new QRegularExpressionValidator(DoubleGe0RegEx, this));
 }
@@ -157,7 +157,7 @@ DoubleGt0EditorWidget::DoubleGt0EditorWidget(QWidget *pParent) :
 {
     // Set a validator that accepts any strictly positive double
 
-    static const QRegularExpression DoubleGt0RegEx = QRegularExpression("^[+]?([1-9]\\d*(\\.\\d*)?|[0]?\\.\\d+)([eE][+-]?\\d+)?$");
+    static const QRegularExpression DoubleGt0RegEx = QRegularExpression(R"(^[+]?([1-9]\d*(\.\d*)?|[0]?\.\d+)([eE][+-]?\d+)?$)");
 
     setValidator(new QRegularExpressionValidator(DoubleGt0RegEx, this));
 }
@@ -202,8 +202,9 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // Make sure that we have at least one item
 
-    if (!count())
+    if (count() == 0) {
         return;
+    }
 
     // We want to go to the next item in our list (and go back to the first one
     // if we are at the end of our list), so determine the new current index
@@ -213,8 +214,9 @@ void ListEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
     do {
         ++newCurrentIndex;
 
-        if (newCurrentIndex == count())
+        if (newCurrentIndex == count()) {
             newCurrentIndex = 0;
+        }
     } while (itemText(newCurrentIndex).isEmpty());
 
     // Set the new current index and accept the event
@@ -254,7 +256,7 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     uint subControl = QStyle::SC_ComboBoxArrow;
     QRect subControlRect;
 
-    while (subControl) {
+    while (subControl != 0) {
         // Retrieve the sub control's region
 
         subControlRect = style()->subControlRect(QStyle::CC_ComboBox,
@@ -265,27 +267,29 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
         // Check whether the sub control exists (i.e. its region is valid) and,
         // if so, whether we ore over it
 
-        if (subControlRect.isValid() && subControlRect.contains(pEvent->pos()))
+        if (subControlRect.isValid() && subControlRect.contains(pEvent->pos())) {
             break;
+        }
 
         // Either the sub control doesn't exist or we are not over it, so try
         // the next sub control
 
-        subControl >>= 1;
+        subControl /= 2;
     }
 
     // Check whether the 'current' sub control is the arrow we are after
 
-    if (QStyle::SubControl(subControl) == QStyle::SC_ComboBoxArrow)
+    if (QStyle::SubControl(subControl) == QStyle::SC_ComboBoxArrow) {
         QComboBox::mousePressEvent(pEvent);
-    else
+    } else {
         pEvent->accept();
+    }
 }
 
 //==============================================================================
 
-static const auto TrueValue  = QStringLiteral("True");
-static const auto FalseValue = QStringLiteral("False");
+static const char *TrueValue  = "True";
+static const char *FalseValue = "False";
 
 //==============================================================================
 
@@ -324,7 +328,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                                              const QStyleOptionViewItem &pOption,
                                              const QModelIndex &pIndex) const
 {
-    Q_UNUSED(pOption);
+    Q_UNUSED(pOption)
 
     // Create and return an editor for our item, based on its type
 
@@ -372,10 +376,11 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         // Add the value items to our list, keeping in mind separators
 
         for (const auto &valueItem : property->listValues()) {
-            if (valueItem.isEmpty())
+            if (valueItem.isEmpty()) {
                 listEditor->insertSeparator(listEditor->count());
-            else
+            } else {
                 listEditor->addItem(valueItem);
+            }
         }
 
         break;
@@ -419,8 +424,8 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                 this, &PropertyItemDelegate::goToNextPropertyRequested);
 
         break;
-    default:
-        // Not a relevant type, so do nothing...
+    case Property::Type::Section:
+        // Not a relevant type, so do nothing
 
         ;
     }
@@ -489,10 +494,13 @@ void PropertyItemDelegate::booleanPropertyChanged(const QString &pValue)
 //==============================================================================
 
 PropertyItem::PropertyItem(Property *pOwner) :
-    QStandardItem(),
     mOwner(pOwner)
 {
 }
+
+//==============================================================================
+
+PropertyItem::~PropertyItem() = default;
 
 //==============================================================================
 
@@ -525,8 +533,9 @@ Property::Property(Type pType, PropertyEditorWidget *pParent) :
 
     mName->setEditable(false);
 
-    if (mUnit)
+    if (mUnit != nullptr) {
         mUnit->setEditable(false);
+    }
 }
 
 //==============================================================================
@@ -624,8 +633,9 @@ QList<QStandardItem *> Property::items() const
 
     QList<QStandardItem *> res = QList<QStandardItem *>() << mName << mValue;
 
-    if (mUnit)
+    if (mUnit != nullptr) {
         res << mUnit;
+    }
 
     return res;
 }
@@ -638,8 +648,9 @@ bool Property::hasIndex(const QModelIndex &pIndex) const
 
     bool res = (mName->index() == pIndex) || (mValue->index() == pIndex);
 
-    if (mUnit)
+    if (mUnit != nullptr) {
         res = res || (mUnit->index() == pIndex);
+    }
 
     return res;
 }
@@ -758,11 +769,12 @@ void Property::setName(const QString &pName, bool pUpdateToolTip)
 {
     // Set our name
 
-    if (pName.compare(mName->text())) {
+    if (pName != mName->text()) {
         mName->setText(pName);
 
-        if (pUpdateToolTip)
+        if (pUpdateToolTip) {
             updateToolTip();
+        }
     }
 }
 
@@ -783,7 +795,7 @@ void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
 
     QString oldValue = value();
 
-    if (pValue.compare(oldValue) || pForce) {
+    if ((pValue != oldValue) || pForce) {
         mValue->setText(pValue);
 
         if (mType == Type::Color) {
@@ -801,8 +813,9 @@ void Property::setValue(const QString &pValue, bool pForce, bool pEmitSignal)
 
         // Let people know if we have a new value
 
-        if (pEmitSignal)
+        if (pEmitSignal) {
             emit valueChanged(oldValue, pValue);
+        }
     }
 }
 
@@ -825,17 +838,18 @@ QVariant Property::variantValue(bool pListValueIndex) const
     case Type::DoubleGt0:
         return doubleValue();
     case Type::List:
-        if (pListValueIndex)
+        if (pListValueIndex) {
             return listValueIndex();
-        else
+        } else {
             return listValue();
+        }
     case Type::Boolean:
         return booleanValue();
     case Type::Color:
         return colorValue();
     }
 
-    return QVariant();
+    return {};
     // Note: we can't reach this point, but without it we may, at compilation
     //       time, be told that not all control paths return a value...
 }
@@ -862,7 +876,7 @@ QString Property::stringValue() const
         return QVariant(booleanValue()).toString();
     }
 
-    return QString();
+    return {};
     // Note: we can't reach this point, but without it we may, at compilation
     //       time, be told that not all control paths return a value...
 }
@@ -882,12 +896,13 @@ void Property::setIntegerValue(int pIntegerValue, bool pEmitSignal)
 {
     // Set our value, should it be of integer type
 
-    if (mType == Type::Integer)
+    if (mType == Type::Integer) {
         setValue(QString::number(pIntegerValue), false, pEmitSignal);
-    else if (mType == Type::IntegerGe0)
+    } else if (mType == Type::IntegerGe0) {
         setValue(QString::number((pIntegerValue >= 0)?pIntegerValue:1), false, pEmitSignal);
-    else if (mType == Type::IntegerGt0)
+    } else if (mType == Type::IntegerGt0) {
         setValue(QString::number((pIntegerValue > 0)?pIntegerValue:1), false, pEmitSignal);
+    }
 }
 
 //==============================================================================
@@ -907,12 +922,13 @@ void Property::setDoubleValue(double pDoubleValue, bool pEmitSignal)
     // Note: we want as much precision as possible, hence we use a precision of
     //       15 decimals (see http://en.wikipedia.org/wiki/Double_precision)...
 
-    if (mType == Type::Double)
+    if (mType == Type::Double) {
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
-    else if (mType == Type::DoubleGe0)
+    } else if (mType == Type::DoubleGe0) {
         setValue(QString::number((pDoubleValue >= 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
-    else if (mType == Type::DoubleGt0)
+    } else if (mType == Type::DoubleGt0) {
         setValue(QString::number((pDoubleValue > 0.0)?pDoubleValue:1.0, 'g', 15), false, pEmitSignal);
+    }
 }
 
 //==============================================================================
@@ -930,8 +946,9 @@ void Property::setListValues(const QStringList &pListValues, bool pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
 
-    if (mType != Type::List)
+    if (mType != Type::List) {
         return;
+    }
 
     // Set our list values, if appropriate
 
@@ -968,11 +985,12 @@ void Property::setListValue(const QString &pListValue)
     // Set our list value, if appropriate
 
     if (    (mType == Type::List)
-        && !mListValues.isEmpty() && listValue().compare(pListValue)) {
+        && !mListValues.isEmpty() && (listValue() != pListValue)) {
         int listValueIndex = mListValues.indexOf(pListValue);
 
-        if (listValueIndex != -1)
+        if (listValueIndex != -1) {
             setValue(mListValues[listValueIndex]);
+        }
     }
 }
 
@@ -1015,7 +1033,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
 {
     // Set our empty list value, if appropriate
 
-    if ((mType == Type::List) && pEmptyListValue.compare(mEmptyListValue)) {
+    if ((mType == Type::List) && (pEmptyListValue != mEmptyListValue)) {
         mEmptyListValue = pEmptyListValue;
 
         // Keep our current value, if our list is not empty, otherwise update it
@@ -1031,7 +1049,7 @@ bool Property::booleanValue() const
 {
     // Return our value as a boolean
 
-    return !value().compare(TrueValue);
+    return value() == TrueValue;
 }
 
 //==============================================================================
@@ -1040,8 +1058,9 @@ void Property::setBooleanValue(bool pBooleanValue)
 {
     // Set our value, should it be of boolean type
 
-    if (mType == Type::Boolean)
+    if (mType == Type::Boolean) {
         setValue(pBooleanValue?TrueValue:FalseValue);
+    }
 }
 
 //==============================================================================
@@ -1066,10 +1085,11 @@ void Property::setColorValue(const QColor &pColorValue)
     if (mType == Type::Color) {
         QString colorValueName = pColorValue.name(QColor::HexArgb);
 
-        if (colorValueName.startsWith("#ff"))
+        if (colorValueName.startsWith("#ff")) {
             setValue(pColorValue.name());
-        else
+        } else {
             setValue(colorValueName);
+        }
     }
 }
 
@@ -1092,16 +1112,15 @@ void Property::setColorValue(const QPoint &pPoint)
             iconRect.translate(3, 1);
 #elif defined(Q_OS_MAC)
             iconRect.translate(5, 1);
-#else
-            #error Unsupported platform
 #endif
 
             iconRect.setSize(QSize(16, 16));
 
             // Check whether the given point is over our colour value icon
 
-            if (!iconRect.contains(pPoint))
+            if (!iconRect.contains(pPoint)) {
                 return;
+            }
         }
 
         // Select a colour and assign it to ourselves
@@ -1111,8 +1130,9 @@ void Property::setColorValue(const QPoint &pPoint)
         colorDialog.setOption(QColorDialog::ShowAlphaChannel);
         colorDialog.setWindowTitle(tr("Select Colour"));
 
-        if (colorDialog.exec())
+        if (colorDialog.exec() != 0) {
             setColorValue(colorDialog.currentColor());
+        }
 
         // Make sure that the widget that owns this property gets the focus back
         // straightaway
@@ -1131,7 +1151,7 @@ QString Property::unit() const
 {
     // Return our unit
 
-    return mUnit?mUnit->text():QString();
+    return (mUnit != nullptr)?mUnit->text():QString();
 }
 
 //==============================================================================
@@ -1140,11 +1160,12 @@ void Property::setUnit(const QString &pUnit, bool pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
-    if (mUnit && (mType != Type::Section) && pUnit.compare(mUnit->text())) {
+    if ((mUnit != nullptr) && (mType != Type::Section) && (pUnit != mUnit->text())) {
         mUnit->setText(pUnit);
 
-        if (pUpdateToolTip)
+        if (pUpdateToolTip) {
             updateToolTip();
+        }
     }
 }
 
@@ -1163,7 +1184,7 @@ void Property::setExtraInfo(const QString &pExtraInfo)
 {
     // Set our extra info
 
-    if (pExtraInfo.compare(mExtraInfo)) {
+    if (pExtraInfo != mExtraInfo) {
         mExtraInfo = pExtraInfo;
 
         updateToolTip();
@@ -1177,7 +1198,7 @@ bool Property::isVisible() const
     // Return our visibility
 
     return mOwner->isRowHidden(mName->row(),
-                               mName->parent()?
+                               (mName->parent() != nullptr)?
                                    mName->parent()->index():
                                    qobject_cast<QStandardItemModel *>(mOwner->model())->invisibleRootItem()->index());
 }
@@ -1189,7 +1210,7 @@ void Property::setVisible(bool pVisible)
     // Set our visibility
 
     mOwner->setRowHidden(mName->row(),
-                         mName->parent()?
+                         (mName->parent() != nullptr)?
                              mName->parent()->index():
                              qobject_cast<QStandardItemModel *>(mOwner->model())->invisibleRootItem()->index(),
                          !pVisible);
@@ -1218,8 +1239,9 @@ void Property::edit() const
 {
     // Have our owner edit our value
 
-    if (mValue->isEditable())
+    if (mValue->isEditable()) {
         mOwner->edit(mValue->index());
+    }
 }
 
 //==============================================================================
@@ -1233,25 +1255,29 @@ void Property::updateToolTip()
     if (mType != Type::Section) {
         toolTip += tr(": ");
 
-        if (value().isEmpty() && (mType != Type::String))
+        if (value().isEmpty() && (mType != Type::String)) {
             toolTip += UnknownValue;
-        else
+        } else {
             toolTip += value();
+        }
 
-        if (mUnit && !mUnit->text().isEmpty())
+        if ((mUnit != nullptr) && !mUnit->text().isEmpty()) {
             toolTip += " "+mUnit->text();
+        }
     }
 
-    if (!mExtraInfo.isEmpty())
+    if (!mExtraInfo.isEmpty()) {
         toolTip += " ("+mExtraInfo+")";
+    }
 
     mName->setToolTip(toolTip);
 
     if (mType != Type::Section) {
         mValue->setToolTip(toolTip);
 
-        if (mUnit)
+        if (mUnit != nullptr) {
             mUnit->setToolTip(toolTip);
+        }
     }
 }
 
@@ -1280,7 +1306,7 @@ PropertyEditorWidget::PropertyEditorWidget(bool pShowUnits,
     // Create our item delegate and set it, after making sure that we handle a
     // few of its signals
 
-    PropertyItemDelegate *propertyItemDelegate = new PropertyItemDelegate(this);
+    auto propertyItemDelegate = new PropertyItemDelegate(this);
 
     connect(selectionModel(), &QItemSelectionModel::currentChanged,
             this, &PropertyEditorWidget::editorClosed);
@@ -1354,16 +1380,17 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
 
     Property *currentProperty = property(pItem->index());
 
-    if (    currentProperty
+    if (   (currentProperty != nullptr)
         && (currentProperty->type() == Property::Type::List)
-        &&  currentProperty->listValues().isEmpty()) {
+        && currentProperty->listValues().isEmpty()) {
         currentProperty->setValue(currentProperty->emptyListValue());
     }
 
     // Retranslate the current item's children, if any
 
-    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
+    for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
         retranslateEmptyListProperties(pItem->child(i));
+    }
 }
 
 //==============================================================================
@@ -1375,8 +1402,9 @@ void PropertyEditorWidget::retranslateUi()
     QStringList horizontalHeaderLabels = QStringList() << tr("Property")
                                                        << tr("Value");
 
-    if (mShowUnits)
+    if (mShowUnits) {
         horizontalHeaderLabels << tr("Unit");
+    }
 
     mModel->setHorizontalHeaderLabels(horizontalHeaderLabels);
 
@@ -1398,8 +1426,9 @@ int PropertyEditorWidget::childrenRowHeight(const QStandardItem *pItem) const
             QStandardItem *childItem = pItem->child(i);
             int childIndexHeight = rowHeight(childItem->index());
 
-            if (childIndexHeight)
+            if (childIndexHeight != 0) {
                 res += childIndexHeight+childrenRowHeight(childItem);
+            }
         }
     }
 
@@ -1420,14 +1449,15 @@ QSize PropertyEditorWidget::sizeHint() const
         int hintWidth = 0;
         int hintHeight = header()->height();
 
-        for (int i = 0, iMax = header()->count(); i < iMax; ++i)
+        for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
             hintWidth += columnWidth(i);
+        }
 
         for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
             QStandardItem *rowItem = mModel->item(i);
             int rowItemHeight = rowHeight(rowItem->index());
 
-            if (rowItemHeight) {
+            if (rowItemHeight != 0) {
                 // Our current row has some height, meaning that it is visible,
                 // so we can set its height to our hintHeight, as well as
                 // retrieve the total height of our row's children
@@ -1436,13 +1466,13 @@ QSize PropertyEditorWidget::sizeHint() const
             }
         }
 
-        return QSize(hintWidth, hintHeight);
-    } else {
-        // We don't automatically resize our height, so our ideal size is our
-        // maximum size
-
-        return maximumSize();
+        return { hintWidth, hintHeight };
     }
+
+    // We don't automatically resize our height, so our ideal size is our
+    // maximum size
+
+    return maximumSize();
 }
 
 //==============================================================================
@@ -1455,8 +1485,9 @@ void PropertyEditorWidget::clear()
 
     // Delete some internal objects
 
-    for (auto property : mAllProperties)
+    for (auto property : mAllProperties) {
         delete property;
+    }
 
     mProperties.clear();
     mAllProperties.clear();
@@ -1478,11 +1509,11 @@ Property * PropertyEditorWidget::addProperty(Property::Type pType,
 {
     // Create our property
 
-    Property *res = new Property(pType, this);
+    auto res = new Property(pType, this);
 
     // Populate our data model with our property
 
-    if (pParent) {
+    if (pParent != nullptr) {
         // We want to add a child property
 
         pParent->add(res);
@@ -1504,7 +1535,7 @@ Property * PropertyEditorWidget::addProperty(Property::Type pType,
 
     if (pType == Property::Type::Section) {
         setFirstColumnSpanned(res->row(),
-                              pParent?pParent->index():mModel->invisibleRootItem()->index(),
+                              (pParent != nullptr)?pParent->index():mModel->invisibleRootItem()->index(),
                               true);
     }
 
@@ -1817,10 +1848,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                    && (pEvent->key() == Qt::Key_Enter))) {
         // The user wants to start/stop editing the property
 
-        if (mPropertyEditor)
+        if (mPropertyEditor != nullptr) {
             editProperty(nullptr);
-        else
+        } else {
             editProperty(currentProperty());
+        }
 
         pEvent->accept();
     } else if (   isEditing()
@@ -1865,8 +1897,9 @@ void PropertyEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
     Property *crtProperty = property(indexAt(pEvent->pos()));
 
-    if (crtProperty && (crtProperty->type() == Property::Type::Color))
+    if ((crtProperty != nullptr) && (crtProperty->type() == Property::Type::Color)) {
         crtProperty->setColorValue(pEvent->pos());
+    }
 }
 
 //==============================================================================
@@ -1919,8 +1952,9 @@ void PropertyEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     } else {
         Property *crtProperty = property(indexAt(pEvent->pos()));
 
-        if (crtProperty && (crtProperty != oldProperty))
+        if ((crtProperty != nullptr) && (crtProperty != oldProperty)) {
             editProperty(crtProperty);
+        }
     }
 }
 
@@ -1978,8 +2012,6 @@ void PropertyEditorWidget::updateHeight()
                             //       shown, but not sure what could be done
                             //       about the blank space, hence we 'manually'
                             //       add those three pixels...
-#else
-    #error Unsupported platform
 #endif
                             0));
         // Note: the new height consists of our ideal height to which we add the
@@ -2025,10 +2057,10 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
     if (mProperty->type() == Property::Type::List) {
         QString propertyValue = mProperty->value();
         QStringList propertyListValues = mProperty->listValues();
-        ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
+        auto propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
 
         for (int i = 0, iMax = propertyListValues.count(); i < iMax; ++i) {
-            if (!propertyValue.compare(propertyListValues[i])) {
+            if (propertyValue == propertyListValues[i]) {
                 propertyEditor->setCurrentIndex(i);
 
                 break;
@@ -2054,8 +2086,9 @@ void PropertyEditorWidget::editorClosed()
 {
     // Make sure that we are editing a property
 
-    if (!mPropertyEditor)
+    if (mPropertyEditor == nullptr) {
         return;
+    }
 
     // We have stopped editing a property, so make sure that its value is
     // updated
@@ -2090,8 +2123,9 @@ void PropertyEditorWidget::selectProperty(Property *pProperty)
 {
     // Select the property, if one is provided
 
-    if (!pProperty)
+    if (pProperty == nullptr) {
         return;
+    }
 
     pProperty->select();
 }
@@ -2103,7 +2137,7 @@ void PropertyEditorWidget::editProperty(Property *pProperty, bool pCommitData)
     // We want to edit a new property, so first stop the editing of the current
     // one, if any
 
-    if (mPropertyEditor) {
+    if (mPropertyEditor != nullptr) {
         // A property is currently being edited, so commit its data and then
         // close its corresponding editor
 
@@ -2125,15 +2159,16 @@ void PropertyEditorWidget::editProperty(Property *pProperty, bool pCommitData)
                 || (propertyType == Property::Type::DoubleGe0)
                 || (propertyType == Property::Type::DoubleGt0)
                 || (propertyType == Property::Type::Color)) {
-                TextEditorWidget *propertyEditor = static_cast<TextEditorWidget *>(mPropertyEditor);
+                auto propertyEditor = static_cast<TextEditorWidget *>(mPropertyEditor);
                 QString propertyValue = propertyEditor->text();
                 int dummy;
 
                 canCommitData = propertyEditor->validator()->validate(propertyValue, dummy) == QValidator::Acceptable;
             }
 
-            if (canCommitData)
+            if (canCommitData) {
                 commitData(mPropertyEditor);
+            }
         }
 
         closeEditor(mPropertyEditor,
@@ -2155,7 +2190,7 @@ void PropertyEditorWidget::editProperty(Property *pProperty, bool pCommitData)
     // Now that the editing of our old property has finished, we can start the
     // editing of our new property, if any
 
-    if (pProperty) {
+    if (pProperty != nullptr) {
         // There is a new property to edit, so first make sure that it is
         // selected
 
@@ -2175,19 +2210,21 @@ bool PropertyEditorWidget::removeProperty(Property *pProperty)
     // Remove the given property and any of its children, but first make sure
     // that we know about the given property
 
-    if (!mAllProperties.contains(pProperty))
+    if (!mAllProperties.contains(pProperty)) {
         return false;
+    }
 
     // Stop tracking the property, if it is a root one
 
-    if (!pProperty->parent())
+    if (pProperty->parent() == nullptr) {
         mProperties.removeOne(pProperty);
+    }
 
     // Remove the property from our model
     // Note: the below will remove the given property and any of its children
 
     mModel->removeRow(pProperty->row(),
-                      pProperty->parent()?
+                      (pProperty->parent() != nullptr)?
                           pProperty->parent()->index():
                           mModel->invisibleRootItem()->index());
 
@@ -2205,8 +2242,9 @@ void PropertyEditorWidget::deleteProperty(Property *pProperty)
     // Recursively delete the memory associated with the given property and any
     // of its children
 
-    for (auto property : pProperty->properties())
+    for (auto property : pProperty->properties()) {
         deleteProperty(property);
+    }
 
     mAllProperties.removeOne(pProperty);
 
@@ -2261,15 +2299,17 @@ void PropertyEditorWidget::goToNeighbouringProperty(int pShift)
 
     QModelIndex neighbouringIndex = QModelIndex();
 
-    if (pShift == 1)
+    if (pShift == 1) {
         neighbouringIndex = indexBelow(currentIndex());
-    else if (pShift == -1)
+    } else if (pShift == -1) {
         neighbouringIndex = indexAbove(currentIndex());
+    }
 
     // Edit the neighbouring property, if any
 
-    if (neighbouringIndex.isValid())
+    if (neighbouringIndex.isValid()) {
         editProperty(property(neighbouringIndex));
+    }
 }
 
 //==============================================================================
@@ -2305,14 +2345,16 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
 {
     // Don't waste time if the given index isn't valid
 
-    if (!pIndex.isValid())
+    if (!pIndex.isValid()) {
         return nullptr;
+    }
 
     // Return our information about the property at the given index
 
     for (auto property : mAllProperties) {
-        if (property->hasIndex(pIndex))
+        if (property->hasIndex(pIndex)) {
             return property;
+        }
     }
 
     return nullptr;

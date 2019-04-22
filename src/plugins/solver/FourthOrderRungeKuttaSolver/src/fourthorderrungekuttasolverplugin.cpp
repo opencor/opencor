@@ -74,12 +74,18 @@ QString FourthOrderRungeKuttaSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000032"))
-        return solverName();
-    else if (!pKisaoId.compare("KISAO:0000483"))
-        return StepId;
+    static const QString Kisao0000032 = "KISAO:0000032";
+    static const QString Kisao0000483 = "KISAO:0000483";
 
-    return QString();
+    if (pKisaoId == Kisao0000032) {
+        return solverName();
+    }
+
+    if (pKisaoId == Kisao0000483) {
+        return StepId;
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -88,12 +94,15 @@ QString FourthOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
-    if (!pId.compare(solverName()))
+    if (pId == solverName()) {
         return "KISAO:0000032";
-    else if (!pId.compare(StepId))
-        return "KISAO:0000483";
+    }
 
-    return QString();
+    if (pId == StepId) {
+        return "KISAO:0000483";
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -132,11 +141,11 @@ Solver::Properties FourthOrderRungeKuttaSolverPlugin::solverProperties() const
 
 QMap<QString, bool> FourthOrderRungeKuttaSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
-    Q_UNUSED(pSolverPropertiesValues);
+    Q_UNUSED(pSolverPropertiesValues)
 
     // We don't handle this interface...
 
-    return QMap<QString, bool>();
+    return {};
 }
 
 //==============================================================================

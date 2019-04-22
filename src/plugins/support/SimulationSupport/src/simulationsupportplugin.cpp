@@ -50,7 +50,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
 
 bool SimulationSupportPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -63,9 +63,9 @@ bool SimulationSupportPlugin::saveFile(const QString &pOldFileName,
                                        const QString &pNewFileName,
                                        bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback)
 
     // We don't handle this interface...
 
@@ -76,7 +76,7 @@ bool SimulationSupportPlugin::saveFile(const QString &pOldFileName,
 
 void SimulationSupportPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -85,7 +85,7 @@ void SimulationSupportPlugin::fileOpened(const QString &pFileName)
 
 void SimulationSupportPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -94,7 +94,7 @@ void SimulationSupportPlugin::filePermissionsChanged(const QString &pFileName)
 
 void SimulationSupportPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -134,7 +134,7 @@ void SimulationSupportPlugin::fileRenamed(const QString &pOldFileName,
 
 void SimulationSupportPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }

@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <float.h>
+#include <cfloat>
 
 //==============================================================================
 
@@ -185,7 +185,6 @@ QColor GraphPanelPlotGraphProperties::symbolFillColor() const
 //==============================================================================
 
 GraphPanelPlotGraphRun::GraphPanelPlotGraphRun(GraphPanelPlotGraph *pOwner) :
-    QwtPlotCurve(),
     mOwner(pOwner),
     mSize(0),
     mValidData(QList<QPair<int, int>>())
@@ -242,8 +241,9 @@ void GraphPanelPlotGraphRun::setRawSamples(const double *pDataX,
         }
     }
 
-    if (validData != EmptyData)
+    if (validData != EmptyData) {
         mValidData << validData;
+    }
 
     mSize = pSize;
 
@@ -362,7 +362,7 @@ bool GraphPanelPlotGraph::isValid() const
     // Return whether we are valid
 
     return   !mFileName.isEmpty()
-           && mParameterX && mParameterY;
+           && (mParameterX != nullptr) && (mParameterY != nullptr);
 }
 
 //==============================================================================
@@ -376,8 +376,9 @@ void GraphPanelPlotGraph::attach(GraphPanelPlotWidget *pPlot)
 
     mDummyRun->attach(pPlot);
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         run->attach(pPlot);
+    }
 
     mPlot = pPlot;
 }
@@ -392,8 +393,9 @@ void GraphPanelPlotGraph::detach()
 
     mDummyRun->detach();
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         run->detach();
+    }
 
     mPlot = nullptr;
 }
@@ -422,9 +424,9 @@ void GraphPanelPlotGraph::addRun()
 {
     // Add a run, after having customised it using our dummy run, if available
 
-    GraphPanelPlotGraphRun *run = new GraphPanelPlotGraphRun(this);
+    auto run = new GraphPanelPlotGraphRun(this);
 
-    if (mDummyRun) {
+    if (mDummyRun != nullptr) {
         const QwtSymbol *symbol = mDummyRun->symbol();
         int symbolSize = symbol->size().width();
 
@@ -440,10 +442,11 @@ void GraphPanelPlotGraph::addRun()
     // If our dummy run already exists, then track the run we just created
     // otherwise make it our dummy run
 
-    if (mDummyRun)
+    if (mDummyRun != nullptr) {
         mRuns << run;
-    else
+    } else {
         mDummyRun = run;
+    }
 }
 
 //==============================================================================
@@ -452,8 +455,9 @@ void GraphPanelPlotGraph::removeRuns()
 {
     // Delete all our runs
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         delete run;
+    }
 
     mRuns.clear();
 }
@@ -573,8 +577,9 @@ void GraphPanelPlotGraph::setPen(const QPen &pPen)
 
     mDummyRun->setPen(pPen);
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         run->setPen(pPen);
+    }
 }
 
 //==============================================================================
@@ -600,8 +605,9 @@ void GraphPanelPlotGraph::setSymbol(const QwtSymbol::Style &pStyle,
 
     mDummyRun->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         run->setSymbol(new QwtSymbol(pStyle, pBrush, pPen, pSize));
+    }
 }
 
 //==============================================================================
@@ -625,8 +631,9 @@ void GraphPanelPlotGraph::setTitle(const QString &pTitle)
 
     mDummyRun->setTitle(pTitle);
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         run->setTitle(pTitle);
+    }
 }
 
 //==============================================================================
@@ -650,8 +657,9 @@ void GraphPanelPlotGraph::setVisible(bool pVisible)
 
     mDummyRun->setVisible(pVisible);
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         run->setVisible(pVisible);
+    }
 }
 
 //==============================================================================
@@ -661,8 +669,9 @@ bool GraphPanelPlotGraph::hasData() const
     // Return whether we have some data for any of our runs
 
     for (auto run : mRuns) {
-        if (run->dataSize())
+        if (run->dataSize() != 0) {
             return true;
+        }
     }
 
     return false;
@@ -686,12 +695,13 @@ QwtSeriesData<QPointF> * GraphPanelPlotGraph::data(int pRun) const
 
     if (mRuns.isEmpty()) {
         return nullptr;
-    } else {
-        if (pRun == -1)
-            return mRuns.last()->data();
-        else
-            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->data():nullptr;
     }
+
+    if (pRun == -1) {
+        return mRuns.last()->data();
+    }
+
+    return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->data():nullptr;
 }
 
 //==============================================================================
@@ -704,14 +714,16 @@ void GraphPanelPlotGraph::setData(double *pDataX, double *pDataY, quint64 pSize,
     GraphPanelPlotGraphRun *run = nullptr;
 
     if (!mRuns.isEmpty()) {
-        if (pRun == -1)
+        if (pRun == -1) {
             run = mRuns.last();
-        else
+        } else {
             run = ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]:nullptr;
+        }
     }
 
-    if (!run)
+    if (run == nullptr) {
         return;
+    }
 
     run->setRawSamples(pDataX, pDataY, int(pSize));
 
@@ -735,7 +747,7 @@ QRectF GraphPanelPlotGraph::boundingRect()
         mBoundingRect = QRectF();
 
         for (auto run : mRuns) {
-            if (run->dataSize()) {
+            if (run->dataSize() != 0) {
                 QRectF boundingRect = mBoundingRects.value(run, InvalidRect);
 
                 if (boundingRect == InvalidRect) {
@@ -794,8 +806,9 @@ QRectF GraphPanelPlotGraph::boundingRect()
                     }
                 }
 
-                if (boundingRect != InvalidRect)
+                if (boundingRect != InvalidRect) {
                     mBoundingRect |= boundingRect;
+                }
             }
         }
     }
@@ -814,7 +827,7 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
         mBoundingLogRect = QRectF();
 
         for (auto run : mRuns) {
-            if (run->dataSize()) {
+            if (run->dataSize() != 0) {
                 QRectF boundingLogRect = mBoundingLogRects.value(run, InvalidRect);
 
                 if (boundingLogRect == InvalidRect) {
@@ -875,8 +888,9 @@ QRectF GraphPanelPlotGraph::boundingLogRect()
                     }
                 }
 
-                if (boundingLogRect != InvalidRect)
+                if (boundingLogRect != InvalidRect) {
                     mBoundingLogRect |= boundingLogRect;
+                }
             }
         }
     }
@@ -909,12 +923,12 @@ QPoint GraphPanelPlotOverlayWidget::optimizedPoint(const QPoint &pPoint) const
     QwtScaleMap canvasMapX = mOwner->canvasMap(QwtPlot::xBottom);
     QwtScaleMap canvasMapY = mOwner->canvasMap(QwtPlot::yLeft);
 
-    return QPoint(qMin(qRound(canvasMapX.transform(mOwner->maxX())),
-                       qMax(qRound(canvasMapX.transform(mOwner->minX())),
-                            realPoint.x())),
-                  qMin(qRound(canvasMapY.transform(mOwner->minY())),
-                       qMax(qRound(canvasMapY.transform(mOwner->maxY())),
-                            realPoint.y())));
+    return { qMin(qRound(canvasMapX.transform(mOwner->maxX())),
+                  qMax(qRound(canvasMapX.transform(mOwner->minX())),
+                       realPoint.x())),
+             qMin(qRound(canvasMapY.transform(mOwner->minY())),
+                  qMax(qRound(canvasMapY.transform(mOwner->maxY())),
+                       realPoint.y())) };
 }
 
 //==============================================================================
@@ -927,8 +941,9 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     // Check whether an action is to be carried out
 
-    if (mOwner->action() == GraphPanelPlotWidget::Action::None)
+    if (mOwner->action() == GraphPanelPlotWidget::Action::None) {
         return;
+    }
 
     // Paint the overlay, if any is needed
 
@@ -938,8 +953,7 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
 
     painter.translate(canvasRect.x(), canvasRect.y());
 
-    switch (mOwner->action()) {
-    case GraphPanelPlotWidget::Action::ShowCoordinates: {
+    if (mOwner->action() == GraphPanelPlotWidget::Action::ShowCoordinates) {
         // Draw the lines that show the coordinates
 
         QPen pen = painter.pen();
@@ -965,17 +979,15 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
                             0:
                             mOwner->pointCoordinatesWidth(),
                         Position::BottomRight);
-
-        break;
-    }
-    case GraphPanelPlotWidget::Action::ZoomRegion: {
+    } else if (mOwner->action() == GraphPanelPlotWidget::Action::ZoomRegion) {
         // Draw the region to be zoomed in
 
         QRect zoomRegionRect = zoomRegion();
         // Note: see drawCoordinates() as why we use QRect rather than QRectF...
 
-        if (mOwner->zoomRegionFilled())
+        if (mOwner->zoomRegionFilled()) {
             painter.fillRect(zoomRegionRect, mOwner->zoomRegionFillColor());
+        }
 
         QPen pen = painter.pen();
 
@@ -1004,13 +1016,6 @@ void GraphPanelPlotOverlayWidget::paintEvent(QPaintEvent *pEvent)
                             0:
                             mOwner->zoomRegionWidth(),
                         Position::TopLeft, false);
-
-        break;
-    }
-    default:
-        // Either no action or not an action we know how to handle
-
-        ;
     }
 }
 
@@ -1069,7 +1074,7 @@ QRect GraphPanelPlotOverlayWidget::zoomRegion() const
         }
     }
 
-    return QRect(minX, minY, maxX-minX, maxY-minY);
+    return { minX, minY, maxX-minX, maxY-minY };
 }
 
 //==============================================================================
@@ -1113,9 +1118,9 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
 
     // Determine where the coordinates and its background should be drawn
 
-    int shift = (pLineWidth >> 1)+pLineWidth%2;
+    int shift = pLineWidth/2+pLineWidth%2;
     int plusShift = shift+1;
-    int minusShift = shift+!(pLineWidth%2);
+    int minusShift = shift+int(pLineWidth%2 == 0);
 
     switch (pPosition) {
     case Position::TopLeft:
@@ -1149,15 +1154,17 @@ void GraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPainter,
         QPoint bottomRightPoint = QPoint(int(canvasMapX.transform(mOwner->maxX())),
                                          int(canvasMapY.transform(mOwner->minY())));
 
-        if (coordinatesRect.top() < topLeftPoint.y())
+        if (coordinatesRect.top() < topLeftPoint.y()) {
             coordinatesRect.moveTop(pPoint.y()+plusShift);
-        else if (coordinatesRect.top()+coordinatesRect.height()-1 > bottomRightPoint.y())
+        } else if (coordinatesRect.top()+coordinatesRect.height()-1 > bottomRightPoint.y()) {
             coordinatesRect.moveTop(pPoint.y()-coordinatesRect.height()-minusShift);
+        }
 
-        if (coordinatesRect.left() < topLeftPoint.x())
+        if (coordinatesRect.left() < topLeftPoint.x()) {
             coordinatesRect.moveLeft(pPoint.x()+plusShift);
-        else if (coordinatesRect.left()+coordinatesRect.width()-1 > bottomRightPoint.x())
+        } else if (coordinatesRect.left()+coordinatesRect.width()-1 > bottomRightPoint.x()) {
             coordinatesRect.moveLeft(pPoint.x()-coordinatesRect.width()-minusShift);
+        }
 
         // Note: the -1 for the else-if tests is because fillRect() below works
         //       on (0, 0; width-1, height-1)...
@@ -1221,7 +1228,7 @@ GraphPanelPlotLegendWidget::GraphPanelPlotLegendWidget(GraphPanelPlotWidget *pPa
 {
     // Have our legend items use as much horizontal space as possible
 
-    QwtDynGridLayout *contentsWidgetLayout = static_cast<QwtDynGridLayout *>(contentsWidget()->layout());
+    auto contentsWidgetLayout = static_cast<QwtDynGridLayout *>(contentsWidget()->layout());
 
     contentsWidgetLayout->setExpandingDirections(Qt::Horizontal);
     contentsWidgetLayout->setSpacing(0);
@@ -1328,12 +1335,14 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     //       horizontal. More information on this issue can be found at
     //       http://www.qtcentre.org/threads/68983-Problem-with-QwtDynGridLayout-layoutItems()...
 
-    if (!mActive)
+    if (!mActive) {
         return;
+    }
 
     if (pFillBackground) {
-        if (autoFillBackground() || testAttribute(Qt::WA_StyledBackground))
+        if (autoFillBackground() || testAttribute(Qt::WA_StyledBackground)) {
             QwtPainter::drawBackgound(pPainter, pRect, this);
+        }
     }
 
     int top;
@@ -1350,12 +1359,13 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     layoutRect.setBottom(qFloor(pRect.bottom())-bottom);
     layoutRect.setRight(qFloor(pRect.right())-right);
 
-    QwtDynGridLayout *legendLayout = static_cast<QwtDynGridLayout *>(contentsWidget()->layout());
+    auto legendLayout = static_cast<QwtDynGridLayout *>(contentsWidget()->layout());
     QList<QRect> itemRects = legendLayout->layoutItems(layoutRect, legendLayout->columnsForWidth(layoutRect.width()));
 
-    if (legendLayout->expandingDirections() & Qt::Horizontal) {
-        for (int i = 0, iMax = itemRects.size(); i < iMax; ++i)
-            itemRects[i].adjust(layoutRect.left(), 0, layoutRect.left(), 0);
+    if ((legendLayout->expandingDirections() & Qt::Horizontal) != 0) {
+        for (auto itemRect : itemRects) {
+            itemRect.adjust(layoutRect.left(), 0, layoutRect.left(), 0);
+        }
     }
 
     int index = -1;
@@ -1363,7 +1373,7 @@ void GraphPanelPlotLegendWidget::renderLegend(QPainter *pPainter,
     for (int i = 0, iMax = legendLayout->count(); i < iMax; ++i) {
         QWidget *widget = legendLayout->itemAt(i)->widget();
 
-        if (widget) {
+        if (widget != nullptr) {
             ++index;
 
             pPainter->save();
@@ -1392,7 +1402,7 @@ QSize GraphPanelPlotLegendWidget::sizeHint() const
     // Return our size hint, based on our internal size hint width and the
     // height of our default size hint
 
-    return QSize(mSizeHintWidth, QwtLegend::sizeHint().height());
+    return { mSizeHintWidth, QwtLegend::sizeHint().height() };
 }
 
 //==============================================================================
@@ -1402,7 +1412,7 @@ void GraphPanelPlotLegendWidget::updateWidget(QWidget *pWidget,
 {
     // Check whether we are dealing with one of our main legend labels
 
-    QwtLegendLabel *legendLabel = static_cast<QwtLegendLabel *>(pWidget);
+    auto legendLabel = static_cast<QwtLegendLabel *>(pWidget);
     bool mainLegendLabel = mLegendLabels.values().contains(legendLabel);
 
     if (mainLegendLabel) {
@@ -1478,10 +1488,11 @@ bool GraphPanelPlotLegendWidget::needScrollBar() const
 
     int legendLabelsHeight = 0;
 
-    for (auto legendLabel : mLegendLabels.values())
+    for (auto legendLabel : mLegendLabels.values()) {
         legendLabelsHeight += legendLabel->height();
+    }
 
-    return !pos().y() && (legendLabelsHeight > height());
+    return (pos().y() == 0) && (legendLabelsHeight > height());
 }
 
 //==============================================================================
@@ -1602,8 +1613,9 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // Speedup painting on X11 systems
     // Note: this can only be done on X11 systems...
 
-    if (QwtPainter::isX11GraphicsSystem())
+    if (QwtPainter::isX11GraphicsSystem()) {
         canvas()->setAttribute(Qt::WA_PaintOnScreen, true);
+    }
 
     // Customise ourselves a bit
 
@@ -1636,7 +1648,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     // Note: to use immediate paint prevents our canvas from becoming black in
     //       some cases (e.g. when running a long simulation)...
 
-    QwtPlotCanvas *plotCanvas = static_cast<QwtPlotCanvas *>(canvas());
+    auto plotCanvas = static_cast<QwtPlotCanvas *>(canvas());
 
     plotCanvas->setFrameShape(QFrame::NoFrame);
     plotCanvas->setPaintAttribute(QwtPlotCanvas::ImmediatePaint);
@@ -1715,7 +1727,7 @@ GraphPanelPlotWidget::GraphPanelPlotWidget(const GraphPanelPlotWidgets &pNeighbo
     mContextMenu->addSeparator();
     mContextMenu->addAction(mCopyToClipboardAction);
 
-    if (pSynchronizeXAxisAction && pSynchronizeYAxisAction) {
+    if ((pSynchronizeXAxisAction != nullptr) && (pSynchronizeYAxisAction != nullptr)) {
         mContextMenu->addSeparator();
         mContextMenu->addAction(pSynchronizeXAxisAction);
         mContextMenu->addAction(pSynchronizeYAxisAction);
@@ -1764,8 +1776,9 @@ GraphPanelPlotWidget::~GraphPanelPlotWidget()
 
     delete mDirectPainter;
 
-    for (auto graph : mGraphs)
+    for (auto graph : mGraphs) {
         delete graph;
+    }
 }
 
 //==============================================================================
@@ -1912,12 +1925,12 @@ bool GraphPanelPlotWidget::event(QEvent *pEvent)
     // Handle pinch gestures to zoom in/out
 
     if (pEvent->type() == QEvent::Gesture) {
-        QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(pEvent);
+        auto gestureEvent = static_cast<QGestureEvent*>(pEvent);
 
         if (QGesture *pinch = gestureEvent->gesture(Qt::PinchGesture)) {
-            QPinchGesture *pinchGesture = static_cast<QPinchGesture *>(pinch);
+            auto pinchGesture = static_cast<QPinchGesture *>(pinch);
 
-            if (pinchGesture->changeFlags() & QPinchGesture::ScaleFactorChanged) {
+            if ((pinchGesture->changeFlags() & QPinchGesture::ScaleFactorChanged) != 0) {
                 scaleAxes(pinchGesture->centerPoint().toPoint(),
                           Scaling::CustomScaling, Scaling::CustomScaling,
                           1.0/pinchGesture->scaleFactor());
@@ -1947,13 +1960,13 @@ bool GraphPanelPlotWidget::eventFilter(QObject *pObject, QEvent *pEvent)
         // Reset the zoom level (i.e. our axes), in case we double-clicked using
         // the left mouse button with no modifiers
 
-        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(pEvent);
+        auto mouseEvent = static_cast<QMouseEvent *>(pEvent);
 
-        if (   !(mouseEvent->modifiers() & Qt::ShiftModifier)
-            && !(mouseEvent->modifiers() & Qt::ControlModifier)
-            && !(mouseEvent->modifiers() & Qt::AltModifier)
-            && !(mouseEvent->modifiers() & Qt::MetaModifier)
-            &&  (mouseEvent->button() == Qt::LeftButton)) {
+        if (   ((mouseEvent->modifiers() & Qt::ShiftModifier) == 0)
+            && ((mouseEvent->modifiers() & Qt::ControlModifier) == 0)
+            && ((mouseEvent->modifiers() & Qt::AltModifier) == 0)
+            && ((mouseEvent->modifiers() & Qt::MetaModifier) == 0)
+            && (mouseEvent->button() == Qt::LeftButton)) {
             resetAxes();
         }
     }
@@ -1967,8 +1980,9 @@ void GraphPanelPlotWidget::updateActions()
 {
     // Leave straightaway if we cannot update our actions anymore
 
-    if (!mCanUpdateActions)
+    if (!mCanUpdateActions) {
         return;
+    }
 
     // Update our actions
 
@@ -2011,11 +2025,13 @@ void GraphPanelPlotWidget::checkAxisValues(bool pLogAxis, double &pMin,
 
     double minAxis = pLogAxis?MinLogAxis:MinAxis;
 
-    if (!qIsFinite(pMin))
+    if (!qIsFinite(pMin)) {
         pMin = minAxis;
+    }
 
-    if (!qIsFinite(pMax))
+    if (!qIsFinite(pMax)) {
         pMax = MaxAxis;
+    }
 
     // Make sure that our axis' values are valid
 
@@ -2312,8 +2328,9 @@ void GraphPanelPlotWidget::setPointCoordinatesStyle(const Qt::PenStyle &pPointCo
 {
     // Set our point coordinates style
 
-    if (pPointCoordinatesStyle != mPointCoordinatesStyle)
+    if (pPointCoordinatesStyle != mPointCoordinatesStyle) {
         mPointCoordinatesStyle = pPointCoordinatesStyle;
+    }
 }
 
 //==============================================================================
@@ -2331,8 +2348,9 @@ void GraphPanelPlotWidget::setPointCoordinatesWidth(int pPointCoordinatesWidth)
 {
     // Set our point coordinates width
 
-    if (pPointCoordinatesWidth != mPointCoordinatesWidth)
+    if (pPointCoordinatesWidth != mPointCoordinatesWidth) {
         mPointCoordinatesWidth = pPointCoordinatesWidth;
+    }
 }
 
 //==============================================================================
@@ -2350,8 +2368,9 @@ void GraphPanelPlotWidget::setPointCoordinatesColor(const QColor &pPointCoordina
 {
     // Set our point coordinates colour
 
-    if (pPointCoordinatesColor != mPointCoordinatesColor)
+    if (pPointCoordinatesColor != mPointCoordinatesColor) {
         mPointCoordinatesColor = pPointCoordinatesColor;
+    }
 }
 
 //==============================================================================
@@ -2369,8 +2388,9 @@ void GraphPanelPlotWidget::setPointCoordinatesFontColor(const QColor &pPointCoor
 {
     // Set our point coordinates font colour
 
-    if (pPointCoordinatesFontColor != mPointCoordinatesFontColor)
+    if (pPointCoordinatesFontColor != mPointCoordinatesFontColor) {
         mPointCoordinatesFontColor = pPointCoordinatesFontColor;
+    }
 }
 
 //==============================================================================
@@ -2583,8 +2603,9 @@ void GraphPanelPlotWidget::setZoomRegionStyle(const Qt::PenStyle &pZoomRegionSty
 {
     // Set our zoom region style
 
-    if (pZoomRegionStyle != mZoomRegionStyle)
+    if (pZoomRegionStyle != mZoomRegionStyle) {
         mZoomRegionStyle = pZoomRegionStyle;
+    }
 }
 
 //==============================================================================
@@ -2602,8 +2623,9 @@ void GraphPanelPlotWidget::setZoomRegionWidth(int pZoomRegionWidth)
 {
     // Set our zoom region width
 
-    if (pZoomRegionWidth != mZoomRegionWidth)
+    if (pZoomRegionWidth != mZoomRegionWidth) {
         mZoomRegionWidth = pZoomRegionWidth;
+    }
 }
 
 //==============================================================================
@@ -2621,8 +2643,9 @@ void GraphPanelPlotWidget::setZoomRegionColor(const QColor &pZoomRegionColor)
 {
     // Set our zoom region colour
 
-    if (pZoomRegionColor != mZoomRegionColor)
+    if (pZoomRegionColor != mZoomRegionColor) {
         mZoomRegionColor = pZoomRegionColor;
+    }
 }
 
 //==============================================================================
@@ -2640,8 +2663,9 @@ void GraphPanelPlotWidget::setZoomRegionFontColor(const QColor &pZoomRegionFontC
 {
     // Set our zoom region font colour
 
-    if (pZoomRegionFontColor != mZoomRegionFontColor)
+    if (pZoomRegionFontColor != mZoomRegionFontColor) {
         mZoomRegionFontColor = pZoomRegionFontColor;
+    }
 }
 
 //==============================================================================
@@ -2659,8 +2683,9 @@ void GraphPanelPlotWidget::setZoomRegionFilled(bool pZoomRegionFilled)
 {
     // Set our zoom region filled status
 
-    if (pZoomRegionFilled != mZoomRegionFilled)
+    if (pZoomRegionFilled != mZoomRegionFilled) {
         mZoomRegionFilled = pZoomRegionFilled;
+    }
 }
 
 //==============================================================================
@@ -2678,8 +2703,9 @@ void GraphPanelPlotWidget::setZoomRegionFillColor(const QColor &pZoomRegionFillC
 {
     // Set our zoom region fill colour
 
-    if (pZoomRegionFillColor != mZoomRegionFillColor)
+    if (pZoomRegionFillColor != mZoomRegionFillColor) {
         mZoomRegionFillColor = pZoomRegionFillColor;
+    }
 }
 
 //==============================================================================
@@ -2802,15 +2828,17 @@ void GraphPanelPlotWidget::optimizeAxis(const int &pAxisId, double &pMin,
         pMin = pMin-pow(10.0, powerValue);
         pMax = pMax+pow(10.0, powerValue);
 
-        if (pAxisId == QwtPlot::xBottom)
+        if (pAxisId == QwtPlot::xBottom) {
             mOptimizedAxisX = false;
-        else
+        } else {
             mOptimizedAxisY = false;
+        }
     } else {
-        if (pAxisId == QwtPlot::xBottom)
+        if (pAxisId == QwtPlot::xBottom) {
             mOptimizedAxisX = true;
-        else
+        } else {
             mOptimizedAxisY = true;
+        }
     }
 
     // Optimise the axis' values, using either a linear or logarithmic approach
@@ -2878,8 +2906,9 @@ bool GraphPanelPlotWidget::hasData() const
     // and selected, has some data
 
     for (auto graph : mGraphs) {
-        if (graph->isValid() && graph->isSelected() && graph->hasData())
+        if (graph->isValid() && graph->isSelected() && graph->hasData()) {
             return true;
+        }
     }
 
     return false;
@@ -2974,15 +3003,15 @@ QRectF GraphPanelPlotWidget::realDataRect()
         optimizeAxisX(minX, maxX);
         optimizeAxisY(minY, maxY);
 
-        return QRectF(minX, minY, maxX-minX, maxY-minY);
-    } else {
-        double minX = mLogAxisX?mDefaultMinLogX:mDefaultMinX;
-        double maxX = mLogAxisX?mDefaultMaxLogX:mDefaultMaxX;
-        double minY = mLogAxisY?mDefaultMinLogY:mDefaultMinY;
-        double maxY = mLogAxisY?mDefaultMaxLogY:mDefaultMaxY;
-
-        return QRectF(minX, minY, maxX-minX, maxY-minY);
+        return { minX, minY, maxX-minX, maxY-minY };
     }
+
+    double minX = mLogAxisX?mDefaultMinLogX:mDefaultMinX;
+    double maxX = mLogAxisX?mDefaultMaxLogX:mDefaultMaxX;
+    double minY = mLogAxisY?mDefaultMinLogY:mDefaultMinY;
+    double maxY = mLogAxisY?mDefaultMaxLogY:mDefaultMaxY;
+
+    return { minX, minY, maxX-minX, maxY-minY };
 }
 
 //==============================================================================
@@ -3039,8 +3068,9 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
     // Axes can only be set if they are not dirty or if we want to force the
     // setting of our X/Y axes
 
-    if (mDirtyAxes && !pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis)
+    if (mDirtyAxes && !pForceAxesSetting && !pSynchronizeXAxis && !pSynchronizeYAxis) {
         return false;
+    }
 
     // Keep track of our axes' old values
 
@@ -3083,8 +3113,9 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
         mCanDirectPaint = false;
         mDirtyAxes = mDirtyAxes || pForceAxesSetting;
 
-        if (xAxisValuesChanged || yAxisValuesChanged)
+        if (xAxisValuesChanged || yAxisValuesChanged) {
             updateActions();
+        }
 
         if (pSynchronizeAxes) {
             if (   mSynchronizeXAxisAction->isChecked()
@@ -3110,13 +3141,14 @@ bool GraphPanelPlotWidget::setAxes(double pMinX, double pMaxX, double pMinY,
             alignWithNeighbors(pCanReplot);
         }
 
-        if (pEmitSignal)
+        if (pEmitSignal) {
             emit axesChanged(pMinX, pMaxX, pMinY, pMaxY);
+        }
 
         return pCanReplot;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -3201,9 +3233,9 @@ bool GraphPanelPlotWidget::scaleAxis(Scaling pScaling, bool pCanZoomIn,
         //       which case we need to re-update pMin...
 
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -3266,7 +3298,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
     int legendWidth = 0;
 
     for (auto plot : selfPlusNeighbors)  {
-        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+        auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         legendWidth = qMax(legendWidth, legend->QwtLegend::sizeHint().width());
 
@@ -3277,7 +3309,7 @@ void GraphPanelPlotWidget::doUpdateGui(bool pForceAlignment)
     }
 
     for (auto plot : selfPlusNeighbors) {
-        GraphPanelPlotLegendWidget *legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
+        auto legend = static_cast<GraphPanelPlotLegendWidget *>(plot->legend());
 
         legend->setSizeHintWidth(legend->needScrollBar()?
                                      legendWidth-legend->scrollExtent(Qt::Vertical):
@@ -3315,8 +3347,8 @@ QPointF GraphPanelPlotWidget::canvasPoint(const QPoint &pPoint) const
     // Return the mouse position using canvas coordinates, making sure that they
     // are within our ranges
 
-    return QPointF(qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(pPoint.x()))),
-                   qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(pPoint.y()))));
+    return { qMin(maxX(), qMax(minX(), canvasMap(QwtPlot::xBottom).invTransform(pPoint.x()))),
+             qMin(maxY(), qMax(minY(), canvasMap(QwtPlot::yLeft).invTransform(pPoint.y()))) };
 }
 
 //==============================================================================
@@ -3372,12 +3404,12 @@ void GraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
         // Rescale ourselves
 
         scaleAxes(mOriginPoint,
-                  deltaX?
+                  (deltaX != 0)?
                       (deltaX > 0)?
                           Scaling::ScalingIn:
                           Scaling::ScalingOut:
                       Scaling::NoScaling,
-                  deltaY?
+                  (deltaY != 0)?
                       (deltaY < 0)?
                           Scaling::ScalingIn:
                           Scaling::ScalingOut:
@@ -3408,8 +3440,9 @@ void GraphPanelPlotWidget::mousePressEvent(QMouseEvent *pEvent)
 
     // Check that the position of the mouse is over our canvas
 
-    if (!plotLayout()->canvasRect().contains(pEvent->pos()))
+    if (!plotLayout()->canvasRect().contains(pEvent->pos())) {
         return;
+    }
 
     // Make sure that we are not already carrying out a action (e.g. we were
     // zooming in/out and then pressed on the left mouse button) and if so, then
@@ -3475,13 +3508,13 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
     // Check whether we need to carry out a action
 
-    if (mAction == Action::None)
+    if (mAction == Action::None) {
         return;
+    }
 
     // Finish carrying out the action, if needed
 
-    switch (mAction) {
-    case Action::ZoomRegion: {
+    if (mAction == Action::ZoomRegion) {
         // Retrieve our zoom region
 
         QRect zoomRegionRect = mOverlayWidget->zoomRegion();
@@ -3501,10 +3534,7 @@ void GraphPanelPlotWidget::mouseReleaseEvent(QMouseEvent *pEvent)
                     zoomRegion.bottom(), zoomRegion.top(),
                     true, true, true, true, false, false);
         }
-
-        break;
-    }
-    default:
+    } else {
         // An action that doesn't require anything specific to be done, except
         // being reset
 
@@ -3566,13 +3596,15 @@ void GraphPanelPlotWidget::wheelEvent(QWheelEvent *pEvent)
             int delta = pEvent->delta();
             Scaling scaling = Scaling::NoScaling;
 
-            if (delta > 0)
+            if (delta > 0) {
                 scaling = Scaling::ScalingIn;
-            else if (delta < 0)
+            } else if (delta < 0) {
                 scaling = Scaling::ScalingOut;
+            }
 
-            if (scaling != Scaling::NoScaling)
+            if (scaling != Scaling::NoScaling) {
                 scaleAxes(pEvent->pos(), scaling, scaling);
+            }
         }
 
         pEvent->accept();
@@ -3590,8 +3622,9 @@ bool GraphPanelPlotWidget::addGraph(GraphPanelPlotGraph *pGraph)
 {
     // Make sure that the given graph is not already attached to us
 
-    if (mGraphs.contains(pGraph))
+    if (mGraphs.contains(pGraph)) {
         return false;
+    }
 
     // Attach the given graph to ourselves and keep track of it, as well as ask
     // our legend to keep track of it too
@@ -3630,8 +3663,9 @@ bool GraphPanelPlotWidget::removeGraph(GraphPanelPlotGraph *pGraph)
 {
     // Check that the given graph is attached to us
 
-    if (!mGraphs.contains(pGraph))
+    if (!mGraphs.contains(pGraph)) {
         return false;
+    }
 
     // Detach the given graph from ourselves, stop tracking it (and ask our
     // legend to do the same) and delete it
@@ -3677,15 +3711,15 @@ bool GraphPanelPlotWidget::drawGraphFrom(GraphPanelPlotGraph *pGraph,
         mDirectPainter->drawSeries(pGraph->lastRun(), int(pFrom), -1);
 
         return false;
-    } else {
-        if (mCanReplot) {
-            replot();
-
-            mCanReplot = false;
-        }
-
-        return true;
     }
+
+    if (mCanReplot) {
+        replot();
+
+        mCanReplot = false;
+    }
+
+    return true;
 }
 
 //==============================================================================
@@ -3725,7 +3759,7 @@ void GraphPanelPlotWidget::removeNeighbor(GraphPanelPlotWidget *pPlot)
 //==============================================================================
 
 void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
-                                              QwtScaleMap pScaleMap,
+                                              const QwtScaleMap &pScaleMap,
                                               const QFont &pFont, int &pStart,
                                               int &pEnd)
 {
@@ -3736,13 +3770,15 @@ void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
     pStart = 0;
     pEnd = 1;
 
-    if (!pScaleDraw->hasComponent(QwtAbstractScaleDraw::Labels))
+    if (!pScaleDraw->hasComponent(QwtAbstractScaleDraw::Labels)) {
         return;
+    }
 
     QDoubleList ticks = pScaleDraw->scaleDiv().ticks(QwtScaleDiv::MajorTick);
 
-    if (ticks.isEmpty())
+    if (ticks.isEmpty()) {
         return;
+    }
 
     // Find the ticks, that are mapped to the borders (minTick is the tick that
     // is mapped to the top/left-most position in widget coordinates)
@@ -3783,11 +3819,13 @@ void GraphPanelPlotWidget::getBorderDistances(QwtScaleDraw *pScaleDraw,
         end -= qAbs(maxPos-pScaleMap.p1());
     }
 
-    if (start < 0.0)
+    if (start < 0.0) {
         start = 0.0;
+    }
 
-    if (end < 0.0)
+    if (end < 0.0) {
         end = 0.0;
+    }
 
     pStart = qCeil(start);
     pEnd = qCeil(end);
@@ -3863,11 +3901,11 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
     bool alignmentChanged = xAlignmentChanged || yAlignmentChanged;
 
     for (auto plot : selfPlusNeighbors) {
-        GraphPanelPlotScaleWidget *xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
+        auto xScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::xBottom));
 
         xScaleWidget->setMinBorderDist(newMinBorderDistStartX, newMinBorderDistEndX);
 
-        GraphPanelPlotScaleWidget *yScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
+        auto yScaleWidget = static_cast<GraphPanelPlotScaleWidget *>(plot->axisWidget(QwtPlot::yLeft));
 
         yScaleWidget->scaleDraw()->setMinimumExtent( newMinExtentY
                                                     -(plot->titleAxisY().isEmpty()?
@@ -3876,11 +3914,13 @@ void GraphPanelPlotWidget::alignWithNeighbors(bool pCanReplot,
 
         if (pCanReplot) {
             if (alignmentChanged) {
-                if (xAlignmentChanged)
+                if (xAlignmentChanged) {
                     xScaleWidget->updateLayout();
+                }
 
-                if (yAlignmentChanged)
+                if (yAlignmentChanged) {
                     yScaleWidget->updateLayout();
+                }
 
                 plot->replot();
             } else if (plot == this) {
@@ -3907,27 +3947,37 @@ void GraphPanelPlotWidget::exportTo()
     // Note: if no file extension is given, then we export our contents to a PDF
     //       file...
 
+    static const QString ImageBmp             = "image/bmp";
+    static const QString ImageJpeg            = "image/jpeg";
+    static const QString ImagePng             = "image/png";
+    static const QString ImagePortableBitmap  = "image/x-portable-bitmap";
+    static const QString ImagePortableGraymap = "image/x-portable-graymap";
+    static const QString ImagePortablePixmap  = "image/x-portable-pixmap";
+    static const QString ImageXbitmap         = "image/x-xbitmap";
+    static const QString ImageXpixmap         = "image/x-xpixmap";
+
     QString pdfFilter = tr("PDF File - Portable Document Format (*.pdf)");
     QStringList filters = QStringList() << pdfFilter
                                         << tr("SVG File - Scalable Vector Graphics (*.svg)");
 
     for (const auto &supportedMimeType : QImageWriter::supportedMimeTypes()) {
-        if (!supportedMimeType.compare("image/bmp"))
+        if (supportedMimeType == ImageBmp) {
             filters << tr("BMP File - Windows Bitmap (*.bmp)");
-        else if (!supportedMimeType.compare("image/jpeg"))
+        } else if (supportedMimeType == ImageJpeg) {
             filters << tr("JPEG File - Joint Photographic Experts Group (*.jpg)");
-        else if (!supportedMimeType.compare("image/png"))
+        } else if (supportedMimeType == ImagePng) {
             filters << tr("PNG File - Portable Network Graphics (*.png)");
-        else if (!supportedMimeType.compare("image/x-portable-bitmap"))
+        } else if (supportedMimeType == ImagePortableBitmap) {
             filters << tr("PBM File - Portable Bitmap (*.pbm)");
-        else if (!supportedMimeType.compare("image/x-portable-graymap"))
+        } else if (supportedMimeType == ImagePortableGraymap) {
             filters << tr("PGM File - Portable Graymap (*.pgm)");
-        else if (!supportedMimeType.compare("image/x-portable-pixmap"))
+        } else if (supportedMimeType == ImagePortablePixmap) {
             filters << tr("PPM File - Portable Pixmap (*.ppm)");
-        else if (!supportedMimeType.compare("image/x-xbitmap"))
+        } else if (supportedMimeType == ImageXbitmap) {
             filters << tr("XBM File - X11 Bitmap (*.xbm)");
-        else if (!supportedMimeType.compare("image/x-xpixmap"))
+        } else if (supportedMimeType == ImageXpixmap) {
             filters << tr("XPM File - X11 Pixmap (*.xpm)");
+        }
     }
 
     std::sort(filters.begin(), filters.end());
@@ -3938,10 +3988,11 @@ void GraphPanelPlotWidget::exportTo()
         static double InToMm = 25.4;
         static int Dpi = 85;
 
-        if (QFileInfo(fileName).completeSuffix().isEmpty())
+        if (QFileInfo(fileName).completeSuffix().isEmpty()) {
             QwtPlotRenderer().renderDocument(this, fileName, "pdf", QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
-        else
+        } else {
             QwtPlotRenderer().renderDocument(this, fileName, QSizeF(width()*InToMm/Dpi, height()*InToMm/Dpi), Dpi);
+        }
     }
 
     // QwtPlotRenderer::renderDocument() changes and then invalidates our

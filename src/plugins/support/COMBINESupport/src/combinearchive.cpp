@@ -38,6 +38,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <array>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace COMBINESupport {
 
@@ -91,11 +95,11 @@ bool CombineArchiveFile::isMaster() const
 
 //==============================================================================
 
-static const auto CellmlFormat      = QStringLiteral("http://identifiers.org/combine.specifications/cellml");
-static const auto Cellml_1_0_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.0");
-static const auto Cellml_1_1_Format = QStringLiteral("http://identifiers.org/combine.specifications/cellml.1.1");
-static const auto OmexFormat        = QStringLiteral("http://identifiers.org/combine.specifications/omex");
-static const auto SedmlFormat       = QStringLiteral("http://identifiers.org/combine.specifications/sed-ml");
+static const char *CellmlFormat      = "http://identifiers.org/combine.specifications/cellml";
+static const char *Cellml_1_0_Format = "http://identifiers.org/combine.specifications/cellml.1.0";
+static const char *Cellml_1_1_Format = "http://identifiers.org/combine.specifications/cellml.1.1";
+static const char *OmexFormat        = "http://identifiers.org/combine.specifications/omex";
+static const char *SedmlFormat       = "http://identifiers.org/combine.specifications/sed-ml";
 
 //==============================================================================
 
@@ -103,18 +107,27 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 {
     // Return the effective format associated with the given format
 
-    if (!pFormat.compare(CellmlFormat))
+    if (pFormat == CellmlFormat) {
         return Format::Cellml;
-    else if (!pFormat.compare(Cellml_1_0_Format))
+    }
+
+    if (pFormat == Cellml_1_0_Format) {
         return Format::Cellml_1_0;
-    else if (!pFormat.compare(Cellml_1_1_Format))
+    }
+
+    if (pFormat == Cellml_1_1_Format) {
         return Format::Cellml_1_1;
-    else if (!pFormat.compare(OmexFormat))
+    }
+
+    if (pFormat == OmexFormat) {
         return Format::Omex;
-    else if (!pFormat.compare(SedmlFormat))
+    }
+
+    if (pFormat == SedmlFormat) {
         return Format::Sedml;
-    else
-        return Format::Unknown;
+    }
+
+    return Format::Unknown;
 }
 
 //==============================================================================
@@ -122,6 +135,7 @@ CombineArchiveFile::Format CombineArchiveFile::format(const QString &pFormat)
 CombineArchive::CombineArchive(const QString &pFileName, bool pNew) :
     StandardSupport::StandardFile(pFileName),
     mDirName(Core::temporaryDirName()),
+    mLoadingNeeded(true),
     mSedmlFile(nullptr),
     mUpdated(false)
 {
@@ -173,7 +187,7 @@ void CombineArchive::reset()
 
 //==============================================================================
 
-static const auto ManifestFileName = QStringLiteral("manifest.xml");
+static const char *ManifestFileName = "manifest.xml";
 
 //==============================================================================
 
@@ -181,8 +195,9 @@ bool CombineArchive::load()
 {
     // Check whether we are already loaded and without an issue
 
-    if (!mLoadingNeeded)
+    if (!mLoadingNeeded) {
         return mIssues.isEmpty();
+    }
 
     mLoadingNeeded = false;
 
@@ -191,7 +206,9 @@ bool CombineArchive::load()
 
     if (mNew) {
         return true;
-    } else if (!QFile::exists(mFileName)) {
+    }
+
+    if (!QFile::exists(mFileName)) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the archive does not exist"));
 
@@ -206,21 +223,16 @@ bool CombineArchive::load()
     };
 
     ZIPSupport::QZipReader zipReader(mFileName);
-    uchar signatureData[SignatureSize];
+    std::array <uchar, SignatureSize> signatureData = {};
 
-    if (zipReader.device()->read(reinterpret_cast<char *>(signatureData), SignatureSize) != SignatureSize) {
+    if (zipReader.device()->read(reinterpret_cast<char *>(signatureData.data()), SignatureSize) != SignatureSize) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the archive is not signed"));
 
         return false;
     }
 
-    uint signature =   uint(signatureData[0])
-                     +(uint(signatureData[1]) <<  8)
-                     +(uint(signatureData[2]) << 16)
-                     +(uint(signatureData[3]) << 24);
-
-    if (signature != 0x04034b50) {
+    if (signatureData[0]+256*signatureData[1]+65536*signatureData[2]+16777216*signatureData[3] != 0x04034b50) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
                                        tr("the archive does not have the correct signature"));
 
@@ -247,8 +259,9 @@ bool CombineArchive::save(const QString &pFileName)
 {
     // Make sure that we are properly loaded and have no issue
 
-    if (mLoadingNeeded || !mIssues.isEmpty())
+    if (mLoadingNeeded || !mIssues.isEmpty()) {
         return false;
+    }
 
     // Generate the contents of our manifest
 
@@ -283,8 +296,9 @@ bool CombineArchive::save(const QString &pFileName)
 
         fileList += "    <content location=\""+file.location()+"\" format=\""+fileFormat+"\"";
 
-        if (file.isMaster())
+        if (file.isMaster()) {
             fileList += " master=\"true\"";
+        }
 
         fileList += "/>\n";
     }
@@ -292,21 +306,25 @@ bool CombineArchive::save(const QString &pFileName)
     // Save ourselves to either the given file, which name is given, or to our
     // current file
 
+    static const QString Dot = ".";
+
     ZIPSupport::QZipWriter zipWriter(pFileName.isEmpty()?mFileName:pFileName);
 
     zipWriter.addFile(ManifestFileName,
-                       "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n"
+                       QByteArray()
+                      +"<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n"
                        "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
-                       "    <content location=\".\" format=\""+OmexFormat.toUtf8()+"\"/>\n"
+                       "    <content location=\".\" format=\""+OmexFormat+"\"/>\n"
                       +fileList
                       +"</omexManifest>\n");
 
     for (const auto &file : mFiles) {
-        if (file.location().compare(".")) {
+        if (file.location() != Dot) {
             QByteArray fileContents;
 
-            if (!Core::readFile(mDirName+"/"+file.location(), fileContents))
+            if (!Core::readFile(mDirName+"/"+file.location(), fileContents)) {
                 return false;
+            }
 
             zipWriter.addFile(file.location(), fileContents);
         }
@@ -349,15 +367,17 @@ bool CombineArchive::isValid()
 {
     // Make sure that we are loaded and fine
 
-    if (!load())
+    if (!load()) {
         return false;
-    else
-        mIssues.clear();
+    }
+
+    mIssues.clear();
 
     // Consider ourselves valid if new
 
-    if (mNew)
+    if (mNew) {
         return true;
+    }
 
     // A COMBINE archive must contain a manifest at its root
 
@@ -388,6 +408,9 @@ bool CombineArchive::isValid()
     // Retrieve the COMBINE archive files from the manifest, making sure that
     // they have been physically extracted
 
+    static const QString True = "true";
+    static const QString One  = "1";
+
     QDomDocument domDocument;
 
     domDocument.setContent(manifestContents, true);
@@ -406,23 +429,25 @@ bool CombineArchive::isValid()
             mFiles.clear();
 
             return false;
-        } else {
-            mFiles << CombineArchiveFile(fileName, location,
-                                         CombineArchiveFile::format(childElement.attribute("format")),
-                                            !childElement.attribute("master").compare("true")
-                                         || !childElement.attribute("master").compare("1"));
         }
+
+        mFiles << CombineArchiveFile(fileName, location,
+                                     CombineArchiveFile::format(childElement.attribute("format")),
+                                        (childElement.attribute("master") == True)
+                                     || (childElement.attribute("master") == One));
     }
 
     // Make sure that one of our COMBINE archive files represents our COMBINE
     // archive itself
+
+    static const QString Dot = ".";
 
     bool combineArchiveReferenceFound = false;
 
     for (int i = 0, iMax = mFiles.count(); i < iMax; ++i) {
         const CombineArchiveFile &file = mFiles[i];
 
-        if (   !file.location().compare(".")
+        if (    (file.location() == Dot)
             &&  (file.format() == CombineArchiveFile::Format::Omex)
             && !file.isMaster()) {
             combineArchiveReferenceFound = true;
@@ -452,8 +477,9 @@ bool CombineArchive::isSupported()
 {
     // Make sure that we are valid
 
-    if (!isValid())
+    if (!isValid()) {
         return false;
+    }
 
     // Make sure that we have only one master file
 
@@ -482,16 +508,18 @@ CombineArchiveFiles CombineArchive::masterFiles()
 {
     // Make sure that we are properly loaded
 
-    if (!load())
+    if (!load()) {
         return CombineArchiveFiles();
+    }
 
     // Return a list of our master files
 
     CombineArchiveFiles res = CombineArchiveFiles();
 
     for (const auto &file : mFiles) {
-        if (file.isMaster())
+        if (file.isMaster()) {
             res << file;
+        }
     }
 
     return res;
@@ -504,13 +532,15 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
 {
     // Make sure that we are properly loaded
 
-    if (!load())
+    if (!load()) {
         return false;
+    }
 
     // Make sure that the format is known
 
-    if (pFormat == CombineArchiveFile::Format::Unknown)
+    if (pFormat == CombineArchiveFile::Format::Unknown) {
         return false;
+    }
 
     // Add the given file to our list
 
@@ -529,14 +559,16 @@ bool CombineArchive::addFile(const QString &pFileName, const QString &pLocation,
     QString destFileName = Core::canonicalFileName(mDirName+"/"+pLocation);
     QString destDirName = QString(destFileName).remove(FileNameRegEx);
 
-    if (!QDir(destDirName).exists() && !dir.mkpath(destDirName))
+    if (!QDir(destDirName).exists() && !dir.mkpath(destDirName)) {
         return false;
+    }
 
-    if (destFileName.compare(pFileName)) {
+    if (destFileName != pFileName) {
         QFile::remove(destFileName);
 
-        if (!QFile::copy(pFileName, destFileName))
+        if (!QFile::copy(pFileName, destFileName)) {
             return false;
+        }
     }
 
     return true;
@@ -548,7 +580,7 @@ SEDMLSupport::SedmlFile * CombineArchive::sedmlFile()
 {
     // Return our SED-ML file, after having created it, if necessary
 
-    if (!mSedmlFile && isSupported()) {
+    if ((mSedmlFile == nullptr) && isSupported()) {
         mSedmlFile = new SEDMLSupport::SedmlFile(masterFiles().first().fileName(),
                                                  mFileName);
     }

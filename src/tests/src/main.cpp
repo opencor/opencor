@@ -42,8 +42,9 @@ int main(int pArgC, char *pArgV[])
 
     QStringList args = QStringList();
 
-    for (int i = 1; i < pArgC; ++i)
+    for (int i = 1; i < pArgC; ++i) {
         args << pArgV[i];
+    }
 
     // The different groups of tests that are to be run
 
@@ -94,14 +95,13 @@ int main(int pArgC, char *pArgV[])
             int testRes = QProcess::execute(buildDir+"/bin/"+testsGroup.key()+"_"+testName, args);
 #elif defined(Q_OS_MAC)
             int testRes = QProcess::execute(buildDir+"/OpenCOR.app/Contents/MacOS/"+testsGroup.key()+"_"+testName, args);
-#else
-    #error Unsupported platform
 #endif
 
-            if (testRes)
+            if (testRes != 0) {
                 failedTests << testsGroup.key()+"::"+testName;
+            }
 
-            res = res?res:testRes;
+            res = (res != 0)?res:testRes;
 
             std::cout << std::endl;
         }
@@ -120,13 +120,15 @@ int main(int pArgC, char *pArgV[])
     if (failedTests.isEmpty()) {
         std::cout << "All the tests passed!" << std::endl;
     } else {
-        if (failedTests.count() == 1)
+        if (failedTests.count() == 1) {
             std::cout << "The following test failed:" << std::endl;
-        else
+        } else {
             std::cout << "The following tests failed:" << std::endl;
+        }
 
-        for (const auto &failedTest : failedTests)
+        for (const auto &failedTest : failedTests) {
             std::cout << " - " << failedTest.toStdString() << std::endl;
+        }
     }
 
     std::cout << std::endl;

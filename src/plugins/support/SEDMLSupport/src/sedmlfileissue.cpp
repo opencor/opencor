@@ -52,10 +52,10 @@ bool SedmlFileIssue::operator==(const SedmlFileIssue &pIssue) const
 {
     // Return whether we are the same as the given issue
 
-    return     (mType == pIssue.mType)
-           &&  (mLine == pIssue.mLine)
-           &&  (mColumn == pIssue.mColumn)
-           && !mMessage.compare(pIssue.mMessage);
+    return    (mType == pIssue.mType)
+           && (mLine == pIssue.mLine)
+           && (mColumn == pIssue.mColumn)
+           && (mMessage == pIssue.mMessage);
 }
 
 //==============================================================================

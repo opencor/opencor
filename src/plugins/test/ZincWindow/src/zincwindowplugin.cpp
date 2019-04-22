@@ -81,8 +81,8 @@ bool ZincWindowPlugin::definesPluginInterfaces()
 bool ZincWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                           QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -113,7 +113,7 @@ void ZincWindowPlugin::finalizePlugin()
 
 void ZincWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -122,7 +122,7 @@ void ZincWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void ZincWindowPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -131,7 +131,7 @@ void ZincWindowPlugin::loadSettings(QSettings &pSettings)
 
 void ZincWindowPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -140,7 +140,7 @@ void ZincWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void ZincWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }

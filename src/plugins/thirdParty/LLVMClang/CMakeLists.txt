@@ -167,8 +167,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/llvmclangplugin.cpp
-    HEADERS_MOC
-        src/llvmclangplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

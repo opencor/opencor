@@ -34,8 +34,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "opencmiss/zinc/sceneviewer.hpp"
-#include "opencmiss/zinc/sceneviewerinput.hpp"
+#include "zincbegin.h"
+    #include "opencmiss/zinc/sceneviewer.hpp"
+    #include "opencmiss/zinc/sceneviewerinput.hpp"
+#include "zincend.h"
 
 //==============================================================================
 
@@ -82,6 +84,7 @@ public:
     };
 
     explicit ZincWidget(QWidget *pParent);
+    ~ZincWidget() override;
 
     OpenCMISS::Zinc::Context * context() const;
     void setContext(OpenCMISS::Zinc::Context *pContext);

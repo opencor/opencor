@@ -711,11 +711,11 @@ void ParsingTests::unitsTests()
 
 //==============================================================================
 
-void ParsingTests::componentTests()
+void ParsingTests::componentTests01()
 {
-    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
-
     // Various tests on a minimal component definition
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp",
@@ -763,9 +763,16 @@ void ParsingTests::componentTests()
                            "enddef;",
                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QVERIFY(!parser.domDocument().isNull());
+}
 
+//==============================================================================
+
+void ParsingTests::componentTests02()
+{
     // Various tests on a component definition with a simple units definition
     // (since they are already tested extensively above)
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -847,9 +854,16 @@ void ParsingTests::componentTests()
                            "enddef;",
                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QVERIFY(!parser.domDocument().isNull());
+}
 
+//==============================================================================
+
+void ParsingTests::componentTests03()
+{
     // Various tests on a component definition with a minimal variable
     // declaration
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -1040,6 +1054,13 @@ void ParsingTests::componentTests()
                            "enddef;",
                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QVERIFY(!parser.domDocument().isNull());
+}
+
+//==============================================================================
+
+void ParsingTests::componentTests04()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     // Test the declaration of a variable with an invalid public interface
     // attribute
@@ -1075,9 +1096,16 @@ void ParsingTests::componentTests()
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
     QCOMPARE(parser.messages().first().message(), QString("The 'init' attribute has already been specified."));
+}
 
+//==============================================================================
+
+void ParsingTests::componentTests05()
+{
     // Various tests on a component definition to check that we can get the LHS
     // of an equation
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -1197,9 +1225,16 @@ void ParsingTests::componentTests()
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
     QCOMPARE(parser.messages().first().message(), QString("'=' is expected, but the end of the file was found instead."));
+}
 
+//==============================================================================
+
+void ParsingTests::componentTests06()
+{
     // Various tests on a component definition to check that we can get the RHS
     // of an equation
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -1371,9 +1406,16 @@ void ParsingTests::componentTests()
                             OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Type::Error);
     QCOMPARE(parser.messages().first().message(), QString("There can only be one 'otherwise' clause."));
+}
 
+//==============================================================================
+
+void ParsingTests::componentTests07()
+{
     // Various tests on a component definition to check that we can have an ODE
     // on the RHS of an equation
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -1488,9 +1530,16 @@ void ParsingTests::componentTests()
                            "enddef;",
                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QVERIFY(!parser.domDocument().isNull());
+}
 
+//==============================================================================
+
+void ParsingTests::componentTests08()
+{
     // Various tests on a component definition to check that we can have a
     // number on the RHS of an equation
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"
@@ -1534,9 +1583,16 @@ void ParsingTests::componentTests()
                            "enddef;",
                            OpenCOR::CellMLSupport::CellmlFile::Version::Cellml_1_0));
     QVERIFY(!parser.domDocument().isNull());
+}
 
+//==============================================================================
+
+void ParsingTests::componentTests09()
+{
     // Various tests on a component definition to check that we can have a
     // parenthesised mathematical expressionon the RHS of an equation
+
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     QVERIFY(!parser.execute("def model my_model as\n"
                             "    def comp my_component as\n"

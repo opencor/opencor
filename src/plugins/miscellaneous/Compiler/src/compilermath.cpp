@@ -68,12 +68,8 @@ double compiler_ceil(double pNb)
 
 double compiler_factorial(double pNb)
 {
-    double res = 1.0;
-
-    while (pNb > 1.0)
-        res *= pNb--;
-
-    return res;
+    return tgamma(pNb+1.0);
+    // Note: Γ(n) = (n-1)!...
 }
 
 //==============================================================================
@@ -268,8 +264,9 @@ double compiler_pow(double pNb1, double pNb2)
 
 double compiler_multi_min(int pCount, ...)
 {
-    if (!pCount)
+    if (pCount == 0) {
         return strtod("NAN", nullptr);
+    }
 
     va_list parameters;
 
@@ -277,11 +274,12 @@ double compiler_multi_min(int pCount, ...)
         double res = va_arg(parameters, double);
         double otherParameter;
 
-        while (--pCount) {
+        while (--pCount != 0) {
             otherParameter = va_arg(parameters, double);
 
-            if (otherParameter < res)
+            if (otherParameter < res) {
                 res = otherParameter;
+            }
         }
     va_end(parameters);
 
@@ -292,8 +290,9 @@ double compiler_multi_min(int pCount, ...)
 
 double compiler_multi_max(int pCount, ...)
 {
-    if (!pCount)
+    if (pCount == 0) {
         return strtod("NAN", nullptr);
+    }
 
     va_list parameters;
 
@@ -301,11 +300,12 @@ double compiler_multi_max(int pCount, ...)
         double res = va_arg(parameters, double);
         double otherParameter;
 
-        while (--pCount) {
+        while (--pCount != 0) {
             otherParameter = va_arg(parameters, double);
 
-            if (otherParameter > res)
+            if (otherParameter > res) {
                 res = otherParameter;
+            }
         }
     va_end(parameters);
 
@@ -314,40 +314,48 @@ double compiler_multi_max(int pCount, ...)
 
 //==============================================================================
 
+constexpr bool isEven(uint pNb)
+{
+    return pNb%2 == 0;
+}
+
+//==============================================================================
+
 double compiler_gcd_pair(double pNb1, double pNb2)
 {
-    #define EVEN(pNb) !(pNb & 1)
+    uint nb1 = uint(std::fabs(pNb1));
+    uint nb2 = uint(std::fabs(pNb2));
 
-    int nb1 = int(std::fabs(pNb1));
-    int nb2 = int(std::fabs(pNb2));
-
-    if (!nb1)
+    if (nb1 == 0) {
         return nb2;
+    }
 
-    if (!nb2)
+    if (nb2 == 0) {
         return nb1;
+    }
 
-    int shift = 0;
+    uint mult = 1;
 
-    while (EVEN(nb1) && EVEN(nb2)) {
-        ++shift;
+    while (isEven(nb1) && isEven(nb2)) {
+        mult *= 2;
 
-        nb1 >>= 1;
-        nb2 >>= 1;
+        nb1 /= 2;
+        nb2 /= 2;
     }
 
     do {
-        if (EVEN(nb1))
-          nb1 >>= 1;
-        else if (EVEN(nb2))
-            nb2 >>= 1;
-        else if (nb1 >= nb2)
-            nb1 = (nb1-nb2) >> 1;
-        else
-            nb2 = (nb2-nb1) >> 1;
-    } while (nb1);
+        if (isEven(nb1)) {
+            nb1 /= 2;
+        } else if (isEven(nb2)) {
+            nb2 /= 2;
+        } else if (nb1 >= nb2) {
+            nb1 = (nb1-nb2)/2;
+        } else {
+            nb2 = (nb2-nb1)/2;
+        }
+    } while (nb1 != 0);
 
-    return nb2 << shift;
+    return mult*nb2;
 }
 
 //==============================================================================
@@ -361,16 +369,18 @@ double compiler_lcm_pair(double pNb1, double pNb2)
 
 double compiler_gcd_multi(int pCount, ...)
 {
-    if (!pCount)
+    if (pCount == 0) {
         return 1.0;
+    }
 
     va_list parameters;
 
     va_start(parameters, pCount);
         double res = va_arg(parameters, double);
 
-        while (--pCount)
+        while (--pCount != 0) {
             res = compiler_gcd_pair(res, va_arg(parameters, double));
+        }
     va_end(parameters);
 
     return res;
@@ -380,16 +390,18 @@ double compiler_gcd_multi(int pCount, ...)
 
 double compiler_lcm_multi(int pCount, ...)
 {
-    if (!pCount)
+    if (pCount == 0) {
         return 1.0;
+    }
 
     va_list parameters;
 
     va_start(parameters, pCount);
         double res = va_arg(parameters, double);
 
-        while (--pCount)
+        while (--pCount != 0) {
             res = compiler_lcm_pair(res, va_arg(parameters, double));
+        }
     va_end(parameters);
 
     return res;

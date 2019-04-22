@@ -25,17 +25,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "cvodes/cvodes.h"
-#include "cvodes/cvodes_bandpre.h"
-#include "cvodes/cvodes_diag.h"
-#include "cvodes/cvodes_direct.h"
-#include "cvodes/cvodes_spils.h"
-#include "sunlinsol/sunlinsol_band.h"
-#include "sunlinsol/sunlinsol_dense.h"
-#include "sunlinsol/sunlinsol_spbcgs.h"
-#include "sunlinsol/sunlinsol_spgmr.h"
-#include "sunlinsol/sunlinsol_sptfqmr.h"
-#include "sunnonlinsol/sunnonlinsol_fixedpoint.h"
+#include "sundialsbegin.h"
+    #include "cvodes/cvodes.h"
+    #include "cvodes/cvodes_bandpre.h"
+    #include "cvodes/cvodes_diag.h"
+    #include "cvodes/cvodes_direct.h"
+    #include "cvodes/cvodes_spils.h"
+    #include "sunlinsol/sunlinsol_band.h"
+    #include "sunlinsol/sunlinsol_dense.h"
+    #include "sunlinsol/sunlinsol_spbcgs.h"
+    #include "sunlinsol/sunlinsol_spgmr.h"
+    #include "sunlinsol/sunlinsol_sptfqmr.h"
+    #include "sunnonlinsol/sunnonlinsol_fixedpoint.h"
+#include "sundialsend.h"
 
 //==============================================================================
 
@@ -48,7 +50,7 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 {
     // Compute the RHS function
 
-    CvodeSolverUserData *userData = static_cast<CvodeSolverUserData *>(pUserData);
+    auto userData = static_cast<CvodeSolverUserData *>(pUserData);
 
     userData->computeRates()(pVoi, userData->constants(),
                              N_VGetArrayPointer_Serial(pRates),
@@ -63,13 +65,14 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
 void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
                   char *pErrorMessage, void *pUserData)
 {
-    Q_UNUSED(pModule);
-    Q_UNUSED(pFunction);
+    Q_UNUSED(pModule)
+    Q_UNUSED(pFunction)
 
     // Forward errors to our CvodeSolver object
 
-    if (pErrorCode != CV_WARNING)
+    if (pErrorCode != CV_WARNING) {
         static_cast<CvodeSolver *>(pUserData)->emitError(pErrorMessage);
+    }
 }
 
 //==============================================================================
@@ -128,8 +131,9 @@ CvodeSolver::~CvodeSolver()
 {
     // Make sure that the solver has been initialised
 
-    if (!mSolver)
+    if (mSolver == nullptr) {
         return;
+    }
 
     // Delete some internal objects
 
@@ -190,7 +194,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(IterationTypeId)) {
         iterationType = mProperties.value(IterationTypeId).toString();
 
-        if (!iterationType.compare(NewtonIteration)) {
+        if (iterationType == NewtonIteration) {
             // We are dealing with a Newton iteration, so retrieve and check its
             // linear solver
 
@@ -199,11 +203,11 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
 
                 bool needUpperAndLowerHalfBandwidths = false;
 
-                if (   !linearSolver.compare(DenseLinearSolver)
-                    || !linearSolver.compare(DiagonalLinearSolver)) {
+                if (   (linearSolver == DenseLinearSolver)
+                    || (linearSolver == DiagonalLinearSolver)) {
                     // We are dealing with a dense/diagonal linear solver, so
                     // nothing more to do
-                } else if (!linearSolver.compare(BandedLinearSolver)) {
+                } else if (linearSolver == BandedLinearSolver) {
                     // We are dealing with a banded linear solver, so we need
                     // both an upper and a lower half bandwidth
 
@@ -220,7 +224,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                         return;
                     }
 
-                    if (!preconditioner.compare(BandedPreconditioner)) {
+                    if (preconditioner == BandedPreconditioner) {
                         // We are dealing with a banded preconditioner, so we
                         // need both an upper and a lower half bandwidth
 
@@ -304,9 +308,9 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
 
     // Create our CVODES solver
 
-    bool newtonIteration = !iterationType.compare(NewtonIteration);
+    bool newtonIteration = iterationType == NewtonIteration;
 
-    mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS);
+    mSolver = CVodeCreate((integrationMethod == BdfMethod)?CV_BDF:CV_ADAMS);
 
     // Use our own error handler
 
@@ -333,40 +337,42 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     // Set our linear solver, if needed
 
     if (newtonIteration) {
-        if (!linearSolver.compare(DenseLinearSolver)) {
+        if (linearSolver == DenseLinearSolver) {
             mMatrix = SUNDenseMatrix(pRatesStatesCount, pRatesStatesCount);
             mLinearSolver = SUNLinSol_Dense(mStatesVector, mMatrix);
 
             CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
-        } else if (!linearSolver.compare(BandedLinearSolver)) {
+        } else if (linearSolver == BandedLinearSolver) {
             mMatrix = SUNBandMatrix(pRatesStatesCount, upperHalfBandwidth,
                                                        lowerHalfBandwidth);
             mLinearSolver = SUNLinSol_Band(mStatesVector, mMatrix);
 
             CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
-        } else if (!linearSolver.compare(DiagonalLinearSolver)) {
+        } else if (linearSolver == DiagonalLinearSolver) {
             CVDiag(mSolver);
         } else {
             // We are dealing with a GMRES/Bi-CGStab/TFQMR linear solver
 
-            if (!preconditioner.compare(BandedPreconditioner)) {
-                if (!linearSolver.compare(GmresLinearSolver))
+            if (preconditioner == BandedPreconditioner) {
+                if (linearSolver == GmresLinearSolver) {
                     mLinearSolver = SUNLinSol_SPGMR(mStatesVector, PREC_LEFT, 0);
-                else if (!linearSolver.compare(BiCgStabLinearSolver))
+                } else if (linearSolver == BiCgStabLinearSolver) {
                     mLinearSolver = SUNLinSol_SPBCGS(mStatesVector, PREC_LEFT, 0);
-                else
+                } else {
                     mLinearSolver = SUNLinSol_SPTFQMR(mStatesVector, PREC_LEFT, 0);
+                }
 
                 CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
                 CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth,
                                                            lowerHalfBandwidth);
             } else {
-                if (!linearSolver.compare(GmresLinearSolver))
+                if (linearSolver == GmresLinearSolver) {
                     mLinearSolver = SUNLinSol_SPGMR(mStatesVector, PREC_NONE, 0);
-                else if (!linearSolver.compare(BiCgStabLinearSolver))
+                } else if (linearSolver == BiCgStabLinearSolver) {
                     mLinearSolver = SUNLinSol_SPBCGS(mStatesVector, PREC_NONE, 0);
-                else
+                } else {
                     mLinearSolver = SUNLinSol_SPTFQMR(mStatesVector, PREC_NONE, 0);
+                }
 
                 CVodeSetLinearSolver(mSolver, mLinearSolver, mMatrix);
             }
@@ -397,8 +403,9 @@ void CvodeSolver::solve(double &pVoi, double pVoiEnd) const
 {
     // Solve the model
 
-    if (!mInterpolateSolution)
+    if (!mInterpolateSolution) {
         CVodeSetStopTime(mSolver, pVoiEnd);
+    }
 
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 

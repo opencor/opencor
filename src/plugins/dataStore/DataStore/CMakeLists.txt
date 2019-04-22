@@ -10,11 +10,6 @@ add_plugin(DataStore
 
         src/datastoredialog.cpp
         src/datastoreplugin.cpp
-    HEADERS_MOC
-        ../../datastoreinterface.h
-
-        src/datastoredialog.h
-        src/datastoreplugin.h
     UIS
         src/datastoredialog.ui
     PLUGINS

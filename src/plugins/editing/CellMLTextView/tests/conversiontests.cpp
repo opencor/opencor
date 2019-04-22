@@ -69,6 +69,7 @@ void ConversionTests::successfulConversionTests()
     // Retest the conversion of a CellML file that works with COR, except that
     // we insert comments everywhere
 
+    static const QString ModelEndTag = "</model>";
     static const QString Comment = QString("<!-- In between comment #%1...-->");
 
     QStringList cellmlCorWithCommentsCellmlContents = QStringList() << cellmlCorCellmlContents[0];
@@ -81,10 +82,11 @@ void ConversionTests::successfulConversionTests()
 
         cellmlCorWithCommentsCellmlContents << currentLine;
 
-        if (currentLine.compare("</model>"))
+        if (currentLine != ModelEndTag) {
             cellmlCorWithCommentsCellmlContents << Comment.arg(++commentNumber);
-        else
+        } else {
             break;
+        }
     }
 
     QVERIFY(converter.execute(cellmlCorWithCommentsCellmlContents.join('\n')));
@@ -94,29 +96,41 @@ void ConversionTests::successfulConversionTests()
 
 //==============================================================================
 
-void ConversionTests::failingConversionTests()
+void ConversionTests::failingConversionTests01()
 {
-    // Test the conversion of various invalid CellML files
+    // CellML base units
 
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
-
-    // CellML base units
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/cellml_base_units.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'base_units' attribute must have a value of 'yes' or 'no'."));
     QCOMPARE(converter.errorLine(), 3);
     QCOMPARE(converter.errorColumn(), 59);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests02()
+{
     // CellML reaction
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/cellml_reaction.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'reaction' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
     QCOMPARE(converter.errorLine(), 4);
     QCOMPARE(converter.errorColumn(), 15);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests03()
+{
     // CellML group
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/cellml_relationship.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -129,16 +143,30 @@ void ConversionTests::failingConversionTests()
              QString("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute."));
     QCOMPARE(converter.errorLine(), 4);
     QCOMPARE(converter.errorColumn(), 72);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests04()
+{
     // CellML connection
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/cellml_connection.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
              QString("A 'connection' element must contain exactly one 'map_components' element."));
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorColumn(), 74);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests05()
+{
     // MathML token elements
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_cn.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -193,8 +221,15 @@ void ConversionTests::failingConversionTests()
              QString("A 'ci' element must have a value."));
     QCOMPARE(converter.errorLine(), 7);
     QCOMPARE(converter.errorColumn(), 20);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests06()
+{
     // MathML basic content elements
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_apply.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -231,8 +266,15 @@ void ConversionTests::failingConversionTests()
              QString("An 'otherwise' element must have one child element."));
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorColumn(), 23);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests07()
+{
     // MathML relational operators
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_eq.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -269,8 +311,15 @@ void ConversionTests::failingConversionTests()
              QString("An 'leq' element must have two siblings."));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorColumn(), 18);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests08()
+{
     // MathML arithmetic operators
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_plus.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -361,8 +410,15 @@ void ConversionTests::failingConversionTests()
              QString("A 'factorial' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorColumn(), 24);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests09()
+{
     // MathML logical operators
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_and.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -387,8 +443,15 @@ void ConversionTests::failingConversionTests()
              QString("A 'not' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorColumn(), 18);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests10()
+{
     // MathML calculus elements
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_diff_1.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -401,8 +464,15 @@ void ConversionTests::failingConversionTests()
              QString("The first sibling of a 'diff' element with two siblings must be a 'bvar' element."));
     QCOMPARE(converter.errorLine(), 7);
     QCOMPARE(converter.errorColumn(), 20);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests11()
+{
     // MathML qualifier elements
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_degree.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -427,8 +497,15 @@ void ConversionTests::failingConversionTests()
              QString("The second child element of a 'bvar' element with two child elements must be a 'degree' element."));
     QCOMPARE(converter.errorLine(), 9);
     QCOMPARE(converter.errorColumn(), 20);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests12()
+{
     // MathML min/max operators
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_min.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -441,8 +518,15 @@ void ConversionTests::failingConversionTests()
              QString("A 'max' element must have at least two siblings."));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorColumn(), 21);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests13()
+{
     // MathML gcd/lcm operators
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_gcd.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -455,8 +539,15 @@ void ConversionTests::failingConversionTests()
              QString("A 'lcm' element must have at least two siblings."));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorColumn(), 21);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests14()
+{
     // MathML trigonometric operators
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_sin.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -601,8 +692,15 @@ void ConversionTests::failingConversionTests()
              QString("An 'arccoth' element must have one sibling."));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorColumn(), 25);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests15()
+{
     // MathML constants
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_constant_1.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),
@@ -615,8 +713,15 @@ void ConversionTests::failingConversionTests()
              QString("A 'pi' element cannot have child elements."));
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorColumn(), 16);
+}
 
+//==============================================================================
+
+void ConversionTests::failingConversionTests16()
+{
     // Unknown MathML element
+
+    OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_unknown_element.cellml")).join('\n')));
     QCOMPARE(converter.errorMessage(),

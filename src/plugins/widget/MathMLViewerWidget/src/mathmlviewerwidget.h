@@ -86,6 +86,8 @@ protected:
     void paintEvent(QPaintEvent *pEvent) override;
 
 private:
+    QMap<QString, QString> mGreekSymbols;
+
     QwtMathMLDocument mMathmlDocument;
 
     double mOneOverMathmlDocumentWidth;
@@ -104,7 +106,7 @@ private:
 
     QAction * newAction();
 
-    QString greekSymbolize(const QString &pValue) const;
+    QString greekSymbol(const QString &pValue) const;
 
     QDomElement newMiNode(const QDomNode &pDomNode,
                           const QString &pValue) const;

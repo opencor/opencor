@@ -88,14 +88,15 @@ bool CellmlFileRuntimeParameter::compare(CellmlFileRuntimeParameter *pParameter1
     QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
     QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
 
-    if (!componentHierarchy1.compare(componentHierarchy2)) {
-        if (!pParameter1->name().compare(pParameter2->name()))
+    if (componentHierarchy1 == componentHierarchy2) {
+        if (pParameter1->name() == pParameter2->name()) {
             return pParameter1->degree() < pParameter2->degree();
-        else
-            return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
-    } else {
-        return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
+        }
+
+        return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
     }
+
+    return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -196,11 +197,12 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
     QString perVoiUnitDegree = QString();
 
-    if (mDegree) {
+    if (mDegree != 0) {
         perVoiUnitDegree += "/"+pVoiUnit;
 
-        if (mDegree > 1)
+        if (mDegree > 1) {
             perVoiUnitDegree += "^"+QString::number(mDegree);
+        }
     }
 
     return mUnit+perVoiUnitDegree;
@@ -249,13 +251,18 @@ QIcon CellmlFileRuntimeParameter::icon(Type pParameterType)
 //==============================================================================
 
 CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
+    mAtLeastOneNlaSystem(false),
     mCodeInformation(nullptr),
     mConstantsCount(0),
     mStatesRatesCount(0),
     mAlgebraicCount(0),
     mCompilerEngine(nullptr),
     mVoi(nullptr),
-    mParameters(CellmlFileRuntimeParameters())
+    mParameters(CellmlFileRuntimeParameters()),
+    mInitializeConstants(nullptr),
+    mComputeComputedConstants(nullptr),
+    mComputeVariables(nullptr),
+    mComputeRates(nullptr)
 {
     update(pCellmlFile);
 }
@@ -266,7 +273,10 @@ CellmlFileRuntime::~CellmlFileRuntime()
 {
     // Reset our properties
 
-    reset(false, true, true);
+    try {
+        reset(false, true, true);
+    } catch (...) {
+    }
 }
 
 //==============================================================================
@@ -281,15 +291,17 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
     iface::cellml_api::Model *model = pCellmlFile->model();
 
-    if (!model)
+    if (model == nullptr) {
         return;
+    }
 
     // Retrieve the code information for the model
 
     retrieveCodeInformation(model);
 
-    if (!mCodeInformation)
+    if (mCodeInformation == nullptr) {
         return;
+    }
 
     // Retrieve various additional things
     // Note: this should only ever be needed when we are called from our
@@ -322,12 +334,12 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
 
         for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
-             component; component = localComponentsIter->nextComponent()) {
+             component != nullptr; component = localComponentsIter->nextComponent()) {
             ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
             ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
 
             for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
-                 variable; variable = variablesIter->nextVariable()) {
+                 variable != nullptr; variable = variablesIter->nextVariable()) {
                 ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
                 mainVariables.insert(sourceVariable, variable);
@@ -339,8 +351,9 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                 // track of the real main variable, which is the one which
                 // source variable is the same
 
-                if (variable == sourceVariable)
+                if (variable == sourceVariable) {
                     realMainVariables << variable;
+                }
             }
         }
 
@@ -353,7 +366,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         QStringList voiComponentHierarchy = QStringList();
 
         for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
-             computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
+             computationTarget != nullptr; computationTarget = computationTargetIter->nextComputationTarget()) {
             // Make sure that our computation target is defined or referenced in
             // our main CellML file, if it has imports
 
@@ -361,10 +374,10 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
             iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
                                                                   variable.getPointer():
                                                                   mainVariables.value(variable);
-            iface::cellml_api::CellMLVariable *realVariable = mainVariable?mainVariable:variable.getPointer();
+            iface::cellml_api::CellMLVariable *realVariable = (mainVariable != nullptr)?mainVariable:variable.getPointer();
 
-            if (   !mainVariable
-                &&  (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
+            if (   (mainVariable == nullptr)
+                && (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
                 continue;
             }
 
@@ -394,7 +407,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                     // must be a 'computed' constant
 
                     parameterType = CellmlFileRuntimeParameter::Type::ComputedConstant;
-                } else if (computationTarget->degree()) {
+                } else if (computationTarget->degree() != 0) {
                     // The computed target has a degree, so it is effectively a
                     // rate
 
@@ -419,10 +432,11 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                 //       dealing with a 'proper' algebraic variable otherwise we
                 //       are dealing with a rate variable...
 
-                if (computationTarget->degree())
+                if (computationTarget->degree() != 0) {
                     parameterType = CellmlFileRuntimeParameter::Type::Rate;
-                else
+                } else {
                     parameterType = CellmlFileRuntimeParameter::Type::Algebraic;
+                }
 
                 break;
             case iface::cellml_services::FLOATING:
@@ -440,20 +454,20 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
             if (   (parameterType != CellmlFileRuntimeParameter::Type::Floating)
                 && (parameterType != CellmlFileRuntimeParameter::Type::LocallyBound)) {
-                CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
-                                                                                       int(computationTarget->degree()),
-                                                                                       QString::fromStdWString(realVariable->unitsName()),
-                                                                                       componentHierarchy(realVariable),
-                                                                                       parameterType,
-                                                                                       int(computationTarget->assignedIndex()));
+                auto parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
+                                                                int(computationTarget->degree()),
+                                                                QString::fromStdWString(realVariable->unitsName()),
+                                                                componentHierarchy(realVariable),
+                                                                parameterType,
+                                                                int(computationTarget->assignedIndex()));
 
                 if (parameterType == CellmlFileRuntimeParameter::Type::Voi) {
-                    if (!mVoi) {
+                    if (mVoi == nullptr) {
                         mVoi = parameter;
 
                         voiName = parameter->name();
                         voiComponentHierarchy = parameter->componentHierarchy();
-                    } else if (    parameter->name().compare(voiName)
+                    } else if (   (parameter->name() != voiName)
                                || (parameter->componentHierarchy() != voiComponentHierarchy)) {
                         // The CellML API wrongly validated a model that has
                         // more than one VOI (at least, according to the CellML
@@ -471,8 +485,9 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
                     }
                 }
 
-                if (realVariable == mainVariable)
+                if (realVariable == mainVariable) {
                     mParameters << parameter;
+                }
             }
         }
 
@@ -512,7 +527,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
     //       distinguish between 'proper' and 'computed' constants...
     //       (See https://tracker.physiomeproject.org/show_bug.cgi?id=3499)
 
-    static const QRegularExpression InitializationStatementRegEx = QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$");
+    static const QRegularExpression InitializationStatementRegEx = QRegularExpression(R"(^(CONSTANTS|RATES|STATES)\[\d*\] = [+-]?\d*\.?\d+([eE][+-]?\d+)?;$)");
 
     QStringList initConstsList = cleanCode(mCodeInformation->initConstsString()).split('\n');
     QString initConsts = QString();
@@ -522,10 +537,11 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
-        if (InitializationStatementRegEx.match(initConst).hasMatch())
+        if (InitializationStatementRegEx.match(initConst).hasMatch()) {
             initConsts += (initConsts.isEmpty()?QString():"\n")+initConst;
-        else
+        } else {
             compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
+        }
     }
 
     modelCode += methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
@@ -550,7 +566,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
     // Keep track of the ODE functions, but only if no issues were reported
 
-    if (mIssues.count()) {
+    if (!mIssues.isEmpty()) {
         reset(true, false, true);
     } else {
         // Add the symbol of any required external function, if any
@@ -569,8 +585,8 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 
         // Make sure that we managed to retrieve all the ODE functions
 
-        if (   !mInitializeConstants || !mComputeComputedConstants
-            || !mComputeVariables || !mComputeRates) {
+        if (   (mInitializeConstants == nullptr) || (mComputeComputedConstants == nullptr)
+            || (mComputeVariables == nullptr) || (mComputeRates == nullptr)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("an unexpected problem occurred while trying to retrieve the model functions"));
 
@@ -710,7 +726,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::parameters() const
 
 //==============================================================================
 
-CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pData) const
+CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(const double *pData) const
 {
     // Return the data parameter(s)
 
@@ -718,7 +734,7 @@ CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(double *pData) con
 
     for (auto parameter : mParameters) {
         if (   (parameter->type() == CellmlFileRuntimeParameter::Type::Data)
-            && (!pData || (parameter->data() == pData))) {
+            && ((pData == nullptr) || (parameter->data() == pData))) {
             res << parameter;
         }
     }
@@ -762,22 +778,26 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues,
 
     delete mCompilerEngine;
 
-    if (pRecreateCompilerEngine)
+    if (pRecreateCompilerEngine) {
         mCompilerEngine = new Compiler::CompilerEngine();
-    else
+    } else {
         mCompilerEngine = nullptr;
+    }
 
     resetFunctions();
 
-    if (pResetIssues)
+    if (pResetIssues) {
         mIssues.clear();
+    }
 
     if (pResetAll) {
-        if (!mParameters.contains(mVoi))
+        if (!mParameters.contains(mVoi)) {
             delete mVoi;
+        }
 
-        for (auto parameter : mParameters)
+        for (auto parameter : mParameters) {
             delete parameter;
+        }
 
         mVoi = nullptr;
 
@@ -857,8 +877,9 @@ void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel
 
     // Check the outcome of the code generation
 
-    if (mIssues.count())
+    if (!mIssues.isEmpty()) {
         resetCodeInformation();
+    }
 }
 
 //==============================================================================
@@ -874,8 +895,9 @@ QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
     if (!pCodeBody.isEmpty()) {
         res += pCodeBody;
 
-        if (!pCodeBody.endsWith('\n'))
+        if (!pCodeBody.endsWith('\n')) {
             res += '\n';
+        }
     }
 
     res += "}\n\n";
@@ -899,8 +921,9 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 {
     // Make sure that we have a given element
 
-    if (!pElement)
-        return QStringList();
+    if (pElement == nullptr) {
+        return {};
+    }
 
     // Try to retrieve the component that owns the given element, unless the
     // given element is a component itself (which will be the case when we come
@@ -910,19 +933,19 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
     ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
 
-    if (!component && !parentComponent) {
+    if ((component == nullptr) && (parentComponent == nullptr)) {
         // The element isn't a component and neither is its parent, so it
         // doesn't have a hierarchy
 
-        return QStringList();
+        return {};
     }
 
     // Recursively retrieve the component hierarchy of the given element's
     // encapsulation parent, if any
 
-    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
+    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = (component != nullptr)?component->encapsulationParent():parentComponent->encapsulationParent();
 
-    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString(component?component->name():parentComponent->name());
+    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString((component != nullptr)?component->name():parentComponent->name());
 }
 
 //==============================================================================
@@ -937,8 +960,9 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     QString res = QString();
 
     for (const auto &code : QString::fromStdWString(pCode).split("\r\n")) {
-        if (!CommentRegEx.match(code.trimmed()).hasMatch())
+        if (!CommentRegEx.match(code.trimmed()).hasMatch()) {
             res += (res.isEmpty()?QString():"\n")+code;
+        }
     }
 
     // Further clean up the given code by removing any reference to a 'return'

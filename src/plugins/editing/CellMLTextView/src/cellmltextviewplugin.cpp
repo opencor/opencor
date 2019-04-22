@@ -82,27 +82,35 @@ int CellMLTextViewPlugin::executeCommand(const QString &pCommand,
 {
     // Run the given CLI command
 
-    if (!pCommand.compare("help")) {
+    static const QString Help = "help";
+    static const QString Export = "export";
+    static const QString Import = "import";
+
+    if (pCommand == Help) {
         // Display the commands that we support
 
         runHelpCommand();
 
         return 0;
-    } else if (!pCommand.compare("export")) {
+    }
+
+    if (pCommand == Export) {
         // Export a CellML file to our CellML Text view format
 
         return runExportCommand(pArguments);
-    } else if (!pCommand.compare("import")) {
+    }
+
+    if (pCommand == Import) {
         // Import a CellML Text view file to CellML
 
         return runImportCommand(pArguments);
-    } else {
-        // Not a CLI command that we support
-
-        runHelpCommand();
-
-        return -1;
     }
+
+    // Not a CLI command that we support
+
+    runHelpCommand();
+
+    return -1;
 }
 
 //==============================================================================
@@ -141,7 +149,7 @@ bool CellMLTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileNa
 
 bool CellMLTextViewPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -163,7 +171,7 @@ bool CellMLTextViewPlugin::saveFile(const QString &pOldFileName,
 
 void CellMLTextViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -172,7 +180,7 @@ void CellMLTextViewPlugin::fileOpened(const QString &pFileName)
 
 void CellMLTextViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -181,7 +189,7 @@ void CellMLTextViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void CellMLTextViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -218,7 +226,7 @@ void CellMLTextViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void CellMLTextViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -250,8 +258,8 @@ bool CellMLTextViewPlugin::definesPluginInterfaces()
 bool CellMLTextViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                               QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -265,8 +273,9 @@ void CellMLTextViewPlugin::initializePlugin()
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (Core::mainWindow() == nullptr) {
         return;
+    }
 
     // Create our CellML Text view widget
 
@@ -291,7 +300,7 @@ void CellMLTextViewPlugin::finalizePlugin()
 
 void CellMLTextViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -303,8 +312,9 @@ void CellMLTextViewPlugin::loadSettings(QSettings &pSettings)
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (Core::mainWindow() == nullptr) {
         return;
+    }
 
     // Retrieve our CellML Text view widget settings
 
@@ -320,8 +330,9 @@ void CellMLTextViewPlugin::saveSettings(QSettings &pSettings) const
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (Core::mainWindow() == nullptr) {
         return;
+    }
 
     // Keep track of our generic CellML Text view widget settings
 
@@ -334,7 +345,7 @@ void CellMLTextViewPlugin::saveSettings(QSettings &pSettings) const
 
 void CellMLTextViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -424,7 +435,7 @@ QString CellMLTextViewPlugin::viewName() const
 
 QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -456,10 +467,11 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     if (!Core::readFile(pArguments[0], fileContents, &errorMessage)) {
         if (errorMessage.isEmpty()) {
-            if (QFile::exists(pArguments[0]))
+            if (QFile::exists(pArguments[0])) {
                 errorMessage = "The file could not be opened.";
-            else
+            } else {
                 errorMessage = "The file could not be found.";
+            }
         } else {
             errorMessage = QString("The file could not be opened (%1).").arg(Core::formatMessage(errorMessage));
         }
@@ -514,11 +526,11 @@ int CellMLTextViewPlugin::importExport(const QStringList &pArguments,
 
     if (errorMessage.isEmpty()) {
         return 0;
-    } else {
-        std::cout << errorMessage.toStdString() << std::endl;
-
-        return -1;
     }
+
+    std::cout << errorMessage.toStdString() << std::endl;
+
+    return -1;
 }
 
 //==============================================================================

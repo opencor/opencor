@@ -81,7 +81,7 @@ QString CellmlTextViewLexer::description(int pStyle) const
         return QObject::tr("Parameter string");
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -93,22 +93,22 @@ QColor CellmlTextViewLexer::color(int pStyle) const
     switch (Style(pStyle)) {
     case Style::Default:
     case Style::ParameterBlock:
-        return QColor(0x1f, 0x1f, 0x1f);
+        return { 0x1f, 0x1f, 0x1f };
     case Style::SingleLineComment:
     case Style::MultilineComment:
-        return QColor(0x7f, 0x7f, 0x7f);
+        return { 0x7f, 0x7f, 0x7f };
     case Style::Keyword:
     case Style::ParameterKeyword:
-        return QColor(0x00, 0x00, 0x7f);
+        return { 0x00, 0x00, 0x7f };
     case Style::CellmlKeyword:
     case Style::ParameterCellmlKeyword:
-        return QColor(0x7f, 0x00, 0x7f);
+        return { 0x7f, 0x00, 0x7f };
     case Style::Number:
     case Style::ParameterNumber:
-        return QColor(0x00, 0x7f, 0x7f);
+        return { 0x00, 0x7f, 0x7f };
     case Style::String:
     case Style::ParameterString:
-        return QColor(0x00, 0x7f, 0x00);
+        return { 0x00, 0x7f, 0x00 };
     }
 
     return QsciLexerCustom::color(pStyle);
@@ -122,20 +122,11 @@ QFont CellmlTextViewLexer::font(int pStyle) const
 
     QFont res = QsciLexer::font(pStyle);
 
-    switch (Style(pStyle)) {
-    case Style::ParameterBlock:
-    case Style::ParameterKeyword:
-    case Style::ParameterCellmlKeyword:
-    case Style::ParameterNumber:
-    case Style::ParameterString:
-        res.setItalic(true);
-
-        break;
-    default:
-        // Not a relevant style, so do nothing
-
-        ;
-    }
+    res.setItalic(   (Style(pStyle) == Style::ParameterBlock)
+                  || (Style(pStyle) == Style::ParameterKeyword)
+                  || (Style(pStyle) == Style::ParameterCellmlKeyword)
+                  || (Style(pStyle) == Style::ParameterNumber)
+                  || (Style(pStyle) == Style::ParameterString));
 
     return res;
 }
@@ -146,12 +137,13 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 {
     // Make sure that we have an editor
 
-    if (!editor())
+    if (editor() == nullptr) {
         return;
+    }
 
     // Retrieve the text to style
 
-    char *data = new char[pBytesEnd-pBytesStart+1] {};
+    auto data = new char[pBytesEnd-pBytesStart+1] {};
 
     editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE,
                             pBytesStart, pBytesEnd, data);
@@ -181,8 +173,9 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
     // Note: we need to ensure that it is the case, so that validString() can
     //       take advantage of the style of a given character in the editor...
 
-    if (editor()->SendScintilla(QsciScintillaBase::SCI_GETENDSTYLED) != pBytesEnd)
+    if (editor()->SendScintilla(QsciScintillaBase::SCI_GETENDSTYLED) != pBytesEnd) {
         qFatal("FATAL ERROR | %s:%d: the styling of the text must be incremental.", __FILE__, __LINE__);
+    }
 #endif
 
     // Let people know that we are done with our styling
@@ -192,26 +185,26 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 
 //==============================================================================
 
-static const auto SingleLineCommentString = QStringLiteral("//");
-static const int SingleLineCommentLength  = SingleLineCommentString.length();
+static const char *SingleLineCommentString = "//";
+static const int SingleLineCommentLength   = 2;
 
 //==============================================================================
 
-static const auto StartMultilineCommentString = QStringLiteral("/*");
-static const auto EndMultilineCommentString   = QStringLiteral("*/");
-static const int EndMultilineCommentLength    = EndMultilineCommentString.length();
+static const char *StartMultilineCommentString = "/*";
+static const char *EndMultilineCommentString   = "*/";
+static const int EndMultilineCommentLength     = 2;
 
 //==============================================================================
 
-static const auto StartParameterBlockString = QStringLiteral("{");
-static const auto EndParameterBlockString   = QStringLiteral("}");
-static const int StartParameterBlockLength  = StartParameterBlockString.length();
-static const int EndParameterBlockLength    = EndParameterBlockString.length();
+static const char *StartParameterBlockString = "{";
+static const char *EndParameterBlockString   = "}";
+static const int StartParameterBlockLength   = 1;
+static const int EndParameterBlockLength     = 1;
 
 //==============================================================================
 
-static const auto StringString = QStringLiteral("\"");
-static const int StringLength = StringString.length();
+static const char *StringString = "\"";
+static const int StringLength   = 1;
 
 //==============================================================================
 
@@ -220,8 +213,9 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd,
 {
     // Make sure that we are given some text to style
 
-    if (pBytesStart == pBytesEnd)
+    if (pBytesStart == pBytesEnd) {
         return;
+    }
 
     // Check whether a /* XXX */ comment or a parameter block started before or
     // at the beginning of the given text
@@ -273,8 +267,9 @@ void CellmlTextViewLexer::styleTextCurrent(int pBytesStart, int pBytesEnd,
 {
     // Make sure that we are given some text to style
 
-    if (pBytesStart == pBytesEnd)
+    if (pBytesStart == pBytesEnd) {
         return;
+    }
 
     // Check whether the given text contains a string, a // comment, a /* XXX */
     // comment or a parameter block
@@ -518,8 +513,9 @@ void CellmlTextViewLexer::styleTextPreviousMultilineComment(int pPosition,
 
     int multilineCommentEndPosition = findString(EndMultilineCommentString, pPosition, int(Style::MultilineComment));
 
-    if (multilineCommentEndPosition == -1)
+    if (multilineCommentEndPosition == -1) {
         multilineCommentEndPosition = mFullText.length();
+    }
 
     // Check whether the beginning of the given text is within the /* XXX */
     // comment
@@ -574,8 +570,9 @@ void CellmlTextViewLexer::styleTextPreviousParameterBlock(int pPosition,
 
     int parameterBlockEndPosition = findString(EndParameterBlockString, pPosition, int(Style::ParameterBlock));
 
-    if (parameterBlockEndPosition == -1)
+    if (parameterBlockEndPosition == -1) {
         parameterBlockEndPosition = mFullText.length();
+    }
 
     // Check whether the beginning of the given text is within a parameter block
 
@@ -588,7 +585,7 @@ void CellmlTextViewLexer::styleTextPreviousParameterBlock(int pPosition,
         int realBytesEnd = fullTextBytesPosition(parameterBlockEndPosition)+EndParameterBlockLength;
         int bytesEnd = qMin(pBytesEnd, realBytesEnd);
         bool hasStart =    (pPosition == start)
-                        && !mFullText.mid(pPosition, StartParameterBlockLength).compare(StartParameterBlockString);
+                        && (mFullText.mid(pPosition, StartParameterBlockLength) == StartParameterBlockString);
         bool hasEnd = bytesEnd == realBytesEnd;
 
         // If needed, style the start of the parameter block
@@ -678,8 +675,9 @@ void CellmlTextViewLexer::styleTextString(int pPosition, int pBytesStart,
         int eolPosition = pText.indexOf(mEolString, pPosition+StringLength);
         int eolBytesPosition = (eolPosition == -1)?-1:textBytesPosition(pText, eolPosition);
 
-        if (eolBytesPosition != -1)
+        if (eolBytesPosition != -1) {
             nextBytesStart = pBytesStart+eolBytesPosition+mEolString.length();
+        }
     }
 
     // Style the string itself
@@ -732,7 +730,7 @@ void CellmlTextViewLexer::styleTextNumberRegEx(int pBytesStart,
 {
     // Style the given text using the number regular expression
 
-    static const QRegularExpression NumberRegEx = QRegularExpression("(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d*)?");
+    static const QRegularExpression NumberRegEx = QRegularExpression(R"((\d+(\.\d*)?|\.\d+)([eE][+-]?\d*)?)");
     // Note: this regular expression is not aimed at catching valid numbers, but
     //       at catching something that could become a valid number (e.g. we
     //       want to be able to catch "123e")...
@@ -777,14 +775,15 @@ bool CellmlTextViewLexer::validString(int pFrom, int pTo, int pStyle) const
     // Check whether the string, which range is given, is valid, i.e. is either
     // of the default or given style
 
-    long style;
+    qint64 style;
 
     for (int i = pFrom; i < pTo; ++i) {
         style = editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
                                         fullTextBytesPosition(i));
 
-        if ((style != int(Style::Default)) && (style != pStyle))
+        if ((style != int(Style::Default)) && (style != pStyle)) {
             return false;
+        }
     }
 
     return true;

@@ -240,8 +240,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/opensslplugin.cpp
-    HEADERS_MOC
-        src/opensslplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR
