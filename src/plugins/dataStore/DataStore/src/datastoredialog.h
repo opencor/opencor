@@ -99,7 +99,6 @@ private slots:
 
 //==============================================================================
 
-}   // namespace DataStore
 } // namespace DataStore
 } // namespace OpenCOR
 
