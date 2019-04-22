@@ -203,7 +203,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     // Create our Web viewer and add it to our horizontal splitter
 
-    auto webViewerWidget = new QWidget(mVerticalSplitter);
+    auto webViewerWidget = new QWidget(mHorizontalSplitter);
     auto webViewerLayout = new QVBoxLayout(webViewerWidget);
 
     webViewerLayout->setContentsMargins(halfMargin, 0, 0, 0);
