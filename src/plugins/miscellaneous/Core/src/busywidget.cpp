@@ -458,8 +458,8 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

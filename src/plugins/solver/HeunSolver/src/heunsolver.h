@@ -65,8 +65,8 @@ private:
 
 //==============================================================================
 
-}   // namespace HeunSolver
-}   // namespace OpenCOR
+} // namespace HeunSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

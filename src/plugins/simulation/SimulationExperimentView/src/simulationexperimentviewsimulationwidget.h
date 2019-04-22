@@ -49,7 +49,7 @@ namespace libsedml {
     class SedRepeatedTask;
     class SedSimulation;
     class SedVariable;
-}   // namespace libsedml
+} // namespace libsedml
 
 //==============================================================================
 
@@ -63,7 +63,7 @@ class DataStoreInterface;
 
 namespace CellMLSupport {
     class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
@@ -74,7 +74,7 @@ namespace Core {
     class SplitterWidget;
     class ToolBarWidget;
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -83,25 +83,25 @@ namespace DataStore {
     class DataStoreExporter;
     class DataStoreImportData;
     class DataStoreImporter;
-}   // namespace DataStore
+} // namespace DataStore
 
 //==============================================================================
 
 namespace GraphPanelWidget {
     class GraphPanelWidget;
-}   // namespace GraphPanelWidget
+} // namespace GraphPanelWidget
 
 //==============================================================================
 
 namespace SEDMLSupport {
     class SedmlFile;
-}   // namespace SEDMLSupport
+} // namespace SEDMLSupport
 
 //==============================================================================
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace SimulationSupport
+} // namespace SimulationSupport
 
 //==============================================================================
 
@@ -422,8 +422,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

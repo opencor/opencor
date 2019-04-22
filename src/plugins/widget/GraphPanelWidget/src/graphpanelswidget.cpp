@@ -423,8 +423,8 @@ void GraphPanelsWidget::synchronizeYAxis()
 
 //==============================================================================
 
-}   // namespace GraphPanelWidget
-}   // namespace OpenCOR
+} // namespace GraphPanelWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

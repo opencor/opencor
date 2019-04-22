@@ -176,8 +176,8 @@ QDockWidget * ZincWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace ZincWindow
-}   // namespace OpenCOR
+} // namespace ZincWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

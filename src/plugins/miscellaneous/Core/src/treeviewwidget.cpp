@@ -327,8 +327,8 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

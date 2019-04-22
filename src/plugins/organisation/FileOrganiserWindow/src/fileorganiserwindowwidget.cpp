@@ -1390,8 +1390,8 @@ void FileOrganiserWindowWidget::fileDeleted(const QString &pFileName)
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

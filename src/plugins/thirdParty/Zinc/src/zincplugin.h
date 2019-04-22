@@ -47,8 +47,8 @@ class ZincPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace Zinc
-}   // namespace OpenCOR
+} // namespace Zinc
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

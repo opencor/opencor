@@ -255,8 +255,8 @@ void TabBarWidgetMacStyle::tabLayout(const QStyleOptionTab *pOption,
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

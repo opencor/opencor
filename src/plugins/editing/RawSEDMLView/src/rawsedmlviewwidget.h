@@ -40,13 +40,13 @@ namespace OpenCOR {
 
 namespace SEDMLEditingView {
     class SedmlEditingViewWidget;
-}   // namespace SEDMLEditingView
+} // namespace SEDMLEditingView
 
 //==============================================================================
 
 namespace EditorWidget {
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -93,8 +93,8 @@ private:
 
 //==============================================================================
 
-}   // namespace RawSEDMLView
-}   // namespace OpenCOR
+} // namespace RawSEDMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

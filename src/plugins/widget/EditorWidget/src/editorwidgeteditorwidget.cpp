@@ -430,7 +430,7 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
     if (pText.isEmpty()) {
         clearHighlighting();
 
-        QsciScintilla::setCursorPosition(mLine, mColumn);  // NOLINT(bugprone-parent-virtual-call)
+        QsciScintilla::setCursorPosition(mLine, mColumn); // NOLINT(bugprone-parent-virtual-call)
     } else {
         // Add the given text to our list of texts to highlight and find
 
@@ -628,8 +628,8 @@ void EditorWidgetEditorWidget::redo()
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

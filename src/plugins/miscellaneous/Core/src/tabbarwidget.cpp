@@ -89,7 +89,6 @@ TabBarWidget::~TabBarWidget()
 TabBarWidget::~TabBarWidget() = default;
 #endif
 
-
 //==============================================================================
 
 int TabBarWidget::oldIndex() const
@@ -157,8 +156,8 @@ QSize TabBarWidget::tabSizeHint(int pIndex) const
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

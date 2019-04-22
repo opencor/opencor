@@ -168,8 +168,8 @@ void FourthOrderRungeKuttaSolver::solve(double &pVoi, double pVoiEnd) const
 
 //==============================================================================
 
-}   // namespace FourthOrderRungeKuttaSolver
-}   // namespace OpenCOR
+} // namespace FourthOrderRungeKuttaSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

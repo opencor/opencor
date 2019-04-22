@@ -191,8 +191,8 @@ DataStore::DataStoreExporterWorker * BiosignalmlDataStoreExporter::workerInstanc
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

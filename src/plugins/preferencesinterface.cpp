@@ -62,7 +62,7 @@ PreferencesWidget::PreferencesWidget(const QString &pName, QWidget *pParent) :
 
 //==============================================================================
 
-}   // namespace Preferences
+} // namespace Preferences
 
 //==============================================================================
 
@@ -92,7 +92,7 @@ QVariant PreferencesInterface::preference(const QString &pName,
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -411,8 +411,8 @@ void WebBrowserWindowWindow::showCustomContextMenu() const
 
 //==============================================================================
 
-}   // namespace WebBrowserWindow
-}   // namespace OpenCOR
+} // namespace WebBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

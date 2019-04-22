@@ -180,8 +180,8 @@ QDockWidget * FileBrowserWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
-}   // namespace OpenCOR
+} // namespace FileBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

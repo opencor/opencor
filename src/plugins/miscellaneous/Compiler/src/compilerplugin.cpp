@@ -44,8 +44,8 @@ PLUGININFO_FUNC CompilerPluginInfo()
 
 //==============================================================================
 
-}   // namespace Compiler
-}   // namespace OpenCOR
+} // namespace Compiler
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

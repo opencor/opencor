@@ -104,7 +104,7 @@ void GeneralPreferencesWidget::savePreferences()
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

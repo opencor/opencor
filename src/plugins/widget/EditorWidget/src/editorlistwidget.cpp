@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
+#include <QClipboard>
 #include <QKeyEvent>
 #include <QMenu>
-#include <QClipboard>
 
 //==============================================================================
 
@@ -98,7 +98,6 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
 
         break;
     }
-
 }
 
 //==============================================================================
@@ -349,8 +348,8 @@ void EditorListWidget::requestItem(const QModelIndex &pItemIndex)
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

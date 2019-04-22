@@ -70,8 +70,8 @@ QwtSymbol::Style SEDMLSUPPORT_EXPORT symbolStyle(const QString &pStringSymbolSty
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

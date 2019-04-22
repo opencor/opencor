@@ -213,8 +213,8 @@ void FileOrganiserWindowWindow::itemDoubleClicked(const QModelIndex &pItemIndex)
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

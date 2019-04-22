@@ -111,7 +111,7 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

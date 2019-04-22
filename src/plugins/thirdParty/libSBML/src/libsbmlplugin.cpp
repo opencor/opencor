@@ -44,8 +44,8 @@ PLUGININFO_FUNC libSBMLPluginInfo()
 
 //==============================================================================
 
-}   // namespace libSBML
-}   // namespace OpenCOR
+} // namespace libSBML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -41,13 +41,13 @@ namespace OpenCOR {
 
 namespace CellMLEditingView {
     class CellmlEditingViewWidget;
-}   // namespace CellMLEditingView
+} // namespace CellMLEditingView
 
 //==============================================================================
 
 namespace EditorWidget {
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -113,8 +113,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace RawCellMLView
-}   // namespace OpenCOR
+} // namespace RawCellMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

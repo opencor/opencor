@@ -1388,8 +1388,8 @@ SedmlFileIssues SedmlFile::issues() const
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -211,8 +211,8 @@ QMap<QString, bool> KINSOLSolverPlugin::solverPropertiesVisibility(const QMap<QS
 
 //==============================================================================
 
-}   // namespace KINSOLSolver
-}   // namespace OpenCOR
+} // namespace KINSOLSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

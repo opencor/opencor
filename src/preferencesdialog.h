@@ -39,7 +39,7 @@ class QStandardItemModel;
 
 namespace Ui {
     class PreferencesDialog;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -54,7 +54,7 @@ class PreferencesInterface;
 
 namespace Preferences {
     class PreferencesWidget;
-}   // namespace Preferences
+} // namespace Preferences
 
 //==============================================================================
 
@@ -134,7 +134,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

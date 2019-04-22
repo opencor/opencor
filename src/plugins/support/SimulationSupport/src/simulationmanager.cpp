@@ -139,8 +139,8 @@ Simulation * SimulationManager::simulation(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

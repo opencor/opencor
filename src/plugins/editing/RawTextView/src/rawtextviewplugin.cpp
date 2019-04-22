@@ -369,8 +369,8 @@ QIcon RawTextViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace RawTextView
-}   // namespace OpenCOR
+} // namespace RawTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -102,8 +102,8 @@ void PmrWebViewerDialog::load(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

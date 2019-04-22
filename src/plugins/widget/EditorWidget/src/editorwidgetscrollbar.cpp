@@ -104,8 +104,8 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

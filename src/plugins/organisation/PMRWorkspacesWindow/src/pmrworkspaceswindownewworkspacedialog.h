@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrWorkspacesWindowNewWorkspaceDialog;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -65,8 +65,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

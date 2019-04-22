@@ -55,7 +55,7 @@ namespace OpenCOR {
 
 namespace Compiler {
     class CompilerEngine;
-}   // namespace Compiler
+} // namespace Compiler
 
 //==============================================================================
 
@@ -211,8 +211,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

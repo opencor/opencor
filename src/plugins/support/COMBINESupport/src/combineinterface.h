@@ -66,8 +66,8 @@ FileTypeInterface COMBINESUPPORT_EXPORT * fileTypeInterface();
 
 //==============================================================================
 
-}   // namespace COMBINESupport
-}   // namespace OpenCOR
+} // namespace COMBINESupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

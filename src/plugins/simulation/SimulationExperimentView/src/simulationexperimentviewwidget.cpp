@@ -771,8 +771,8 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

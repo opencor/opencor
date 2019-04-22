@@ -77,8 +77,8 @@ void MathmlConverter::xslTransformationDone(const QString &pInput,
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

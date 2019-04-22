@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrWorkspacesWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -50,7 +50,7 @@ namespace OpenCOR {
 namespace PMRSupport {
     class PmrWebService;
     class PmrWorkspace;
-}   // namespace PMRSupport
+} // namespace PMRSupport
 
 //==============================================================================
 
@@ -126,8 +126,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

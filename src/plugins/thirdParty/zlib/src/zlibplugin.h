@@ -47,8 +47,8 @@ class zlibPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace zlib
-}   // namespace OpenCOR
+} // namespace zlib
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

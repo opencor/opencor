@@ -342,8 +342,8 @@ QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace SampleView
-}   // namespace OpenCOR
+} // namespace SampleView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

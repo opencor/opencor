@@ -46,7 +46,7 @@ namespace OpenCOR {
 
 namespace Core {
     class TreeViewWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -185,8 +185,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

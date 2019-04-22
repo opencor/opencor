@@ -340,8 +340,8 @@ void SimulationWorker::emitError(const QString &pMessage)
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

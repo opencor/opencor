@@ -47,8 +47,8 @@ class libgit2Plugin : public QObject
 
 //==============================================================================
 
-}   // namespace libgit2
-}   // namespace OpenCOR
+} // namespace libgit2
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class DataStoreDialog;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -81,7 +81,7 @@ private:
 
     QStandardItemModel *mModel;
 
-    QMap<QStandardItem *, DataStoreVariable*> mData;
+    QMap<QStandardItem *, DataStoreVariable *> mData;
     int mNbOfData;
 
     DataStoreVariables selectedData(QStandardItem *pItem) const;
@@ -99,8 +99,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace DataStore
-}   // namespace OpenCOR
+} // namespace DataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

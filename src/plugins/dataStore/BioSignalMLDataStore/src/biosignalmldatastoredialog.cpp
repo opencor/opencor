@@ -134,8 +134,8 @@ QLabel * BiosignalmlDataStoreDialog::boldLabel(const QString &pText)
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

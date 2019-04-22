@@ -44,8 +44,8 @@ PLUGININFO_FUNC OpenSSLPluginInfo()
 
 //==============================================================================
 
-}   // namespace OpenSSL
-}   // namespace OpenCOR
+} // namespace OpenSSL
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

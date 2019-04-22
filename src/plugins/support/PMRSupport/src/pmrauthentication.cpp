@@ -41,9 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
-#include <QDesktopServices>
 
 //==============================================================================
 
@@ -98,8 +98,8 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

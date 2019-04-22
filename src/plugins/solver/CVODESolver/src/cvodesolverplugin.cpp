@@ -351,8 +351,8 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
 
 //==============================================================================
 
-}   // namespace CVODESolver
-}   // namespace OpenCOR
+} // namespace CVODESolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

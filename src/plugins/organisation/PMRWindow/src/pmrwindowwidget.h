@@ -45,7 +45,7 @@ namespace OpenCOR {
 namespace Core {
     class TreeViewWidget;
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -147,8 +147,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWindow
-}   // namespace OpenCOR
+} // namespace PMRWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -222,7 +222,7 @@ void CellmlFileRdfTriple::setRdfTriple(iface::rdf_api::Triple *pRdfTriple)
 {
     // Set the RDF triple's CellML API RDF triple
 
-    mRdfTriple = nullptr;   // This will release the previous one, if any
+    mRdfTriple = nullptr; // This will release the previous one, if any
     mRdfTriple = pRdfTriple;
 }
 
@@ -731,8 +731,8 @@ void CellmlFileRdfTriples::updateCellmlFileModifiedStatus()
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

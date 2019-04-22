@@ -591,7 +591,7 @@ bool QScintillaWidget::event(QEvent *pEvent)
     // Note: see the note on the clearing of some key mappings in the
     //       constructor above...
 
-    return QsciScintillaBase::event(pEvent);  // NOLINT(bugprone-parent-virtual-call)
+    return QsciScintillaBase::event(pEvent); // NOLINT(bugprone-parent-virtual-call)
 }
 
 //==============================================================================
@@ -836,8 +836,8 @@ void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 
 //==============================================================================
 
-}   // namespace QScintillaSupport
-}   // namespace OpenCOR
+} // namespace QScintillaSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

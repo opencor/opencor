@@ -54,7 +54,7 @@ static void * mallocWrapper(void *pData, unsigned int pSize)
 
     // Allocate some memory
 
-    return malloc(pSize);  // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
+    return malloc(pSize); // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
@@ -65,7 +65,7 @@ static void freeWrapper(void *pData, void *pPointer)
 
     // Free the given memory
 
-    free(pPointer);  // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
+    free(pPointer); // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
@@ -76,7 +76,7 @@ static void * reallocWrapper(void *pData, void *pPointer, unsigned int pSize)
 
     // Reallocate some memory
 
-    return realloc(pPointer, pSize);  // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
+    return realloc(pPointer, pSize); // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
@@ -92,8 +92,8 @@ LibXDiffPlugin::LibXDiffPlugin()
 
 //==============================================================================
 
-}   // namespace LibXDiff
-}   // namespace OpenCOR
+} // namespace LibXDiff
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

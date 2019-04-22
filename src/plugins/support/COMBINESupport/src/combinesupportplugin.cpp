@@ -198,8 +198,8 @@ void COMBINESupportPlugin::handleUrl(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace COMBINESupport
-}   // namespace OpenCOR
+} // namespace COMBINESupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

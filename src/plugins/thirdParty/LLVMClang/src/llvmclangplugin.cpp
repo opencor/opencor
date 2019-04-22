@@ -44,8 +44,8 @@ PLUGININFO_FUNC LLVMClangPluginInfo()
 
 //==============================================================================
 
-}   // namespace LLVMClang
-}   // namespace OpenCOR
+} // namespace LLVMClang
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

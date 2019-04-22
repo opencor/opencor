@@ -132,8 +132,8 @@ void HeunSolver::solve(double &pVoi, double pVoiEnd) const
 
 //==============================================================================
 
-}   // namespace HeunSolver
-}   // namespace OpenCOR
+} // namespace HeunSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

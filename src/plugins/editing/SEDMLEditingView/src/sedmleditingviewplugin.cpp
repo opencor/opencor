@@ -366,8 +366,8 @@ void SEDMLEditingViewPlugin::sedmlValidation()
 
 //==============================================================================
 
-}   // namespace SEDMLEditingView
-}   // namespace OpenCOR
+} // namespace SEDMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

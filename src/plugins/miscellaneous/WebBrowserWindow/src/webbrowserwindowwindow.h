@@ -36,7 +36,7 @@ class QMenu;
 
 namespace Ui {
     class WebBrowserWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -91,8 +91,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace WebBrowserWindow
-}   // namespace OpenCOR
+} // namespace WebBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

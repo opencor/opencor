@@ -44,8 +44,8 @@ PLUGININFO_FUNC SamplePluginInfo()
 
 //==============================================================================
 
-}   // namespace Sample
-}   // namespace OpenCOR
+} // namespace Sample
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

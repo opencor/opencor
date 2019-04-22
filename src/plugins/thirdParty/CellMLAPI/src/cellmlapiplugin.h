@@ -47,8 +47,8 @@ class CellMLAPIPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace CellMLAPI
-}   // namespace OpenCOR
+} // namespace CellMLAPI
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

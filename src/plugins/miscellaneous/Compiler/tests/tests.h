@@ -32,8 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace OpenCOR {
 namespace Compiler {
     class CompilerEngine;
-}   // namespace Compiler
-}   // namespace OpenCOR
+} // namespace Compiler
+} // namespace OpenCOR
 
 //==============================================================================
 

@@ -44,8 +44,8 @@ PLUGININFO_FUNC ZincPluginInfo()
 
 //==============================================================================
 
-}   // namespace Zinc
-}   // namespace OpenCOR
+} // namespace Zinc
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -44,8 +44,8 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
 
 //==============================================================================
 
-}   // namespace SUNDIALS
-}   // namespace OpenCOR
+} // namespace SUNDIALS
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
