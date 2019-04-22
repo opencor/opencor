@@ -44,8 +44,8 @@ PLUGININFO_FUNC zlibPluginInfo()
 
 //==============================================================================
 
-}   // namespace zlib
-}   // namespace OpenCOR
+} // namespace zlib
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

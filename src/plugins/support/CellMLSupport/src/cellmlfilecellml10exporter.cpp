@@ -786,8 +786,8 @@ bool CellmlFileCellml10Exporter::saveModel(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

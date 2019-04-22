@@ -45,13 +45,13 @@ namespace OpenCOR {
 
 namespace Core {
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
 namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewerWidget
+} // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -161,8 +161,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

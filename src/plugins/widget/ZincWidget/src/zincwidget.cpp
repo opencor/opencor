@@ -507,8 +507,8 @@ QSize ZincWidget::sizeHint() const
 
 //==============================================================================
 
-}   // namespace ZincWidget
-}   // namespace OpenCOR
+} // namespace ZincWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

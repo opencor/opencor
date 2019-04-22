@@ -849,8 +849,8 @@ int CellmlTextViewLexer::textBytesPosition(const QString &pText,
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

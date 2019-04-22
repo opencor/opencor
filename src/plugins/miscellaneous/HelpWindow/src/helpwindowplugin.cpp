@@ -181,8 +181,8 @@ QDockWidget * HelpWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace HelpWindow
-}   // namespace OpenCOR
+} // namespace HelpWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

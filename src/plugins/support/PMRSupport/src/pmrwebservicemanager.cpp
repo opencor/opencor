@@ -288,8 +288,8 @@ void PmrWebServiceManager::update(const QString &pPmrUrl)
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -422,8 +422,8 @@ void CvodeSolver::solve(double &pVoi, double pVoiEnd) const
 
 //==============================================================================
 
-}   // namespace CVODESolver
-}   // namespace OpenCOR
+} // namespace CVODESolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

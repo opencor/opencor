@@ -214,8 +214,8 @@ void StandardFileManager::rename(const QString &pOldFileName,
 
 //==============================================================================
 
-}   // namespace StandardSupport
-}   // namespace OpenCOR
+} // namespace StandardSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -50,13 +50,13 @@ namespace OpenCOR {
 
 namespace Core {
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
 namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewerWidget
+} // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -69,7 +69,8 @@ class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsItem {
+class CellmlAnnotationViewMetadataEditDetailsItem
+{
 public:
     explicit CellmlAnnotationViewMetadataEditDetailsItem(const QString &pName = QString(),
                                                          const QString &pResource = QString(),
@@ -221,8 +222,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

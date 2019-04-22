@@ -252,8 +252,8 @@ DataStore::DataStoreExporterWorker * CsvDataStoreExporter::workerInstance(DataSt
 
 //==============================================================================
 
-}   // namespace CSVDataStore
-}   // namespace OpenCOR
+} // namespace CSVDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

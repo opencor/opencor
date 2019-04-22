@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace llvm {
     class ExecutionEngine;
-}   // namespace llvm
+} // namespace llvm
 
 //==============================================================================
 
@@ -68,8 +68,8 @@ private:
 
 //==============================================================================
 
-}   // namespace Compiler
-}   // namespace OpenCOR
+} // namespace Compiler
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

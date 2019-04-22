@@ -39,8 +39,8 @@ double add(double pNb1, double pNb2)
 
 //==============================================================================
 
-}   // namespace Sample
-}   // namespace OpenCOR
+} // namespace Sample
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

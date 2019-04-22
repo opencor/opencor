@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class GraphPanelWidgetCustomAxesDialog;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -75,8 +75,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace GraphPanelWidget
-}   // namespace OpenCOR
+} // namespace GraphPanelWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

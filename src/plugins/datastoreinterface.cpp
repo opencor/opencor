@@ -881,7 +881,7 @@ void DataStoreExporter::exportData(DataStoreExportData *pDataStoreData)
 
 //==============================================================================
 
-}   // namespace DataStore
+} // namespace DataStore
 
 //==============================================================================
 
@@ -889,7 +889,7 @@ DataStoreInterface::~DataStoreInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

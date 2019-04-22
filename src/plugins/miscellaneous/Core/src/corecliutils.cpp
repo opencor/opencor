@@ -87,8 +87,8 @@ namespace Core {
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 
@@ -522,7 +522,7 @@ void doNothing(quint64 pMax)
 #ifdef Q_OS_WIN
         ;
 #else
-        asm("nop");  // NOLINT(hicpp-no-assembler)
+        asm("nop"); // NOLINT(hicpp-no-assembler)
 #endif
     }
 }
@@ -558,7 +558,7 @@ void doNothing(const quint64 *pMax, const bool *pStopped)
 #ifdef Q_OS_WIN
         ;
 #else
-        asm("nop");  // NOLINT(hicpp-no-assembler)
+        asm("nop"); // NOLINT(hicpp-no-assembler)
 #endif
     }
 }
@@ -1077,8 +1077,8 @@ QStringList droppedFileNames(QDropEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

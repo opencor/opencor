@@ -75,8 +75,8 @@ DataStoreInterface CORE_EXPORT * dataStoreInterface(FileTypeInterface *pFileType
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -47,7 +47,6 @@ PLUGININFO_FUNC HeunSolverPluginInfo()
 // I18n interface
 //==============================================================================
 
-
 void HeunSolverPlugin::retranslateUi()
 {
     // We don't handle this interface...
@@ -59,7 +58,6 @@ void HeunSolverPlugin::retranslateUi()
 //==============================================================================
 // Solver interface
 //==============================================================================
-
 
 Solver::Solver * HeunSolverPlugin::solverInstance() const
 {
@@ -150,8 +148,8 @@ QMap<QString, bool> HeunSolverPlugin::solverPropertiesVisibility(const QMap<QStr
 
 //==============================================================================
 
-}   // namespace HeunSolver
-}   // namespace OpenCOR
+} // namespace HeunSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -36,8 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QCheckBox>
 #include <QApplication>
+#include <QCheckBox>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QDir>
@@ -828,8 +828,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     QByteArray oldByteArray = pOld.toUtf8();
     QByteArray newByteArray = pNew.toUtf8();
 
-    xdl_init_mmfile(&oldBlock, oldByteArray.size(), XDL_MMF_ATOMIC);  // NOLINT(hicpp-signed-bitwise)
-    xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC);  // NOLINT(hicpp-signed-bitwise)
+    xdl_init_mmfile(&oldBlock, oldByteArray.size(), XDL_MMF_ATOMIC); // NOLINT(hicpp-signed-bitwise)
+    xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC); // NOLINT(hicpp-signed-bitwise)
 
     memcpy(xdl_mmfile_writeallocate(&oldBlock, oldByteArray.size()),
            oldByteArray.constData(), size_t(oldByteArray.size()));
@@ -1120,8 +1120,8 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

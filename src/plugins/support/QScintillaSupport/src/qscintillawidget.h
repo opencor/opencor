@@ -161,8 +161,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace QScintillaSupport
-}   // namespace OpenCOR
+} // namespace QScintillaSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

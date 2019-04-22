@@ -150,8 +150,8 @@ QMap<QString, bool> SecondOrderRungeKuttaSolverPlugin::solverPropertiesVisibilit
 
 //==============================================================================
 
-}   // namespace SecondOrderRungeKuttaSolver
-}   // namespace OpenCOR
+} // namespace SecondOrderRungeKuttaSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

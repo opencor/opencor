@@ -49,21 +49,20 @@ namespace OpenCOR {
 
 namespace Core {
     class SplitterWidget;
-}   // namespace Core
-
+} // namespace Core
 
 //==============================================================================
 
 namespace PMRSupport {
     class PmrWorkspace;
     class PmrWorkspaceFileNode;
-}   // namespace PMRSupport
+} // namespace PMRSupport
 
 //==============================================================================
 
 namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewerWidget
+} // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -181,8 +180,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -44,8 +44,8 @@ PLUGININFO_FUNC libNuMLPluginInfo()
 
 //==============================================================================
 
-}   // namespace libNuML
-}   // namespace OpenCOR
+} // namespace libNuML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

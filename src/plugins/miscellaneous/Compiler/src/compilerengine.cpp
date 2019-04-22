@@ -376,8 +376,8 @@ void * CompilerEngine::getFunction(const QString &pFunctionName)
 
 //==============================================================================
 
-}   // namespace Compiler
-}   // namespace OpenCOR
+} // namespace Compiler
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

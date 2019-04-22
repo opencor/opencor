@@ -182,7 +182,7 @@ void SplashScreenWindow::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -94,8 +94,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLTools
-}   // namespace OpenCOR
+} // namespace CellMLTools
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -624,8 +624,8 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
                      componentVariable != nullptr; componentVariable = componentVariablesIter->nextVariable()) {
-                        variablesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Type::Variable,
-                                                                                           componentVariable));
+                    variablesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Type::Variable,
+                                                                                       componentVariable));
                 }
             }
         }
@@ -1045,8 +1045,8 @@ void CellmlAnnotationViewCellmlListWidget::openImport()
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

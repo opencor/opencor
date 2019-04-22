@@ -373,8 +373,8 @@ void CellMLEditingViewPlugin::cellmlValidation()
 
 //==============================================================================
 
-}   // namespace CellMLEditingView
-}   // namespace OpenCOR
+} // namespace CellMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

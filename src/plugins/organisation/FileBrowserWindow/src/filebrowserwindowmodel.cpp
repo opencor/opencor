@@ -57,8 +57,8 @@ Qt::ItemFlags FileBrowserWindowModel::flags(const QModelIndex &pIndex) const
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
-}   // namespace OpenCOR
+} // namespace FileBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

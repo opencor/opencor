@@ -203,8 +203,8 @@ void SedmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 
 //==============================================================================
 
-}   // namespace SEDMLEditingView
-}   // namespace OpenCOR
+} // namespace SEDMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

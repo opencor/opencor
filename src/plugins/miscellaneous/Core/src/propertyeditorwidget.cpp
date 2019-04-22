@@ -33,8 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
 #include <QColorDialog>
-#include <QHeaderView>
 #include <QEvent>
+#include <QHeaderView>
 #include <QKeyEvent>
 #include <QMainWindow>
 #include <QModelIndex>
@@ -2380,8 +2380,8 @@ bool PropertyEditorWidget::showUnits() const
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

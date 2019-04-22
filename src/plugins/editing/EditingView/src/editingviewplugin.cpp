@@ -686,8 +686,8 @@ void EditingViewPlugin::doWordWrap()
 
 //==============================================================================
 
-}   // namespace EditingView
-}   // namespace OpenCOR
+} // namespace EditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

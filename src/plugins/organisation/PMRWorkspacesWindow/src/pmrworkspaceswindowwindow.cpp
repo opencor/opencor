@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "i18ninterface.h"
-#include "toolbarwidget.h"
 #include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
@@ -34,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
 #include "preferencesinterface.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -532,8 +532,8 @@ void PmrWorkspacesWindowWindow::actionPmrTriggered()
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

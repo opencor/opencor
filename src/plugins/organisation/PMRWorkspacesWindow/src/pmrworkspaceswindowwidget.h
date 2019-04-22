@@ -46,13 +46,13 @@ namespace OpenCOR {
 namespace Core {
     class TreeViewWidget;
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
 namespace PMRSupport {
     class PmrWebService;
-}   // namespace PMRSupport
+} // namespace PMRSupport
 
 //==============================================================================
 
@@ -338,8 +338,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

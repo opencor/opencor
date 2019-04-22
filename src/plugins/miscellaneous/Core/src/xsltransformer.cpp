@@ -103,8 +103,8 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

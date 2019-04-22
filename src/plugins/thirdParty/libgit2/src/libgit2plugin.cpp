@@ -44,8 +44,8 @@ PLUGININFO_FUNC libgit2PluginInfo()
 
 //==============================================================================
 
-}   // namespace libgit2
-}   // namespace OpenCOR
+} // namespace libgit2
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

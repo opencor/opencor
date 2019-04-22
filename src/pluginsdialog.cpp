@@ -703,7 +703,7 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

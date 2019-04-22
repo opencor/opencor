@@ -112,8 +112,8 @@ void SampleViewWidget::update(const QString &pFileName)
 
 //==============================================================================
 
-}   // namespace SampleView
-}   // namespace OpenCOR
+} // namespace SampleView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -44,8 +44,8 @@ PLUGININFO_FUNC CellMLAPIPluginInfo()
 
 //==============================================================================
 
-}   // namespace CellMLAPI
-}   // namespace OpenCOR
+} // namespace CellMLAPI
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

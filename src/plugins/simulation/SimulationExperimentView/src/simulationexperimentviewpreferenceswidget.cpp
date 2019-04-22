@@ -293,8 +293,8 @@ void SimulationExperimentViewPreferencesWidget::headerSectionResized(int pIndex,
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

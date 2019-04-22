@@ -41,7 +41,7 @@ class QTextEdit;
 
 namespace Ui {
     class EditorWidgetFindReplaceWidget;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -134,8 +134,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

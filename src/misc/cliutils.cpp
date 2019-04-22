@@ -57,7 +57,7 @@ static QtMessageHandler gDefaultMessageHandler;
 
 #ifdef QT_DEBUG
 void messageHandler(QtMsgType pType, const QMessageLogContext &pContext,
-                     const QString &pMessage)
+                    const QString &pMessage)
 {
     // Handle all messages, except a specific warning from libpng
     // Note: https://wiki.archlinux.org/index.php/Libpng_errors explains the
@@ -190,7 +190,7 @@ QString prettyProductName()
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

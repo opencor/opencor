@@ -180,8 +180,8 @@ QDockWidget * FileOrganiserWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -43,7 +43,7 @@ class EditingViewInterface;
 
 namespace EditorWidget {
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -130,8 +130,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace EditingView
-}   // namespace OpenCOR
+} // namespace EditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

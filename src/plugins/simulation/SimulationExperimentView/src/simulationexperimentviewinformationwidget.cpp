@@ -266,8 +266,8 @@ void SimulationExperimentViewInformationWidget::graphPanelGraphsModeChanged(Simu
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
