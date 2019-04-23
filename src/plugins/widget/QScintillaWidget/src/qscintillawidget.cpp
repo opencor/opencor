@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-namespace QScintillaSupport {
+namespace QScintillaWidget {
 
 //==============================================================================
 
@@ -836,7 +836,7 @@ void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 
 //==============================================================================
 
-} // namespace QScintillaSupport
+} // namespace QScintillaWidget
 } // namespace OpenCOR
 
 //==============================================================================

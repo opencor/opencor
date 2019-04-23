@@ -42,7 +42,7 @@ class EditorWidgetScrollBar;
 
 //==============================================================================
 
-class EDITORWIDGET_EXPORT EditorWidgetEditorWidget : public QScintillaSupport::QScintillaWidget
+class EDITORWIDGET_EXPORT EditorWidgetEditorWidget : public QScintillaWidget::QScintillaWidget
 {
     Q_OBJECT
 

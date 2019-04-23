@@ -42,7 +42,7 @@ namespace EditorWidget {
 EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
                                                    EditorWidgetFindReplaceWidget *pFindReplace,
                                                    EditorWidget *pParent) :
-    QScintillaSupport::QScintillaWidget(pLexer, pParent),
+    QScintillaWidget::QScintillaWidget(pLexer, pParent),
     mOwner(pParent),
     mFindReplace(pFindReplace),
     mReadOnlyStyles(QIntList()),
@@ -110,7 +110,7 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         // Default handling of the event
 
-        QScintillaSupport::QScintillaWidget::keyPressEvent(pEvent);
+        QScintillaWidget::QScintillaWidget::keyPressEvent(pEvent);
 
         // Update our highlighting all if our find/replace widget is visible and
         // has some find text and we didn't press one of the navigation keys,
@@ -161,7 +161,7 @@ void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    QScintillaSupport::QScintillaWidget::mouseDoubleClickEvent(pEvent);
+    QScintillaWidget::QScintillaWidget::mouseDoubleClickEvent(pEvent);
 
     // Check whether something has been selected and, if so, highlight all of
     // its occurrences
@@ -184,7 +184,7 @@ void EditorWidgetEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    QScintillaSupport::QScintillaWidget::mousePressEvent(pEvent);
+    QScintillaWidget::QScintillaWidget::mousePressEvent(pEvent);
 
     // Clear any highlighting that we might have, if our find/replace widget is
     // not visible
@@ -200,7 +200,7 @@ void EditorWidgetEditorWidget::setReadOnly(bool pReadOnly)
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::setReadOnly(pReadOnly);
+    QScintillaWidget::QScintillaWidget::setReadOnly(pReadOnly);
 
     // Update our background colour
 
@@ -481,7 +481,7 @@ void EditorWidgetEditorWidget::replace()
                                mFindReplace->isCaseSensitive()?
                                    QRegularExpression::NoPatternOption:
                                    QRegularExpression::CaseInsensitiveOption).match(selectedText()).hasMatch()) {
-            QScintillaSupport::QScintillaWidget::replace(mFindReplace->replaceText());
+            QScintillaWidget::QScintillaWidget::replace(mFindReplace->replaceText());
         }
     } else {
         // The find/replace is done using a simple match, which may be case
@@ -507,7 +507,7 @@ void EditorWidgetEditorWidget::replace()
                                     mFindReplace->isCaseSensitive()?
                                         Qt::CaseSensitive:
                                         Qt::CaseInsensitive) == 0) {
-            QScintillaSupport::QScintillaWidget::replace(mFindReplace->replaceText());
+            QScintillaWidget::QScintillaWidget::replace(mFindReplace->replaceText());
         }
     }
 }
@@ -552,7 +552,7 @@ void EditorWidgetEditorWidget::cut()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::cut();
+    QScintillaWidget::QScintillaWidget::cut();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
@@ -568,7 +568,7 @@ void EditorWidgetEditorWidget::paste()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::paste();
+    QScintillaWidget::QScintillaWidget::paste();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
@@ -584,7 +584,7 @@ void EditorWidgetEditorWidget::del()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::del();
+    QScintillaWidget::QScintillaWidget::del();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
@@ -600,7 +600,7 @@ void EditorWidgetEditorWidget::undo()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::undo();
+    QScintillaWidget::QScintillaWidget::undo();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
@@ -616,7 +616,7 @@ void EditorWidgetEditorWidget::redo()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::redo();
+    QScintillaWidget::QScintillaWidget::redo();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text

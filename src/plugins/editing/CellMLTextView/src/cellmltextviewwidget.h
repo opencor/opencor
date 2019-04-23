@@ -50,9 +50,9 @@ namespace EditorWidget {
 
 //==============================================================================
 
-namespace QScintillaSupport {
+namespace QScintillaWidget {
     class QScintillaWidget;
-} // namespace QScintillaSupport
+} // namespace QScintillaWidget
 
 //==============================================================================
 

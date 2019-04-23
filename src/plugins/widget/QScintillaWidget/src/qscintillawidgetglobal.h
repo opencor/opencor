@@ -18,17 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// QScintilla support global
+// QScintilla widget global
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#ifdef QScintillaSupport_PLUGIN
-    #define QSCINTILLASUPPORT_EXPORT Q_DECL_EXPORT
+#ifdef QScintillaWidget_PLUGIN
+    #define QSCINTILLAWIDGET_EXPORT Q_DECL_EXPORT
 #else
-    #define QSCINTILLASUPPORT_EXPORT Q_DECL_IMPORT
+    #define QSCINTILLAWIDGET_EXPORT Q_DECL_IMPORT
 #endif
 
 //==============================================================================
