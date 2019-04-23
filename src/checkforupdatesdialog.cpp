@@ -116,7 +116,7 @@ void CheckForUpdatesEngine::check()
         } else {
             mStatus =  tr("The version information is mal-formatted.")
                       +"<br/>"
-                      +tr("Please <a href=\"http://opencor.ws/user/contactUs.html\">contact us</a> about this error.");
+                      +tr(R"(Please <a href="http://opencor.ws/user/contactUs.html">contact us</a> about this error.)");
         }
     } else {
         mStatus = formatMessage(errorMessage, false, true);
