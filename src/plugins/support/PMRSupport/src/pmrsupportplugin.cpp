@@ -40,8 +40,8 @@ PLUGININFO_FUNC PMRSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="https://models.physiomeproject.org/">PMR</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="https://models.physiomeproject.org/">PMR</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "Core" << "libgit2" << "OAuth" << "WebViewerWidget",
