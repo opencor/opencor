@@ -254,10 +254,10 @@ void SEDMLSupportPlugin::newSedmlFile()
     Core::FileManager::Status createStatus =
 #endif
     fileManagerInstance->create(QString(),
-                                QString("<?xml version='1.0' encoding='UTF-8'?>\n"
-                                        "<sedML level=\"1\" version=\"2\" xmlns=\"http://sed-ml.org/sed-ml/level1/version2\">\n"
-                                        "    <!-- Your code goes here-->\n"
-                                        "</sedML>\n"));
+                                QString( "<?xml version='1.0' encoding='UTF-8'?>\n"
+                                        R"(<sedML level="1" version="2" xmlns="http://sed-ml.org/sed-ml/level1/version2">)""\n"
+                                         "    <!-- Your code goes here-->\n"
+                                         "</sedML>\n"));
 
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created

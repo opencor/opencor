@@ -131,9 +131,9 @@ void UserMessageWidget::updateGui()
                                        "%3"
                                        "    </tbody>\n"
                                        "</table>\n";
-        static const QString Icon = "            <td>\n"
-                                    "                <img src=\"%1\">\n"
-                                    "            </td>\n";
+        static const QString Icon =  "            <td>\n"
+                                    R"(                <img src="%1">)""\n"
+                                     "            </td>\n";
         static const QString ExtraMessage = "        <tr valign=middle>\n"
                                             "%1"
                                             "            <td align=center>\n"
