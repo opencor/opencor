@@ -24,5 +24,5 @@ add_plugin(EditorWidget
     UIS
         src/editorwidgetfindreplacewidget.ui
     PLUGINS
-        QScintillaSupport
+        QScintillaWidget
 )

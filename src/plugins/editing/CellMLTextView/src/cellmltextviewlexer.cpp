@@ -163,7 +163,7 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
     mFullText = editor()->text();
     mFullTextUtf8 = mFullText.toUtf8();
 
-    mEolString = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString();
+    mEolString = qobject_cast<QScintillaWidget::QScintillaWidget *>(editor())->eolString();
 
     styleText(pBytesStart, pBytesEnd, text, false);
 

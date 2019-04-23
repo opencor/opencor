@@ -1,12 +1,12 @@
-project(QScintillaSupportPlugin)
+project(QScintillaWidgetPlugin)
 
 # Add the plugin
 
-add_plugin(QScintillaSupport
+add_plugin(QScintillaWidget
     SOURCES
         ../../plugininfo.cpp
 
-        src/qscintillasupportplugin.cpp
+        src/qscintillawidgetplugin.cpp
         src/qscintillawidget.cpp
     PLUGINS
         Core
