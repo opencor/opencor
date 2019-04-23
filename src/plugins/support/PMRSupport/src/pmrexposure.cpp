@@ -113,8 +113,8 @@ QString PmrExposure::toHtml() const
 {
     // Return an HTML description of ourselves
 
-    return QString("<a href=\"%1\">%2</a>").arg(mUrl)
-                                           .arg(mName);
+    return QString(R"(<a href="%1">%2</a>)").arg(mUrl)
+                                            .arg(mName);
 }
 
 //==============================================================================

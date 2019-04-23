@@ -132,7 +132,7 @@ void PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged(const QString &p
     } else if (pCurrentText == StagingInstance) {
         mGui->noteValue->setText(tr("the staging instance is selected. It is used for public testing/preview of PMR developments. Data on this instance is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise."));
     } else if (pCurrentText == TeachingInstance) {
-        mGui->noteValue->setText(tr("the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the <a href=\"https://lists.cellml.org/sympa/info/cellml-discussion\">cellml-discussion mailing list</a>."));
+        mGui->noteValue->setText(tr(R"(the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the <a href="https://lists.cellml.org/sympa/info/cellml-discussion">cellml-discussion mailing list</a>.)"));
     } else {
         mGui->noteValue->setText(QString());
     }

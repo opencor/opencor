@@ -243,12 +243,12 @@ void PmrWebService::requestNewWorkspace(const QString &pName,
 {
     // Create a new workspace
 
-    static const QString CreateWorkspaceJson = "{ \"template\": { \"data\": ["
-                                               "  { \"name\": \"form.widgets.title\", \"value\": \"%1\" },"
-                                               "  { \"name\": \"form.widgets.description\", \"value\": \"%2\" },"
-                                               "  { \"name\": \"form.widgets.storage\", \"value\": \"git\" },"
-                                               "  { \"name\": \"form.buttons.add\", \"value\": \"Add\" }"
-                                               "] } }";
+    static const QString CreateWorkspaceJson = R"({ "template": { "data": [)"
+                                               R"(  { "name": "form.widgets.title", "value": "%1" },)"
+                                               R"(  { "name": "form.widgets.description", "value": "%2" },)"
+                                               R"(  { "name": "form.widgets.storage", "value": "git" },)"
+                                               R"(  { "name": "form.buttons.add", "value": "Add" })"
+                                                "] } }";
 
     QJsonDocument createWorkspaceJson = QJsonDocument::fromJson(QString(CreateWorkspaceJson).arg(pName)
                                                                                             .arg(pDescription).toUtf8());
@@ -667,7 +667,7 @@ void PmrWebService::emitInformation(const QString &pMessage)
     // Let people know about the given information message
 
     emit information( pMessage+"<br/><br/>"
-                     +tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."));
+                     +tr(R"(<strong>Note:</strong> you might want to email <a href="mailto: help@physiomeproject.org">help@physiomeproject.org</a> and ask why this is the case.)"));
 }
 
 //==============================================================================
@@ -676,7 +676,7 @@ void PmrWebService::forbidden(const QString &pUrl)
 {
     // Let people know that access to the given URL is forbidden
 
-    emitInformation(tr("Access to <a href=\"%1\">%1</a> is forbidden (you might need to reauthenticate).").arg(pUrl));
+    emitInformation(tr(R"(Access to <a href="%1">%1</a> is forbidden (you might need to reauthenticate).)").arg(pUrl));
 }
 
 //==============================================================================
