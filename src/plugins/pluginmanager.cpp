@@ -49,7 +49,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     // Retrieve OpenCOR's plugins directory
     // Note #1: the plugin's directory is retrieved in main()...
     // Note #2: we use QDir().canonicalPath() to ensure that our plugins
-    //          directory uses "/" (and not a mixture of "/" and "\"), which is
+    //          directory use "/" (and not a mixture of "/" and "\"), which is
     //          critical on Windows...
 
     mPluginsDir = QDir(QCoreApplication::libraryPaths().first()).canonicalPath()+"/"+qAppName();
