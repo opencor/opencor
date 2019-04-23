@@ -904,13 +904,13 @@ void cleanDomElement(QDomElement *pDomElement,
             QDomAttr attributeNode = domElementAttributes.item(0).toAttr();
 
             if (attributeNode.namespaceURI().isEmpty()) {
-                serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
+                serialisedAttributes << attributeNode.name()+R"(=")"+attributeNode.value().toHtmlEscaped()+R"(")";
             } else {
-                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
+                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+R"(=")"+attributeNode.value().toHtmlEscaped()+R"(")";
 
                 if (   (attributeNode.prefix() != pDomElement->prefix())
                     && (attributeNode.namespaceURI() != pDomElement->namespaceURI())) {
-                    serialisedAttributes << "xmlns:"+attributeNode.prefix()+"=\""+attributeNode.namespaceURI()+"\"";
+                    serialisedAttributes << "xmlns:"+attributeNode.prefix()+R"(=")"+attributeNode.namespaceURI()+R"(")";
                 }
             }
 
@@ -990,7 +990,7 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
     // Manually serialise the elements' attributes
 
     for (const auto &elementAttribute : elementsAttributes.keys()) {
-        res.replace(elementAttribute+"=\"\"", elementsAttributes.value(elementAttribute));
+        res.replace(elementAttribute+R"(="")", elementsAttributes.value(elementAttribute));
     }
 
     return res;
