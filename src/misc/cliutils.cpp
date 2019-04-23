@@ -174,7 +174,7 @@ QString applicationDescription(bool pGuiMode)
 {
     // Return the application description
 
-    QString res = QObject::tr("%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files.").arg("<a href=\""+QString(HomePageUrl)+"\">"+qAppName()+"</a>");
+    QString res = QObject::tr(R"(%1 is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href="http://www.cellml.org/">CellML</a> files.)").arg(R"(<a href=")"+QString(HomePageUrl)+R"(">)"+qAppName()+"</a>");
 
     return pGuiMode?res:plainString(res);
 }

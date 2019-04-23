@@ -170,7 +170,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(MaximumStepId)) {
         maximumStep = mProperties.value(MaximumStepId).toDouble();
     } else {
-        emit error(tr("the \"Maximum step\" property value could not be retrieved"));
+        emit error(tr(R"(the "Maximum step" property value could not be retrieved)"));
 
         return;
     }
@@ -178,7 +178,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(MaximumNumberOfStepsId)) {
         maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
     } else {
-        emit error(tr("the \"Maximum number of steps\" property value could not be retrieved"));
+        emit error(tr(R"(the "Maximum number of steps" property value could not be retrieved)"));
 
         return;
     }
@@ -186,7 +186,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(IntegrationMethodId)) {
         integrationMethod = mProperties.value(IntegrationMethodId).toString();
     } else {
-        emit error(tr("the \"Integration method\" property value could not be retrieved"));
+        emit error(tr(R"(the "Integration method" property value could not be retrieved)"));
 
         return;
     }
@@ -219,7 +219,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                     if (mProperties.contains(PreconditionerId)) {
                         preconditioner = mProperties.value(PreconditionerId).toString();
                     } else {
-                        emit error(tr("the \"Preconditioner\" property value could not be retrieved"));
+                        emit error(tr(R"(the "Preconditioner" property value could not be retrieved)"));
 
                         return;
                     }
@@ -237,12 +237,12 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                         upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
 
                         if (upperHalfBandwidth >= pRatesStatesCount) {
-                            emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+                            emit error(tr(R"(the "Upper half-bandwidth" property must have a value between 0 and %1)").arg(pRatesStatesCount-1));
 
                             return;
                         }
                     } else {
-                        emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
+                        emit error(tr(R"(the "Upper half-bandwidth" property value could not be retrieved)"));
 
                         return;
                     }
@@ -251,24 +251,24 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
                         lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
 
                         if (lowerHalfBandwidth >= pRatesStatesCount) {
-                            emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+                            emit error(tr(R"(the "Lower half-bandwidth" property must have a value between 0 and %1)").arg(pRatesStatesCount-1));
 
                             return;
                         }
                     } else {
-                        emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
+                        emit error(tr(R"(the "Lower half-bandwidth" property value could not be retrieved)"));
 
                         return;
                     }
                 }
             } else {
-                emit error(tr("the \"Linear solver\" property value could not be retrieved"));
+                emit error(tr(R"(the "Linear solver" property value could not be retrieved)"));
 
                 return;
             }
         }
     } else {
-        emit error(tr("the \"Iteration type\" property value could not be retrieved"));
+        emit error(tr(R"(the "Iteration type" property value could not be retrieved)"));
 
         return;
     }
@@ -276,7 +276,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(RelativeToleranceId)) {
         relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
     } else {
-        emit error(tr("the \"Relative tolerance\" property value could not be retrieved"));
+        emit error(tr(R"(the "Relative tolerance" property value could not be retrieved)"));
 
         return;
     }
@@ -284,7 +284,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(AbsoluteToleranceId)) {
         absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
     } else {
-        emit error(tr("the \"Absolute tolerance\" property value could not be retrieved"));
+        emit error(tr(R"(the "Absolute tolerance" property value could not be retrieved)"));
 
         return;
     }
@@ -292,7 +292,7 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(InterpolateSolutionId)) {
         mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
     } else {
-        emit error(tr("the \"Interpolate solution\" property value could not be retrieved"));
+        emit error(tr(R"(the "Interpolate solution" property value could not be retrieved)"));
 
         return;
     }

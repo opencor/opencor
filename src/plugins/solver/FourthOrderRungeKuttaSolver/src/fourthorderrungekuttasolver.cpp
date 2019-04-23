@@ -62,7 +62,7 @@ void FourthOrderRungeKuttaSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(StepId)) {
         mStep = mProperties.value(StepId).toDouble();
     } else {
-        emit error(tr("the \"Step\" property value could not be retrieved"));
+        emit error(tr(R"(the "Step" property value could not be retrieved)"));
 
         return;
     }

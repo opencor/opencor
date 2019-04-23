@@ -877,9 +877,9 @@ void SimulationExperimentViewSimulationWidget::updateInvalidModelMessageWidget()
 //==============================================================================
 
 static const char *OutputTab  = "&nbsp;&nbsp;&nbsp;&nbsp;";
-static const char *OutputGood = " class=\"good\"";
-static const char *OutputInfo = " class=\"info\"";
-static const char *OutputBad  = " class=\"bad\"";
+static const char *OutputGood = R"( class="good")";
+static const char *OutputInfo = R"( class="info")";
+static const char *OutputBad  = R"( class="bad")";
 static const char *OutputBrLn = "<br/>\n";
 
 //==============================================================================
