@@ -44,8 +44,8 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="http://www.sed-ml.org/">SED-ML</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="http://www.sed-ml.org/">SED-ML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "CellMLSupport" << "libSEDML" << "Qwt",
@@ -254,10 +254,10 @@ void SEDMLSupportPlugin::newSedmlFile()
     Core::FileManager::Status createStatus =
 #endif
     fileManagerInstance->create(QString(),
-                                QString("<?xml version='1.0' encoding='UTF-8'?>\n"
-                                        "<sedML level=\"1\" version=\"2\" xmlns=\"http://sed-ml.org/sed-ml/level1/version2\">\n"
-                                        "    <!-- Your code goes here-->\n"
-                                        "</sedML>\n"));
+                                QString( "<?xml version='1.0' encoding='UTF-8'?>\n"
+                                        R"(<sedML level="1" version="2" xmlns="http://sed-ml.org/sed-ml/level1/version2">)""\n"
+                                         "    <!-- Your code goes here-->\n"
+                                         "</sedML>\n"));
 
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created

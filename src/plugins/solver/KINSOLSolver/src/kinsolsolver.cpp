@@ -224,7 +224,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
         if (mProperties.contains(MaximumNumberOfIterationsId)) {
             maximumNumberOfIterationsValue = mProperties.value(MaximumNumberOfIterationsId).toInt();
         } else {
-            emit error(tr("the \"Maximum number of iterations\" property value could not be retrieved"));
+            emit error(tr(R"(the "Maximum number of iterations" property value could not be retrieved)"));
 
             return;
         }
@@ -237,12 +237,12 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
                     upperHalfBandwidthValue = mProperties.value(UpperHalfBandwidthId).toInt();
 
                     if (upperHalfBandwidthValue >= pSize) {
-                        emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+                        emit error(tr(R"(the "Upper half-bandwidth" property must have a value between 0 and %1)").arg(pSize-1));
 
                         return;
                     }
                 } else {
-                    emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
+                    emit error(tr(R"(the "Upper half-bandwidth" property value could not be retrieved)"));
 
                     return;
                 }
@@ -251,18 +251,18 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
                     lowerHalfBandwidthValue = mProperties.value(LowerHalfBandwidthId).toInt();
 
                     if (lowerHalfBandwidthValue >= pSize) {
-                        emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+                        emit error(tr(R"(the "Lower half-bandwidth" property must have a value between 0 and %1)").arg(pSize-1));
 
                         return;
                     }
                 } else {
-                    emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
+                    emit error(tr(R"(the "Lower half-bandwidth" property value could not be retrieved)"));
 
                     return;
                 }
             }
         } else {
-            emit error(tr("the \"Linear solver\" property value could not be retrieved"));
+            emit error(tr(R"(the "Linear solver" property value could not be retrieved)"));
 
             return;
         }

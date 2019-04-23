@@ -130,7 +130,7 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
                           mHelpEngine->fileData(url):
                           mErrorMessageTemplate.arg(tr("Error"))
                                                .arg(tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.")
-                                               .arg(tr("Please <a href=\"contactUs.html\">contact us</a> about this error."))
+                                               .arg(tr(R"(Please <a href="contactUs.html">contact us</a> about this error.)"))
                                                .arg(Core::copyright()).toUtf8();
 
     // Return the requested document or an error message

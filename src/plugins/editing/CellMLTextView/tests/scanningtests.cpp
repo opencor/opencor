@@ -687,14 +687,14 @@ void ScanningTests::scanningStringTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewScanner scanner;
 
-    scanner.setText("\"This is a string...\"");
+    scanner.setText(R"("This is a string...")");
 
     QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::String);
     QCOMPARE(scanner.string(), QString("This is a string..."));
     scanner.getNextToken();
     QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
-    scanner.setText("A string: \"This is a string...\".");
+    scanner.setText(R"(A string: "This is a string...".)");
 
     QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
     QCOMPARE(scanner.string(), QString("A"));
@@ -712,7 +712,7 @@ void ScanningTests::scanningStringTests()
     scanner.getNextToken();
     QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
-    scanner.setText("\"This is an incomplete string...");
+    scanner.setText(R"("This is an incomplete string...)");
 
     QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Invalid);
     QCOMPARE(scanner.string(), QString("This is an incomplete string..."));

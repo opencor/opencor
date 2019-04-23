@@ -45,8 +45,8 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.cellml.org/\">CellML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="http://www.cellml.org/">CellML</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="http://www.cellml.org/">CellML</a>.)"));
 
     return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "CellMLAPI" << "Compiler" << "StandardSupport",
@@ -255,10 +255,10 @@ void CellMLSupportPlugin::newCellmlFile()
     Core::FileManager::Status createStatus =
 #endif
     fileManagerInstance->create(QString(),
-                                QString("<?xml version='1.0' encoding='UTF-8'?>\n"
-                                        "<model name=\"my_model\" xmlns=\"http://www.cellml.org/cellml/%1#\" xmlns:cellml=\"http://www.cellml.org/cellml/1.1#\">\n"
-                                        "    <!-- Your code goes here-->\n"
-                                        "</model>\n").arg(CellmlRefVersion));
+                                QString( "<?xml version='1.0' encoding='UTF-8'?>\n"
+                                        R"(<model name="my_model" xmlns="http://www.cellml.org/cellml/%1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#">)""\n"
+                                         "    <!-- Your code goes here-->\n"
+                                         "</model>\n").arg(CellmlRefVersion));
 
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created

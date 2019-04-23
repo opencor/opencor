@@ -688,20 +688,20 @@ int xdiffCallback(void *data, mmbuffer_t *pBuffer, int pBufferSize)
 
 //==============================================================================
 
-static const char *Row = "    <tr class=\"%1\">\n"
-                         "        <td class=\"linenumber shrink rightborder\">\n"
-                         "            <code>%2</code>\n"
-                         "        </td>\n"
-                         "        <td class=\"linenumber shrink rightborder\">\n"
-                         "            <code>%3</code>\n"
-                         "        </td>\n"
-                         "        <td class=\"tag shrink\">\n"
-                         "            <code>%4</code>\n"
-                         "        </td>\n"
-                         "        <td class=\"expand\">\n"
-                         "            <code>%5</code>\n"
-                         "        </td>\n"
-                         "    </tr>\n";
+static const char *Row = R"(    <tr class="%1">)""\n"
+                         R"(        <td class="linenumber shrink rightborder">)""\n"
+                          "            <code>%2</code>\n"
+                          "        </td>\n"
+                         R"(        <td class="linenumber shrink rightborder">)""\n"
+                          "            <code>%3</code>\n"
+                          "        </td>\n"
+                         R"(        <td class="tag shrink">)""\n"
+                          "            <code>%4</code>\n"
+                          "        </td>\n"
+                         R"(        <td class="expand">)""\n"
+                          "            <code>%5</code>\n"
+                          "        </td>\n"
+                          "    </tr>\n";
 
 //==============================================================================
 
@@ -774,9 +774,9 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
                                  text:
                                  text.contains('\n')?
                                      text.endsWith('\n')?
-                                         QString("<span class=\"add\">%1</span>\n").arg(text.remove(Separator)):
-                                         QString("<span class=\"add\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"add\">")):
-                                     QString("<span class=\"add\">%1</span>").arg(text);
+                                         QString(R"(<span class="add">%1</span>)""\n").arg(text.remove(Separator)):
+                                         QString(R"(<span class="add">%1</span>)").arg(text.replace(Separator, QString("</span>\n")+R"(<span class="add">)")):
+                                     QString(R"(<span class="add">%1</span>)").arg(text);
 
             break;
         case DiffMatchPatch::DELETE:
@@ -784,9 +784,9 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
                                  text:
                                  text.contains('\n')?
                                      text.endsWith('\n')?
-                                         QString("<span class=\"remove\">%1</span>\n").arg(text.remove(Separator)):
-                                         QString("<span class=\"remove\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"remove\">")):
-                                     QString("<span class=\"remove\">%1</span>").arg(text);
+                                         QString(R"(<span class="remove">%1</span>)""\n").arg(text.remove(Separator)):
+                                         QString(R"(<span class="remove">%1</span>)").arg(text.replace(Separator, QString("</span>\n")+R"(<span class="remove">)")):
+                                     QString(R"(<span class="remove">%1</span>)").arg(text);
 
             break;
         }
@@ -1013,11 +1013,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     } else {
         // We are dealing with a binary file
 
-        static const QString BinaryFile = "    <tr class=\"binaryfile\">\n"
-                                          "        <td colspan=4>\n"
-                                          "            <code>%1</code>\n"
-                                          "        </td>\n"
-                                          "    </tr>\n";
+        static const QString BinaryFile = R"(    <tr class="binaryfile">)""\n"
+                                           "        <td colspan=4>\n"
+                                           "            <code>%1</code>\n"
+                                           "        </td>\n"
+                                           "    </tr>\n";
 
         res = BinaryFile.arg("["+tr("Binary File")+"]");
 
@@ -1065,12 +1065,12 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         // hasn't already been done, and show them (respecting the order in whic
         // they are listed)
 
-        static const QString Space = "    <tr class=\"space\"/>\n";
-        static const QString FileName = "    <tr class=\"filename\">\n"
-                                        "        <td colspan=4>\n"
-                                        "            %1\n"
-                                        "        </td>\n"
-                                        "    </tr>\n";
+        static const QString Space = R"(    <tr class="space"/>)""\n";
+        static const QString FileName = R"(    <tr class="filename">)""\n"
+                                         "        <td colspan=4>\n"
+                                         "            %1\n"
+                                         "        </td>\n"
+                                         "    </tr>\n";
 
         QString html = "<table>\n";
         bool firstFile = true;

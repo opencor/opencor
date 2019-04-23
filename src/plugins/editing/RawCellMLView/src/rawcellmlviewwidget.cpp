@@ -385,7 +385,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         if (   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
             || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
-            pExtra = tr("the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
+            pExtra = tr(R"(the <a href="https://github.com/cellmlapi/cellml-api/">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.)");
         }
 
         return res;

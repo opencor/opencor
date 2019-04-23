@@ -1240,7 +1240,7 @@ void CellmlTextViewWidget::updateViewer()
             // version of our statement and check whether it's the same as our
             // previous one
 
-            QString contentMathmlEquation =  "<math xmlns=\""+CellMLSupport::MathmlNamespace+"\">"
+            QString contentMathmlEquation =  R"(<math xmlns=")"+CellMLSupport::MathmlNamespace+R"(">)"
                                             +Core::cleanContentMathml(Core::serialiseDomDocument(mParser.domDocument()))
                                             +"</math>";
 

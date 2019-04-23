@@ -604,8 +604,8 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
     }
 
     outputString(Output::DefImport,
-                 QString("def import%1 using \"%2\" for").arg(cmetaId(pDomNode))
-                                                         .arg(attributeNodeValue(pDomNode, CellMLSupport::XlinkNamespace, "href")));
+                 QString(R"(def import%1 using "%2" for)").arg(cmetaId(pDomNode))
+                                                          .arg(attributeNodeValue(pDomNode, CellMLSupport::XlinkNamespace, "href")));
 
     indent();
 

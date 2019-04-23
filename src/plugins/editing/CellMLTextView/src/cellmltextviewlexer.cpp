@@ -203,7 +203,7 @@ static const int EndParameterBlockLength     = 1;
 
 //==============================================================================
 
-static const char *StringString = "\"";
+static const char *StringString = R"(")";
 static const int StringLength   = 1;
 
 //==============================================================================

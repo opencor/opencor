@@ -981,7 +981,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     // new parameter to all our calls to doNonLinearSolve() so that
     // doNonLinearSolve() can retrieve the correct instance of our NLA solver
 
-    res.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
+    res.replace("do_nonlinearsolve(", QString(R"(doNonLinearSolve("%1", )").arg(address()));
 
     return res;
 }
