@@ -1757,11 +1757,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
     }
 
     if (!annotation.isEmpty()) {
-        sedmlAlgorithm->appendAnnotation(QString(R"(<%1 xmlns="%2">"
+        sedmlAlgorithm->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
                                                   "     %3"
-                                                  " </%1>)").arg(SEDMLSupport::SolverProperties)
-                                                            .arg(SEDMLSupport::OpencorNamespace)
-                                                            .arg(annotation).toStdString());
+                                                  " </%1>").arg(SEDMLSupport::SolverProperties)
+                                                           .arg(SEDMLSupport::OpencorNamespace)
+                                                           .arg(annotation).toStdString());
     }
 
     // Check whether the simulation required an NLA solver and, if so, let our
@@ -1782,9 +1782,9 @@ void SimulationExperimentViewSimulationWidget::addSedmlSimulation(libsedml::SedD
                                                                       .arg(nlaSolverProperties.value(nlaSolverProperty).toString());
         }
 
-        pSedmlSimulation->appendAnnotation(QString(R"(<%1 xmlns="%2" %3="%4">"
+        pSedmlSimulation->appendAnnotation(QString(R"(<%1 xmlns="%2" %3="%4">)"
                                                     "     %5"
-                                                    " </%1>)").arg(SEDMLSupport::NlaSolver)
+                                                    " </%1>").arg(SEDMLSupport::NlaSolver)
                                                              .arg(SEDMLSupport::OpencorNamespace)
                                                              .arg(SEDMLSupport::Name)
                                                              .arg(mSimulation->data()->nlaSolverName())
@@ -1833,11 +1833,11 @@ void SimulationExperimentViewSimulationWidget::addSedmlVariableTarget(libsedml::
                                     .arg(variable).toStdString());
 
     if (variableDegree != 0) {
-        pSedmlVariable->appendAnnotation(QString("<%1 xmlns=\"%2\">"
-                                                 "    %3"
-                                                 "</%1>").arg(SEDMLSupport::VariableDegree)
-                                                         .arg(SEDMLSupport::OpencorNamespace)
-                                                         .arg(variableDegree).toStdString());
+        pSedmlVariable->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
+                                                  "    %3"
+                                                  "</%1>").arg(SEDMLSupport::VariableDegree)
+                                                          .arg(SEDMLSupport::OpencorNamespace)
+                                                          .arg(variableDegree).toStdString());
     }
 }
 
@@ -2070,11 +2070,11 @@ bool SimulationExperimentViewSimulationWidget::createSedmlFile(SEDMLSupport::Sed
 
         // Add our properties as an annotation
 
-        sedmlPlot2d->appendAnnotation(QString("<%1 xmlns=\"%2\">"
-                                              "    %3"
-                                              "</%1>").arg(SEDMLSupport::Properties)
-                                                      .arg(SEDMLSupport::OpencorNamespace)
-                                                      .arg(annotation).toStdString());
+        sedmlPlot2d->appendAnnotation(QString(R"(<%1 xmlns="%2">)"
+                                               "    %3"
+                                               "</%1>").arg(SEDMLSupport::Properties)
+                                                       .arg(SEDMLSupport::OpencorNamespace)
+                                                       .arg(annotation).toStdString());
 
         // Keep track of the graph panel's graphs, if any
 
