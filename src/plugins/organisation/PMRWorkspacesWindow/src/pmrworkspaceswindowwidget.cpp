@@ -1643,15 +1643,15 @@ void PmrWorkspacesWindowWidget::aboutWorkspace()
     // Let people know that we want to show some information about the current
     // workspace
 
-    static const QString Entry = "    <tr>\n"
-                                 "        <td style=\"font-weight: bold;\">%1</td>\n"
-                                 "        <td>%2</td>\n"
-                                 "    </tr>\n";
+    static const QString Entry =  "    <tr>\n"
+                                 R"(        <td style="font-weight: bold;">%1</td>)""\n"
+                                  "        <td>%2</td>\n"
+                                  "    </tr>\n";
 
     PMRSupport::PmrWorkspace *workspace = PMRSupport::PmrWorkspaceManager::instance()->workspace(currentItem()->workspace()->url());
-    QString message = QString("<p style=\"font-weight: bold;\">\n"
-                              "    %1\n"
-                              "</p>\n").arg(workspace->name());
+    QString message = QString(R"(<p style="font-weight: bold;">)""\n"
+                               "    %1\n"
+                               "</p>\n").arg(workspace->name());
 
     if (!workspace->description().isEmpty()) {
         message += QString("\n"
@@ -1671,12 +1671,12 @@ void PmrWorkspacesWindowWidget::aboutWorkspace()
     }
 
     message += Entry.arg(tr("PMR:"))
-                    .arg(QString("<a href=\"%1\">%1</a>").arg(workspace->url()));
+                    .arg(QString(R"(<a href="%1">%1</a>)").arg(workspace->url()));
 
     if (workspace->isLocal()) {
         message += Entry.arg(tr("Path:"))
-                        .arg(QString("<a href=\"%1\">%2</a>").arg(QUrl::fromLocalFile(workspace->path()).url())
-                                                             .arg(workspace->path()));
+                        .arg(QString(R"(<a href="%1">%2</a>)").arg(QUrl::fromLocalFile(workspace->path()).url())
+                                                              .arg(workspace->path()));
     }
 
     message += "</table>\n";

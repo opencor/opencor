@@ -294,10 +294,10 @@ bool CombineArchive::save(const QString &pFileName)
             break;
         }
 
-        fileList += "    <content location=\""+file.location()+"\" format=\""+fileFormat+"\"";
+        fileList += R"(    <content location=")"+file.location()+R"(" format=")"+fileFormat+R"(")";
 
         if (file.isMaster()) {
-            fileList += " master=\"true\"";
+            fileList += R"( master="true")";
         }
 
         fileList += "/>\n";
@@ -312,9 +312,9 @@ bool CombineArchive::save(const QString &pFileName)
 
     zipWriter.addFile(ManifestFileName,
                        QByteArray()
-                      +"<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n"
-                       "<omexManifest xmlns=\"http://identifiers.org/combine.specifications/omex-manifest\">\n"
-                       "    <content location=\".\" format=\""+OmexFormat+"\"/>\n"
+                      + "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n"
+                       R"(<omexManifest xmlns="http://identifiers.org/combine.specifications/omex-manifest">)""\n"
+                       R"(    <content location="." format=")"+OmexFormat+R"("/>)""\n"
                       +fileList
                       +"</omexManifest>\n");
 
