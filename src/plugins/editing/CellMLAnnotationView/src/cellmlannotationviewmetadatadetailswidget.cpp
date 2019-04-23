@@ -212,7 +212,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUnsupportedMetadataMe
 
     mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mPlugin->viewName()),
                                             Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
-                                                tr("Click <a href=\"here\">here</a> if you want to remove the existing metadata."):
+                                                tr(R"(Click <a href="here">here</a> if you want to remove the existing metadata.)"):
                                                 QString());
 }
 

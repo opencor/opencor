@@ -584,23 +584,23 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const CellmlA
             mItemsMapping.insert(itemInformationSha1, item);
             mEnabledItems.insert(itemInformationSha1, true);
 
-            ontologicalTerms += "<tr id=\"item_"+itemInformationSha1+"\">\n"
-                                "    <td>\n"
-                                "        "+item.name()+"\n"
-                                "    </td>\n"
-                                "    <td id=\"resource_"+itemInformationSha1+"\">\n"
-                                "        <a href=\""+itemInformation+"\">"+item.resource()+"</a>\n"
-                                "    </td>\n"
-                                "    <td id=\"id_"+itemInformationSha1+"\">\n"
-                                "        <a href=\""+itemInformation+"\">"+item.id()+"</a>\n"
-                                "    </td>\n"
-                                "    <td id=\"button_"+itemInformationSha1+"\">\n"
-                                "        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"></a>\n"
-                                "    </td>\n"
-                                "    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
-                                "        <img class=\"disabledButton\">\n"
-                                "    </td>\n"
-                                "</tr>\n";
+            ontologicalTerms += R"(<tr id="item_)"+itemInformationSha1+R"(">)""\n"
+                                 "    <td>\n"
+                                 "        "+item.name()+"\n"
+                                 "    </td>\n"
+                                R"(    <td id="resource_)"+itemInformationSha1+R"(">)""\n"
+                                R"(        <a href=")"+itemInformation+R"(">)"+item.resource()+"</a>\n"
+                                 "    </td>\n"
+                                R"(    <td id="id_)"+itemInformationSha1+R"(">)""\n"
+                                R"(        <a href=")"+itemInformation+R"(">)"+item.id()+"</a>\n"
+                                 "    </td>\n"
+                                R"(    <td id="button_)"+itemInformationSha1+R"(">)""\n"
+                                R"(        <a class="noHover" href=")"+itemInformationSha1+R"("><img class="button"></a>)""\n"
+                                 "    </td>\n"
+                                R"(    <td id="disabledButton_)"+itemInformationSha1+R"(" style="display: none;">)""\n"
+                                R"(        <img class="disabledButton">)""\n"
+                                 "    </td>\n"
+                                 "</tr>\n";
         }
 
         mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerms);
