@@ -369,6 +369,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
     // Retranslate our output headers
 
     updateOutputHeaders();
+
+    // Retranslate the description for the current qualifier, if needed
+
+    if (mLookUpQualifierButton->isChecked()) {
+        genericLookUp(mQualifierValue->currentText(), InformationType::Qualifier);
+    }
 }
 
 //==============================================================================
