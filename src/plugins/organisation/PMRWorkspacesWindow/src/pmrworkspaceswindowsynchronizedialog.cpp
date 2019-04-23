@@ -133,46 +133,25 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     mHorizontalSplitter = new Core::SplitterWidget(this);
     mVerticalSplitter = new Core::SplitterWidget(Qt::Vertical, mHorizontalSplitter);
 
-    // Create our message-related widget, populate it, and add it to our
-    // vertical splitter
-
-    auto messageWidget = new QWidget(mVerticalSplitter);
-    auto messageLayout = new QVBoxLayout(messageWidget);
-    int margin;
-
-    messageLayout->getContentsMargins(nullptr, nullptr, nullptr, &margin);
-
-    int halfMargin = margin/2;
-
-    messageLayout->setContentsMargins(0, 0, halfMargin, halfMargin);
-
-    messageWidget->setLayout(messageLayout);
-
-    auto messageLabel = new QLabel(tr("Message:"), messageWidget);
-    QFont newFont = messageLabel->font();
-
-    newFont.setBold(true);
-
-    messageLabel->setFont(newFont);
-
-    mMessageValue = new QTextEdit(messageWidget);
-
-    messageLayout->addWidget(messageLabel);
-    messageLayout->addWidget(mMessageValue);
-
-    mVerticalSplitter->addWidget(messageWidget);
-
     // Create our changes-related widget, populate it, and add it to our
     // vertical splitter
 
     auto changesWidget = new QWidget(mVerticalSplitter);
     auto changesLayout = new QVBoxLayout(changesWidget);
+    int margin;
+
+    changesLayout->getContentsMargins(nullptr, nullptr, nullptr, &margin);
+
+    int halfMargin = margin/2;
 
     changesLayout->setContentsMargins(0, halfMargin, halfMargin, 0);
 
     changesWidget->setLayout(changesLayout);
 
     auto changesLabel = new QLabel(changesWidget);
+    QFont newFont = changesLabel->font();
+
+    newFont.setBold(true);
 
     changesLabel->setFont(newFont);
 
@@ -193,17 +172,38 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mVerticalSplitter->addWidget(changesWidget);
 
+    // Create our message-related widget, populate it, and add it to our
+    // vertical splitter
+
+    auto messageWidget = new QWidget(mVerticalSplitter);
+    auto messageLayout = new QVBoxLayout(messageWidget);
+
+    messageLayout->setContentsMargins(0, 0, halfMargin, halfMargin);
+
+    messageWidget->setLayout(messageLayout);
+
+    auto messageLabel = new QLabel(tr("Message:"), messageWidget);
+
+    messageLabel->setFont(newFont);
+
+    mMessageValue = new QTextEdit(messageWidget);
+
+    messageLayout->addWidget(messageLabel);
+    messageLayout->addWidget(mMessageValue);
+
+    mVerticalSplitter->addWidget(messageWidget);
+
     // Customise our vertical splitter and add it to our horizontal splitter
 
     mVerticalSplitter->setCollapsible(0, false);
     mVerticalSplitter->setCollapsible(1, false);
-    mVerticalSplitter->setStretchFactor(1, 1);
+    mVerticalSplitter->setStretchFactor(0, 1);
 
     mHorizontalSplitter->addWidget(mVerticalSplitter);
 
     // Create our Web viewer and add it to our horizontal splitter
 
-    auto webViewerWidget = new QWidget(mVerticalSplitter);
+    auto webViewerWidget = new QWidget(mHorizontalSplitter);
     auto webViewerLayout = new QVBoxLayout(webViewerWidget);
 
     webViewerLayout->setContentsMargins(halfMargin, 0, 0, 0);
@@ -273,7 +273,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mHorizontalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsHorizontalSplitterSizes).toList()));
     mVerticalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsVerticalSplitterSizes,
-                                                                      QVariantList() << 222 << 555).toList()));
+                                                                      QVariantList() << 555 << 222).toList()));
 
     // Add some dialog buttons
 
