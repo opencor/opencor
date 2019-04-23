@@ -36,8 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <QCheckBox>
 #include <QApplication>
+#include <QCheckBox>
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QDir>
@@ -57,7 +57,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "diff_match_patch.h"
+#include "libxdiffbegin.h"
+    #include "diff_match_patch.h"
+#include "libxdiffend.h"
 
 //==============================================================================
 
@@ -78,6 +80,10 @@ PmrWorkspacesWindowSynchronizeDialogItem::PmrWorkspacesWindowSynchronizeDialogIt
 
 //==============================================================================
 
+PmrWorkspacesWindowSynchronizeDialogItem::~PmrWorkspacesWindowSynchronizeDialogItem() = default;
+
+//==============================================================================
+
 PMRSupport::PmrWorkspaceFileNode * PmrWorkspacesWindowSynchronizeDialogItem::fileNode() const
 {
     // Return our file node
@@ -87,9 +93,9 @@ PMRSupport::PmrWorkspaceFileNode * PmrWorkspacesWindowSynchronizeDialogItem::fil
 
 //==============================================================================
 
-static const auto SettingsCellmlTextFormatSupport = QStringLiteral("CellmlTextFormatSupport");
-static const auto SettingsHorizontalSplitterSizes = QStringLiteral("HorizontalSplitterSizes");
-static const auto SettingsVerticalSplitterSizes   = QStringLiteral("VerticalSplitterSizes");
+static const char *SettingsCellmlTextFormatSupport = "CellmlTextFormatSupport";
+static const char *SettingsHorizontalSplitterSizes = "HorizontalSplitterSizes";
+static const char *SettingsVerticalSplitterSizes   = "VerticalSplitterSizes";
 
 //==============================================================================
 
@@ -118,7 +124,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     // Create and set our vertical layout
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     setLayout(layout);
 
@@ -127,46 +133,25 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
     mHorizontalSplitter = new Core::SplitterWidget(this);
     mVerticalSplitter = new Core::SplitterWidget(Qt::Vertical, mHorizontalSplitter);
 
-    // Create our message-related widget, populate it, and add it to our
-    // vertical splitter
-
-    QWidget *messageWidget = new QWidget(mVerticalSplitter);
-    QVBoxLayout *messageLayout = new QVBoxLayout(messageWidget);
-    int margin;
-
-    messageLayout->getContentsMargins(nullptr, nullptr, nullptr, &margin);
-
-    int halfMargin = margin >> 1;
-
-    messageLayout->setContentsMargins(0, 0, halfMargin, halfMargin);
-
-    messageWidget->setLayout(messageLayout);
-
-    QLabel *messageLabel = new QLabel(tr("Message:"), messageWidget);
-    QFont newFont = messageLabel->font();
-
-    newFont.setBold(true);
-
-    messageLabel->setFont(newFont);
-
-    mMessageValue = new QTextEdit(messageWidget);
-
-    messageLayout->addWidget(messageLabel);
-    messageLayout->addWidget(mMessageValue);
-
-    mVerticalSplitter->addWidget(messageWidget);
-
     // Create our changes-related widget, populate it, and add it to our
     // vertical splitter
 
-    QWidget *changesWidget = new QWidget(mVerticalSplitter);
-    QVBoxLayout *changesLayout = new QVBoxLayout(changesWidget);
+    auto changesWidget = new QWidget(mVerticalSplitter);
+    auto changesLayout = new QVBoxLayout(changesWidget);
+    int margin;
+
+    changesLayout->getContentsMargins(nullptr, nullptr, nullptr, &margin);
+
+    int halfMargin = margin/2;
 
     changesLayout->setContentsMargins(0, halfMargin, halfMargin, 0);
 
     changesWidget->setLayout(changesLayout);
 
-    QLabel *changesLabel = new QLabel(changesWidget);
+    auto changesLabel = new QLabel(changesWidget);
+    QFont newFont = changesLabel->font();
+
+    newFont.setBold(true);
 
     changesLabel->setFont(newFont);
 
@@ -187,36 +172,57 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mVerticalSplitter->addWidget(changesWidget);
 
+    // Create our message-related widget, populate it, and add it to our
+    // vertical splitter
+
+    auto messageWidget = new QWidget(mVerticalSplitter);
+    auto messageLayout = new QVBoxLayout(messageWidget);
+
+    messageLayout->setContentsMargins(0, 0, halfMargin, halfMargin);
+
+    messageWidget->setLayout(messageLayout);
+
+    auto messageLabel = new QLabel(tr("Message:"), messageWidget);
+
+    messageLabel->setFont(newFont);
+
+    mMessageValue = new QTextEdit(messageWidget);
+
+    messageLayout->addWidget(messageLabel);
+    messageLayout->addWidget(mMessageValue);
+
+    mVerticalSplitter->addWidget(messageWidget);
+
     // Customise our vertical splitter and add it to our horizontal splitter
 
     mVerticalSplitter->setCollapsible(0, false);
     mVerticalSplitter->setCollapsible(1, false);
-    mVerticalSplitter->setStretchFactor(1, 1);
+    mVerticalSplitter->setStretchFactor(0, 1);
 
     mHorizontalSplitter->addWidget(mVerticalSplitter);
 
     // Create our Web viewer and add it to our horizontal splitter
 
-    QWidget *webViewerWidget = new QWidget(mVerticalSplitter);
-    QVBoxLayout *webViewerLayout = new QVBoxLayout(webViewerWidget);
+    auto webViewerWidget = new QWidget(mHorizontalSplitter);
+    auto webViewerLayout = new QVBoxLayout(webViewerWidget);
 
     webViewerLayout->setContentsMargins(halfMargin, 0, 0, 0);
 
     webViewerWidget->setLayout(webViewerLayout);
 
-    Core::ToolBarWidget *webViewerToolBarWidget = new Core::ToolBarWidget();
-    QLabel *webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
+    auto webViewerToolBarWidget = new Core::ToolBarWidget();
+    auto webViewerLabel = new QLabel(tr("Changes:"), webViewerWidget);
 
     webViewerLabel->setAlignment(Qt::AlignBottom);
     webViewerLabel->setFont(newFont);
 
-    QWidget *webViewerSpacer = new QWidget(webViewerToolBarWidget);
+    auto webViewerSpacer = new QWidget(webViewerToolBarWidget);
 
     webViewerSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    QAction *webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
-    QAction *webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
-    QAction *webViewerZoomOutAction = Core::newAction(QIcon(":/oxygen/actions/zoom-out.png"), webViewerToolBarWidget);
+    auto webViewerNormalSizeAction = Core::newAction(QIcon(":/oxygen/actions/zoom-original.png"), webViewerToolBarWidget);
+    auto webViewerZoomInAction = Core::newAction(QIcon(":/oxygen/actions/zoom-in.png"), webViewerToolBarWidget);
+    auto webViewerZoomOutAction = Core::newAction(QIcon(":/oxygen/actions/zoom-out.png"), webViewerToolBarWidget);
 
     mWebViewerCellmlTextFormatAction = Core::newAction(QIcon(":/CellMLSupport/logo.png"), webViewerToolBarWidget);
 
@@ -267,7 +273,7 @@ PmrWorkspacesWindowSynchronizeDialog::PmrWorkspacesWindowSynchronizeDialog(PMRSu
 
     mHorizontalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsHorizontalSplitterSizes).toList()));
     mVerticalSplitter->setSizes(qVariantListToIntList(mSettings.value(SettingsVerticalSplitterSizes,
-                                                                      QVariantList() << 222 << 555).toList()));
+                                                                      QVariantList() << 555 << 222).toList()));
 
     // Add some dialog buttons
 
@@ -387,8 +393,9 @@ void PmrWorkspacesWindowSynchronizeDialog::keyPressEvent(QKeyEvent *pEvent)
         && (pEvent->key() == Qt::Key_Return)) {
         // Pretend that we clicked on the Ok button, if possible
 
-        if (mButtonBox->button(QDialogButtonBox::Ok)->isEnabled())
+        if (mButtonBox->button(QDialogButtonBox::Ok)->isEnabled()) {
             acceptSynchronization();
+        }
 
         pEvent->accept();
     } else {
@@ -430,19 +437,20 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
                 QString sha1 = Core::File::sha1(fileName);
 
                 for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
-                    PmrWorkspacesWindowSynchronizeDialogItem *item = static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
+                    auto item = static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
 
                     if (item->fileNode() == fileNode) {
                         fileItem = item;
 
-                        if (sha1.compare(mSha1s.value(fileName))) {
+                        if (sha1 != mSha1s.value(fileName)) {
                             mSha1s.insert(fileName, sha1);
 
                             mDiffHtmls.remove(fileName);
                             mCellmlDiffHtmls.remove(fileName);
 
-                            if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(item->index())))
+                            if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(item->index()))) {
                                 mNeedUpdateDiffInformation = true;
+                            }
                         }
 
                         break;
@@ -451,8 +459,8 @@ PmrWorkspacesWindowSynchronizeDialogItems PmrWorkspacesWindowSynchronizeDialog::
 
                 // Create a new item, if needed
 
-                if (!fileItem) {
-                    mNbOfCheckableFiles += unstagedFile;
+                if (fileItem == nullptr) {
+                    mNbOfCheckableFiles += int(unstagedFile);
 
                     fileItem = new PmrWorkspacesWindowSynchronizeDialogItem(fileNode);
 
@@ -496,8 +504,9 @@ QStringList PmrWorkspacesWindowSynchronizeDialog::fileNames() const
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
 
-        if (fileItem->checkState() == Qt::Checked)
+        if (fileItem->checkState() == Qt::Checked) {
             res << mModel->invisibleRootItem()->child(i)->text();
+        }
     }
 
     return res;
@@ -509,15 +518,17 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
 {
     // Refresh our changes, but only if we are visible
 
-    if (!isVisible())
+    if (!isVisible()) {
         return;
+    }
 
     // Keep track of our existing items
 
     PmrWorkspacesWindowSynchronizeDialogItems oldItems = PmrWorkspacesWindowSynchronizeDialogItems();
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         oldItems << static_cast<PmrWorkspacesWindowSynchronizeDialogItem *>(mModel->invisibleRootItem()->child(i));
+    }
 
     // Update our model by (re)populating it
     // Note: we don't need to refresh the status of our workspace since it has
@@ -539,8 +550,9 @@ void PmrWorkspacesWindowSynchronizeDialog::refreshChanges()
     // Check whether we still have at least one item selected and, if not,
     // select the 'new' first one
 
-    if (mChangesValue->selectionModel()->selectedIndexes().isEmpty())
+    if (mChangesValue->selectionModel()->selectedIndexes().isEmpty()) {
         mChangesValue->setCurrentIndex(mProxyModel->index(0, 0));
+    }
 
     // Update our diff information, if needed
 
@@ -559,13 +571,14 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
     // Note: we temporally disable the handling of the itemChanged() signal
     //       since we 'manually' set everything ourselves...
 
-    if (pItem) {
+    if (pItem != nullptr) {
         disconnect(mModel, &QStandardItemModel::itemChanged,
                    this, &PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox);
 
         if (mChangesValue->selectionModel()->isSelected(mProxyModel->mapFromSource(pItem->index()))) {
-            for (const auto &fileIndex : mChangesValue->selectionModel()->selectedIndexes())
+            for (const auto &fileIndex : mChangesValue->selectionModel()->selectedIndexes()) {
                 mModel->itemFromIndex(mProxyModel->mapToSource(fileIndex))->setCheckState(pItem->checkState());
+            }
         }
 
         connect(mModel, &QStandardItemModel::itemChanged,
@@ -579,11 +592,11 @@ void PmrWorkspacesWindowSynchronizeDialog::updateSelectAllChangesCheckBox(QStand
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
 
-        nbOfCheckedFiles +=     fileItem->isEnabled()
-                            && (fileItem->checkState() == Qt::Checked);
+        nbOfCheckedFiles += int(   fileItem->isEnabled()
+                                && (fileItem->checkState() == Qt::Checked));
     }
 
-    mSelectAllChangesCheckBox->setCheckState(nbOfCheckedFiles?
+    mSelectAllChangesCheckBox->setCheckState((nbOfCheckedFiles != 0)?
                                                  (nbOfCheckedFiles == mNbOfCheckableFiles)?
                                                      Qt::Checked:
                                                      Qt::PartiallyChecked:
@@ -597,8 +610,9 @@ void PmrWorkspacesWindowSynchronizeDialog::selectAllChangesCheckBoxClicked()
     // If our checked state is partially checked, then we want to make it fully
     // so
 
-    if (mSelectAllChangesCheckBox->checkState() == Qt::PartiallyChecked)
+    if (mSelectAllChangesCheckBox->checkState() == Qt::PartiallyChecked) {
         mSelectAllChangesCheckBox->setCheckState(Qt::Checked);
+    }
 
     // Un/select all the files
 
@@ -607,8 +621,9 @@ void PmrWorkspacesWindowSynchronizeDialog::selectAllChangesCheckBoxClicked()
     for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         QStandardItem *fileItem = mModel->invisibleRootItem()->child(i);
 
-        if (fileItem->isEnabled())
+        if (fileItem->isEnabled()) {
             fileItem->setCheckState(checkState);
+        }
     }
 }
 
@@ -651,15 +666,11 @@ bool PmrWorkspacesWindowSynchronizeDialog::cellmlText(const QString &pFileName,
     program.replace(ExeExtensionRegEx, ".com");
 #endif
 
-    if (!Core::exec(program,
-                    QStringList() << "-c"
-                                  << "CellMLTextView::import"
-                                  << pFileName,
-                    pCellmlText)) {
-        return true;
-    } else {
-        return false;
-    }
+    return Core::exec(program,
+                      QStringList() << "-c"
+                                    << "CellMLTextView::import"
+                                    << pFileName,
+                      pCellmlText) == 0;
 }
 
 //==============================================================================
@@ -668,28 +679,29 @@ int xdiffCallback(void *data, mmbuffer_t *pBuffer, int pBufferSize)
 {
     // Add the given buffer to the given data
 
-    for (int i = 0; i < pBufferSize; ++i)
+    for (int i = 0; i < pBufferSize; ++i) {
         *static_cast<QString *>(data) += QString(pBuffer[i].ptr).left(int(pBuffer[i].size));
+    }
 
     return 0;
 }
 
 //==============================================================================
 
-static const auto Row = QStringLiteral("    <tr class=\"%1\">\n"
-                                       "        <td class=\"linenumber shrink rightborder\">\n"
-                                       "            <code>%2</code>\n"
-                                       "        </td>\n"
-                                       "        <td class=\"linenumber shrink rightborder\">\n"
-                                       "            <code>%3</code>\n"
-                                       "        </td>\n"
-                                       "        <td class=\"tag shrink\">\n"
-                                       "            <code>%4</code>\n"
-                                       "        </td>\n"
-                                       "        <td class=\"expand\">\n"
-                                       "            <code>%5</code>\n"
-                                       "        </td>\n"
-                                       "    </tr>\n");
+static const char *Row = R"(    <tr class="%1">)""\n"
+                         R"(        <td class="linenumber shrink rightborder">)""\n"
+                          "            <code>%2</code>\n"
+                          "        </td>\n"
+                         R"(        <td class="linenumber shrink rightborder">)""\n"
+                          "            <code>%3</code>\n"
+                          "        </td>\n"
+                         R"(        <td class="tag shrink">)""\n"
+                          "            <code>%4</code>\n"
+                          "        </td>\n"
+                         R"(        <td class="expand">)""\n"
+                          "            <code>%5</code>\n"
+                          "        </td>\n"
+                          "    </tr>\n";
 
 //==============================================================================
 
@@ -717,91 +729,91 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
     // Make sure that we have some differences data
 
     if (pDifferencesData.isEmpty()) {
-        return QString();
-    } else {
-        // Highlight the differences within our differences data' difference
-        // field
-
-        static const QChar Separator = QChar(7);
-        // Note: strings, for which we want to show the difference, should never
-        //       contain the Bell character, so it should be safe to use that
-        //       character as our separator...
-
-        QString oldString = QString();
-        QString newString = QString();
-
-        for (const auto &differenceData : pDifferencesData) {
-            if (differenceData.tag == '+')
-                newString += differenceData.difference+Separator;
-            else
-                oldString += differenceData.difference+Separator;
-        }
-
-        typedef diff_match_patch<std::wstring> DiffMatchPatch;
-
-        DiffMatchPatch diffMatchPatch;
-        DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(oldString.toStdWString(), newString.toStdWString());
-
-        diffMatchPatch.diff_cleanupEfficiency(diffs);
-
-        QString oldDiffString = QString();
-        QString newDiffString = QString();
-
-        for (auto diff : diffs) {
-            QString text = cleanHtmlEscaped(QString::fromStdWString(diff.text));
-
-            switch (diff.operation) {
-            case DiffMatchPatch::EQUAL:
-                oldDiffString += text;
-                newDiffString += text;
-
-                break;
-            case DiffMatchPatch::INSERT:
-                newDiffString += oldString.isEmpty()?
-                                     text:
-                                     text.contains('\n')?
-                                         text.endsWith('\n')?
-                                             QString("<span class=\"add\">%1</span>\n").arg(text.remove(Separator)):
-                                             QString("<span class=\"add\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"add\">")):
-                                         QString("<span class=\"add\">%1</span>").arg(text);
-
-                break;
-            case DiffMatchPatch::DELETE:
-                oldDiffString += newString.isEmpty()?
-                                     text:
-                                     text.contains('\n')?
-                                         text.endsWith('\n')?
-                                             QString("<span class=\"remove\">%1</span>\n").arg(text.remove(Separator)):
-                                             QString("<span class=\"remove\">%1</span>").arg(text.replace(Separator, "</span>\n<span class=\"remove\">")):
-                                         QString("<span class=\"remove\">%1</span>").arg(text);
-
-                break;
-            }
-        }
-
-        // Generate the HTML code for any differences data that we may have been
-        // given
-
-        QString html = QString();
-        QStringList oldDiffStrings = oldDiffString.split(Separator);
-        QStringList newDiffStrings = newDiffString.split(Separator);
-        int addLineNumber = -1;
-        int removeLineNumber = -1;
-
-        for (const auto &differenceData : pDifferencesData) {
-            html += Row.arg(differenceData.operation)
-                       .arg(differenceData.removeLineNumber)
-                       .arg(differenceData.addLineNumber)
-                       .arg(differenceData.tag)
-                       .arg((differenceData.tag == '+')?
-                                newDiffStrings[++addLineNumber]:
-                                oldDiffStrings[++removeLineNumber]);
-        }
-
-        pDifferencesData.clear();
-
-        return html;
+        return {};
     }
+
+    // Highlight the differences within our differences data' difference field
+
+    static const QChar Separator = QChar(7);
+    // Note: strings, for which we want to show the difference, should never
+    //       contain the Bell character, so it should be safe to use that
+    //       character as our separator...
+
+    QString oldString = QString();
+    QString newString = QString();
+
+    for (const auto &differenceData : pDifferencesData) {
+        if (differenceData.tag == '+') {
+            newString += differenceData.difference+Separator;
+        } else {
+            oldString += differenceData.difference+Separator;
+        }
+    }
+
+    using DiffMatchPatch = diff_match_patch<std::wstring>;
+
+    DiffMatchPatch diffMatchPatch;
+    DiffMatchPatch::Diffs diffs = diffMatchPatch.diff_main(oldString.toStdWString(), newString.toStdWString());
+
+    diffMatchPatch.diff_cleanupEfficiency(diffs);
+
+    QString oldDiffString = QString();
+    QString newDiffString = QString();
+
+    for (const auto &diff : diffs) {
+        QString text = cleanHtmlEscaped(QString::fromStdWString(diff.text));
+
+        switch (diff.operation) {
+        case DiffMatchPatch::EQUAL:
+            oldDiffString += text;
+            newDiffString += text;
+
+            break;
+        case DiffMatchPatch::INSERT:
+            newDiffString += oldString.isEmpty()?
+                                 text:
+                                 text.contains('\n')?
+                                     text.endsWith('\n')?
+                                         QString(R"(<span class="add">%1</span>)""\n").arg(text.remove(Separator)):
+                                         QString(R"(<span class="add">%1</span>)").arg(text.replace(Separator, QString("</span>\n")+R"(<span class="add">)")):
+                                     QString(R"(<span class="add">%1</span>)").arg(text);
+
+            break;
+        case DiffMatchPatch::DELETE:
+            oldDiffString += newString.isEmpty()?
+                                 text:
+                                 text.contains('\n')?
+                                     text.endsWith('\n')?
+                                         QString(R"(<span class="remove">%1</span>)""\n").arg(text.remove(Separator)):
+                                         QString(R"(<span class="remove">%1</span>)").arg(text.replace(Separator, QString("</span>\n")+R"(<span class="remove">)")):
+                                     QString(R"(<span class="remove">%1</span>)").arg(text);
+
+            break;
+        }
+    }
+
+    // Generate the HTML code for any differences data that we may have been
+    // given
+
+    QString html = QString();
+    QStringList oldDiffStrings = oldDiffString.split(Separator);
+    QStringList newDiffStrings = newDiffString.split(Separator);
+    int addLineNumber = -1;
+    int removeLineNumber = -1;
+
+    for (const auto &differenceData : pDifferencesData) {
+        html += QString(Row).arg(differenceData.operation)
+                            .arg(differenceData.removeLineNumber)
+                            .arg(differenceData.addLineNumber)
+                            .arg(differenceData.tag)
+                            .arg((differenceData.tag == '+')?
+                                     newDiffStrings[++addLineNumber]:
+                                     oldDiffStrings[++removeLineNumber]);
+    }
+
+    pDifferencesData.clear();
+
+    return html;
 }
 
 //==============================================================================
@@ -816,8 +828,8 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
     QByteArray oldByteArray = pOld.toUtf8();
     QByteArray newByteArray = pNew.toUtf8();
 
-    xdl_init_mmfile(&oldBlock, oldByteArray.size(), XDL_MMF_ATOMIC);
-    xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC);
+    xdl_init_mmfile(&oldBlock, oldByteArray.size(), XDL_MMF_ATOMIC); // NOLINT(hicpp-signed-bitwise)
+    xdl_init_mmfile(&newBlock, newByteArray.size(), XDL_MMF_ATOMIC); // NOLINT(hicpp-signed-bitwise)
 
     memcpy(xdl_mmfile_writeallocate(&oldBlock, oldByteArray.size()),
            oldByteArray.constData(), size_t(oldByteArray.size()));
@@ -867,11 +879,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
 
             removeLineNumber = QString(difference).remove(BeforeRemoveLineNumberRegEx).remove(AfterLineNumberRegEx).toInt()-1;
 
-            html += Row.arg("header")
-                       .arg("...")
-                       .arg("...")
-                       .arg(QString())
-                       .arg(difference);
+            html += QString(Row).arg("header")
+                                .arg("...")
+                                .arg("...")
+                                .arg(QString())
+                                .arg(difference);
         } else {
             QString diff = difference;
             QChar tag = diff[0];
@@ -900,13 +912,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pOld,
                 ++addLineNumber;
                 ++removeLineNumber;
 
-                html += Row.arg((differenceNumber == differenceMaxNumber)?
-                                    "last default":
-                                    "default")
-                           .arg(removeLineNumber)
-                           .arg(addLineNumber)
-                           .arg(QString())
-                           .arg(cleanHtmlEscaped(diff));
+                html += QString(Row).arg((differenceNumber == differenceMaxNumber)?
+                                             "last default":
+                                             "default")
+                                    .arg(removeLineNumber)
+                                    .arg(addLineNumber)
+                                    .arg(QString())
+                                    .arg(cleanHtmlEscaped(diff));
             }
         }
     }
@@ -957,10 +969,10 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
         if (   mWebViewerCellmlTextFormatAction->isChecked()
             && !mInvalidCellmlCode.contains(oldFileContents)
             && !mInvalidCellmlCode.contains(newFileContents)
-            && (oldFileEmpty || (oldCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-                             || (oldCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1))
-            && (newFileEmpty || (newCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-                             || (newCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1))) {
+            && (oldFileEmpty || (oldCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+                             || (oldCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1))
+            && (newFileEmpty || (newCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+                             || (newCellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1))) {
             // We are dealing with a CellML 1.0/1.1 file, so generate the CellML
             // Text version of the file, this for both its head and working
             // versions, and if successful then diff them
@@ -977,11 +989,13 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
                 // The conversion failed, so keep track of that fact (so as not
                 // to try to convert everytime this file gets selected)
 
-                if (!oldFileEmpty)
+                if (!oldFileEmpty) {
                     mInvalidCellmlCode << oldFileContents;
+                }
 
-                if (!newFileEmpty)
+                if (!newFileEmpty) {
                     mInvalidCellmlCode << newFileContents;
+                }
             }
         }
 
@@ -999,11 +1013,11 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(const QString &pFileName)
     } else {
         // We are dealing with a binary file
 
-        static const QString BinaryFile = "    <tr class=\"binaryfile\">\n"
-                                          "        <td colspan=4>\n"
-                                          "            <code>%1</code>\n"
-                                          "        </td>\n"
-                                          "    </tr>\n";
+        static const QString BinaryFile = R"(    <tr class="binaryfile">)""\n"
+                                           "        <td colspan=4>\n"
+                                           "            <code>%1</code>\n"
+                                           "        </td>\n"
+                                           "    </tr>\n";
 
         res = BinaryFile.arg("["+tr("Binary File")+"]");
 
@@ -1039,8 +1053,9 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
     if (indexes.isEmpty()) {
         // No selected indexes, so select the previously selected indexes
 
-        for (const auto &index : mPreviouslySelectedIndexes)
+        for (const auto &index : mPreviouslySelectedIndexes) {
             mChangesValue->selectionModel()->select(index, QItemSelectionModel::Select);
+        }
     } else {
         // We have some selected indexes, so keep track of them
 
@@ -1050,12 +1065,12 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
         // hasn't already been done, and show them (respecting the order in whic
         // they are listed)
 
-        static const QString Space = "    <tr class=\"space\"/>\n";
-        static const QString FileName = "    <tr class=\"filename\">\n"
-                                        "        <td colspan=4>\n"
-                                        "            %1\n"
-                                        "        </td>\n"
-                                        "    </tr>\n";
+        static const QString Space = R"(    <tr class="space"/>)""\n";
+        static const QString FileName = R"(    <tr class="filename">)""\n"
+                                         "        <td colspan=4>\n"
+                                         "            %1\n"
+                                         "        </td>\n"
+                                         "    </tr>\n";
 
         QString html = "<table>\n";
         bool firstFile = true;
@@ -1068,8 +1083,9 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 
                 QString fileName = mModel->itemFromIndex(mProxyModel->mapToSource(index))->text();
 
-                if (!firstFile)
+                if (!firstFile) {
                     html += Space;
+                }
 
                 html += FileName.arg(fileName);
 
@@ -1086,8 +1102,9 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
                     fileDiffHtml = mDiffHtmls.value(fileName);
                 }
 
-                if (fileDiffHtml.isEmpty())
+                if (fileDiffHtml.isEmpty()) {
                     fileDiffHtml = diffHtml(fileName);
+                }
 
                 html += fileDiffHtml;
 
@@ -1103,8 +1120,8 @@ void PmrWorkspacesWindowSynchronizeDialog::updateDiffInformation()
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

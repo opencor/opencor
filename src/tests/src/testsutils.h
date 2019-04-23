@@ -38,18 +38,18 @@ namespace OpenCOR {
 //==============================================================================
 
 QString dirName(const QString &pDirName);
-QString fileName(const QString &pFilePath);
+QString fileName(const QString &pFileName);
 
 QByteArray rawFileContents(const QString &pFileName);
 QStringList fileContents(const QString &pFileName);
 
 QString fileSha1(const QString &pFileName);
 
-int runCli(const QStringList pArguments, QStringList &pOutput);
+int runCli(const QStringList &pArguments, QStringList &pOutput);
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

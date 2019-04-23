@@ -38,19 +38,19 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFile;
     class CellmlFileRuntime;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
 namespace COMBINESupport {
     class CombineArchive;
-}   // namespace COMBINESupport
+} // namespace COMBINESupport
 
 //==============================================================================
 
 namespace SEDMLSupport {
     class SedmlFile;
-}   // namespace SEDMLSupport
+} // namespace SEDMLSupport
 
 //==============================================================================
 
@@ -67,6 +67,7 @@ class SimulationObject : public QObject
 {
 public:
     explicit SimulationObject(Simulation *pSimulation);
+    ~SimulationObject() override;
 
     Simulation * simulation() const;
 
@@ -257,7 +258,8 @@ class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
     Q_OBJECT
 
 public:
-    enum FileType {
+    enum class FileType {
+        Unknown,
         CellmlFile,
         SedmlFile,
         CombineArchive
@@ -345,8 +347,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

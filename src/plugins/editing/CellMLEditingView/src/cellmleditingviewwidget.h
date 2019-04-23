@@ -47,13 +47,13 @@ namespace OpenCOR {
 namespace EditorWidget {
     class EditorListItem;
     class EditorListWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
 namespace MathMLViewerWidget {
     class MathmlViewerWidget;
-}   // namespace MathMLViewerWidget
+} // namespace MathMLViewerWidget
 
 //==============================================================================
 
@@ -120,8 +120,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLEditingView
-}   // namespace OpenCOR
+} // namespace CellMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

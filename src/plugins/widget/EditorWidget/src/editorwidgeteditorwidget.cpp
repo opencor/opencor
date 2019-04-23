@@ -42,7 +42,7 @@ namespace EditorWidget {
 EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
                                                    EditorWidgetFindReplaceWidget *pFindReplace,
                                                    EditorWidget *pParent) :
-    QScintillaSupport::QScintillaWidget(pLexer, pParent),
+    QScintillaWidget::QScintillaWidget(pLexer, pParent),
     mOwner(pParent),
     mFindReplace(pFindReplace),
     mReadOnlyStyles(QIntList()),
@@ -64,8 +64,9 @@ EditorWidgetEditorWidget::EditorWidgetEditorWidget(QsciLexer *pLexer,
     QColor baseColor = Core::baseColor();
 
     for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i) {
-        if (backgroundColor(i) == baseColor)
+        if (backgroundColor(i) == baseColor) {
             mReadOnlyStyles << i;
+        }
     }
 
     // Define and customise an indicator for our highlighting
@@ -109,7 +110,7 @@ void EditorWidgetEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 
         // Default handling of the event
 
-        QScintillaSupport::QScintillaWidget::keyPressEvent(pEvent);
+        QScintillaWidget::QScintillaWidget::keyPressEvent(pEvent);
 
         // Update our highlighting all if our find/replace widget is visible and
         // has some find text and we didn't press one of the navigation keys,
@@ -160,7 +161,7 @@ void EditorWidgetEditorWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    QScintillaSupport::QScintillaWidget::mouseDoubleClickEvent(pEvent);
+    QScintillaWidget::QScintillaWidget::mouseDoubleClickEvent(pEvent);
 
     // Check whether something has been selected and, if so, highlight all of
     // its occurrences
@@ -183,13 +184,14 @@ void EditorWidgetEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
-    QScintillaSupport::QScintillaWidget::mousePressEvent(pEvent);
+    QScintillaWidget::QScintillaWidget::mousePressEvent(pEvent);
 
     // Clear any highlighting that we might have, if our find/replace widget is
     // not visible
 
-    if (!mFindReplace->isVisible())
+    if (!mFindReplace->isVisible()) {
         clearHighlighting();
+    }
 }
 
 //==============================================================================
@@ -198,7 +200,7 @@ void EditorWidgetEditorWidget::setReadOnly(bool pReadOnly)
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::setReadOnly(pReadOnly);
+    QScintillaWidget::QScintillaWidget::setReadOnly(pReadOnly);
 
     // Update our background colour
 
@@ -243,7 +245,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
 
     QByteArray findText = mFindReplace->findText().toUtf8();
 
-    if (pAction == HighlightAll) {
+    if (pAction == Action::HighlightAll) {
         // Clear any previous hihghlighting
 
         clearHighlighting();
@@ -251,8 +253,9 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         // No point in carrying on, if the find text is empty or only consists
         // of spaces and the like
 
-        if (findText.trimmed().isEmpty())
+        if (findText.trimmed().isEmpty()) {
             return;
+        }
     } else {
         // Stop tracking our changes and consider our action as being one big
         // action
@@ -271,9 +274,9 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
     // Specify our search flags
 
     SendScintilla(SCI_SETSEARCHFLAGS,
-                   (mFindReplace->useRegularExpression()?SCFIND_REGEXP:0)
-                  |(mFindReplace->isCaseSensitive()?SCFIND_MATCHCASE:0)
-                  |(mFindReplace->searchWholeWordsOnly()?SCFIND_WHOLEWORD:0));
+                  ulong( (mFindReplace->useRegularExpression()?SCFIND_REGEXP:0)
+                        |(mFindReplace->isCaseSensitive()?SCFIND_MATCHCASE:0)
+                        |(mFindReplace->searchWholeWordsOnly()?SCFIND_WHOLEWORD:0)));
 
     // Hihghlight/replace all the occurences of the text
 
@@ -285,7 +288,7 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
                               SCI_REPLACETARGET;
     QByteArray replaceText = mFindReplace->replaceText().toUtf8();
     const char *rawReplaceText = replaceText.constData();
-    uintptr_t rawReplaceTextLen = uintptr_t(strlen(rawReplaceText));
+    auto rawReplaceTextLen = uintptr_t(strlen(rawReplaceText));
     int selFoundTextLen = 0;
 
     forever {
@@ -303,44 +306,46 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
             // No more occurrences, so just leave our loop
 
             break;
+        }
+
+        // Determine the length of our found text
+        // Note: we cannot and must not use findTextLen since we may be finding
+        //       text using a regular expression...
+
+        int foundTextLen = int(SendScintilla(SCI_GETTARGETEND))-findTextPos;
+
+        // Either highlight or replace our found text
+
+        if (pAction == Action::HighlightAll) {
+            SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
+            SendScintilla(SCI_INDICATORFILLRANGE, ulong(findTextPos), foundTextLen);
+
+            int line = int(SendScintilla(SCI_LINEFROMPOSITION, findTextPos));
+
+            mHighlightedLines << line;
         } else {
-            // Determine the length of our found text
-            // Note: we cannot and must not use findTextLen since we may be
-            //       finding text using a regular expression...
-
-            int foundTextLen = int(SendScintilla(SCI_GETTARGETEND))-findTextPos;
-
-            // Either highlight or replace our found text
-
-            if (pAction == HighlightAll) {
-                SendScintilla(SCI_SETINDICATORCURRENT, mHighlightIndicatorNumber);
-                SendScintilla(SCI_INDICATORFILLRANGE, ulong(findTextPos), foundTextLen);
-
-                int line = int(SendScintilla(SCI_LINEFROMPOSITION, findTextPos));
-
-                mHighlightedLines << line;
-            } else {
-                if (findTextPos < selectionStart)
-                    selectionShift += replaceText.length()-foundTextLen;
-                else if (findTextPos == selectionStart)
-                    selFoundTextLen = foundTextLen;
-
-                SendScintilla(SCI_SETTARGETSTART, findTextPos);
-                SendScintilla(SCI_SETTARGETEND, findTextPos+foundTextLen);
-
-                SendScintilla(replaceCommand, rawReplaceTextLen, rawReplaceText);
+            if (findTextPos < selectionStart) {
+                selectionShift += replaceText.length()-foundTextLen;
+            } else if (findTextPos == selectionStart) {
+                selFoundTextLen = foundTextLen;
             }
+
+            SendScintilla(SCI_SETTARGETSTART, findTextPos);
+            SendScintilla(SCI_SETTARGETEND, findTextPos+foundTextLen);
+
+            SendScintilla(replaceCommand, rawReplaceTextLen, rawReplaceText);
         }
     }
 
     // Some post-processing, based on the given action
 
-    if (pAction == HighlightAll) {
+    if (pAction == Action::HighlightAll) {
         // Get our vertical scroll-bar to update itself, if we have some lines
         // to highlight
 
-        if (!mHighlightedLines.isEmpty())
+        if (!mHighlightedLines.isEmpty()) {
             mVerticalScrollBar->update();
+        }
     } else {
         // Reselect what used to be selected and re-enable the tracking of
         // changes, as well as let Scintilla know that we are done with our big
@@ -349,10 +354,10 @@ void EditorWidgetEditorWidget::processAll(Action pAction)
         endUndoAction();
 
         SendScintilla(SCI_SETSELECTIONSTART, selectionStart+selectionShift);
-        SendScintilla(SCI_SETSELECTIONEND,   selectionEnd+selectionShift
-                                           +(selFoundTextLen?
-                                                replaceText.length()-selFoundTextLen:
-                                                0));
+        SendScintilla(SCI_SETSELECTIONEND,  selectionEnd+selectionShift
+                                           +((selFoundTextLen != 0)?
+                                                 replaceText.length()-selFoundTextLen:
+                                                 0));
 
         setHandleChanges(true);
     }
@@ -364,7 +369,7 @@ void EditorWidgetEditorWidget::highlightAll()
 {
     // Highlight all the occurences of the text
 
-    processAll(HighlightAll);
+    processAll(Action::HighlightAll);
 }
 
 //==============================================================================
@@ -373,7 +378,7 @@ void EditorWidgetEditorWidget::replaceAll()
 {
     // Replace all the occurences of the text
 
-    processAll(ReplaceAll);
+    processAll(Action::ReplaceAll);
 }
 
 //==============================================================================
@@ -407,8 +412,9 @@ bool EditorWidgetEditorWidget::findPrevious()
 
     bool res = findText(mFindReplace->findText(), false, false);
 
-    if (!res)
+    if (!res) {
         setCurrentPosition(oldPosition);
+    }
 
     return res;
 }
@@ -424,7 +430,7 @@ void EditorWidgetEditorWidget::findTextChanged(const QString &pText)
     if (pText.isEmpty()) {
         clearHighlighting();
 
-        QsciScintilla::setCursorPosition(mLine, mColumn);
+        QsciScintilla::setCursorPosition(mLine, mColumn); // NOLINT(bugprone-parent-virtual-call)
     } else {
         // Add the given text to our list of texts to highlight and find
 
@@ -475,7 +481,7 @@ void EditorWidgetEditorWidget::replace()
                                mFindReplace->isCaseSensitive()?
                                    QRegularExpression::NoPatternOption:
                                    QRegularExpression::CaseInsensitiveOption).match(selectedText()).hasMatch()) {
-            QScintillaSupport::QScintillaWidget::replace(mFindReplace->replaceText());
+            QScintillaWidget::QScintillaWidget::replace(mFindReplace->replaceText());
         }
     } else {
         // The find/replace is done using a simple match, which may be case
@@ -491,17 +497,17 @@ void EditorWidgetEditorWidget::replace()
         cursorPosition(line, column);
 
         if (   mFindReplace->searchWholeWordsOnly()
-            && crtSelectedText.compare(wordAt(line, column))) {
+            && (crtSelectedText != wordAt(line, column))) {
             return;
         }
 
         // Replace the currently selected text if we have a match
 
-        if (!crtSelectedText.compare(mFindReplace->findText(),
-                                  mFindReplace->isCaseSensitive()?
-                                      Qt::CaseSensitive:
-                                      Qt::CaseInsensitive)) {
-            QScintillaSupport::QScintillaWidget::replace(mFindReplace->replaceText());
+        if (crtSelectedText.compare(mFindReplace->findText(),
+                                    mFindReplace->isCaseSensitive()?
+                                        Qt::CaseSensitive:
+                                        Qt::CaseInsensitive) == 0) {
+            QScintillaWidget::QScintillaWidget::replace(mFindReplace->replaceText());
         }
     }
 }
@@ -546,13 +552,14 @@ void EditorWidgetEditorWidget::cut()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::cut();
+    QScintillaWidget::QScintillaWidget::cut();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
 
-    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty())
+    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty()) {
         highlightAll();
+    }
 }
 
 //==============================================================================
@@ -561,13 +568,14 @@ void EditorWidgetEditorWidget::paste()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::paste();
+    QScintillaWidget::QScintillaWidget::paste();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
 
-    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty())
+    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty()) {
         highlightAll();
+    }
 }
 
 //==============================================================================
@@ -576,13 +584,14 @@ void EditorWidgetEditorWidget::del()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::del();
+    QScintillaWidget::QScintillaWidget::del();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
 
-    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty())
+    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty()) {
         highlightAll();
+    }
 }
 
 //==============================================================================
@@ -591,13 +600,14 @@ void EditorWidgetEditorWidget::undo()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::undo();
+    QScintillaWidget::QScintillaWidget::undo();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
 
-    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty())
+    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty()) {
         highlightAll();
+    }
 }
 
 //==============================================================================
@@ -606,19 +616,20 @@ void EditorWidgetEditorWidget::redo()
 {
     // Default handling of the method
 
-    QScintillaSupport::QScintillaWidget::redo();
+    QScintillaWidget::QScintillaWidget::redo();
 
     // Update our highlighting all if our find/replace widget is visible and
     // has some find text
 
-    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty())
+    if (mFindReplace->isVisible() && !mFindReplace->findText().isEmpty()) {
         highlightAll();
+    }
 }
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

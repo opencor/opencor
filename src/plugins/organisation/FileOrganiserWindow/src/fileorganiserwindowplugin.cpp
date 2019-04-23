@@ -44,7 +44,7 @@ PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to virtually organise files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour organiser virtuellement des fichiers."));
 
-    return new PluginInfo(PluginInfo::Organisation, true, false,
+    return new PluginInfo(PluginInfo::Category::Organisation, true, false,
                           QStringList() << "Core",
                           descriptions);
 }
@@ -81,8 +81,8 @@ bool FileOrganiserWindowPlugin::definesPluginInterfaces()
 bool FileOrganiserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                                    QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -113,7 +113,7 @@ void FileOrganiserWindowPlugin::finalizePlugin()
 
 void FileOrganiserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -144,7 +144,7 @@ void FileOrganiserWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void FileOrganiserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -180,8 +180,8 @@ QDockWidget * FileOrganiserWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -64,7 +64,7 @@ void RawTextViewWidget::loadSettings(QSettings &pSettings)
 
 void RawTextViewWidget::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
     // Note: our view is such that our settings are actually saved when calling
     //       finalize() on the last file...
 }
@@ -75,8 +75,9 @@ void RawTextViewWidget::retranslateUi()
 {
     // Retranslate our viewer and editor
 
-    if (mEditor)
+    if (mEditor != nullptr) {
         mEditor->retranslateUi();
+    }
 }
 
 //==============================================================================
@@ -87,7 +88,7 @@ void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
     EditorWidget::EditorWidget *newEditor = mEditors.value(pFileName);
 
-    if (!newEditor) {
+    if (newEditor == nullptr) {
         // No editor exists for the given file, so create one
 
         QByteArray fileContents;
@@ -150,7 +151,7 @@ void RawTextViewWidget::finalize(const QString &pFileName)
 
     EditorWidget::EditorWidget *editor = mEditors.value(pFileName);
 
-    if (editor) {
+    if (editor != nullptr) {
         // There is an editor for the given file name, so save our settings and
         // reset our memory of the current editor, if needed
 
@@ -182,8 +183,9 @@ void RawTextViewWidget::fileSaved(const QString &pFileName)
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget && !crtWidget->isVisible())
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
         fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================
@@ -214,7 +216,7 @@ void RawTextViewWidget::fileRenamed(const QString &pOldFileName,
 
     EditorWidget::EditorWidget *editor = mEditors.value(pOldFileName);
 
-    if (editor) {
+    if (editor != nullptr) {
         mEditors.insert(pNewFileName, editor);
         mEditors.remove(pOldFileName);
     }
@@ -244,18 +246,18 @@ QList<QWidget *> RawTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditor) {
+    if (mEditor != nullptr) {
         return QList<QWidget *>() << mEditor->cursorPositionWidget()
                                   << mEditor->editingModeWidget();
-    } else {
-        return QList<QWidget *>();
     }
+
+    return {};
 }
 
 //==============================================================================
 
-}   // namespace RawTextView
-}   // namespace OpenCOR
+} // namespace RawTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

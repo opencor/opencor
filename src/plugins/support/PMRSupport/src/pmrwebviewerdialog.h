@@ -39,7 +39,7 @@ namespace OpenCOR {
 
 namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewerWidget
+} // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -66,8 +66,8 @@ private:
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

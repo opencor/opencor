@@ -75,8 +75,9 @@ BusyWidget::BusyWidget(QWidget *pParent, double pProgress) :
 
     show();
 
-    if (qFuzzyCompare(pProgress, -1.0))
+    if (qFuzzyCompare(pProgress, -1.0)) {
         mTimer->start();
+    }
 }
 
 //==============================================================================
@@ -358,7 +359,7 @@ void BusyWidget::resize()
 {
     // Resize ourselves against our parent/desktop
 
-    if (mParent) {
+    if (mParent != nullptr) {
         QWidget::resize(mParent->width(), mParent->height());
     } else {
         QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
@@ -375,8 +376,9 @@ void BusyWidget::rotate()
 
     ++mMainLine;
 
-    if (mMainLine >= mCount)
+    if (mMainLine >= mCount) {
         mMainLine = 0;
+    }
 
     update();
 }
@@ -397,11 +399,11 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
         Margin = 5
     };
 
-    painter.translate(width() >> 1, height() >> 1);
+    painter.translate(0.5*width(), 0.5*height());
 
     QPainterPath painterPath;
     int halfBackgroundSize = mRadius+mLength+Margin;
-    int backgroundSize = halfBackgroundSize << 1;
+    int backgroundSize = 2*halfBackgroundSize;
     double backgroundCornerRadius = mBackgroundRoundness*halfBackgroundSize;
 
     painterPath.addRoundedRect(QRectF(-halfBackgroundSize, -halfBackgroundSize,
@@ -413,15 +415,16 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
     // Draw ourselves and accept the event
 
     if (qFuzzyCompare(mProgress, -1.0)) {
-        double lineCornerRadius = mRoundness*(mThickness >> 1);
+        double lineCornerRadius = 0.5*mRoundness*mThickness;
 
         for (int i = 0; i < mCount; ++i) {
             painter.save();
 
             int relativeLine = i-mMainLine;
 
-            if (relativeLine < 0)
+            if (relativeLine < 0) {
                 relativeLine += mCount;
+            }
 
             painter.rotate(-90-relativeLine*360.0/mCount);
             painter.translate(mRadius, 0);
@@ -455,8 +458,8 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

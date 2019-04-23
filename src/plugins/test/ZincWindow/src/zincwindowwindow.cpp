@@ -36,8 +36,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "opencmiss/zinc/fieldmodule.hpp"
-#include "opencmiss/zinc/fieldvectoroperators.hpp"
+#include <array>
+
+//==============================================================================
+
+#include "zincbegin.h"
+    #include "opencmiss/zinc/fieldmodule.hpp"
+    #include "opencmiss/zinc/fieldvectoroperators.hpp"
+#include "zincend.h"
 
 //==============================================================================
 
@@ -73,8 +79,6 @@ ZincWindowWindow::ZincWindowWindow(QWidget *pParent) :
                                                      false, true, true, true));
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(mZincWidget);
-#else
-    #error Unsupported platform
 #endif
 
     // Create and set our Zinc context
@@ -234,9 +238,9 @@ void ZincWindowWindow::graphicsInitialized()
     // Our Zinc widget has had its graphics initialised, so now we can set its
     // background colour
 
-    double backgroundColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+    std::array<double, 4> backgroundColor = { 1.0, 1.0, 1.0, 1.0 };
 
-    sceneViewer.setBackgroundColourRGBA(backgroundColor);
+    sceneViewer.setBackgroundColourRGBA(backgroundColor.data());
 }
 
 //==============================================================================
@@ -254,8 +258,8 @@ void ZincWindowWindow::devicePixelRatioChanged(int pDevicePixelRatio)
 
 //==============================================================================
 
-}   // namespace ZincWindow
-}   // namespace OpenCOR
+} // namespace ZincWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

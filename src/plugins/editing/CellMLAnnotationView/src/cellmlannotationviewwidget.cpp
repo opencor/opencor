@@ -56,8 +56,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
 //==============================================================================
 
-static const auto SettingsCellmlAnnotationViewEditingWidgetSizes         = QStringLiteral("EditingWidgetSizes");
-static const auto SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes = QStringLiteral("MetadataDetailsWidgetSizes");
+static const char *SettingsCellmlAnnotationViewEditingWidgetSizes         = "EditingWidgetSizes";
+static const char *SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes = "MetadataDetailsWidgetSizes";
 
 //==============================================================================
 
@@ -96,8 +96,9 @@ void CellmlAnnotationViewWidget::retranslateUi()
 {
     // Retranslate our editing widgets
 
-    for (auto editingWidget : mEditingWidgets.values())
+    for (auto editingWidget : mEditingWidgets.values()) {
         editingWidget->retranslateUi();
+    }
 }
 
 //==============================================================================
@@ -108,7 +109,7 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
 
     mEditingWidget = mEditingWidgets.value(pFileName);
 
-    if (!mEditingWidget) {
+    if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
         mEditingWidget = new CellmlAnnotationViewEditingWidget(mPlugin, pFileName, this, this);
@@ -153,7 +154,7 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // There is an editing widget for the given file name, so delete it and
         // remove it from our list
 
@@ -163,8 +164,9 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
 
         // Reset our memory of the current editor, if needed
 
-        if (editingWidget == mEditingWidget)
+        if (editingWidget == mEditingWidget) {
             mEditingWidget = nullptr;
+        }
     }
 }
 
@@ -177,8 +179,9 @@ void CellmlAnnotationViewWidget::filePermissionsChanged(const QString &pFileName
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget)
+    if (editingWidget != nullptr) {
         editingWidget->filePermissionsChanged();
+    }
 }
 
 //==============================================================================
@@ -190,8 +193,9 @@ void CellmlAnnotationViewWidget::fileSaved(const QString &pFileName)
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget && !crtWidget->isVisible())
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
         fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================
@@ -215,7 +219,7 @@ void CellmlAnnotationViewWidget::fileRenamed(const QString &pOldFileName,
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
@@ -239,7 +243,7 @@ bool CellmlAnnotationViewWidget::saveFile(const QString &pOldFileName,
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    return editingWidget?editingWidget->cellmlFile()->update(pNewFileName):false;
+    return (editingWidget != nullptr)?editingWidget->cellmlFile()->update(pNewFileName):false;
 }
 
 //==============================================================================
@@ -264,8 +268,8 @@ void CellmlAnnotationViewWidget::metadataDetailsWidgetSplitterMoved(const QIntLi
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

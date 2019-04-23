@@ -35,10 +35,10 @@ PLUGININFO_FUNC ForwardEulerSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that implements the <a href=\"http://en.wikipedia.org/wiki/Euler_method\">Forward Euler method</a> to solve <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">ODEs</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Euler_method\">méthode Forward Euler</a> pour résoudre des <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">EDOs</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that implements the <a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler method</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui implémente la <a href="http://en.wikipedia.org/wiki/Euler_method">méthode Forward Euler</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
-    return new PluginInfo(PluginInfo::Solver, true, false,
+    return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           QStringList(),
                           descriptions);
 }
@@ -72,12 +72,18 @@ QString ForwardEulerSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000030"))
-        return solverName();
-    else if (!pKisaoId.compare("KISAO:0000483"))
-        return StepId;
+    static const QString Kisao0000030 = "KISAO:0000030";
+    static const QString Kisao0000483 = "KISAO:0000483";
 
-    return QString();
+    if (pKisaoId == Kisao0000030) {
+        return solverName();
+    }
+
+    if (pKisaoId == Kisao0000483) {
+        return StepId;
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -86,12 +92,15 @@ QString ForwardEulerSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
-    if (!pId.compare(solverName()))
+    if (pId == solverName()) {
         return "KISAO:0000030";
-    else if (!pId.compare(StepId))
-        return "KISAO:0000483";
+    }
 
-    return QString();
+    if (pId == StepId) {
+        return "KISAO:0000483";
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -100,7 +109,7 @@ Solver::Type ForwardEulerSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Ode;
+    return Solver::Type::Ode;
 }
 
 //==============================================================================
@@ -123,24 +132,24 @@ Solver::Properties ForwardEulerSolverPlugin::solverProperties() const
     stepDescriptions.insert("en", QString::fromUtf8("Step"));
     stepDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
+    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
 }
 
 //==============================================================================
 
 QMap<QString, bool> ForwardEulerSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
-    Q_UNUSED(pSolverPropertiesValues);
+    Q_UNUSED(pSolverPropertiesValues)
 
     // We don't handle this interface...
 
-    return QMap<QString, bool>();
+    return {};
 }
 
 //==============================================================================
 
-}   // namespace ForwardEulerSolver
-}   // namespace OpenCOR
+} // namespace ForwardEulerSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

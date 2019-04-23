@@ -44,6 +44,7 @@ public:
                                       const QString &pComment,
                                       DataStore::DataStore *pDataStore,
                                       const DataStore::DataStoreVariables &pVariables);
+    ~BiosignalmlDataStoreData() override;
 
     QString name() const;
     QString author() const;
@@ -59,8 +60,8 @@ private:
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

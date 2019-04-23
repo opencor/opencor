@@ -584,8 +584,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/sundialsplugin.cpp
-    HEADERS_MOC
-        src/sundialsplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

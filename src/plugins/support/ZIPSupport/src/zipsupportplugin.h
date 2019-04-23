@@ -47,8 +47,8 @@ class ZIPSupportPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace ZIPSupport
-}   // namespace OpenCOR
+} // namespace ZIPSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

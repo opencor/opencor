@@ -41,7 +41,7 @@ namespace OpenCOR {
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace SimulationSupport
+} // namespace SimulationSupport
 
 //==============================================================================
 
@@ -99,7 +99,7 @@ public:
     quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::None);
+                                SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::Task::None);
 
 private:
     SimulationExperimentViewPlugin *mPlugin;
@@ -153,8 +153,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

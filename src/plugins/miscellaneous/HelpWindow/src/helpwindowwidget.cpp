@@ -76,7 +76,7 @@ qint64 HelpWindowNetworkReply::bytesAvailable() const
 
 //==============================================================================
 
-qint64 HelpWindowNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
+qint64 HelpWindowNetworkReply::readData(char *pData, qint64 pMaxlen)
 {
     // Determine the lenght of the data to be read
 
@@ -84,8 +84,8 @@ qint64 HelpWindowNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
 
     // Read the data, should there be some to read
 
-    if (len) {
-        memcpy(pBuffer, mData.constData(), size_t(len));
+    if (len != 0) {
+        memcpy(pData, mData.constData(), size_t(len));
 
         mData.remove(0, int(len));
     }
@@ -93,8 +93,9 @@ qint64 HelpWindowNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
     // Should there be no data left to read, then let ourselves know immediately
     // that we are done
 
-    if (!mData.length())
+    if (mData.isEmpty()) {
         QTimer::singleShot(0, this, &HelpWindowNetworkReply::finished);
+    }
 
     // Return the size of the data which was read
 
@@ -119,8 +120,8 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
                                                               const QNetworkRequest &pRequest,
                                                               QIODevice *pOutgoingData)
 {
-    Q_UNUSED(pOperation);
-    Q_UNUSED(pOutgoingData);
+    Q_UNUSED(pOperation)
+    Q_UNUSED(pOutgoingData)
 
     // Retrieve, if possible, the requested document
 
@@ -129,7 +130,7 @@ QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperati
                           mHelpEngine->fileData(url):
                           mErrorMessageTemplate.arg(tr("Error"))
                                                .arg(tr("The following help file could not be found:")+" <strong>"+url.toString()+"</strong>.")
-                                               .arg(tr("Please <a href=\"contactUs.html\">contact us</a> about this error."))
+                                               .arg(tr(R"(Please <a href="contactUs.html">contact us</a> about this error.)"))
                                                .arg(Core::copyright()).toUtf8();
 
     // Return the requested document or an error message
@@ -193,8 +194,9 @@ void HelpWindowWidget::retranslateUi()
     // Retranslate the current document, but only if it is an error document
     // since a valid document is hard-coded and therefore cannot be retranslated
 
-    if (!mHelpEngine->findFile(webView()->url()).isValid())
+    if (!mHelpEngine->findFile(webView()->url()).isValid()) {
         webView()->load(webView()->url());
+    }
 }
 
 //==============================================================================
@@ -221,13 +223,15 @@ bool HelpWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
     // We only support URLs that refer to an OpenCOR document (qthelp://...)
 
-    return !pUrlScheme.compare("qthelp");
+    static const QString QtHelp = "qthelp";
+
+    return pUrlScheme == QtHelp;
 }
 
 //==============================================================================
 
-}   // namespace HelpWindow
-}   // namespace OpenCOR
+} // namespace HelpWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

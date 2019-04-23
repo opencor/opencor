@@ -96,8 +96,9 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
                     return true;
                 }
 
-                if (localSchemes.contains(urlScheme))
+                if (localSchemes.contains(urlScheme)) {
                     return true;
+                }
 
                 emit linkClicked(pRequest.url());
 
@@ -110,11 +111,12 @@ bool WebViewerPage::acceptNavigationRequest(QWebFrame *pFrame,
         }
 
         return true;
-    } else {
-        QDesktopServices::openUrl(url);
-
-        return false;
     }
+
+
+    QDesktopServices::openUrl(url);
+
+    return false;
 }
 
 //==============================================================================
@@ -183,7 +185,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
     // Create our layout and populate it
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
@@ -200,7 +202,7 @@ WebViewerWidget::WebViewerWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const auto SettingsZoomLevel = QStringLiteral("ZoomLevel");
+static const char *SettingsZoomLevel = "ZoomLevel";
 
 //==============================================================================
 
@@ -249,9 +251,11 @@ bool WebViewerWidget::event(QEvent *pEvent)
 
     if (mOverridingCursor) {
         return true;
-    } else if (    mOverrideCursor && !mOverridingCursor
-               && (pEvent->type() == QEvent::CursorChange)
-               && (cursor().shape() == Qt::IBeamCursor)) {
+    }
+
+    if (   mOverrideCursor && !mOverridingCursor
+        && (pEvent->type() == QEvent::CursorChange)
+        && (cursor().shape() == Qt::IBeamCursor)) {
         mOverridingCursor = true;
 
         setCursor(Qt::ArrowCursor);
@@ -259,8 +263,10 @@ bool WebViewerWidget::event(QEvent *pEvent)
         mOverridingCursor = false;
 
         return true;
-    } else if (pEvent->type() == QEvent::ToolTip) {
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
+    }
+
+    if (pEvent->type() == QEvent::ToolTip) {
+        auto helpEvent = static_cast<QHelpEvent *>(pEvent);
 
         if (!mToolTip.isEmpty()) {
             QToolTip::showText(helpEvent->globalPos(), mToolTip);
@@ -271,9 +277,9 @@ bool WebViewerWidget::event(QEvent *pEvent)
         }
 
         return true;
-    } else {
-        return QWidget::event(pEvent);
     }
+
+    return QWidget::event(pEvent);
 }
 
 //==============================================================================
@@ -286,10 +292,11 @@ void WebViewerWidget::wheelEvent(QWheelEvent *pEvent)
     if (mZoomingEnabled && (pEvent->modifiers() == Qt::ControlModifier)) {
         int delta = pEvent->delta();
 
-        if (delta > 0)
+        if (delta > 0) {
             zoomIn();
-        else if (delta < 0)
+        } else if (delta < 0) {
             zoomOut();
+        }
 
         pEvent->accept();
     } else {
@@ -304,7 +311,7 @@ void WebViewerWidget::wheelEvent(QWheelEvent *pEvent)
 
 bool WebViewerWidget::isUrlSchemeSupported(const QString &pUrlScheme)
 {
-    Q_UNUSED(pUrlScheme);
+    Q_UNUSED(pUrlScheme)
 
     // By default, we support all URL schemes
 
@@ -344,11 +351,14 @@ QWebElement WebViewerWidget::retrieveLinkInformation(QString &pLink,
     //       handled), which means that if we need that information to process
     //       the click, then we will have the wrong information...
 
+    static const QString A = "A";
+
     QWebHitTestResult hitTestResult = mWebView->page()->mainFrame()->hitTestContent(mapFromGlobal(QCursor::pos()));
     QWebElement res = hitTestResult.element();
 
-    while (!res.isNull() && res.tagName().compare("A"))
+    while (!res.isNull() && (res.tagName() != A)) {
         res = res.parent();
+    }
 
     if (res.isNull()) {
         pLink = QString();
@@ -466,8 +476,9 @@ void WebViewerWidget::emitZoomRelatedSignals()
 
 void WebViewerWidget::setZoomLevel(int pZoomLevel)
 {
-    if (!mZoomingEnabled || (pZoomLevel == mZoomLevel))
+    if (!mZoomingEnabled || (pZoomLevel == mZoomLevel)) {
         return;
+    }
 
     // Set the zoom level of the help document contents to a particular value
 
@@ -515,12 +526,13 @@ void WebViewerWidget::pageChanged()
     // We have a new page, resulting in the previous or next page becoming
     // either available or not
 
-    QAction *action = qobject_cast<QAction *>(sender());
+    auto action = qobject_cast<QAction *>(sender());
 
-    if (action == mWebView->pageAction(QWebPage::Back))
+    if (action == mWebView->pageAction(QWebPage::Back)) {
         emit backEnabled(action->isEnabled());
-    else if (action == mWebView->pageAction(QWebPage::Forward))
+    } else if (action == mWebView->pageAction(QWebPage::Forward)) {
         emit forwardEnabled(action->isEnabled());
+    }
 }
 
 //==============================================================================
@@ -553,8 +565,8 @@ void WebViewerWidget::resetProgressBar()
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
-}   // namespace OpenCOR
+} // namespace WebViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

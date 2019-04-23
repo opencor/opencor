@@ -45,17 +45,18 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.cellml.org/\">CellML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="http://www.cellml.org/">CellML</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="http://www.cellml.org/">CellML</a>.)"));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "CellMLAPI" << "Compiler" << "StandardSupport",
                           descriptions);
 }
 
 //==============================================================================
 
-CellMLSupportPlugin::CellMLSupportPlugin()
+CellMLSupportPlugin::CellMLSupportPlugin() :
+    mFileNewCellmlFileAction(nullptr)
 {
     // Keep track of our file type interface
 
@@ -117,8 +118,8 @@ QStringList CellMLSupportPlugin::fileTypeDefaultViews() const
 
 void CellMLSupportPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pViewPlugin)
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -129,7 +130,7 @@ Gui::Menus CellMLSupportPlugin::guiMenus() const
 {
     // We don't handle this interface...
 
-    return Gui::Menus();
+    return {};
 }
 
 //==============================================================================
@@ -138,7 +139,7 @@ Gui::MenuActions CellMLSupportPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellmlFileAction);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::FileNew, mFileNewCellmlFileAction);
 }
 
 //==============================================================================
@@ -169,8 +170,8 @@ bool CellMLSupportPlugin::definesPluginInterfaces()
 bool CellMLSupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                              QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -202,7 +203,7 @@ void CellMLSupportPlugin::finalizePlugin()
 
 void CellMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // Make a call to the instance of the CellML file manager so that it gets
     // properly set up (and therefore can start managing CellML files) before it
@@ -218,7 +219,7 @@ void CellMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void CellMLSupportPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -227,7 +228,7 @@ void CellMLSupportPlugin::loadSettings(QSettings &pSettings)
 
 void CellMLSupportPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -236,7 +237,7 @@ void CellMLSupportPlugin::saveSettings(QSettings &pSettings) const
 
 void CellMLSupportPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -254,23 +255,24 @@ void CellMLSupportPlugin::newCellmlFile()
     Core::FileManager::Status createStatus =
 #endif
     fileManagerInstance->create(QString(),
-                                QString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                                        "<model xmlns=\"http://www.cellml.org/cellml/%1#\" name=\"my_model\">\n"
-                                        "    <!-- Your code goes here-->\n"
-                                        "</model>\n").arg(CellmlRefVersion));
+                                QString( "<?xml version='1.0' encoding='UTF-8'?>\n"
+                                        R"(<model name="my_model" xmlns="http://www.cellml.org/cellml/%1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#">)""\n"
+                                         "    <!-- Your code goes here-->\n"
+                                         "</model>\n").arg(CellmlRefVersion));
 
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != Core::FileManager::Created)
+    if (createStatus != Core::FileManager::Status::Created) {
         qFatal("FATAL ERROR | %s:%d: the new CellML file did not get created.", __FILE__, __LINE__);
+    }
 #endif
 }
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

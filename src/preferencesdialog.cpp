@@ -51,7 +51,7 @@ PreferencesPluginCategoryWidget::PreferencesPluginCategoryWidget(QWidget *pParen
 {
     // Create a form widget layout
 
-    QFormLayout *formWidgetLayout = new QFormLayout(this);
+    auto formWidgetLayout = new QFormLayout(this);
 
     formWidgetLayout->setFormAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
 
@@ -90,7 +90,7 @@ QLabel * PreferencesPluginCategoryWidget::label(const QString &pLabel)
 {
     // Create and return a label
 
-    QLabel *res = new QLabel(pLabel, this);
+    auto res = new QLabel(pLabel, this);
 
     res->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
 
@@ -125,8 +125,9 @@ void PreferencesItemDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (pluginItem->hasChildren())
+    if (pluginItem->hasChildren()) {
         option.font.setBold(true);
+    }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
 }
@@ -190,12 +191,12 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
 
     // Populate the data model with our General section
 
-    QStandardItem *generalPluginItem = new QStandardItem(tr("General"));
-    QStandardItem *selectedPluginItem = generalPluginItem;
+    auto generalPluginItem = new QStandardItem(tr("General"));
+    auto selectedPluginItem = generalPluginItem;
 
     mModel->invisibleRootItem()->appendRow(generalPluginItem);
 
-    Preferences::PreferencesWidget *generalPreferencesWidget = new GeneralPreferencesWidget(mainWindow());
+    auto generalPreferencesWidget = new GeneralPreferencesWidget(mainWindow());
 
     mGui->stackedWidget->addWidget(generalPreferencesWidget);
 
@@ -207,16 +208,18 @@ PreferencesDialog::PreferencesDialog(PluginManager *pPluginManager,
     for (auto plugin : mPluginManager->sortedPlugins()) {
         PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
-        if (preferencesInterface && preferencesInterface->preferencesWidget()) {
+        if (   (preferencesInterface != nullptr)
+            && (preferencesInterface->preferencesWidget() != nullptr)) {
             // Create the item corresponding to the current plugin and add it to
             // its corresponding category
 
-            QStandardItem *pluginItem = new QStandardItem(plugin->name());
+            auto pluginItem = new QStandardItem(plugin->name());
 
             pluginCategoryItem(plugin->info()->category())->appendRow(pluginItem);
 
-            if (!plugin->name().compare(pPluginName))
+            if (plugin->name() == pPluginName) {
                 selectedPluginItem = pluginItem;
+            }
 
             // Retrieve the corresponding preferences widget and add it to our
             // stacked widget, as well as keep track of it
@@ -292,7 +295,7 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(PluginInfo::Category pCate
 
     QStandardItem *res = mCategoryItems.value(pCategory);
 
-    if (!res) {
+    if (res == nullptr) {
         // No category item exists for the given category, so create one and add
         // it to our data model (and this in the right place)
 
@@ -313,8 +316,9 @@ QStandardItem * PreferencesDialog::pluginCategoryItem(PluginInfo::Category pCate
             }
         }
 
-        if (!inserted)
+        if (!inserted) {
             mModel->invisibleRootItem()->appendRow(res);
+        }
 
         // Keep track of the relationship between our new item and its category
 
@@ -348,8 +352,9 @@ void PreferencesDialog::buttonBoxAccepted()
         if (preferencesWidget->preferencesChanged()) {
             preferencesWidget->savePreferences();
 
-            if (mPreferencesWidgetPluginNames.contains(preferencesWidget))
+            if (mPreferencesWidgetPluginNames.contains(preferencesWidget)) {
                 mPluginNames << mPreferencesWidgetPluginNames.value(preferencesWidget);
+            }
         }
     }
 
@@ -363,7 +368,7 @@ void PreferencesDialog::buttonBoxAccepted()
 void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
                                                 const QModelIndex &pOldIndex)
 {
-    Q_UNUSED(pOldIndex);
+    Q_UNUSED(pOldIndex)
 
     // Check whether we are dealing with a plugin category
 
@@ -393,8 +398,9 @@ void PreferencesDialog::updatePreferencesWidget(const QModelIndex &pNewIndex,
 
     QLayout *widgetLayout = mGui->stackedWidget->currentWidget()->layout();
 
-    if (widgetLayout)
+    if (widgetLayout != nullptr) {
         widgetLayout->setContentsMargins(QMargins());
+    }
 
     // Make sure that we are big enough to show our contents
 
@@ -416,13 +422,14 @@ void PreferencesDialog::resetAll()
 {
     // Reset all of our general and plugins' preferences
 
-    for (auto preferencesWidget : mItemPreferencesWidgets.values())
+    for (auto preferencesWidget : mItemPreferencesWidgets.values()) {
         preferencesWidget->resetPreferences();
+    }
 }
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

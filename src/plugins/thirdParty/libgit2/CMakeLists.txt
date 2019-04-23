@@ -188,8 +188,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libgit2plugin.cpp
-    HEADERS_MOC
-        src/libgit2plugin.h
     PLUGINS
         OpenSSL
         zlib

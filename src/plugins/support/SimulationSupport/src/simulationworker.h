@@ -36,7 +36,7 @@ namespace OpenCOR {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
@@ -104,8 +104,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

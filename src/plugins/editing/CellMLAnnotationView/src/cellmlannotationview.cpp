@@ -48,8 +48,8 @@ QString idUrl(const QString &pResource, const QString &pId)
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

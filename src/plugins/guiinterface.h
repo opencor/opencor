@@ -49,7 +49,7 @@ namespace Gui {
 class Menu
 {
 public:
-    enum Type {
+    enum class Type {
         File,
         View
     };
@@ -76,7 +76,7 @@ typedef QList<Menu> Menus;
 class MenuAction
 {
 public:
-    enum Type {
+    enum class Type {
         File,
         FileNew,
         Tools
@@ -98,7 +98,7 @@ typedef QList<MenuAction> MenuActions;
 
 //==============================================================================
 
-}   // namespace Gui
+} // namespace Gui
 
 //==============================================================================
 
@@ -118,7 +118,7 @@ public:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 

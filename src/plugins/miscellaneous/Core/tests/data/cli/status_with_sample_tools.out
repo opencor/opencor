@@ -11,7 +11,7 @@ The following plugins are available:
  - LLVMClang: the plugin is loaded and fully functional.
  - MathMLViewerWidget: the plugin is loaded and fully functional.
  - QScintilla: the plugin is loaded and fully functional.
- - QScintillaSupport: the plugin is loaded and fully functional.
+ - QScintillaWidget: the plugin is loaded and fully functional.
  - Qwt: the plugin is loaded and fully functional.
  - Sample: the plugin is loaded and fully functional.
  - SampleTools: the plugin is loaded and fully functional.

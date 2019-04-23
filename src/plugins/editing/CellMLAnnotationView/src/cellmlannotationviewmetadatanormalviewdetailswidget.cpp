@@ -60,8 +60,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mItemsCount(0),
     mElement(nullptr),
     mRdfTripleInformation(QString()),
-    mInformationType(None),
-    mLookUpRdfTripleInformation(First),
+    mInformationType(InformationType::None),
+    mLookUpRdfTripleInformation(Information::First),
     mRdfTriplesMapping(QMap<QString, CellMLSupport::CellmlFileRdfTriple *>()),
     mUrls(QMap<QString, QString>()),
     mRdfTripleInformationSha1s(QStringList()),
@@ -157,10 +157,11 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputHeaders()
 
     QWebElement countElement = documentElement.findFirst("th[id=count]");
 
-    if (mItemsCount == 1)
+    if (mItemsCount == 1) {
         countElement.setInnerXml(tr("(1 term)"));
-    else
+    } else {
         countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItemsCount)));
+    }
 }
 
 //==============================================================================
@@ -175,24 +176,24 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(c
 
     // Show/hide our output message and output for ontological terms
 
-    mOutputMessage->setVisible(!mItemsCount);
-    mOutputOntologicalTerms->setVisible(mItemsCount);
+    mOutputMessage->setVisible(mItemsCount == 0);
+    mOutputOntologicalTerms->setVisible(mItemsCount != 0);
 
     // Request for something to be looked up, if needed
 
-    if (pLookUpRdfTripleInformation != No) {
-        if (mItemsCount) {
+    if (pLookUpRdfTripleInformation != Information::No) {
+        if (mItemsCount != 0) {
             // Request for the first resource id, the last resource id or an
             // 'old' qualifier, resource or resource id to be looked up
 
-            if (pLookUpRdfTripleInformation == First) {
+            if (pLookUpRdfTripleInformation == Information::First) {
                 // Look up the first resource id
 
-                genericLookUp(mFirstRdfTripleInformation, Id);
-            } else if (pLookUpRdfTripleInformation == Last) {
+                genericLookUp(mFirstRdfTripleInformation, InformationType::Id);
+            } else if (pLookUpRdfTripleInformation == Information::Last) {
                 // Look up the last resource id
 
-                genericLookUp(mLastRdfTripleInformation, Id);
+                genericLookUp(mLastRdfTripleInformation, InformationType::Id);
             } else {
                 // Look up any 'old' qualifier, resource or resource id
 
@@ -216,8 +217,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                                                                     InformationType pInformationType,
                                                                     Information pLookUpRdfTripleInformation)
 {
-    if (!pElement)
+    if (pElement == nullptr) {
         return;
+    }
 
     // Keep track of the CellML element
 
@@ -243,11 +245,12 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
 
-    if (rdfTriples.count()) {
+    if (!rdfTriples.isEmpty()) {
         // Add the RDF triples
 
-        for (auto rdfTriple : rdfTriples)
+        for (auto rdfTriple : rdfTriples) {
             addRdfTriple(rdfTriple, false);
+        }
     } else {
         mOutputOntologicalTerms->webView()->setHtml(QString());
     }
@@ -263,12 +266,13 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
                                                                        bool pNeedAdditionalGuiUpdates)
 {
-    if (!pRdfTriple)
+    if (pRdfTriple == nullptr) {
         return;
+    }
 
     // Initialise our web view, if needed
 
-    if (!mItemsCount) {
+    if (mItemsCount == 0) {
         int iconSize = int(16/qApp->devicePixelRatio());
 
         mOutputOntologicalTerms->webView()->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", iconSize, iconSize))
@@ -279,39 +283,41 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     ++mItemsCount;
 
-    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                             pRdfTriple->modelQualifierAsString():
                             pRdfTriple->bioQualifierAsString();
     QString rdfTripleInformation = qualifier+"|"+pRdfTriple->resource()+"|"+pRdfTriple->id();
     QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation);
 
-    QString ontologicalTerm = "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
-                              "    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
-                              "        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
-                              "    </td>\n"
-                              "    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
-                              "        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->resource()+"</a>\n"
-                              "    </td>\n"
-                              "    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
-                              "        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->id()+"</a>\n"
-                              "    </td>\n"
-                              "    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
-                              "        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"></a>\n"
-                              "    </td>\n"
-                              "    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
-                              "        <img class=\"disabledButton\">\n"
-                              "    </td>\n"
-                              "</tr>\n";
+    QString ontologicalTerm = R"(<tr id="item_)"+rdfTripleInformationSha1+R"(">)""\n"
+                              R"(    <td id="qualifier_)"+rdfTripleInformationSha1+R"(">)""\n"
+                              R"(        <a href=")"+rdfTripleInformation+R"(">)"+qualifier+"</a>\n"
+                               "    </td>\n"
+                              R"(    <td id="resource_)"+rdfTripleInformationSha1+R"(">)""\n"
+                              R"(        <a href=")"+rdfTripleInformation+R"(">)"+pRdfTriple->resource()+"</a>\n"
+                               "    </td>\n"
+                              R"(    <td id="id_)"+rdfTripleInformationSha1+R"(">)""\n"
+                              R"(        <a href=")"+rdfTripleInformation+R"(">)"+pRdfTriple->id()+"</a>\n"
+                               "    </td>\n"
+                              R"(    <td id="button_)"+rdfTripleInformationSha1+R"(">)""\n"
+                              R"(        <a class="noHover" href=")"+rdfTripleInformationSha1+R"("><img class="button"></a>)""\n"
+                               "    </td>\n"
+                              R"(    <td id="disabledButton_)"+rdfTripleInformationSha1+R"(" style="display: none;">)""\n"
+                              R"(        <img class="disabledButton">)""\n"
+                               "    </td>\n"
+                               "</tr>\n";
 
-    if (mItemsCount == 1)
+    if (mItemsCount == 1) {
         mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerm);
-    else
+    } else {
         mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1s.last())).appendOutside(ontologicalTerm);
+    }
 
     // Keep track of some information
 
-    if (!mUrls.contains(pRdfTriple->resource()))
+    if (!mUrls.contains(pRdfTriple->resource())) {
         mUrls.insert(pRdfTriple->resource(), resourceUrl(pRdfTriple->resource()));
+    }
 
     mUrls.insert(rdfTripleInformation, idUrl(pRdfTriple->resource(), pRdfTriple->id()));
 
@@ -319,17 +325,18 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     mRdfTriplesMapping.insert(rdfTripleInformationSha1, pRdfTriple);
 
-    if (mFirstRdfTripleInformation.isEmpty())
+    if (mFirstRdfTripleInformation.isEmpty()) {
         mFirstRdfTripleInformation = rdfTripleInformation;
+    }
 
     mLastRdfTripleInformation = rdfTripleInformation;
 
     // Do some additional GUI updates, if needed
 
     if (pNeedAdditionalGuiUpdates) {
-        mLookUpRdfTripleInformation = Last;
+        mLookUpRdfTripleInformation = Information::Last;
 
-        additionalGuiUpdates(QString(), None, mLookUpRdfTripleInformation);
+        additionalGuiUpdates(QString(), InformationType::None, mLookUpRdfTripleInformation);
     }
 }
 
@@ -357,40 +364,42 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     QWebElement documentElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement();
     QString rdfTripleInformationSha1 = pRdfTripleInformation.isEmpty()?QString():Core::sha1(pRdfTripleInformation);
 
-    if (rdfTripleInformationSha1.compare(mRdfTripleInformationSha1)) {
+    if (rdfTripleInformationSha1 != mRdfTripleInformationSha1) {
         if (!mRdfTripleInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1)).removeClass(Highlighted);
 
-            if (mInformationType == Qualifier)
+            if (mInformationType == InformationType::Qualifier) {
                 documentElement.findFirst(QString("td[id=qualifier_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
-            else if (mInformationType == Resource)
+            } else if (mInformationType == InformationType::Resource) {
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
-            else if (mInformationType == Id)
+            } else if (mInformationType == InformationType::Id) {
                 documentElement.findFirst(QString("td[id=id_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
+            }
         }
 
         if (!rdfTripleInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(rdfTripleInformationSha1)).addClass(Highlighted);
 
-            if (pInformationType == Qualifier)
+            if (pInformationType == InformationType::Qualifier) {
                 documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
-            else if (pInformationType == Resource)
+            } else if (pInformationType == InformationType::Resource) {
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
-            else if (pInformationType == Id)
+            } else if (pInformationType == InformationType::Id) {
                 documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            }
         }
 
         mRdfTripleInformationSha1 = rdfTripleInformationSha1;
     } else if (!rdfTripleInformationSha1.isEmpty()) {
-        if (pInformationType == Qualifier) {
+        if (pInformationType == InformationType::Qualifier) {
             documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
             documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
-        } else if (pInformationType == Resource) {
+        } else if (pInformationType == InformationType::Resource) {
             documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
-        } else if (pInformationType == Id) {
+        } else if (pInformationType == InformationType::Id) {
             documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
@@ -400,11 +409,11 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     mInformationType = pInformationType;
 
     // Check whether we have something to look up
-    // Note: there is nothing nothing do for Any...
+    // Note: there is nothing do for Information::Any...
 
-    if (mLookUpRdfTripleInformation == First) {
+    if (mLookUpRdfTripleInformation == Information::First) {
         mOutputOntologicalTerms->webView()->page()->triggerAction(QWebPage::MoveToStartOfDocument);
-    } else if (mLookUpRdfTripleInformation == Last) {
+    } else if (mLookUpRdfTripleInformation == Information::Last) {
         // Note #1: normally, we would use
         //             mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToEndOfDocument);
         //          but this doesn't work...
@@ -415,26 +424,26 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
         //          but this doesn't get us exactly to the bottom of the page...
 
         QTimer::singleShot(0, this, &CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple);
-    } else if (mLookUpRdfTripleInformation == No) {
+    } else if (mLookUpRdfTripleInformation == Information::No) {
         return;
     }
 
     // Let people know that we want to look something up
 
     switch (pInformationType) {
-    case None:
+    case InformationType::None:
         emit noLookUpRequested();
 
         break;
-    case Qualifier:
+    case InformationType::Qualifier:
         emit qualifierLookUpRequested(qualifier);
 
         break;
-    case Resource:
+    case InformationType::Resource:
         emit resourceLookUpRequested(resource);
 
         break;
-    case Id:
+    case InformationType::Id:
         emit idLookUpRequested(resource, id);
 
         break;
@@ -447,7 +456,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformati
 {
     // Disable the looking up of RDF triple information
 
-    mLookUpRdfTripleInformation = No;
+    mLookUpRdfTripleInformation = Information::No;
 
     // Update the GUI by pretending to be interested in looking something up
 
@@ -480,7 +489,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(mLink);
 
-        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                                 rdfTriple->modelQualifierAsString():
                                 rdfTriple->bioQualifierAsString();
         QString rdfTripleInformation = qualifier+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
@@ -499,29 +508,32 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         QWebElement rdfTripleElement = mOutputOntologicalTerms->webView()->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mLink));
 
-        if (!mItemsCount) {
+        if (mItemsCount == 0) {
             mRdfTripleInformation = QString();
-            mInformationType = None;
-        } else if (!mLink.compare(mRdfTripleInformationSha1)) {
+            mInformationType = InformationType::None;
+        } else if (mLink == mRdfTripleInformationSha1) {
             QWebElement newRdfTripleEment = rdfTripleElement.nextSibling();
 
-            if (newRdfTripleEment.isNull())
+            if (newRdfTripleEment.isNull()) {
                 newRdfTripleEment = rdfTripleElement.previousSibling();
+            }
 
             static const QRegularExpression ItemRegEx = QRegularExpression("^item_");
 
             CellMLSupport::CellmlFileRdfTriple *newRdfTriple = mRdfTriplesMapping.value(newRdfTripleEment.attribute("id").remove(ItemRegEx));
-            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelQualifier::ModelUnknown)?
                                        newRdfTriple->modelQualifierAsString():
                                        newRdfTriple->bioQualifierAsString();
 
             mRdfTripleInformation = newQualifier+"|"+newRdfTriple->resource()+"|"+newRdfTriple->id();
 
-            if (!rdfTripleInformation.compare(mFirstRdfTripleInformation))
+            if (rdfTripleInformation == mFirstRdfTripleInformation) {
                 mFirstRdfTripleInformation = mRdfTripleInformation;
+            }
 
-            if (!rdfTripleInformation.compare(mLastRdfTripleInformation))
+            if (rdfTripleInformation == mLastRdfTripleInformation) {
                 mLastRdfTripleInformation = mRdfTripleInformation;
+            }
         }
 
         // Remove the RDF triple from our GUI
@@ -530,9 +542,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         // Do some additional GUI updates
 
-        mLookUpRdfTripleInformation = Any;
+        mLookUpRdfTripleInformation = Information::Any;
 
-        if (!mLink.compare(mRdfTripleInformationSha1)) {
+        if (mLink == mRdfTripleInformationSha1) {
             additionalGuiUpdates(mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
         } else {
             // The looked up information is the same, so no need to look it up
@@ -540,7 +552,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
             // Note: indeed, to look it up again would result in the web view
             //       flashing (since a 'new' web page would be loaded)...
 
-            additionalGuiUpdates(mRdfTripleInformation, mInformationType, No);
+            additionalGuiUpdates(mRdfTripleInformation, mInformationType, Information::No);
         }
 
         // Remove the RDF triple from the CellML file
@@ -554,18 +566,18 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
         // We have clicked on a qualifier/resource/id link, so start by enabling
         // the looking up of any RDF triple information
 
-        mLookUpRdfTripleInformation = Any;
+        mLookUpRdfTripleInformation = Information::Any;
 
         // Call our generic look up function
 
         QStringList rdfTripleInformation = mLink.split('|');
 
         genericLookUp(mLink,
-                      (!rdfTripleInformation[0].compare(mTextContent))?
-                          Qualifier:
-                          !rdfTripleInformation[1].compare(mTextContent)?
-                              Resource:
-                              Id);
+                      (rdfTripleInformation[0] == mTextContent)?
+                          InformationType::Qualifier:
+                          (rdfTripleInformation[1] == mTextContent)?
+                              InformationType::Resource:
+                              InformationType::Id);
     }
 }
 
@@ -592,9 +604,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
         } else {
             QStringList rdfTripleInformation = link.split('|');
 
-            linkToolTip = (!rdfTripleInformation[0].compare(textContent))?
+            linkToolTip = (rdfTripleInformation[0] == textContent)?
                               tr("Look Up Qualifier"):
-                              !rdfTripleInformation[1].compare(textContent)?
+                              (rdfTripleInformation[1] == textContent)?
                                   tr("Look Up Resource"):
                                   tr("Look Up Id");
         }
@@ -615,8 +627,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(
     // id, but only if we are over a link, i.e. if both mLink and mTextContent
     // are not empty
 
-    if (!mLink.isEmpty() && !mTextContent.isEmpty())
+    if (!mLink.isEmpty() && !mTextContent.isEmpty()) {
         mContextMenu->exec(QCursor::pos());
+    }
 }
 
 //==============================================================================
@@ -627,12 +640,13 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::copy()
 
     QStringList rdfTripleInformation = mLink.split('|');
 
-    if (!rdfTripleInformation[0].compare(mTextContent))
+    if (rdfTripleInformation[0] == mTextContent) {
         QApplication::clipboard()->setText(mTextContent);
-    else if (!rdfTripleInformation[1].compare(mTextContent))
+    } else if (rdfTripleInformation[1] == mTextContent) {
         QApplication::clipboard()->setText(mUrls.value(mTextContent));
-    else
+    } else {
         QApplication::clipboard()->setText(mUrls.value(mLink));
+    }
 }
 
 //==============================================================================
@@ -647,14 +661,14 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::filePermissionsChanged
 
     for (const auto &rdfTripleInformationSha1 : mRdfTripleInformationSha1s) {
         documentElement.findFirst(QString("td[id=button_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", fileReadableAndWritable?"table-cell":"none");
-        documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", !fileReadableAndWritable?"table-cell":"none");
+        documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", (!fileReadableAndWritable)?"table-cell":"none");
     }
 }
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

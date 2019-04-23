@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <model name="hodgkin_huxley_squid_axon_model_1952" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <units name="millisecond">
         <unit prefix="milli" units="second"/>

@@ -83,9 +83,9 @@ if(USE_PREBUILT_QSCINTILLA_PACKAGE)
                               SHA1_VALUES 52dbf010e21045a04112d066fc2abb0ba21bc34c)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 6a64ba6d94568da2aad1318c31a175d6633ac38c
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 088a41487146864415c38d5cf48558a94d4ed0af
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 79d52722c953cb337081ebeae481e74d7dc0e9df)
+                              SHA1_VALUES 6ec3695e71aeeb26dca6f7bbd6c575fa5b84bc05)
     endif()
 else()
     # Set platform specific configuration options
@@ -136,12 +136,23 @@ else()
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
+        # Fix the RPATH information
+
         if(APPLE)
-            # Fix the RPATH information
+            ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
+                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES copyLibrary)
+        else()
+            # Note: we wouldn't normally strip the library here since it's done
+            #       elsewhere in our build process, but it happens that there is
+            #       an issue with the system version of patchelf that prevents
+            #       the library from being stripped afterwards...
 
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
-                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${SHARED_LIBRARY}
-                                     COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${SHARED_LIBRARY}
+                                     COMMAND strip -x ${SHARED_LIBRARY}
+                                     COMMAND patchelf --remove-rpath ${SHARED_LIBRARY}
+                                     COMMAND patchelf --set-rpath $ORIGIN --force-rpath ${SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyLibrary)
         endif()
@@ -171,8 +182,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/qscintillaplugin.cpp
-    HEADERS_MOC
-        src/qscintillaplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

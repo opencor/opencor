@@ -34,12 +34,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "Qsci/qscilexer.h"
+#include "qscintillabegin.h"
+    #include "Qsci/qscilexer.h"
+#include "qscintillaend.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace QScintillaSupport {
+namespace QScintillaWidget {
 
 //==============================================================================
 
@@ -71,8 +73,6 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mFont = QFont("Monospace", 9);
 #elif defined(Q_OS_MAC)
     mFont = QFont("Monaco", 12);
-#else
-    #error Unsupported platform
 #endif
 
     setFont(mFont);
@@ -105,12 +105,15 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     //          press Ctrl+L, then nothing would happen while we would have
     //          expected the current file to be (un)locked...
 
-    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'/');
-    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'D');
-    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'L');
-    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+(SCMOD_SHIFT << 16)+'L');
-    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'R');
-    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'T');
+    int ctrlKey = 65536*SCMOD_CTRL;
+    int shiftKey = 65536*SCMOD_SHIFT;
+
+    SendScintilla(SCI_CLEARCMDKEY, ctrlKey+'/');
+    SendScintilla(SCI_CLEARCMDKEY, ctrlKey+'D');
+    SendScintilla(SCI_CLEARCMDKEY, ctrlKey+'L');
+    SendScintilla(SCI_CLEARCMDKEY, ctrlKey+shiftKey+'L');
+    SendScintilla(SCI_CLEARCMDKEY, ctrlKey+'R');
+    SendScintilla(SCI_CLEARCMDKEY, ctrlKey+'T');
 
     // Add support for Specials (Unicode block)
     // Note #1: see issue #709 for more information...
@@ -164,8 +167,9 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
     mContextMenu->clear();
 
-    for (auto action : pContextMenuActions)
+    for (auto action : pContextMenuActions) {
         mContextMenu->addAction(action);
+    }
 }
 
 //==============================================================================
@@ -192,7 +196,7 @@ void QScintillaWidget::setCursorPosition(int pLine, int pColumn)
 
     // Center ourselves around the given line
 
-    SendScintilla(SCI_LINESCROLL, 0, pLine-firstVisibleLine()-(SendScintilla(SCI_LINESONSCREEN) >> 1));
+    SendScintilla(SCI_LINESCROLL, 0, pLine-firstVisibleLine()-(SendScintilla(SCI_LINESONSCREEN)/2));
 
     // Set our cursor position
 
@@ -205,8 +209,9 @@ void QScintillaWidget::setLexer(QsciLexer *pLexer)
 {
     // Set our font for the given lexer, if any
 
-    if (pLexer)
+    if (pLexer != nullptr) {
         pLexer->setFont(mFont);
+    }
 
     QsciScintilla::setLexer(pLexer);
 }
@@ -247,13 +252,15 @@ void QScintillaWidget::setContents(const QString &pContents,
 
     bool readOnly = isReadOnly();
 
-    if (readOnly)
+    if (readOnly) {
         setReadOnly(false);
+    }
 
     SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
 
-    if (pEmptyUndoBuffer)
+    if (pEmptyUndoBuffer) {
         SendScintilla(SCI_EMPTYUNDOBUFFER);
+    }
 
     setReadOnly(readOnly);
 }
@@ -279,10 +286,10 @@ QString QScintillaWidget::textInRange(int pStartRange, int pEndRange) const
     if (   (pStartRange < 0) || (pStartRange >= maxRange)
         || (pEndRange < 0) || (pEndRange >= maxRange)
         || (pStartRange >= pEndRange)) {
-        return QString();
+        return {};
     }
 
-    char *text = new char[pEndRange-pStartRange+1] {};
+    auto text = new char[pEndRange-pStartRange+1] {};
 
     SendScintilla(SCI_GETTEXTRANGE, pStartRange, pEndRange, text);
 
@@ -344,13 +351,14 @@ void QScintillaWidget::selectWordAt(int pLine, int pColumn)
 {
     // Select the word, if any, at the given line/column
 
-    ulong position = ulong(positionFromLineIndex(pLine, pColumn));
+    auto position = ulong(positionFromLineIndex(pLine, pColumn));
 
-    int startPosition = int(SendScintilla(SCI_WORDSTARTPOSITION, position, true));
-    int endPosition = int(SendScintilla(SCI_WORDENDPOSITION, position, true));
+    int startPosition = int(SendScintilla(SCI_WORDSTARTPOSITION, position, 1));
+    int endPosition = int(SendScintilla(SCI_WORDENDPOSITION, position, 1));
 
-    if (endPosition-startPosition > 0)
+    if (endPosition-startPosition > 0) {
         SendScintilla(SCI_SETSEL, ulong(startPosition), endPosition);
+    }
 }
 
 //==============================================================================
@@ -413,7 +421,7 @@ QString QScintillaWidget::eolString() const
         return "\r";
     }
 
-    return QString();
+    return {};
     // Note: we can't reach this point, but without it we may, at compilation
     //       time, be told that not all control paths return a value...
 }
@@ -505,16 +513,28 @@ QString QScintillaWidget::specials(const QString &pString)
     // Note: see the customised representation of the Specials (Unicode block)
     //       in the constructor...
 
-    if (!pString.compare("\xef\xbf\xb9"))
+    static const QString IAA = "\xef\xbf\xb9";
+    static const QString IAS = "\xef\xbf\xba";
+    static const QString IAT = "\xef\xbf\xbb";
+    static const QString OBJ = "\xef\xbf\xbc";
+
+    if (pString == IAA) {
         return "IAA";
-    else if (!pString.compare("\xef\xbf\xba"))
+    }
+
+    if (pString == IAS) {
         return "IAS";
-    else if (!pString.compare("\xef\xbf\xbb"))
+    }
+
+    if (pString == IAT) {
         return "IAT";
-    else if (!pString.compare("\xef\xbf\xbc"))
+    }
+
+    if (pString == OBJ) {
         return "OBJ";
-    else
-        return pString;
+    }
+
+    return pString;
 }
 
 //==============================================================================
@@ -527,8 +547,9 @@ void QScintillaWidget::changeEvent(QEvent *pEvent)
 
     // Check whether the palette has changed and if so then update our colors
 
-    if (pEvent->type() == QEvent::PaletteChange)
+    if (pEvent->type() == QEvent::PaletteChange) {
         updateColors();
+    }
 }
 
 //==============================================================================
@@ -537,10 +558,11 @@ void QScintillaWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     // Show our context menu or QsciScintilla's one, if we don't have one
 
-    if (mContextMenu->isEmpty())
+    if (mContextMenu->isEmpty()) {
         QsciScintilla::contextMenuEvent(pEvent);
-    else
+    } else {
         mContextMenu->exec(pEvent->globalPos());
+    }
 }
 
 //==============================================================================
@@ -554,10 +576,11 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     //       Scintilla editor will result in the text/plain version of the data
     //       (e.g. file:///home/me/myFile) to be inserted in the text...
 
-    if (!pEvent->mimeData()->hasFormat(Core::FileSystemMimeType))
+    if (!pEvent->mimeData()->hasFormat(Core::FileSystemMimeType)) {
         pEvent->acceptProposedAction();
-    else
+    } else {
         pEvent->ignore();
+    }
 }
 
 //==============================================================================
@@ -565,10 +588,10 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 bool QScintillaWidget::event(QEvent *pEvent)
 {
     // Bypass QsciScintilla's handling of event()
-    // Note: see the note on the clearing of some key mappings in the contructor
-    //       above...
+    // Note: see the note on the clearing of some key mappings in the
+    //       constructor above...
 
-    return QsciScintillaBase::event(pEvent);
+    return QsciScintillaBase::event(pEvent); // NOLINT(bugprone-parent-virtual-call)
 }
 
 //==============================================================================
@@ -639,10 +662,11 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
     if (pEvent->modifiers() == Qt::ControlModifier) {
         int delta = pEvent->delta();
 
-        if (delta > 0)
+        if (delta > 0) {
             zoomIn();
-        else if (delta < 0)
+        } else if (delta < 0) {
             zoomOut();
+        }
 
         pEvent->accept();
     } else {
@@ -713,8 +737,9 @@ void QScintillaWidget::updateUi()
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleChanges)
+    if (!mHandleChanges) {
         return;
+    }
 
     // Update our editing mode, if needed
 
@@ -734,8 +759,9 @@ void QScintillaWidget::updateMarginLineNumbersWidth()
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleChanges)
+    if (!mHandleChanges) {
         return;
+    }
 
     // Resize the margin line numbers width
     // Note: the +6 is to ensure that the margin line numbers width is indeed
@@ -753,12 +779,13 @@ void QScintillaWidget::checkCanSelectAll()
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleChanges)
+    if (!mHandleChanges) {
         return;
+    }
 
     // Check whether we can select all the text
 
-    bool newCanSelectAll = !text().isEmpty() && selectedText().compare(text());
+    bool newCanSelectAll = !text().isEmpty() && (selectedText() != text());
 
     if (newCanSelectAll != mCanSelectAll) {
         mCanSelectAll = newCanSelectAll;
@@ -797,8 +824,9 @@ void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 {
     // Make sure that we are allowed to handle connections
 
-    if (!mHandleChanges)
+    if (!mHandleChanges) {
         return;
+    }
 
     // Update our cursor position
 
@@ -808,8 +836,8 @@ void QScintillaWidget::updateCursorPosition(int pLine, int pColumn)
 
 //==============================================================================
 
-}   // namespace QScintillaSupport
-}   // namespace OpenCOR
+} // namespace QScintillaWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

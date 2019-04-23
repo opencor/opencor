@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "borderedwidget.h"
 #include "corecliutils.h"
-#include "helpwindowwindow.h"
 #include "helpwindowwidget.h"
+#include "helpwindowwindow.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
@@ -77,7 +77,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
+    auto toolBarWidget = new Core::ToolBarWidget();
 
     toolBarWidget->addAction(mGui->actionHome);
     toolBarWidget->addSeparator();
@@ -107,8 +107,6 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(new Core::BorderedWidget(mHelpWindowWidget,
                                                      true, false, false, false));
-#else
-    #error Unsupported platform
 #endif
 
     // Create and populate our context menu
@@ -159,7 +157,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     // En/disable the printing action, depending on whether printers are
     // available
 
-    mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
+    mGui->actionPrint->setEnabled(!QPrinterInfo::availablePrinterNames().isEmpty());
 }
 
 //==============================================================================
@@ -279,8 +277,9 @@ void HelpWindowWindow::actionPrintTriggered()
     QPrinter printer;
     QPrintDialog printDialog(&printer);
 
-    if (printDialog.exec() == QDialog::Accepted)
+    if (printDialog.exec() == QDialog::Accepted) {
         mHelpWindowWidget->webView()->print(&printer);
+    }
 }
 
 //==============================================================================
@@ -295,8 +294,8 @@ void HelpWindowWindow::showCustomContextMenu() const
 
 //==============================================================================
 
-}   // namespace HelpWindow
-}   // namespace OpenCOR
+} // namespace HelpWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

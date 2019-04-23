@@ -29,9 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "o2/o0globals.h"
-#include "o2/o0settingsstore.h"
-#include "o2/o1requestor.h"
+#include "oauthbegin.h"
+    #include "o2/o0globals.h"
+    #include "o2/o0settingsstore.h"
+    #include "o2/o1requestor.h"
+#include "oauthend.h"
 
 //==============================================================================
 
@@ -39,9 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QDesktopServices>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
-#include <QDesktopServices>
 
 //==============================================================================
 
@@ -87,7 +89,7 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
     // Note: for the group key, we use the given URL's host since the URL itself
     //       contains a "://" and this messes things up with QSettings...
 
-    O0SettingsStore *store = new O0SettingsStore("hgh189;;099!@7878");
+    auto store = new O0SettingsStore("hgh189;;099!@7878");
 
     store->setGroupKey(SettingsPlugins+"/"+PluginName+"/Credentials/"+QUrl(pPmrUrl).host());
 
@@ -96,8 +98,8 @@ PmrAuthentication::PmrAuthentication(const QString &pPmrUrl, QObject *pParent) :
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

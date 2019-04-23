@@ -65,7 +65,7 @@ public:
 #include "plugininterface.inl"
 
 private:
-    enum Command {
+    enum class Command {
         Export,
         Validate
     };
@@ -94,8 +94,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLTools
-}   // namespace OpenCOR
+} // namespace CellMLTools
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

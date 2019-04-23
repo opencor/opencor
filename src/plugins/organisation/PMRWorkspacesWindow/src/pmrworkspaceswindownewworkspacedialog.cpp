@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "pmrsupport.h"
 #include "pmrworkspace.h"
-#include "pmrworkspaceswindowplugin.h"
 #include "pmrworkspaceswindownewworkspacedialog.h"
+#include "pmrworkspaceswindowplugin.h"
 
 //==============================================================================
 
@@ -155,14 +155,15 @@ void PmrWorkspacesWindowNewWorkspaceDialog::choosePath()
 
     QString dirName = PMRSupport::getNonGitDirectory();
 
-    if (!dirName.isEmpty())
+    if (!dirName.isEmpty()) {
         mGui->folderValue->setText(QDir::toNativeSeparators(dirName));
+    }
 }
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

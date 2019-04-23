@@ -38,13 +38,11 @@ extern "C" Q_DECL_EXPORT int pluginInterfaceVersion()
 
 //==============================================================================
 
-PluginInterface::~PluginInterface()
-{
-}
+PluginInterface::~PluginInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -35,8 +35,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "git2/checkout.h"
-#include "git2/status.h"
+#include "libgit2begin.h"
+    #include "git2/checkout.h"
+    #include "git2/status.h"
+#include "libgit2end.h"
 
 //==============================================================================
 
@@ -181,8 +183,8 @@ typedef QList<PmrWorkspace *> PmrWorkspaces;
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

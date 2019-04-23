@@ -48,11 +48,10 @@ PmrWebViewerDialog::PmrWebViewerDialog(QWidget *pParent) :
     mSettings.beginGroup(SettingsPlugins);
     mSettings.beginGroup(PluginName);
     mSettings.beginGroup("PmrWebViewerDialog");
-qDebug(">>> %s", qPrintable(mSettings.group()));
 
     // Customise ourselves
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
 
@@ -103,8 +102,8 @@ void PmrWebViewerDialog::load(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

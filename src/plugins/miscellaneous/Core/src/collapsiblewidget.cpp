@@ -63,11 +63,12 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
                                                  QWidget *pParent) :
     QWidget(pParent),
     mCollapsed(false),
-    mLastHeader(false)
+    mLastHeader(false),
+    mMenuMenu(nullptr)
 {
     // Create and set our vertical layout
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
@@ -76,8 +77,8 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(bool pCollapsible,
 
     // Create a sub-widget with a horizontal layout
 
-    QWidget *subWidget = new QWidget(this);
-    QHBoxLayout *subLayout = new QHBoxLayout(subWidget);
+    auto subWidget = new QWidget(this);
+    auto subLayout = new QHBoxLayout(subWidget);
 
     subLayout->setContentsMargins(QMargins());
     subLayout->setSpacing(0);
@@ -192,8 +193,9 @@ void CollapsibleHeaderWidget::setCollapsed(bool pCollapsed)
 {
     // Collapse or uncollapse ourselves, if needed
 
-    if (pCollapsed != mCollapsed)
+    if (pCollapsed != mCollapsed) {
         toggleCollapsedState();
+    }
 }
 
 //==============================================================================
@@ -233,11 +235,11 @@ void CollapsibleHeaderWidget::setMenu(QMenu *pMenu)
         static const QIcon NoIcon   = QIcon();
         static const QIcon MenuIcon = QIcon(":/menu.png");
 
-        mMenu->setIcon(pMenu?MenuIcon:NoIcon);
+        mMenu->setIcon((pMenu != nullptr)?MenuIcon:NoIcon);
 
         mMenuMenu = pMenu;
 
-        if (pMenu) {
+        if (pMenu != nullptr) {
             connect(mMenu, &QToolButton::clicked,
                     this, &CollapsibleHeaderWidget::showMenu);
         } else {
@@ -321,7 +323,7 @@ bool CollapsibleWidget::isCollapsed(int pIndex) const
 {
     // Return wheter our requested header is collapsed
 
-    return mHeaders.value(pIndex)?mHeaders[pIndex]->isCollapsed():false;
+    return (mHeaders.value(pIndex) != nullptr)?mHeaders[pIndex]->isCollapsed():false;
 }
 
 //==============================================================================
@@ -330,8 +332,9 @@ void CollapsibleWidget::setCollapsed(int pIndex, bool pCollapsed)
 {
     // Collapse or uncollapse our requested header
 
-    if (mHeaders.value(pIndex))
+    if (mHeaders.value(pIndex) != nullptr) {
         mHeaders[pIndex]->setCollapsed(pCollapsed);
+    }
 }
 
 //==============================================================================
@@ -340,7 +343,7 @@ QString CollapsibleWidget::headerTitle(int pIndex) const
 {
     // Return the title of our requested header
 
-    return mHeaders.value(pIndex)?mHeaders[pIndex]->title():QString();
+    return (mHeaders.value(pIndex) != nullptr)?mHeaders[pIndex]->title():QString();
 }
 
 //==============================================================================
@@ -349,8 +352,9 @@ void CollapsibleWidget::setHeaderTitle(int pIndex, const QString &pTitle)
 {
     // Set the title of our requested header
 
-    if (mHeaders.value(pIndex))
+    if (mHeaders.value(pIndex) != nullptr) {
         mHeaders[pIndex]->setTitle(pTitle);
+    }
 }
 
 //==============================================================================
@@ -360,12 +364,13 @@ CollapsibleHeaderWidget * CollapsibleWidget::addWidget(QWidget *pWidget,
 {
     // Make sure that there is a widget to add
 
-    if (!pWidget)
+    if (pWidget == nullptr) {
         return nullptr;
+    }
 
     // We want to add a widget, so we first need to add a header to our layout
 
-    CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(pCollapsible, this);
+    auto header = new CollapsibleHeaderWidget(pCollapsible, this);
 
     // Let our header know whether it is the first header
 
@@ -374,8 +379,9 @@ CollapsibleHeaderWidget * CollapsibleWidget::addWidget(QWidget *pWidget,
     // Let our header know that, if anything, it is our new last header, meaning
     // that our previous last header is not the last one anymore
 
-    if (!mHeaders.isEmpty())
+    if (!mHeaders.isEmpty()) {
         mHeaders.last()->setLastHeader(false);
+    }
 
     header->setLastHeader(true);
 
@@ -422,8 +428,8 @@ void CollapsibleWidget::emitCollapsed()
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

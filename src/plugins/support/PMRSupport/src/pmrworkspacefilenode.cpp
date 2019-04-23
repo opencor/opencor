@@ -110,7 +110,7 @@ bool PmrWorkspaceFileNode::hasChildren() const
 {
     // Return whether we have children
 
-    return mChildren.size();
+    return !mChildren.isEmpty();
 }
 
 //==============================================================================
@@ -130,7 +130,7 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
     // Check whether we already have the given child and, if so, return it
 
     for (auto child : mChildren) {
-        if (!child->name().compare(pName)) {
+        if (child->name() == pName) {
             // This is the child we are trying to add, so update its status and
             // return it
 
@@ -143,8 +143,7 @@ PmrWorkspaceFileNode * PmrWorkspaceFileNode::addChild(const QString &pName,
     // We don't already have the given child, so add it to ourselves and return
     // it
 
-    PmrWorkspaceFileNode *res = new PmrWorkspaceFileNode(pName, path()+"/"+pName,
-                                                         pStatus, this);
+    auto res = new PmrWorkspaceFileNode(pName, path()+"/"+pName, pStatus, this);
 
     mChildren << res;
 
@@ -163,15 +162,15 @@ bool PmrWorkspaceFileNode::removeChild(PmrWorkspaceFileNode *pChild)
         mChildren.removeOne(pChild);
 
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

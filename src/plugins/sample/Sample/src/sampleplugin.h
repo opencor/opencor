@@ -47,8 +47,8 @@ class SamplePlugin : public QObject
 
 //==============================================================================
 
-}   // namespace Sample
-}   // namespace OpenCOR
+} // namespace Sample
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -78,8 +78,8 @@ private:
 
 //==============================================================================
 
-}   // namespace RawCellMLView
-}   // namespace OpenCOR
+} // namespace RawCellMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

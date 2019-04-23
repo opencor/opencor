@@ -54,13 +54,9 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initQtMessagePattern();
 
-    // Initialise the plugins path
-
-    OpenCOR::initPluginsPath(pArgC, pArgV);
-
     // Create our application
 
-    OpenCOR::CliApplication *cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
+    auto cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
 
     // Some general initialisations
 
@@ -71,14 +67,14 @@ int main(int pArgC, char *pArgV[])
     int res;
 
     if (!cliApp->run(res)) {
-        // OpenCOR isn't meant to be run as a CLI application, so start its GUI
+        // OpenCOR wasn't meant to be run as a CLI application, so start its GUI
         // version instead
 
         static const QString DotExe = ".exe";
 
         if (qApp->applicationFilePath().right(DotExe.size()) == DotExe) {
             // This is a safeguard from accidentally running a non-renamed (to
-            // '.com') CLI version of OpenCOR
+            // .com) CLI version of OpenCOR
 
             error("the CLI version of "+qAppName()+" has the wrong extension ('.exe' instead of '.com').");
 
@@ -87,7 +83,7 @@ int main(int pArgC, char *pArgV[])
             QString guiAppFilePath = qApp->applicationDirPath()+"/"+qAppName()+DotExe;
 
             if (!QFile::exists(guiAppFilePath)) {
-                // We can't find the GUI version of OpenCOR, so...
+                // We couldn't find the GUI version of OpenCOR
 
                 error("the GUI version of "+qAppName()+" cannot be found.");
 
@@ -101,18 +97,18 @@ int main(int pArgC, char *pArgV[])
 
                 appArguments.removeFirst();
 
-                QProcess().startDetached(guiAppFilePath, appArguments, QProcess().workingDirectory());
+                QProcess::startDetached(guiAppFilePath, appArguments, QProcess().workingDirectory());
 
                 res = 0;
             }
         }
     }
 
-    // Release some memory
+    // Delete our application
 
     delete cliApp;
 
-    // We are done, so...
+    // We are done running the CLI version of OpenCOR, so leave
 
     return res;
 }

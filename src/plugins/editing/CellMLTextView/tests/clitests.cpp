@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "corecliutils.h"
 #include "clitests.h"
+#include "corecliutils.h"
 
 //==============================================================================
 

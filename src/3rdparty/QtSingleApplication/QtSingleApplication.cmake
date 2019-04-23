@@ -1,15 +1,12 @@
 # Files that make up QtSingleApplication
 
-set(SOURCES ${SOURCES}
-    src/3rdparty/QtSingleApplication/src/qtlocalpeer.cpp
-    src/3rdparty/QtSingleApplication/src/qtsingleapplication.cpp
-)
+set(QT_SINGLE_APPLICATION_DIR src/3rdparty/QtSingleApplication/src)
 
-set(HEADERS_MOC ${HEADERS_MOC}
-    src/3rdparty/QtSingleApplication/src/qtlocalpeer.h
-    src/3rdparty/QtSingleApplication/src/qtsingleapplication.h
+set(SOURCES ${SOURCES}
+    ${QT_SINGLE_APPLICATION_DIR}/qtlocalpeer.cpp
+    ${QT_SINGLE_APPLICATION_DIR}/qtsingleapplication.cpp
 )
 
 # Include directory
 
-include_directories(src/3rdparty/QtSingleApplication/src)
+include_directories(${QT_SINGLE_APPLICATION_DIR})

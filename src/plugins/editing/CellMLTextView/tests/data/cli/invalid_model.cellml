@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <model name="invalid_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <component name="main">
         <units name="per_second">

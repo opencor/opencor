@@ -15,12 +15,6 @@ add_plugin(CellMLEditingView
         src/cellmleditingviewinterface.cpp
         src/cellmleditingviewplugin.cpp
         src/cellmleditingviewwidget.cpp
-    HEADERS_MOC
-        ../../plugin.h
-        ../../pluginmanager.h
-
-        src/cellmleditingviewplugin.h
-        src/cellmleditingviewwidget.h
     PLUGINS
         CellMLSupport
         EditingView

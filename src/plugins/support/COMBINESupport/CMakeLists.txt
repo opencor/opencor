@@ -14,10 +14,6 @@ add_plugin(COMBINESupport
         src/combinefilemanager.cpp
         src/combineinterface.cpp
         src/combinesupportplugin.cpp
-    HEADERS_MOC
-        src/combinearchive.h
-        src/combinefilemanager.h
-        src/combinesupportplugin.h
     PLUGINS
         SEDMLSupport
         ZIPSupport

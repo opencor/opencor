@@ -66,6 +66,18 @@
 //---OPENCOR--- BEGIN
 namespace OpenCOR {
 namespace ZIPSupport {
+
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wconversion"
+    #pragma clang diagnostic ignored "-Wcovered-switch-default"
+    #pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+    #pragma clang diagnostic ignored "-Wold-style-cast"
+    #pragma clang diagnostic ignored "-Wshadow-field"
+    #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
+    #pragma clang diagnostic ignored "-Wshorten-64-to-32"
+    #pragma clang diagnostic ignored "-Wswitch-enum"
+#endif
 //---OPENCOR--- END
 QT_BEGIN_NAMESPACE
 
@@ -583,7 +595,7 @@ QZipReader::FileInfo QZipPrivate::fillFileInfo(int index) const
     while (filePathRef.startsWith(QLatin1Char('.')) || filePathRef.startsWith(QLatin1Char('/')))
         filePathRef = filePathRef.mid(1);
     while (filePathRef.endsWith(QLatin1Char('/')))
-        filePathRef = filePathRef.left(filePathRef.length()-1);
+        filePathRef.chop(1);
 
     fileInfo.filePath = filePathRef.toString();
     return fileInfo;
@@ -622,19 +634,19 @@ public:
     void addEntry(EntryType type, const QString &fileName, const QByteArray &contents);
 };
 
-LocalFileHeader CentralFileHeader::toLocalHeader() const
+static LocalFileHeader toLocalHeader(const CentralFileHeader &ch)
 {
     LocalFileHeader h;
     writeUInt(h.signature, 0x04034b50);
-    copyUShort(h.version_needed, version_needed);
-    copyUShort(h.general_purpose_bits, general_purpose_bits);
-    copyUShort(h.compression_method, compression_method);
-    copyUInt(h.last_mod_file, last_mod_file);
-    copyUInt(h.crc_32, crc_32);
-    copyUInt(h.compressed_size, compressed_size);
-    copyUInt(h.uncompressed_size, uncompressed_size);
-    copyUShort(h.file_name_length, file_name_length);
-    copyUShort(h.extra_field_length, extra_field_length);
+    copyUShort(h.version_needed, ch.version_needed);
+    copyUShort(h.general_purpose_bits, ch.general_purpose_bits);
+    copyUShort(h.compression_method, ch.compression_method);
+    copyUInt(h.last_mod_file, ch.last_mod_file);
+    copyUInt(h.crc_32, ch.crc_32);
+    copyUInt(h.compressed_size, ch.compressed_size);
+    copyUInt(h.uncompressed_size, ch.uncompressed_size);
+    copyUShort(h.file_name_length, ch.file_name_length);
+    copyUShort(h.extra_field_length, ch.extra_field_length);
     return h;
 }
 
@@ -854,7 +866,7 @@ void QZipWriterPrivate::addEntry(EntryType type, const QString &fileName, const 
 
     fileHeaders.append(header);
 
-    LocalFileHeader h = header.h.toLocalHeader();
+    LocalFileHeader h = toLocalHeader(header.h);
     device->write((const char *)&h, sizeof(LocalFileHeader));
     device->write(header.file_name);
     device->write(data);
@@ -1185,8 +1197,6 @@ bool QZipReader::extractAll(const QString &destinationDir) const
     static const QRegularExpression FileNameRegEx = QRegularExpression("\\\\[^\\\\]*$");
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     static const QRegularExpression FileNameRegEx = QRegularExpression("/[^/]*$");
-#else
-    #error Unsupported platform
 #endif
 //---OPENCOR--- END
     for (const FileInfo &fi : allFiles) {
@@ -1518,6 +1528,10 @@ void QZipWriter::close()
 
 QT_END_NAMESPACE
 //---OPENCOR--- BEGIN
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic pop
+#endif
+
 }   // namespace ZIPSupport
 }   // namespace OpenCOR
 //---OPENCOR--- END

@@ -45,7 +45,7 @@ namespace OpenCOR {
 namespace Core {
     class TreeViewWidget;
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -56,7 +56,7 @@ namespace PMRWindow {
 class PmrWindowItem : public QStandardItem
 {
 public:
-    enum Type {
+    enum class Type {
         Exposure     = QStandardItem::UserType,
         ExposureFile = QStandardItem::UserType+1
     };
@@ -147,8 +147,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWindow
-}   // namespace OpenCOR
+} // namespace PMRWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

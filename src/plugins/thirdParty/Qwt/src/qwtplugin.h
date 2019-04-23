@@ -47,8 +47,8 @@ class QwtPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace Qwt
-}   // namespace OpenCOR
+} // namespace Qwt
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

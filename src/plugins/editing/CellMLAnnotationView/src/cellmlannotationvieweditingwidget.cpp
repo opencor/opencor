@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlannotationview.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
-#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
+#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlfilemanager.h"
 #include "corecliutils.h"
@@ -174,10 +174,30 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
     //       which can be found on that site and present it to the user in the
     //       form of a web page...
 
-    if (pQualifier.isEmpty())
+    if (pQualifier.isEmpty()) {
         return;
+    }
 
     // Generate the web page containing some information about the qualifier
+
+    static const QString ModelIs            = "model:is";
+    static const QString ModelIsDerivedFrom = "model:isDerivedFrom";
+    static const QString ModelIsDescribedBy = "model:isDescribedBy";
+    static const QString ModelIsInstanceOf  = "model:isInstanceOf";
+    static const QString ModelHasInstance   = "model:hasInstance";
+    static const QString BioEncodes         = "bio:encodes";
+    static const QString BioHasPart         = "bio:hasPart";
+    static const QString BioHasProperty     = "bio:hasProperty";
+    static const QString BioHasVersion      = "bio:hasVersion";
+    static const QString BioIs              = "bio:is";
+    static const QString BioIsDescribedBy   = "bio:isDescribedBy";
+    static const QString BioIsEncodedBy     = "bio:isEncodedBy";
+    static const QString BioIsHomologTo     = "bio:isHomologTo";
+    static const QString BioIsPartOf        = "bio:isPartOf";
+    static const QString BioIsPropertyOf    = "bio:isPropertyOf";
+    static const QString BioIsVersionOf     = "bio:isVersionOf";
+    static const QString BioOccursIn        = "bio:occursIn";
+    static const QString BioHasTaxon        = "bio:hasTaxon";
 
     QString qualifierSvg = pQualifier.startsWith("model:")?
                                mModelQualifierSvg:
@@ -185,60 +205,60 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(WebV
     QString shortDescription;
     QString longDescription;
 
-    if (!pQualifier.compare("model:is")) {
+    if (pQualifier == ModelIs) {
         shortDescription = tr("Identity");
-        longDescription = tr("The modelling object represented by the model element is identical with the subject of the referenced resource (\"Modelling Object B\"). For instance, this qualifier might be used to link an encoded model to a database of models.");
-    } else if (!pQualifier.compare("model:isDerivedFrom")) {
+        longDescription = tr(R"(The modelling object represented by the model element is identical with the subject of the referenced resource ("Modelling Object B"). For instance, this qualifier might be used to link an encoded model to a database of models.)");
+    } else if (pQualifier == ModelIsDerivedFrom) {
         shortDescription = tr("Origin");
-        longDescription = tr("The modelling object represented by the model element is derived from the modelling object represented by the referenced resource (\"Modelling Object B\"). This relation may be used, for instance, to express a refinement or adaptation in usage for a previously described modelling component.");
-    } else if (!pQualifier.compare("model:isDescribedBy")) {
+        longDescription = tr(R"(The modelling object represented by the model element is derived from the modelling object represented by the referenced resource ("Modelling Object B"). This relation may be used, for instance, to express a refinement or adaptation in usage for a previously described modelling component.)");
+    } else if (pQualifier == ModelIsDescribedBy) {
         shortDescription = tr("Description");
-        longDescription = tr("The modelling object represented by the model element is described by the subject of the referenced resource (\"Modelling Object B\"). This relation might be used to link a model or a kinetic law to the literature that describes it.");
-    } else if (!pQualifier.compare("model:isInstanceOf")) {
+        longDescription = tr(R"(The modelling object represented by the model element is described by the subject of the referenced resource ("Modelling Object B"). This relation might be used to link a model or a kinetic law to the literature that describes it.)");
+    } else if (pQualifier == ModelIsInstanceOf) {
         shortDescription = tr("Class");
-        longDescription = tr("The modelling object represented by the model element is an instance of the subject of the referenced resource (\"Modelling Object B\"). For instance, this qualifier might be used to link a specific model with its generic form.");
-    } else if (!pQualifier.compare("model:hasInstance")) {
+        longDescription = tr(R"(The modelling object represented by the model element is an instance of the subject of the referenced resource ("Modelling Object B"). For instance, this qualifier might be used to link a specific model with its generic form.)");
+    } else if (pQualifier == ModelHasInstance) {
         shortDescription = tr("Instance");
-        longDescription = tr("The modelling object represented by the model element has for instance (is a class of) the subject of the referenced resource (\"Modelling Object B\"). For instance, this qualifier might be used to link a generic model with its specific forms.");
-    } else if (!pQualifier.compare("bio:encodes")) {
+        longDescription = tr(R"(The modelling object represented by the model element has for instance (is a class of) the subject of the referenced resource ("Modelling Object B"). For instance, this qualifier might be used to link a generic model with its specific forms.)");
+    } else if (pQualifier == BioEncodes) {
         shortDescription = tr("Encodement");
-        longDescription = tr("The biological entity represented by the model element encodes, directly or transitively, the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to express, for example, that a specific DNA sequence encodes a particular protein.");
-    } else if (!pQualifier.compare("bio:hasPart")) {
+        longDescription = tr(R"(The biological entity represented by the model element encodes, directly or transitively, the subject of the referenced resource ("Biological Entity B"). This relation may be used to express, for example, that a specific DNA sequence encodes a particular protein.)");
+    } else if (pQualifier == BioHasPart) {
         shortDescription = tr("Part");
-        longDescription = tr("The biological entity represented by the model element includes the subject of the referenced resource (\"Biological Entity B\"), either physically or logically. This relation might be used to link a complex to the description of its components.");
-    } else if (!pQualifier.compare("bio:hasProperty")) {
+        longDescription = tr(R"(The biological entity represented by the model element includes the subject of the referenced resource ("Biological Entity B"), either physically or logically. This relation might be used to link a complex to the description of its components.)");
+    } else if (pQualifier == BioHasProperty) {
         shortDescription = tr("Property");
-        longDescription = tr("The subject of the referenced resource (\"Biological Entity B\") is a property of the biological entity represented by the model element. This relation might be used when a biological entity exhibits a certain enzymatic activity or exerts a specific function.");
-    } else if (!pQualifier.compare("bio:hasVersion")) {
+        longDescription = tr(R"(The subject of the referenced resource ("Biological Entity B") is a property of the biological entity represented by the model element. This relation might be used when a biological entity exhibits a certain enzymatic activity or exerts a specific function.)");
+    } else if (pQualifier == BioHasVersion) {
         shortDescription = tr("Version");
-        longDescription = tr("The subject of the referenced resource (\"Biological Entity B\") is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform or modified form of a biological entity.");
-    } else if (!pQualifier.compare("bio:is")) {
+        longDescription = tr(R"(The subject of the referenced resource ("Biological Entity B") is a version or an instance of the biological entity represented by the model element. This relation may be used to represent an isoform or modified form of a biological entity.)");
+    } else if (pQualifier == BioIs) {
         shortDescription = tr("Indentity");
-        longDescription = tr("The biological entity represented by the model element has identity with the subject of the referenced resource (\"Biological Entity B\"). This relation might be used to link a reaction to its exact counterpart in a database, for instance.");
-    } else if (!pQualifier.compare("bio:isDescribedBy")) {
+        longDescription = tr(R"(The biological entity represented by the model element has identity with the subject of the referenced resource ("Biological Entity B"). This relation might be used to link a reaction to its exact counterpart in a database, for instance.)");
+    } else if (pQualifier == BioIsDescribedBy) {
         shortDescription = tr("Description");
-        longDescription = tr("The biological entity represented by the model element is described by the subject of the referenced resource (\"Biological Entity B\"). This relation should be used, for instance, to link a species or a parameter to the literature that describes the concentration of that species or the value of that parameter.");
-    } else if (!pQualifier.compare("bio:isEncodedBy")) {
+        longDescription = tr(R"(The biological entity represented by the model element is described by the subject of the referenced resource ("Biological Entity B"). This relation should be used, for instance, to link a species or a parameter to the literature that describes the concentration of that species or the value of that parameter.)");
+    } else if (pQualifier == BioIsEncodedBy) {
         shortDescription = tr("Encoder");
-        longDescription = tr("The biological entity represented by the model element is encoded, directly or transitively, by the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to express, for example, that a protein is encoded by a specific DNA sequence.");
-    } else if (!pQualifier.compare("bio:isHomologTo")) {
+        longDescription = tr(R"(The biological entity represented by the model element is encoded, directly or transitively, by the subject of the referenced resource ("Biological Entity B"). This relation may be used to express, for example, that a protein is encoded by a specific DNA sequence.)");
+    } else if (pQualifier == BioIsHomologTo) {
         shortDescription = tr("Homolog");
-        longDescription = tr("The biological entity represented by the model element is homologous to the subject of the referenced resource (\"Biological Entity B\"). This relation can be used to represent biological entities that share a common ancestor.");
-    } else if (!pQualifier.compare("bio:isPartOf")) {
+        longDescription = tr(R"(The biological entity represented by the model element is homologous to the subject of the referenced resource ("Biological Entity B"). This relation can be used to represent biological entities that share a common ancestor.)");
+    } else if (pQualifier == BioIsPartOf) {
         shortDescription = tr("Parthood");
-        longDescription = tr("The biological entity represented by the model element is a physical or logical part of the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to link a model component to a description of the complex in which it is a part.");
-    } else if (!pQualifier.compare("bio:isPropertyOf")) {
+        longDescription = tr(R"(The biological entity represented by the model element is a physical or logical part of the subject of the referenced resource ("Biological Entity B"). This relation may be used to link a model component to a description of the complex in which it is a part.)");
+    } else if (pQualifier == BioIsPropertyOf) {
         shortDescription = tr("Property bearer");
-        longDescription = tr("The biological entity represented by the model element is a property of the referenced resource (\"Biological Entity B\").");
-    } else if (!pQualifier.compare("bio:isVersionOf")) {
+        longDescription = tr(R"(The biological entity represented by the model element is a property of the referenced resource ("Biological Entity B").)");
+    } else if (pQualifier == BioIsVersionOf) {
         shortDescription = tr("Hypernym");
-        longDescription = tr("The biological entity represented by the model element is a version or an instance of the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to represent, for example, the 'superclass' or 'parent' form of a particular biological entity.");
-    } else if (!pQualifier.compare("bio:occursIn")) {
+        longDescription = tr(R"(The biological entity represented by the model element is a version or an instance of the subject of the referenced resource ("Biological Entity B"). This relation may be used to represent, for example, the 'superclass' or 'parent' form of a particular biological entity.)");
+    } else if (pQualifier == BioOccursIn) {
         shortDescription = tr("Container");
-        longDescription = tr("The biological entity represented by the model element is physically limited to a location, which is the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to ascribe a compartmental location, within which a reaction takes place.");
-    } else if (!pQualifier.compare("bio:hasTaxon")) {
+        longDescription = tr(R"(The biological entity represented by the model element is physically limited to a location, which is the subject of the referenced resource ("Biological Entity B"). This relation may be used to ascribe a compartmental location, within which a reaction takes place.)");
+    } else if (pQualifier == BioHasTaxon) {
         shortDescription = tr("Taxon");
-        longDescription = tr("The biological entity represented by the model element is taxonomically restricted, where the restriction is the subject of the referenced resource (\"Biological Entity B\"). This relation may be used to ascribe a species restriction to a biochemical reaction.");
+        longDescription = tr(R"(The biological entity represented by the model element is taxonomically restricted, where the restriction is the subject of the referenced resource ("Biological Entity B"). This relation may be used to ascribe a species restriction to a biochemical reaction.)");
     } else {
         qualifierSvg = QString();
 
@@ -291,8 +311,8 @@ void CellmlAnnotationViewEditingWidget::filePermissionsChanged()
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

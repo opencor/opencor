@@ -21,15 +21,8 @@ add_plugin(EditorWidget
         src/editorwidgetfindreplacewidget.cpp
         src/editorwidgetplugin.cpp
         src/editorwidgetscrollbar.cpp
-    HEADERS_MOC
-        src/editorlistwidget.h
-        src/editorwidget.h
-        src/editorwidgeteditorwidget.h
-        src/editorwidgetfindreplacewidget.h
-        src/editorwidgetplugin.h
-        src/editorwidgetscrollbar.h
     UIS
         src/editorwidgetfindreplacewidget.ui
     PLUGINS
-        QScintillaSupport
+        QScintillaWidget
 )

@@ -30,8 +30,7 @@ namespace Core {
 
 //==============================================================================
 
-ToolBarWidget::ToolBarWidget() :
-    QToolBar()
+ToolBarWidget::ToolBarWidget()
 {
     // Note: we do NOT want a parent! Indeed, if we did have a parent, then to
     //       start OpenCOR using the Simulation Experiment view would, on macOS,
@@ -58,8 +57,8 @@ ToolBarWidget::ToolBarWidget() :
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

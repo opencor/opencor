@@ -55,7 +55,7 @@ RemoteFileDialog::RemoteFileDialog(const QString &pTitle, QWidget *pParent) :
 
     setWindowTitle(pTitle);
 
-    QGridLayout *layout = new QGridLayout(this);
+    auto layout = new QGridLayout(this);
 
     setLayout(layout);
 
@@ -107,8 +107,8 @@ void RemoteFileDialog::changed()
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

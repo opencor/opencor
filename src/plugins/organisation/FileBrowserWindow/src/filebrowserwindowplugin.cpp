@@ -44,7 +44,7 @@ PLUGININFO_FUNC FileBrowserWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access local files."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder aux fichiers locaux."));
 
-    return new PluginInfo(PluginInfo::Organisation, true, false,
+    return new PluginInfo(PluginInfo::Category::Organisation, true, false,
                           QStringList() << "Core",
                           descriptions);
 }
@@ -81,8 +81,8 @@ bool FileBrowserWindowPlugin::definesPluginInterfaces()
 bool FileBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                                  QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -113,7 +113,7 @@ void FileBrowserWindowPlugin::finalizePlugin()
 
 void FileBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -144,7 +144,7 @@ void FileBrowserWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void FileBrowserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -180,8 +180,8 @@ QDockWidget * FileBrowserWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
-}   // namespace OpenCOR
+} // namespace FileBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

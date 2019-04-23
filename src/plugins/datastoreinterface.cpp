@@ -143,8 +143,9 @@ DataStoreVariable::~DataStoreVariable()
 {
     // Delete some internal objects
 
-    for (auto run : mRuns)
+    for (auto run : mRuns) {
         delete run;
+    }
 }
 
 //==============================================================================
@@ -288,10 +289,15 @@ quint64 DataStoreVariable::size(int pRun) const
 {
     // Return our size for the given run
 
-    if (pRun == -1)
-        return mRuns.count()?mRuns.last()->size():0;
-    else
-        return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->size():0;
+    if (pRun == -1) {
+        return (!mRuns.isEmpty())?
+                   mRuns.last()->size():
+                   0;
+    }
+
+    return ((pRun >= 0) && (pRun < mRuns.count()))?
+               mRuns[pRun]->size():
+               0;
 }
 
 //==============================================================================
@@ -332,11 +338,11 @@ double DataStoreVariable::value(quint64 pPosition, int pRun) const
 
     if (pRun == -1) {
         return mRuns.last()->value(pPosition);
-    } else {
-        Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
-
-        return mRuns[pRun]->value(pPosition);
     }
+
+    Q_ASSERT((pRun >= 0) && (pRun < mRuns.count()));
+
+    return mRuns[pRun]->value(pPosition);
 }
 
 //==============================================================================
@@ -347,12 +353,15 @@ double * DataStoreVariable::values(int pRun) const
 
     if (mRuns.isEmpty()) {
         return nullptr;
-    } else {
-        if (pRun == -1)
-            return mRuns.last()->values();
-        else
-            return ((pRun >= 0) && (pRun < mRuns.count()))?mRuns[pRun]->values():nullptr;
     }
+
+    if (pRun == -1) {
+        return mRuns.last()->values();
+    }
+
+    return ((pRun >= 0) && (pRun < mRuns.count()))?
+               mRuns[pRun]->values():
+               nullptr;
 }
 
 //==============================================================================
@@ -417,14 +426,16 @@ DataStoreImportData::DataStoreImportData(const QString &pFileName,
             mResultsVariables << pResultsDataStore->addVariable(mResultsValues+i);
         }
 
-        if (!pImportDataStore->addRun(pNbOfDataPoints))
+        if (!pImportDataStore->addRun(pNbOfDataPoints)) {
             throw std::exception();
+        }
 
         if (!pRunSizes.isEmpty()) {
             for (auto runSize : pRunSizes) {
                 for (auto resultsVariables : mResultsVariables) {
-                    if (!resultsVariables->addRun(runSize))
+                    if (!resultsVariables->addRun(runSize)) {
                         throw std::exception();
+                    }
                 }
             }
         }
@@ -609,8 +620,9 @@ DataStore::~DataStore()
 
     delete mVoi;
 
-    for (auto variable : mVariables)
+    for (auto variable : mVariables) {
         delete variable;
+    }
 }
 
 //==============================================================================
@@ -641,12 +653,14 @@ bool DataStore::addRun(quint64 pCapacity)
     int oldRunsCount = mVoi->runsCount();
 
     try {
-        if (!mVoi->addRun(pCapacity))
+        if (!mVoi->addRun(pCapacity)) {
             throw std::exception();
+        }
 
         for (auto variable : mVariables) {
-            if (!variable->addRun(pCapacity))
+            if (!variable->addRun(pCapacity)) {
                 throw std::exception();
+            }
         }
     } catch (...) {
         // We couldn't add a run to our VOI and all our variables, so only keep
@@ -654,8 +668,9 @@ bool DataStore::addRun(quint64 pCapacity)
 
         mVoi->keepRuns(oldRunsCount);
 
-        for (auto variable : mVariables)
+        for (auto variable : mVariables) {
             variable->keepRuns(oldRunsCount);
+        }
 
         return false;
     }
@@ -716,8 +731,9 @@ DataStoreVariables DataStore::addVariables(double *pValues, int pCount)
 
     DataStoreVariables variables = DataStoreVariables();
 
-    for (int i = 0; i < pCount; ++i, ++pValues)
+    for (int i = 0; i < pCount; ++i, ++pValues) {
         variables << new DataStoreVariable(pValues);
+    }
 
     mVariables << variables;
 
@@ -730,7 +746,7 @@ DataStoreVariable * DataStore::addVariable(double *pValue)
 {
     // Add a variable to our data store
 
-    DataStoreVariable *variable = new DataStoreVariable(pValue);
+    auto variable = new DataStoreVariable(pValue);
 
     mVariables << variable;
 
@@ -772,8 +788,9 @@ void DataStore::addValues(double pVoiValue)
     //       the VOI value first, we might in some cases (see issue #1579 for
     //       example) end up with the wrong size...
 
-    for (auto variable : mVariables)
+    for (auto variable : mVariables) {
         variable->addValue();
+    }
 
     mVoi->addValue(pVoiValue);
 }
@@ -794,7 +811,7 @@ void DataStoreImporter::importData(DataStoreImportData *pImportData)
     //       since it's an instance of a derived class located in another
     //       plugin...
 
-    QThread *thread = new QThread();
+    auto thread = new QThread();
     DataStoreImporterWorker *worker = workerInstance(pImportData);
 
     worker->moveToThread(thread);
@@ -836,7 +853,7 @@ void DataStoreExporter::exportData(DataStoreExportData *pDataStoreData)
     //       since it's an instance of a derived class located in another
     //       plugin...
 
-    QThread *thread = new QThread();
+    auto thread = new QThread();
     DataStoreExporterWorker *worker = workerInstance(pDataStoreData);
 
     worker->moveToThread(thread);
@@ -864,17 +881,15 @@ void DataStoreExporter::exportData(DataStoreExportData *pDataStoreData)
 
 //==============================================================================
 
-}   // namespace DataStore
+} // namespace DataStore
 
 //==============================================================================
 
-DataStoreInterface::~DataStoreInterface()
-{
-}
+DataStoreInterface::~DataStoreInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

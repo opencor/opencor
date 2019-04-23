@@ -81,7 +81,7 @@ public:
     QDomDocument rdfNodes() const;
 
 private:
-    enum OutputType {
+    enum class Output {
         None,
         EmptyLine,
         DefModel,
@@ -104,18 +104,18 @@ private:
         EndDef
     };
 
-    enum MathmlNodeType {
-        UnknownMathmlNode,
-        EqMathmlNode, NeqMathmlNode, LtMathmlNode, LeqMathmlNode, GeqMathmlNode, GtMathmlNode,
-        PlusMathmlNode, MinusMathmlNode, TimesMathmlNode, DivideMathmlNode,
-        AndMathmlNode, OrMathmlNode, XorMathmlNode
+    enum class MathmlNode {
+        Unknown,
+        Eq, Neq, Lt, Leq, Geq, Gt,
+        Plus, Minus, Times, Divide,
+        And, Or, Xor
     };
 
     QString mOutput;
     QString mPrevIndent;
     QString mIndent;
 
-    OutputType mLastOutputType;
+    Output mLastOutput;
 
     QString mErrorMessage;
     int mErrorLine;
@@ -136,14 +136,14 @@ private:
     bool mPiecewiseStatementUsed;
 
     QMap<QString, QString> mMappings;
-    QMap<QString, MathmlNodeType> mMathmlNodeTypes;
+    QMap<QString, MathmlNode> mMathmlNodes;
 
     void reset();
 
     void indent(bool pForceTracking = true);
     void unindent();
 
-    void outputString(OutputType pOutputType = EmptyLine,
+    void outputString(Output pOutputType = Output::EmptyLine,
                       const QString &pString = QString());
 
     bool rdfNode(const QDomNode &pDomNode) const;
@@ -152,7 +152,7 @@ private:
 
     QString cmetaId(const QDomNode &pDomNode) const;
 
-    MathmlNodeType mathmlNodeType(const QDomNode &pDomNode) const;
+    MathmlNode mathmlNode(const QDomNode &pDomNode) const;
 
     QString attributeNodeValue(const QDomNode &pDomNode,
                                const QString &pNamespace,
@@ -206,8 +206,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -38,13 +38,11 @@ extern "C" Q_DECL_EXPORT int cliInterfaceVersion()
 
 //==============================================================================
 
-CliInterface::~CliInterface()
-{
-}
+CliInterface::~CliInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

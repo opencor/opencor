@@ -151,8 +151,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/zincplugin.cpp
-    HEADERS_MOC
-        src/zincplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

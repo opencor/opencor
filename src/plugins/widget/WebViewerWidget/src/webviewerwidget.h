@@ -46,7 +46,7 @@ namespace OpenCOR {
 namespace Core {
     class BorderedWidget;
     class ProgressBarWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -163,8 +163,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
-}   // namespace OpenCOR
+} // namespace WebViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

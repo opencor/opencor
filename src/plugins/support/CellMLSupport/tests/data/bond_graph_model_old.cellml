@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <model name="bond_graph_model_old" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Automatically generated from MTT on 12-Jun-2016-->
     <units name="flow">

@@ -42,7 +42,7 @@ void Tests::basicTests()
 
     // Check the version of libSBML
 
-    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.17.0");
+    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.18.0");
 
     // Check against which libraries libSBML has been compiled
 
@@ -55,7 +55,7 @@ void Tests::basicTests()
     // Create an SBML document with a model inside it, then set the name of the
     // model and check that it has been properly set
 
-    libsbml::SBMLDocument *sbmlDocument = new libsbml::SBMLDocument();
+    auto sbmlDocument = new libsbml::SBMLDocument();
     libsbml::Model *sbmlModel = sbmlDocument->createModel();
 
     static const std::string ModelName = "myModel";

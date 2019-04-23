@@ -36,17 +36,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "git2/blob.h"
-#include "git2/clone.h"
-#include "git2/commit.h"
-#include "git2/errors.h"
-#include "git2/graph.h"
-#include "git2/index.h"
-#include "git2/merge.h"
-#include "git2/message.h"
-#include "git2/remote.h"
-#include "git2/repository.h"
-#include "git2/signature.h"
+#include "libgit2begin.h"
+    #include "git2/blob.h"
+    #include "git2/clone.h"
+    #include "git2/commit.h"
+    #include "git2/errors.h"
+    #include "git2/graph.h"
+    #include "git2/index.h"
+    #include "git2/merge.h"
+    #include "git2/message.h"
+    #include "git2/remote.h"
+    #include "git2/repository.h"
+    #include "git2/signature.h"
+#include "libgit2end.h"
 
 //==============================================================================
 
@@ -304,22 +306,25 @@ bool PmrWorkspace::commit(const char *pMessage, const size_t &pParentCount,
     git_tree *tree = nullptr;
     git_oid commitId;
 
-    bool res =    git_signature_now(&author, name.data(), email.data())
-               || git_repository_index(&index, mGitRepository)
-               || git_index_write_tree(&treeId, index)
-               || git_tree_lookup(&tree, mGitRepository, &treeId)
-               || git_commit_create(&commitId, mGitRepository, "HEAD", author,
-                                    author, nullptr, pMessage, tree,
-                                    pParentCount, pParents);
+    bool res =    (git_signature_now(&author, name.data(), email.data()) != GIT_OK)
+               || (git_repository_index(&index, mGitRepository) != GIT_OK)
+               || (git_index_write_tree(&treeId, index) != GIT_OK)
+               || (git_tree_lookup(&tree, mGitRepository, &treeId) != GIT_OK)
+               || (git_commit_create(&commitId, mGitRepository, "HEAD", author,
+                                     author, nullptr, pMessage, tree,
+                                     pParentCount, pParents) != GIT_OK);
 
-    if (tree)
+    if (tree != nullptr) {
         git_tree_free(tree);
+    }
 
-    if (index)
+    if (index != nullptr) {
         git_index_free(index);
+    }
 
-    if (author)
+    if (author != nullptr) {
         git_signature_free(author);
+    }
 
     return !res;
 }
@@ -330,8 +335,9 @@ bool PmrWorkspace::commit(const QString &pMessage)
 {
     // Make sure that we are open
 
-    if (!isOpen())
+    if (!isOpen()) {
         return false;
+    }
 
     // Get an empty buffer to hold the cleaned message
 
@@ -343,11 +349,11 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
     // Clean up the message and remove comments (which start with ";")
 
-    git_message_prettify(&message, pMessage.toUtf8().constData(), true, ';');
+    git_message_prettify(&message, pMessage.toUtf8().constData(), 1, ';');
 
     bool res = true;
 
-    if (message.size) {
+    if (message.size != 0) {
         int parentsCount = -1;
         git_commit *parent = nullptr;
 
@@ -360,8 +366,8 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
             git_oid parentId;
 
-            if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
-                && !git_commit_lookup(&parent, mGitRepository, &parentId)) {
+            if (   (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == GIT_OK)
+                && (git_commit_lookup(&parent, mGitRepository, &parentId) == GIT_OK)) {
                 parentsCount = 1;
             }
         }
@@ -370,12 +376,14 @@ bool PmrWorkspace::commit(const QString &pMessage)
             res = commit(message.ptr, size_t(parentsCount),
                          const_cast<const git_commit **>(&parent));
 
-            if (!res)
+            if (!res) {
                 emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide both a name and an email)."));
+            }
         }
 
-        if (parent)
+        if (parent != nullptr) {
             git_commit_free(parent);
+        }
     } else {
         emitGitError(tr("An error occurred while trying to commit to the workspace (you must provide a message)."));
     }
@@ -387,11 +395,11 @@ bool PmrWorkspace::commit(const QString &pMessage)
 
 //==============================================================================
 
-typedef struct {
-    size_t size;
-    git_repository *repository;
-    git_commit **parents;
-} MergeheadForeachCallbackData;
+using MergeheadForeachCallbackData = struct {
+                                                size_t size;
+                                                git_repository *repository;
+                                                git_commit **parents;
+                                            };
 
 //==============================================================================
 
@@ -404,15 +412,15 @@ bool PmrWorkspace::commitMerge()
     git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &data);
 
     size_t parentsCount = data.size+1;
-    git_commit **parents = new git_commit*[parentsCount]();
+    auto parents = new git_commit*[parentsCount]();
 
     // HEAD is always a parent
 
     bool res = false;
     git_oid parentId;
 
-    if (   !git_reference_name_to_id(&parentId, mGitRepository, "HEAD")
-        && !git_commit_lookup(parents, mGitRepository, &parentId)) {
+    if (   (git_reference_name_to_id(&parentId, mGitRepository, "HEAD") == GIT_OK)
+        && (git_commit_lookup(parents, mGitRepository, &parentId) == GIT_OK)) {
         res = true;
 
         // Populate the list of commit parents
@@ -422,27 +430,31 @@ bool PmrWorkspace::commitMerge()
             data.repository = mGitRepository;
             data.parents = &(parents[1]);
 
-            if (git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &data))
+            if (git_repository_mergehead_foreach(mGitRepository, mergeheadForeachCallback, &data) != GIT_OK) {
                 res = false;
+            }
         }
 
         if (res) {
             std::string message = std::string("Merge branch 'master' of ");
 
-            if (commit(message.c_str(), parentsCount, const_cast<const git_commit **>(parents)))
+            if (commit(message.c_str(), parentsCount, const_cast<const git_commit **>(parents))) {
                 git_repository_state_cleanup(mGitRepository);
-            else
+            } else {
                 res = false;
+            }
         }
     }
 
-    for (size_t n = 0; n < parentsCount; ++n)
+    for (size_t n = 0; n < parentsCount; ++n) {
         git_commit_free(parents[n]);
+    }
 
     delete[] parents;
 
-    if (!res)
+    if (!res) {
         emitGitError(tr("An error occurred while trying to commit the merge."));
+    }
 
     return res;
 }
@@ -462,7 +474,7 @@ bool PmrWorkspace::isOpen() const
 {
     // Return whether we are open
 
-    return mGitRepository;
+    return mGitRepository != nullptr;
 }
 
 //==============================================================================
@@ -480,9 +492,10 @@ bool PmrWorkspace::open(const QString &pPath, bool pRefreshStatus)
     mRootFileNode->setPath(pPath);
 
     if (!pPath.isEmpty()) {
-        if (!git_repository_open(&mGitRepository, pPath.toUtf8().constData())) {
-            if (pRefreshStatus)
+        if (git_repository_open(&mGitRepository, pPath.toUtf8().constData()) == GIT_OK) {
+            if (pRefreshStatus) {
                 refreshStatus();
+            }
 
             return true;
         }
@@ -499,45 +512,49 @@ CharPair PmrWorkspace::gitStatusChars(uint pFlags) const
 {
     // Git status
 
-    if (pFlags & GIT_STATUS_CONFLICTED)
-        return CharPair(' ', 'C');
+    if ((pFlags & GIT_STATUS_CONFLICTED) != 0) {
+        return { ' ', 'C' };
+    }
 
-    if (pFlags & GIT_STATUS_IGNORED)
-        return CharPair(' ', 'I');
+    if ((pFlags & GIT_STATUS_IGNORED) != 0) {
+        return { ' ', 'I' };
+    }
 
     // iStatus
 
     QChar iStatus = ' ';
 
-    if (pFlags & GIT_STATUS_INDEX_TYPECHANGE)
+    if ((pFlags & GIT_STATUS_INDEX_TYPECHANGE) != 0) {
         iStatus = 'T';
-    else if (pFlags & GIT_STATUS_INDEX_RENAMED)
+    } else if ((pFlags & GIT_STATUS_INDEX_RENAMED) != 0) {
         iStatus = 'R';
-    else if (pFlags & GIT_STATUS_INDEX_DELETED)
+    } else if ((pFlags & GIT_STATUS_INDEX_DELETED) != 0) {
         iStatus = 'D';
-    else if (pFlags & GIT_STATUS_INDEX_MODIFIED)
+    } else if ((pFlags & GIT_STATUS_INDEX_MODIFIED) != 0) {
         iStatus = 'M';
-    else if (pFlags & GIT_STATUS_INDEX_NEW)
+    } else if ((pFlags & GIT_STATUS_INDEX_NEW) != 0) {
         iStatus = 'A';
+    }
 
     // wStatus
 
     QChar wStatus = ' ';
 
-    if (pFlags & GIT_STATUS_WT_TYPECHANGE)
+    if ((pFlags & GIT_STATUS_WT_TYPECHANGE) != 0) {
         wStatus = 'T';
-    else if (pFlags & GIT_STATUS_WT_RENAMED)
+    } else if ((pFlags & GIT_STATUS_WT_RENAMED) != 0) {
         wStatus = 'R';
-    else if (pFlags & GIT_STATUS_WT_DELETED)
+    } else if ((pFlags & GIT_STATUS_WT_DELETED) != 0) {
         wStatus = 'D';
-    else if (pFlags & GIT_STATUS_WT_MODIFIED)
+    } else if ((pFlags & GIT_STATUS_WT_MODIFIED) != 0) {
         wStatus = 'M';
-    else if (pFlags & GIT_STATUS_WT_NEW)
+    } else if ((pFlags & GIT_STATUS_WT_NEW) != 0) {
         wStatus = 'A';
-    else if (pFlags & GIT_STATUS_WT_UNREADABLE)
+    } else if ((pFlags & GIT_STATUS_WT_UNREADABLE) != 0) {
         wStatus = 'U';
+    }
 
-    return CharPair(iStatus, wStatus);
+    return { iStatus, wStatus };
 }
 
 //==============================================================================
@@ -548,36 +565,37 @@ PmrWorkspaceFileNode * PmrWorkspace::parentFileNode(const QString &pPath,
     // Check whether the first folder in the path is a child of the given parent
     // file node
 
-    PmrWorkspaceFileNode *realParentFileNode = pParentFileNode?pParentFileNode:mRootFileNode;
+    PmrWorkspaceFileNode *realParentFileNode = (pParentFileNode != nullptr)?pParentFileNode:mRootFileNode;
     QStringList pathComponents = pPath.split('/');
 
     if (pathComponents.count() == 1) {
         // The path only consists of a file name, so return our parent file node
 
         return realParentFileNode;
-    } else {
-        // The path contains some folders, so check whether the top folder is a
-        // child of our parent file node and, if so, use it to recursively
-        // retrieve the parent file node of the given path, otherwise create XXXXXXXXXXX
-
-        QString topFolder = pathComponents.first();
-        PmrWorkspaceFileNode *newParentFileNode = nullptr;
-
-        for (auto childFileNode : realParentFileNode->children()) {
-            if (!topFolder.compare(childFileNode->name())) {
-                newParentFileNode = childFileNode;
-
-                break;
-            }
-        }
-
-        if (!newParentFileNode)
-            newParentFileNode = realParentFileNode->addChild(topFolder);
-
-        pathComponents.removeFirst();
-
-        return parentFileNode(pathComponents.join('/'), newParentFileNode);
     }
+
+    // The path contains some folders, so check whether the top folder is a
+    // child of our parent file node and, if so, use it to recursively retrieve
+    // the parent file node of the given path, otherwise create one
+
+    QString topFolder = pathComponents.first();
+    PmrWorkspaceFileNode *newParentFileNode = nullptr;
+
+    for (auto childFileNode : realParentFileNode->children()) {
+        if (topFolder == childFileNode->name()) {
+            newParentFileNode = childFileNode;
+
+            break;
+        }
+    }
+
+    if (newParentFileNode == nullptr) {
+        newParentFileNode = realParentFileNode->addChild(topFolder);
+    }
+
+    pathComponents.removeFirst();
+
+    return parentFileNode(pathComponents.join('/'), newParentFileNode);
 }
 
 //==============================================================================
@@ -609,27 +627,29 @@ void PmrWorkspace::refreshStatus()
 
         git_status_list *statusList;
 
-        if (!git_status_list_new(&statusList, mGitRepository, &statusOptions)) {
+        if (git_status_list_new(&statusList, mGitRepository, &statusOptions) == GIT_OK) {
             // Go through the different entries and keep track of every single
             // one of them in mRepositoryStatusMap, as well as update
             // mStagedCount and mUnstagedCount, if needed
 
             for (size_t i = 0, iMax = git_status_list_entrycount(statusList); i < iMax; ++i) {
                 const git_status_entry *status = git_status_byindex(statusList, i);
-                const char *filePath = (status->head_to_index)?
+                const char *filePath = (status->head_to_index != nullptr)?
                                            status->head_to_index->old_file.path:
-                                           (status->index_to_workdir)?
+                                           (status->index_to_workdir != nullptr)?
                                                status->index_to_workdir->old_file.path:
                                                nullptr;
 
-                if (filePath) {
-                    CharPair statusChars = gitStatusChars(uint(status->status));
+                if (filePath != nullptr) {
+                    CharPair statusChars = gitStatusChars(status->status);
 
-                    if (statusChars.first != ' ')
+                    if (statusChars.first != ' ') {
                         ++mStagedCount;
+                    }
 
-                    if (statusChars.second != ' ')
+                    if (statusChars.second != ' ') {
                         ++mUnstagedCount;
+                    }
 
                     mRepositoryStatusMap.insert(filePath, parentFileNode(filePath)->addChild(QFileInfo(filePath).fileName(), statusChars));
                 }
@@ -644,17 +664,20 @@ void PmrWorkspace::refreshStatus()
         PmrWorkspaceFileNodes oldFileNodesToDelete = PmrWorkspaceFileNodes();
 
         for (auto oldFileNode : oldFileNodes) {
-            if (!newFileNodes.contains(oldFileNode))
+            if (!newFileNodes.contains(oldFileNode)) {
                 oldFileNodesToDelete << oldFileNode;
+            }
         }
 
-        if (!oldFileNodesToDelete.isEmpty())
+        if (!oldFileNodesToDelete.isEmpty()) {
             deleteFileNodes(mRootFileNode, oldFileNodesToDelete);
+        }
     } else if (mRootFileNode->hasChildren()) {
         // We are not open, so clear our root file node
 
-        for (auto child : mRootFileNode->children())
+        for (auto child : mRootFileNode->children()) {
             delete child;
+        }
     }
 }
 
@@ -665,18 +688,20 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
 {
     // Recursively delete the given file nodes, unless there is none left
 
-    if (pFileNodes.isEmpty())
+    if (pFileNodes.isEmpty()) {
         return;
+    }
 
     if (pFileNode->hasChildren()) {
-        for (auto child : pFileNode->children())
+        for (auto child : pFileNode->children()) {
             deleteFileNodes(child, pFileNodes);
+        }
 
         // Remove the file node or let people know that we have been uncloned,
         // if the file node doesn't have any children anymore
 
         if (!pFileNode->hasChildren()) {
-            if (pFileNode->parent()) {
+            if (pFileNode->parent() != nullptr) {
                 pFileNode->parent()->removeChild(pFileNode);
             } else {
                 // The folder where we were cloned has been deleted, so close
@@ -685,8 +710,9 @@ void PmrWorkspace::deleteFileNodes(PmrWorkspaceFileNode *pFileNode,
 
                 close();
 
-                if (!isOwned())
+                if (!isOwned()) {
                     PmrWorkspaceManager::instance()->removeWorkspace(this);
+                }
 
                 emit workspaceUncloned(this);
             }
@@ -726,8 +752,9 @@ QByteArray PmrWorkspace::headFileContents(const QString &pFileName)
 
     git_reference *head;
 
-    if (git_repository_head(&head, mGitRepository) != GIT_OK)
-        return QByteArray();
+    if (git_repository_head(&head, mGitRepository) != GIT_OK) {
+        return {};
+    }
 
     const git_oid *sha = git_reference_target(head);
     git_commit *commit;
@@ -735,36 +762,41 @@ QByteArray PmrWorkspace::headFileContents(const QString &pFileName)
 
     git_reference_free(head);
 
-    if (commitStatus != GIT_OK)
-        return QByteArray();
+    if (commitStatus != GIT_OK) {
+        return {};
+    }
 
     git_tree *tree;
     int treeStatus = git_commit_tree(&tree, commit);
 
     git_commit_free(commit);
 
-    if (treeStatus != GIT_OK)
-        return QByteArray();
+    if (treeStatus != GIT_OK) {
+        return {};
+    }
 
     git_tree_entry *treeEntry;
 
     if (git_tree_entry_bypath(&treeEntry, tree, pFileName.toUtf8().constData()) != GIT_OK) {
         git_tree_free(tree);
 
-        return QByteArray();
+        return {};
     }
 
     git_blob *blob = nullptr;
     const git_oid *blobSha = git_tree_entry_id(treeEntry);
 
-    if (blobSha && (git_blob_lookup(&blob, mGitRepository, blobSha) != GIT_OK))
+    if (   (blobSha != nullptr)
+        && (git_blob_lookup(&blob, mGitRepository, blobSha) != GIT_OK)) {
         blob = nullptr;
+    }
 
     git_tree_entry_free(treeEntry);
     git_tree_free(tree);
 
-    if (!blob)
-        return QByteArray();
+    if (blob == nullptr) {
+        return {};
+    }
 
     QByteArray res(static_cast<const char *>(git_blob_rawcontent(blob)),
                    int(git_blob_rawsize(blob)));
@@ -783,18 +815,19 @@ CharPair PmrWorkspace::gitFileStatus(const QString &pPath) const
     CharPair res = CharPair(' ', ' ');
 
     if (isOpen()) {
-        uint statusFlags = 0;
+        uint statusFlags = GIT_STATUS_CURRENT;
 
-        if (!git_status_file(&statusFlags, mGitRepository,
-                             QDir(mPath).relativeFilePath(pPath).toUtf8().constData())) {
+        if (git_status_file(&statusFlags, mGitRepository,
+                            QDir(mPath).relativeFilePath(pPath).toUtf8().constData()) == GIT_OK) {
              // Retrieve the status itself
 
              res = gitStatusChars(statusFlags);
 
             // Also update the status in our file tree
 
-            if (mRepositoryStatusMap.contains(pPath))
+            if (mRepositoryStatusMap.contains(pPath)) {
                 mRepositoryStatusMap.value(pPath)->setStatus(res);
+            }
          } else {
              emitGitError(tr("An error occurred while trying to get the status of %1.").arg(pPath));
          }
@@ -818,20 +851,20 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
             git_oid masterOid;
             bool error = false;
 
-            if (!git_reference_name_to_id(&masterOid, mGitRepository,
-                                          "refs/heads/master")) {
+            if (git_reference_name_to_id(&masterOid, mGitRepository,
+                                         "refs/heads/master") == GIT_OK) {
                 git_oid originMasterOid;
 
-                if (!git_reference_name_to_id(&originMasterOid, mGitRepository,
-                                              "refs/remotes/origin/master")) {
+                if (git_reference_name_to_id(&originMasterOid, mGitRepository,
+                                             "refs/remotes/origin/master") == GIT_OK) {
                     size_t ahead = 0;
                     size_t behind = 0;
 
-                    if (!git_graph_ahead_behind(&ahead, &behind, mGitRepository,
-                                                &masterOid, &originMasterOid)) {
-                        res = ahead?
+                    if (git_graph_ahead_behind(&ahead, &behind, mGitRepository,
+                                               &masterOid, &originMasterOid) == GIT_OK) {
+                        res = (ahead != 0)?
                                   StatusAhead:
-                                  behind?
+                                  (behind != 0)?
                                       StatusBehind:
                                       StatusCurrent;
                     } else {
@@ -844,21 +877,24 @@ PmrWorkspace::WorkspaceStatus PmrWorkspace::gitWorkspaceStatus() const
                 error = true;
             }
 
-            if (error)
+            if (error) {
                 emitGitError(tr("An error occurred while trying to get the remote status of %1.").arg(mPath));
+            }
         }
 
         git_index *index;
 
-        if (!git_repository_index(&index, mGitRepository)) {
-            if (git_index_has_conflicts(index)) {
+        if (git_repository_index(&index, mGitRepository) == GIT_OK) {
+            if (git_index_has_conflicts(index) != 0) {
                 res = WorkspaceStatus(res|StatusConflict);
             } else {
-                if (mStagedCount)
+                if (mStagedCount != 0) {
                     res = WorkspaceStatus(res|StatusStaged);
+                }
 
-                if (mUnstagedCount)
+                if (mUnstagedCount != 0) {
                     res = WorkspaceStatus(res|StatusUnstaged);
+                }
             }
 
             git_index_free(index);
@@ -881,33 +917,34 @@ void PmrWorkspace::stageFile(const QString &pPath, bool pStage)
         bool success = false;
         git_index *index;
 
-       if (!git_repository_index(&index, mGitRepository)) {
+       if (git_repository_index(&index, mGitRepository) == GIT_OK) {
             if (pStage) {
                 uint statusFlags = 0;
 
                 git_status_file(&statusFlags, mGitRepository, relativePath);
 
-                if (statusFlags & GIT_STATUS_WT_DELETED)
-                    success = !git_index_remove_bypath(index, relativePath);
-                else
-                    success = !git_index_add_bypath(index, relativePath);
+                if ((statusFlags & GIT_STATUS_WT_DELETED) != 0) {
+                    success = git_index_remove_bypath(index, relativePath) == GIT_OK;
+                } else {
+                    success = git_index_add_bypath(index, relativePath) == GIT_OK;
+                }
             } else if (git_repository_head_unborn(mGitRepository) == 1) {
-                success = !git_index_remove_bypath(index, relativePath);
+                success = git_index_remove_bypath(index, relativePath) == GIT_OK;
             } else {
                 // We need to add a "reset stage" to the index, which means
                 // getting the tree for HEAD and tree_entry for the file
 
                 git_reference *head;
 
-                if (!git_repository_head(&head, mGitRepository)) {
+                if (git_repository_head(&head, mGitRepository) == GIT_OK) {
                     git_tree *headTree;
 
-                    if (!git_reference_peel(reinterpret_cast<git_object **>(&headTree),
-                                            head, GIT_OBJECT_TREE)) {
+                    if (git_reference_peel(reinterpret_cast<git_object **>(&headTree),
+                                           head, GIT_OBJECT_TREE) == GIT_OK) {
                         git_tree_entry *headEntry;
 
-                        if (!git_tree_entry_bypath(&headEntry, headTree,
-                                                   relativePath)) {
+                        if (git_tree_entry_bypath(&headEntry, headTree,
+                                                  relativePath) == GIT_OK) {
                             git_index_entry indexEntry;
 
                             memset(&indexEntry, '\0', sizeof(git_index_entry));
@@ -922,7 +959,7 @@ void PmrWorkspace::stageFile(const QString &pPath, bool pStage)
 
                             success = true;
                         } else {
-                            success = !git_index_remove_bypath(index, relativePath);
+                            success = git_index_remove_bypath(index, relativePath) == GIT_OK;
                         }
 
                         git_tree_free(headTree);
@@ -932,14 +969,16 @@ void PmrWorkspace::stageFile(const QString &pPath, bool pStage)
                 }
             }
 
-            if (success)
+            if (success) {
                 git_index_write(index);
+            }
 
             git_index_free(index);
         }
 
-        if (!success)
+        if (!success) {
             emitGitError(tr("An error occurred while trying to stage %1.").arg(pPath));
+        }
     }
 }
 
@@ -952,7 +991,7 @@ StagedFiles PmrWorkspace::stagedFiles()
     StagedFiles res = StagedFiles();
     git_index *index;
 
-    if (!git_repository_index(&index, mGitRepository)) {
+    if (git_repository_index(&index, mGitRepository) == GIT_OK) {
         git_status_options statusOptions;
 
         git_status_init_options(&statusOptions, GIT_STATUS_OPTIONS_VERSION);
@@ -963,26 +1002,27 @@ StagedFiles PmrWorkspace::stagedFiles()
 
         git_status_list *statusList;
 
-        if (!git_status_list_new(&statusList, mGitRepository, &statusOptions)) {
+        if (git_status_list_new(&statusList, mGitRepository, &statusOptions) == GIT_OK) {
             for (size_t i = 0, iMax = git_status_list_entrycount(statusList); i < iMax; ++i) {
                 const git_status_entry *status = git_status_byindex(statusList, i);
-                const char *filePath = status->head_to_index?
+                const char *filePath = (status->head_to_index != nullptr)?
                                            status->head_to_index->old_file.path:
-                                           status->index_to_workdir?
+                                           (status->index_to_workdir != nullptr)?
                                                status->index_to_workdir->old_file.path:
                                                nullptr;
 
-                if (filePath) {
-                    if (status->status & GIT_STATUS_INDEX_TYPECHANGE)
+                if (filePath != nullptr) {
+                    if ((status->status & GIT_STATUS_INDEX_TYPECHANGE) != 0) {
                         res << StagedFile(filePath, GIT_STATUS_INDEX_TYPECHANGE);
-                    else if (status->status & GIT_STATUS_INDEX_RENAMED)
+                    } else if ((status->status & GIT_STATUS_INDEX_RENAMED) != 0) {
                         res << StagedFile(filePath, GIT_STATUS_INDEX_RENAMED);
-                    else if (status->status & GIT_STATUS_INDEX_DELETED)
+                    } else if ((status->status & GIT_STATUS_INDEX_DELETED) != 0) {
                         res << StagedFile(filePath, GIT_STATUS_INDEX_DELETED);
-                    else if (status->status & GIT_STATUS_INDEX_MODIFIED)
+                    } else if ((status->status & GIT_STATUS_INDEX_MODIFIED) != 0) {
                         res << StagedFile(filePath, GIT_STATUS_INDEX_MODIFIED);
-                    else if (status->status & GIT_STATUS_INDEX_NEW)
+                    } else if ((status->status & GIT_STATUS_INDEX_NEW) != 0) {
                         res << StagedFile(filePath, GIT_STATUS_INDEX_NEW);
+                    }
                 }
             }
 
@@ -1007,11 +1047,11 @@ void PmrWorkspace::setGitAuthorization(git_strarray *pAuthorizationStrArray)
         QByteArray authorisationHeader =  QByteArray("Authorization: Basic ")
                                          +QString(mUsername+":"+mPassword).toUtf8().toBase64();
 
-        char *authorizationStrArrayData = reinterpret_cast<char *>(malloc(size_t(authorisationHeader.count()+1)));
-        char **authorizationStrArrayArray = reinterpret_cast<char **>(malloc(sizeof(char *)));
+        auto authorizationStrArrayData = new char[authorisationHeader.count()+1];
+        auto authorizationStrArrayArray = new char*;
 
         memcpy(authorizationStrArrayData, authorisationHeader.constData(),
-               size_t(authorisationHeader.count()+1));
+               size_t(authorisationHeader.count())+1);
 
         authorizationStrArrayArray[0] = authorizationStrArrayData;
 
@@ -1025,10 +1065,10 @@ void PmrWorkspace::setGitAuthorization(git_strarray *pAuthorizationStrArray)
 int PmrWorkspace::certificateCheckCallback(git_cert *pCertificate, int pValid,
                                            const char *pHost, void *pPayload)
 {
-    Q_UNUSED(pCertificate);
-    Q_UNUSED(pValid);
-    Q_UNUSED(pHost);
-    Q_UNUSED(pPayload);
+    Q_UNUSED(pCertificate)
+    Q_UNUSED(pValid)
+    Q_UNUSED(pHost)
+    Q_UNUSED(pPayload)
 
     // Bypass the certificate check
 
@@ -1044,18 +1084,19 @@ int PmrWorkspace::checkoutNotifyCallback(git_checkout_notify_t pNotification,
                                          const git_diff_file *pWorkDirectory,
                                          void *pPayload)
 {
-    Q_UNUSED(pBaseline);
-    Q_UNUSED(pTarget);
-    Q_UNUSED(pWorkDirectory);
+    Q_UNUSED(pBaseline)
+    Q_UNUSED(pTarget)
+    Q_UNUSED(pWorkDirectory)
 
     // Keep track of conflicted and updated files
 
-    PmrWorkspace *workspace = reinterpret_cast<PmrWorkspace *>(pPayload);
+    auto workspace = reinterpret_cast<PmrWorkspace *>(pPayload);
 
-    if (pNotification == GIT_CHECKOUT_NOTIFY_CONFLICT)
+    if (pNotification == GIT_CHECKOUT_NOTIFY_CONFLICT) {
         workspace->mConflictedFiles << pPath;
-    else if (pNotification == GIT_CHECKOUT_NOTIFY_UPDATED)
+    } else if (pNotification == GIT_CHECKOUT_NOTIFY_UPDATED) {
         workspace->mUpdatedFiles << pPath;
+    }
 
     return 0;
 }
@@ -1067,24 +1108,24 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
                                            const git_oid *pId, uint pMerge,
                                            void *pPayload)
 {
-    Q_UNUSED(pReferenceName);
+    Q_UNUSED(pReferenceName)
 
     // Determine whether merging can be done
 
-    int res = 1;
+    bool res = true;
 
-    PmrWorkspace *workspace = reinterpret_cast<PmrWorkspace *>(pPayload);
+    auto workspace = reinterpret_cast<PmrWorkspace *>(pPayload);
     git_repository *gitRepository = workspace->mGitRepository;
 
     workspace->mConflictedFiles = QStringList();
     workspace->mUpdatedFiles = QStringList();
 
-    if (pMerge) {
+    if (pMerge != 0) {
         git_annotated_commit *remoteCommitHead = nullptr;
 
         if (git_annotated_commit_from_fetchhead(&remoteCommitHead, gitRepository,
-                                                "origin/master", pRemoteUrl, pId)) {
-            res = 0;
+                                                "origin/master", pRemoteUrl, pId) != GIT_OK) {
+            res = false;
         } else {
             // Initialise some common checkout options
 
@@ -1107,22 +1148,23 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
             git_merge_preference_t preference = GIT_MERGE_PREFERENCE_NONE;
 
             git_merge_analysis(&analysis, &preference, gitRepository,
-                               const_cast<const git_annotated_commit**>(&remoteCommitHead), 1);
+                               const_cast<const git_annotated_commit **>(&remoteCommitHead), 1);
 
-            if (analysis & GIT_MERGE_ANALYSIS_UNBORN) {
+            if ((analysis & GIT_MERGE_ANALYSIS_UNBORN) != 0) {
                 // We can simply set HEAD to the target commit
 
                 git_reference *newMaster = nullptr;
 
-                res =    !git_reference_create(&newMaster, gitRepository, RefsHeadMaster,
+                res =    (git_reference_create(&newMaster, gitRepository, RefsHeadMaster,
                                                git_annotated_commit_id(remoteCommitHead),
-                                               true, "initial pull")
-                      && !git_repository_set_head(gitRepository, RefsHeadMaster)
-                      && !git_checkout_head(gitRepository, &checkoutOptions);
+                                               1, "initial pull") == GIT_OK)
+                      && (git_repository_set_head(gitRepository, RefsHeadMaster) == GIT_OK)
+                      && (git_checkout_head(gitRepository, &checkoutOptions) == GIT_OK);
 
-                if (newMaster)
+                if (newMaster != nullptr) {
                     git_reference_free(newMaster);
-            } else if (analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) {
+                }
+            } else if ((analysis & GIT_MERGE_ANALYSIS_FASTFORWARD) != 0) {
                 // We can check out the newly fetched head without merging
 
                 const git_oid *commitId = git_annotated_commit_id(remoteCommitHead);
@@ -1130,36 +1172,40 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
                 git_reference *headReference = nullptr;
                 git_reference *newHeadReference = nullptr;
 
-                res =    !git_commit_lookup(&commit, gitRepository, commitId)
-                      && !git_checkout_tree(gitRepository, reinterpret_cast<const git_object *>(commit), &checkoutOptions)
-                      && !git_reference_lookup(&headReference, gitRepository, RefsHeadMaster);
+                res =    (git_commit_lookup(&commit, gitRepository, commitId) == GIT_OK)
+                      && (git_checkout_tree(gitRepository, reinterpret_cast<const git_object *>(commit), &checkoutOptions) == GIT_OK)
+                      && (git_reference_lookup(&headReference, gitRepository, RefsHeadMaster) == GIT_OK);
 
                 if (res) {
-                    static const char *LogMessage = "pull: fast-forward";
+                    static const char *PullLogMessage = "pull: fast-forward";
 
-                    const git_oid *commitId = git_commit_id(commit);
+                    const git_oid *pullCommitId = git_commit_id(commit);
 
                     if (git_reference_type(headReference) == GIT_REFERENCE_DIRECT) {
-                        res = !git_reference_set_target(&newHeadReference,
-                                                        headReference,
-                                                        commitId, LogMessage);
+                        res = git_reference_set_target(&newHeadReference,
+                                                       headReference,
+                                                       pullCommitId,
+                                                       PullLogMessage) == GIT_OK;
                     } else {
-                        res = !git_reference_create(&newHeadReference,
-                                                    gitRepository,
-                                                    RefsHeadMaster,
-                                                    commitId, false, LogMessage);
+                        res = git_reference_create(&newHeadReference,
+                                                   gitRepository,
+                                                   RefsHeadMaster, pullCommitId,
+                                                   0, PullLogMessage) == GIT_OK;
                     }
                 }
 
-                if (commit)
+                if (commit != nullptr) {
                     git_commit_free(commit);
+                }
 
-                if (headReference)
+                if (headReference != nullptr) {
                     git_reference_free(headReference);
+                }
 
-                if (newHeadReference)
+                if (newHeadReference != nullptr) {
                     git_reference_free(newHeadReference);
-            } else if (analysis & GIT_MERGE_ANALYSIS_NORMAL) {
+                }
+            } else if ((analysis & GIT_MERGE_ANALYSIS_NORMAL) != 0) {
                 // A "normal" merge, i.e. both HEAD and the given merge input
                 // have diverged from their common ancestor, which means that
                 // the divergent commits must be merged
@@ -1168,16 +1214,16 @@ int PmrWorkspace::fetchheadForeachCallback(const char *pReferenceName,
 
                 git_merge_init_options(&mergeOptions, GIT_MERGE_OPTIONS_VERSION);
 
-                res = !git_merge(gitRepository,
-                                 const_cast<const git_annotated_commit **>(&remoteCommitHead),
-                                 1, &mergeOptions, &checkoutOptions);
+                res = git_merge(gitRepository,
+                                const_cast<const git_annotated_commit **>(&remoteCommitHead),
+                                1, &mergeOptions, &checkoutOptions) == GIT_OK;
             }
 
             git_annotated_commit_free(remoteCommitHead);
         }
     }
 
-    return !res;
+    return int(!res);
 }
 
 //==============================================================================
@@ -1187,13 +1233,15 @@ int PmrWorkspace::mergeheadForeachCallback(const git_oid *pOid, void *pPayload)
     // Retrieve and return the number of merge heads
 
     int res = 0;
-    MergeheadForeachCallbackData *data = reinterpret_cast<MergeheadForeachCallbackData *>(pPayload);
+    auto data = reinterpret_cast<MergeheadForeachCallbackData *>(pPayload);
 
-    if (data->parents)
+    if (data->parents != nullptr) {
         res = git_commit_lookup(&data->parents[data->size], data->repository, pOid);
+    }
 
-    if (!res)
+    if (res == 0) {
         ++data->size;
+    }
 
     return res;
 }
@@ -1204,8 +1252,9 @@ bool PmrWorkspace::fetch()
 {
     // Fetch any updates for a workspace, if possible
 
-    if (!isOpen())
+    if (!isOpen()) {
         return false;
+    }
 
     bool res = true;
     git_fetch_options fetchOptions;
@@ -1232,15 +1281,16 @@ bool PmrWorkspace::fetch()
     git_remote *gitRemote = nullptr;
     git_strarray refSpecsStrArray = { const_cast<char **>(&RefsHeadMaster), 1 };
 
-    if (   git_remote_lookup(&gitRemote, mGitRepository, "origin")
-        || git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, nullptr)) {
+    if (   (git_remote_lookup(&gitRemote, mGitRepository, "origin") != GIT_OK)
+        || (git_remote_fetch(gitRemote, &refSpecsStrArray, &fetchOptions, nullptr) != GIT_OK)) {
         emitGitError(tr("An error occurred while trying to fetch the remote workspace."));
 
         res = false;
     }
 
-    if (gitRemote)
+    if (gitRemote != nullptr) {
         git_remote_free(gitRemote);
+    }
 
     git_strarray_free(&authorizationStrArray);
 
@@ -1253,28 +1303,31 @@ bool PmrWorkspace::merge()
 {
     // Merge and commit fetched updates, if possible
 
-    if (!isOpen())
+    if (!isOpen()) {
         return false;
+    }
 
     bool res = true;
     int error = git_repository_fetchhead_foreach(mGitRepository, fetchheadForeachCallback, this);
 
-    if (!error) {
+    if (error == GIT_OK) {
         // We only need to commit normal merges
 
-        if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE)
+        if (git_repository_state(mGitRepository) == GIT_REPOSITORY_STATE_MERGE) {
             res = commitMerge();
+        }
     } else if (error != GIT_ENOTFOUND) {
         int nbOfConflictedFiles = mConflictedFiles.count();
         QString errorMessage = tr("An error occurred while trying to merge the workspace.");
 
-        if (nbOfConflictedFiles) {
+        if (nbOfConflictedFiles != 0) {
             int counter = 0;
 
-            if (mConflictedFiles.count() == 1)
+            if (mConflictedFiles.count() == 1) {
                 errorMessage += "\n\n"+tr("The following file has conflicts:");
-            else
+            } else {
                 errorMessage += "\n\n"+tr("The following files have conflicts:");
+            }
 
             for (const auto &conflictedFile : mConflictedFiles) {
                 ++counter;
@@ -1303,8 +1356,9 @@ void PmrWorkspace::push()
 {
     // Push a workspace, if possible
 
-    if (!isOpen())
+    if (!isOpen()) {
         return;
+    }
 
     git_push_options pushOptions;
     git_strarray authorizationStrArray = { nullptr, 0 };
@@ -1330,13 +1384,14 @@ void PmrWorkspace::push()
     git_remote *gitRemote = nullptr;
     git_strarray refSpecsStrArray = { const_cast<char **>(&RefsHeadMaster), 1 };
 
-    if (   git_remote_lookup(&gitRemote, mGitRepository, "origin")
-        || git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions)) {
+    if (   (git_remote_lookup(&gitRemote, mGitRepository, "origin") != GIT_OK)
+        || (git_remote_push(gitRemote, &refSpecsStrArray, &pushOptions) != GIT_OK)) {
         emitGitError(tr("An error occurred while trying to push the workspace."));
     }
 
-    if (gitRemote)
+    if (gitRemote != nullptr) {
         git_remote_free(gitRemote);
+    }
 
     git_strarray_free(&authorizationStrArray);
 }
@@ -1349,7 +1404,7 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 
     const git_error *gitError = git_error_last();
 
-    if (gitError) {
+    if (gitError != nullptr) {
         emit warning(tr("%1\n\nGit message: %2.").arg(pMessage)
                                                  .arg(Core::formatMessage(gitError->message)));
     } else {
@@ -1359,8 +1414,8 @@ void PmrWorkspace::emitGitError(const QString &pMessage) const
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

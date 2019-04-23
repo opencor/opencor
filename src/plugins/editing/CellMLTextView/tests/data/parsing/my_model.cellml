@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <model cmeta:id="my_model_cmeta_id_with-hyphens-and.periods." name="my_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- A comment can fit on one line...-->
     <!-- A comment can also fit

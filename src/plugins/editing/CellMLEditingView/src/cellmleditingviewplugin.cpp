@@ -45,10 +45,10 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides core <a href=\"http://www.cellml.org/\">CellML</a> editing view facilities."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition <a href=\"http://www.cellml.org/\">CellML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that provides core <a href="http://www.cellml.org/">CellML</a> editing view facilities.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui fournit les fonctionalités de base d'une vue d'édition <a href="http://www.cellml.org/">CellML</a>.)"));
 
-    return new PluginInfo(PluginInfo::Editing, false, false,
+    return new PluginInfo(PluginInfo::Category::Editing, false, false,
                           QStringList() << "CellMLSupport" << "EditingView" << "MathMLViewerWidget",
                           descriptions);
 }
@@ -56,6 +56,10 @@ PLUGININFO_FUNC CellMLEditingViewPluginInfo()
 //==============================================================================
 
 CellMLEditingViewPlugin::CellMLEditingViewPlugin() :
+    mEditReformatAction(nullptr),
+    mEditReformatSeparator(nullptr),
+    mToolsCellmlValidationAction(nullptr),
+    mToolsCellmlValidationSeparator(nullptr),
     mFileName(QString()),
     mEditor(nullptr),
     mCellmlEditingViewInterface(nullptr)
@@ -68,7 +72,7 @@ CellMLEditingViewPlugin::CellMLEditingViewPlugin() :
 
 bool CellMLEditingViewPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -81,9 +85,9 @@ bool CellMLEditingViewPlugin::saveFile(const QString &pOldFileName,
                                        const QString &pNewFileName,
                                        bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback)
 
     // We don't handle this interface...
 
@@ -94,7 +98,7 @@ bool CellMLEditingViewPlugin::saveFile(const QString &pOldFileName,
 
 void CellMLEditingViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -106,11 +110,11 @@ void CellMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
     // The given file has been un/locked, so show/enable or hide/disable our
     // reformat action, if needed
 
-    if (mEditor && !pFileName.compare(mFileName)) {
+    if ((mEditor != nullptr) && (pFileName == mFileName)) {
         bool hasFileNameAndIsReadableAndWritable = !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-        Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
-        Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+        Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface != nullptr, hasFileNameAndIsReadableAndWritable);
+        Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface != nullptr, hasFileNameAndIsReadableAndWritable);
     }
 }
 
@@ -118,7 +122,7 @@ void CellMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void CellMLEditingViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -127,7 +131,7 @@ void CellMLEditingViewPlugin::fileModified(const QString &pFileName)
 
 void CellMLEditingViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -136,7 +140,7 @@ void CellMLEditingViewPlugin::fileSaved(const QString &pFileName)
 
 void CellMLEditingViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -146,8 +150,8 @@ void CellMLEditingViewPlugin::fileReloaded(const QString &pFileName)
 void CellMLEditingViewPlugin::fileRenamed(const QString &pOldFileName,
                                           const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
 
     // We don't handle this interface...
 }
@@ -156,7 +160,7 @@ void CellMLEditingViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void CellMLEditingViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -171,25 +175,25 @@ void CellMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the CellML editing interface
 
-    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
+    EditingViewInterface *editingViewInterface = (pViewPlugin != nullptr)?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
-    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):nullptr;
-    mCellmlEditingViewInterface = pViewPlugin?qobject_cast<CellmlEditingViewInterface *>(pViewPlugin->instance()):nullptr;
+    mEditor = (editingViewInterface != nullptr)?editingViewInterface->editorWidget(pFileName):nullptr;
+    mCellmlEditingViewInterface = (pViewPlugin != nullptr)?qobject_cast<CellmlEditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
     bool hasFileName = !pFileName.isEmpty();
     bool hasFileNameAndIsReadWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-    Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface, mEditor && hasFileNameAndIsReadWritable);
-    Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface, hasFileNameAndIsReadWritable);
+    Core::showEnableAction(mEditReformatAction, mCellmlEditingViewInterface != nullptr, (mEditor != nullptr) && hasFileNameAndIsReadWritable);
+    Core::showEnableAction(mEditReformatSeparator, mCellmlEditingViewInterface != nullptr, hasFileNameAndIsReadWritable);
 
-    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface, mEditor && hasFileName);
-    Core::showEnableAction(mToolsCellmlValidationSeparator, mCellmlEditingViewInterface, hasFileName);
+    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingViewInterface != nullptr, (mEditor != nullptr) && hasFileName);
+    Core::showEnableAction(mToolsCellmlValidationSeparator, mCellmlEditingViewInterface != nullptr, hasFileName);
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
     //       EditingViewPlugin::updateGui()...
 
-    if (mEditor) {
+    if (mEditor != nullptr) {
         mEditor->setContextMenu(mEditor->contextMenu()->actions() << mEditReformatSeparator
                                                                   << mEditReformatAction
                                                                   << mToolsCellmlValidationSeparator
@@ -207,7 +211,7 @@ Gui::Menus CellMLEditingViewPlugin::guiMenus() const
 {
     // We don't handle this interface...
 
-    return Gui::Menus();
+    return {};
 }
 
 //==============================================================================
@@ -216,10 +220,10 @@ Gui::MenuActions CellMLEditingViewPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationSeparator);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsCellmlValidationAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsCellmlValidationSeparator);
 }
 
 //==============================================================================
@@ -256,7 +260,7 @@ bool CellMLEditingViewPlugin::pluginInterfacesOk(const QString &pFileName,
     // Make sure that the given plugin instance uses the right version of the
     // CellML editing view interface, if it supports it
 
-    return !(   qobject_cast<CellmlEditingViewInterface *>(pInstance)
+    return !(   (qobject_cast<CellmlEditingViewInterface *>(pInstance) != nullptr)
              && (Plugin::interfaceVersion(pFileName, "cellmlEditingViewInterfaceVersion") != cellmlEditingViewInterfaceVersion()));
 }
 
@@ -267,8 +271,9 @@ void CellMLEditingViewPlugin::initializePlugin()
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (Core::mainWindow() == nullptr) {
         return;
+    }
 
     // Create our different actions
 
@@ -300,7 +305,7 @@ void CellMLEditingViewPlugin::finalizePlugin()
 
 void CellMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -309,7 +314,7 @@ void CellMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void CellMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -318,7 +323,7 @@ void CellMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 
 void CellMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -327,7 +332,7 @@ void CellMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 
 void CellMLEditingViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -340,8 +345,9 @@ void CellMLEditingViewPlugin::reformat()
 {
     // Reformat the contents of the editor
 
-    if (mCellmlEditingViewInterface)
+    if (mCellmlEditingViewInterface != nullptr) {
         mCellmlEditingViewInterface->reformat(mFileName);
+    }
 }
 
 //==============================================================================
@@ -350,7 +356,7 @@ void CellMLEditingViewPlugin::cellmlValidation()
 {
     // Validate the current CellML file
 
-    if (mCellmlEditingViewInterface) {
+    if (mCellmlEditingViewInterface != nullptr) {
         QString extra = QString();
 
         if (mCellmlEditingViewInterface->validCellml(mFileName, extra)) {
@@ -367,8 +373,8 @@ void CellMLEditingViewPlugin::cellmlValidation()
 
 //==============================================================================
 
-}   // namespace CellMLEditingView
-}   // namespace OpenCOR
+} // namespace CellMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

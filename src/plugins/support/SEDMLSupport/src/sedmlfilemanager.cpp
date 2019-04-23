@@ -90,8 +90,8 @@ StandardSupport::StandardFile * SedmlFileManager::create(const QString &pFileNam
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

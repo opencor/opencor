@@ -24,6 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef Q_OS_WIN
     #pragma warning(push)
     #pragma warning(disable: 4005)
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+    #pragma clang diagnostic ignored "-Wextra-semi"
+    #pragma clang diagnostic ignored "-Wnewline-eof"
+    #pragma clang diagnostic ignored "-Wundef"
 #endif
 
 //==============================================================================

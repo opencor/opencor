@@ -23,10 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "corecliutils.h"
 #include "coreguiutils.h"
-#include "sedmleditingviewplugin.h"
 #include "editingviewinterface.h"
 #include "filemanager.h"
 #include "sedmleditingviewinterface.h"
+#include "sedmleditingviewplugin.h"
 
 //==============================================================================
 
@@ -45,10 +45,10 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides core <a href=\"http://www.sed-ml.org/\">SED-ML</a> editing view facilities."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that provides core <a href="http://www.sed-ml.org/">SED-ML</a> editing view facilities.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui fournit les fonctionalités de base d'une vue d'édition <a href="http://www.sed-ml.org/">SED-ML</a>.)"));
 
-    return new PluginInfo(PluginInfo::Editing, false, false,
+    return new PluginInfo(PluginInfo::Category::Editing, false, false,
                           QStringList() << "EditingView" << "SEDMLSupport",
                           descriptions);
 }
@@ -56,6 +56,10 @@ PLUGININFO_FUNC SEDMLEditingViewPluginInfo()
 //==============================================================================
 
 SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
+    mEditReformatAction(nullptr),
+    mEditReformatSeparator(nullptr),
+    mToolsSedmlValidationAction(nullptr),
+    mToolsSedmlValidationSeparator(nullptr),
     mFileName(QString()),
     mEditor(nullptr),
     mSedmlEditingViewInterface(nullptr)
@@ -68,7 +72,7 @@ SEDMLEditingViewPlugin::SEDMLEditingViewPlugin() :
 
 bool SEDMLEditingViewPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -81,9 +85,9 @@ bool SEDMLEditingViewPlugin::saveFile(const QString &pOldFileName,
                                       const QString &pNewFileName,
                                       bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback)
 
     // We don't handle this interface...
 
@@ -94,7 +98,7 @@ bool SEDMLEditingViewPlugin::saveFile(const QString &pOldFileName,
 
 void SEDMLEditingViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -106,11 +110,11 @@ void SEDMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
     // The given file has been un/locked, so show/enable or hide/disable our
     // reformat action, if needed
 
-    if (mEditor && !pFileName.compare(mFileName)) {
+    if ((mEditor != nullptr) && (pFileName == mFileName)) {
         bool hasFileNameAndIsReadableAndWritable = !pFileName.isEmpty() && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-        Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
-        Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface, hasFileNameAndIsReadableAndWritable);
+        Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface != nullptr, hasFileNameAndIsReadableAndWritable);
+        Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface != nullptr, hasFileNameAndIsReadableAndWritable);
     }
 }
 
@@ -118,7 +122,7 @@ void SEDMLEditingViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void SEDMLEditingViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -127,7 +131,7 @@ void SEDMLEditingViewPlugin::fileModified(const QString &pFileName)
 
 void SEDMLEditingViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -136,7 +140,7 @@ void SEDMLEditingViewPlugin::fileSaved(const QString &pFileName)
 
 void SEDMLEditingViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -146,8 +150,8 @@ void SEDMLEditingViewPlugin::fileReloaded(const QString &pFileName)
 void SEDMLEditingViewPlugin::fileRenamed(const QString &pOldFileName,
                                          const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
 
     // We don't handle this interface...
 }
@@ -156,7 +160,7 @@ void SEDMLEditingViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void SEDMLEditingViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -171,25 +175,25 @@ void SEDMLEditingViewPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the SED-ML editing interface
 
-    EditingViewInterface *editingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
+    EditingViewInterface *editingViewInterface = (pViewPlugin != nullptr)?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
-    mEditor = editingViewInterface?editingViewInterface->editorWidget(pFileName):nullptr;
-    mSedmlEditingViewInterface = pViewPlugin?qobject_cast<SedmlEditingViewInterface *>(pViewPlugin->instance()):nullptr;
+    mEditor = (editingViewInterface != nullptr)?editingViewInterface->editorWidget(pFileName):nullptr;
+    mSedmlEditingViewInterface = (pViewPlugin != nullptr)?qobject_cast<SedmlEditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
     bool hasFileName = !pFileName.isEmpty();
     bool hasFileNameAndIsReadWritable = hasFileName && Core::FileManager::instance()->isReadableAndWritable(pFileName);
 
-    Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface, mEditor && hasFileNameAndIsReadWritable);
-    Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface, hasFileNameAndIsReadWritable);
+    Core::showEnableAction(mEditReformatAction, mSedmlEditingViewInterface != nullptr, (mEditor != nullptr) && hasFileNameAndIsReadWritable);
+    Core::showEnableAction(mEditReformatSeparator, mSedmlEditingViewInterface != nullptr, hasFileNameAndIsReadWritable);
 
-    Core::showEnableAction(mToolsSedmlValidationAction, mSedmlEditingViewInterface, mEditor && hasFileName);
-    Core::showEnableAction(mToolsSedmlValidationSeparator, mSedmlEditingViewInterface, hasFileName);
+    Core::showEnableAction(mToolsSedmlValidationAction, mSedmlEditingViewInterface != nullptr, (mEditor != nullptr) && hasFileName);
+    Core::showEnableAction(mToolsSedmlValidationSeparator, mSedmlEditingViewInterface != nullptr, hasFileName);
 
     // Update our editor's context menu
     // Note: our editor's original context menu is set in
     //       EditingViewPlugin::updateGui()...
 
-    if (mEditor) {
+    if (mEditor != nullptr) {
         mEditor->setContextMenu(mEditor->contextMenu()->actions() << mEditReformatSeparator
                                                                   << mEditReformatAction
                                                                   << mToolsSedmlValidationSeparator
@@ -207,7 +211,7 @@ Gui::Menus SEDMLEditingViewPlugin::guiMenus() const
 {
     // We don't handle this interface...
 
-    return Gui::Menus();
+    return {};
 }
 
 //==============================================================================
@@ -216,10 +220,10 @@ Gui::MenuActions SEDMLEditingViewPlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatSeparator)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationAction)
-                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsSedmlValidationSeparator);
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mEditReformatSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsSedmlValidationAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::Tools, mToolsSedmlValidationSeparator);
 }
 
 //==============================================================================
@@ -256,7 +260,7 @@ bool SEDMLEditingViewPlugin::pluginInterfacesOk(const QString &pFileName,
     // Make sure that the given plugin instance uses the right version of the
     // SED-ML editing view interface, if it supports it
 
-    return !(   qobject_cast<SedmlEditingViewInterface *>(pInstance)
+    return !(   (qobject_cast<SedmlEditingViewInterface *>(pInstance) != nullptr)
              && (Plugin::interfaceVersion(pFileName, "sedmlEditingViewInterfaceVersion") != sedmlEditingViewInterfaceVersion()));
 }
 
@@ -294,7 +298,7 @@ void SEDMLEditingViewPlugin::finalizePlugin()
 
 void SEDMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -303,7 +307,7 @@ void SEDMLEditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void SEDMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -312,7 +316,7 @@ void SEDMLEditingViewPlugin::loadSettings(QSettings &pSettings)
 
 void SEDMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -321,7 +325,7 @@ void SEDMLEditingViewPlugin::saveSettings(QSettings &pSettings) const
 
 void SEDMLEditingViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -334,8 +338,9 @@ void SEDMLEditingViewPlugin::reformat()
 {
     // Reformat the contents of the editor
 
-    if (mSedmlEditingViewInterface)
+    if (mSedmlEditingViewInterface != nullptr) {
         mSedmlEditingViewInterface->reformat(mFileName);
+    }
 }
 
 //==============================================================================
@@ -344,7 +349,7 @@ void SEDMLEditingViewPlugin::sedmlValidation()
 {
     // Validate the current SED-ML file
 
-    if (mSedmlEditingViewInterface) {
+    if (mSedmlEditingViewInterface != nullptr) {
         QString extra = QString();
 
         if (mSedmlEditingViewInterface->validSedml(mFileName, extra)) {
@@ -361,8 +366,8 @@ void SEDMLEditingViewPlugin::sedmlValidation()
 
 //==============================================================================
 
-}   // namespace SEDMLEditingView
-}   // namespace OpenCOR
+} // namespace SEDMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

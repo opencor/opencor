@@ -29,9 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "nvector/nvector_serial.h"
-#include "sundials/sundials_linearsolver.h"
-#include "sundials/sundials_matrix.h"
+#include "sundialsbegin.h"
+    #include "nvector/nvector_serial.h"
+    #include "sundials/sundials_linearsolver.h"
+    #include "sundials/sundials_matrix.h"
+#include "sundialsend.h"
 
 //==============================================================================
 
@@ -138,8 +140,8 @@ private:
 
 //==============================================================================
 
-}   // namespace KINSOLSolver
-}   // namespace OpenCOR
+} // namespace KINSOLSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

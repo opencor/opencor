@@ -46,13 +46,13 @@ namespace OpenCOR {
 namespace EditorWidget {
     class EditorListWidget;
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
-namespace QScintillaSupport {
+namespace QScintillaWidget {
     class QScintillaWidget;
-}   // namespace QScintillaSupport
+} // namespace QScintillaWidget
 
 //==============================================================================
 
@@ -203,8 +203,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

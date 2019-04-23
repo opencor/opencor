@@ -29,8 +29,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "numl/common/libnuml-version.h"
-#include "numl/NUMLDocument.h"
+#include "libnumlbegin.h"
+    #include "numl/common/libnuml-version.h"
+    #include "numl/NUMLDocument.h"
+#include "libnumlend.h"
 
 //==============================================================================
 
@@ -45,11 +47,11 @@ void Tests::basicTests()
     // Create a NuML document with a model inside it, then set the name of the
     // model and check that it has been properly set
 
-    libnuml::NUMLDocument *numlDocument = new libnuml::NUMLDocument();
+    auto numlDocument = new libnuml::NUMLDocument();
 
     static const std::string ElementName = "numl";
 
-    QCOMPARE(numlDocument->getElementName(), ElementName       );
+    QCOMPARE(numlDocument->getElementName(), ElementName);
 
     delete numlDocument;
 }

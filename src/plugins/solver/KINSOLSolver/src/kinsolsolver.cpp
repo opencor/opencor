@@ -25,14 +25,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "kinsol/kinsol.h"
-#include "kinsol/kinsol_direct.h"
-#include "kinsol/kinsol_spils.h"
-#include "sunlinsol/sunlinsol_band.h"
-#include "sunlinsol/sunlinsol_dense.h"
-#include "sunlinsol/sunlinsol_spbcgs.h"
-#include "sunlinsol/sunlinsol_spgmr.h"
-#include "sunlinsol/sunlinsol_sptfqmr.h"
+#include "sundialsbegin.h"
+    #include "kinsol/kinsol.h"
+    #include "kinsol/kinsol_direct.h"
+    #include "kinsol/kinsol_spils.h"
+    #include "sunlinsol/sunlinsol_band.h"
+    #include "sunlinsol/sunlinsol_dense.h"
+    #include "sunlinsol/sunlinsol_spbcgs.h"
+    #include "sunlinsol/sunlinsol_spgmr.h"
+    #include "sunlinsol/sunlinsol_sptfqmr.h"
+#include "sundialsend.h"
 
 //==============================================================================
 
@@ -45,7 +47,7 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
 {
     // Compute the system function
 
-    KinsolSolverUserData *userData = static_cast<KinsolSolverUserData *>(pUserData);
+    auto userData = static_cast<KinsolSolverUserData *>(pUserData);
     double *f = N_VGetArrayPointer_Serial(pF);
 
     userData->computeSystem()(N_VGetArrayPointer_Serial(pY), f, userData->userData());
@@ -55,9 +57,10 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
     //       solver is badly set up (e.g. Forward Euler with an integration step
     //       that is too big)...
 
-    for (long i = 0, iMax = static_cast<N_VectorContent_Serial>(pF->content)->length; i < iMax; ++i) {
-        if (!qIsFinite(f[i]))
+    for (qint64 i = 0, iMax = static_cast<N_VectorContent_Serial>(pF->content)->length; i < iMax; ++i) {
+        if (!qIsFinite(f[i])) {
             return 1;
+        }
     }
 
     return 0;
@@ -68,13 +71,14 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
 void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
                   char *pErrorMessage, void *pUserData)
 {
-    Q_UNUSED(pModule);
-    Q_UNUSED(pFunction);
+    Q_UNUSED(pModule)
+    Q_UNUSED(pFunction)
 
     // Forward errors to our KinsolSolver object
 
-    if (pErrorCode != KIN_WARNING)
+    if (pErrorCode != KIN_WARNING) {
         static_cast<KinsolSolver *>(pUserData)->emitError(pErrorMessage);
+    }
 }
 
 //==============================================================================
@@ -195,8 +199,9 @@ KinsolSolver::~KinsolSolver()
 {
     // Delete some internal objects
 
-    for (auto data : mData.values())
+    for (auto data : mData.values()) {
         delete data;
+    }
 }
 
 //==============================================================================
@@ -208,7 +213,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
     KinsolSolverData *data = mData.value(reinterpret_cast<void *>(pComputeSystem));
 
-    if (!data) {
+    if (data == nullptr) {
         // Retrieve our properties
 
         int maximumNumberOfIterationsValue = MaximumNumberOfIterationsDefaultValue;
@@ -219,7 +224,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
         if (mProperties.contains(MaximumNumberOfIterationsId)) {
             maximumNumberOfIterationsValue = mProperties.value(MaximumNumberOfIterationsId).toInt();
         } else {
-            emit error(tr("the \"Maximum number of iterations\" property value could not be retrieved"));
+            emit error(tr(R"(the "Maximum number of iterations" property value could not be retrieved)"));
 
             return;
         }
@@ -227,17 +232,17 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
         if (mProperties.contains(LinearSolverId)) {
             linearSolverValue = mProperties.value(LinearSolverId).toString();
 
-            if (!linearSolverValue.compare(BandedLinearSolver)) {
+            if (linearSolverValue == BandedLinearSolver) {
                 if (mProperties.contains(UpperHalfBandwidthId)) {
                     upperHalfBandwidthValue = mProperties.value(UpperHalfBandwidthId).toInt();
 
                     if (upperHalfBandwidthValue >= pSize) {
-                        emit error(tr("the \"Upper half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+                        emit error(tr(R"(the "Upper half-bandwidth" property must have a value between 0 and %1)").arg(pSize-1));
 
                         return;
                     }
                 } else {
-                    emit error(tr("the \"Upper half-bandwidth\" property value could not be retrieved"));
+                    emit error(tr(R"(the "Upper half-bandwidth" property value could not be retrieved)"));
 
                     return;
                 }
@@ -246,18 +251,18 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
                     lowerHalfBandwidthValue = mProperties.value(LowerHalfBandwidthId).toInt();
 
                     if (lowerHalfBandwidthValue >= pSize) {
-                        emit error(tr("the \"Lower half-bandwidth\" property must have a value between 0 and %1").arg(pSize-1));
+                        emit error(tr(R"(the "Lower half-bandwidth" property must have a value between 0 and %1)").arg(pSize-1));
 
                         return;
                     }
                 } else {
-                    emit error(tr("the \"Lower half-bandwidth\" property value could not be retrieved"));
+                    emit error(tr(R"(the "Lower half-bandwidth" property value could not be retrieved)"));
 
                     return;
                 }
             }
         } else {
-            emit error(tr("the \"Linear solver\" property value could not be retrieved"));
+            emit error(tr(R"(the "Linear solver" property value could not be retrieved)"));
 
             return;
         }
@@ -283,7 +288,7 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
         // Set our user data
 
-        KinsolSolverUserData *userData = new KinsolSolverUserData(pComputeSystem, pUserData);
+        auto userData = new KinsolSolverUserData(pComputeSystem, pUserData);
 
         KINSetUserData(solver, userData);
 
@@ -296,22 +301,22 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
         SUNMatrix matrix = nullptr;
         SUNLinearSolver linearSolver;
 
-        if (!linearSolverValue.compare(DenseLinearSolver)) {
+        if (linearSolverValue == DenseLinearSolver) {
             matrix = SUNDenseMatrix(pSize, pSize);
             linearSolver = SUNDenseLinearSolver(parametersVector, matrix);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
-        } else if (!linearSolverValue.compare(BandedLinearSolver)) {
+        } else if (linearSolverValue == BandedLinearSolver) {
             matrix = SUNBandMatrix(pSize, upperHalfBandwidthValue,
                                           lowerHalfBandwidthValue);
             linearSolver = SUNBandLinearSolver(parametersVector, matrix);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
-        } else if (!linearSolverValue.compare(GmresLinearSolver)) {
+        } else if (linearSolverValue == GmresLinearSolver) {
             linearSolver = SUNSPGMR(parametersVector, PREC_NONE, 0);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
-        } else if (!linearSolverValue.compare(BiCgStabLinearSolver)) {
+        } else if (linearSolverValue == BiCgStabLinearSolver) {
             linearSolver = SUNSPBCGS(parametersVector, PREC_NONE, 0);
 
             KINSetLinearSolver(solver, linearSolver, matrix);
@@ -343,8 +348,8 @@ void KinsolSolver::solve(ComputeSystemFunction pComputeSystem,
 
 //==============================================================================
 
-}   // namespace KINSOLSolver
-}   // namespace OpenCOR
+} // namespace KINSOLSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

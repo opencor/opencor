@@ -10,11 +10,6 @@ add_plugin(KINSOLSolver
 
         src/kinsolsolver.cpp
         src/kinsolsolverplugin.cpp
-    HEADERS_MOC
-        ../../solverinterface.h
-
-        src/kinsolsolver.h
-        src/kinsolsolverplugin.h
     PLUGINS
         SUNDIALS
     QT_MODULES

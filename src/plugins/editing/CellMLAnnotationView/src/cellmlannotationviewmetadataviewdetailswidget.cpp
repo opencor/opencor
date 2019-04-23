@@ -69,21 +69,22 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
-    if (!pElement)
+    if (pElement == nullptr) {
         return;
+    }
 
     // Decide on which view to use and update it, if needed
 
     switch (mCellmlFile->rdfTriples(pElement).type()) {
-    case CellMLSupport::CellmlFileRdfTriple::Unknown:
+    case CellMLSupport::CellmlFileRdfTriple::Type::Unknown:
         removeWidget(mNormalView);
         addWidget(mRawView);
 
         mRawView->updateGui(pElement);
 
         break;
-    case CellMLSupport::CellmlFileRdfTriple::BioModelsDotNetQualifier:
-    case CellMLSupport::CellmlFileRdfTriple::Empty:
+    case CellMLSupport::CellmlFileRdfTriple::Type::BioModelsDotNetQualifier:
+    case CellMLSupport::CellmlFileRdfTriple::Type::Empty:
         removeWidget(mRawView);
         addWidget(mNormalView);
 
@@ -124,8 +125,8 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::filePermissionsChanged()
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

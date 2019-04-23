@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace libsedml {
     class SedAlgorithm;
     class SedDocument;
-}   // namespace libsedml
+} // namespace libsedml
 
 //==============================================================================
 
@@ -54,7 +54,7 @@ namespace OpenCOR {
 
 namespace CellMLSupport {
     class CellmlFile;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
@@ -101,7 +101,7 @@ namespace Language {
     static const auto Cellml     = QStringLiteral("urn:sedml:language:cellml");
     static const auto Cellml_1_0 = QStringLiteral("urn:sedml:language:cellml.1_0");
     static const auto Cellml_1_1 = QStringLiteral("urn:sedml:language:cellml.1_1");
-}
+} // namespace Language
 
 //==============================================================================
 
@@ -147,6 +147,10 @@ private:
 
     void reset() override;
 
+    bool isSedmlFile() const;
+
+    bool hasErrors() const;
+
     bool validListPropertyValue(const libsbml::XMLNode &pPropertyNode,
                                 const QString &pPropertyNodeValue,
                                 const QString &pPropertyName,
@@ -158,8 +162,8 @@ private:
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

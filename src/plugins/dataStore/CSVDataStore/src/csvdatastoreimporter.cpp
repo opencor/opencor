@@ -53,7 +53,7 @@ void CsvDataStoreImporterWorker::run()
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
         QTextStream in(&file);
-        QString line = in.readLine();   // Header, which we ignore
+        QString line = in.readLine(); // Header, which we ignore
         DataStore::DataStore *importDataStore = mImportData->importDataStore();
         double *importValues = mImportData->importValues();
         int nbOfVariables = mImportData->nbOfVariables();
@@ -63,8 +63,9 @@ void CsvDataStoreImporterWorker::run()
 
             QStringList fields = line.split(",");
 
-            for (int j = 0; j < nbOfVariables; ++j)
+            for (int j = 0; j < nbOfVariables; ++j) {
                 importValues[j] = fields[j+1].toDouble();
+            }
 
             importDataStore->addValues(fields[0].toDouble());
 
@@ -92,8 +93,8 @@ DataStore::DataStoreImporterWorker * CsvDataStoreImporter::workerInstance(DataSt
 
 //==============================================================================
 
-}   // namespace CSVDataStore
-}   // namespace OpenCOR
+} // namespace CSVDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

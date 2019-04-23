@@ -35,10 +35,10 @@ PLUGININFO_FUNC CVODESolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> to solve <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">ODEs</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/cvode\">CVODE</a> pour résoudre des <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">EDOs</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that uses <a href="http://computation.llnl.gov/projects/sundials/cvode">CVODE</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="http://computation.llnl.gov/projects/sundials/cvode">CVODE</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
-    return new PluginInfo(PluginInfo::Solver, true, false,
+    return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           QStringList() << "SUNDIALS",
                           descriptions);
 }
@@ -72,32 +72,68 @@ QString CVODESolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000019"))
-        return solverName();
-    else if (!pKisaoId.compare("KISAO:0000467"))
-        return MaximumStepId;
-    else if (!pKisaoId.compare("KISAO:0000415"))
-        return MaximumNumberOfStepsId;
-    else if (!pKisaoId.compare("KISAO:0000475"))
-        return IntegrationMethodId;
-    else if (!pKisaoId.compare("KISAO:0000476"))
-        return IterationTypeId;
-    else if (!pKisaoId.compare("KISAO:0000477"))
-        return LinearSolverId;
-    else if (!pKisaoId.compare("KISAO:0000478"))
-        return PreconditionerId;
-    else if (!pKisaoId.compare("KISAO:0000479"))
-        return UpperHalfBandwidthId;
-    else if (!pKisaoId.compare("KISAO:0000480"))
-        return LowerHalfBandwidthId;
-    else if (!pKisaoId.compare("KISAO:0000209"))
-        return RelativeToleranceId;
-    else if (!pKisaoId.compare("KISAO:0000211"))
-        return AbsoluteToleranceId;
-    else if (!pKisaoId.compare("KISAO:0000481"))
-        return InterpolateSolutionId;
+    static const QString Kisao0000019 = "KISAO:0000019";
+    static const QString Kisao0000467 = "KISAO:0000467";
+    static const QString Kisao0000415 = "KISAO:0000415";
+    static const QString Kisao0000475 = "KISAO:0000475";
+    static const QString Kisao0000476 = "KISAO:0000476";
+    static const QString Kisao0000477 = "KISAO:0000477";
+    static const QString Kisao0000478 = "KISAO:0000478";
+    static const QString Kisao0000479 = "KISAO:0000479";
+    static const QString Kisao0000480 = "KISAO:0000480";
+    static const QString Kisao0000209 = "KISAO:0000209";
+    static const QString Kisao0000211 = "KISAO:0000211";
+    static const QString Kisao0000481 = "KISAO:0000481";
 
-    return QString();
+    if (pKisaoId == Kisao0000019) {
+        return solverName();
+    }
+
+    if (pKisaoId == Kisao0000467) {
+        return MaximumStepId;
+    }
+
+    if (pKisaoId == Kisao0000415) {
+        return MaximumNumberOfStepsId;
+    }
+
+    if (pKisaoId == Kisao0000475) {
+        return IntegrationMethodId;
+    }
+
+    if (pKisaoId == Kisao0000476) {
+        return IterationTypeId;
+    }
+
+    if (pKisaoId == Kisao0000477) {
+        return LinearSolverId;
+    }
+
+    if (pKisaoId == Kisao0000478) {
+        return PreconditionerId;
+    }
+
+    if (pKisaoId == Kisao0000479) {
+        return UpperHalfBandwidthId;
+    }
+
+    if (pKisaoId == Kisao0000480) {
+        return LowerHalfBandwidthId;
+    }
+
+    if (pKisaoId == Kisao0000209) {
+        return RelativeToleranceId;
+    }
+
+    if (pKisaoId == Kisao0000211) {
+        return AbsoluteToleranceId;
+    }
+
+    if (pKisaoId == Kisao0000481) {
+        return InterpolateSolutionId;
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -106,32 +142,55 @@ QString CVODESolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
-    if (!pId.compare(solverName()))
+    if (pId == solverName()) {
         return "KISAO:0000019";
-    else if (!pId.compare(MaximumStepId))
-        return "KISAO:0000467";
-    else if (!pId.compare(MaximumNumberOfStepsId))
-        return "KISAO:0000415";
-    else if (!pId.compare(IntegrationMethodId))
-        return "KISAO:0000475";
-    else if (!pId.compare(IterationTypeId))
-        return "KISAO:0000476";
-    else if (!pId.compare(LinearSolverId))
-        return "KISAO:0000477";
-    else if (!pId.compare(PreconditionerId))
-        return "KISAO:0000478";
-    else if (!pId.compare(UpperHalfBandwidthId))
-        return "KISAO:0000479";
-    else if (!pId.compare(LowerHalfBandwidthId))
-        return "KISAO:0000480";
-    else if (!pId.compare(RelativeToleranceId))
-        return "KISAO:0000209";
-    else if (!pId.compare(AbsoluteToleranceId))
-        return "KISAO:0000211";
-    else if (!pId.compare(InterpolateSolutionId))
-        return "KISAO:0000481";
+    }
 
-    return QString();
+    if (pId == MaximumStepId) {
+        return "KISAO:0000467";
+    }
+
+    if (pId == MaximumNumberOfStepsId) {
+        return "KISAO:0000415";
+    }
+
+    if (pId == IntegrationMethodId) {
+        return "KISAO:0000475";
+    }
+
+    if (pId == IterationTypeId) {
+        return "KISAO:0000476";
+    }
+
+    if (pId == LinearSolverId) {
+        return "KISAO:0000477";
+    }
+
+    if (pId == PreconditionerId) {
+        return "KISAO:0000478";
+    }
+
+    if (pId == UpperHalfBandwidthId) {
+        return "KISAO:0000479";
+    }
+
+    if (pId == LowerHalfBandwidthId) {
+        return "KISAO:0000480";
+    }
+
+    if (pId == RelativeToleranceId) {
+        return "KISAO:0000209";
+    }
+
+    if (pId == AbsoluteToleranceId) {
+        return "KISAO:0000211";
+    }
+
+    if (pId == InterpolateSolutionId) {
+        return "KISAO:0000481";
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -140,7 +199,7 @@ Solver::Type CVODESolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Ode;
+    return Solver::Type::Ode;
 }
 
 //==============================================================================
@@ -219,17 +278,17 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     QStringList PreconditionerListValues = QStringList() << NoPreconditioner
                                                          << BandedPreconditioner;
 
-    return Solver::Properties() << Solver::Property(Solver::Property::DoubleGe0, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
-                                << Solver::Property(Solver::Property::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
-                                << Solver::Property(Solver::Property::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::DoubleGe0, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
-                                << Solver::Property(Solver::Property::DoubleGt0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
-                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
+    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGe0, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::DoubleGe0, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::DoubleGt0, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
 }
 
 //==============================================================================
@@ -241,21 +300,21 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
 
     QMap<QString, bool> res = QMap<QString, bool>();
 
-    if (!pSolverPropertiesValues.value(IterationTypeId).compare(NewtonIteration)) {
+    if (pSolverPropertiesValues.value(IterationTypeId) == NewtonIteration) {
         // Newton iteration
 
         res.insert(LinearSolverId, true);
 
         QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
 
-        if (   !linearSolver.compare(DenseLinearSolver)
-            || !linearSolver.compare(DiagonalLinearSolver)) {
+        if (   (linearSolver == DenseLinearSolver)
+            || (linearSolver == DiagonalLinearSolver)) {
             // Dense/diagonal linear solver
 
             res.insert(PreconditionerId, false);
             res.insert(UpperHalfBandwidthId, false);
             res.insert(LowerHalfBandwidthId, false);
-        } else if (!linearSolver.compare(BandedLinearSolver)) {
+        } else if (linearSolver == BandedLinearSolver) {
             // Banded linear solver
 
             res.insert(PreconditionerId, false);
@@ -266,7 +325,7 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
 
             res.insert(PreconditionerId, true);
 
-            if (!pSolverPropertiesValues.value(PreconditionerId).compare(BandedPreconditioner)) {
+            if (pSolverPropertiesValues.value(PreconditionerId) == BandedPreconditioner) {
                 // Banded preconditioner
 
                 res.insert(UpperHalfBandwidthId, true);
@@ -292,8 +351,8 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
 
 //==============================================================================
 
-}   // namespace CVODESolver
-}   // namespace OpenCOR
+} // namespace CVODESolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -409,8 +409,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/cellmlapiplugin.cpp
-    HEADERS_MOC
-        src/cellmlapiplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

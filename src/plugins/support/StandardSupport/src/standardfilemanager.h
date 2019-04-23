@@ -74,8 +74,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace StandardSupport
-}   // namespace OpenCOR
+} // namespace StandardSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

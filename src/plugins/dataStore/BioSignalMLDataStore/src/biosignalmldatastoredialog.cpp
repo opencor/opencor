@@ -51,8 +51,8 @@ BiosignalmlDataStoreDialog::BiosignalmlDataStoreDialog(DataStore::DataStore *pDa
 
     // Create a form-like widget
 
-    Core::Widget *widget = new Core::Widget(this);
-    QFormLayout *formLayout = qobject_cast<QFormLayout *>(widget->createLayout(Core::Widget::FormLayout));
+    auto widget = new Core::Widget(this);
+    auto formLayout = qobject_cast<QFormLayout *>(widget->createLayout(Core::Widget::Layout::Form));
 
     formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
 
@@ -122,7 +122,7 @@ QLabel * BiosignalmlDataStoreDialog::boldLabel(const QString &pText)
 {
     // Create and return a label after having made it bold
 
-    QLabel *res = new QLabel(pText, this);
+    auto res = new QLabel(pText, this);
     QFont newFont = res->font();
 
     newFont.setBold(true);
@@ -134,8 +134,8 @@ QLabel * BiosignalmlDataStoreDialog::boldLabel(const QString &pText)
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

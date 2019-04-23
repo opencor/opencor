@@ -45,139 +45,130 @@ class CellmlTextViewScanner : public QObject
     Q_OBJECT
 
 public:
-    enum TokenType {
-        UnknownToken, SingleLineCommentToken, MultilineCommentToken,
-        StringToken, IdentifierOrCmetaIdToken, ProperCmetaIdToken, NumberToken,
-        InvalidToken,
+    enum class Token {
+        Unknown, SingleLineComment, MultilineComment, String,
+        IdentifierOrCmetaId, ProperCmetaId, Number, Invalid,
 
         // CellML Text keywords
 
-        AndToken, AsToken, BetweenToken, CaseToken, CompToken, DefToken,
-        EndCompToken, EndDefToken, EndSelToken, ForToken, GroupToken,
-        ImportToken, InclToken, MapToken, ModelToken, OtherwiseToken, SelToken,
-        UnitToken, UsingToken, VarToken, VarsToken,
+        And, As, Between, Case, Comp, Def, EndComp, EndDef, EndSel, For, Group,
+        Import, Incl, Map, Model, Otherwise, Sel, Unit, Using, Var, Vars,
 
-        /*AndToken,*/ OrToken, XorToken, NotToken,
+        /*And,*/ Or, Xor, Not,
 
-        OdeToken,
+        Ode,
 
-        AbsToken, CeilToken, ExpToken, FactToken, FloorToken, LnToken, SqrToken,
-        SqrtToken,
+        Abs, Ceil, Exp, Fact, Floor, Ln, Sqr, Sqrt,
 
-        SinToken, CosToken, TanToken, SecToken, CscToken, CotToken,
-        SinhToken, CoshToken, TanhToken, SechToken, CschToken, CothToken,
-        AsinToken, AcosToken, AtanToken, AsecToken, AcscToken, AcotToken,
-        AsinhToken, AcoshToken, AtanhToken, AsechToken, AcschToken, AcothToken,
+        Sin, Cos, Tan, Sec, Csc, Cot,
+        Sinh, Cosh, Tanh, Sech, Csch, Coth,
+        Asin, Acos, Atan, Asec, Acsc, Acot,
+        Asinh, Acosh, Atanh, Asech, Acsch, Acoth,
 
-        FirstOneArgumentMathematicalFunctionToken = AbsToken,
-        LastOneArgumentMathematicalFunctionToken = AcothToken,
+        FirstOneArgumentMathematicalFunction = Abs,
+        LastOneArgumentMathematicalFunction = Acoth,
 
-        LogToken,
+        Log,
 
-        FirstOneOrTwoArgumentMathematicalFunctionToken = LogToken,
-        LastOneOrTwoArgumentMathematicalFunctionToken = LogToken,
+        FirstOneOrTwoArgumentMathematicalFunction = Log,
+        LastOneOrTwoArgumentMathematicalFunction = Log,
 
-        PowToken, RemToken, RootToken,
+        Pow, Rem, Root,
 
-        FirstTwoArgumentMathematicalFunctionToken = PowToken,
-        LastTwoArgumentMathematicalFunctionToken = RootToken,
+        FirstTwoArgumentMathematicalFunction = Pow,
+        LastTwoArgumentMathematicalFunction = Root,
 
-        MinToken, MaxToken,
+        Min, Max,
 
-        GcdToken, LcmToken,
+        Gcd, Lcm,
 
-        FirstTwoOrMoreArgumentMathematicalFunctionToken = MinToken,
-        LastTwoOrMoreArgumentMathematicalFunctionToken = LcmToken,
+        FirstTwoOrMoreArgumentMathematicalFunction = Min,
+        LastTwoOrMoreArgumentMathematicalFunction = Lcm,
 
-        TrueToken, FalseToken, NanToken, PiToken, InfToken, EToken,
+        True, False, Nan, Pi, Inf, E,
 
-        FirstMathematicalConstantToken = TrueToken,
-        LastMathematicalConstantToken = EToken,
+        FirstMathematicalConstant = True,
+        LastMathematicalConstant = E,
 
-        BaseToken, EncapsulationToken, ContainmentToken,
+        Base, Encapsulation, Containment,
 
-        AmpereToken, BecquerelToken, CandelaToken, CelsiusToken, CoulombToken,
-        DimensionlessToken, FaradToken, GramToken, GrayToken, HenryToken,
-        HertzToken, JouleToken, KatalToken, KelvinToken, KilogramToken,
-        LiterToken, LitreToken, LumenToken, LuxToken, MeterToken, MetreToken,
-        MoleToken, NewtonToken, OhmToken, PascalToken, RadianToken, SecondToken,
-        SiemensToken, SievertToken, SteradianToken, TeslaToken, VoltToken,
-        WattToken, WeberToken,
+        Ampere, Becquerel, Candela, Celsius, Coulomb, Dimensionless, Farad,
+        Gram, Gray, Henry, Hertz, Joule, Katal, Kelvin, Kilogram, Liter, Litre,
+        Lumen, Lux, Meter, Metre, Mole, Newton, Ohm, Pascal, Radian, Second,
+        Siemens, Sievert, Steradian, Tesla, Volt, Watt, Weber,
 
-        FirstUnitToken = AmpereToken,
-        LastUnitToken = WeberToken,
+        FirstUnit = Ampere,
+        LastUnit = Weber,
 
         // CellML Text parameter keywords
 
-        PrefToken, ExpoToken, MultToken, OffToken,
+        Pref, Expo, Mult, Off,
 
-        InitToken, PubToken, PrivToken,
+        Init, Pub, Priv,
 
-        YottaToken, ZettaToken, ExaToken, PetaToken, TeraToken, GigaToken,
-        MegaToken, KiloToken, HectoToken, DekaToken, DeciToken, CentiToken,
-        MilliToken, MicroToken, NanoToken, PicoToken, FemtoToken, AttoToken,
-        ZeptoToken, YoctoToken,
+        Yotta, Zetta, Exa, Peta, Tera, Giga, Mega, Kilo, Hecto, Deka, Deci,
+        Centi, Milli, Micro, Nano, Pico, Femto, Atto, Zepto, Yocto,
 
-        FirstPrefixToken = YottaToken,
-        LastPrefixToken = YoctoToken,
+        FirstPrefix = Yotta,
+        LastPrefix = Yocto,
 
-        InToken, OutToken, NoneToken,
+        In, Out, None,
 
         // Miscellaneous
 
-        QuoteToken, CommaToken,
-        EqToken, EqEqToken, NeqToken, LtToken, LeqToken, GtToken, GeqToken,
-        PlusToken, MinusToken, TimesToken, DivideToken,
-        ColonToken, SemiColonToken,
-        OpeningBracketToken, ClosingBracketToken,
-        OpeningCurlyBracketToken, ClosingCurlyBracketToken,
-        EofToken
+        Quote, Comma,
+        Eq, EqEq, Neq, Lt, Leq, Gt, Geq,
+        Plus, Minus, Times, Divide,
+        Colon, SemiColon,
+        OpeningBracket, ClosingBracket,
+        OpeningCurlyBracket, ClosingCurlyBracket,
+        Eof
     };
 
-    typedef QList<TokenType> TokenTypes;
+    typedef QList<Token> Tokens;
 
     explicit CellmlTextViewScanner();
 
     void setText(const QString &pText);
 
-    TokenType tokenType() const;
-    int tokenLine() const;
-    int tokenColumn() const;
-    QString tokenString() const;
-    QString tokenComment() const;
+    Token token() const;
+    int line() const;
+    int column() const;
+    QString string() const;
+    QString comment() const;
 
     void getNextToken();
 
 private:
-    enum CharType {
-        OtherChar,
-        LetterChar, DigitChar, UnderscoreChar,
-        DoubleQuoteChar, QuoteChar, CommaChar,
-        EqChar, LtChar, GtChar,
-        PlusChar, MinusChar, TimesChar, DivideChar,
-        FullStopChar, ColonChar, SemiColonChar,
-        OpeningBracketChar, ClosingBracketChar,
-        OpeningCurlyBracketChar, ClosingCurlyBracketChar,
-        SpaceChar, TabChar, CrChar, LfChar, EofChar
+    enum class Char {
+        Other,
+        Letter, Digit, Underscore,
+        DoubleQuote, Quote, Comma,
+        Eq, Lt, Gt,
+        Plus, Minus, Times, Divide,
+        FullStop, Colon, SemiColon,
+        OpeningBracket, ClosingBracket,
+        OpeningCurlyBracket, ClosingCurlyBracket,
+        Space, Tab, Cr, Lf, Eof
     };
 
     QString mText;
 
     const QChar *mChar;
 
-    CharType mCharType;
+    Char mCharType;
     int mCharLine;
     int mCharColumn;
 
-    TokenType mTokenType;
-    int mTokenLine;
-    int mTokenColumn;
-    QString mTokenString;
-    QString mTokenComment;
+    Token mToken;
+    int mLine;
+    int mColumn;
+    QString mString;
+    QString mComment;
 
-    QMap<QString, TokenType> mKeywords;
-    QMap<QString, TokenType> mSiUnitKeywords;
-    QMap<QString, TokenType> mParameterKeywords;
+    QMap<QString, Token> mKeywords;
+    QMap<QString, Token> mSiUnitKeywords;
+    QMap<QString, Token> mParameterKeywords;
 
     bool mWithinParameterBlock;
 
@@ -192,8 +183,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

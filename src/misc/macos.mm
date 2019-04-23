@@ -45,8 +45,9 @@ void removeMacosSpecificMenuItems()
     // Remove (don't allow) the "Show Tab Bar" menu item from the "View" menu,
     // if supported
 
-    if ([NSWindow respondsToSelector:@selector(allowsAutomaticWindowTabbing)])
+    if ([NSWindow respondsToSelector:@selector(allowsAutomaticWindowTabbing)] != 0) {
         NSWindow.allowsAutomaticWindowTabbing = NO;
+    }
 #endif
 
     // Remove (don't have) the "Enter Full Screen" menu item from the "View"

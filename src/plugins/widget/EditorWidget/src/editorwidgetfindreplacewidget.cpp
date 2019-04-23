@@ -34,9 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QAction>
-#include <QKeyEvent>
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -87,7 +87,7 @@ EditorWidgetFindReplaceWidget::EditorWidgetFindReplaceWidget(EditorWidget *pPare
     mWholeWordsOnlyAction = Core::newAction(true, this);
     mRegularExpressionAction = Core::newAction(true, this);
 
-    QMenu *dropDownMenu = new QMenu(this);
+    auto dropDownMenu = new QMenu(this);
 
     dropDownMenu->addAction(mCaseSensitiveAction);
     dropDownMenu->addAction(mWholeWordsOnlyAction);
@@ -215,7 +215,7 @@ void EditorWidgetFindReplaceWidget::setReadOnly(bool pReadOnly)
 
     // Enable/disable our find spacer
 
-    mGui->findLayout->setStretch(2, !pReadOnly);
+    mGui->findLayout->setStretch(2, int(!pReadOnly));
 
     // Disable our replace-related buttons, if needed
 
@@ -290,8 +290,9 @@ bool EditorWidgetFindReplaceWidget::isActive() const
 
 void EditorWidgetFindReplaceWidget::setActive(bool pActive)
 {
-    if (pActive == mActive)
+    if (pActive == mActive) {
         return;
+    }
 
     // Set our active state
 
@@ -382,8 +383,9 @@ void EditorWidgetFindReplaceWidget::changeEvent(QEvent *pEvent)
     // Check whether the palette has changed and if so then update our style
     // sheet
 
-    if (pEvent->type() == QEvent::PaletteChange)
+    if (pEvent->type() == QEvent::PaletteChange) {
         updateStyleSheet();
+    }
 }
 
 //==============================================================================
@@ -497,26 +499,26 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
 
     QPainter dropDownPixmapPainter(&dropDownPixmap);
 
-    int nbOfOptions =  mCaseSensitiveAction->isChecked()
-                      +mWholeWordsOnlyAction->isChecked()
-                      +mRegularExpressionAction->isChecked();
+    int nbOfOptions =  int(mCaseSensitiveAction->isChecked())
+                      +int(mWholeWordsOnlyAction->isChecked())
+                      +int(mRegularExpressionAction->isChecked());
 
-    if (nbOfOptions) {
+    if (nbOfOptions != 0) {
         static const QIcon CaseSensitiveIcon     = QIcon(":/EditorWidget/casesensitively.png");
         static const QIcon WholeWordsOnlyIcon    = QIcon(":/EditorWidget/wholewords.png");
         static const QIcon RegularExpressionIcon = QIcon(":/EditorWidget/regexp.png");
 
         enum {
-            CaseSensitiveIconWidth     = 5,
-            WholeWordsOnlyIconWidth    = 5,
-            RegularExpressionWidth = 4
+            CaseSensitiveIconWidth  = 5,
+            WholeWordsOnlyIconWidth = 5,
+            RegularExpressionWidth  = 4
         };
 
-        int left =  ( IconSize
-                     -nbOfOptions+1
-                     -mCaseSensitiveAction->isChecked()*CaseSensitiveIconWidth
-                     -mWholeWordsOnlyAction->isChecked()*WholeWordsOnlyIconWidth
-                     -mRegularExpressionAction->isChecked()*RegularExpressionWidth) >> 1;
+        int left = ( IconSize
+                    -nbOfOptions+1
+                    -int(mCaseSensitiveAction->isChecked())*CaseSensitiveIconWidth
+                    -int(mWholeWordsOnlyAction->isChecked())*WholeWordsOnlyIconWidth
+                    -int(mRegularExpressionAction->isChecked())*RegularExpressionWidth)/2;
 
         if (mCaseSensitiveAction->isChecked()) {
             CaseSensitiveIcon.paint(&dropDownPixmapPainter,
@@ -547,7 +549,7 @@ void EditorWidgetFindReplaceWidget::searchOptionChanged()
         };
 
         MagnifierIcon.paint(&dropDownPixmapPainter,
-                            0, (IconSize-MagnifierIconHeight) >> 1,
+                            0, (IconSize-MagnifierIconHeight)/2,
                             IconSize, MagnifierIconHeight);
     }
 
@@ -569,8 +571,8 @@ void EditorWidgetFindReplaceWidget::emitCanFindReplace()
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

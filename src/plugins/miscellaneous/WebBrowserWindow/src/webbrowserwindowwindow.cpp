@@ -85,8 +85,8 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // Note: the spacer is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    Core::ToolBarWidget *topToolBarWidget = new Core::ToolBarWidget();
-    QWidget *spacer = new QWidget(topToolBarWidget);
+    auto topToolBarWidget = new Core::ToolBarWidget();
+    auto spacer = new QWidget(topToolBarWidget);
 
     spacer->setMinimumSize(0, 0);
     spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -112,7 +112,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *bottomToolBarWidget = new Core::ToolBarWidget();
+    auto bottomToolBarWidget = new Core::ToolBarWidget();
 
     bottomToolBarWidget->addAction(mGui->actionClear);
     bottomToolBarWidget->addSeparator();
@@ -145,8 +145,6 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(new Core::BorderedWidget(mWebBrowserWindowWidget,
                                                      true, false, false, false));
-#else
-    #error Unsupported platform
 #endif
 
     // Various connections to handle our web browser window widget
@@ -204,7 +202,7 @@ WebBrowserWindowWindow::WebBrowserWindowWindow(QWidget *pParent) :
     // En/disable the printing action, depending on whether printers are
     // available
 
-    mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
+    mGui->actionPrint->setEnabled(!QPrinterInfo::availablePrinterNames().isEmpty());
 }
 
 //==============================================================================
@@ -227,7 +225,7 @@ void WebBrowserWindowWindow::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsUrl = QStringLiteral("Url");
+static const char *SettingsUrl = "Url";
 
 //==============================================================================
 
@@ -269,7 +267,7 @@ void WebBrowserWindowWindow::urlChanged(const QUrl &pUrl)
 
     QString url = pUrl.toString();
 
-    mUrlValue->setText(url.compare(mWebBrowserWindowWidget->homePage())?url:QString());
+    mUrlValue->setText((url != mWebBrowserWindowWidget->homePage())?url:QString());
 }
 
 //==============================================================================
@@ -294,7 +292,7 @@ void WebBrowserWindowWindow::actionBackTriggered()
     //       our homepage since we don't want to see its progress in the latter
     //       case...
 
-    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(mWebBrowserWindowWidget->webView()->history()->backItem().url().toString().compare(mWebBrowserWindowWidget->homePage()));
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(mWebBrowserWindowWidget->webView()->history()->backItem().url().toString() != mWebBrowserWindowWidget->homePage());
 
     mWebBrowserWindowWidget->webView()->back();
 }
@@ -308,7 +306,7 @@ void WebBrowserWindowWindow::actionForwardTriggered()
     //       is our homepage since we don't want to see its progress in the
     //       latter case...
 
-    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(mWebBrowserWindowWidget->webView()->history()->forwardItem().url().toString().compare(mWebBrowserWindowWidget->homePage()));
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(mWebBrowserWindowWidget->webView()->history()->forwardItem().url().toString() != mWebBrowserWindowWidget->homePage());
 
     mWebBrowserWindowWidget->webView()->forward();
 }
@@ -359,8 +357,9 @@ void WebBrowserWindowWindow::actionPrintTriggered()
     QPrinter printer;
     QPrintDialog printDialog(&printer);
 
-    if (printDialog.exec() == QDialog::Accepted)
+    if (printDialog.exec() == QDialog::Accepted) {
         mWebBrowserWindowWidget->webView()->print(&printer);
+    }
 }
 
 //==============================================================================
@@ -395,7 +394,7 @@ void WebBrowserWindowWindow::returnPressed()
                       mWebBrowserWindowWidget->homePage():
                       mUrlValue->text();
 
-    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(url.compare(mWebBrowserWindowWidget->homePage()));
+    mWebBrowserWindowWidget->progressBarWidget()->setEnabled(url != mWebBrowserWindowWidget->homePage());
 
     mWebBrowserWindowWidget->webView()->load(url);
 }
@@ -412,8 +411,8 @@ void WebBrowserWindowWindow::showCustomContextMenu() const
 
 //==============================================================================
 
-}   // namespace WebBrowserWindow
-}   // namespace OpenCOR
+} // namespace WebBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

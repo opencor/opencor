@@ -50,10 +50,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 #include <QTemporaryDir>
 #include <QTemporaryFile>
-#include <QTextStream>
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
 #include <QXmlStreamReader>
+
+//==============================================================================
+
+#include <array>
 
 //==============================================================================
 
@@ -69,6 +72,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+    extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 
@@ -78,8 +87,8 @@ namespace Core {
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 
@@ -89,8 +98,9 @@ QBoolList qVariantListToBoolList(const QVariantList &pVariantList)
 
     QBoolList res = QBoolList();
 
-    for (const auto &variant : pVariantList)
+    for (const auto &variant : pVariantList) {
         res << variant.toBool();
+    }
 
     return res;
 }
@@ -103,8 +113,9 @@ QVariantList qBoolListToVariantList(const QBoolList &pBoolList)
 
     QVariantList res = QVariantList();
 
-    for (auto nb : pBoolList)
+    for (auto nb : pBoolList) {
         res << nb;
+    }
 
     return res;
 }
@@ -117,8 +128,9 @@ QIntList qVariantListToIntList(const QVariantList &pVariantList)
 
     QIntList res = QIntList();
 
-    for (const auto &variant : pVariantList)
+    for (const auto &variant : pVariantList) {
         res << variant.toInt();
+    }
 
     return res;
 }
@@ -131,8 +143,9 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 
     QVariantList res = QVariantList();
 
-    for (auto nb : pIntList)
+    for (auto nb : pIntList) {
         res << nb;
+    }
 
     return res;
 }
@@ -149,10 +162,10 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
                                         const QUrl &pIdentifier,
                                         const QSourceLocation &pSourceLocation)
 {
-    Q_UNUSED(pType);
-    Q_UNUSED(pDescription);
-    Q_UNUSED(pIdentifier);
-    Q_UNUSED(pSourceLocation);
+    Q_UNUSED(pType)
+    Q_UNUSED(pDescription)
+    Q_UNUSED(pIdentifier)
+    Q_UNUSED(pSourceLocation)
 
     // We ignore the message...
 }
@@ -176,16 +189,11 @@ quint64 totalMemory()
 #elif defined(Q_OS_LINUX)
     res = quint64(sysconf(_SC_PHYS_PAGES))*quint64(sysconf(_SC_PAGESIZE));
 #elif defined(Q_OS_MAC)
-    int mib[2];
-
-    mib[0] = CTL_HW;
-    mib[1] = HW_MEMSIZE;
+    std::array<int, 2> mib = { CTL_HW, HW_MEMSIZE };
 
     size_t len = sizeof(res);
 
-    sysctl(mib, 2, &res, &len, nullptr, 0);
-#else
-    #error Unsupported platform
+    sysctl(mib.data(), 2, &res, &len, nullptr, 0);
 #endif
 
     return res;
@@ -220,8 +228,6 @@ quint64 freeMemory()
                     host_info_t(&vmStats), &infoCount);
 
     res = (quint64(vmStats.free_count)+quint64(vmStats.inactive_count))*quint64(vm_page_size);
-#else
-    #error Unsupported platform
 #endif
 
     return res;
@@ -239,8 +245,9 @@ QString digitGroupNumber(const QString &pNumber)
     bool validNumber;
     double number = res.toDouble(&validNumber);
 
-    if (validNumber)
+    if (validNumber) {
         res = QLocale().toString(number, 'g', 15);
+    }
 
     return res;
 }
@@ -249,10 +256,11 @@ QString digitGroupNumber(const QString &pNumber)
 
 QString sizeAsString(quint64 pSize, int pPrecision)
 {
-    QString units[9] = { QObject::tr("B"), QObject::tr("KB"), QObject::tr("MB"),
-                         QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB") };
+    std::array<QString, 9> units = { QObject::tr("B"), QObject::tr("KB"),
+                                     QObject::tr("MB"), QObject::tr("GB"),
+                                     QObject::tr("TB"), QObject::tr("PB") };
 
-    int i = qFloor(log(pSize)/log(1024.0));
+    auto i = ulong(qFloor(log(pSize)/log(1024.0)));
     double size = pSize/qPow(1024.0, i);
     double scaling = qPow(10.0, pPrecision);
 
@@ -270,32 +278,36 @@ QString formatTime(qint64 pTime)
     //       unexpected results (not sure whether it's on some machines, with
     //       some compilers and/or with a release/debug mode). For example, to
     //       compute the number of hours, we might want to do something like
-    //          int h = int(pTime/3600000.0) % 24;
+    //          int h = int(pTime/3600000.0)%24;
     //       but in some cases this will give 0 for pTime=3600000 while it
     //       should clearly give 1, hence the approach used below...
 
     QString res = QString();
     qint64 time = pTime;
-    int ms = time % 1000; time = (time-ms)/1000;
-    int s  = time %   60; time = (time-s)/60;
-    int m  = time %   60; time = (time-m)/60;
-    int h  = time %   24; time = (time-h)/24;
-    int d  = int(time);
+    qint64 ms = time%1000; time = (time-ms)/1000;
+    qint64 s  = time%60;   time = (time-s)/60;
+    qint64 m  = time%60;   time = (time-m)/60;
+    qint64 h  = time%24;   time = (time-h)/24;
 
-    if (d || ((h || m || s || ms) && !res.isEmpty()))
-        res += (res.isEmpty()?QString():" ")+QString::number(d)+QObject::tr("d");
+    if ((time != 0) || (((h != 0) || (m != 0) || (s != 0) || (ms != 0)) && !res.isEmpty())) {
+        res += (res.isEmpty()?QString():" ")+QString::number(time)+QObject::tr("d");
+    }
 
-    if (h || ((m || s || ms) && !res.isEmpty()))
+    if ((h != 0) || (((m != 0) || (s != 0) || (ms != 0)) && !res.isEmpty())) {
         res += (res.isEmpty()?QString():" ")+QString::number(h)+QObject::tr("h");
+    }
 
-    if (m || ((s || ms) && !res.isEmpty()))
+    if ((m != 0) || (((s != 0) || (ms != 0)) && !res.isEmpty())) {
         res += (res.isEmpty()?QString():" ")+QString::number(m)+QObject::tr("m");
+    }
 
-    if (s || (ms && !res.isEmpty()))
+    if ((s != 0) || ((ms != 0) && !res.isEmpty())) {
         res += (res.isEmpty()?QString():" ")+QString::number(s)+QObject::tr("s");
+    }
 
-    if (ms || res.isEmpty())
+    if ((ms != 0) || res.isEmpty()) {
         res += (res.isEmpty()?QString():" ")+QString::number(ms)+QObject::tr("ms");
+    }
 
     return res;
 }
@@ -331,8 +343,9 @@ QString fileSha1(const QString &pFileName)
     if (file.open(QFile::ReadOnly)) {
         QCryptographicHash hash(QCryptographicHash::Sha1);
 
-        if (hash.addData(&file))
+        if (hash.addData(&file)) {
             res = hash.result().toHex();
+        }
 
         file.close();
     }
@@ -383,9 +396,9 @@ void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
                 pPosition = -1;
 
                 return;
-            } else {
-                pPosition = pos+pEol.length();
             }
+
+            pPosition = pos+pEol.length();
         }
 
         pPosition += pColumn-1;
@@ -398,8 +411,9 @@ void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
 
         stringPositionAsLineColumn(pString, pEol, pPosition, testLine, testColumn);
 
-        if ((testLine != pLine) || (testColumn != pColumn))
+        if ((testLine != pLine) || (testColumn != pColumn)) {
             pPosition = -1;
+        }
     }
 }
 
@@ -435,7 +449,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 
 //==============================================================================
 
-static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
+static const char *SettingsActiveDirectory = "ActiveDirectory";
 
 //==============================================================================
 
@@ -461,23 +475,34 @@ bool isDirectory(const QString &pDirName)
 {
     // Return whether the given directory exists
 
-    return !pDirName.isEmpty() && QDir(pDirName).exists();
+    if (!pDirName.isEmpty() && QDir(pDirName).exists()) {
+        // Check whether the directory is writable
+
+#ifdef Q_OS_WIN
+        ++qt_ntfs_permission_lookup;
+#endif
+
+        bool res = QFileInfo(pDirName).isWritable();
+
+#ifdef Q_OS_WIN
+        --qt_ntfs_permission_lookup;
+#endif
+
+        return res;
+    }
+
+    return false;
 }
 
 //==============================================================================
 
 bool isEmptyDirectory(const QString &pDirName)
 {
-    // Return whether the given directory exists and is empty
+    // Return whether the given directory is really a directory and an empty one
+    // at that
 
-    if (pDirName.isEmpty()) {
-        return false;
-    } else {
-        QDir dir(pDirName);
-
-        return     dir.exists()
-               && !dir.entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).count();
-    }
+    return    isDirectory(pDirName)
+           && QDir(pDirName).entryInfoList(QDir::AllEntries|QDir::System|QDir::Hidden|QDir::NoDotAndDotDot).isEmpty();
 }
 
 //==============================================================================
@@ -497,7 +522,7 @@ void doNothing(quint64 pMax)
 #ifdef Q_OS_WIN
         ;
 #else
-        asm("nop");
+        asm("nop"); // NOLINT(hicpp-no-assembler)
 #endif
     }
 }
@@ -512,7 +537,7 @@ void doNothing(quint64 pMax)
     #pragma optimize("", off)
 #endif
 
-void doNothing(const quint64 *pMax, bool *pStopped)
+void doNothing(const quint64 *pMax, const bool *pStopped)
 {
     // A silly function, which aim is simply to do nothing
     // Note #1: this function came about because there is no way, on Windows, to
@@ -526,13 +551,14 @@ void doNothing(const quint64 *pMax, bool *pStopped)
     //          takes forever...
 
     for (quint64 i = 0; i < 1000**pMax; ++i) {
-        if (pStopped && *pStopped)
+        if ((pStopped != nullptr) && *pStopped) {
             break;
+        }
 
 #ifdef Q_OS_WIN
         ;
 #else
-        asm("nop");
+        asm("nop"); // NOLINT(hicpp-no-assembler)
 #endif
     }
 }
@@ -549,39 +575,42 @@ QString formatXml(const QString &pXml)
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pXml))
+    if (domDocument.setContent(pXml)) {
         return serialiseDomDocument(domDocument);
-    else
-        return QString();
+    }
+
+    return {};
 }
 
 //==============================================================================
 
-void cleanContentMathml(QDomElement pDomElement)
+void cleanContentMathml(QDomElement *pDomElement)
 {
     // Clean up the current element
     // Note: the idea is to remove all the attributes that are not in the
     //       MathML namespace. Indeed, if we were to leave them in then the XSL
     //       transformation would either do nothing or, worst, crash OpenCOR...
 
-    QDomNamedNodeMap attributes = pDomElement.attributes();
+    QDomNamedNodeMap attributes = pDomElement->attributes();
     QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
 
     for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
         QDomNode attribute = attributes.item(i);
 
-        if (attribute.localName().compare(attribute.nodeName()))
+        if (attribute.localName() != attribute.nodeName()) {
             nonMathmlAttributes << attribute;
+        }
     }
 
-    for (const auto &nonMathmlAttribute : nonMathmlAttributes)
-        pDomElement.removeAttributeNode(nonMathmlAttribute.toAttr());
+    for (const auto &nonMathmlAttribute : nonMathmlAttributes) {
+        pDomElement->removeAttributeNode(nonMathmlAttribute.toAttr());
+    }
 
     // Go through the element's child elements, if any, and clean them up
 
-    for (QDomElement childElement = pDomElement.firstChildElement();
+    for (QDomElement childElement = pDomElement->firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanContentMathml(childElement);
+        cleanContentMathml(&childElement);
     }
 }
 
@@ -594,17 +623,20 @@ QString cleanContentMathml(const QString &pContentMathml)
     QDomDocument domDocument;
 
     if (domDocument.setContent(pContentMathml, true)) {
-        cleanContentMathml(domDocument.documentElement());
+        for (QDomElement childElement = domDocument.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            cleanContentMathml(&childElement);
+        }
 
         return domDocument.toString(-1);
-    } else {
-        return QString();
     }
+
+    return {};
 }
 
 //==============================================================================
 
-void cleanPresentationMathml(QDomElement pDomElement)
+void cleanPresentationMathml(QDomElement *pDomElement)
 {
     // Merge successive child mrow elements, as long as their parent is not an
     // element that requires a specific number of arguments (which could become
@@ -612,26 +644,31 @@ void cleanPresentationMathml(QDomElement pDomElement)
     // Note: see http://www.w3.org/TR/MathML2/chapter3.html#id.3.1.3.2 for the
     //       list of the elements to check...
 
-    if (   pDomElement.nodeName().compare("mfrac")
-        && pDomElement.nodeName().compare("mroot")
-        && pDomElement.nodeName().compare("msub")
-        && pDomElement.nodeName().compare("msup")
-        && pDomElement.nodeName().compare("msubsup")
-        && pDomElement.nodeName().compare("munder")
-        && pDomElement.nodeName().compare("mover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")
-        && pDomElement.nodeName().compare("munderover")) {
-        for (QDomElement childElement = pDomElement.firstChildElement();
+    static const QString Mfrac      = "mfrac";
+    static const QString Mroot      = "mroot";
+    static const QString Msub       = "msub";
+    static const QString Msup       = "msup";
+    static const QString Msubsup    = "msubsup";
+    static const QString Munder     = "munder";
+    static const QString Mover      = "mover";
+    static const QString Munderover = "munderover";
+    static const QString Mrow       = "mrow";
+
+    if (   (pDomElement->nodeName() != Mfrac)
+        && (pDomElement->nodeName() != Mroot)
+        && (pDomElement->nodeName() != Msub)
+        && (pDomElement->nodeName() != Msup)
+        && (pDomElement->nodeName() != Msubsup)
+        && (pDomElement->nodeName() != Munder)
+        && (pDomElement->nodeName() != Mover)
+        && (pDomElement->nodeName() != Munderover)) {
+        for (QDomElement childElement = pDomElement->firstChildElement();
              !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
             QDomElement nextChildElement = childElement.nextSiblingElement();
 
             if (   !nextChildElement.isNull()
-                && !childElement.nodeName().compare("mrow")
-                && !childElement.nodeName().compare(nextChildElement.nodeName())) {
+                &&  (childElement.nodeName() == Mrow)
+                &&  (childElement.nodeName() == nextChildElement.nodeName())) {
                 // The current and next child elements are both mrow's, so merge
                 // them together
 
@@ -640,16 +677,16 @@ void cleanPresentationMathml(QDomElement pDomElement)
                     childElement.appendChild(nextChildChildElement);
                 }
 
-                pDomElement.removeChild(nextChildElement);
+                pDomElement->removeChild(nextChildElement);
             }
         }
     }
 
     // Recursively clean ourselves
 
-    for (QDomElement childElement = pDomElement.firstChildElement();
+    for (QDomElement childElement = pDomElement->firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanPresentationMathml(childElement);
+        cleanPresentationMathml(&childElement);
     }
 
     // Move the contents of child mrow elements to their parent, should it also
@@ -659,21 +696,21 @@ void cleanPresentationMathml(QDomElement pDomElement)
     //       mrow element and the contents of its mrow child elements have been
     //       moved to it...
 
-    if (!pDomElement.nodeName().compare("mrow")) {
-        for (QDomElement childElement = pDomElement.firstChildElement();
+    if (pDomElement->nodeName() == Mrow) {
+        for (QDomElement childElement = pDomElement->firstChildElement();
              !childElement.isNull(); ) {
             QDomElement nextChildElement = childElement.nextSiblingElement();
 
-            if (!childElement.nodeName().compare("mrow")) {
+            if (childElement.nodeName() == Mrow) {
                 // The current child element is an mrow, so move its contents to
                 // its parent
 
                 for (QDomElement childChildElement = childElement.firstChildElement();
                      !childChildElement.isNull(); childChildElement = childElement.firstChildElement()) {
-                    pDomElement.insertBefore(childChildElement, childElement);
+                    pDomElement->insertBefore(childChildElement, childElement);
                 }
 
-                pDomElement.removeChild(childElement);
+                pDomElement->removeChild(childElement);
             }
 
             childElement = nextChildElement;
@@ -690,12 +727,15 @@ QString cleanPresentationMathml(const QString &pPresentationMathml)
     QDomDocument domDocument;
 
     if (domDocument.setContent(pPresentationMathml)) {
-        cleanPresentationMathml(domDocument.documentElement());
+        for (QDomElement childElement = domDocument.firstChildElement();
+             !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+            cleanPresentationMathml(&childElement);
+        }
 
         return domDocument.toString(-1);
-    } else {
-        return QString();
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -705,6 +745,8 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
 {
     // Return the name of a 'new' file
     // Note: see Tests::newFileNameTests() for what we want to be able to get...
+
+    static const QString Dot = ".";
 
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = fileManagerInstance->isRemote(pFileName)?
@@ -717,13 +759,15 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
                                      fileInfo.completeSuffix():
                                      pFileExtension;
 
-    if (!fileCanonicalPath.compare("."))
+    if (fileCanonicalPath == Dot) {
         fileCanonicalPath = QString();
-    else
+    } else {
         fileCanonicalPath += "/";
+    }
 
-    if (!fileCompleteSuffix.isEmpty())
+    if (!fileCompleteSuffix.isEmpty()) {
         fileCompleteSuffix.prepend('.');
+    }
 
     static const QString Space = " ";
     static const QString Hyphen = "-";
@@ -735,24 +779,26 @@ QString newFileName(const QString &pFileName, const QString &pExtra,
 
     if (pExtra.isEmpty()) {
         return fileCanonicalPath+fileBaseName+fileCompleteSuffix;
-    } else {
-        static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
-
-        QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
-                                Space+Hyphen+Space:
-                                ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
-                                    Underscore:
-                                    Hyphen;
-        QString extra = pExtra;
-
-        if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch())
-            extra[0] = extra[0].toLower();
-
-        if (pBefore)
-            return fileCanonicalPath+extra+separator+fileBaseName+fileCompleteSuffix;
-        else
-            return fileCanonicalPath+fileBaseName+separator+extra+fileCompleteSuffix;
     }
+
+    static const QRegularExpression InitialCapitalLetterRegEx = QRegularExpression("^\\p{Lu}");
+
+    QString separator = ((nbOfSpaces >= nbOfHyphens) && (nbOfSpaces >= nbOfUnderscores))?
+                            Space+Hyphen+Space:
+                            ((nbOfUnderscores >= nbOfSpaces) && (nbOfUnderscores >= nbOfHyphens))?
+                                Underscore:
+                                Hyphen;
+    QString extra = pExtra;
+
+    if (!InitialCapitalLetterRegEx.match(fileBaseName).hasMatch()) {
+        extra[0] = extra[0].toLower();
+    }
+
+    if (pBefore) {
+        return fileCanonicalPath+extra+separator+fileBaseName+fileCompleteSuffix;
+    }
+
+    return fileCanonicalPath+fileBaseName+separator+extra+fileCompleteSuffix;
 }
 
 //==============================================================================
@@ -820,8 +866,8 @@ bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
 
 //==============================================================================
 
-void cleanDomElement(QDomElement &pDomElement,
-                     QMap<QString, QByteArray> &pElementsAttributes)
+void cleanDomElement(QDomElement *pDomElement,
+                     QMap<QString, QByteArray> *pElementsAttributes)
 {
     // Serialise all the element's attributes and sort their serialised version
     // before removing them from the element and adding a new attribute that
@@ -831,11 +877,11 @@ void cleanDomElement(QDomElement &pDomElement,
 
     static int attributeNumber = 0;
 
-    if (pDomElement.hasAttributes()) {
+    if (pDomElement->hasAttributes()) {
         QStringList serialisedAttributes = QStringList();
-        QDomNamedNodeMap domElementAttributes = pDomElement.attributes();
+        QDomNamedNodeMap domElementAttributes = pDomElement->attributes();
 
-        while (domElementAttributes.count()) {
+        while (!domElementAttributes.isEmpty()) {
             // Serialise (ourselves) the element's attribute
             // Note: to rely on QDomNode::save() to do the serialisation isn't
             //       good enough. Indeed, if it is going to be fine for an
@@ -858,19 +904,19 @@ void cleanDomElement(QDomElement &pDomElement,
             QDomAttr attributeNode = domElementAttributes.item(0).toAttr();
 
             if (attributeNode.namespaceURI().isEmpty()) {
-                serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
+                serialisedAttributes << attributeNode.name()+R"(=")"+attributeNode.value().toHtmlEscaped()+R"(")";
             } else {
-                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+"=\""+attributeNode.value().toHtmlEscaped()+"\"";
+                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+R"(=")"+attributeNode.value().toHtmlEscaped()+R"(")";
 
-                if (   attributeNode.prefix().compare(pDomElement.prefix())
-                    && attributeNode.namespaceURI().compare(pDomElement.namespaceURI())) {
-                    serialisedAttributes << "xmlns:"+attributeNode.prefix()+"=\""+attributeNode.namespaceURI()+"\"";
+                if (   (attributeNode.prefix() != pDomElement->prefix())
+                    && (attributeNode.namespaceURI() != pDomElement->namespaceURI())) {
+                    serialisedAttributes << "xmlns:"+attributeNode.prefix()+R"(=")"+attributeNode.namespaceURI()+R"(")";
                 }
             }
 
             // Remove the attribute node from the element
 
-            pDomElement.removeAttributeNode(attributeNode);
+            pDomElement->removeAttributeNode(attributeNode);
         }
 
         // Sort the serialised attributes, using the attributes' name, and
@@ -885,21 +931,21 @@ void cleanDomElement(QDomElement &pDomElement,
 
         QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, AttributeNumberWidth, 10, QChar('0'));
 
-        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(' ').toUtf8());
+        pElementsAttributes->insert(elementAttributes, serialisedAttributes.join(' ').toUtf8());
 
         // Add a new attribute to the element
         // Note: this attribute, once serialised by QDomDocument::save(), will
         //       be used to do a string replacement (see
         //       serialiseDomDocument())...
 
-        domElementAttributes.setNamedItem(pDomElement.ownerDocument().createAttribute(elementAttributes));
+        domElementAttributes.setNamedItem(pDomElement->ownerDocument().createAttribute(elementAttributes));
     }
 
     // Recursively clean ourselves
 
-    for (QDomElement childElement = pDomElement.firstChildElement();
+    for (QDomElement childElement = pDomElement->firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanDomElement(childElement, pElementsAttributes);
+        cleanDomElement(&childElement, pElementsAttributes);
     }
 }
 
@@ -927,19 +973,25 @@ QByteArray serialiseDomDocument(const QDomDocument &pDomDocument)
 
     for (QDomElement childElement = domDocument.firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanDomElement(childElement, elementsAttributes);
+        cleanDomElement(&childElement, &elementsAttributes);
     }
 
     // Serialise our 'reduced' DOM document
 
-    QTextStream textStream(&res, QIODevice::WriteOnly);
+    res = domDocument.toByteArray(4);
 
-    domDocument.save(textStream, 4);
+    // Replace <?xml version='1.0'?> with <?xml version='1.0' encoding='UTF-8'?>
+    // Note: indeed, by default QDomDocument uses UTF-8 and when it gets
+    //       serialised it doesn't specify it while we want it specified (so as
+    //       to be consistent with SED-ML for example)...
+
+    res.replace("<?xml version='1.0'?>", "<?xml version='1.0' encoding='UTF-8'?>");
 
     // Manually serialise the elements' attributes
 
-    for (const auto &elementAttribute : elementsAttributes.keys())
-        res.replace(elementAttribute+"=\"\"", elementsAttributes.value(elementAttribute));
+    for (const auto &elementAttribute : elementsAttributes.keys()) {
+        res.replace(elementAttribute+R"(="")", elementsAttributes.value(elementAttribute));
+    }
 
     return res;
 }
@@ -955,8 +1007,9 @@ QStringList filters(const FileTypeInterfaces &pFileTypeInterfaces,
     QStringList res = QStringList();
 
     for (auto fileTypeInterface : pFileTypeInterfaces) {
-        if (!pCheckMimeTypes || !pMimeType.compare(fileTypeInterface->mimeType()))
+        if (!pCheckMimeTypes || (pMimeType == fileTypeInterface->mimeType())) {
             res << fileTypeInterface->fileTypeDescription()+" (*."+fileTypeInterface->fileExtension()+")";
+        }
     }
 
     return res;
@@ -1003,8 +1056,9 @@ QStringList droppedFileNames(QDropEvent *pEvent)
 
                 fileName = fileInfo.symLinkTarget();
 
-                if (QFile::exists(fileName))
+                if (QFile::exists(fileName)) {
                     res << fileName;
+                }
             } else {
                 // We are dropping a file, so we can just add it
 
@@ -1023,8 +1077,8 @@ QStringList droppedFileNames(QDropEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

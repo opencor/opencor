@@ -68,9 +68,10 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (pluginItem->parent()) {
-        if (!pluginItem->isCheckable())
+    if (pluginItem->parent() != nullptr) {
+        if (!pluginItem->isCheckable()) {
             option.state &= ~QStyle::State_Enabled;
+        }
     } else {
         option.font.setBold(true);
     }
@@ -80,7 +81,7 @@ void PluginItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-static const auto SettingsShowOnlySelectablePlugins = QStringLiteral("ShowOnlySelectablePlugins");
+static const char *SettingsShowOnlySelectablePlugins = "ShowOnlySelectablePlugins";
 
 //==============================================================================
 
@@ -154,15 +155,15 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
     for (auto plugin : mPluginManager->sortedPlugins()) {
         // Create the item corresponding to the current plugin
 
-        QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?LoadedIcon:NotLoadedIcon,
-                                                      plugin->name());
+        auto pluginItem = new QStandardItem((plugin->status() == Plugin::Status::Loaded)?LoadedIcon:NotLoadedIcon,
+                                            plugin->name());
 
         // Only selectable plugins and plugins that are of the right type are
         // checkable
 
         PluginInfo *pluginInfo = plugin->info();
 
-        if (pluginInfo) {
+        if (pluginInfo != nullptr) {
             pluginItem->setCheckable(pluginInfo->isSelectable());
 
             if (pluginItem->isCheckable()) {
@@ -190,7 +191,7 @@ PluginsDialog::PluginsDialog(PluginManager *pPluginManager,
             // We are either dealing with a library that is not a plugin or with
             // a plugin that is too old, so add it to the Invalid category
 
-            pluginCategoryItem(PluginInfo::Invalid)->appendRow(pluginItem);
+            pluginCategoryItem(PluginInfo::Category::Invalid)->appendRow(pluginItem);
         }
     }
 
@@ -273,31 +274,32 @@ QString PluginsDialog::statusDescription(Plugin *pPlugin) const
     // Return the plugin's status' description, if any
 
     switch (pPlugin->status()) {
-    case Plugin::NotWanted:
+    case Plugin::Status::NotWanted:
         return tr("the plugin is not wanted.");
-    case Plugin::NotNeeded:
+    case Plugin::Status::NotNeeded:
         return tr("the plugin is not needed.");
-    case Plugin::Loaded:
+    case Plugin::Status::Loaded:
         return tr("the plugin is loaded and fully functional.");
-    case Plugin::NotLoaded:
+    case Plugin::Status::NotLoaded:
         return tr("the plugin could not be loaded (%1).").arg(formatMessage(pPlugin->statusErrors()));
-    case Plugin::NotPlugin:
+    case Plugin::Status::NotPlugin:
         return tr("this is not a plugin (%1).").arg(formatMessage(pPlugin->statusErrors()));
-    case Plugin::OldPlugin:
+    case Plugin::Status::OldPlugin:
         return tr("the plugin could not be loaded (one or several of the interfaces it supports are too old).");
-    case Plugin::NotCorePlugin:
+    case Plugin::Status::NotCorePlugin:
         return tr("the plugin claims to be the core plugin, but it is not.");
-    case Plugin::InvalidCorePlugin:
+    case Plugin::Status::InvalidCorePlugin:
         return tr("the plugin should be the core plugin, but it does not support the core interface.");
-    case Plugin::NotCliPluginNoCliSupport:
+    case Plugin::Status::NotCliPluginNoCliSupport:
         return tr("the plugin supports the CLI interface, but it does not claim to be CLI-capable.");
-    case Plugin::NotCliPluginNoCliInterface:
+    case Plugin::Status::NotCliPluginNoCliInterface:
         return tr("the plugin claims to be CLI-capable, but it does not support the CLI interface.");
-    case Plugin::MissingOrInvalidDependencies:
-        if (pPlugin->statusErrorsCount() == 1)
+    case Plugin::Status::MissingOrInvalidDependencies:
+        if (pPlugin->statusErrorsCount() == 1) {
             return tr("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(pPlugin->statusErrors());
-        else
+        } else {
             return tr("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(pPlugin->statusErrors());
+        }
     }
 
     return "???";
@@ -310,7 +312,7 @@ QString PluginsDialog::statusDescription(Plugin *pPlugin) const
 void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
                                       const QModelIndex &pOldIndex)
 {
-    Q_UNUSED(pOldIndex);
+    Q_UNUSED(pOldIndex)
 
     // Make sure that we have a valid index
     // Note: it may happen (e.g. there are only non-selectable plugins and we
@@ -325,16 +327,16 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
     // Update the information view with the category's or plugin's information
 
     QStandardItem *item = pNewIndex.isValid()?mModel->itemFromIndex(pNewIndex):nullptr;
-    QString itemText = item?item->text():QString();
-    Plugin *plugin = (item && item->parent())?mPluginManager->plugin(itemText):nullptr;
+    QString itemText = (item != nullptr)?item->text():QString();
+    Plugin *plugin = ((item != nullptr) && (item->parent() != nullptr))?mPluginManager->plugin(itemText):nullptr;
 
-    if (plugin) {
+    if (plugin != nullptr) {
         // We are supposedly dealing with a plugin, so retrieve its information,
         // if possible
 
         PluginInfo *pluginInfo = plugin->info();
 
-        if (pluginInfo) {
+        if (pluginInfo != nullptr) {
             // We are indeed dealing with a plugin
 
             pluginItem = true;
@@ -369,7 +371,7 @@ void PluginsDialog::updateInformation(const QModelIndex &pNewIndex,
 
             mGui->fieldFourLabel->setText(tr("Status:"));
             mGui->fieldFourValue->setText(statusDescription(plugin));
-        } else if (plugin->status() == Plugin::NotPlugin) {
+        } else if (plugin->status() == Plugin::Status::NotPlugin) {
             // We are not dealing with a plugin, but a simple library
 
             libraryItem = true;
@@ -442,14 +444,15 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
 
-    if (pItem && !pItem->parent()) {
+    if ((pItem != nullptr) && (pItem->parent() == nullptr)) {
         Qt::CheckState newCheckState = (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked;
 
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
             QStandardItem *pluginItem = pItem->child(i);
 
-            if (mSelectablePluginItems.contains(pluginItem))
+            if (mSelectablePluginItems.contains(pluginItem)) {
                 pluginItem->setCheckState(newCheckState);
+            }
         }
     }
 
@@ -479,7 +482,7 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
     for (auto categoryItem : mCategoryItems.values()) {
         int nbOfPlugins = categoryItem->rowCount();
 
-        if (nbOfPlugins) {
+        if (nbOfPlugins != 0) {
             int nbOfSelectablePlugins = 0;
             int nbOfUnselectablePlugins = 0;
             int nbOfSelectedSelectablePlugins = 0;
@@ -490,15 +493,16 @@ void PluginsDialog::updatePluginsSelectedState(QStandardItem *pItem,
                 if (pluginItem->isCheckable()) {
                     ++nbOfSelectablePlugins;
 
-                    if (pluginItem->checkState() == Qt::Checked)
+                    if (pluginItem->checkState() == Qt::Checked) {
                         ++nbOfSelectedSelectablePlugins;
+                    }
                 } else {
                     ++nbOfUnselectablePlugins;
                 }
             }
 
             if (nbOfPlugins != nbOfUnselectablePlugins) {
-                categoryItem->setCheckState(nbOfSelectedSelectablePlugins?
+                categoryItem->setCheckState((nbOfSelectedSelectablePlugins != 0)?
                                                 (nbOfSelectedSelectablePlugins == nbOfSelectablePlugins)?
                                                     Qt::Checked:
                                                     Qt::PartiallyChecked:
@@ -599,7 +603,7 @@ QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory
 
     QStandardItem *res = mCategoryItems.value(pCategory);
 
-    if (!res) {
+    if (res == nullptr) {
         // No category item exists for the given category, so create one and add
         // it to our data model (and this in the right place)
 
@@ -612,9 +616,8 @@ QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory
 
         for (int i = 0, iMax = rootItem->rowCount(); i < iMax; ++i) {
             QStandardItem *categoryItem = rootItem->child(i);
-            int comparison = nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text()));
 
-            if (comparison < 0) {
+            if (nonDiacriticCategoryName.compare(nonDiacriticString(categoryItem->text())) < 0) {
                 inserted = true;
 
                 mModel->invisibleRootItem()->insertRow(i, res);
@@ -623,8 +626,9 @@ QStandardItem * PluginsDialog::pluginCategoryItem(PluginInfo::Category pCategory
             }
         }
 
-        if (!inserted)
+        if (!inserted) {
             mModel->invisibleRootItem()->appendRow(res);
+        }
 
         // Keep track of the relationship between our new item and its category
 
@@ -699,7 +703,7 @@ void PluginsDialog::selectablePluginsCheckBoxToggled(bool pChecked)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

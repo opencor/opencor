@@ -8,8 +8,6 @@ add_plugin(ZIPSupport
 
         src/qzip.cpp
         src/zipsupportplugin.cpp
-    HEADERS_MOC
-        src/zipsupportplugin.h
     PLUGINS
         Core
         zlib

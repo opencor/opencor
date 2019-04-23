@@ -1,3 +1,45 @@
+macro(configure_clang_and_clang_tidy TARGET_NAME)
+    # Configure Cland and Clang-Tidy for the given target
+
+    if(APPLE)
+        # Note #1: the full list of diagnostic flags for Clang can be found at
+        #          https://clang.llvm.org/docs/DiagnosticsReference.html...
+        # Note #2: besides C++98 compatibility, which we are not after, some
+        #          warnings are disabled so that Qt-related files can be
+        #          compiled without any problems...
+
+        set(COMPILE_OPTIONS
+            -Weverything
+            -Wno-c++98-compat
+            -Wno-c++98-compat-pedantic
+            -Wno-documentation
+            -Wno-exit-time-destructors
+            -Wno-extra-semi-stmt
+            -Wno-global-constructors
+            -Wno-header-hygiene
+            -Wno-missing-prototypes
+            -Wno-padded
+            -Wno-redundant-parens
+            -Wno-sign-conversion
+            -Wno-unknown-warning-option
+            -Wno-used-but-marked-unused
+            -Wno-zero-as-null-pointer-constant
+        )
+
+        set_target_properties(${TARGET_NAME} PROPERTIES
+            COMPILE_OPTIONS "${COMPILE_OPTIONS}"
+        )
+    endif()
+
+    if(ENABLE_CLANG_TIDY)
+        set_target_properties(${TARGET_NAME} PROPERTIES
+            CXX_CLANG_TIDY "${CLANG_TIDY}"
+        )
+    endif()
+endmacro()
+
+#===============================================================================
+
 macro(track_files)
     # Keep track of the given files
     # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
@@ -47,15 +89,10 @@ endmacro()
 
 macro(build_documentation DOCUMENTATION_NAME)
     # Build the given documentation as an external project and have it copied to
-    # our final documentation directory, but only if we Python and Sphinx are
-    # available
-    # Note: the check for Python and Sphinx is in case we are building only one
-    #       of our third-party libraries (to upgrade it to a newer version for
-    #       example), in which case we want our Python and PythonPackages
-    #       plugins will probably not be built...
+    # our final documentation directory, but only if we have a target for our
+    # Python and PythonPackages plugins (since we need both Python and Sphinx)
 
-    if(    NOT "${PYTHON_EXECUTABLE}" STREQUAL ""
-       AND NOT "${SPHINX_EXECUTABLE}" STREQUAL "")
+    if(TARGET PythonPlugin AND TARGET PythonPackagesPlugin)
         set(DOCUMENTATION_BUILD ${DOCUMENTATION_NAME}DocumentationBuild)
 
         string(REPLACE ";" "|"
@@ -76,11 +113,26 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
-        # Add our external project as a dependency to our project build target,
-        # so that our Help window plugin can generate the help files that will
-        # be embedded in OpenCOR as a resource
+        # Make ourselves depend on our Python and PythonPackages plugins
 
-        add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+        add_dependencies(${DOCUMENTATION_BUILD} PythonPlugin PythonPackagesPlugin)
+    endif()
+endmacro()
+
+#===============================================================================
+
+macro(strip_file PROJECT_TARGET FILENAME)
+    # Strip the given file of all its local symbols
+    # Note: to strip QScintilla and Qwt when building them on Linux results in
+    #       an error due to patchelf having been used on them. So, we use a
+    #       wrapper that ignores errors and returns 0, so that our build doesn't
+    #       break...
+
+    if("${PROJECT_TARGET}" STREQUAL "DIRECT")
+        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
+    else()
+        add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x ${FILENAME})
     endif()
 endmacro()
 
@@ -99,7 +151,6 @@ macro(add_plugin PLUGIN_NAME)
     )
     set(MULTI_VALUE_KEYWORDS
         SOURCES
-        HEADERS_MOC
         UIS
         DEFINITIONS
         PLUGINS
@@ -136,7 +187,7 @@ macro(add_plugin PLUGIN_NAME)
         # Update the translation (.ts) files and generate the language (.qm)
         # files, which will later on be embedded in the plugin
 
-        update_language_files(${PLUGIN_NAME} ${ARG_SOURCES} ${ARG_HEADERS_MOC} ${ARG_UIS})
+        update_language_files(${PLUGIN_NAME} ${ARG_SOURCES} ${ARG_UIS})
     endif()
 
     if(EXISTS ${UI_QRC_FILENAME})
@@ -164,22 +215,12 @@ macro(add_plugin PLUGIN_NAME)
 
     # Generate and add the different files needed by the plugin
 
-    if(NOT "${ARG_HEADERS_MOC}" STREQUAL "")
-        qt5_wrap_cpp(SOURCES_MOC ${ARG_HEADERS_MOC})
-    endif()
-
-    if(NOT "${ARG_UIS}" STREQUAL "")
-        qt5_wrap_ui(SOURCES_UIS ${ARG_UIS})
-    endif()
-
     if(NOT "${RESOURCES}" STREQUAL "")
         qt5_add_resources(SOURCES_RCS ${RESOURCES})
     endif()
 
     add_library(${PROJECT_NAME} SHARED
         ${ARG_SOURCES}
-        ${SOURCES_MOC}
-        ${SOURCES_UIS}
         ${SOURCES_RCS}
     )
 
@@ -187,6 +228,8 @@ macro(add_plugin PLUGIN_NAME)
         OUTPUT_NAME ${PLUGIN_NAME}
         LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
+
+    configure_clang_and_clang_tidy(${PROJECT_NAME})
 
     # OpenCOR plugins
 
@@ -251,12 +294,7 @@ macro(add_plugin PLUGIN_NAME)
             # Strip the external library of all its local symbols, if possible
 
             if(NOT WIN32 AND RELEASE_MODE)
-                if(${COPY_TARGET} STREQUAL "DIRECT")
-                    execute_process(COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
-                                       COMMAND strip -x ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
-                endif()
+                strip_file(${COPY_TARGET} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
             endif()
 
             # Link the plugin to the external library
@@ -282,10 +320,10 @@ macro(add_plugin PLUGIN_NAME)
             # and that it references the correct Qt libraries, if any at all
 
             if(APPLE)
-                if(${COPY_TARGET} STREQUAL "DIRECT")
+                if("${COPY_TARGET}" STREQUAL "DIRECT")
                     execute_process(COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 else()
-                    add_custom_command(TARGET ${COPY_EXTERNAL_BINARIES_TARGET} POST_BUILD
+                    add_custom_command(TARGET ${COPY_TARGET} POST_BUILD
                                        COMMAND install_name_tool -id @rpath/${ARG_EXTERNAL_BINARY} ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${ARG_EXTERNAL_BINARY})
                 endif()
 
@@ -366,7 +404,7 @@ macro(add_plugin PLUGIN_NAME)
     if(APPLE)
         macos_clean_up_file_with_qt_dependencies(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
     elseif(NOT WIN32)
-        runpath2rpath(${PROJECT_NAME} ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+        runpath2rpath(${PROJECT_NAME} ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME})
     endif()
 
     # Package the plugin, but only if we are not on macOS since it will have
@@ -390,10 +428,10 @@ macro(add_plugin PLUGIN_NAME)
             set(TEST_NAME ${PLUGIN_NAME}_${ARG_TEST})
 
             set(TEST_SOURCE tests/${ARG_TEST}.cpp)
-            set(TEST_HEADER_MOC tests/${ARG_TEST}.h)
+            set(TEST_HEADER tests/${ARG_TEST}.h)
 
             if(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE}
-               AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC})
+               AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER})
                 # The test exists, so build it, but first set the RPATH and
                 # RPATH link values to use by the test, if on Linux
 
@@ -402,26 +440,15 @@ macro(add_plugin PLUGIN_NAME)
                            LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
                 endif()
 
-
-                set(TEST_SOURCES_MOC)
-                # Note: we need to initialise TEST_SOURCES_MOC in case there is
-                #       more than just one test. Indeed, if we were not to
-                #       initialise it, then it would include the information of
-                #       all the tests up to the one we want to build...
-
-                qt5_wrap_cpp(TEST_SOURCES_MOC ${TEST_HEADER_MOC})
                 qt5_add_resources(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
 
                 add_executable(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
 
                     ${ARG_SOURCES}
-                    ${SOURCES_MOC}
-                    ${SOURCES_UIS}
                     ${SOURCES_RCS}
 
                     ${TEST_SOURCE}
-                    ${TEST_SOURCES_MOC}
                     ${TEST_SOURCES_RCS}
                 )
 
@@ -429,6 +456,8 @@ macro(add_plugin PLUGIN_NAME)
                     OUTPUT_NAME ${TEST_NAME}
                     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
                 )
+
+                configure_clang_and_clang_tidy(${TEST_NAME})
 
                 # OpenCOR plugins
 
@@ -504,10 +533,13 @@ macro(add_plugin PLUGIN_NAME)
                                    COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
-                # Clean up our plugin's tests, if we are on macOS
+                # Clean up our plugin's tests, if we are on macOS, our make sure
+                # that it uses RPATH rather than RUNPATH on Linux
 
                 if(APPLE)
                     macos_clean_up_file_with_qt_dependencies(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
+                elseif(NOT WIN32)
+                    runpath2rpath(${TEST_NAME} ${DEST_TESTS_DIR}/${TEST_FILENAME})
                 endif()
             else()
                 message(AUTHOR_WARNING "The '${ARG_TEST}' test for the '${PLUGIN_NAME}' plugin does not exist...")
@@ -659,12 +691,7 @@ macro(linux_deploy_qt_library PROJECT_TARGET DIRNAME FILENAME)
     # Strip the Qt library of all its local symbols
 
     if(RELEASE_MODE)
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND strip -x ${PROJECT_BUILD_DIR}/lib/${FILENAME})
-        endif()
+        strip_file(${PROJECT_TARGET} ${PROJECT_BUILD_DIR}/lib/${FILENAME})
     endif()
 
     # Deploy the Qt library
@@ -692,7 +719,7 @@ macro(linux_deploy_qt_plugin PLUGIN_CATEGORY)
         # Strip the Qt plugin of all its local symbols
 
         if(RELEASE_MODE)
-            execute_process(COMMAND strip -x ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+            strip_file(DIRECT ${PROJECT_BUILD_DIR}/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
         endif()
 
         # Deploy the Qt plugin
@@ -729,12 +756,7 @@ macro(macos_clean_up_file PROJECT_TARGET DIRNAME FILENAME)
     set(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
     if(RELEASE_MODE)
-        if("${PROJECT_TARGET}" STREQUAL "DIRECT")
-            execute_process(COMMAND strip -x ${FULL_FILENAME})
-        else()
-            add_custom_command(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND strip -x ${FULL_FILENAME})
-        endif()
+        strip_file(${PROJECT_TARGET} ${FULL_FILENAME})
     endif()
 
     # Clean up the file's id
@@ -897,7 +919,7 @@ foreach(SHA1_FILE IN LISTS SHA1_FILES)
     endif()
 
     if(NOT WIN32 AND RELEASE_MODE)
-        execute_process(COMMAND strip -x \$\{REAL_SHA1_FILENAME\})
+        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/strip -x \$\{REAL_SHA1_FILENAME\})
     endif()
 
     file(SHA1 \$\{REAL_SHA1_FILENAME\} SHA1_VALUE)
@@ -1121,8 +1143,8 @@ macro(retrieve_package_file PACKAGE_NAME PACKAGE_VERSION DIRNAME SHA1_VALUE)
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
         else()
             file(REMOVE ${FULL_COMPRESSED_FILENAME})
-            # Note: this is in case we had an HTTP error of sorts, in which case
-            #       we would end up with an empty file...
+            # Note: this is in case we had an HTTP/S error of sorts, in which
+            #       case we would end up with an empty file...
 
             message(FATAL_ERROR "The compressed version of the '${PACKAGE_NAME}' package could not be retrieved from '${PACKAGE_URL}'...")
         endif()

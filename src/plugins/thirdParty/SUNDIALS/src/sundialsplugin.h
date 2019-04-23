@@ -47,8 +47,8 @@ class SUNDIALSPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace SUNDIALS
-}   // namespace OpenCOR
+} // namespace SUNDIALS
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -39,10 +39,11 @@ void doNonLinearSolve(char *pRuntime,
 
     OpenCOR::Solver::NlaSolver *nlaSolver = OpenCOR::Solver::nlaSolver(pRuntime);
 
-    if (nlaSolver)
+    if (nlaSolver != nullptr) {
         nlaSolver->solve(pFunction, pParameters, pSize, pUserData);
-    else
+    } else {
         qWarning("WARNING | %s:%d: no NLA solver could be found.", __FILE__, __LINE__);
+    }
 }
 
 //==============================================================================
@@ -87,17 +88,22 @@ void Solver::emitError(const QString &pErrorMessage)
 
     QString errorMessage = QString();
 
-    if (pErrorMessage.startsWith("Newton"))
+    if (pErrorMessage.startsWith("Newton")) {
         errorMessage = pErrorMessage;
-    else if (!pErrorMessage.isEmpty())
+    } else if (!pErrorMessage.isEmpty()) {
         errorMessage = pErrorMessage[0].toLower()+pErrorMessage.right(pErrorMessage.size()-1);
+    }
 
-    if (!errorMessage.right(3).compare("..."))
+    static const QString Dot = ".";
+    static const QString DotDotDot = "...";
+
+    if (errorMessage.right(3) == DotDotDot) {
         emit error(errorMessage.left(errorMessage.size()-3));
-    else if (!errorMessage.right(1).compare("."))
+    } else if (errorMessage.right(1) == Dot) {
         emit error(errorMessage.left(errorMessage.size()-1));
-    else
+    } else {
         emit error(errorMessage);
+    }
 }
 
 //==============================================================================
@@ -120,7 +126,7 @@ void OdeSolver::initialize(double pVoi, int pRatesStatesCount,
                            double *pAlgebraic,
                            ComputeRatesFunction pComputeRates)
 {
-    Q_UNUSED(pVoi);
+    Q_UNUSED(pVoi)
 
     // Initialise the ODE solver
 
@@ -138,10 +144,14 @@ void OdeSolver::initialize(double pVoi, int pRatesStatesCount,
 
 void OdeSolver::reinitialize(double pVoi)
 {
-    Q_UNUSED(pVoi);
+    Q_UNUSED(pVoi)
 
     // Nothing to do by default...
 }
+
+//==============================================================================
+
+NlaSolver::~NlaSolver() = default;
 
 //==============================================================================
 
@@ -244,17 +254,15 @@ bool Property::hasVoiUnit() const
 
 //==============================================================================
 
-}   // namespace Solver
+} // namespace Solver
 
 //==============================================================================
 
-SolverInterface::~SolverInterface()
-{
-}
+SolverInterface::~SolverInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

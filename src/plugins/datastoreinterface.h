@@ -269,7 +269,7 @@ signals:
     void done(DataStoreImportData *pImportData, const QString &pErrorMessage);
 
 public slots:
-   virtual void run() = 0;
+    virtual void run() = 0;
 };
 
 //==============================================================================
@@ -328,7 +328,7 @@ signals:
 
 //==============================================================================
 
-}   // namespace DataStore
+} // namespace DataStore
 
 //==============================================================================
 
@@ -352,7 +352,7 @@ typedef QList<DataStoreInterface *> DataStoreInterfaces;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 

@@ -158,8 +158,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libxdiffplugin.cpp
-    HEADERS_MOC
-        src/libxdiffplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

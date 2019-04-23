@@ -60,15 +60,15 @@ class CSVDataStorePlugin : public QObject, public DataStoreInterface,
 public:
     explicit CSVDataStorePlugin();
 
-#include "filetypeinterface.inl"
 #include "datastoreinterface.inl"
+#include "filetypeinterface.inl"
 #include "i18ninterface.inl"
 };
 
 //==============================================================================
 
-}   // namespace CSVDataStore
-}   // namespace OpenCOR
+} // namespace CSVDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

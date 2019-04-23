@@ -32,7 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "git2/repository.h"
+#include "libgit2begin.h"
+    #include "git2/errors.h"
+    #include "git2/repository.h"
+#include "libgit2end.h"
 
 //==============================================================================
 
@@ -61,8 +64,9 @@ QString getNonGitDirectory()
     dialog.setOption(QFileDialog::ShowDirsOnly);
 
     forever {
-        if (dialog.exec() != QDialog::Accepted)
+        if (dialog.exec() != QDialog::Accepted) {
             break;
+        }
 
         QString res = Core::canonicalDirName(dialog.selectedFiles().first());
 
@@ -70,6 +74,15 @@ QString getNonGitDirectory()
             // We have retrieved a file name, so update our active directory
 
             Core::setActiveDirectory(res);
+
+            // Check whether the directory is writable
+
+            if (!Core::isDirectory(res)) {
+                Core::warningMessageBox(QObject::tr("Select Directory"),
+                                        QObject::tr("Please choose a writable directory."));
+
+                continue;
+            }
 
             // Check whether the directory is a Git directory
 
@@ -84,7 +97,7 @@ QString getNonGitDirectory()
         return res;
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -95,23 +108,23 @@ bool isGitDirectory(const QString &pDirName)
 
     if (pDirName.isEmpty()) {
         return false;
-    } else {
-        git_repository *gitRepository = nullptr;
-
-        if (!git_repository_open(&gitRepository, pDirName.toUtf8().constData())) {
-            git_repository_free(gitRepository);
-
-            return true;
-        } else {
-            return false;
-        }
     }
+
+    git_repository *gitRepository = nullptr;
+
+    if (git_repository_open(&gitRepository, pDirName.toUtf8().constData()) == GIT_OK) {
+        git_repository_free(gitRepository);
+
+        return true;
+    }
+
+    return false;
 }
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

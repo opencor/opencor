@@ -92,7 +92,7 @@ void SimulationWorker::run()
 
     // Set up our ODE solver
 
-    Solver::OdeSolver *odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
+    auto odeSolver = static_cast<Solver::OdeSolver *>(mSimulation->data()->odeSolverInterface()->solverInstance());
 
     // Set up our NLA solver, if needed
     // Note: we unset it at the end of this method...
@@ -113,7 +113,7 @@ void SimulationWorker::run()
     connect(odeSolver, &Solver::OdeSolver::error,
             this, &SimulationWorker::emitError);
 
-    if (nlaSolver) {
+    if (nlaSolver != nullptr) {
         connect(nlaSolver, &Solver::NlaSolver::error,
                 this, &SimulationWorker::emitError);
     }
@@ -140,8 +140,9 @@ void SimulationWorker::run()
 
     // Initialise our NLA solver, if any
 
-    if (nlaSolver)
+    if (nlaSolver != nullptr) {
         nlaSolver->setProperties(mSimulation->data()->nlaSolverProperties());
+    }
 
     // Now, we are ready to compute our model, but only if no error has occurred
     // so far
@@ -175,7 +176,7 @@ void SimulationWorker::run()
             // Note: indeed, with a solver such as CVODE, we need to update our
             //       internals...
 
-            if (nlaSolver || mReset) {
+            if ((nlaSolver != nullptr) || mReset) {
                 odeSolver->reinitialize(mCurrentPoint);
 
                 mReset = false;
@@ -191,8 +192,9 @@ void SimulationWorker::run()
 
             // Make sure that no error occurred
 
-            if (mError)
+            if (mError) {
                 break;
+            }
 
             // Add our new point
 
@@ -205,56 +207,58 @@ void SimulationWorker::run()
                 // stop, so leave our main work loop
 
                 break;
-            } else {
-                // Delay things a bit, if needed
+            }
 
-                if (mSimulation->delay())
-                    Core::doNothing(mSimulation->delay(), &mStopped);
+            // Delay things a bit, if needed
 
-                // Pause ourselves, if needed
+            if (mSimulation->delay() != nullptr) {
+                Core::doNothing(mSimulation->delay(), &mStopped);
+            }
 
-                if (mPaused) {
-                    // We should be paused, so stop our timer
+            // Pause ourselves, if needed
 
-                    elapsedTime += timer.elapsed();
+            if (mPaused) {
+                // We should be paused, so stop our timer
 
-                    // Let people know that we are paused
+                elapsedTime += timer.elapsed();
 
-                    emit paused();
+                // Let people know that we are paused
 
-                    // Actually pause ourselves
+                emit paused();
 
-                    pausedMutex.lock();
-                        mPausedCondition.wait(&pausedMutex);
-                    pausedMutex.unlock();
+                // Actually pause ourselves
 
-                    // We are not paused anymore
+                pausedMutex.lock();
+                    mPausedCondition.wait(&pausedMutex);
+                pausedMutex.unlock();
 
-                    mPaused = false;
+                // We are not paused anymore
 
-                    // Let people know that we are running again
+                mPaused = false;
 
-                    emit running(true);
+                // Let people know that we are running again
 
-                    // (Re)start our timer
+                emit running(true);
 
-                    timer.start();
+                // (Re)start our timer
 
-                }
+                timer.start();
+
             }
         }
 
         // Retrieve the total elapsed time, should no error have occurred
 
-        if (!mError)
+        if (!mError) {
             elapsedTime += timer.elapsed();
+        }
     }
 
     // Delete our solver(s)
 
     delete odeSolver;
 
-    if (nlaSolver) {
+    if (nlaSolver != nullptr) {
         delete nlaSolver;
 
         Solver::unsetNlaSolver(mRuntime->address());
@@ -278,8 +282,9 @@ void SimulationWorker::pause()
 {
     // Pause ourselves, if we are currently running
 
-    if (isRunning())
+    if (isRunning()) {
         mPaused = true;
+    }
 }
 
 //==============================================================================
@@ -288,8 +293,9 @@ void SimulationWorker::resume()
 {
     // Resume ourselves, if we are currently paused
 
-    if (isPaused())
+    if (isPaused()) {
         mPausedCondition.wakeOne();
+    }
 }
 
 //==============================================================================
@@ -301,8 +307,9 @@ void SimulationWorker::stop()
     if (isRunning() || isPaused()) {
         mStopped = true;
 
-        if (isPaused())
+        if (isPaused()) {
             mPausedCondition.wakeOne();
+        }
     }
 }
 
@@ -312,8 +319,9 @@ void SimulationWorker::reset()
 {
     // Stop ourselves, if we are currently running or paused
 
-    if (isRunning() || isPaused())
+    if (isRunning() || isPaused()) {
         mReset = true;
+    }
 }
 
 //==============================================================================
@@ -332,8 +340,8 @@ void SimulationWorker::emitError(const QString &pMessage)
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

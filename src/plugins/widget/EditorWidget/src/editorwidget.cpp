@@ -46,7 +46,7 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 {
     // Create and set our vertical layout
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
@@ -133,8 +133,8 @@ EditorWidget::EditorWidget(const QString &pContents, bool pReadOnly,
 
 //==============================================================================
 
-static const auto SettingsEditorWidgetWordWrap  = QStringLiteral("EditorWidgetWordWrap");
-static const auto SettingsEditorWidgetZoomLevel = QStringLiteral("EditorWidgetZoomLevel");
+static const char *SettingsEditorWidgetWordWrap  = "EditorWidgetWordWrap";
+static const char *SettingsEditorWidgetZoomLevel = "EditorWidgetZoomLevel";
 
 //==============================================================================
 
@@ -171,8 +171,9 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 {
     // Make sure that we are given another widget
 
-    if (!pEditorWidget || (pEditorWidget == this))
+    if ((pEditorWidget == nullptr) || (pEditorWidget == this)) {
         return;
+    }
 
     // Update our word wrap mode and zoom level
 
@@ -198,7 +199,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
 bool EditorWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
 {
-    Q_UNUSED(pEvent);
+    Q_UNUSED(pEvent)
 
     // By default, we don't handle our editor's key press event
 
@@ -632,10 +633,11 @@ void EditorWidget::setFindReplaceVisible(bool pVisible, bool pSelectWord)
     // Give the focus to our find/replace widget or to our editor, depending on
     // the case
 
-    if (pVisible)
+    if (pVisible) {
         mFindReplace->setFocus();
-    else
+    } else {
         mEditor->setFocus();
+    }
 }
 
 //==============================================================================
@@ -733,8 +735,8 @@ bool EditorWidget::handleEditorChanges() const
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

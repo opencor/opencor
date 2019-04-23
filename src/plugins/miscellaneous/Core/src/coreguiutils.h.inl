@@ -31,11 +31,14 @@ void CORE_EXPORT adjustWidgetSize(QWidget *pWidget);
 void CORE_EXPORT showEnableAction(QAction *pAction, bool pVisible,
                                   bool pEnabled = true);
 
-QColor CORE_EXPORT baseColor();
-QColor CORE_EXPORT borderColor();
-QColor CORE_EXPORT highlightColor();
-QColor CORE_EXPORT shadowColor();
-QColor CORE_EXPORT windowColor();
+QColor CORE_EXPORT opaqueColor(const QColor &pColor, const QColor &pBackgroundColor);
+
+QColor CORE_EXPORT baseColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
+QColor CORE_EXPORT borderColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
+QColor CORE_EXPORT highlightColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
+QColor CORE_EXPORT shadowColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
+QColor CORE_EXPORT windowColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
+QColor CORE_EXPORT windowTextColor(QPalette::ColorGroup pColorGroup = QPalette::Current);
 
 QMessageBox::StandardButton CORE_EXPORT informationMessageBox(const QString &pTitle,
                                                               const QString &pText,

@@ -22,19 +22,6 @@ add_plugin(CellMLAnnotationView
         src/cellmlannotationviewmetadataviewdetailswidget.cpp
         src/cellmlannotationviewplugin.cpp
         src/cellmlannotationviewwidget.cpp
-    HEADERS_MOC
-        ../../plugin.h
-        ../../pluginmanager.h
-
-        src/cellmlannotationviewcellmllistwidget.h
-        src/cellmlannotationvieweditingwidget.h
-        src/cellmlannotationviewmetadatadetailswidget.h
-        src/cellmlannotationviewmetadataeditdetailswidget.h
-        src/cellmlannotationviewmetadatanormalviewdetailswidget.h
-        src/cellmlannotationviewmetadatarawviewdetailswidget.h
-        src/cellmlannotationviewmetadataviewdetailswidget.h
-        src/cellmlannotationviewplugin.h
-        src/cellmlannotationviewwidget.h
     PLUGINS
         CellMLSupport
         WebViewerWidget

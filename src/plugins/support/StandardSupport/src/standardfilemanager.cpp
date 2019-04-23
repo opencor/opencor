@@ -65,8 +65,9 @@ bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking) 
     // good to keep considering the file as of the right type, so that the user
     // can continue editing it without any problem, for example
 
-    if (!pForceChecking && file(pFileName))
+    if (!pForceChecking && (file(pFileName) != nullptr)) {
         return true;
+    }
 
     // The given file is not managed, so consider it of the right type if it is
     // an empty file (after having been trimmed) or it can be loaded
@@ -74,13 +75,14 @@ bool StandardFileManager::isFile(const QString &pFileName, bool pForceChecking) 
     QByteArray fileContents;
 
     if (Core::readFile(pFileName, fileContents)) {
-        if (fileContents.trimmed().isEmpty())
+        if (fileContents.trimmed().isEmpty()) {
             return true;
+        }
 
         return canLoad(pFileName);
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -109,8 +111,9 @@ void StandardFileManager::manage(const QString &pFileName)
     // Create the given file and add it to our list of managed files, if we are
     // dealing with a file that is not already managed,
 
-    if (!file(pFileName) && isFile(pFileName, false))
+    if ((file(pFileName) == nullptr) && isFile(pFileName, false)) {
         mFiles.insert(Core::canonicalFileName(pFileName), create(pFileName));
+    }
 }
 
 //==============================================================================
@@ -119,7 +122,7 @@ void StandardFileManager::unmanage(const QString &pFileName)
 {
     StandardFile *crtFile = file(pFileName);
 
-    if (crtFile) {
+    if (crtFile != nullptr) {
         // We are dealing with a file, so we can remove it from our list of
         // managed files after having deleted it
 
@@ -137,8 +140,9 @@ void StandardFileManager::save(const QString &pFileName)
 
     StandardFile *crtFile = file(pFileName);
 
-    if (crtFile)
+    if (crtFile != nullptr) {
         reload(pFileName, crtFile->isNew());
+    }
 }
 
 //==============================================================================
@@ -153,14 +157,15 @@ void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
 
     StandardFile *crtFile = file(pFileName);
 
-    if (crtFile) {
+    if (crtFile != nullptr) {
         // The file is managed, but should it still be (i.e. can it still be
         // considered as being a file)?
 
-        if (isFile(pFileName, pForceChecking))
+        if (isFile(pFileName, pForceChecking)) {
             crtFile->reload();
-        else
+        } else {
             unmanage(pFileName);
+        }
     } else {
         // The file is not managed, which means that previously it wasn't
         // considered as being a file, but things may be different now, so try
@@ -170,8 +175,9 @@ void StandardFileManager::reload(const QString &pFileName, bool pForceChecking)
 
         crtFile = file(pFileName);
 
-        if (crtFile)
+        if (crtFile != nullptr) {
             crtFile->load();
+        }
     }
 }
 
@@ -194,8 +200,9 @@ void StandardFileManager::rename(const QString &pOldFileName,
 
     StandardFile *crtFile = file(pOldFileName);
 
-    if (!crtFile)
+    if (crtFile == nullptr) {
         return;
+    }
 
     mFiles.insert(Core::canonicalFileName(pNewFileName), crtFile);
     mFiles.remove(Core::canonicalFileName(pOldFileName));
@@ -207,8 +214,8 @@ void StandardFileManager::rename(const QString &pOldFileName,
 
 //==============================================================================
 
-}   // namespace StandardSupport
-}   // namespace OpenCOR
+} // namespace StandardSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

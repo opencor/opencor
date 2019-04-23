@@ -35,10 +35,10 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that uses <a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> to solve <a href=\"https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations\">non-linear algebraic systems</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui utilise <a href=\"http://computation.llnl.gov/projects/sundials/kinsol\">KINSOL</a> pour résoudre des <a href=\"https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations\">systèmes algébriques non-linéaires</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that uses <a href="http://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> to solve <a href="https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations">non-linear algebraic systems</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui utilise <a href="http://computation.llnl.gov/projects/sundials/kinsol">KINSOL</a> pour résoudre des <a href="https://en.wikipedia.org/wiki/Nonlinear_system#Nonlinear_algebraic_equations">systèmes algébriques non-linéaires</a>.)"));
 
-    return new PluginInfo(PluginInfo::Solver, true, false,
+    return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           QStringList() << "SUNDIALS",
                           descriptions);
 }
@@ -72,18 +72,33 @@ QString KINSOLSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000282"))
-        return solverName();
-    else if (!pKisaoId.compare("KISAO:0000486"))
-        return MaximumNumberOfIterationsId;
-    else if (!pKisaoId.compare("KISAO:0000477"))
-        return LinearSolverId;
-    else if (!pKisaoId.compare("KISAO:0000479"))
-        return UpperHalfBandwidthId;
-    else if (!pKisaoId.compare("KISAO:0000480"))
-        return LowerHalfBandwidthId;
+    static const QString Kisao0000282 = "KISAO:0000282";
+    static const QString Kisao0000486 = "KISAO:0000486";
+    static const QString Kisao0000477 = "KISAO:0000477";
+    static const QString Kisao0000479 = "KISAO:0000479";
+    static const QString Kisao0000480 = "KISAO:0000480";
 
-    return QString();
+    if (pKisaoId == Kisao0000282) {
+        return solverName();
+    }
+
+    if (pKisaoId == Kisao0000486) {
+        return MaximumNumberOfIterationsId;
+    }
+
+    if (pKisaoId == Kisao0000477) {
+        return LinearSolverId;
+    }
+
+    if (pKisaoId == Kisao0000479) {
+        return UpperHalfBandwidthId;
+    }
+
+    if (pKisaoId == Kisao0000480) {
+        return LowerHalfBandwidthId;
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -92,18 +107,27 @@ QString KINSOLSolverPlugin::kisaoId(const QString &pId) const
 {
     // Return the KiSAO id for the given id
 
-    if (!pId.compare(solverName()))
+    if (pId == solverName()) {
         return "KISAO:0000282";
-    else if (!pId.compare(MaximumNumberOfIterationsId))
-        return "KISAO:0000486";
-    else if (!pId.compare(LinearSolverId))
-        return "KISAO:0000477";
-    else if (!pId.compare(UpperHalfBandwidthId))
-        return "KISAO:0000479";
-    else if (!pId.compare(LowerHalfBandwidthId))
-        return "KISAO:0000480";
+    }
 
-    return QString();
+    if (pId == MaximumNumberOfIterationsId) {
+        return "KISAO:0000486";
+    }
+
+    if (pId == LinearSolverId) {
+        return "KISAO:0000477";
+    }
+
+    if (pId == UpperHalfBandwidthId) {
+        return "KISAO:0000479";
+    }
+
+    if (pId == LowerHalfBandwidthId) {
+        return "KISAO:0000480";
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -112,7 +136,7 @@ Solver::Type KINSOLSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Nla;
+    return Solver::Type::Nla;
 }
 
 //==============================================================================
@@ -153,10 +177,10 @@ Solver::Properties KINSOLSolverPlugin::solverProperties() const
                                                        << BiCgStabLinearSolver
                                                        << TfqmrLinearSolver;
 
-    return Solver::Properties() << Solver::Property(Solver::Property::IntegerGt0, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
-                                << Solver::Property(Solver::Property::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
-                                << Solver::Property(Solver::Property::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false);
+    return Solver::Properties() << Solver::Property(Solver::Property::Type::IntegerGt0, MaximumNumberOfIterationsId, MaximumNumberOfIterationsDescriptions, QStringList(), MaximumNumberOfIterationsDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::IntegerGe0, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Type::IntegerGe0, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false);
 }
 
 //==============================================================================
@@ -170,7 +194,7 @@ QMap<QString, bool> KINSOLSolverPlugin::solverPropertiesVisibility(const QMap<QS
 
     QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
 
-    if (!linearSolver.compare(BandedLinearSolver)) {
+    if (linearSolver == BandedLinearSolver) {
         // Banded linear solver
 
         res.insert(UpperHalfBandwidthId, true);
@@ -187,8 +211,8 @@ QMap<QString, bool> KINSOLSolverPlugin::solverPropertiesVisibility(const QMap<QS
 
 //==============================================================================
 
-}   // namespace KINSOLSolver
-}   // namespace OpenCOR
+} // namespace KINSOLSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

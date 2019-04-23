@@ -38,45 +38,45 @@ PLUGININFO_FUNC LibXDiffPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.xmailserver.org/xdiff-lib.html\">LibXDiff</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.xmailserver.org/xdiff-lib.html\">LibXDiff</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://www.xmailserver.org/xdiff-lib.html">LibXDiff</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://www.xmailserver.org/xdiff-lib.html">LibXDiff</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-static void *mallocWrapper(void *pData, unsigned int pSize)
+static void * mallocWrapper(void *pData, unsigned int pSize)
 {
-    Q_UNUSED(pData);
+    Q_UNUSED(pData)
 
     // Allocate some memory
 
-    return malloc(pSize);
+    return malloc(pSize); // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
 
 static void freeWrapper(void *pData, void *pPointer)
 {
-    Q_UNUSED(pData);
+    Q_UNUSED(pData)
 
     // Free the given memory
 
-    free(pPointer);
+    free(pPointer); // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
 
-static void *reallocWrapper(void *pData, void *pPointer, unsigned int pSize)
+static void * reallocWrapper(void *pData, void *pPointer, unsigned int pSize)
 {
-    Q_UNUSED(pData);
+    Q_UNUSED(pData)
 
     // Reallocate some memory
 
-    return realloc(pPointer, pSize);
+    return realloc(pPointer, pSize); // NOLINT(cppcoreguidelines-no-malloc, hicpp-no-malloc)
 }
 
 //==============================================================================
@@ -92,8 +92,8 @@ LibXDiffPlugin::LibXDiffPlugin()
 
 //==============================================================================
 
-}   // namespace LibXDiff
-}   // namespace OpenCOR
+} // namespace LibXDiff
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

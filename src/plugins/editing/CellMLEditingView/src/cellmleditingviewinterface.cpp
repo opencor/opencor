@@ -38,13 +38,11 @@ extern "C" Q_DECL_EXPORT int cellmlEditingViewInterfaceVersion()
 
 //==============================================================================
 
-CellmlEditingViewInterface::~CellmlEditingViewInterface()
-{
-}
+CellmlEditingViewInterface::~CellmlEditingViewInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

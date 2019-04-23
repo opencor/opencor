@@ -43,10 +43,10 @@ PLUGININFO_FUNC PMRWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://models.physiomeproject.org/\">PMR</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="https://models.physiomeproject.org/">PMR</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://models.physiomeproject.org/">PMR</a>.)"));
 
-    return new PluginInfo(PluginInfo::Organisation, true, false,
+    return new PluginInfo(PluginInfo::Category::Organisation, true, false,
                           QStringList() << "PMRSupport",
                           descriptions,
                           QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
@@ -84,8 +84,8 @@ bool PMRWindowPlugin::definesPluginInterfaces()
 bool PMRWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                          QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -116,7 +116,7 @@ void PMRWindowPlugin::finalizePlugin()
 
 void PMRWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -147,7 +147,7 @@ void PMRWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void PMRWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -208,8 +208,8 @@ QDockWidget * PMRWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace PMRWindow
-}   // namespace OpenCOR
+} // namespace PMRWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

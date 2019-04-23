@@ -8,8 +8,6 @@ add_plugin(Sample
 
         src/sampleplugin.cpp
         src/sampleutilities.cpp
-    HEADERS_MOC
-        src/sampleplugin.h
     QT_MODULES
         Core
 )

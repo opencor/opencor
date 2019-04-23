@@ -16,10 +16,6 @@ add_plugin(SEDMLSupport
         src/sedmlinterface.cpp
         src/sedmlsupport.cpp
         src/sedmlsupportplugin.cpp
-    HEADERS_MOC
-        src/sedmlfile.h
-        src/sedmlfilemanager.h
-        src/sedmlsupportplugin.h
     PLUGINS
         CellMLSupport
         libSBML

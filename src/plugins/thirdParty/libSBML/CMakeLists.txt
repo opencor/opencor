@@ -3,16 +3,16 @@ project(libSBMLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libSBML)
-set(PACKAGE_VERSION 5.17.0)
+set(PACKAGE_VERSION 5.18.0)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 5)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.17.0)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.18.0)
 
 # Git tag for our library
 
-set(GIT_TAG v5.17.0)
+set(GIT_TAG v5.18.0)
 
 # Package repository
 
@@ -63,34 +63,36 @@ if(USE_PREBUILT_LIBSBML_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 529681a0289bc9402cb8e79ff405ab51e6df7ac8
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 816b0d2d693561cfd1c8b8268c00665bca9cc9f7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 604b364f1b4d7ec294e408e3b2790ae059902a01
-                                              94c7394be6610b8831557bc390b0542c052ad3ab)
+                                  SHA1_VALUES 83cf96e9dda06bae8a109b850250793f6f11a5af
+                                              9b0f91cf59941dca597571b87991f7790a52fddd)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c8e180f8f97899b447a808fcfd402b82f357be33
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} d05e5e52d33e25d25f90746c64522b774a67079d
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES df6657338b75904e27be01ba8194c7d9b7cca7da
-                                              316e086388254eb24c2a61d4e0321219136dcae0)
+                                  SHA1_VALUES 5661f67ebb6191b5856469363ae80b0405acbd4a
+                                              b729843608a652001642197ad3db26cbc733c114)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 7a92ce68e3e285b12854b04c59932f44df2f479b
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 44aab4d24ea8df6e318f3800492555908c35d913
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 561ba2196854e6993e537a83776014ef4b4ab4f0)
+                              SHA1_VALUES 62723d3554d59b04738d700cfceaa85e76110adc)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} e1efd4245977c34b525ce34ba87dccd9f4891ccd
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a57fe8d76f839f0aa6433dede040b78ea739dab3
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 76aadab74b4470aa0f1c612fe02c71714724d329)
+                              SHA1_VALUES e78b46543bc75952d14722de098bef24c25ca685)
     endif()
 else()
     # Download some dependencies for Windows, if needed
+    # Note: they can originally be found at
+    #       https://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/...
 
     if(WIN32)
         if(RELEASE_MODE)
@@ -99,7 +101,7 @@ else()
             set(MODE debug)
         endif()
 
-        set(DEPENDENCIES_FILENAME libSBML_dependencies_vs14_${MODE}_x64.zip)
+        set(DEPENDENCIES_FILENAME libSBML_dependencies_vs15_${MODE}_x64.zip)
         set(DEPENDENCIES_DIR ${CMAKE_SOURCE_DIR}/src/plugins/thirdParty/libSBML/ext/dependencies)
         set(DEPENDENCIES_MODE_DIR ${DEPENDENCIES_DIR}/${MODE})
 
@@ -214,8 +216,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libsbmlplugin.cpp
-    HEADERS_MOC
-        src/libsbmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

@@ -34,18 +34,18 @@ PLUGININFO_FUNC ZincPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> library."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder la librairie <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access the <a href="https://github.com/OpenCMISS/zinc">Zinc</a> library.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder la librairie <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace Zinc
-}   // namespace OpenCOR
+} // namespace Zinc
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

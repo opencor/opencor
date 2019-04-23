@@ -63,31 +63,31 @@ if(USE_PREBUILT_LIBNUML_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} a39db4db954fa9d7dc4ebe30d9bf3483d210cdc5
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} a39cae2ca11d65a3b4696ce0ba7b3f2429437b96
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES d7fca96349c39fce1db4f0a87780d1b75014a624
-                                              119099b65ce3d3dfa7ad3cc419bf7a963d508420)
+                                  SHA1_VALUES 9ba23228511e627e33928e3010b94fd9bc70d9f4
+                                              93dd2336f2d580afe793f22dd65479cb622dbf11)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 987483fe81c3f16b6b05914a6a488c3e8d85e9a1
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 080bfc0e7d1fbfaacccc78ca7564d4a78bbb7020
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 60783f45ecb6eac9938351d4793fba79ceb3283f
-                                              ce4925551c1759fa812b9441d37e4b331e2caf81)
+                                  SHA1_VALUES 36cd7e24d6b514d882d7600fc1544f5499ac7507
+                                              93dd2336f2d580afe793f22dd65479cb622dbf11)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} ee9401bf34b1ce8dcdf95beca1a88dee3ab34a65
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 7c9407dc140d7eb19261182f557407124162de2d
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES e915e99c817217be7a2562c6bc3656cc42558d6c)
+                              SHA1_VALUES 3cccf0afc1826a3aef7a356a0be0ed0ea1ea2101)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 5cdf38db5546509d211bcb964224c7490c9ff97a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 270dda02e5950e5f17673224f0f136ad693774b2
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 3b179071772ed7820eb0bf4346ba3e75fe82ef27)
+                              SHA1_VALUES 6db4bb2e39c254f1740c3a80a40c61c776f3c9a9)
     endif()
 else()
     # Build libNuML as an external project
@@ -188,8 +188,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libnumlplugin.cpp
-    HEADERS_MOC
-        src/libnumlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

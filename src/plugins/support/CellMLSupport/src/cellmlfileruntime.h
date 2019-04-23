@@ -55,7 +55,7 @@ namespace OpenCOR {
 
 namespace Compiler {
     class CompilerEngine;
-}   // namespace Compiler
+} // namespace Compiler
 
 //==============================================================================
 
@@ -70,7 +70,7 @@ class CellmlFile;
 class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameter
 {
 public:
-    enum ParameterType {
+    enum class Type {
         Unknown,
         Voi,
         Constant,
@@ -86,7 +86,7 @@ public:
     explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        ParameterType pType, int pIndex,
+                                        Type pType, int pIndex,
                                         double *pData = nullptr);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
@@ -96,7 +96,7 @@ public:
     int degree() const;
     QString unit() const;
     QStringList componentHierarchy() const;
-    ParameterType type() const;
+    Type type() const;
     int index() const;
     double * data() const;
 
@@ -107,14 +107,14 @@ public:
     QString formattedUnit(const QString &pVoiUnit) const;
 
     static QMap<int, QIcon> icons();
-    static QIcon icon(ParameterType pParameterType);
+    static QIcon icon(Type pParameterType);
 
 private:
     QString mName;
     int mDegree;
     QString mUnit;
     QStringList mComponentHierarchy;
-    ParameterType mType;
+    Type mType;
     int mIndex;
     double *mData;
 };
@@ -163,7 +163,7 @@ public:
     CellmlFileIssues issues() const;
 
     CellmlFileRuntimeParameters parameters() const;
-    CellmlFileRuntimeParameters dataParameters(double *pData = nullptr) const;
+    CellmlFileRuntimeParameters dataParameters(const double *pData = nullptr) const;
 
     CellmlFileRuntimeParameter * voi() const;
 
@@ -211,8 +211,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

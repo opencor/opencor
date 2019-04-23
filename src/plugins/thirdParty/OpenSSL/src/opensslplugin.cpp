@@ -34,18 +34,18 @@ PLUGININFO_FUNC OpenSSLPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.openssl.org/\">OpenSSL</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.openssl.org/\">OpenSSL</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://www.openssl.org/">OpenSSL</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://www.openssl.org/">OpenSSL</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace OpenSSL
-}   // namespace OpenCOR
+} // namespace OpenSSL
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

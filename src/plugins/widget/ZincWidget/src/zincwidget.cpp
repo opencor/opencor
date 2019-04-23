@@ -31,8 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "opencmiss/zinc/context.hpp"
-#include "opencmiss/zinc/result.hpp"
+#include "zincbegin.h"
+    #include "opencmiss/zinc/context.hpp"
+    #include "opencmiss/zinc/result.hpp"
+#include "zincend.h"
 
 //==============================================================================
 
@@ -52,8 +54,9 @@ void ZincWidgetSceneViewerCallback::operator()(const OpenCMISS::Zinc::Sceneviewe
 {
     // Ask our Zinc widget to update itself if repainting is required
 
-    if (pSceneViewerEvent.getChangeFlags() & OpenCMISS::Zinc::Sceneviewerevent::CHANGE_FLAG_REPAINT_REQUIRED)
+    if ((pSceneViewerEvent.getChangeFlags() & OpenCMISS::Zinc::Sceneviewerevent::CHANGE_FLAG_REPAINT_REQUIRED) != 0) {
         QTimer::singleShot(0, mZincWidget, QOverload<>::of(&ZincWidget::update));
+    }
 }
 
 //==============================================================================
@@ -63,11 +66,21 @@ ZincWidget::ZincWidget(QWidget *pParent) :
     Core::CommonWidget(this),
     mGraphicsInitialized(false),
     mDevicePixelRatio(-1),
-    mContext(0),
+    mContext(nullptr),
     mSceneViewer(OpenCMISS::Zinc::Sceneviewer()),
     mSceneViewerNotifier(OpenCMISS::Zinc::Sceneviewernotifier()),
     mZincWidgetSceneViewerCallback(this)
 {
+}
+
+//==============================================================================
+
+ZincWidget::~ZincWidget()
+{
+    // Prevent our scene viewer from being recreated (by setContext()) when
+    // we are being destroyed
+
+    mGraphicsInitialized = false;
 }
 
 //==============================================================================
@@ -87,8 +100,9 @@ void ZincWidget::setContext(OpenCMISS::Zinc::Context *pContext)
 
     mContext = pContext;
 
-    if (mGraphicsInitialized)
+    if (mGraphicsInitialized) {
         createSceneViewer();
+    }
 }
 
 //==============================================================================
@@ -106,14 +120,17 @@ ZincWidget::ProjectionMode ZincWidget::projectionMode()
 {
     // Return our projection mode
 
-    switch (mSceneViewer.getProjectionMode()) {
-    case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL:
-        return Parallel;
-    case OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE:
-        return Perspective;
-    default:
-        return Invalid;
+    OpenCMISS::Zinc::Sceneviewer::ProjectionMode projectionMode = mSceneViewer.getProjectionMode();
+
+    if (projectionMode == OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL) {
+        return ProjectionMode::Parallel;
     }
+
+    if (projectionMode == OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE) {
+        return ProjectionMode::Perspective;
+    }
+
+    return ProjectionMode::Invalid;
 }
 
 //==============================================================================
@@ -123,18 +140,18 @@ void ZincWidget::setProjectionMode(ProjectionMode pProjectionMode)
     // Set our projection mode
 
     switch (pProjectionMode) {
-    case Parallel:
+    case ProjectionMode::Parallel:
         mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PARALLEL);
 
         break;
-    case Perspective:
+    case ProjectionMode::Perspective:
         mSceneViewer.setProjectionMode(OpenCMISS::Zinc::Sceneviewer::PROJECTION_MODE_PERSPECTIVE);
 
         break;
-    default:
+    case ProjectionMode::Invalid:
         // Invalid, so do nothing
 
-        ;
+        break;
     }
 }
 
@@ -147,8 +164,9 @@ int ZincWidget::viewParameters(double *pEye, double *pLookAt, double *pUp,
 
     int res = mSceneViewer.getLookatParameters(pEye, pLookAt, pUp);
 
-    if (res == OpenCMISS::Zinc::Result::RESULT_OK)
+    if (res == OpenCMISS::Zinc::Result::RESULT_OK) {
         pAngle = mSceneViewer.getViewAngle();
+    }
 
     return res;
 }
@@ -282,16 +300,16 @@ void ZincWidget::updateSceneViewerViewerportSize(int pWidth, int pHeight,
     if (pCheckDevicePixelRatio) {
         if (newDevicePixelRatio == mDevicePixelRatio) {
             return;
-        } else {
-            // Small hack to force ourselves to resize
-
-            resize(pWidth+1, pHeight+1);
-            resize(pWidth, pHeight);
-
-            // Let people know that our device pixel ratio has changed
-
-            emit devicePixelRatioChanged(newDevicePixelRatio);
         }
+
+        // Small hack to force ourselves to resize
+
+        resize(pWidth+1, pHeight+1);
+        resize(pWidth, pHeight);
+
+        // Let people know that our device pixel ratio has changed
+
+        emit devicePixelRatioChanged(newDevicePixelRatio);
     }
 
     mDevicePixelRatio = newDevicePixelRatio;
@@ -312,8 +330,9 @@ void ZincWidget::initializeGL()
 
     mGraphicsInitialized = true;
 
-    if (mContext)
+    if (mContext != nullptr) {
         createSceneViewer();
+    }
 
     emit graphicsInitialized();
 }
@@ -344,20 +363,27 @@ OpenCMISS::Zinc::Sceneviewerinput::ButtonType ZincWidget::buttonMap(const Qt::Mo
 {
     // Map the given button to a Zinc button
 
-    switch (pButton) {
-    case Qt::LeftButton:
+    if (pButton == Qt::LeftButton) {
         return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_LEFT;
-    case Qt::MiddleButton:
-        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_MIDDLE;
-    case Qt::XButton1:
-        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_SCROLL_DOWN;
-    case Qt::XButton2:
-            return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_SCROLL_UP;
-    case Qt::RightButton:
-        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_RIGHT;
-    default:
-        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_INVALID;
     }
+
+    if (pButton == Qt::MiddleButton) {
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_MIDDLE;
+    }
+
+    if (pButton == Qt::XButton1) {
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_SCROLL_DOWN;
+    }
+
+    if (pButton == Qt::XButton2) {
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_SCROLL_UP;
+    }
+
+    if (pButton == Qt::RightButton) {
+        return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_RIGHT;
+    }
+
+    return OpenCMISS::Zinc::Sceneviewerinput::BUTTON_TYPE_INVALID;
 }
 
 //==============================================================================
@@ -368,14 +394,17 @@ OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags ZincWidget::modifierMap(const Q
 
     OpenCMISS::Zinc::Sceneviewerinput::ModifierFlags res = OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_NONE;
 
-    if (pModifiers & Qt::ShiftModifier)
-        res = res|OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_SHIFT;
+    if ((pModifiers & Qt::ShiftModifier) != 0) {
+        res |= OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_SHIFT;
+    }
 
-    if (pModifiers & Qt::ControlModifier)
-        res = res|OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_CONTROL;
+    if ((pModifiers & Qt::ControlModifier) != 0)  {
+        res |= OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_CONTROL;
+    }
 
-    if (pModifiers & Qt::AltModifier)
-        res = res|OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_ALT;
+    if ((pModifiers & Qt::AltModifier) != 0)  {
+        res |= OpenCMISS::Zinc::Sceneviewerinput::MODIFIER_FLAG_ALT;
+    }
 
     return res;
 }
@@ -390,10 +419,11 @@ void ZincWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
     sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_MOTION_NOTIFY);
 
-    if (pEvent->type() == QEvent::Leave)
+    if (pEvent->type() == QEvent::Leave) {
         sceneInput.setPosition(-1, -1);
-    else
+    } else {
         sceneInput.setPosition(pEvent->x(), pEvent->y());
+    }
 
     mSceneViewer.processSceneviewerinput(sceneInput);
 }
@@ -449,7 +479,7 @@ void ZincWidget::wheelEvent(QWheelEvent *pEvent)
     sceneInput = mSceneViewer.createSceneviewerinput();
 
     sceneInput.setEventType(OpenCMISS::Zinc::Sceneviewerinput::EVENT_TYPE_MOTION_NOTIFY);
-    sceneInput.setPosition(pEvent->x(), pEvent->y()-0.1*pEvent->delta());
+    sceneInput.setPosition(pEvent->x(), int(pEvent->y()-0.1*pEvent->delta()));
 
     mSceneViewer.processSceneviewerinput(sceneInput);
 
@@ -477,8 +507,8 @@ QSize ZincWidget::sizeHint() const
 
 //==============================================================================
 
-}   // namespace ZincWidget
-}   // namespace OpenCOR
+} // namespace ZincWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

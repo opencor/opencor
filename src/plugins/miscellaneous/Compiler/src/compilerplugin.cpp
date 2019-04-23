@@ -37,15 +37,15 @@ PLUGININFO_FUNC CompilerPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support code compilation."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter la compilation de code."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, false, false,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, false, false,
                           QStringList() << "Core" << "LLVMClang",
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace Compiler
-}   // namespace OpenCOR
+} // namespace Compiler
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

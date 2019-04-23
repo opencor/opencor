@@ -37,15 +37,15 @@ PLUGININFO_FUNC libBioSignalMLPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access BioSignalML."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder BioSignalML."));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace libBioSignalML
-}   // namespace OpenCOR
+} // namespace libBioSignalML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

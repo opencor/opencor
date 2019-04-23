@@ -38,7 +38,7 @@ class QStandardItemModel;
 
 namespace Ui {
     class PluginsDialog;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -112,7 +112,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

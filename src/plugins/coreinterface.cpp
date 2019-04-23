@@ -38,13 +38,11 @@ extern "C" Q_DECL_EXPORT int coreInterfaceVersion()
 
 //==============================================================================
 
-CoreInterface::~CoreInterface()
-{
-}
+CoreInterface::~CoreInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

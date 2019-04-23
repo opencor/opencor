@@ -45,9 +45,10 @@ class PluginManager;
 
 //==============================================================================
 
-class CliApplication {
+class CliApplication
+{
 public:
-    explicit CliApplication(int &pArgC, char **pArgV);
+    explicit CliApplication(int &pArgC, char *pArgV[]);
     ~CliApplication();
 
     bool run(int &pRes);
@@ -78,7 +79,7 @@ private:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
