@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "qscintillasupportglobal.h"
+#include "qscintillawidgetglobal.h"
 
 //==============================================================================
 
@@ -51,11 +51,11 @@ class QWheelEvent;
 //==============================================================================
 
 namespace OpenCOR {
-namespace QScintillaSupport {
+namespace QScintillaWidget {
 
 //==============================================================================
 
-class QSCINTILLASUPPORT_EXPORT QScintillaWidget : public QsciScintilla
+class QSCINTILLAWIDGET_EXPORT QScintillaWidget : public QsciScintilla
 {
     Q_OBJECT
 
@@ -161,7 +161,7 @@ private slots:
 
 //==============================================================================
 
-} // namespace QScintillaSupport
+} // namespace QScintillaWidget
 } // namespace OpenCOR
 
 //==============================================================================

@@ -906,7 +906,6 @@ set(PLUGINS
     support/CellMLSupport
     support/COMBINESupport
     support/PMRSupport
-    support/QScintillaSupport
     support/SEDMLSupport
     support/SimulationSupport
     support/StandardSupport
@@ -929,6 +928,7 @@ set(PLUGINS
     widget/EditorWidget
     widget/GraphPanelWidget
     widget/MathMLViewerWidget
+    widget/QScintillaWidget
     widget/WebViewerWidget
 )
 
