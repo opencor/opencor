@@ -775,7 +775,7 @@ QString PmrWorkspacesWindowSynchronizeDialog::diffHtml(DifferencesData &pDiffere
                                  text.contains('\n')?
                                      text.endsWith('\n')?
                                          QString(R"(<span class="add">%1</span>)""\n").arg(text.remove(Separator)):
-                                         QString(R"(<span class="add">HELLO%1</span>)").arg(text.replace(Separator, QString("</span>\n")+R"(<span class="add">)")):
+                                         QString(R"(<span class="add">%1</span>)").arg(text.replace(Separator, QString("</span>\n")+R"(<span class="add">)")):
                                      QString(R"(<span class="add">%1</span>)").arg(text);
 
             break;
