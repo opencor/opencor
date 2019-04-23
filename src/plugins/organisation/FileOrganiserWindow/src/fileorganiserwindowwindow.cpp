@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "fileorganiserwindowwindow.h"
 #include "fileorganiserwindowwidget.h"
+#include "fileorganiserwindowwindow.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
@@ -65,7 +65,7 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
 
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
+    auto toolBarWidget = new Core::ToolBarWidget();
     QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
     int plusIconSize = int(0.57*folderIconSize);
@@ -213,8 +213,8 @@ void FileOrganiserWindowWindow::itemDoubleClicked(const QModelIndex &pItemIndex)
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

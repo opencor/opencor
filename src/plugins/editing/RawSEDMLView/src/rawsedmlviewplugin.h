@@ -79,8 +79,8 @@ private:
 
 //==============================================================================
 
-}   // namespace RawSEDMLView
-}   // namespace OpenCOR
+} // namespace RawSEDMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -75,7 +75,7 @@ bool GeneralPreferencesWidget::preferencesChanged() const
 {
     // Return whether our preferences have changed
 
-    return mGui->styleValue->currentText().compare(mStyle);
+    return mGui->styleValue->currentText() != mStyle;
 }
 
 //==============================================================================
@@ -104,7 +104,7 @@ void GeneralPreferencesWidget::savePreferences()
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

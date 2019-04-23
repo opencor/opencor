@@ -34,18 +34,18 @@ PLUGININFO_FUNC zlibPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.zlib.net/\">zlib</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.zlib.net/\">zlib</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://www.zlib.net/">zlib</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://www.zlib.net/">zlib</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace zlib
-}   // namespace OpenCOR
+} // namespace zlib
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

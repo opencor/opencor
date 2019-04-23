@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "i18ninterface.h"
-#include "toolbarwidget.h"
 #include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrwebservice.h"
@@ -34,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pmrworkspaceswindowwidget.h"
 #include "pmrworkspaceswindowwindow.h"
 #include "preferencesinterface.h"
+#include "toolbarwidget.h"
 
 //==============================================================================
 
@@ -61,6 +61,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     mGui(new Ui::PmrWorkspacesWindowWindow),
     mInitialized(false),
     mFirstTimeRetrievingWorkspaces(true),
+    mPmrUrl(QString()),
     mAuthenticated(false),
     mWaitingForPmrWebService(false)
 {
@@ -88,7 +89,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     static const QIcon PlusIcon = QIcon(":/oxygen/actions/list-add.png");
     static const QIcon UserIcon = QIcon(":/oxygen/apps/preferences-desktop-user-password.png");
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
+    auto toolBarWidget = new Core::ToolBarWidget();
     QIcon folderIcon = Core::standardIcon(QStyle::SP_DirClosedIcon);
     int folderIconSize = folderIcon.availableSizes().first().width();
     int plusIconSize = int(0.57*folderIconSize);
@@ -111,7 +112,7 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     toolBarWidget->addSeparator();
     toolBarWidget->addAction(mGui->actionPreferences);
 
-    QWidget *spacer = new QWidget(toolBarWidget);
+    auto spacer = new QWidget(toolBarWidget);
 
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -153,9 +154,13 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(new Core::BorderedWidget(mPmrWorkspacesWindowWidget,
                                                      true, false, false, false));
-#else
-    #error Unsupported platform
 #endif
+
+    // Initialise (update) our PMR URL
+
+    update(PreferencesInterface::preference(PMRSupport::PluginName,
+                                            PMRSupport::SettingsPreferencesPmrUrl,
+                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
 
     // Keep track of the window's visibility, so that we can request the list of
     // workspaces, if necessary
@@ -164,6 +169,9 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
             this, &PmrWorkspacesWindowWindow::retrieveWorkspaces);
 
     // Some connections to process responses from our PMR web service
+
+    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
+            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
 
     connect(mPmrWebService, &PMRSupport::PmrWebService::information,
             this, &PmrWorkspacesWindowWindow::showInformation);
@@ -195,8 +203,6 @@ PmrWorkspacesWindowWindow::PmrWorkspacesWindowWindow(QWidget *pParent) :
     // Retranslate our GUI
 
     retranslateUi();
-
-    mInitialized = true;
 }
 
 //==============================================================================
@@ -235,21 +241,9 @@ void PmrWorkspacesWindowWindow::loadSettings(QSettings &pSettings)
         mPmrWorkspacesWindowWidget->loadSettings(pSettings);
     pSettings.endGroup();
 
-    // Initialise (update) our PMR URL
-    // Note: we do it here rather than in our constructor because we need
-    //       mPmrWorkspacesWindowWidget to be fully initialised...
+    // We are fully initialised now
 
-    update(PreferencesInterface::preference(PMRSupport::PluginName,
-                                            PMRSupport::SettingsPreferencesPmrUrl,
-                                            PMRSupport::SettingsPreferencesPmrUrlDefault).toString());
-
-    // A connection to show ourselves busy when our PMR web service is
-    // Note: we do it here rather than in our constructor otherwise our main
-    //       window won't properly resize upon startup, in case we are floating
-    //       (as opposed to being docked)...
-
-    connect(mPmrWebService, &PMRSupport::PmrWebService::busy,
-            this, QOverload<bool>::of(&PmrWorkspacesWindowWindow::busy));
+    mInitialized = true;
 }
 
 //==============================================================================
@@ -297,9 +291,10 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
     //       that does (in which case the busy widget of the first instance
     //       would still have been visible)...
 
-    if (pPmrUrl.compare(mPmrUrl)) {
-        if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
+    if (pPmrUrl != mPmrUrl) {
+        if (PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces()) {
             mPmrWorkspacesWindowWidget->initialize();
+        }
 
         busy(false, true);
 
@@ -320,23 +315,30 @@ void PmrWorkspacesWindowWindow::update(const QString &pPmrUrl)
 
 void PmrWorkspacesWindowWindow::busy(bool pBusy, bool pResetCounter)
 {
-    // Show ourselves as busy or not busy anymore
+    // Show ourselves as busy or not busy anymore, but only if we are
+    // initialised
+
+    if (!mInitialized) {
+        return;
+    }
 
     static int counter = 0;
 
-    if (!pBusy && !counter)
+    if (!pBusy && (counter == 0)) {
         return;
+    }
 
-    if (pResetCounter)
+    if (pResetCounter) {
         counter = 0;
-    else
+    } else {
         counter += pBusy?1:-1;
+    }
 
     if (pBusy && (counter == 1)) {
         mGui->dockWidgetContents->setEnabled(false);
 
         mPmrWorkspacesWindowWidget->showBusyWidget();
-    } else if (!pBusy && !counter) {
+    } else if (!pBusy && (counter == 0)) {
         // Re-enable the GUI side
 
         mGui->dockWidgetContents->setEnabled(true);
@@ -364,10 +366,11 @@ void PmrWorkspacesWindowWindow::showInformation(const QString &pMessage)
     //       information become available when trying to retrieve the list of
     //       workspaces at startup...
 
-    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Information, pMessage);
-    else
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces()) {
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Message::Information, pMessage);
+    } else {
         Core::informationMessageBox(windowTitle(), pMessage);
+    }
 }
 
 //==============================================================================
@@ -380,10 +383,11 @@ void PmrWorkspacesWindowWindow::showWarning(const QString &pMessage)
     //       warning occur when trying to retrieve the list of workspaces at
     //       startup...
 
-    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Warning, pMessage);
-    else
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces()) {
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Message::Warning, pMessage);
+    } else {
         Core::warningMessageBox(windowTitle(), pMessage);
+    }
 }
 
 //==============================================================================
@@ -397,10 +401,11 @@ void PmrWorkspacesWindowWindow::showError(const QString &pMessage)
     //       error occur when trying to retrieve the list of workspaces at
     //       startup...
 
-    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces())
-        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Error, pMessage);
-    else
+    if (!PMRSupport::PmrWorkspaceManager::instance()->hasWorkspaces()) {
+        mPmrWorkspacesWindowWidget->initialize(PmrWorkspacesWindowWidget::Message::Error, pMessage);
+    } else {
         Core::criticalMessageBox(windowTitle(), pMessage);
+    }
 }
 
 //==============================================================================
@@ -442,10 +447,11 @@ void PmrWorkspacesWindowWindow::updateGui()
     // authenticated, or simply show a message asking us to authenticate
     // ourselves
 
-    if (mAuthenticated)
+    if (mAuthenticated) {
         actionReloadTriggered();
-    else if (mInitialized)
+    } else if (mInitialized) {
         mPmrWorkspacesWindowWidget->initialize();
+    }
 }
 
 //==============================================================================
@@ -508,8 +514,9 @@ void PmrWorkspacesWindowWindow::actionPmrTriggered()
 {
     // Log on/off to/ PMR
 
-    if (mWaitingForPmrWebService)
+    if (mWaitingForPmrWebService) {
         return;
+    }
 
     mWaitingForPmrWebService = true;
 
@@ -525,8 +532,8 @@ void PmrWorkspacesWindowWindow::actionPmrTriggered()
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

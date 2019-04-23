@@ -18,17 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// QScintilla support global
+// Zinc end
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#ifdef QScintillaSupport_PLUGIN
-    #define QSCINTILLASUPPORT_EXPORT Q_DECL_EXPORT
-#else
-    #define QSCINTILLASUPPORT_EXPORT Q_DECL_IMPORT
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic pop
 #endif
 
 //==============================================================================

@@ -60,7 +60,7 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
     mSimulationWidgetSizes(QIntList()),
     mContentsWidgetSizes(QIntList()),
     mCollapsibleWidgetCollapsed(QBoolList()),
-    mGraphPanelGraphsMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs),
+    mGraphPanelGraphsMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs),
     mSimulationColumnWidths(QIntList()),
     mSolversColumnWidths(QIntList()),
     mGraphPanelColumnWidths(QIntList()),
@@ -76,15 +76,15 @@ SimulationExperimentViewWidget::SimulationExperimentViewWidget(SimulationExperim
 
 //==============================================================================
 
-static const auto SettingsSizes                  = QStringLiteral("Sizes");
-static const auto SettingsContentsSizes          = QStringLiteral("ContentsSizes");
-static const auto SettingsCollapsed              = QStringLiteral("Collapsed");
-static const auto SettingsGraphPanelGraphsMode   = QStringLiteral("GraphPanelGraphsMode");
-static const auto SettingsSimulationColumnWidths = QStringLiteral("SimulationColumnWidths");
-static const auto SettingsSolversColumnWidths    = QStringLiteral("SolversColumnWidths");
-static const auto SettingsGraphPanelColumnWidths = QStringLiteral("GraphPanelColumnWidths");
-static const auto SettingsGraphsColumnWidths     = QStringLiteral("GraphsColumnWidths");
-static const auto SettingsParametersColumnWidths = QStringLiteral("ParametersColumnWidths");
+static const char *SettingsSizes                  = "Sizes";
+static const char *SettingsContentsSizes          = "ContentsSizes";
+static const char *SettingsCollapsed              = "Collapsed";
+static const char *SettingsGraphPanelGraphsMode   = "GraphPanelGraphsMode";
+static const char *SettingsSimulationColumnWidths = "SimulationColumnWidths";
+static const char *SettingsSolversColumnWidths    = "SolversColumnWidths";
+static const char *SettingsGraphPanelColumnWidths = "GraphPanelColumnWidths";
+static const char *SettingsGraphsColumnWidths     = "GraphsColumnWidths";
+static const char *SettingsParametersColumnWidths = "ParametersColumnWidths";
 
 //==============================================================================
 
@@ -107,7 +107,7 @@ void SimulationExperimentViewWidget::loadSettings(QSettings &pSettings)
 
     // Retrieve our graph panel /graphs mode
 
-    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings.value(SettingsGraphPanelGraphsMode, SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs).toInt());
+    mGraphPanelGraphsMode = SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode(pSettings.value(SettingsGraphPanelGraphsMode, int(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs)).toInt());
 
     // Retrieve the columns' width of our various property editors
 
@@ -137,7 +137,7 @@ void SimulationExperimentViewWidget::saveSettings(QSettings &pSettings) const
 
     // Keep track of our graph panel /graphs mode
 
-    pSettings.setValue(SettingsGraphPanelGraphsMode, mGraphPanelGraphsMode);
+    pSettings.setValue(SettingsGraphPanelGraphsMode, int(mGraphPanelGraphsMode));
 
     // Keep track of the columns' width of our various property editors
 
@@ -154,8 +154,9 @@ void SimulationExperimentViewWidget::retranslateUi()
 {
     // Retranslate our simulation widgets
 
-    for (auto simulationWidget : mSimulationWidgets.values())
+    for (auto simulationWidget : mSimulationWidgets.values()) {
         simulationWidget->retranslateUi();
+    }
 }
 
 //==============================================================================
@@ -166,7 +167,7 @@ void SimulationExperimentViewWidget::initialize(const QString &pFileName)
 
     mSimulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (!mSimulationWidget) {
+    if (mSimulationWidget == nullptr) {
         // No simulation widget exists for the given file, so create one
 
         mSimulationWidget = new SimulationExperimentViewSimulationWidget(mPlugin, this, pFileName, this);
@@ -246,7 +247,7 @@ void SimulationExperimentViewWidget::finalize(const QString &pFileName)
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget) {
+    if (simulationWidget != nullptr) {
         // Finalise our simulation widget
 
         simulationWidget->finalize();
@@ -259,8 +260,9 @@ void SimulationExperimentViewWidget::finalize(const QString &pFileName)
 
         // Next, we reset our memory of the simulation widget, if needed
 
-        if (simulationWidget == mSimulationWidget)
+        if (simulationWidget == mSimulationWidget) {
             mSimulationWidget = nullptr;
+        }
     }
 }
 
@@ -272,13 +274,13 @@ QIcon SimulationExperimentViewWidget::fileTabIcon(const QString &pFileName) cons
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget) {
+    if (simulationWidget != nullptr) {
         return simulationWidget->fileTabIcon();
-    } else {
-        static const QIcon NoIcon = QIcon();
-
-        return NoIcon;
     }
+
+    static const QIcon NoIcon = QIcon();
+
+    return NoIcon;
 }
 
 //==============================================================================
@@ -299,10 +301,11 @@ bool SimulationExperimentViewWidget::saveFile(const QString &pOldFileName,
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
-    if (simulationWidget)
+    if (simulationWidget != nullptr) {
         return simulationWidget->save(pNewFileName);
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -315,8 +318,9 @@ void SimulationExperimentViewWidget::fileOpened(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    for (auto simulationWidget : mSimulationWidgets.values())
+    for (auto simulationWidget : mSimulationWidgets.values()) {
         simulationWidget->updateGui(true);
+    }
 }
 
 //==============================================================================
@@ -328,8 +332,9 @@ void SimulationExperimentViewWidget::filePermissionsChanged(const QString &pFile
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget)
+    if (simulationWidget != nullptr) {
         simulationWidget->filePermissionsChanged();
+    }
 }
 
 //==============================================================================
@@ -342,7 +347,7 @@ void SimulationExperimentViewWidget::fileSaved(const QString &pFileName)
 
     SimulationExperimentViewSimulationWidget *crtSimulationWidget = simulationWidget(pFileName);
 
-    if (crtSimulationWidget && !crtSimulationWidget->isVisible()) {
+    if ((crtSimulationWidget != nullptr) && !crtSimulationWidget->isVisible()) {
         crtSimulationWidget->simulation()->reload();
 
         fileReloaded(pFileName);
@@ -358,7 +363,7 @@ void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget) {
+    if (simulationWidget != nullptr) {
         simulationWidget->fileReloaded();
 
         // Make sure that our simulation's contents' information GUI is up to
@@ -370,8 +375,9 @@ void SimulationExperimentViewWidget::fileReloaded(const QString &pFileName)
 
         // Make sure that the GUI of our simulation widgets is up to date
 
-        for (auto simulationWidget : mSimulationWidgets.values())
-            simulationWidget->updateGui(true);
+        for (auto otherSimulationWidget : mSimulationWidgets.values()) {
+            otherSimulationWidget->updateGui(true);
+        }
     }
 }
 
@@ -390,15 +396,16 @@ void SimulationExperimentViewWidget::fileRenamed(const QString &pOldFileName,
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pOldFileName);
 
-    if (simulationWidget) {
+    if (simulationWidget != nullptr) {
         mSimulationWidgets.insert(pNewFileName, simulationWidget);
         mSimulationWidgets.remove(pOldFileName);
     }
 
     // Let our simulation widgets know that a file has been renamed
 
-    for (auto simulationWidget : mSimulationWidgets.values())
-        simulationWidget->fileRenamed(pOldFileName, pNewFileName);
+    for (auto otherSimulationWidget : mSimulationWidgets.values()) {
+        otherSimulationWidget->fileRenamed(pOldFileName, pNewFileName);
+    }
 }
 
 //==============================================================================
@@ -411,8 +418,9 @@ void SimulationExperimentViewWidget::fileClosed(const QString &pFileName)
 
     // Make sure that the GUI of our simulation widgets is up to date
 
-    for (auto simulationWidget : mSimulationWidgets.values())
+    for (auto simulationWidget : mSimulationWidgets.values()) {
         simulationWidget->updateGui(true);
+    }
 }
 
 //==============================================================================
@@ -468,10 +476,11 @@ SimulationSupport::Simulation * SimulationExperimentViewWidget::simulation(const
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget)
+    if (simulationWidget != nullptr) {
         return simulationWidget->simulation();
-    else
-        return nullptr;
+    }
+
+    return nullptr;
 }
 
 //==============================================================================
@@ -482,10 +491,11 @@ CellMLSupport::CellmlFileRuntime * SimulationExperimentViewWidget::runtime(const
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (simulationWidget)
+    if (simulationWidget != nullptr) {
         return simulationWidget->simulation()->runtime();
-    else
-        return nullptr;
+    }
+
+    return nullptr;
 }
 
 //==============================================================================
@@ -516,8 +526,9 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     SimulationExperimentViewSimulationWidget *simulationWidget = mSimulationWidgets.value(pFileName);
 
-    if (!simulationWidget)
+    if (simulationWidget == nullptr) {
         return;
+    }
 
     // Make sure that our previous run, if any, is complete, if we are coming
     // here as a result of having added a new run
@@ -525,7 +536,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     int simulationRunsCount = simulation->runsCount();
 
-    if (   (pTask == SimulationExperimentViewSimulationWidget::AddRun)
+    if (   (pTask == SimulationExperimentViewSimulationWidget::Task::AddRun)
         && (simulationRunsCount > 1)) {
         quint64 previousSimulationResultsSize = simulation->results()->size(simulationRunsCount-2);
 
@@ -534,7 +545,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
                 currentSimulationWidget->updateSimulationResults(simulationWidget,
                                                                  previousSimulationResultsSize,
                                                                  simulationRunsCount-2,
-                                                                 SimulationExperimentViewSimulationWidget::None);
+                                                                 SimulationExperimentViewSimulationWidget::Task::None);
             }
         }
     }
@@ -546,7 +557,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
     quint64 simulationResultsSize = simulation->results()->size();
 
-    if (   (pTask != SimulationExperimentViewSimulationWidget::None)
+    if (   (pTask != SimulationExperimentViewSimulationWidget::Task::None)
         || (simulationResultsSize != mSimulationResultsSizes.value(pFileName))) {
         mSimulationResultsSizes.insert(pFileName, simulationResultsSize);
 
@@ -565,7 +576,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         || (simulationResultsSize != simulation->results()->size())) {
         QTimer::singleShot(0, this, std::bind(&SimulationExperimentViewWidget::checkSimulationResults,
                                               this, pFileName,
-                                              SimulationExperimentViewSimulationWidget::None));
+                                              SimulationExperimentViewSimulationWidget::Task::None));
     } else if (!simulation->isRunning() && !simulation->isPaused()) {
         // The simulation is over, so stop tracking the result's size and reset
         // the simulation progress of the given file
@@ -613,7 +624,7 @@ void SimulationExperimentViewWidget::graphPanelSettingsRequested()
 {
     // Make sure that our graph panel settings are active and visible
 
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::GraphPanel);
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::GraphPanel);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
 }
 
@@ -623,7 +634,7 @@ void SimulationExperimentViewWidget::graphsSettingsRequested()
 {
     // Make sure that our graphs settings are active and visible
 
-    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Graphs);
+    mSimulationWidget->contentsWidget()->informationWidget()->graphPanelAndGraphsWidget()->setMode(SimulationExperimentViewInformationGraphPanelAndGraphsWidget::Mode::Graphs);
     mSimulationWidget->contentsWidget()->informationWidget()->collapsibleWidget()->setCollapsed(2, false);
 }
 
@@ -642,7 +653,7 @@ void SimulationExperimentViewWidget::simulationHeaderSectionResized(int pIndex,
                                                                     int pOldSize,
                                                                     int pNewSize)
 {
-    Q_UNUSED(pOldSize);
+    Q_UNUSED(pOldSize)
 
     // Keep track of the new column width
 
@@ -655,7 +666,7 @@ void SimulationExperimentViewWidget::solversHeaderSectionResized(int pIndex,
                                                                  int pOldSize,
                                                                  int pNewSize)
 {
-    Q_UNUSED(pOldSize);
+    Q_UNUSED(pOldSize)
 
     // Keep track of the new column width
 
@@ -668,7 +679,7 @@ void SimulationExperimentViewWidget::graphPanelHeaderSectionResized(int pIndex,
                                                                     int pOldSize,
                                                                     int pNewSize)
 {
-    Q_UNUSED(pOldSize);
+    Q_UNUSED(pOldSize)
 
     // Keep track of the new column width
 
@@ -681,7 +692,7 @@ void SimulationExperimentViewWidget::graphsHeaderSectionResized(int pIndex,
                                                                 int pOldSize,
                                                                 int pNewSize)
 {
-    Q_UNUSED(pOldSize);
+    Q_UNUSED(pOldSize)
 
     // Keep track of the new column width
 
@@ -694,7 +705,7 @@ void SimulationExperimentViewWidget::parametersHeaderSectionResized(int pIndex,
                                                                     int pOldSize,
                                                                     int pNewSize)
 {
-    Q_UNUSED(pOldSize);
+    Q_UNUSED(pOldSize)
 
     // Keep track of the new column width
 
@@ -727,34 +738,41 @@ void SimulationExperimentViewWidget::updateContentsInformationGui(SimulationExpe
 
     SimulationExperimentViewInformationWidget *informationWidget = contentsWidget->informationWidget();
 
-    for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mCollapsibleWidgetCollapsed.count(); i < iMax; ++i) {
         informationWidget->collapsibleWidget()->setCollapsed(i, mCollapsibleWidgetCollapsed[i]);
+    }
 
     informationWidget->graphPanelAndGraphsWidget()->setMode(mGraphPanelGraphsMode);
 
-    for (int i = 0, iMax = mSimulationColumnWidths.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mSimulationColumnWidths.count(); i < iMax; ++i) {
         informationWidget->simulationWidget()->setColumnWidth(i, (i == iMax-1)?0:mSimulationColumnWidths[i]);
+    }
 
-    for (int i = 0, iMax = mSolversColumnWidths.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mSolversColumnWidths.count(); i < iMax; ++i) {
         informationWidget->solversWidget()->setColumnWidth(i, (i == iMax-1)?0:mSolversColumnWidths[i]);
+    }
 
-    for (int i = 0, iMax = mGraphPanelColumnWidths.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mGraphPanelColumnWidths.count(); i < iMax; ++i) {
         informationWidget->graphPanelAndGraphsWidget()->setGraphPanelColumnWidth(i, (i == iMax-1)?0:mGraphPanelColumnWidths[i]);
+    }
 
-    for (int i = 0, iMax = mGraphsColumnWidths.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mGraphsColumnWidths.count(); i < iMax; ++i) {
         informationWidget->graphPanelAndGraphsWidget()->setGraphsColumnWidth(i, (i == iMax-1)?0:mGraphsColumnWidths[i]);
+    }
 
-    for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mParametersColumnWidths.count(); i < iMax; ++i) {
         informationWidget->parametersWidget()->setColumnWidth(i, (i == iMax-1)?0:mParametersColumnWidths[i]);
+    }
 
-    for (auto section : mGraphPanelSectionsExpanded.keys())
+    for (auto section : mGraphPanelSectionsExpanded.keys()) {
         informationWidget->graphPanelAndGraphsWidget()->setGraphPanelSectionExpanded(section, mGraphPanelSectionsExpanded.value(section));
+    }
 }
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

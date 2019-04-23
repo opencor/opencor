@@ -47,8 +47,8 @@ class libSBMLPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace libSBML
-}   // namespace OpenCOR
+} // namespace libSBML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

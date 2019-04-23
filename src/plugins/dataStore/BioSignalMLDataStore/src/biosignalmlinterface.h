@@ -66,8 +66,8 @@ FileTypeInterface BIOSIGNALMLDATASTORE_EXPORT * fileTypeInterface();
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

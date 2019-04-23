@@ -58,8 +58,9 @@ void SimulationManager::manage(const QString &pFileName)
 
     QString fileName = Core::canonicalFileName(pFileName);
 
-    if (!simulation(fileName))
+    if (simulation(fileName) == nullptr) {
         mSimulations.insert(fileName, new Simulation(fileName));
+    }
 }
 
 //==============================================================================
@@ -72,7 +73,7 @@ void SimulationManager::unmanage(const QString &pFileName)
 
     Simulation *crtSimulation = simulation(pFileName);
 
-    if (crtSimulation) {
+    if (crtSimulation != nullptr) {
         delete crtSimulation;
 
         mSimulations.remove(Core::canonicalFileName(pFileName));
@@ -88,8 +89,9 @@ void SimulationManager::save(const QString &pFileName)
 
     Simulation *crtSimulation = simulation(pFileName);
 
-    if (crtSimulation)
+    if (crtSimulation != nullptr) {
         crtSimulation->save();
+    }
 }
 
 //==============================================================================
@@ -101,8 +103,9 @@ void SimulationManager::reload(const QString &pFileName)
 
     Simulation *crtSimulation = simulation(pFileName);
 
-    if (crtSimulation)
+    if (crtSimulation != nullptr) {
         crtSimulation->reload();
+    }
 }
 
 //==============================================================================
@@ -115,7 +118,7 @@ void SimulationManager::rename(const QString &pOldFileName,
 
     Simulation *crtSimulation = simulation(pOldFileName);
 
-    if (crtSimulation) {
+    if (crtSimulation != nullptr) {
         QString newFileName = Core::canonicalFileName(pNewFileName);
 
         mSimulations.insert(newFileName, crtSimulation);
@@ -136,8 +139,8 @@ Simulation * SimulationManager::simulation(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

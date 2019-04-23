@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrSupportPreferencesWidget;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -79,8 +79,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

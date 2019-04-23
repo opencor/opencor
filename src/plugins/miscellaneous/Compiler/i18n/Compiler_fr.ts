@@ -24,6 +24,10 @@
         <translation>le code n&apos;a pas pu être compilé</translation>
     </message>
     <message>
+        <source>the bitcode module could not be retrieved</source>
+        <translation>le module de code de bits n&apos;a pas pu être récupéré</translation>
+    </message>
+    <message>
         <source>the execution engine could not be created</source>
         <translation>le moteur d&apos;exécution n&apos;a pas pu être créé</translation>
     </message>

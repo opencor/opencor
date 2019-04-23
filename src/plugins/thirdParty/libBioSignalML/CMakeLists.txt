@@ -221,8 +221,6 @@ add_plugin(libBioSignalML
         ../../plugininfo.cpp
 
         src/libbiosignalmlplugin.cpp
-    HEADERS_MOC
-        src/libbiosignalmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

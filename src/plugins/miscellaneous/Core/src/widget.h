@@ -44,18 +44,18 @@ class CORE_EXPORT Widget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    enum LayoutType {
-        VerticalLayout,
-        HorizontalLayout,
-        FormLayout,
-        GridLayout,
-        StackedLayout
+    enum class Layout {
+        Vertical,
+        Horizontal,
+        Form,
+        Grid,
+        Stacked
     };
 
     explicit Widget(const QSize &pSizeHint, QWidget *pParent);
     explicit Widget(QWidget *pParent);
 
-    QLayout * createLayout(LayoutType pLayoutType = VerticalLayout);
+    QLayout * createLayout(Layout pLayoutType = Layout::Vertical);
 
 protected:
     void resizeEvent(QResizeEvent *pEvent) override;
@@ -68,8 +68,8 @@ private:
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

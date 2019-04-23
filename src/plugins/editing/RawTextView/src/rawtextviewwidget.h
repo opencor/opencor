@@ -39,7 +39,7 @@ namespace OpenCOR {
 
 namespace EditorWidget {
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -82,8 +82,8 @@ private:
 
 //==============================================================================
 
-}   // namespace RawTextView
-}   // namespace OpenCOR
+} // namespace RawTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -38,20 +38,18 @@ extern "C" Q_DECL_EXPORT int viewInterfaceVersion()
 
 //==============================================================================
 
-ViewInterface::~ViewInterface()
-{
-}
+ViewInterface::~ViewInterface() = default;
 
 //==============================================================================
 
-static const auto ViewModeUnknown    = QStringLiteral("UnknownMode");
-static const auto ViewModeEditing    = QStringLiteral("EditingMode");
-static const auto ViewModeSimulation = QStringLiteral("SimulationMode");
+static const char *ViewModeUnknown    = "UnknownMode";
+static const char *ViewModeEditing    = "EditingMode";
+static const char *ViewModeSimulation = "SimulationMode";
 #ifdef ENABLE_SAMPLE_PLUGINS
-static const auto ViewModeSample     = QStringLiteral("SampleMode");
+static const char *ViewModeSample     = "SampleMode";
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-static const auto ViewModeTest       = QStringLiteral("TestMode");
+static const char *ViewModeTest       = "TestMode";
 #endif
 
 //==============================================================================
@@ -61,18 +59,18 @@ QString ViewInterface::modeAsString(Mode pMode)
     // Return the mode corresponding to the given mode string
 
     switch (pMode) {
-    case UnknownMode:
+    case Mode::Unknown:
         return ViewModeUnknown;
-    case EditingMode:
+    case Mode::Editing:
         return ViewModeEditing;
-    case SimulationMode:
+    case Mode::Simulation:
         return ViewModeSimulation;
 #ifdef ENABLE_SAMPLE_PLUGINS
-    case SampleMode:
+    case Mode::Sample:
         return ViewModeSample;
 #endif
 #ifdef ENABLE_TEST_PLUGINS
-    case TestMode:
+    case Mode::Test:
         return ViewModeTest;
 #endif
     }
@@ -88,25 +86,32 @@ ViewInterface::Mode ViewInterface::modeFromString(const QString &pMode)
 {
     // Return the mode string corresponding to the given mode
 
-    if (!pMode.compare(ViewModeEditing))
-        return EditingMode;
-    else if (!pMode.compare(ViewModeSimulation))
-        return SimulationMode;
+    if (pMode == ViewModeEditing) {
+        return Mode::Editing;
+    }
+
+    if (pMode == ViewModeSimulation) {
+        return Mode::Simulation;
+    }
+
 #ifdef ENABLE_SAMPLE_PLUGINS
-    else if (!pMode.compare(ViewModeSample))
-        return SampleMode;
-#endif
-#ifdef ENABLE_TEST_PLUGINS
-    else if (!pMode.compare(ViewModeTest))
-        return TestMode;
+    if (pMode == ViewModeSample) {
+        return Mode::Sample;
+    }
 #endif
 
-    return UnknownMode;
+#ifdef ENABLE_TEST_PLUGINS
+    if (pMode == ViewModeTest) {
+        return Mode::Test;
+    }
+#endif
+
+    return Mode::Unknown;
 }
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

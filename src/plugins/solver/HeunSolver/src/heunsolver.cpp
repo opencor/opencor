@@ -59,7 +59,7 @@ void HeunSolver::initialize(double pVoi, int pRatesStatesCount,
     if (mProperties.contains(StepId)) {
         mStep = mProperties.value(StepId).toDouble();
     } else {
-        emit error(tr("the \"Step\" property value could not be retrieved"));
+        emit error(tr(R"(the "Step" property value could not be retrieved)"));
 
         return;
     }
@@ -116,22 +116,24 @@ void HeunSolver::solve(double &pVoi, double pVoiEnd) const
 
         // Compute Y_n+1
 
-        for (int i = 0; i < mRatesStatesCount; ++i)
+        for (int i = 0; i < mRatesStatesCount; ++i) {
             mStates[i] += realHalfStep*(mK[i]+mRates[i]);
+        }
 
         // Advance through time
 
-        if (!qFuzzyCompare(realStep, mStep))
+        if (!qFuzzyCompare(realStep, mStep)) {
             pVoi = pVoiEnd;
-        else
+        } else {
             pVoi = voiStart+(++stepNumber)*mStep;
+        }
     }
 }
 
 //==============================================================================
 
-}   // namespace HeunSolver
-}   // namespace OpenCOR
+} // namespace HeunSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

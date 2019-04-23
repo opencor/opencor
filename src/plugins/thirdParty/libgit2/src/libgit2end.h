@@ -18,37 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// QScintilla support plugin
+// libgit2 end
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace QScintillaSupport {
-
-//==============================================================================
-
-PLUGININFO_FUNC QScintillaSupportPluginInfo();
-
-//==============================================================================
-
-class QScintillaSupportPlugin : public QObject
-{
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.QScintillaSupportPlugin" FILE "qscintillasupportplugin.json")
-};
-
-//==============================================================================
-
-}   // namespace QScintillaSupport
-}   // namespace OpenCOR
+#ifdef Q_OS_MAC
+    #pragma clang diagnostic pop
+#endif
 
 //==============================================================================
 // End of file

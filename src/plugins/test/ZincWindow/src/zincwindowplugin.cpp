@@ -40,10 +40,10 @@ PLUGININFO_FUNC ZincWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to test the <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a> library."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour tester la librairie <a href=\"https://github.com/OpenCMISS/zinc\">Zinc</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to test the <a href="https://github.com/OpenCMISS/zinc">Zinc</a> library.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour tester la librairie <a href="https://github.com/OpenCMISS/zinc">Zinc</a>.)"));
 
-    return new PluginInfo(PluginInfo::Test, true, false,
+    return new PluginInfo(PluginInfo::Category::Test, true, false,
                           QStringList() << "ZincWidget",
                           descriptions);
 }
@@ -81,8 +81,8 @@ bool ZincWindowPlugin::definesPluginInterfaces()
 bool ZincWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                           QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -113,7 +113,7 @@ void ZincWindowPlugin::finalizePlugin()
 
 void ZincWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -122,7 +122,7 @@ void ZincWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void ZincWindowPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -131,7 +131,7 @@ void ZincWindowPlugin::loadSettings(QSettings &pSettings)
 
 void ZincWindowPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -140,7 +140,7 @@ void ZincWindowPlugin::saveSettings(QSettings &pSettings) const
 
 void ZincWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -176,8 +176,8 @@ QDockWidget * ZincWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace ZincWindow
-}   // namespace OpenCOR
+} // namespace ZincWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

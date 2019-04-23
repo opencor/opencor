@@ -47,8 +47,8 @@ class CompilerPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace Compiler
-}   // namespace OpenCOR
+} // namespace Compiler
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

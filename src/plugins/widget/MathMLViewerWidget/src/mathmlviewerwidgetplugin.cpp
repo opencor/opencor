@@ -34,10 +34,10 @@ PLUGININFO_FUNC MathMLViewerWidgetPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to visualise <a href=\"https://www.w3.org/Math/\">MathML</a> documents."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents <a href=\"https://www.w3.org/Math/\">MathML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to visualise <a href="https://www.w3.org/Math/">MathML</a> documents.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour visualiser des documents <a href="https://www.w3.org/Math/">MathML</a>.)"));
 
-    return new PluginInfo(PluginInfo::Widget, false, false,
+    return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           QStringList() << "Core" << "Qwt",
                           descriptions);
 }
@@ -56,8 +56,8 @@ void MathMLViewerWidgetPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace MathMLViewerWidget
-}   // namespace OpenCOR
+} // namespace MathMLViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -38,7 +38,15 @@ private slots:
     void fileTests();
     void importTests();
     void unitsTests();
-    void componentTests();
+    void componentTests01();
+    void componentTests02();
+    void componentTests03();
+    void componentTests04();
+    void componentTests05();
+    void componentTests06();
+    void componentTests07();
+    void componentTests08();
+    void componentTests09();
     void groupTests();
     void mapTests();
 };

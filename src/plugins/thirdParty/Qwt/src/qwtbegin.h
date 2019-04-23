@@ -23,8 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MML_TEST
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     #define QWT_DLL
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated"
+    #pragma clang diagnostic ignored "-Wdocumentation-unknown-command"
+    #pragma clang diagnostic ignored "-Wfloat-conversion"
+    #pragma clang diagnostic ignored "-Wfloat-equal"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 //==============================================================================

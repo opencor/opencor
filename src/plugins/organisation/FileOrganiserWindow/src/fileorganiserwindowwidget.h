@@ -39,7 +39,7 @@ namespace OpenCOR {
 
 namespace Core {
     class FileManager;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -53,6 +53,7 @@ public:
     explicit FileOrganiserWindowItem(const QIcon &pIcon,
                                      const QString &pTextOrPath,
                                      bool pFolder = false);
+    ~FileOrganiserWindowItem() override;
 
     bool isFolder() const;
 
@@ -181,8 +182,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

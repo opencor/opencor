@@ -47,8 +47,8 @@ class LLVMClangPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace LLVMClang
-}   // namespace OpenCOR
+} // namespace LLVMClang
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

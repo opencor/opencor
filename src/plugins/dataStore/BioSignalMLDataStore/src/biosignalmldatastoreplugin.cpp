@@ -36,7 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "biosignalml/data/hdf5.h"
+#include "libbiosignalmlbegin.h"
+    #include "biosignalml/data/hdf5.h"
+#include "libbiosignalmlend.h"
 
 //==============================================================================
 
@@ -52,7 +54,7 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo()
     descriptions.insert("en", QString::fromUtf8("a BioSignalML specific data store plugin."));
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à BioSignalML."));
 
-    return new PluginInfo(PluginInfo::DataStore, true, false,
+    return new PluginInfo(PluginInfo::Category::DataStore, true, false,
                           QStringList() << "DataStore" << "libBioSignalML",
                           descriptions);
 }
@@ -91,7 +93,8 @@ DataStore::DataStoreImportData * BioSignalMLDataStorePlugin::getImportData(const
     DataStore::DataStoreImportData *res = nullptr;
 
     try {
-        bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(pFileName.toStdString(), true);
+        auto recording = new bsml::HDF5::Recording(pFileName.toStdString(), true);
+
         res = new DataStore::DataStoreImportData(pFileName, pImportDataStore,
                                                  pResultsDataStore,
                                                  int(recording->get_signal_uris().size()),
@@ -119,7 +122,7 @@ DataStore::DataStoreExportData * BioSignalMLDataStorePlugin::getExportData(const
 
     BiosignalmlDataStoreDialog biosignalmlDataStoreDialog(pDataStore, pIcons, Core::mainWindow());
 
-    if (biosignalmlDataStoreDialog.exec()) {
+    if (biosignalmlDataStoreDialog.exec() != 0) {
         // Now that we have the information we need, we can ask for the name of
         // the BioSignalML file where to do the export
 
@@ -182,16 +185,14 @@ bool BioSignalMLDataStorePlugin::isFile(const QString &pFileName) const
 
     try {
         recording = new bsml::HDF5::Recording(pFileName.toStdString(), true);
+
+        recording->close();
+
+        delete recording;
     } catch (...) {
         // Something went wrong, so clearly not a BioSignalML file
 
         return false;
-    }
-
-    if (recording) {
-        recording->close();
-
-        delete recording;
     }
 
     return true;
@@ -230,7 +231,7 @@ QStringList BioSignalMLDataStorePlugin::fileTypeDefaultViews() const
 {
     // Return the default views to use for the type of file we support
 
-    return QStringList();
+    return {};
 }
 
 //==============================================================================
@@ -247,8 +248,8 @@ void BioSignalMLDataStorePlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

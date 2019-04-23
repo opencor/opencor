@@ -36,7 +36,7 @@ namespace OpenCOR {
 
 namespace GraphPanelWidget {
     class GraphPanelsWidget;
-}   // namespace GraphPanelWidget
+} // namespace GraphPanelWidget
 
 //==============================================================================
 
@@ -77,8 +77,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

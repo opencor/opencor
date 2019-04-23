@@ -48,7 +48,7 @@ BorderedWidget::BorderedWidget(QWidget *pWidget, bool pTop, bool pLeft,
 
     // Create a grid layout for ourselves
 
-    QGridLayout *gridLayout = new QGridLayout(this);
+    auto gridLayout = new QGridLayout(this);
 
     gridLayout->setContentsMargins(QMargins());
     gridLayout->setSpacing(0);
@@ -127,8 +127,8 @@ void BorderedWidget::setRightBorderVisible(bool pVisible) const
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -18,34 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// QScintilla support plugin
+// QScintilla widget plugin
 //==============================================================================
 
-#include "qscintillasupportplugin.h"
+#include "qscintillawidgetplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace QScintillaSupport {
+namespace QScintillaWidget {
 
 //==============================================================================
 
-PLUGININFO_FUNC QScintillaSupportPluginInfo()
+PLUGININFO_FUNC QScintillaWidgetPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           QStringList() << "Core" << "QScintilla",
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace QScintillaSupport
-}   // namespace OpenCOR
+} // namespace QScintillaWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

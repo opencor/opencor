@@ -44,7 +44,7 @@ namespace CellMLTextView {
 class CellmlTextViewParserMessage
 {
 public:
-    enum Type {
+    enum class Type {
         Error,
         Warning
     };
@@ -87,7 +87,7 @@ class CellmlTextViewParser : public QObject
     Q_OBJECT
 
 public:
-    enum StatementType {
+    enum class Statement {
         Unknown,
         Normal,
         PiecewiseSel,
@@ -109,7 +109,7 @@ public:
 
     CellmlTextViewParserMessages messages() const;
 
-    StatementType statementType() const;
+    Statement statement() const;
 
 private:
     CellmlTextViewScanner mScanner;
@@ -123,7 +123,7 @@ private:
 
     QMap<QString, QString> mNamespaces;
 
-    StatementType mStatementType;
+    Statement mStatement;
 
     void initialize(const QString &pCellmlText);
 
@@ -137,19 +137,19 @@ private:
     QDomElement newDerivativeElement(const QString &pF, const QString &pX,
                                      const QString &pOrder);
     QDomElement newNumberElement(const QString &pNumber, const QString &pUnit);
-    QDomElement newMathematicalConstantElement(CellmlTextViewScanner::TokenType pTokenType);
-    QDomElement newMathematicalFunctionElement(CellmlTextViewScanner::TokenType pTokenType,
+    QDomElement newMathematicalConstantElement(CellmlTextViewScanner::Token pTokenType);
+    QDomElement newMathematicalFunctionElement(CellmlTextViewScanner::Token pTokenType,
                                                const QList<QDomElement> &pArgumentElements);
 
-    CellmlTextViewScanner::TokenTypes rangeOfTokenTypes(CellmlTextViewScanner::TokenType pFromTokenType,
-                                                        CellmlTextViewScanner::TokenType pToTokenType);
+    CellmlTextViewScanner::Tokens rangeOfTokens(CellmlTextViewScanner::Token pFromTokenType,
+                                                CellmlTextViewScanner::Token pToTokenType);
 
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
-                   const CellmlTextViewScanner::TokenTypes &pTokenTypes);
+                   const CellmlTextViewScanner::Tokens &pTokens);
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
-                   CellmlTextViewScanner::TokenType pTokenType);
+                   CellmlTextViewScanner::Token pTokenType);
     bool isTokenType(QDomNode &pDomNode,
-                     CellmlTextViewScanner::TokenType pTokenType);
+                     CellmlTextViewScanner::Token pTokenType);
 
     bool andToken(QDomNode &pDomNode);
     bool asToken(QDomNode &pDomNode);
@@ -195,7 +195,7 @@ private:
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
 
-    QString mathmlName(CellmlTextViewScanner::TokenType pTokenType) const;
+    QString mathmlName(CellmlTextViewScanner::Token pTokenType) const;
 
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
     QDomElement parseNumber(QDomNode &pDomNode);
@@ -205,7 +205,7 @@ private:
     QDomElement parseParenthesizedMathematicalExpression(QDomNode &pDomNode);
 
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,
-                                                   const CellmlTextViewScanner::TokenTypes &pTokenTypes,
+                                                   const CellmlTextViewScanner::Tokens &pTokens,
                                                    ParseNormalMathematicalExpressionFunction pFunction);
     QDomElement parseNormalMathematicalExpression(QDomNode &pDomNode);
     QDomElement parseNormalMathematicalExpression2(QDomNode &pDomNode);
@@ -223,8 +223,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

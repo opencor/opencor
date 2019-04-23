@@ -1,0 +1,40 @@
+# Note: the full list of Clang-Tidy checks can be found at
+#       https://clang.llvm.org/extra/clang-tidy/checks/list.html...
+
+---
+Checks: >-
+  -*,
+  bugprone-*,
+  cert-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-const-cast,
+  -cppcoreguidelines-pro-type-reinterpret-cast,
+  -cppcoreguidelines-pro-type-static-cast-downcast,
+  -cppcoreguidelines-pro-type-vararg,
+  fuchsia-*,
+  -fuchsia-default-arguments,
+  -fuchsia-overloaded-operator,
+  google-*,
+  -google-default-arguments,
+  hicpp-*,
+  -hicpp-no-array-decay,
+  -hicpp-signed-bitwise,
+  -hicpp-vararg,
+  llvm-*,
+  -llvm-include-order,
+  misc-*,
+  modernize-*,
+  -modernize-pass-by-value,
+  performance-*,
+  readability-*,
+  -readability-isolate-declaration,
+  -readability-magic-numbers
+WarningsAsErrors: >-
+  *
+...

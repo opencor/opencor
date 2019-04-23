@@ -25,7 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "o2/o1.h"
+#include <QtGlobal>
+
+//==============================================================================
+
+#include "oauthbegin.h"
+    #include "o2/o1.h"
+#include "oauthend.h"
 
 //==============================================================================
 
@@ -34,7 +40,7 @@ namespace PMRSupport {
 
 //==============================================================================
 
-class PmrAuthentication: public O1
+class PmrAuthentication : public O1
 {
     Q_OBJECT
 
@@ -44,8 +50,8 @@ public:
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

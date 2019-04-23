@@ -43,14 +43,14 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-static const auto SettingsCategory        = QStringLiteral("Category");
-static const auto SettingsPropertiesWidth = QStringLiteral("PropertiesWidth");
+static const char *SettingsCategory        = "Category";
+static const char *SettingsPropertiesWidth = "PropertiesWidth";
 
 //==============================================================================
 
-static const auto SettingsCategoryDefault    = QStringLiteral("Graph Panel");
-static const auto SettingsCategoryGraphPanel = SettingsCategoryDefault;
-static const auto SettingsCategoryGraph      = QStringLiteral("Graph");
+static const char *SettingsCategoryDefault    = "Graph Panel";
+static const char *SettingsCategoryGraphPanel = SettingsCategoryDefault;
+static const char *SettingsCategoryGraph      = "Graph";
 
 //==============================================================================
 
@@ -73,9 +73,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     QString category = mSettings.value(SettingsCategory, SettingsCategoryDefault).toString();
 
-    mCategoryTabs->setCurrentIndex(!category.compare(SettingsCategoryGraphPanel)?
-                                       0:
-                                       1);
+    mCategoryTabs->setCurrentIndex(int(category != SettingsCategoryGraphPanel));
 
     mGui->layout->addWidget(mCategoryTabs);
 
@@ -138,8 +136,8 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     // Add our property editors (with a border) to our layout
 
-    Core::BorderedWidget *graphPanelBorderedWidget = new Core::BorderedWidget(mGraphPanelProperties, true, true, true, true);
-    Core::BorderedWidget *graphBorderedWidget = new Core::BorderedWidget(mGraphProperties, true, true, true, true);
+    auto graphPanelBorderedWidget = new Core::BorderedWidget(mGraphPanelProperties, true, true, true, true);
+    auto graphBorderedWidget = new Core::BorderedWidget(mGraphProperties, true, true, true, true);
 
     mPropertyEditors.insert(graphPanelIndex, graphPanelBorderedWidget);
     mPropertyEditors.insert(graphIndex, graphBorderedWidget);
@@ -264,8 +262,9 @@ void SimulationExperimentViewPreferencesWidget::updateGui()
 {
     // Update our GUI by showing the right property editor
 
-    for (int i = 0, iMax = mCategoryTabs->count(); i < iMax; ++i)
+    for (int i = 0, iMax = mCategoryTabs->count(); i < iMax; ++i) {
         mPropertyEditors.value(i)->setVisible(i == mCategoryTabs->currentIndex());
+    }
 }
 
 //==============================================================================
@@ -274,7 +273,7 @@ void SimulationExperimentViewPreferencesWidget::headerSectionResized(int pIndex,
                                                                      int pOldSize,
                                                                      int pNewSize)
 {
-    Q_UNUSED(pOldSize);
+    Q_UNUSED(pOldSize)
 
     // Update the column width of our property editors
 
@@ -294,8 +293,8 @@ void SimulationExperimentViewPreferencesWidget::headerSectionResized(int pIndex,
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

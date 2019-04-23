@@ -67,8 +67,8 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
     // Note: the spacers is a little trick to improve the rendering of our tool
     //       bar widget...
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
-    QWidget *spacer = new QWidget(toolBarWidget);
+    auto toolBarWidget = new Core::ToolBarWidget();
+    auto spacer = new QWidget(toolBarWidget);
 
     spacer->setMinimumSize(0, 0);
     spacer->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -124,8 +124,6 @@ PmrWindowWindow::PmrWindowWindow(QWidget *pParent) :
 #elif defined(Q_OS_MAC)
     mGui->layout->addWidget(new Core::BorderedWidget(mPmrWindowWidget,
                                                      true, false, false, false));
-#else
-    #error Unsupported platform
 #endif
 
     // Keep track of the window's visibility, so that we can request the list of
@@ -230,9 +228,10 @@ void PmrWindowWindow::update(const QString &pPmrUrl)
     //       that does (in which case the busy widget of the first instance
     //       would still have been visible)...
 
-    if (pPmrUrl.compare(mPmrUrl)) {
-        if (mPmrWindowWidget->hasExposures())
+    if (pPmrUrl != mPmrUrl) {
+        if (mPmrWindowWidget->hasExposures()) {
             mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), QString());
+        }
 
         busy(false, true);
 
@@ -266,19 +265,21 @@ void PmrWindowWindow::busy(bool pBusy, bool pResetCounter)
 
     static int counter = 0;
 
-    if (!pBusy && !counter)
+    if (!pBusy && (counter == 0)) {
         return;
+    }
 
-    if (pResetCounter)
+    if (pResetCounter) {
         counter = 0;
-    else
+    } else {
         counter += pBusy?1:-1;
+    }
 
     if (pBusy && (counter == 1)) {
         mGui->dockWidgetContents->setEnabled(false);
 
         mPmrWindowWidget->showBusyWidget();
-    } else if (!pBusy && !counter) {
+    } else if (!pBusy && (counter == 0)) {
         // Re-enable the GUI side and give, within the current window, the focus
         // to mFilterValue, but only if the current window already has the
         // focus, or to mPmrWindowWidget if it was previously double clicked
@@ -316,8 +317,9 @@ void PmrWindowWindow::showInformation(const QString &pMessage)
     //       information become available when trying to retrieve the list of
     //       exposures at startup...
 
-    if (mPmrWindowWidget->hasExposures())
+    if (mPmrWindowWidget->hasExposures()) {
         Core::informationMessageBox(windowTitle(), pMessage);
+    }
 }
 
 //==============================================================================
@@ -330,8 +332,9 @@ void PmrWindowWindow::showWarning(const QString &pMessage)
     //       warning occur when trying to retrieve the list of exposures at
     //       startup...
 
-    if (mPmrWindowWidget->hasExposures())
+    if (mPmrWindowWidget->hasExposures()) {
         Core::warningMessageBox(windowTitle(), pMessage);
+    }
 }
 
 //==============================================================================
@@ -345,10 +348,11 @@ void PmrWindowWindow::showError(const QString &pMessage)
     //       error occur when trying to retrieve the list of exposures at
     //       startup...
 
-    if (mPmrWindowWidget->hasExposures())
+    if (mPmrWindowWidget->hasExposures()) {
         Core::criticalMessageBox(windowTitle(), pMessage);
-    else
+    } else {
         mPmrWindowWidget->initialize(PMRSupport::PmrExposures(), QString(), pMessage);
+    }
 }
 
 //==============================================================================
@@ -406,8 +410,8 @@ void PmrWindowWindow::retrieveExposures(bool pVisible)
 
 //==============================================================================
 
-}   // namespace PMRWindow
-}   // namespace OpenCOR
+} // namespace PMRWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

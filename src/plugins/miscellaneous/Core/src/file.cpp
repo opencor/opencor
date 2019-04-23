@@ -43,7 +43,9 @@ static int gNewIndex = 0;
 
 File::File(const QString &pFileName, Type pType, const QString &pUrl) :
     mFileName(canonicalFileName(pFileName)),
-    mUrl(pUrl)
+    mUrl(pUrl),
+    mModified(false),
+    mDependenciesModified(false)
 {
     // Initialise ourselves by 'resetting' ourselves
 
@@ -51,8 +53,9 @@ File::File(const QString &pFileName, Type pType, const QString &pUrl) :
 
     // Set our index, in case we are a new file
 
-    if (pType == New)
+    if (pType == Type::New) {
         mNewIndex = ++gNewIndex;
+    }
 }
 
 //==============================================================================
@@ -63,8 +66,9 @@ File::~File()
     // remote file (in which case our corresponding phsyical file was always
     // supposed to be only a temporary file)
 
-    if (isNew() || isRemote())
+    if (isNew() || isRemote()) {
         QFile::remove(mFileName);
+    }
 }
 
 //==============================================================================
@@ -82,7 +86,7 @@ bool File::setFileName(const QString &pFileName)
 {
     // Set our file name
 
-    if (pFileName.compare(mFileName)) {
+    if (pFileName != mFileName) {
         mFileName = pFileName;
 
         mSha1 = sha1();
@@ -92,9 +96,9 @@ bool File::setFileName(const QString &pFileName)
         //       safe side...
 
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -103,16 +107,20 @@ File::Status File::check()
 {
     // Always consider ourselves unchanged if we are a remote file
 
-    if (!mUrl.isEmpty())
-        return Unchanged;
+    if (!mUrl.isEmpty()) {
+        return Status::Unchanged;
+    }
 
     // Check whether the file and/or one or several of its dependencies has been
     // modified
 
-    if (mModified)
-        return mDependenciesModified?AllModified:Modified;
-    else if (mDependenciesModified)
-        return DependenciesModified;
+    if (mModified) {
+        return mDependenciesModified?Status::AllModified:Status::Modified;
+    }
+
+    if (mDependenciesModified) {
+        return Status::DependenciesModified;
+    }
 
     // Retrieve our 'new' SHA-1 value and that of our dependencies (if any), and
     // check whether they are different from the one(s) we currently have
@@ -120,24 +128,25 @@ File::Status File::check()
     QString newSha1 = sha1();
     QStringList newDependenciesSha1 = QStringList();
 
-    for (const auto &dependency : mDependencies)
+    for (const auto &dependency : mDependencies) {
         newDependenciesSha1 << sha1(dependency);
+    }
 
     if (newSha1.isEmpty()) {
         // Our SHA-1 value is now empty, which means that either we have been
         // deleted or that we are unreadable (which, in effect, means that we
         // have been changed)
 
-        return QFile::exists(mFileName)?Changed:Deleted;
-    } else {
-        // Our SHA-1 value and/or that of one or several of our dependencies is
-        // different from our stored value, which means that we and/or one or
-        // several of our dependencies has changed
-
-        return newSha1.compare(mSha1)?
-                   (newDependenciesSha1 != mDependenciesSha1)?AllChanged:Changed:
-                   (newDependenciesSha1 != mDependenciesSha1)?DependenciesChanged:Unchanged;
+        return QFile::exists(mFileName)?Status::Changed:Status::Deleted;
     }
+
+    // Our SHA-1 value and/or that of one or several of our dependencies is
+    // different from our stored value, which means that we and/or one or
+    // several of our dependencies has changed
+
+    return (newSha1 != mSha1)?
+               (newDependenciesSha1 != mDependenciesSha1)?Status::AllChanged:Status::Changed:
+               (newDependenciesSha1 != mDependenciesSha1)?Status::DependenciesChanged:Status::Unchanged;
 }
 
 //==============================================================================
@@ -185,7 +194,7 @@ bool File::isDifferent() const
     // Return whether we are different from our corresponding physical version
     // by comparing our respective SHA-1 values
 
-    return mSha1.compare(sha1());
+    return mSha1 != sha1();
 }
 
 //==============================================================================
@@ -199,8 +208,8 @@ bool File::isDifferent(const QString &pFileContents) const
     //       our internal SHA-1 value...
 
     return mModified?
-               sha1().compare(Core::sha1(pFileContents)):
-               mSha1.compare(Core::sha1(pFileContents));
+               sha1() != Core::sha1(pFileContents):
+               mSha1 != Core::sha1(pFileContents);
 }
 
 //==============================================================================
@@ -209,7 +218,7 @@ bool File::isNew() const
 {
     // Return whether we are new
 
-    return mNewIndex;
+    return mNewIndex != 0;
 }
 
 //==============================================================================
@@ -291,13 +300,14 @@ bool File::setModified(bool pModified)
         //       view will update the modified state of the file, but the SHA-1
         //       value will be out-of-date, hence we need to update it...
 
-        if (!pModified)
+        if (!pModified) {
             mSha1 = sha1();
+        }
 
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -342,25 +352,30 @@ File::Status File::setLocked(bool pLocked)
 {
     // Set our locked status, but only if we are readable
 
-    if (pLocked == isLocked())
-        return LockedNotNeeded;
+    if (pLocked == isLocked()) {
+        return Status::LockedNotNeeded;
+    }
 
     QFileDevice::Permissions newPermissions = QFile::permissions(mFileName);
 
     if (pLocked) {
-        if (newPermissions & QFileDevice::WriteOwner)
+        if ((newPermissions & QFileDevice::WriteOwner) != 0) {
             newPermissions ^= QFileDevice::WriteOwner;
+        }
 
 #ifdef Q_OS_WIN
-        if (newPermissions & QFileDevice::WriteGroup)
+        if ((newPermissions & QFileDevice::WriteGroup) != 0) {
             newPermissions ^= QFileDevice::WriteGroup;
+        }
 
-        if (newPermissions & QFileDevice::WriteOther)
+        if ((newPermissions & QFileDevice::WriteOther) != 0) {
             newPermissions ^= QFileDevice::WriteOther;
+        }
 #endif
 
-        if (newPermissions & QFileDevice::WriteUser)
+        if ((newPermissions & QFileDevice::WriteUser) != 0) {
             newPermissions ^= QFileDevice::WriteUser;
+        }
     } else {
         newPermissions |= QFileDevice::WriteOwner;
 #ifdef Q_OS_WIN
@@ -370,10 +385,11 @@ File::Status File::setLocked(bool pLocked)
         newPermissions |= QFileDevice::WriteUser;
     }
 
-    if (QFile::setPermissions(mFileName, newPermissions))
-        return LockedSet;
-    else
-        return LockedNotSet;
+    if (QFile::setPermissions(mFileName, newPermissions)) {
+        return Status::LockedSet;
+    }
+
+    return Status::LockedNotSet;
 }
 
 //==============================================================================
@@ -396,13 +412,14 @@ bool File::setDependencies(const QStringList &pDependencies)
 
         mDependenciesSha1.clear();
 
-        for (const auto &dependency : pDependencies)
+        for (const auto &dependency : pDependencies) {
             mDependenciesSha1 << sha1(dependency);
+        }
 
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
@@ -415,15 +432,15 @@ bool File::setDependenciesModified(bool pDependenciesModified)
         mDependenciesModified = pDependenciesModified;
 
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

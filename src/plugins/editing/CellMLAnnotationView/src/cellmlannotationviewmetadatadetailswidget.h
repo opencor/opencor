@@ -39,13 +39,13 @@ namespace Core {
     class BorderedWidget;
     class SplitterWidget;
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
 namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewerWidget
+} // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -107,7 +107,6 @@ private:
 signals:
     void splitterMoved(const QIntList &pSizes);
 
-
     void qualifierDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
                                    const QString &pQualifier);
     void resourceDetailsRequested(WebViewerWidget::WebViewerWidget *pWebViewer,
@@ -133,8 +132,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

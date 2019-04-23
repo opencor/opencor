@@ -84,8 +84,9 @@ void GraphPanelsWidget::retranslateUi()
 
     // Retranslate all our graph panels
 
-    for (auto graphPanel : mGraphPanels)
+    for (auto graphPanel : mGraphPanels) {
         graphPanel->retranslateUi();
+    }
 }
 
 //==============================================================================
@@ -94,8 +95,9 @@ void GraphPanelsWidget::initialize(const GraphPanelWidgetProperties &pGraphPanel
 {
     // Create a default graph panel, if none exists
 
-    if (mGraphPanels.isEmpty())
+    if (mGraphPanels.isEmpty()) {
         addGraphPanel(pGraphPanelWidgetProperties);
+    }
 }
 
 //==============================================================================
@@ -123,10 +125,7 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
 {
     // Create a new graph panel, add it to ourselves and keep track of it
 
-    GraphPanelWidget *res = new GraphPanelWidget(mGraphPanels,
-                                                 mSynchronizeXAxisAction,
-                                                 mSynchronizeYAxisAction,
-                                                 this);
+    auto res = new GraphPanelWidget(mGraphPanels, mSynchronizeXAxisAction, mSynchronizeYAxisAction, this);
 
     mGraphPanels << res;
 
@@ -157,8 +156,9 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
         int newTotalHeight = oldTotalHeight-handleWidth();
         double scalingFactor = double(mGraphPanels.count()-1)/mGraphPanels.count()*newTotalHeight/oldTotalHeight;
 
-        for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i)
+        for (int i = 0, iMax = oldSizes.count()-1; i < iMax; ++i) {
             newSizes << qRound(scalingFactor*oldSizes[i]);
+        }
 
         setSizes(newSizes << newTotalHeight-std::accumulate(newSizes.begin(), newSizes.end(), 0));
     }
@@ -207,8 +207,9 @@ GraphPanelWidget * GraphPanelsWidget::addGraphPanel(const GraphPanelWidgetProper
 
 bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 {
-    if (!pGraphPanel)
+    if (pGraphPanel == nullptr) {
         return false;
+    }
 
     // Retrieve the index of the given graph panel
 
@@ -229,11 +230,13 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
 
     mGraphPanels.removeOne(pGraphPanel);
 
-    if (mUseInternalSizes)
+    if (mUseInternalSizes) {
         mInternalSizes.removeLast();
+    }
 
-    if (mGraphPanels.count() == 1)
+    if (mGraphPanels.count() == 1) {
         mUseInternalSizes = true;
+    }
 
     // Now, we can delete our graph panel
 
@@ -255,8 +258,9 @@ bool GraphPanelsWidget::removeGraphPanel(GraphPanelWidget *pGraphPanel)
     // Ask our active graph panel's plot to align itself against its neighbours,
     // if any
 
-    if (!mGraphPanels.isEmpty())
+    if (!mGraphPanels.isEmpty()) {
         mActiveGraphPanel->plot()->updateGui();
+    }
 
     return true;
 }
@@ -278,9 +282,9 @@ bool GraphPanelsWidget::removeCurrentGraphPanel(const GraphPanelWidgetProperties
         setUpdatesEnabled(true);
 
         return res;
-    } else {
-        return removeGraphPanel(mActiveGraphPanel);
     }
+
+    return removeGraphPanel(mActiveGraphPanel);
 }
 
 //==============================================================================
@@ -293,8 +297,9 @@ void GraphPanelsWidget::removeAllGraphPanels(const GraphPanelWidgetProperties &p
     setUpdatesEnabled(false);
         addGraphPanel(pGraphPanelWidgetProperties);
 
-        while (mGraphPanels.count() > 1)
+        while (mGraphPanels.count() > 1) {
             removeGraphPanel(mGraphPanels.first());
+        }
     setUpdatesEnabled(true);
 }
 
@@ -304,8 +309,9 @@ void GraphPanelsWidget::setActiveGraphPanel(GraphPanelWidget *pGraphPanel)
 {
     // Make sure that we own the given graph panel
 
-    if (!mGraphPanels.contains(pGraphPanel))
+    if (!mGraphPanels.contains(pGraphPanel)) {
         return;
+    }
 
     // Make the given graph panel the active one
 
@@ -328,8 +334,9 @@ void GraphPanelsWidget::setSizes(const QIntList &pSizes)
 {
     // Make sure that we have the correct number of sizes
 
-    if (pSizes.count() != count())
+    if (pSizes.count() != count()) {
         return;
+    }
 
     // Set our sizes as internal and/or default sizes, depending on whether the
     // given sizes consist of ones
@@ -342,8 +349,9 @@ void GraphPanelsWidget::setSizes(const QIntList &pSizes)
         }
     }
 
-    if (mUseInternalSizes)
+    if (mUseInternalSizes) {
         mInternalSizes = pSizes;
+    }
 
     QSplitter::setSizes(pSizes);
 }
@@ -415,8 +423,8 @@ void GraphPanelsWidget::synchronizeYAxis()
 
 //==============================================================================
 
-}   // namespace GraphPanelWidget
-}   // namespace OpenCOR
+} // namespace GraphPanelWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

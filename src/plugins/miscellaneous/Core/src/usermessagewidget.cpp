@@ -131,9 +131,9 @@ void UserMessageWidget::updateGui()
                                        "%3"
                                        "    </tbody>\n"
                                        "</table>\n";
-        static const QString Icon = "            <td>\n"
-                                    "                <img src=\"%1\">\n"
-                                    "            </td>\n";
+        static const QString Icon =  "            <td>\n"
+                                    R"(                <img src="%1">)""\n"
+                                     "            </td>\n";
         static const QString ExtraMessage = "        <tr valign=middle>\n"
                                             "%1"
                                             "            <td align=center>\n"
@@ -174,9 +174,9 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
 {
     // Set our message, if needed
 
-    if (   pIcon.compare(mIcon)
-        || pMessage.compare(mMessage)
-        || pExtraMessage.compare(mExtraMessage)) {
+    if (   (pIcon != mIcon)
+        || (pMessage != mMessage)
+        || (pExtraMessage != mExtraMessage)) {
         // Keep track of the new values for our icon, message and extra message
 
         mIcon = pIcon;
@@ -210,8 +210,8 @@ void UserMessageWidget::resetMessage()
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

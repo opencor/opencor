@@ -44,8 +44,6 @@ namespace OpenCOR {
 #elif defined(Q_OS_MAC)
     static const auto PluginPrefix    = QStringLiteral("lib");
     static const auto PluginExtension = QStringLiteral(".dylib");
-#else
-    #error Unsupported platform
 #endif
 
 //==============================================================================
@@ -68,7 +66,7 @@ class Plugin : public QObject
     Q_OBJECT
 
 public:
-    enum Status {
+    enum class Status {
         NotWanted,
         NotNeeded,
         Loaded,
@@ -127,7 +125,7 @@ typedef QList<Plugin *> Plugins;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -50,13 +50,13 @@ namespace OpenCOR {
 
 namespace Core {
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
 namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewerWidget
+} // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -69,7 +69,8 @@ class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsItem {
+class CellmlAnnotationViewMetadataEditDetailsItem
+{
 public:
     explicit CellmlAnnotationViewMetadataEditDetailsItem(const QString &pName = QString(),
                                                          const QString &pResource = QString(),
@@ -109,7 +110,7 @@ public:
     void filePermissionsChanged();
 
 private:
-    enum InformationType {
+    enum class InformationType {
         None,
         Qualifier,
         Resource,
@@ -136,7 +137,7 @@ private:
 
     bool mLookUpTerm;
     QString mErrorMessage;
-    bool mInternetConnectionAvailable;
+    bool mHasInternetConnection;
 
     Core::Widget *mOutput;
     Core::UserMessageWidget *mOutputMessage;
@@ -170,17 +171,17 @@ private:
 
     void upudateOutputMessage(bool pLookUpTerm,
                               const QString &pErrorMessage,
-                              bool pInternetConnectionAvailable,
+                              bool pHasInternetConnection,
                               bool *pShowBusyWidget = nullptr);
     void updateOutputHeaders();
 
     void updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
                         bool pLookUpTerm,
                         const QString &pErrorMessage = QString(),
-                        bool pInternetConnectionAvailable = true);
+                        bool pHasInternetConnection = true);
 
     void genericLookUp(const QString &pItemInformation = QString(),
-                       InformationType pInformationType = None);
+                       InformationType pInformationType = InformationType::None);
 
     bool isDirectTerm(const QString &pTerm) const;
 
@@ -221,8 +222,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

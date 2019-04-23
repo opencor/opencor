@@ -3,16 +3,16 @@ project(libSEDMLPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME libSEDML)
-set(PACKAGE_VERSION 0.4.3)
+set(PACKAGE_VERSION 0.4.4)
 
 # Version of our package's libraries
 
 set(MAJOR_LIBRARY_VERSION 0)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.4.3)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.4.4)
 
 # Git tag for our library
 
-set(GIT_TAG v0.4.3)
+set(GIT_TAG 0.4.4)
 
 # Package repository
 
@@ -63,31 +63,31 @@ if(USE_PREBUILT_LIBSEDML_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} ff370cd60079d0cbb1d70151ba1a53980c12ef39
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} aa58e6f1c4599ee30fcf77f8767082094f01aeb7
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 26468ec5c1fd9d7016360454b5859329dabbc193
-                                              0941d5b8c439045de3e52065fcec355737286358)
+                                  SHA1_VALUES f63f7f2d03ed05561b7316ce3863678f26ae9eb9
+                                              fa9de78adbf4a9a74ed871d150f65477f6138ebe)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 9af70876cda63372a50b5f50ad92573e1db7ba3c
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} c2558bd77ed366ca6109bcddb9e22dc2af72ecf4
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES baf4cf556f5bc84a2a192040966a0f411d9b8ff1
-                                              fa8d33829360b5139f4c882950722111691eb0cb)
+                                  SHA1_VALUES 72654f38292667fc2e9450fca544c02bcd666415
+                                              fa9de78adbf4a9a74ed871d150f65477f6138ebe)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 37e2dd9b120818ff7376fde824115318cc149a66
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1f8e85082d57ba2820373d7652c53ac16d362e00
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES d6690e7ac4fd4defd3ad32774e611cdb1b5bd09a)
+                              SHA1_VALUES cbac855943b834817a33c0f619afb9379098e777)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} da409f582fc3c3390c796ec6e54483f8c018fd41
+                              ${RELATIVE_PROJECT_SOURCE_DIR} e7eee27dd9797404650e9fa7efd060db1ca81c0f
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 62397d3f1b0fdc1beaa45ef18a07a8bd1bfcfdba)
+                              SHA1_VALUES 81fd13a50eab84d6acaf1562bb515aa055638a5d)
     endif()
 else()
     # Build libSEDML as an external project
@@ -199,8 +199,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/libsedmlplugin.cpp
-    HEADERS_MOC
-        src/libsedmlplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

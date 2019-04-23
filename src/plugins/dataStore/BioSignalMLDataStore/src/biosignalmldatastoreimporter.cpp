@@ -25,7 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "biosignalml/data/hdf5.h"
+#include "libbiosignalmlbegin.h"
+    #include "biosignalml/data/hdf5.h"
+#include "libbiosignalmlend.h"
 
 //==============================================================================
 
@@ -50,17 +52,18 @@ void BiosignalmlDataStoreImporterWorker::run()
     try {
         // Retrieve our clock and determine our number of data points
 
-        bsml::HDF5::Recording *recording = new bsml::HDF5::Recording(mImportData->fileName().toStdString(), true);
+        auto recording = new bsml::HDF5::Recording(mImportData->fileName().toStdString(), true);
         std::vector<double> clockTicks = recording->get_clock(recording->get_clock_uris().front())->read();
 
         // Retrieve the values of our different variables
 
         int nbOfVariables = mImportData->nbOfVariables();
-        bsml::data::TimeSeries::Ptr *variables = new bsml::data::TimeSeries::Ptr[nbOfVariables] {};
+        auto variables = new bsml::data::TimeSeries::Ptr[nbOfVariables] {};
         bsml::data::TimeSeries::Ptr *variable = variables-1;
 
-        for (auto signalUri : recording->get_signal_uris())
+        for (const auto &signalUri : recording->get_signal_uris()) {
             *(++variable) = recording->get_signal(signalUri)->read();
+        }
 
         // Add a run to our data store and store the values of our different
         // variables to it
@@ -69,8 +72,9 @@ void BiosignalmlDataStoreImporterWorker::run()
         double *importValues = mImportData->importValues();
 
         for (quint64 i = 0, iMax = mImportData->nbOfDataPoints(); i < iMax; ++i) {
-            for (int j = 0; j < nbOfVariables; ++j)
+            for (int j = 0; j < nbOfVariables; ++j) {
                 importValues[j] = variables[j]->data()[i];
+            }
 
             importDataStore->addValues(clockTicks[i]);
 
@@ -104,8 +108,8 @@ DataStore::DataStoreImporterWorker * BiosignalmlDataStoreImporter::workerInstanc
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

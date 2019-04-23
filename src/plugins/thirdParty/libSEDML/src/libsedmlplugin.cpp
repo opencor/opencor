@@ -34,18 +34,18 @@ PLUGININFO_FUNC libSEDMLPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="https://github.com/fbergmann/libSEDML/">libSEDML</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://github.com/fbergmann/libSEDML/">libSEDML</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
-                          QStringList() << "libNuML" << "libSBML",
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
+                          QStringList() << "libNuML",
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace libSEDML
-}   // namespace OpenCOR
+} // namespace libSEDML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

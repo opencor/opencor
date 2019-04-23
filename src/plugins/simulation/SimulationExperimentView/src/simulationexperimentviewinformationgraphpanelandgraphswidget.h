@@ -44,19 +44,19 @@ namespace OpenCOR {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
 namespace DataStore {
     class DataStoreImportData;
-}   // namespace DataStore
+} // namespace DataStore
 
 //==============================================================================
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace SimulationSupport
+} // namespace SimulationSupport
 
 //==============================================================================
 
@@ -75,7 +75,7 @@ class SimulationExperimentViewInformationGraphPanelAndGraphsWidget : public QSta
     Q_OBJECT
 
 public:
-    enum Mode {
+    enum class Mode {
         GraphPanel,
         Graphs
     };
@@ -231,8 +231,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

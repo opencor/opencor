@@ -15,9 +15,6 @@ add_plugin(RawSEDMLView
 
         src/rawsedmlviewplugin.cpp
         src/rawsedmlviewwidget.cpp
-    HEADERS_MOC
-        src/rawsedmlviewplugin.h
-        src/rawsedmlviewwidget.h
     PLUGINS
         SEDMLEditingView
 )

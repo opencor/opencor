@@ -61,15 +61,15 @@ class BioSignalMLDataStorePlugin : public QObject, public DataStoreInterface,
 public:
     explicit BioSignalMLDataStorePlugin();
 
-#include "filetypeinterface.inl"
 #include "datastoreinterface.inl"
+#include "filetypeinterface.inl"
 #include "i18ninterface.inl"
 };
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

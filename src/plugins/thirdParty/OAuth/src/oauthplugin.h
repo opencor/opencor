@@ -47,8 +47,8 @@ class OAuthPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace OAuth
-}   // namespace OpenCOR
+} // namespace OAuth
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

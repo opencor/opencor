@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 1, "month": 2, "year": 2019,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 7, "month": 3, "year": 2019,
                      "categories": [
                        { "name": "Editing",
                          "entries": [
@@ -11,6 +11,15 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "improved", "description": "Unicode support." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "subCategory", "name": "PMR Workspaces window",
+                             "entries": [
+                               { "type": "improved", "description": "Synchronisation dialog." }
                              ]
                            }
                          ]
@@ -175,9 +184,6 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "General",
                          "entries": [
-                           { "type": "added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
-                           { "type": "added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/List_of_Ubuntu_releases#Ubuntu_16.04_LTS_.28Xenial_Xerus.29\">Ubuntu 16.04 LTS</a> (Xenial Xerus)." },
-                           { "type": "added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_El_Capitan\">OS X 10.11</a> (El Capitan) and <a href=\"https://en.wikipedia.org/wiki/MacOS_Sierra\">macOS 10.12</a> (Sierra)." },
                            { "type": "added", "description": "Resetting all your settings from the <a href=\"https://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." },
                            { "type": "added", "description": "Detection of changes to one or several file dependencies." },
                            { "type": "added", "description": "Support for an OpenCOR-specific URL scheme." },
@@ -346,8 +352,6 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "added", "description": "Checking for updates." },
                            { "type": "added", "description": "<a href=\"howToGetStarted.html\">How to get started</a> section." },
-                           { "type": "added", "description": "Support for 64-bit <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
-                           { "type": "added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/OS_X_Yosemite\">OS X 10.10</a> (Yosemite)." },
                            { "type": "improved", "description": "OpenCOR logo." },
                            { "type": "improved", "description": "Binaries on <a href=\"https://en.wikipedia.org/wiki/OS_X\">OS X</a>." },
                            { "type": "improved", "description": "<a href=\"https://nsis.sourceforge.io/\">NSIS</a> packaging on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
@@ -556,7 +560,6 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "added", "description": "<a href=\"licensing.html\">Open source license</a>." },
-                           { "type": "added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Mac_OS_X_Lion\">Mac OS X 10.7</a> (Lion) and later." },
                            { "type": "added", "description": "Showing/hiding of all the recent/current docked widgets at once." },
                            { "type": "added", "description": "<a href=\"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/\">Noble 1962</a> as one of the <a href=\"https://www.cellml.org/\">CellML</a> file examples." },
                            { "type": "added", "description": "Reloading of a file." },

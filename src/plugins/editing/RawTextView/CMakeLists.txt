@@ -14,9 +14,6 @@ add_plugin(RawTextView
 
         src/rawtextviewplugin.cpp
         src/rawtextviewwidget.cpp
-    HEADERS_MOC
-        src/rawtextviewplugin.h
-        src/rawtextviewwidget.h
     PLUGINS
         EditingView
 )

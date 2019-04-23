@@ -31,7 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "biosignalml/data/hdf5.h"
+#include "libbiosignalmlbegin.h"
+    #include "biosignalml/data/hdf5.h"
+#include "libbiosignalmlend.h"
 
 //==============================================================================
 
@@ -51,13 +53,14 @@ void BiosignalmlDataStoreExporterWorker::run()
 {
     // Determine the number of steps to export everything
 
-    BiosignalmlDataStoreData *dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
+    auto dataStoreData = static_cast<BiosignalmlDataStoreData *>(mDataStoreData);
     DataStore::DataStore *dataStore = dataStoreData->dataStore();
     int nbOfRuns = dataStore->runsCount();
     int nbOfSteps = 0;
 
-    for (int i = 0; i < nbOfRuns; ++i)
+    for (int i = 0; i < nbOfRuns; ++i) {
         nbOfSteps += dataStore->size(i);
+    }
 
     double oneOverNbOfSteps = 1.0/nbOfSteps;
     int stepNb = 0;
@@ -89,7 +92,7 @@ void BiosignalmlDataStoreExporterWorker::run()
             // Create and populate a clock
 
             std::string runNb = (nbOfRuns == 1)?"":"/"+QString::number(i+1).toStdString();
-            bsml::HDF5::Clock::Ptr clock = recording->new_clock(recordingUri+"/clock/"+voi->uri().toStdString()+runNb,
+            bsml::HDF5::Clock::Ptr clock = recording->new_clock(std::string().append(recordingUri).append("/clock/").append(voi->uri().toStdString()).append(runNb),
                                                                 rdf::URI(baseUnits+voi->unit().toStdString()),
                                                                 voi->values(i),
                                                                 voi->size(i));
@@ -110,8 +113,8 @@ void BiosignalmlDataStoreExporterWorker::run()
             std::vector<rdf::URI> units;
 
             for (auto variable : variables) {
-                uris.push_back(recordingUri+"/signal/"+variable->uri().toStdString()+runNb);
-                units.push_back(rdf::URI(baseUnits+variable->unit().toStdString()));
+                uris.emplace_back(std::string().append(recordingUri).append("/signal/").append(variable->uri().toStdString()).append(runNb));
+                units.emplace_back(rdf::URI(baseUnits+variable->unit().toStdString()));
             }
 
             // Create and populate a signal array
@@ -121,26 +124,27 @@ void BiosignalmlDataStoreExporterWorker::run()
             };
 
             bsml::HDF5::SignalArray::Ptr signalArray = recording->new_signalarray(uris, units, clock);
-            bsml::HDF5::SignalArray::size_type j = 0;
+            bsml::HDF5::SignalArray::size_type n = 0;
 
             for (auto variable : variables) {
-                (*signalArray)[j]->set_label(variable->label().toStdString());
+                (*signalArray)[n]->set_label(variable->label().toStdString());
 
-                ++j;
+                ++n;
             }
 
-            double *data = new double[quint64(variables.count()*BufferRows)] {};
+            auto data = new double[quint64(variables.count()*BufferRows)] {};
             double *dataPointer = data;
-            int rowCount = 0;
+            size_t rowCount = 0;
 
             for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j) {
-                for (auto variable : variables)
+                for (auto variable : variables) {
                     *dataPointer++ = variable->value(j, i);
+                }
 
                 ++rowCount;
 
                 if (rowCount >= BufferRows) {
-                    signalArray->extend(data, size_t(variables.count()*BufferRows));
+                    signalArray->extend(data, size_t(variables.count())*BufferRows);
 
                     dataPointer = data;
 
@@ -150,7 +154,7 @@ void BiosignalmlDataStoreExporterWorker::run()
                 emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
             }
 
-            signalArray->extend(data, size_t(variables.count()*rowCount));
+            signalArray->extend(data, size_t(variables.count())*rowCount);
 
             delete[] data;
         }
@@ -165,7 +169,7 @@ void BiosignalmlDataStoreExporterWorker::run()
 
     // Close and delete our recording, if any
 
-    if (recording) {
+    if (recording != nullptr) {
         recording->close();
 
         delete recording;
@@ -187,8 +191,8 @@ DataStore::DataStoreExporterWorker * BiosignalmlDataStoreExporter::workerInstanc
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

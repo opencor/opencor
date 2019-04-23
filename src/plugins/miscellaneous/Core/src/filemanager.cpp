@@ -57,7 +57,7 @@ FileManager::FileManager() :
 
     // Keep track of when OpenCOR gets/loses the focus
 
-    if (qobject_cast<QGuiApplication *>(QCoreApplication::instance())) {
+    if (qobject_cast<QGuiApplication *>(QCoreApplication::instance()) != nullptr) {
         connect(qApp, &QApplication::focusWindowChanged,
                 this, &FileManager::focusWindowChanged);
     }
@@ -73,8 +73,9 @@ FileManager::~FileManager()
 
     // Remove all the managed files
 
-    for (auto file : mFiles)
+    for (auto file : mFiles) {
         delete file;
+    }
 }
 
 //==============================================================================
@@ -131,27 +132,27 @@ FileManager::Status FileManager::manage(const QString &pFileName,
     QString fileName = canonicalFileName(pFileName);
 
     if (QFile::exists(fileName)) {
-        if (file(fileName)) {
-            return AlreadyManaged;
-        } else {
-            // The file isn't already managed, so add it to our list of managed
-            // files and let people know about it being now managed
-
-            File *file = new File(fileName, pType, pUrl);
-
-            mFiles << file;
-
-            mFileNameFiles.insert(fileName, file);
-
-            startStopTimer();
-
-            emit fileManaged(fileName);
-
-            return Added;
+        if (file(fileName) != nullptr) {
+            return Status::AlreadyManaged;
         }
-    } else {
-        return DoesNotExist;
+
+        // The file isn't already managed, so add it to our list of managed
+        // files and let people know about it being now managed
+
+        auto file = new File(fileName, pType, pUrl);
+
+        mFiles << file;
+
+        mFileNameFiles.insert(fileName, file);
+
+        startStopTimer();
+
+        emit fileManaged(fileName);
+
+        return Status::Added;
     }
+
+    return Status::DoesNotExist;
 }
 
 //==============================================================================
@@ -163,7 +164,7 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     QString fileName = canonicalFileName(pFileName);
     File *file = FileManager::file(fileName);
 
-    if (file) {
+    if (file != nullptr) {
         // The file is managed, so we can remove it
 
         mFiles.removeOne(file);
@@ -175,10 +176,10 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
         emit fileUnmanaged(fileName);
 
-        return Removed;
-    } else {
-        return NotManaged;
+        return Status::Removed;
     }
+
+    return Status::NotManaged;
 }
 
 //==============================================================================
@@ -198,10 +199,11 @@ QString FileManager::sha1(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->sha1();
-    else
-        return QString();
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -212,8 +214,9 @@ void FileManager::reset(const QString &pFileName)
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         file->reset();
+    }
 }
 
 //==============================================================================
@@ -224,10 +227,11 @@ int FileManager::newIndex(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->newIndex();
-    else
-        return 0;
+    }
+
+    return 0;
 }
 
 //==============================================================================
@@ -238,10 +242,11 @@ QString FileManager::url(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->url();
-    else
-        return QString();
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -251,11 +256,12 @@ QString FileManager::fileName(const QString &pUrl) const
     // Return the given file's file name, if it is being managed
 
     for (auto file : mFiles) {
-        if (!pUrl.compare(file->url()))
+        if (pUrl == file->url()) {
             return file->fileName();
+        }
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -267,10 +273,11 @@ bool FileManager::isDifferent(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->isDifferent();
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -283,10 +290,11 @@ bool FileManager::isDifferent(const QString &pFileName,
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->isDifferent(pFileContents);
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -297,10 +305,11 @@ bool FileManager::isNew(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->isNew();
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -311,10 +320,11 @@ bool FileManager::isRemote(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->isRemote();
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -325,10 +335,11 @@ bool FileManager::isModified(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->isModified();
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -358,11 +369,12 @@ void FileManager::makeNew(const QString &pFileName)
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file) {
+    if (file != nullptr) {
         QString fileName;
 
-        if (newFile(fileName))
+        if (newFile(fileName)) {
             file->makeNew(fileName);
+        }
     }
 }
 
@@ -375,8 +387,9 @@ void FileManager::setModified(const QString &pFileName, bool pModified)
     QString fileName = canonicalFileName(pFileName);
     File *file = FileManager::file(fileName);
 
-    if (file && file->setModified(pModified))
+    if ((file != nullptr) && file->setModified(pModified)) {
         emit fileModified(fileName);
+    }
 }
 
 //==============================================================================
@@ -390,8 +403,9 @@ void FileManager::setDependenciesModified(const QString &pFileName,
     QString fileName = canonicalFileName(pFileName);
     File *file = FileManager::file(fileName);
 
-    if (file)
+    if (file != nullptr) {
         file->setDependenciesModified(pModified);
+    }
 }
 
 //==============================================================================
@@ -402,10 +416,11 @@ bool FileManager::isReadable(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->isReadable();
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -414,12 +429,13 @@ bool FileManager::isWritable(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is writable
 
-    File *File = file(canonicalFileName(pFileName));
+    File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (File)
-        return File->isWritable();
-    else
-        return false;
+    if (file != nullptr) {
+        return file->isWritable();
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -440,10 +456,11 @@ bool FileManager::isLocked(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->isLocked();
-    else
-        return false;
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -456,21 +473,25 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
     QString fileName = canonicalFileName(pFileName);
     File *file = FileManager::file(fileName);
 
-    if (file) {
+    if (file != nullptr) {
         File::Status status = file->setLocked(pLocked);
 
-        if (status == File::LockedSet)
+        if (status == File::Status::LockedSet) {
             emitFilePermissionsChanged(fileName);
+        }
 
-        if (status == File::LockedNotNeeded)
-            return LockedNotNeeded;
-        else if (status == File::LockedSet)
-            return LockedSet;
-        else
-            return LockedNotSet;
-    } else {
-        return NotManaged;
+        if (status == File::Status::LockedNotNeeded) {
+            return Status::LockedNotNeeded;
+        }
+
+        if (status == File::Status::LockedSet) {
+            return Status::LockedSet;
+        }
+
+        return Status::LockedNotSet;
     }
+
+    return Status::NotManaged;
 }
 
 //==============================================================================
@@ -481,10 +502,11 @@ QStringList FileManager::dependencies(const QString &pFileName) const
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         return file->dependencies();
-    else
-        return QStringList();
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -496,8 +518,9 @@ void FileManager::setDependencies(const QString &pFileName,
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file)
+    if (file != nullptr) {
         file->setDependencies(pDependencies);
+    }
 }
 
 //==============================================================================
@@ -509,7 +532,7 @@ void FileManager::reload(const QString &pFileName)
     QString fileName = canonicalFileName(pFileName);
     File *file = FileManager::file(fileName);
 
-    if (file) {
+    if (file != nullptr) {
         // The file is managed, so reset its settings and let people know that
         // it should be reloaded
 
@@ -519,8 +542,9 @@ void FileManager::reload(const QString &pFileName)
 
         // Reset our modified state and let people know about it, if needed
 
-        if (file->setModified(false))
+        if (file->setModified(false)) {
             emit fileModified(fileName);
+        }
     }
 }
 
@@ -538,11 +562,11 @@ bool FileManager::newFile(QString &pFileName, const QByteArray &pContents)
         pFileName = temporaryFileName;
 
         return true;
-    } else {
-        pFileName = QString();
-
-        return false;
     }
+
+    pFileName = QString();
+
+    return false;
 }
 
 //==============================================================================
@@ -559,10 +583,10 @@ FileManager::Status FileManager::create(const QString &pUrl,
 
         emit fileCreated(fileName, pUrl);
 
-        return Created;
-    } else {
-        return NotCreated;
+        return Status::Created;
     }
+
+    return Status::NotCreated;
 }
 
 //==============================================================================
@@ -584,7 +608,7 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
 
     File *file = FileManager::file(pOldFileName);
 
-    if (file) {
+    if (file != nullptr) {
         // The 'old' file is managed, so rename it and let people know about it
 
         QString newFileName = canonicalFileName(pNewFileName);
@@ -597,13 +621,13 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
 
             emit fileRenamed(oldFileName, newFileName);
 
-            return Renamed;
-        } else {
-            return RenamingNotNeeded;
+            return Status::Renamed;
         }
-    } else {
-        return NotManaged;
+
+        return Status::RenamingNotNeeded;
     }
+
+    return Status::NotManaged;
 }
 
 //==============================================================================
@@ -614,7 +638,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
     File *file = FileManager::file(canonicalFileName(pFileName));
 
-    if (file) {
+    if (file != nullptr) {
         // The file is managed, so retrieve its contents
 
         QByteArray fileContents;
@@ -630,16 +654,16 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
                 emit fileDuplicated(fileName);
 
-                return Duplicated;
-            } else {
-                return NotDuplicated;
+                return Status::Duplicated;
             }
-        } else {
-            return NotDuplicated;
+
+            return Status::NotDuplicated;
         }
-    } else {
-        return NotManaged;
+
+        return Status::NotDuplicated;
     }
+
+    return Status::NotManaged;
 }
 
 //==============================================================================
@@ -651,7 +675,7 @@ void FileManager::save(const QString &pFileName)
     QString fileName = canonicalFileName(pFileName);
     File *file = FileManager::file(fileName);
 
-    if (file) {
+    if (file != nullptr) {
         // The file is managed, so reset its settings and let people know that
         // it has been saved
 
@@ -712,8 +736,9 @@ void FileManager::checkFiles()
     //       means that we can't enable/disable our timer in those acses, hence
     //       our checking that OpenCOR is really active indeed...
 
-    if (!opencorActive() || !mCheckFilesEnabled)
+    if (!opencorActive() || !mCheckFilesEnabled) {
         return;
+    }
 
     // Check our various files, after making sure that they are still being
     // managed
@@ -722,25 +747,23 @@ void FileManager::checkFiles()
     //       OpenCOR...
 
     for (auto file : mFiles) {
-        if (!mFiles.contains(file))
+        if (!mFiles.contains(file)) {
             continue;
+        }
 
         QString fileName = file->fileName();
         File::Status fileStatus = file->check();
 
-        switch (fileStatus) {
-        case File::Changed:
-        case File::DependenciesChanged:
-        case File::AllChanged:
+        if (   (fileStatus == File::Status::Changed)
+            || (fileStatus == File::Status::DependenciesChanged)
+            || (fileStatus == File::Status::AllChanged)) {
             // The file and/or one or several of its dependencies has changed,
             // so let people know about it
 
             emit fileChanged(fileName,
-                             (fileStatus == File::Changed) || (fileStatus == File::AllChanged),
-                             (fileStatus == File::DependenciesChanged) || (fileStatus == File::AllChanged));
-
-            break;
-        case File::Unchanged:
+                             (fileStatus == File::Status::Changed) || (fileStatus == File::Status::AllChanged),
+                             (fileStatus == File::Status::DependenciesChanged) || (fileStatus == File::Status::AllChanged));
+        } else if (fileStatus == File::Status::Unchanged) {
             // The file has neither changed nor been deleted, so check whether
             // its permissions have changed
 
@@ -750,26 +773,18 @@ void FileManager::checkFiles()
                      && mFilesWritable.contains(fileName))) {
                 emitFilePermissionsChanged(fileName);
             }
-
-            break;
-        case File::Deleted:
+        } else if (fileStatus == File::Status::Deleted) {
             // The file has been deleted, so let people know about it
 
             emit fileDeleted(fileName);
-
-            break;
-        default:
-            // Not a relevant status, so do nothing
-
-            ;
         }
     }
 }
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

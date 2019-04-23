@@ -95,6 +95,17 @@ QString CompilerEngine::error() const
 
 //==============================================================================
 
+inline std::string functionName(const char *pFunctionName)
+{
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    return pFunctionName;
+#elif defined(Q_OS_MAC)
+    return std::string("_")+pFunctionName;
+#endif
+}
+
+//==============================================================================
+
 bool CompilerEngine::compileCode(const QString &pCode)
 {
     // Reset ourselves
@@ -164,36 +175,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
                     "\n"
                    +pCode;
 
-    // Determine our target triple
-    // Note: normally, we would call llvm::sys::getProcessTriple(), but this
-    //       returns the information about the system on which LLVM was built.
-    //       In most cases it is fine, but on macOS it may be a problem. Indeed,
-    //       with OS X 10.9, Apple decided to extend the C standard by adding
-    //       some functions (e.g. __exp10()). So, if the given code needs one of
-    //       those functions, then OpenCOR will crash if run on an 'old' version
-    //       of macOS. So, to avoid this issue, we set the target triple
-    //       ourselves, based on the system on which OpenCOR is to be used...
-
-    std::string targetTriple;
-
-#if defined(Q_OS_WIN)
-    targetTriple = "x86_64-pc-windows-msvc-elf";
-    // Note: MCJIT currently works only through the ELF object format, hence we
-    //       are appending "-elf"...
-#elif defined(Q_OS_LINUX)
-    targetTriple = "x86_64-pc-linux-gnu";
-#elif defined(Q_OS_MAC)
-    targetTriple = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
-#else
-    #error Unsupported platform
-#endif
-
     // Get a driver to compile our code
 
-    llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagnosticOptions = new clang::DiagnosticOptions();
+    auto diagnosticOptions = new clang::DiagnosticOptions();
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions);
-    clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
+    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), diagnosticsEngine);
 
     driver.setCheckInputsExist(false);
 
@@ -202,17 +189,17 @@ bool CompilerEngine::compileCode(const QString &pCode)
     llvm::StringRef dummyFileName("dummyFile.c");
     llvm::SmallVector<const char *, 16> compilationArguments;
 
-    compilationArguments.push_back("clang");
-    compilationArguments.push_back("-fsyntax-only");
+    compilationArguments.emplace_back("clang");
+    compilationArguments.emplace_back("-fsyntax-only");
 #ifdef QT_DEBUG
-    compilationArguments.push_back("-g");
-    compilationArguments.push_back("-O0");
+    compilationArguments.emplace_back("-g");
+    compilationArguments.emplace_back("-O0");
 #else
-    compilationArguments.push_back("-O3");
-    compilationArguments.push_back("-ffast-math");
+    compilationArguments.emplace_back("-O3");
+    compilationArguments.emplace_back("-ffast-math");
 #endif
-    compilationArguments.push_back("-Werror");
-    compilationArguments.push_back(dummyFileName.data());
+    compilationArguments.emplace_back("-Werror");
+    compilationArguments.emplace_back(dummyFileName.data());
 
     std::unique_ptr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
@@ -236,10 +223,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Retrieve the command job
 
-    clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobs.begin());
+    static const QString Clang = "clang";
+
+    auto &command = llvm::cast<clang::driver::Command>(*jobs.begin());
     QString commandName = command.getCreator().getName();
 
-    if (commandName.compare("clang")) {
+    if (commandName != Clang) {
         mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
 
         return false;
@@ -247,7 +236,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create a compiler invocation using our command's arguments
 
-    const clang::driver::ArgStringList &commandArguments = command.getArguments();
+    const llvm::opt::ArgStringList &commandArguments = command.getArguments();
     std::unique_ptr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
@@ -291,6 +280,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     std::unique_ptr<llvm::Module> module = codeGenerationAction->takeModule();
 
+    if (!module) {
+        mError = tr("the bitcode module could not be retrieved");
+
+        return false;
+    }
+
     // Initialise the native target (and its ASM printer), so not only can we
     // then create an execution engine, but more importantly its data layout
     // will match that of our target platform
@@ -302,7 +297,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     mExecutionEngine = llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create();
 
-    if (!mExecutionEngine) {
+    if (mExecutionEngine == nullptr) {
         mError = tr("the execution engine could not be created");
 
         module.reset();
@@ -313,63 +308,55 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Map all the external functions that may, or not, be needed by the given
     // code
 
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    #define FUNCTION_NAME(x) (x)
-#elif defined(Q_OS_MAC)
-    #define FUNCTION_NAME(x) (std::string(std::string("_")+(x)).c_str())
-#else
-    #error Unsupported platform
-#endif
+    mExecutionEngine->addGlobalMapping(functionName("fabs"), reinterpret_cast<quint64>(compiler_fabs));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("fabs"), reinterpret_cast<quint64>(compiler_fabs));
+    mExecutionEngine->addGlobalMapping(functionName("log"), reinterpret_cast<quint64>(compiler_log));
+    mExecutionEngine->addGlobalMapping(functionName("exp"), reinterpret_cast<quint64>(compiler_exp));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("log"), reinterpret_cast<quint64>(compiler_log));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("exp"), reinterpret_cast<quint64>(compiler_exp));
+    mExecutionEngine->addGlobalMapping(functionName("floor"), reinterpret_cast<quint64>(compiler_floor));
+    mExecutionEngine->addGlobalMapping(functionName("ceil"), reinterpret_cast<quint64>(compiler_ceil));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("floor"), reinterpret_cast<quint64>(compiler_floor));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("ceil"), reinterpret_cast<quint64>(compiler_ceil));
+    mExecutionEngine->addGlobalMapping(functionName("factorial"), reinterpret_cast<quint64>(compiler_factorial));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("factorial"), reinterpret_cast<quint64>(compiler_factorial));
+    mExecutionEngine->addGlobalMapping(functionName("sin"), reinterpret_cast<quint64>(compiler_sin));
+    mExecutionEngine->addGlobalMapping(functionName("sinh"), reinterpret_cast<quint64>(compiler_sinh));
+    mExecutionEngine->addGlobalMapping(functionName("asin"), reinterpret_cast<quint64>(compiler_asin));
+    mExecutionEngine->addGlobalMapping(functionName("asinh"), reinterpret_cast<quint64>(compiler_asinh));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sin"), reinterpret_cast<quint64>(compiler_sin));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sinh"), reinterpret_cast<quint64>(compiler_sinh));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asin"), reinterpret_cast<quint64>(compiler_asin));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asinh"), reinterpret_cast<quint64>(compiler_asinh));
+    mExecutionEngine->addGlobalMapping(functionName("cos"), reinterpret_cast<quint64>(compiler_cos));
+    mExecutionEngine->addGlobalMapping(functionName("cosh"), reinterpret_cast<quint64>(compiler_cosh));
+    mExecutionEngine->addGlobalMapping(functionName("acos"), reinterpret_cast<quint64>(compiler_acos));
+    mExecutionEngine->addGlobalMapping(functionName("acosh"), reinterpret_cast<quint64>(compiler_acosh));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cos"), reinterpret_cast<quint64>(compiler_cos));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cosh"), reinterpret_cast<quint64>(compiler_cosh));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acos"), reinterpret_cast<quint64>(compiler_acos));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acosh"), reinterpret_cast<quint64>(compiler_acosh));
+    mExecutionEngine->addGlobalMapping(functionName("tan"), reinterpret_cast<quint64>(compiler_tan));
+    mExecutionEngine->addGlobalMapping(functionName("tanh"), reinterpret_cast<quint64>(compiler_tanh));
+    mExecutionEngine->addGlobalMapping(functionName("atan"), reinterpret_cast<quint64>(compiler_atan));
+    mExecutionEngine->addGlobalMapping(functionName("atanh"), reinterpret_cast<quint64>(compiler_atanh));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tan"), reinterpret_cast<quint64>(compiler_tan));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("tanh"), reinterpret_cast<quint64>(compiler_tanh));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atan"), reinterpret_cast<quint64>(compiler_atan));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("atanh"), reinterpret_cast<quint64>(compiler_atanh));
+    mExecutionEngine->addGlobalMapping(functionName("sec"), reinterpret_cast<quint64>(compiler_sec));
+    mExecutionEngine->addGlobalMapping(functionName("sech"), reinterpret_cast<quint64>(compiler_sech));
+    mExecutionEngine->addGlobalMapping(functionName("asec"), reinterpret_cast<quint64>(compiler_asec));
+    mExecutionEngine->addGlobalMapping(functionName("asech"), reinterpret_cast<quint64>(compiler_asech));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sec"), reinterpret_cast<quint64>(compiler_sec));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("sech"), reinterpret_cast<quint64>(compiler_sech));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asec"), reinterpret_cast<quint64>(compiler_asec));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("asech"), reinterpret_cast<quint64>(compiler_asech));
+    mExecutionEngine->addGlobalMapping(functionName("csc"), reinterpret_cast<quint64>(compiler_csc));
+    mExecutionEngine->addGlobalMapping(functionName("csch"), reinterpret_cast<quint64>(compiler_csch));
+    mExecutionEngine->addGlobalMapping(functionName("acsc"), reinterpret_cast<quint64>(compiler_acsc));
+    mExecutionEngine->addGlobalMapping(functionName("acsch"), reinterpret_cast<quint64>(compiler_acsch));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csc"), reinterpret_cast<quint64>(compiler_csc));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("csch"), reinterpret_cast<quint64>(compiler_csch));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsc"), reinterpret_cast<quint64>(compiler_acsc));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acsch"), reinterpret_cast<quint64>(compiler_acsch));
+    mExecutionEngine->addGlobalMapping(functionName("cot"), reinterpret_cast<quint64>(compiler_cot));
+    mExecutionEngine->addGlobalMapping(functionName("coth"), reinterpret_cast<quint64>(compiler_coth));
+    mExecutionEngine->addGlobalMapping(functionName("acot"), reinterpret_cast<quint64>(compiler_acot));
+    mExecutionEngine->addGlobalMapping(functionName("acoth"), reinterpret_cast<quint64>(compiler_acoth));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("cot"), reinterpret_cast<quint64>(compiler_cot));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("coth"), reinterpret_cast<quint64>(compiler_coth));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acot"), reinterpret_cast<quint64>(compiler_acot));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("acoth"), reinterpret_cast<quint64>(compiler_acoth));
+    mExecutionEngine->addGlobalMapping(functionName("arbitrary_log"), reinterpret_cast<quint64>(compiler_arbitrary_log));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("arbitrary_log"), reinterpret_cast<quint64>(compiler_arbitrary_log));
+    mExecutionEngine->addGlobalMapping(functionName("pow"), reinterpret_cast<quint64>(compiler_pow));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("pow"), reinterpret_cast<quint64>(compiler_pow));
+    mExecutionEngine->addGlobalMapping(functionName("multi_min"), reinterpret_cast<quint64>(compiler_multi_min));
+    mExecutionEngine->addGlobalMapping(functionName("multi_max"), reinterpret_cast<quint64>(compiler_multi_max));
 
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_min"), reinterpret_cast<quint64>(compiler_multi_min));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("multi_max"), reinterpret_cast<quint64>(compiler_multi_max));
-
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("gcd_multi"), reinterpret_cast<quint64>(compiler_gcd_multi));
-    mExecutionEngine->addGlobalMapping(FUNCTION_NAME("lcm_multi"), reinterpret_cast<quint64>(compiler_lcm_multi));
+    mExecutionEngine->addGlobalMapping(functionName("gcd_multi"), reinterpret_cast<quint64>(compiler_gcd_multi));
+    mExecutionEngine->addGlobalMapping(functionName("lcm_multi"), reinterpret_cast<quint64>(compiler_lcm_multi));
 
     return true;
 }
@@ -380,16 +367,17 @@ void * CompilerEngine::getFunction(const QString &pFunctionName)
 {
     // Return the address of the requested function
 
-    if (mExecutionEngine)
+    if (mExecutionEngine != nullptr) {
         return reinterpret_cast<void *>(mExecutionEngine->getFunctionAddress(qPrintable(pFunctionName)));
-    else
-        return nullptr;
+    }
+
+    return nullptr;
 }
 
 //==============================================================================
 
-}   // namespace Compiler
-}   // namespace OpenCOR
+} // namespace Compiler
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

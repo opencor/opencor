@@ -76,8 +76,8 @@ void SampleWindowWindow::updateSum()
 
 //==============================================================================
 
-}   // namespace SampleWindow
-}   // namespace OpenCOR
+} // namespace SampleWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

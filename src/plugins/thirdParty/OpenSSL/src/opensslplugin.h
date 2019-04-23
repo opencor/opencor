@@ -47,8 +47,8 @@ class OpenSSLPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace OpenSSL
-}   // namespace OpenCOR
+} // namespace OpenSSL
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

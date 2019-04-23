@@ -66,8 +66,8 @@ FileTypeInterface SEDMLSUPPORT_EXPORT * fileTypeInterface();
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

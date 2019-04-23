@@ -44,10 +44,10 @@ PLUGININFO_FUNC RawSEDMLViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.sed-ml.org/\">SED-ML</a> files using an <a href=\"https://www.w3.org/XML/\">XML</a> editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.sed-ml.org/\">SED-ML</a> à l'aide d'un éditeur <a href=\"https://www.w3.org/XML/\">XML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to edit <a href="http://www.sed-ml.org/">SED-ML</a> files using an <a href="https://www.w3.org/XML/">XML</a> editor.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="http://www.sed-ml.org/">SED-ML</a> à l'aide d'un éditeur <a href="https://www.w3.org/XML/">XML</a>.)"));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "SEDMLEditingView",
                           descriptions);
 }
@@ -67,7 +67,7 @@ EditorWidget::EditorWidget * RawSEDMLViewPlugin::editorWidget(const QString &pFi
 
 bool RawSEDMLViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -83,7 +83,7 @@ bool RawSEDMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileName
 
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pFileName);
 
-    return crtEditorWidget?
+    return (crtEditorWidget != nullptr)?
                Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents()):
                false;
 }
@@ -94,7 +94,7 @@ bool RawSEDMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileName
 
 bool RawSEDMLViewPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -107,13 +107,13 @@ bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
                                   const QString &pNewFileName,
                                   bool &pNeedFeedback)
 {
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pNeedFeedback)
 
     // Save the given file
 
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
-    return crtEditorWidget?
+    return (crtEditorWidget != nullptr)?
                Core::writeFile(pNewFileName, crtEditorWidget->contents()):
                false;
 }
@@ -122,7 +122,7 @@ bool RawSEDMLViewPlugin::saveFile(const QString &pOldFileName,
 
 void RawSEDMLViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -131,7 +131,7 @@ void RawSEDMLViewPlugin::fileOpened(const QString &pFileName)
 
 void RawSEDMLViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -140,7 +140,7 @@ void RawSEDMLViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void RawSEDMLViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -177,7 +177,7 @@ void RawSEDMLViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void RawSEDMLViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -209,8 +209,8 @@ bool RawSEDMLViewPlugin::definesPluginInterfaces()
 bool RawSEDMLViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                             QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -244,7 +244,7 @@ void RawSEDMLViewPlugin::finalizePlugin()
 
 void RawSEDMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -275,7 +275,7 @@ void RawSEDMLViewPlugin::saveSettings(QSettings &pSettings) const
 
 void RawSEDMLViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -296,7 +296,7 @@ void RawSEDMLViewPlugin::reformat(const QString &pFileName) const
 bool RawSEDMLViewPlugin::validSedml(const QString &pFileName,
                                     QString &pExtra) const
 {
-    Q_UNUSED(pExtra);
+    Q_UNUSED(pExtra)
 
     // Validate the given file
 
@@ -311,7 +311,7 @@ ViewInterface::Mode RawSEDMLViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::Editing;
 }
 
 //==============================================================================
@@ -349,8 +349,9 @@ QWidget * RawSEDMLViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a SED-ML file (be it new or not)
 
-    if (!SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
+    if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName) == nullptr) {
         return nullptr;
+    }
 
     // Update and return our Raw SED-ML view widget using the given SED-ML file
 
@@ -381,7 +382,7 @@ QString RawSEDMLViewPlugin::viewName() const
 
 QIcon RawSEDMLViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -392,8 +393,8 @@ QIcon RawSEDMLViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace RawSEDMLView
-}   // namespace OpenCOR
+} // namespace RawSEDMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -44,7 +44,7 @@ PLUGININFO_FUNC SampleViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides a test view."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une vue de test."));
 
-    return new PluginInfo(PluginInfo::Sample, true, false,
+    return new PluginInfo(PluginInfo::Category::Sample, true, false,
                           QStringList() << "Core",
                           descriptions);
 }
@@ -52,6 +52,7 @@ PLUGININFO_FUNC SampleViewPluginInfo()
 //==============================================================================
 
 SampleViewPlugin::SampleViewPlugin() :
+    mViewWidget(nullptr),
     mFileName(QString())
 {
 }
@@ -62,7 +63,7 @@ SampleViewPlugin::SampleViewPlugin() :
 
 bool SampleViewPlugin::importFile(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -75,9 +76,9 @@ bool SampleViewPlugin::saveFile(const QString &pOldFileName,
                                 const QString &pNewFileName,
                                 bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback)
 
     // We don't handle this interface...
 
@@ -88,7 +89,7 @@ bool SampleViewPlugin::saveFile(const QString &pOldFileName,
 
 void SampleViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -100,15 +101,16 @@ void SampleViewPlugin::filePermissionsChanged(const QString &pFileName)
     // The given file has had its permissions changed, so update our view
     // widget, if needed
 
-    if (!pFileName.compare(mFileName))
+    if (pFileName == mFileName) {
         mViewWidget->update(pFileName);
+    }
 }
 
 //==============================================================================
 
 void SampleViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -117,7 +119,7 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 void SampleViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -128,8 +130,9 @@ void SampleViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so update our view widget, if needed
 
-    if (!pFileName.compare(mFileName))
+    if (pFileName == mFileName) {
         mViewWidget->update(pFileName);
+    }
 }
 
 //==============================================================================
@@ -137,11 +140,11 @@ void SampleViewPlugin::fileReloaded(const QString &pFileName)
 void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pOldFileName)
 
     // The given file has been renamed, so update our view widget, if needed
 
-    if (!pOldFileName.compare(mFileName)) {
+    if (pOldFileName == mFileName) {
         mFileName = pNewFileName;
 
         mViewWidget->update(pNewFileName);
@@ -154,8 +157,9 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 {
     // The given file has been closed, so update our internals, if needed
 
-    if (!pFileName.compare(mFileName))
+    if (pFileName == mFileName) {
         mFileName = QString();
+    }
 }
 
 //==============================================================================
@@ -166,8 +170,9 @@ void SampleViewPlugin::retranslateUi()
 {
     // Retranslate our view widget, if needed
 
-    if (!mFileName.isEmpty())
+    if (!mFileName.isEmpty()) {
         mViewWidget->retranslateUi();
+    }
 }
 
 //==============================================================================
@@ -186,8 +191,8 @@ bool SampleViewPlugin::definesPluginInterfaces()
 bool SampleViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                           QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -219,7 +224,7 @@ void SampleViewPlugin::finalizePlugin()
 
 void SampleViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
@@ -228,7 +233,7 @@ void SampleViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void SampleViewPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -237,7 +242,7 @@ void SampleViewPlugin::loadSettings(QSettings &pSettings)
 
 void SampleViewPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -246,7 +251,7 @@ void SampleViewPlugin::saveSettings(QSettings &pSettings) const
 
 void SampleViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -259,7 +264,7 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return SampleMode;
+    return ViewInterface::Mode::Sample;
 }
 
 //==============================================================================
@@ -268,7 +273,7 @@ QStringList SampleViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support, i.e. any in our case
 
-    return QStringList();
+    return {};
 }
 
 //==============================================================================
@@ -279,7 +284,7 @@ QString SampleViewPlugin::viewMimeType(const QString &pFileName) const
 
     // Return the MIME type for the given file
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -288,7 +293,7 @@ QString SampleViewPlugin::viewDefaultFileExtension() const
 {
     // Return the default file extension we support
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -308,7 +313,7 @@ QWidget * SampleViewPlugin::viewWidget(const QString &pFileName)
 
 void SampleViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // Reset our internals
 
@@ -328,17 +333,17 @@ QString SampleViewPlugin::viewName() const
 
 QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
-    return QIcon();
+    return {};
 }
 
 //==============================================================================
 
-}   // namespace SampleView
-}   // namespace OpenCOR
+} // namespace SampleView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

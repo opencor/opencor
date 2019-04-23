@@ -93,15 +93,16 @@ SimulationExperimentViewInformationSolversWidget::SimulationExperimentViewInform
 
     // Add properties for our different solvers
 
-    mOdeSolverData = addSolverProperties(Solver::Ode);
-    mNlaSolverData = addSolverProperties(Solver::Nla);
+    mOdeSolverData = addSolverProperties(Solver::Type::Ode);
+    mNlaSolverData = addSolverProperties(Solver::Type::Nla);
 
     // Show/hide the relevant properties
 
     solverChanged(mOdeSolverData, mOdeSolverData->solversListProperty()->value());
 
-    if (mNlaSolverData)
+    if (mNlaSolverData != nullptr) {
         solverChanged(mNlaSolverData, mNlaSolverData->solversListProperty()->value());
+    }
 
     // Expand all our properties
 
@@ -134,7 +135,7 @@ void SimulationExperimentViewInformationSolversWidget::retranslateUi()
 
     mOdeSolverData->solversListProperty()->setEmptyListValue(tr("None available"));
 
-    if (mNlaSolverData) {
+    if (mNlaSolverData != nullptr) {
         mNlaSolverData->solversProperty()->setName(tr("NLA solver"));
         mNlaSolverData->solversListProperty()->setName(tr("Name"));
 
@@ -200,7 +201,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
             // Add our solvers section property and list property for our
             // solvers, if needed
 
-            if (!solversProperty) {
+            if (solversProperty == nullptr) {
                 solversProperty = addSectionProperty();
 
                 solversListProperty = addListProperty(solversProperty);
@@ -215,42 +216,42 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
                 // Add the solver's property and set its default value
 
                 switch (solverInterfaceProperty.type()) {
-                case Solver::Property::Boolean:
+                case Solver::Property::Type::Boolean:
                     property = addBooleanProperty(solverInterfaceProperty.defaultValue().toBool(),
                                                   solversProperty);
 
                     break;
-                case Solver::Property::Integer:
+                case Solver::Property::Type::Integer:
                     property = addIntegerProperty(solverInterfaceProperty.defaultValue().toInt(),
                                                   solversProperty);
 
                     break;
-                case Solver::Property::IntegerGe0:
+                case Solver::Property::Type::IntegerGe0:
                     property = addIntegerGe0Property(solverInterfaceProperty.defaultValue().toInt(),
                                                      solversProperty);
 
                     break;
-                case Solver::Property::IntegerGt0:
+                case Solver::Property::Type::IntegerGt0:
                     property = addIntegerGt0Property(solverInterfaceProperty.defaultValue().toInt(),
                                                      solversProperty);
 
                     break;
-                case Solver::Property::Double:
+                case Solver::Property::Type::Double:
                     property = addDoubleProperty(solverInterfaceProperty.defaultValue().toDouble(),
                                                  solversProperty);
 
                     break;
-                case Solver::Property::DoubleGe0:
+                case Solver::Property::Type::DoubleGe0:
                     property = addDoubleGe0Property(solverInterfaceProperty.defaultValue().toDouble(),
                                                     solversProperty);
 
                     break;
-                case Solver::Property::DoubleGt0:
+                case Solver::Property::Type::DoubleGt0:
                     property = addDoubleGt0Property(solverInterfaceProperty.defaultValue().toDouble(),
                                                     solversProperty);
 
                     break;
-                case Solver::Property::List:
+                case Solver::Property::Type::List:
                     property = addListProperty(solverInterfaceProperty.listValues(),
                                                solverInterfaceProperty.defaultValue().toString(),
                                                solversProperty);
@@ -286,7 +287,7 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
 
     // Check whether we have at least one solver
 
-    if (solversListProperty) {
+    if (solversListProperty != nullptr) {
         // We have a solvers list property, which means that we have at least
         // one solver, so sort our list
 
@@ -302,9 +303,9 @@ SimulationExperimentViewInformationSolversWidgetData * SimulationExperimentViewI
                                                                         solversProperty,
                                                                         solversListProperty,
                                                                         solversProperties);
-    } else {
-        return nullptr;
     }
+
+    return nullptr;
 }
 
 //==============================================================================
@@ -314,15 +315,17 @@ void SimulationExperimentViewInformationSolversWidget::setPropertiesUnit(Simulat
 {
     // Make sure that we have some solver's data
 
-    if (!pSolverData)
+    if (pSolverData == nullptr) {
         return;
+    }
 
     // Go through the solvers' properties and set the unit of the relevant ones
 
     for (const auto &properties : pSolverData->solversProperties()) {
         for (auto property : properties) {
-            if (!property->unit().isEmpty())
+            if (!property->unit().isEmpty()) {
                 property->setUnit(pVoiUnit);
+            }
         }
     }
 }
@@ -338,8 +341,9 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
 
         mOdeSolverData->solversProperty()->setVisible(true);
 
-        if (mNlaSolverData)
+        if (mNlaSolverData != nullptr) {
             mNlaSolverData->solversProperty()->setVisible(pSimulation->runtime()->needNlaSolver());
+        }
     }
 
     // Set the unit of our different properties, if needed
@@ -352,7 +356,7 @@ void SimulationExperimentViewInformationSolversWidget::initialize(SimulationSupp
     // Initialise our simulation's NLA solver's properties, so that we can
     // properly reset our simulation the first time round
 
-    if (mNlaSolverData) {
+    if (mNlaSolverData != nullptr) {
         pSimulation->data()->setNlaSolverName(mNlaSolverData->solversListProperty()->value(), false);
 
         for (auto property : mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName())) {
@@ -382,7 +386,7 @@ QStringList SimulationExperimentViewInformationSolversWidget::nlaSolvers() const
 {
     // Return the available NLA solvers, if any
 
-    return mNlaSolverData?mNlaSolverData->solversListProperty()->listValues():QStringList();
+    return (mNlaSolverData != nullptr)?mNlaSolverData->solversListProperty()->listValues():QStringList();
 }
 
 //==============================================================================
@@ -409,24 +413,27 @@ void SimulationExperimentViewInformationSolversWidget::updateSolverGui(Simulatio
 {
     // Make sure that we have some solver data
 
-    if (!pSolverData)
+    if (pSolverData == nullptr) {
         return;
+    }
 
     // Make sure that we have a solver
 
     QString solverName = pSolverData->solversListProperty()->value();
     SolverInterface *solverInterface = pSolverData->solversInterfaces().value(solverName);
 
-    if (!solverInterface)
+    if (solverInterface == nullptr) {
         return;
+    }
 
     // Retrieve our solver properties values
 
     Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
     QMap<QString, QString> solverPropertiesValues = QMap<QString, QString>();
 
-    for (auto solverProperty : solverProperties)
+    for (auto solverProperty : solverProperties) {
         solverPropertiesValues.insert(solverProperty->id(),solverProperty->value());
+    }
 
     // Ask our solver interface to tell us about the visibility of its
     // properties based on their values
@@ -437,8 +444,9 @@ void SimulationExperimentViewInformationSolversWidget::updateSolverGui(Simulatio
     // Note: if there is no visibility information for a given solver property,
     //       then it means that it should be visible...
 
-    for (auto solverProperty : solverProperties)
+    for (auto solverProperty : solverProperties) {
         solverProperty->setVisible(solverPropertiesVisibility.value(solverProperty->id(), true));
+    }
 }
 
 //==============================================================================
@@ -447,11 +455,13 @@ void SimulationExperimentViewInformationSolversWidget::updateGui(SimulationExper
 {
     // Update our solver(s) properties visibility
 
-    if (!pSolverData || (pSolverData == mOdeSolverData))
+    if ((pSolverData == nullptr) || (pSolverData == mOdeSolverData)) {
         updateSolverGui(mOdeSolverData);
+    }
 
-    if (mNlaSolverData && (!pSolverData || (pSolverData == mNlaSolverData)))
+    if ((mNlaSolverData != nullptr) && ((pSolverData == nullptr) || (pSolverData == mNlaSolverData))) {
         updateSolverGui(mNlaSolverData);
+    }
 }
 
 //==============================================================================
@@ -461,8 +471,9 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(SimulationE
 {
     // Make sure that we have some solver data
 
-    if (!pSolverData)
+    if (pSolverData == nullptr) {
         return;
+    }
 
     // Go through the different properties for the given type of solver and
     // show/hide whatever needs showing/hiding
@@ -470,10 +481,11 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(SimulationE
     for (auto solverProperties = pSolverData->solversProperties().constBegin(),
               solverPropertiesEnd = pSolverData->solversProperties().constEnd();
          solverProperties != solverPropertiesEnd; ++solverProperties) {
-        bool solverPropertiesVisible = !solverProperties.key().compare(pSolverName);
+        bool solverPropertiesVisible = solverProperties.key() == pSolverName;
 
-        for (auto solverProperty : solverProperties.value())
+        for (auto solverProperty : solverProperties.value()) {
             solverProperty->setVisible(solverPropertiesVisible);
+        }
     }
 }
 
@@ -488,7 +500,7 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Prope
     //       one or several other list properties, as is the case for the CVODE
     //       solver)...
 
-    if (!pProperty->row()) {
+    if (pProperty->row() == 0) {
         solverChanged((pProperty == mOdeSolverData->solversListProperty())?
                           mOdeSolverData:
                           mNlaSolverData,
@@ -498,8 +510,8 @@ void SimulationExperimentViewInformationSolversWidget::solverChanged(Core::Prope
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

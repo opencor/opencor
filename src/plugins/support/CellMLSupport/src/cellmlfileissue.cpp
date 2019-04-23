@@ -57,16 +57,17 @@ bool CellmlFileIssue::compare(const CellmlFileIssue &pIssue1,
 
     if (pIssue1.line() == pIssue2.line()) {
         if (pIssue1.column() == pIssue2.column()) {
-            if (pIssue1.type() == pIssue2.type())
+            if (pIssue1.type() == pIssue2.type()) {
                 return pIssue1.message().compare(pIssue2.message(), Qt::CaseInsensitive) < 0;
-            else
-                return pIssue1.type() < pIssue2.type();
-        } else {
-            return pIssue1.column() < pIssue2.column();
+            }
+
+            return pIssue1.type() < pIssue2.type();
         }
-    } else {
-        return pIssue1.line() < pIssue2.line();
+
+        return pIssue1.column() < pIssue2.column();
     }
+
+    return pIssue1.line() < pIssue2.line();
 }
 
 //==============================================================================
@@ -126,8 +127,8 @@ QString CellmlFileIssue::importedFile() const
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

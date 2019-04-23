@@ -12,10 +12,6 @@ add_plugin(WebBrowserWindow
         src/webbrowserwindowplugin.cpp
         src/webbrowserwindowwidget.cpp
         src/webbrowserwindowwindow.cpp
-    HEADERS_MOC
-        src/webbrowserwindowplugin.h
-        src/webbrowserwindowwidget.h
-        src/webbrowserwindowwindow.h
     UIS
         src/webbrowserwindowwindow.ui
     PLUGINS

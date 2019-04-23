@@ -13,11 +13,6 @@ add_plugin(CellMLTools
         ../../pluginmanager.cpp
 
         src/cellmltoolsplugin.cpp
-    HEADERS_MOC
-        ../../plugin.h
-        ../../pluginmanager.h
-
-        src/cellmltoolsplugin.h
     PLUGINS
         CellMLSupport
     TESTS

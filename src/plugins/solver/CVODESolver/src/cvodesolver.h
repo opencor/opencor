@@ -29,10 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "nvector/nvector_serial.h"
-#include "sundials/sundials_linearsolver.h"
-#include "sundials/sundials_matrix.h"
-#include "sundials/sundials_nonlinearsolver.h"
+#include "sundialsbegin.h"
+    #include "nvector/nvector_serial.h"
+    #include "sundials/sundials_linearsolver.h"
+    #include "sundials/sundials_matrix.h"
+    #include "sundials/sundials_nonlinearsolver.h"
+#include "sundialsend.h"
 
 //==============================================================================
 
@@ -159,8 +161,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CVODESolver
-}   // namespace OpenCOR
+} // namespace CVODESolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -31,15 +31,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class ZincWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
 namespace OpenCMISS {
 namespace Zinc {
     class Context;
-}   // namespace Zinc
-}   // namespace OpenCMISS
+} // namespace Zinc
+} // namespace OpenCMISS
 
 //==============================================================================
 
@@ -49,7 +49,7 @@ namespace OpenCOR {
 
 namespace ZincWidget {
     class ZincWidget;
-}   // namespace ZincWidget
+} // namespace ZincWidget
 
 //==============================================================================
 
@@ -85,8 +85,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace ZincWindow
-}   // namespace OpenCOR
+} // namespace ZincWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

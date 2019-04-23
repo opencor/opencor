@@ -55,12 +55,9 @@ namespace MathMLViewerWidget {
 
 //==============================================================================
 
-static QMap<QString, QString> GreekSymbols;
-
-//==============================================================================
-
 MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
     Widget(pParent),
+    mGreekSymbols(QMap<QString, QString>()),
     mMathmlDocument(QwtMathMLDocument()),
     mOneOverMathmlDocumentWidth(0),
     mOneOverMathmlDocumentHeight(0),
@@ -69,61 +66,55 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
 {
     // Populate our table of Greek symbols, if needed
 
-    if (GreekSymbols.isEmpty()) {
-        // Upper case
+    mGreekSymbols.insert("ALPHA", "Α");
+    mGreekSymbols.insert("BETA", "Β");
+    mGreekSymbols.insert("GAMMA", "Γ");
+    mGreekSymbols.insert("DELTA", "Δ");
+    mGreekSymbols.insert("EPSILON", "Ε");
+    mGreekSymbols.insert("ZETA", "Ζ");
+    mGreekSymbols.insert("ETA", "Η");
+    mGreekSymbols.insert("THETA", "Θ");
+    mGreekSymbols.insert("IOTA", "Ι");
+    mGreekSymbols.insert("KAPPA", "Κ");
+    mGreekSymbols.insert("LAMBDA", "Λ");
+    mGreekSymbols.insert("MU", "Μ");
+    mGreekSymbols.insert("NU", "Ν");
+    mGreekSymbols.insert("XI", "Ξ");
+    mGreekSymbols.insert("OMICRON", "Ο");
+    mGreekSymbols.insert("PI", "Π");
+    mGreekSymbols.insert("RHO", "Ρ");
+    mGreekSymbols.insert("SIGMA", "Σ");
+    mGreekSymbols.insert("TAU", "Τ");
+    mGreekSymbols.insert("UPSILON", "Υ");
+    mGreekSymbols.insert("PHI", "Φ");
+    mGreekSymbols.insert("CHI", "Χ");
+    mGreekSymbols.insert("PSI", "Ψ");
+    mGreekSymbols.insert("OMEGA", "Ω");
 
-        GreekSymbols.insert("ALPHA", "Α");
-        GreekSymbols.insert("BETA", "Β");
-        GreekSymbols.insert("GAMMA", "Γ");
-        GreekSymbols.insert("DELTA", "Δ");
-        GreekSymbols.insert("EPSILON", "Ε");
-        GreekSymbols.insert("ZETA", "Ζ");
-        GreekSymbols.insert("ETA", "Η");
-        GreekSymbols.insert("THETA", "Θ");
-        GreekSymbols.insert("IOTA", "Ι");
-        GreekSymbols.insert("KAPPA", "Κ");
-        GreekSymbols.insert("LAMBDA", "Λ");
-        GreekSymbols.insert("MU", "Μ");
-        GreekSymbols.insert("NU", "Ν");
-        GreekSymbols.insert("XI", "Ξ");
-        GreekSymbols.insert("OMICRON", "Ο");
-        GreekSymbols.insert("PI", "Π");
-        GreekSymbols.insert("RHO", "Ρ");
-        GreekSymbols.insert("SIGMA", "Σ");
-        GreekSymbols.insert("TAU", "Τ");
-        GreekSymbols.insert("UPSILON", "Υ");
-        GreekSymbols.insert("PHI", "Φ");
-        GreekSymbols.insert("CHI", "Χ");
-        GreekSymbols.insert("PSI", "Ψ");
-        GreekSymbols.insert("OMEGA", "Ω");
-
-        // Lower case
-
-        GreekSymbols.insert("alpha", "α");
-        GreekSymbols.insert("beta", "β");
-        GreekSymbols.insert("gamma", "γ");
-        GreekSymbols.insert("delta", "δ");
-        GreekSymbols.insert("epsilon", "ε");
-        GreekSymbols.insert("zeta", "ζ");
-        GreekSymbols.insert("eta", "η");
-        GreekSymbols.insert("theta", "θ");
-        GreekSymbols.insert("iota", "ι");
-        GreekSymbols.insert("kappa", "κ");
-        GreekSymbols.insert("lambda", "λ");
-        GreekSymbols.insert("mu", "μ");
-        GreekSymbols.insert("nu", "ν");
-        GreekSymbols.insert("xi", "ξ");
-        GreekSymbols.insert("omicron", "ο");
-        GreekSymbols.insert("pi", "π");
-        GreekSymbols.insert("rho", "ρ");
-        GreekSymbols.insert("sigma", "σ");
-        GreekSymbols.insert("tau", "τ");
-        GreekSymbols.insert("upsilon", "υ");
-        GreekSymbols.insert("phi", "φ");
-        GreekSymbols.insert("chi", "χ");
-        GreekSymbols.insert("psi", "ψ");
-        GreekSymbols.insert("omega", "ω");
-    }
+    mGreekSymbols.insert("alpha", "α");
+    mGreekSymbols.insert("beta", "β");
+    mGreekSymbols.insert("gamma", "γ");
+    mGreekSymbols.insert("delta", "δ");
+    mGreekSymbols.insert("epsilon", "ε");
+    mGreekSymbols.insert("zeta", "ζ");
+    mGreekSymbols.insert("eta", "η");
+    mGreekSymbols.insert("theta", "θ");
+    mGreekSymbols.insert("iota", "ι");
+    mGreekSymbols.insert("kappa", "κ");
+    mGreekSymbols.insert("lambda", "λ");
+    mGreekSymbols.insert("mu", "μ");
+    mGreekSymbols.insert("nu", "ν");
+    mGreekSymbols.insert("xi", "ξ");
+    mGreekSymbols.insert("omicron", "ο");
+    mGreekSymbols.insert("pi", "π");
+    mGreekSymbols.insert("rho", "ρ");
+    mGreekSymbols.insert("sigma", "σ");
+    mGreekSymbols.insert("tau", "τ");
+    mGreekSymbols.insert("upsilon", "υ");
+    mGreekSymbols.insert("phi", "φ");
+    mGreekSymbols.insert("chi", "χ");
+    mGreekSymbols.insert("psi", "ψ");
+    mGreekSymbols.insert("omega", "ω");
 
     // Create our context menu
 
@@ -163,10 +154,10 @@ MathmlViewerWidget::MathmlViewerWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const auto SettingsMathmlViewerWidgetOptimizeFontSizeEnabled = QStringLiteral("MathmlViewerWidgetOptimizeFontSizeEnabled");
-static const auto SettingsMathmlViewerWidgetSubscriptsEnabled       = QStringLiteral("MathmlViewerWidgetSubscriptsEnabled");
-static const auto SettingsMathmlViewerWidgetGreekSymbolsEnabled     = QStringLiteral("MathmlViewerWidgetGreekSymbolsEnabled");
-static const auto SettingsMathmlViewerWidgetDigitGroupingEnabled    = QStringLiteral("MathmlViewerWidgetDigitGroupingEnabled");
+static const char *SettingsMathmlViewerWidgetOptimizeFontSizeEnabled = "MathmlViewerWidgetOptimizeFontSizeEnabled";
+static const char *SettingsMathmlViewerWidgetSubscriptsEnabled       = "MathmlViewerWidgetSubscriptsEnabled";
+static const char *SettingsMathmlViewerWidgetGreekSymbolsEnabled     = "MathmlViewerWidgetGreekSymbolsEnabled";
+static const char *SettingsMathmlViewerWidgetDigitGroupingEnabled    = "MathmlViewerWidgetDigitGroupingEnabled";
 
 //==============================================================================
 
@@ -222,8 +213,9 @@ void MathmlViewerWidget::updateSettings(MathmlViewerWidget *pMathmlViewerWidget)
 {
     // Make sure that we are given another widget
 
-    if (!pMathmlViewerWidget)
+    if (pMathmlViewerWidget == nullptr) {
         return;
+    }
 
     // Update our MathML viewer settings
 
@@ -248,8 +240,8 @@ void MathmlViewerWidget::setContents(const QString &pContents)
 {
     // Make sure that we are not trying to set the same contents
 
-    if (   !pContents.compare(mContents)
-        &&  ((pContents.isEmpty() && !mError) || !pContents.isEmpty())) {
+    if (   (pContents == mContents)
+        && ((pContents.isEmpty() && !mError) || !pContents.isEmpty())) {
         return;
     }
 
@@ -267,12 +259,13 @@ void MathmlViewerWidget::setContents(const QString &pContents)
 
         QDomDocument domDocument;
 
-        if (domDocument.setContent(pContents))
+        if (domDocument.setContent(pContents)) {
             mError = !mMathmlDocument.setContent(domDocument.toString(-1));
-        else if (pContents.isEmpty())
+        } else if (pContents.isEmpty()) {
             mError = !mMathmlDocument.setContent(QString());
-        else
+        } else {
             mError = true;
+        }
     }
 
     if (mError) {
@@ -317,8 +310,9 @@ void MathmlViewerWidget::setError(bool pError)
 {
     // Keep track of whether there is an error
 
-    if (mContents.isEmpty() && (pError == mError))
+    if (mContents.isEmpty() && (pError == mError)) {
         return;
+    }
 
     mContents = QString();
     mError = pError;
@@ -343,8 +337,9 @@ void MathmlViewerWidget::setOptimizeFontSize(bool pOptimizeFontSize)
 {
     // Keep track of whether we should optimise our font size
 
-    if (pOptimizeFontSize == optimizeFontSize())
+    if (pOptimizeFontSize == optimizeFontSize()) {
         return;
+    }
 
     mOptimizeFontSizeAction->setChecked(pOptimizeFontSize);
 }
@@ -364,8 +359,9 @@ void MathmlViewerWidget::setSubscripts(bool pSubscripts)
 {
     // Keep track of whether we use subscripts
 
-    if (pSubscripts == subscripts())
+    if (pSubscripts == subscripts()) {
         return;
+    }
 
     mSubscriptsAction->setChecked(pSubscripts);
 }
@@ -385,8 +381,9 @@ void MathmlViewerWidget::setGreekSymbols(bool pGreekSymbols)
 {
     // Keep track of whether we use Greek symbols
 
-    if (pGreekSymbols == greekSymbols())
+    if (pGreekSymbols == greekSymbols()) {
         return;
+    }
 
     mGreekSymbolsAction->setChecked(pGreekSymbols);
 }
@@ -406,8 +403,9 @@ void MathmlViewerWidget::setDigitGrouping(bool pDigitGrouping)
 {
     // Keep track of whether we do digit grouping
 
-    if (pDigitGrouping == digitGrouping())
+    if (pDigitGrouping == digitGrouping()) {
         return;
+    }
 
     mDigitGroupingAction->setChecked(pDigitGrouping);
 }
@@ -429,8 +427,9 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     QRectF rect = pEvent->rect();
 
-    if (qFuzzyIsNull(rect.width()) || qFuzzyIsNull(rect.height()))
+    if (qFuzzyIsNull(rect.width()) || qFuzzyIsNull(rect.height())) {
         return;
+    }
 
     // Clear our background
 
@@ -454,16 +453,19 @@ void MathmlViewerWidget::paintEvent(QPaintEvent *pEvent)
         int painterRectWidth = WarningIconWidth;
         int painterRectHeight = WarningIconHeight;
 
-        if (rect.width() < rect.height())
-            painterRectHeight *= rect.height()/rect.width();
-        else
-            painterRectWidth *= rect.width()/rect.height();
+        if (rect.width() < rect.height()) {
+            painterRectHeight = int(painterRectHeight*rect.height()/double(rect.width()));
+        } else {
+            painterRectWidth = int(painterRectWidth*rect.width()/double(rect.height()));
+        }
 
-        if (painterRectHeight % 2)
+        if (painterRectHeight%2 != 0) {
             ++painterRectHeight;
+        }
 
-        if (painterRectWidth % 2)
+        if (painterRectWidth%2 != 0) {
             ++painterRectWidth;
+        }
 
         QRect painterRect = QRect(0, 0, painterRectWidth, painterRectHeight);
         // Note: both painterRectWidth and painterRectHeight have even values.
@@ -521,11 +523,11 @@ QAction * MathmlViewerWidget::newAction()
 
 //==============================================================================
 
-QString MathmlViewerWidget::greekSymbolize(const QString &pValue) const
+QString MathmlViewerWidget::greekSymbol(const QString &pValue) const
 {
     // Convert the given value into a Greek symbol, if possible
 
-    return GreekSymbols.value(pValue, pValue);
+    return mGreekSymbols.value(pValue, pValue);
 }
 
 //==============================================================================
@@ -540,7 +542,7 @@ QDomElement MathmlViewerWidget::newMiNode(const QDomNode &pDomNode,
 
     res.setAttribute("mathvariant", "italic");
 
-    res.appendChild(pDomNode.ownerDocument().createTextNode(greekSymbols()?greekSymbolize(pValue):pValue));
+    res.appendChild(pDomNode.ownerDocument().createTextNode(greekSymbols()?greekSymbol(pValue):pValue));
 
     return res;
 }
@@ -577,8 +579,8 @@ void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
             // grouping and the current node is an mn element, or whether we
             // are dealing with an mo element
 
-            if (    (processSubscripts || processGreekSymbols)
-                && !domNode.nodeName().compare(MiElement)) {
+            if (   (processSubscripts || processGreekSymbols)
+                && (domNode.nodeName() == MiElement)) {
                 // We want to use subscripts and/or Greek symbols and the
                 // current node is an mi element, so check whether we want to
                 // use subscripts
@@ -631,7 +633,7 @@ void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
                         // to use Greek symbols, so try to Greek symbolise our
                         // child node value
 
-                        childNode.setNodeValue(greekSymbolize(childNodeValue));
+                        childNode.setNodeValue(greekSymbol(childNodeValue));
                     }
                 } else if (processGreekSymbols) {
                     // We want to use Greek symbols, so go through the value of
@@ -655,7 +657,7 @@ void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
 
                             domChildNodeSubValue = childNodeValue.mid(startPos+1, endPos-startPos);
 
-                            childNodeValue.replace(startPos+1, endPos-startPos, greekSymbolize(domChildNodeSubValue));
+                            childNodeValue.replace(startPos+1, endPos-startPos, greekSymbol(domChildNodeSubValue));
 
                             fromPos = startPos;
                         } else {
@@ -667,15 +669,15 @@ void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
                 }
 
                 processDomNode = false;
-            } else if (    processDigitGrouping
-                       && !domNode.nodeName().compare(MnElement)) {
+            } else if (   processDigitGrouping
+                       && (domNode.nodeName() == MnElement)) {
                 // We want to do digit grouping and the current node is an mn
                 // element, so we can go ahead
 
                 childNode.setNodeValue(Core::digitGroupNumber(childNode.nodeValue()));
 
                 processDomNode = false;
-            } else if (!domNode.nodeName().compare(MoElement)) {
+            } else if (domNode.nodeName() == MoElement) {
                 // The current node is an mo element, so no need to process it
                 // further
 
@@ -685,8 +687,9 @@ void MathmlViewerWidget::processNode(const QDomNode &pDomNode) const
 
         // Process the current node itself, if needed
 
-        if (processDomNode)
+        if (processDomNode) {
             processNode(domNode);
+        }
     }
 }
 
@@ -696,8 +699,9 @@ QString MathmlViewerWidget::processedContents() const
 {
     // Process and return our processed contents
 
-    if (mContents.isEmpty())
-        return QString();
+    if (mContents.isEmpty()) {
+        return {};
+    }
 
     QDomDocument domDocument;
 
@@ -705,12 +709,12 @@ QString MathmlViewerWidget::processedContents() const
         processNode(domDocument.documentElement());
 
         return domDocument.toString(-1);
-    } else {
-        // We should never reach this point (since we should only come here if
-        // our contents is valid), but better be safe than sorry...
-
-        return QString();
     }
+
+    // We should never reach this point (since we should only come here if our
+    // contents is valid), but better be safe than sorry
+
+    return {};
 }
 
 //==============================================================================
@@ -744,8 +748,8 @@ void MathmlViewerWidget::copyToClipboard()
 
 //==============================================================================
 
-}   // namespace MathMLViewerWidget
-}   // namespace OpenCOR
+} // namespace MathMLViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

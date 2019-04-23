@@ -47,8 +47,8 @@ class QScintillaPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace QScintilla
-}   // namespace OpenCOR
+} // namespace QScintilla
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

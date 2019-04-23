@@ -38,13 +38,11 @@ extern "C" Q_DECL_EXPORT int fileTypeInterfaceVersion()
 
 //==============================================================================
 
-FileTypeInterface::~FileTypeInterface()
-{
-}
+FileTypeInterface::~FileTypeInterface() = default;
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -47,8 +47,8 @@ class libBioSignalMLPlugin : public QObject
 
 //==============================================================================
 
-}   // namespace libBioSignalML
-}   // namespace OpenCOR
+} // namespace libBioSignalML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

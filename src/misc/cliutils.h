@@ -72,8 +72,6 @@ private slots:
 
 void initQtMessagePattern();
 
-void initPluginsPath(int pArgC, char *pArgV[]);
-
 void initApplication(QString *pAppDate = nullptr);
 
 QString applicationDescription(bool pGuiMode = true);
@@ -82,7 +80,7 @@ QString prettyProductName();
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

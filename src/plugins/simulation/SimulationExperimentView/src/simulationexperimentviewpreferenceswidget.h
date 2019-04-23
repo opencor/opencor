@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class SimulationExperimentViewPreferencesWidget;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -50,7 +50,7 @@ namespace Core {
     class BorderedWidget;
     class PropertyEditorWidget;
     class TabBarWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -134,8 +134,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

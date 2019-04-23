@@ -104,7 +104,7 @@ CellmlEditingViewWidget::CellmlEditingViewWidget(const QString &pContents,
 
 //==============================================================================
 
-static const auto SettingsCellmlEditingViewWidgetSizes = QStringLiteral("CellmlEditingViewWidgetSizes");
+static const char *SettingsCellmlEditingViewWidgetSizes = "CellmlEditingViewWidgetSizes";
 
 //==============================================================================
 
@@ -176,8 +176,9 @@ void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pEditingWi
 {
     // Make sure that we are given another editing widget
 
-    if (!pEditingWidget || (pEditingWidget == this))
+    if ((pEditingWidget == nullptr) || (pEditingWidget == this)) {
         return;
+    }
 
     // Update our sizes, MathML viewer and editor widgets' settings
 
@@ -193,7 +194,7 @@ void CellmlEditingViewWidget::updateSettings(CellmlEditingViewWidget *pEditingWi
 
 bool CellmlEditingViewWidget::handleEditorKeyPressEvent(QKeyEvent *pEvent)
 {
-    Q_UNUSED(pEvent);
+    Q_UNUSED(pEvent)
 
     // By default, we don't handle our editor's key press event
 
@@ -260,8 +261,8 @@ void CellmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 
 //==============================================================================
 
-}   // namespace CellMLEditingView
-}   // namespace OpenCOR
+} // namespace CellMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

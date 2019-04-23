@@ -66,14 +66,16 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::retranslateUi()
 
 void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement)
 {
-    if (!pElement)
+    if (pElement == nullptr) {
         return;
+    }
 
     // Remove all previous RDF triples from our tree view widget
 
     while (mModel->hasChildren()) {
-        for (auto item : mModel->takeRow(0))
+        for (auto item : mModel->takeRow(0)) {
             delete item;
+        }
     }
 
     // Add the 'new' RDF triples to our tree view widget
@@ -86,7 +88,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 
     for (auto rdfTriple : mCellmlFile->rdfTriples(pElement)) {
         mModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(QString::number(++rdfTripleCounter))
-                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::UriReference)?
+                                                                        << new QStandardItem((rdfTriple->subject()->type() == CellMLSupport::CellmlFileRdfTripleElement::Type::UriReference)?
                                                                                                  rdfTriple->metadataId():
                                                                                                  rdfTriple->subject()->asString())
                                                                         << new QStandardItem(rdfTriple->predicate()->asString())
@@ -103,8 +105,8 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

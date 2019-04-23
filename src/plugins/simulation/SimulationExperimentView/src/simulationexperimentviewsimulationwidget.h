@@ -49,7 +49,7 @@ namespace libsedml {
     class SedRepeatedTask;
     class SedSimulation;
     class SedVariable;
-}   // namespace libsedml
+} // namespace libsedml
 
 //==============================================================================
 
@@ -63,7 +63,7 @@ class DataStoreInterface;
 
 namespace CellMLSupport {
     class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
@@ -74,32 +74,34 @@ namespace Core {
     class SplitterWidget;
     class ToolBarWidget;
     class UserMessageWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
 namespace DataStore {
     class DataStoreExportData;
+    class DataStoreExporter;
     class DataStoreImportData;
-}   // namespace DataStore
+    class DataStoreImporter;
+} // namespace DataStore
 
 //==============================================================================
 
 namespace GraphPanelWidget {
     class GraphPanelWidget;
-}   // namespace GraphPanelWidget
+} // namespace GraphPanelWidget
 
 //==============================================================================
 
 namespace SEDMLSupport {
     class SedmlFile;
-}   // namespace SEDMLSupport
+} // namespace SEDMLSupport
 
 //==============================================================================
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace SimulationSupport
+} // namespace SimulationSupport
 
 //==============================================================================
 
@@ -118,7 +120,7 @@ class SimulationExperimentViewSimulationWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    enum Task {
+    enum class Task {
         None,
         ResetRuns,
         AddRun
@@ -167,12 +169,13 @@ public:
     void resetSimulationProgress();
 
 protected:
+    void changeEvent(QEvent *pEvent) override;
     void dragEnterEvent(QDragEnterEvent *pEvent) override;
     void dragMoveEvent(QDragMoveEvent *pEvent) override;
     void dropEvent(QDropEvent *pEvent) override;
 
 private:
-    enum ErrorType {
+    enum class Error {
         General,
         InvalidCellmlFile,
         InvalidSimulationEnvironment
@@ -232,8 +235,9 @@ private:
     Core::UserMessageWidget *mInvalidModelMessageWidget;
 
     QTextEdit *mOutputWidget;
+    QString mOutputMessage;
 
-    ErrorType mErrorType;
+    Error mError;
 
     bool mValidSimulationEnvironment;
 
@@ -261,6 +265,7 @@ private:
 
     QMap<QString, FileTypeInterface *> mFileTypeInterfaces;
 
+    QString styledOutput();
     void output(const QString &pMessage);
 
     void updateSimulationMode();
@@ -322,7 +327,7 @@ private:
 
     void updateSedmlFileOrCombineArchiveModifiedStatus();
 
-    void simulationError(const QString &pMessage, ErrorType pErrorType);
+    void simulationError(const QString &pMessage, Error pError);
 
     void sedmlExportSedmlFile(const QString &pFileName);
     void sedmlExportCombineArchive(const QString &pFileName);
@@ -335,7 +340,8 @@ signals:
     void graphPanelSettingsRequested();
     void graphsSettingsRequested();
 
-    void importDone();
+    void importDone(DataStore::DataStoreImporter *pDataStoreImporter);
+    void exportDone(DataStore::DataStoreExporter *pDataStoreExporter);
 
 private slots:
     void runPauseResumeSimulation();
@@ -409,12 +415,15 @@ private slots:
     void checkGraphPanelsAndGraphs();
 
     void finalFurtherInitialize();
+
+    void resetDataStoreImporterConnections(DataStore::DataStoreImporter *pDataStoreImporter);
+    void resetDataStoreExporterConnections(DataStore::DataStoreExporter *pDataStoreExporter);
 };
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

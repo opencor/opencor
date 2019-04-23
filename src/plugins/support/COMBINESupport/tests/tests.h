@@ -32,8 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace OpenCOR {
 namespace COMBINESupport {
     class CombineArchive;
-}   // namespace COMBINESupport
-}   // namespace OpenCOR
+} // namespace COMBINESupport
+} // namespace OpenCOR
 
 //==============================================================================
 

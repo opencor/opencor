@@ -29,7 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "Qsci/qscilexercustom.h"
+#include "qscintillabegin.h"
+    #include "Qsci/qscilexercustom.h"
+#include "qscintillaend.h"
 
 //==============================================================================
 
@@ -43,7 +45,7 @@ class CellmlTextViewLexer : public QsciLexerCustom
     Q_OBJECT
 
 public:
-    enum {
+    enum class Style {
         Default,
         SingleLineComment,
         MultilineComment,
@@ -108,8 +110,8 @@ signals:
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

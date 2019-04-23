@@ -37,10 +37,10 @@ PLUGININFO_FUNC COMBINESupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://co.mbine.org/\">COMBINE</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://co.mbine.org/\">COMBINE</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="http://co.mbine.org/">COMBINE</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="http://co.mbine.org/">COMBINE</a>.)"));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "Core" << "SEDMLSupport" << "ZIPSupport",
                           descriptions);
 }
@@ -131,8 +131,8 @@ bool COMBINESupportPlugin::definesPluginInterfaces()
 bool COMBINESupportPlugin::pluginInterfacesOk(const QString &pFileName,
                                               QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -157,7 +157,7 @@ void COMBINESupportPlugin::finalizePlugin()
 
 void COMBINESupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // Make a call to the instance of the COMBINE file manager so that it gets
     // properly set up (and therefore can start managing COMBINE archives)
@@ -173,7 +173,7 @@ void COMBINESupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 void COMBINESupportPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -182,7 +182,7 @@ void COMBINESupportPlugin::loadSettings(QSettings &pSettings)
 
 void COMBINESupportPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -191,15 +191,15 @@ void COMBINESupportPlugin::saveSettings(QSettings &pSettings) const
 
 void COMBINESupportPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-}   // namespace COMBINESupport
-}   // namespace OpenCOR
+} // namespace COMBINESupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -45,11 +45,12 @@ void TabBarWidgetMacStyle::drawControl(ControlElement pElement,
     if (pElement == CE_TabBarTabLabel) {
         // Note: adapted from QCommonStyle::drawControl()...
 
-        if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
-            int alignment = Qt::AlignCenter | Qt::TextShowMnemonic;
+        if (auto tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
+            uint alignment = Qt::AlignCenter|Qt::TextShowMnemonic;
 
-            if (!styleHint(SH_UnderlineShortcut, pOption, pWidget))
+            if (styleHint(SH_UnderlineShortcut, pOption, pWidget) == 0) {
                 alignment |= Qt::TextHideMnemonic;
+            }
 
             bool isVerticalTab =    (tab->shape == QTabBar::RoundedWest)
                                  || (tab->shape == QTabBar::RoundedEast)
@@ -90,25 +91,26 @@ void TabBarWidgetMacStyle::drawControl(ControlElement pElement,
                 pPainter->drawPixmap(iconRect.x(), iconRect.y(),
                                      tab->icon.pixmap(pWidget->window()->windowHandle(),
                                                       tab->iconSize,
-                                                      (tab->state & State_Enabled)?
+                                                      ((tab->state & State_Enabled) != 0)?
                                                           QIcon::Normal:
                                                           QIcon::Disabled,
-                                                      (tab->state & State_Selected)?
+                                                      ((tab->state & State_Selected) != 0)?
                                                           QIcon::On:
                                                           QIcon::Off));
             }
 
-            drawItemText(pPainter, tabRect, alignment, tab->palette,
-                         tab->state & State_Enabled, tab->text,
-                         (   (tab->state & State_Selected)
-                          && (tab->state & State_Active))?
+            drawItemText(pPainter, tabRect, int(alignment), tab->palette,
+                         (tab->state & State_Enabled) != 0, tab->text,
+                         (   ((tab->state & State_Selected) != 0)
+                          && ((tab->state & State_Active) != 0))?
                              QPalette::BrightText:
                              QPalette::WindowText);
 
-            if (isVerticalTab)
+            if (isVerticalTab) {
                 pPainter->restore();
+            }
 
-            if (tab->state & State_HasFocus) {
+            if ((tab->state & State_HasFocus) != 0) {
                 const int Offset = 1+pixelMetric(PM_DefaultFrameWidth);
 
                 int x1 = tab->rect.left();
@@ -141,19 +143,19 @@ QRect TabBarWidgetMacStyle::subElementRect(SubElement pElement,
     if (pElement == SE_TabBarTabText) {
         // Note: adapted from QCommonStyle::subElementRect()...
 
-        if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
+        if (auto tab = qstyleoption_cast<const QStyleOptionTab *>(pOption)) {
             QRect res;
             QRect dummy;
 
             tabLayout(tab, pWidget, &res, &dummy);
 
             return res;
-        } else {
-            return QRect();
         }
-    } else {
-        return QProxyStyle::subElementRect(pElement, pOption, pWidget);
+
+        return {};
     }
+
+    return QProxyStyle::subElementRect(pElement, pOption, pWidget);
 }
 
 //==============================================================================
@@ -174,16 +176,18 @@ void TabBarWidgetMacStyle::tabLayout(const QStyleOptionTab *pOption,
                        || (pOption->shape == QTabBar::TriangularWest)
                        || (pOption->shape == QTabBar::TriangularEast);
 
-    if (verticalTab)
+    if (verticalTab) {
         textRect.setRect(0, 0, textRect.height(), textRect.width());
+    }
 
-    if (!pOption->leftButtonSize.isEmpty())
+    if (!pOption->leftButtonSize.isEmpty()) {
         textRect.adjust(-4, 0, 0, 0);
+    }
 
     int horizontalShift = pixelMetric(QStyle::PM_TabBarTabShiftHorizontal, pOption, pWidget);
     int verticalShift = pixelMetric(QStyle::PM_TabBarTabShiftVertical, pOption, pWidget);
-    int horizontalPadding = pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget) >> 1;
-    int verticalPadding = pixelMetric(QStyle::PM_TabBarTabVSpace, pOption, pWidget) >> 1;
+    int horizontalPadding = pixelMetric(QStyle::PM_TabBarTabHSpace, pOption, pWidget)/2;
+    int verticalPadding = pixelMetric(QStyle::PM_TabBarTabVSpace, pOption, pWidget)/2;
 
     if (   (pOption->shape == QTabBar::RoundedSouth)
         || (pOption->shape == QTabBar::TriangularSouth)) {
@@ -193,7 +197,7 @@ void TabBarWidgetMacStyle::tabLayout(const QStyleOptionTab *pOption,
     textRect.adjust(horizontalPadding, verticalShift-verticalPadding,
                     horizontalShift-horizontalPadding, verticalPadding);
 
-    if (pOption->state & QStyle::State_Selected) {
+    if ((pOption->state & QStyle::State_Selected) != 0) {
         textRect.setTop(textRect.top()-verticalShift);
         textRect.setRight(textRect.right()-horizontalShift);
     }
@@ -222,35 +226,37 @@ void TabBarWidgetMacStyle::tabLayout(const QStyleOptionTab *pOption,
         }
 
         QSize tabIconSize = pOption->icon.actualSize(iconSize,
-                                                     (pOption->state & QStyle::State_Enabled)?
+                                                     ((pOption->state & QStyle::State_Enabled) != 0)?
                                                          QIcon::Normal:
                                                          QIcon::Disabled,
-                                                     (pOption->state & QStyle::State_Selected)?
+                                                     ((pOption->state & QStyle::State_Selected) != 0)?
                                                          QIcon::On:
                                                          QIcon::Off);
 
         tabIconSize = QSize(qMin(tabIconSize.width(), iconSize.width()),
                             qMin(tabIconSize.height(), iconSize.height()));
 
-        *pIconRect = QRect(textRect.left(), textRect.center().y()-(tabIconSize.height() >> 1),
+        *pIconRect = QRect(textRect.left(), textRect.center().y()-tabIconSize.height()/2,
                            tabIconSize.width(), tabIconSize.height());
 
-        if (!verticalTab)
+        if (!verticalTab) {
             *pIconRect = visualRect(pOption->direction, pOption->rect, *pIconRect);
+        }
 
         textRect.setLeft(textRect.left()+tabIconSize.width()+4);
     }
 
-    if (!verticalTab)
+    if (!verticalTab) {
         textRect = visualRect(pOption->direction, pOption->rect, textRect);
+    }
 
     *pTextRect = textRect;
 }
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

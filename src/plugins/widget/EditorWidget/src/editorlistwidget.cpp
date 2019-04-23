@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QApplication>
+#include <QClipboard>
 #include <QKeyEvent>
 #include <QMenu>
-#include <QClipboard>
 
 //==============================================================================
 
@@ -42,7 +42,6 @@ namespace EditorWidget {
 
 EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
                                const QString &pMessage) :
-    QStandardItem(),
     mType(pType),
     mLine(pLine),
     mColumn(pColumn),
@@ -70,7 +69,7 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
     setToolTip(text());
 
     switch (pType) {
-    case Unknown:
+    case Type::Unknown:
         // We should never come here...
 
 #ifdef QT_DEBUG
@@ -78,28 +77,27 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
 #else
         break;
 #endif
-    case Error:
+    case Type::Error:
         setIcon(ErrorIcon);
 
         break;
-    case Warning:
+    case Type::Warning:
         setIcon(WarningIcon);
 
         break;
-    case Hint:
+    case Type::Hint:
         setIcon(HintIcon);
 
         break;
-    case Information:
+    case Type::Information:
         setIcon(InformationIcon);
 
         break;
-    case Fatal:
+    case Type::Fatal:
         setIcon(FatalIcon);
 
         break;
     }
-
 }
 
 //==============================================================================
@@ -108,7 +106,7 @@ int EditorListItem::type() const
 {
     // Return the item's type
 
-    return mType;
+    return int(mType);
 }
 
 //==============================================================================
@@ -258,7 +256,7 @@ void EditorListWidget::selectFirstItem()
 
     QStandardItem *firstItem = mModel->invisibleRootItem()->child(0);
 
-    if (firstItem) {
+    if (firstItem != nullptr) {
         QModelIndex firstItemIndex = firstItem->index();
 
         setCurrentIndex(firstItemIndex);
@@ -286,8 +284,9 @@ void EditorListWidget::keyPressEvent(QKeyEvent *pEvent)
 
     // Check whether the user wants the current item to be requested
 
-    if ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))
+    if ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return)) {
         requestItem(currentIndex());
+    }
 }
 
 //==============================================================================
@@ -299,27 +298,29 @@ void EditorListWidget::copyToClipboard()
     QStringList list = QStringList();
 
     for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
-        EditorListItem *item = static_cast<EditorListItem *>(mModel->item(i));
+        auto item = static_cast<EditorListItem *>(mModel->item(i));
         QString itemType;
 
-        switch (item->type()) {
-        case EditorListItem::Error:
+        switch (EditorListItem::Type(item->type())) {
+        case EditorListItem::Type::Unknown:
+            break;
+        case EditorListItem::Type::Error:
             itemType = tr("Error");
 
             break;
-        case EditorListItem::Warning:
+        case EditorListItem::Type::Warning:
             itemType = tr("Warning");
 
             break;
-        case EditorListItem::Hint:
+        case EditorListItem::Type::Hint:
             itemType = tr("Hint");
 
             break;
-        case EditorListItem::Information:
+        case EditorListItem::Type::Information:
             itemType = tr("Information");
 
             break;
-        case EditorListItem::Fatal:
+        case EditorListItem::Type::Fatal:
             itemType = tr("Fatal");
 
             break;
@@ -338,16 +339,17 @@ void EditorListWidget::requestItem(const QModelIndex &pItemIndex)
     // Check what kind of item has been double clicked and if it is a file, then
     // open it
 
-    EditorListItem *item = static_cast<EditorListItem *>(mModel->itemFromIndex(pItemIndex));
+    auto item = static_cast<EditorListItem *>(mModel->itemFromIndex(pItemIndex));
 
-    if (item && (item->line() != -1))
+    if ((item != nullptr) && (item->line() != -1)) {
         emit itemRequested(item);
+    }
 }
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
