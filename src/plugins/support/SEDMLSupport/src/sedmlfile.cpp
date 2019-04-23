@@ -152,12 +152,12 @@ libsedml::SedDocument * SedmlFile::sedmlDocument()
 bool SedmlFile::isSedmlFile() const
 {
     // Return whether our current SED-ML document is indeed a SED-ML file
-    // Note: a non-SED-ML file will result in our SED-ML document having one
-    //       error of id libsedml::SedNotSchemaConformant. So, we use this fact
-    //       to determine whether our current SED-ML document is indeed a SED-ML
-    //       file...
+    // Note: a non-SED-ML file results in our SED-ML document having at least
+    //       one error, the first of which being of id
+    //       libsedml::SedNotSchemaConformant. So, we use this fact to determine
+    //       whether our current SED-ML document is indeed a SED-ML file...
 
-    return    (mSedmlDocument->getNumErrors() != 1)
+    return    (mSedmlDocument->getNumErrors() == 0)
            || (mSedmlDocument->getError(0)->getErrorId() != libsedml::SedNotSchemaConformant);
 }
 
