@@ -223,7 +223,7 @@ bool CombineArchive::load()
     };
 
     ZIPSupport::QZipReader zipReader(mFileName);
-    std::array <uchar, SignatureSize> signatureData = {};
+    std::array<uchar, SignatureSize> signatureData = {};
 
     if (zipReader.device()->read(reinterpret_cast<char *>(signatureData.data()), SignatureSize) != SignatureSize) {
         mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
