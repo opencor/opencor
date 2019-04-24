@@ -534,6 +534,11 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     // Some basic checks to see whether we are dealing with our pendulum model
     // (be it its CellML or SED-ML version)
 
+    static const QString MainQ1    = "main.q1";
+    static const QString MainTheta = "main.theta";
+    static const QString MainR0    = "main.r0";
+
+
     SimulationSupport::Simulation *simulation = simulationWidget->simulation();
     CellMLSupport::CellmlFileRuntimeParameter *q1Parameter = nullptr;
     CellMLSupport::CellmlFileRuntimeParameter *thetaParameter = nullptr;
@@ -542,12 +547,13 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
     foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, simulation->runtime()->parameters()) {
         QString parameterFullyFormattedName = parameter->fullyFormattedName();
 
-        if (!parameterFullyFormattedName.compare("main.q1"))
+        if (parameterFullyFormattedName == MainQ1) {
             q1Parameter = parameter;
-        else if (!parameterFullyFormattedName.compare("main.theta"))
+        } else if (parameterFullyFormattedName == MainTheta) {
             thetaParameter = parameter;
-        else if (!parameterFullyFormattedName.compare("main.r0"))
+        } else if (parameterFullyFormattedName == MainR0) {
             r0Parameter = parameter;
+        }
     }
 
     // Make sure that our previous run, if any, is complete, if we are coming
@@ -587,7 +593,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
                                                              pTask);
         }
 
-        if (   q1Parameter && thetaParameter && r0Parameter
+        if (   (q1Parameter != nullptr) && (thetaParameter != nullptr) && (r0Parameter != nullptr)
             && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
             && (thetaParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
             && (r0Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)) {

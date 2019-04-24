@@ -40,6 +40,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <array>
+
+//==============================================================================
+
 #include "zincbegin.h"
     #include "opencmiss/zinc/fieldarithmeticoperators.hpp"
     #include "opencmiss/zinc/fieldcomposite.hpp"
@@ -195,13 +199,13 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
     mCurrentDataSize = 0;
 
-    if (mTimeValues)
-        delete mTimeValues;
+    delete mTimeValues;
 
     mTimeValues = new double[pDataSize];
 
-    for (quint64 i = 0; i < pDataSize; ++i)
+    for (quint64 i = 0; i < pDataSize; ++i) {
         mTimeValues[i] = i*pTimeInterval;
+    }
 
     mR0Values = pR0Values;
     mQ1Values = pQ1Values;
@@ -238,17 +242,17 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
             // Define cylindrical polar coordinates
 
-            OpenCMISS::Zinc::Field coordinatesData[] = { r, mTheta };
-            OpenCMISS::Zinc::FieldConcatenate coordinates = mFieldModule.createFieldConcatenate(2, coordinatesData);
+            std::array<OpenCMISS::Zinc::Field, 2> coordinatesData = { r, mTheta };
+            OpenCMISS::Zinc::FieldConcatenate coordinates = mFieldModule.createFieldConcatenate(2, coordinatesData.data());
 
             coordinates.setCoordinateSystemType(OpenCMISS::Zinc::Field::COORDINATE_SYSTEM_TYPE_CYLINDRICAL_POLAR);
 
             // Define a constant field at the (default rectangular cartesian)
             // origin
 
-            const double rcOriginData[] = { 0.0, 0.0, 0.0 };
+            std::array<const double, 3> rcOriginData = { 0.0, 0.0, 0.0 };
 
-            OpenCMISS::Zinc::FieldConstant rcOrigin = mFieldModule.createFieldConstant(3, rcOriginData);
+            OpenCMISS::Zinc::FieldConstant rcOrigin = mFieldModule.createFieldConstant(3, rcOriginData.data());
 
             // Define a field converting the polar coordinates to rectangular
             // cartesian
@@ -305,9 +309,9 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
             // Note: if we are reading times during solution, we could
             //       dynamically change it (and the fine tessellation below)...
 
-            const double constantData[] = { 100.0 };
+            std::array<const double, 1> constantData = { 100.0 };
 
-            OpenCMISS::Zinc::FieldConstant fieldConstant = mFieldModule.createFieldConstant(1, constantData);
+            OpenCMISS::Zinc::FieldConstant fieldConstant = mFieldModule.createFieldConstant(1, constantData.data());
             OpenCMISS::Zinc::FieldMultiply xi1Time = mFieldModule.createFieldMultiply(xi1, fieldConstant);
 
             // xiCoordinates returns node's value of rcCoordinates at the
@@ -335,9 +339,9 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
         OpenCMISS::Zinc::Tessellationmodule tessellationModule = scene.getTessellationmodule();
         OpenCMISS::Zinc::Tessellation tessellation = tessellationModule.createTessellation();
 
-        const int tessellationData[] = { int(pDataSize) };
+        std::array<const int, 1> tessellationData = { int(pDataSize) };
 
-        tessellation.setMinimumDivisions(1, tessellationData);
+        tessellation.setMinimumDivisions(1, tessellationData.data());
 
         // Also increase the circle divisions quality of the default points
         // tessellation (so the cylinder used for the weights looks better than
@@ -358,17 +362,17 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
 
             OpenCMISS::Zinc::Graphicspointattributes pointAttributes = axes.getGraphicspointattributes();
 
-            double pointAttributesData[] = { 1.0, 1.0, 1.0 };
+            std::array<double, 3> pointAttributesData = { 1.0, 1.0, 1.0 };
 
             pointAttributes.setGlyphShapeType(OpenCMISS::Zinc::Glyph::SHAPE_TYPE_AXES_XYZ);
-            pointAttributes.setBaseSize(3, pointAttributesData);
+            pointAttributes.setBaseSize(3, pointAttributesData.data());
 
             OpenCMISS::Zinc::Material material = materialModule.createMaterial();
 
-            double rgbValues[] = { 0.0, 0.0, 0.0 };
+            std::array<double, 3> rgbValues = { 0.0, 0.0, 0.0 };
 
-            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues);
-            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues);
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues.data());
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues.data());
 
             axes.setMaterial(material);
 
@@ -390,13 +394,13 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
             pointAttributesData[1] = 0.05;
             pointAttributesData[2] = 0.05;
 
-            pointAttributes.setBaseSize(3, pointAttributesData);
+            pointAttributes.setBaseSize(3, pointAttributesData.data());
 
             pointAttributesData[0] = 1.0;
             pointAttributesData[1] = 0.0;
             pointAttributesData[2] = 0.0;
 
-            pointAttributes.setScaleFactors(3, pointAttributesData);
+            pointAttributes.setScaleFactors(3, pointAttributesData.data());
 
             string.setMaterial(materialModule.findMaterialByName("silver"));
 
@@ -416,13 +420,13 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
             pointAttributesData[1] = 0.5;
             pointAttributesData[2] = 0.5;
 
-            pointAttributes.setBaseSize(3, pointAttributesData);
+            pointAttributes.setBaseSize(3, pointAttributesData.data());
 
             pointAttributesData[0] = 0.0;
             pointAttributesData[1] = 0.0;
             pointAttributesData[2] = 0.0;
 
-            pointAttributes.setScaleFactors(3, pointAttributesData);
+            pointAttributes.setScaleFactors(3, pointAttributesData.data());
 
             weight.setMaterial(materialModule.findMaterialByName("gold"));
 
@@ -438,8 +442,8 @@ void PendulumWindowWindow::initData(const quint64 &pDataSize,
             rgbValues[1] = 0.445;
             rgbValues[2] = 0.738;
 
-            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues);
-            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues);
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_AMBIENT, rgbValues.data());
+            material.setAttributeReal3(OpenCMISS::Zinc::Material::ATTRIBUTE_DIFFUSE, rgbValues.data());
 
             path.setMaterial(material);
         scene.endChange();
@@ -520,21 +524,21 @@ void PendulumWindowWindow::graphicsInitialized()
     // Our Zinc widget has had its graphics initialised, so now we can set its
     // background colour
 
-    double backgroundColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+    std::array<double, 4> backgroundColor = { 1.0, 1.0, 1.0, 1.0 };
 
-    sceneViewer.setBackgroundColourRGBA(backgroundColor);
+    sceneViewer.setBackgroundColourRGBA(backgroundColor.data());
 
     // Our initial look at and eye positions, and up vector
 
     sceneViewer.setViewingVolume(-1.922499, 1.922499, -1.922499, 1.922499, 0.632076, 22.557219);
 
-    const double lookAtPosition[] = { 0.612522, -0.044677, 0.000000 };
-    const double eyePosition[] = { 0.612522, -0.044677, 7.469910 };
-    const double upVector[] = { -1.000000, 0.000000, 0.000000 };
+    std::array<const double, 3> lookAtPosition = { 0.612522, -0.044677, 0.000000 };
+    std::array<const double, 3> eyePosition = { 0.612522, -0.044677, 7.469910 };
+    std::array<const double, 3> upVector = { -1.000000, 0.000000, 0.000000 };
 
-    sceneViewer.setLookatPosition(lookAtPosition);
-    sceneViewer.setEyePosition(eyePosition);
-    sceneViewer.setUpVector(upVector);
+    sceneViewer.setLookatPosition(lookAtPosition.data());
+    sceneViewer.setEyePosition(eyePosition.data());
+    sceneViewer.setUpVector(upVector.data());
 }
 
 //==============================================================================
@@ -601,10 +605,11 @@ void PendulumWindowWindow::updateScene()
 
     int value = mTimeSlider->value();
 
-    if (value == mTimeSlider->maximum())
+    if (value == mTimeSlider->maximum()) {
         value = 0;
-    else
+    } else {
         ++value;
+    }
 
     mTimeSlider->setValue(value);
 }
@@ -615,10 +620,11 @@ void PendulumWindowWindow::autoMode()
 {
     // Enable/disable our timer
 
-    if (mTimeCheckBox->isChecked())
+    if (mTimeCheckBox->isChecked()) {
         mTimer.start();
-    else
+    } else {
         mTimer.stop();
+    }
 }
 
 //==============================================================================

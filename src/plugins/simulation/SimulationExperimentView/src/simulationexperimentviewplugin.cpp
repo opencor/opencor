@@ -225,10 +225,13 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
 
         // Look for our pendulum window
 
+        static const QString PendulumWindow = "PendulumWindow";
+
         WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
 
-        if (windowInterface && !plugin->name().compare("PendulumWindow"))
+        if ((windowInterface != nullptr) && (plugin->name() == PendulumWindow)) {
             mPendulumWindowWindow = static_cast<PendulumWindow::PendulumWindowWindow *>(windowInterface->windowWidget());
+        }
     }
 
     // Create our Simulation Experiment view widget
