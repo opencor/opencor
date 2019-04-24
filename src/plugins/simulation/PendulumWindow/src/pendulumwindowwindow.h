@@ -34,8 +34,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "opencmiss/zinc/fieldfiniteelement.hpp"
-#include "opencmiss/zinc/timekeeper.hpp"
+#include "zincbegin.h"
+    #include "opencmiss/zinc/fieldfiniteelement.hpp"
+    #include "opencmiss/zinc/timekeeper.hpp"
+#include "zincend.h"
 
 //==============================================================================
 

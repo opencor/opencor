@@ -43,7 +43,7 @@ PLUGININFO_FUNC PendulumWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to test the pendulum model."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour tester le modèle du pendule."));
 
-    return new PluginInfo(PluginInfo::Simulation, false, false,
+    return new PluginInfo(PluginInfo::Category::Simulation, false, false,
                           QStringList() << "ZincWidget",
                           descriptions);
 }
@@ -120,7 +120,7 @@ void PendulumWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void PendulumWindowPlugin::loadSettings(QSettings *pSettings)
+void PendulumWindowPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -129,7 +129,7 @@ void PendulumWindowPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PendulumWindowPlugin::saveSettings(QSettings *pSettings) const
+void PendulumWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

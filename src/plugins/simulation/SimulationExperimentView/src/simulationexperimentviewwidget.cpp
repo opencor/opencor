@@ -588,10 +588,10 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
         }
 
         if (   q1Parameter && thetaParameter && r0Parameter
-            && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-            && (thetaParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State)
-            && (r0Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)) {
-            if (pTask != SimulationExperimentViewSimulationWidget::None) {
+            && (q1Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
+            && (thetaParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State)
+            && (r0Parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)) {
+            if (pTask != SimulationExperimentViewSimulationWidget::Task::None) {
                 mPlugin->pendulumWindowWindow()->initData(simulation->size(),
                                                           simulation->data()->startingPoint(),
                                                           simulation->data()->endingPoint(),
@@ -600,7 +600,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
                                                           simulation->results()->states(q1Parameter->index()),
                                                           simulation->results()->states(thetaParameter->index()));
             } else {
-                mPlugin->pendulumWindowWindow()->addData(simulationResultsSize);
+                mPlugin->pendulumWindowWindow()->addData(int(simulationResultsSize));
             }
         }
     }

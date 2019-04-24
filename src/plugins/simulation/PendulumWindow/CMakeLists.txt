@@ -11,9 +11,6 @@ ADD_PLUGIN(PendulumWindow
 
         src/pendulumwindowplugin.cpp
         src/pendulumwindowwindow.cpp
-    HEADERS_MOC
-        src/pendulumwindowplugin.h
-        src/pendulumwindowwindow.h
     UIS
         src/pendulumwindowwindow.ui
     PLUGINS

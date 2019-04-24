@@ -40,13 +40,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "opencmiss/zinc/fieldarithmeticoperators.hpp"
-#include "opencmiss/zinc/fieldcomposite.hpp"
-#include "opencmiss/zinc/fieldconstant.hpp"
-#include "opencmiss/zinc/fieldcoordinatetransformation.hpp"
-#include "opencmiss/zinc/fieldmodule.hpp"
-#include "opencmiss/zinc/fieldtime.hpp"
-#include "opencmiss/zinc/fieldvectoroperators.hpp"
+#include "zincbegin.h"
+    #include "opencmiss/zinc/fieldarithmeticoperators.hpp"
+    #include "opencmiss/zinc/fieldcomposite.hpp"
+    #include "opencmiss/zinc/fieldconstant.hpp"
+    #include "opencmiss/zinc/fieldcoordinatetransformation.hpp"
+    #include "opencmiss/zinc/fieldmodule.hpp"
+    #include "opencmiss/zinc/fieldtime.hpp"
+    #include "opencmiss/zinc/fieldvectoroperators.hpp"
+#include "zincend.h"
 
 //==============================================================================
 
@@ -90,7 +92,7 @@ PendulumWindowWindow::PendulumWindowWindow(QWidget *pParent) :
 
     Core::Widget *timeWidget = new Core::Widget(QSize(), this);
 
-    timeWidget->createLayout(Core::Widget::HorizontalLayout);
+    timeWidget->createLayout(Core::Widget::Layout::Horizontal);
 
     mTimeLabel = new QLabel(timeWidget);
 
