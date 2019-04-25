@@ -77,7 +77,7 @@ macro(update_language_files TARGET_NAME)
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
                             OUTPUT_QUIET)
             execute_process(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                          -qm ${QM_FILE}
+                                                              -qm ${QM_FILE}
                             OUTPUT_QUIET)
 
             track_files(${QM_FILE})
