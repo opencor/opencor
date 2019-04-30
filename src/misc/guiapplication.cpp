@@ -64,7 +64,7 @@ bool GuiApplication::hasFileNamesOrOpencorUrls() const
 {
     // Return whether we have some file name or OpenCOR URLs
 
-    return mFileNamesOrOpencorUrls.count();
+    return !mFileNamesOrOpencorUrls.isEmpty();
 }
 
 //==============================================================================
@@ -74,14 +74,14 @@ QString GuiApplication::firstFileNameOrOpencorUrl()
     // Retrieve, remove and return our first file name or OpenCOR URL, if any
 
     if (mFileNamesOrOpencorUrls.isEmpty()) {
-        return QString();
-    } else {
-        QString res = mFileNamesOrOpencorUrls.first();
-
-        mFileNamesOrOpencorUrls.removeFirst();
-
-        return res;
+        return {};
     }
+
+    QString res = mFileNamesOrOpencorUrls.first();
+
+    mFileNamesOrOpencorUrls.removeFirst();
+
+    return res;
 }
 
 //==============================================================================
@@ -100,26 +100,28 @@ bool GuiApplication::event(QEvent *pEvent)
     // Check whether we have been asked to open one or several files
 
     if (pEvent->type() == QEvent::FileOpen) {
-        QFileOpenEvent *fileOpenEvent = static_cast<QFileOpenEvent*>(pEvent);
+        auto fileOpenEvent = static_cast<QFileOpenEvent *>(pEvent);
         QString fileNameOrOpencorUrl = fileOpenEvent->file();
 
-        if (fileNameOrOpencorUrl.isEmpty())
+        if (fileNameOrOpencorUrl.isEmpty()) {
             fileNameOrOpencorUrl = fileOpenEvent->url().toString();
+        }
 
-        if (mCanEmitFileOpenRequestSignal)
+        if (mCanEmitFileOpenRequestSignal) {
             emit fileOpenRequest(fileNameOrOpencorUrl);
-        else
+        } else {
             mFileNamesOrOpencorUrls << fileNameOrOpencorUrl;
+        }
 
         return true;
-    } else {
-        return QApplication::event(pEvent);
     }
+
+    return QApplication::event(pEvent);
 }
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

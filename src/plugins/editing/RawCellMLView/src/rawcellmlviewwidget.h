@@ -41,13 +41,13 @@ namespace OpenCOR {
 
 namespace CellMLEditingView {
     class CellmlEditingViewWidget;
-}   // namespace CellMLEditingView
+} // namespace CellMLEditingView
 
 //==============================================================================
 
 namespace EditorWidget {
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -62,12 +62,10 @@ class RawCellmlViewWidget : public Core::ViewWidget
 public:
     explicit RawCellmlViewWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
-
-    bool contains(const QString &pFileName) const;
 
     void initialize(const QString &pFileName, bool pUpdate = true);
     void finalize(const QString &pFileName);
@@ -115,8 +113,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace RawCellMLView
-}   // namespace OpenCOR
+} // namespace RawCellMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -41,7 +41,7 @@ namespace OpenCOR {
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace SimulationSupport
+} // namespace SimulationSupport
 
 //==============================================================================
 
@@ -64,8 +64,8 @@ public:
                                             const Plugins &pCellmlSimulationViewPlugins,
                                             QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
 
@@ -74,6 +74,7 @@ public:
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
+    bool importFile(const QString &pFileName);
     bool saveFile(const QString &pOldFileName, const QString &pNewFileName);
 
     void fileOpened(const QString &pFileName);
@@ -98,7 +99,7 @@ public:
     quint64 simulationResultsSize(const QString &pFileName) const;
 
     void checkSimulationResults(const QString &pFileName,
-                                SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::None);
+                                SimulationExperimentViewSimulationWidget::Task pTask = SimulationExperimentViewSimulationWidget::Task::None);
 
 public slots:
     void clearResults(const QString &pFileName);
@@ -156,8 +157,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

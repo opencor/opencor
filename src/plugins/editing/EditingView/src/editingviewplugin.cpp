@@ -48,7 +48,7 @@ PLUGININFO_FUNC EditingViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides core editing view facilities."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit les fonctionalités de base d'une vue d'édition."));
 
-    return new PluginInfo(PluginInfo::Editing, false, false,
+    return new PluginInfo(PluginInfo::Category::Editing, false, false,
                           QStringList() << "EditorWidget",
                           descriptions);
 }
@@ -57,6 +57,18 @@ PLUGININFO_FUNC EditingViewPluginInfo()
 
 EditingViewPlugin::EditingViewPlugin() :
     mEditingViewInterface(nullptr),
+    mEditMenu(nullptr),
+    mEditUndoAction(nullptr),
+    mEditRedoAction(nullptr),
+    mEditCutAction(nullptr),
+    mEditCopyAction(nullptr),
+    mEditPasteAction(nullptr),
+    mEditDeleteAction(nullptr),
+    mEditFindReplaceAction(nullptr),
+    mEditFindNextAction(nullptr),
+    mEditFindPreviousAction(nullptr),
+    mEditSelectAllAction(nullptr),
+    mEditWordWrapAction(nullptr),
     mEditor(nullptr),
     mFileName(QString())
 {
@@ -66,13 +78,24 @@ EditingViewPlugin::EditingViewPlugin() :
 // File handling interface
 //==============================================================================
 
+bool EditingViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool EditingViewPlugin::saveFile(const QString &pOldFileName,
                                  const QString &pNewFileName,
                                  bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback)
 
     // We don't handle this interface...
 
@@ -83,7 +106,7 @@ bool EditingViewPlugin::saveFile(const QString &pOldFileName,
 
 void EditingViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -101,7 +124,7 @@ void EditingViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void EditingViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -110,7 +133,7 @@ void EditingViewPlugin::fileModified(const QString &pFileName)
 
 void EditingViewPlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -119,7 +142,7 @@ void EditingViewPlugin::fileSaved(const QString &pFileName)
 
 void EditingViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -129,8 +152,8 @@ void EditingViewPlugin::fileReloaded(const QString &pFileName)
 void EditingViewPlugin::fileRenamed(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
 
     // We don't handle this interface...
 }
@@ -139,7 +162,7 @@ void EditingViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void EditingViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -153,9 +176,9 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Reset our previous editor and set up our new one, should the current
     // plugin handle the editing view interface
 
-    mEditingViewInterface = pViewPlugin?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
+    mEditingViewInterface = (pViewPlugin != nullptr)?qobject_cast<EditingViewInterface *>(pViewPlugin->instance()):nullptr;
 
-    if (mEditingViewInterface) {
+    if (mEditingViewInterface != nullptr) {
         // Retrieve our new editor widget
 
         mEditor = mEditingViewInterface->editorWidget(pFileName);
@@ -166,7 +189,7 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         //       we don't end up with several identical connections (something
         //       that might happen if we were to switch views and back)...
 
-        if (mEditor) {
+        if (mEditor != nullptr) {
             mEditor->setContextMenu(mEditMenu->actions());
 
             connect(mEditor, &EditorWidget::EditorWidget::textChanged,
@@ -192,21 +215,21 @@ void EditingViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the editing view interface
 
-    Core::showEnableAction(mEditUndoAction, mEditingViewInterface, mEditor);
-    Core::showEnableAction(mEditRedoAction, mEditingViewInterface, mEditor);
+    Core::showEnableAction(mEditUndoAction, mEditingViewInterface != nullptr, mEditor != nullptr);
+    Core::showEnableAction(mEditRedoAction, mEditingViewInterface != nullptr, mEditor != nullptr);
 
-    Core::showEnableAction(mEditCutAction, mEditingViewInterface, mEditor);
-    Core::showEnableAction(mEditCopyAction, mEditingViewInterface, mEditor);
-    Core::showEnableAction(mEditPasteAction, mEditingViewInterface, mEditor);
-    Core::showEnableAction(mEditDeleteAction, mEditingViewInterface, mEditor);
+    Core::showEnableAction(mEditCutAction, mEditingViewInterface != nullptr, mEditor != nullptr);
+    Core::showEnableAction(mEditCopyAction, mEditingViewInterface != nullptr, mEditor != nullptr);
+    Core::showEnableAction(mEditPasteAction, mEditingViewInterface != nullptr, mEditor != nullptr);
+    Core::showEnableAction(mEditDeleteAction, mEditingViewInterface != nullptr, mEditor != nullptr);
 
-    Core::showEnableAction(mEditFindReplaceAction, mEditingViewInterface, mEditor);
-    Core::showEnableAction(mEditFindNextAction, mEditingViewInterface, mEditor);
-    Core::showEnableAction(mEditFindPreviousAction, mEditingViewInterface, mEditor);
+    Core::showEnableAction(mEditFindReplaceAction, mEditingViewInterface != nullptr, mEditor != nullptr);
+    Core::showEnableAction(mEditFindNextAction, mEditingViewInterface != nullptr, mEditor != nullptr);
+    Core::showEnableAction(mEditFindPreviousAction, mEditingViewInterface != nullptr, mEditor != nullptr);
 
-    Core::showEnableAction(mEditSelectAllAction, mEditingViewInterface, mEditor);
+    Core::showEnableAction(mEditSelectAllAction, mEditingViewInterface != nullptr, mEditor != nullptr);
 
-    Core::showEnableAction(mEditWordWrapAction, mEditingViewInterface, mEditor);
+    Core::showEnableAction(mEditWordWrapAction, mEditingViewInterface != nullptr, mEditor != nullptr);
 
     // Finish updating our GUI
 
@@ -219,7 +242,7 @@ Gui::Menus EditingViewPlugin::guiMenus() const
 {
     // Return our menus
 
-    return Gui::Menus() << Gui::Menu(Gui::Menu::View, mEditMenu);
+    return Gui::Menus() << Gui::Menu(Gui::Menu::Type::View, mEditMenu);
 }
 
 //==============================================================================
@@ -228,7 +251,7 @@ Gui::MenuActions EditingViewPlugin::guiMenuActions() const
 {
     // We don't handle this interface...
 
-    return Gui::MenuActions();
+    return {};
 }
 
 //==============================================================================
@@ -290,7 +313,7 @@ bool EditingViewPlugin::pluginInterfacesOk(const QString &pFileName,
     // Make sure that the given plugin instance uses the right version of the
     // editing view interface, if it supports it
 
-    return !(   qobject_cast<EditingViewInterface *>(pInstance)
+    return !(   (qobject_cast<EditingViewInterface *>(pInstance) != nullptr)
              && (Plugin::interfaceVersion(pFileName, "editingViewInterfaceVersion") != editingViewInterfaceVersion()));
 }
 
@@ -301,8 +324,9 @@ void EditingViewPlugin::initializePlugin()
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!Core::mainWindow())
+    if (Core::mainWindow() == nullptr) {
         return;
+    }
 
     // Create our Edit menu
 
@@ -397,25 +421,25 @@ void EditingViewPlugin::finalizePlugin()
 
 void EditingViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void EditingViewPlugin::loadSettings(QSettings *pSettings)
+void EditingViewPlugin::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void EditingViewPlugin::saveSettings(QSettings *pSettings) const
+void EditingViewPlugin::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // We don't handle this interface...
 }
@@ -424,7 +448,7 @@ void EditingViewPlugin::saveSettings(QSettings *pSettings) const
 
 void EditingViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -437,7 +461,7 @@ void EditingViewPlugin::updateGui(const QString &pFileName)
 {
     // Update some actions and make our editor read-only or writable, if needed
 
-    if (mEditingViewInterface && !pFileName.compare(mFileName)) {
+    if ((mEditingViewInterface != nullptr) && (pFileName == mFileName)) {
         // Update some actions
 
         updateUndoAndRedoActions();
@@ -447,7 +471,7 @@ void EditingViewPlugin::updateGui(const QString &pFileName)
 
         // Make our editor widget read-only or writable
 
-        if (mEditor) {
+        if (mEditor != nullptr) {
             mEditor->setReadOnly(   !Core::FileManager::instance()->isReadableAndWritable(pFileName)
                                  || !mEditingViewInterface->isEditorWidgetUseable(pFileName));
         }
@@ -460,7 +484,7 @@ void EditingViewPlugin::clipboardDataChanged()
 {
     // Enable our paste action if the clipboard contains some text
 
-    if (mEditingViewInterface) {
+    if (mEditingViewInterface != nullptr) {
         mEditPasteAction->setEnabled(    Core::FileManager::instance()->isReadableAndWritable(mFileName)
                                      && !QApplication::clipboard()->text().isEmpty());
     }
@@ -472,15 +496,16 @@ void EditingViewPlugin::updateUndoAndRedoActions()
 {
     // Make sure that our editor allows us to handle connections
 
-    if (!mEditor || !mEditor->handleEditorChanges())
+    if ((mEditor == nullptr) || !mEditor->handleEditorChanges()) {
         return;
+    }
 
     // Update our undo/redo actions, and update the modified state of the
     // current file
 
-    if (mEditingViewInterface) {
+    if (mEditingViewInterface != nullptr) {
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        bool editorAndFileReadableAndWritable = mEditor && fileManagerInstance->isReadableAndWritable(mFileName);
+        bool editorAndFileReadableAndWritable = (mEditor != nullptr) && fileManagerInstance->isReadableAndWritable(mFileName);
 
         mEditUndoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isUndoAvailable());
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
@@ -495,13 +520,14 @@ void EditingViewPlugin::updateEditingActions()
 {
     // Make sure that our editor allows us to handle connections
 
-    if (!mEditor || !mEditor->handleEditorChanges())
+    if ((mEditor == nullptr) || !mEditor->handleEditorChanges()) {
         return;
+    }
 
     // Update our editing actions
 
-    if (mEditingViewInterface) {
-        bool hasSelectedText = mEditor && mEditor->hasSelectedText();
+    if (mEditingViewInterface != nullptr) {
+        bool hasSelectedText = (mEditor != nullptr) && mEditor->hasSelectedText();
         bool fileReadableOrWritable = Core::FileManager::instance()->isReadableAndWritable(mFileName);
 
         mEditCutAction->setEnabled(hasSelectedText && fileReadableOrWritable);
@@ -517,8 +543,8 @@ void EditingViewPlugin::updateFindPreviousNextActions()
 {
     // Update our find previous and next actions
 
-    if (mEditingViewInterface) {
-        bool findPreviousNextAvailable = mEditor && mEditor->isFindPreviousNextAvailable();
+    if (mEditingViewInterface != nullptr) {
+        bool findPreviousNextAvailable = (mEditor != nullptr) && mEditor->isFindPreviousNextAvailable();
 
         mEditFindPreviousAction->setEnabled(findPreviousNextAvailable);
         mEditFindNextAction->setEnabled(findPreviousNextAvailable);
@@ -531,13 +557,15 @@ void EditingViewPlugin::updateSelectAllAction()
 {
     // Make sure that our editor allows us to handle connections
 
-    if (!mEditor || !mEditor->handleEditorChanges())
+    if ((mEditor == nullptr) || !mEditor->handleEditorChanges()) {
         return;
+    }
 
     // Update our select all action
 
-    if (mEditingViewInterface)
-        mEditSelectAllAction->setEnabled(mEditor && mEditor->isSelectAllAvailable());
+    if (mEditingViewInterface != nullptr) {
+        mEditSelectAllAction->setEnabled((mEditor != nullptr) && mEditor->isSelectAllAvailable());
+    }
 }
 
 //==============================================================================
@@ -658,8 +686,8 @@ void EditingViewPlugin::doWordWrap()
 
 //==============================================================================
 
-}   // namespace EditingView
-}   // namespace OpenCOR
+} // namespace EditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

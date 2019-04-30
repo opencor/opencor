@@ -33,8 +33,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "opencmiss/zinc/context.hpp"
-#include "opencmiss/zinc/result.hpp"
+#include <array>
+
+//==============================================================================
+
+#include "zincbegin.h"
+    #include "opencmiss/zinc/context.hpp"
+    #include "opencmiss/zinc/result.hpp"
+#include "zincend.h"
 
 //==============================================================================
 
@@ -44,14 +50,14 @@ void Tests::basicTests()
 
     // Create a context and check a few things
 
-    static const cmzn_context_id Id = cmzn_context_create("test");
+    static cmzn_context * const Id = cmzn_context_create("test");
 
     OpenCMISS::Zinc::Context context(Id);
 
     QCOMPARE(context.isValid(), true);
     QCOMPARE(context.getId(), Id);
 
-    int version[3];
+    std::array<int, 3> version = {};
 
     QCOMPARE(context.getVersion(&version[0]), int(OpenCMISS::Zinc::Result::RESULT_OK));
     QCOMPARE(version[0], 3);

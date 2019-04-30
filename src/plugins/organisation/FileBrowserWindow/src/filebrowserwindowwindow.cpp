@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // File Browser window
 //==============================================================================
 
-#include "filebrowserwindowwindow.h"
 #include "filebrowserwindowwidget.h"
+#include "filebrowserwindowwindow.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
@@ -62,7 +62,7 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
 
     // Create a tool bar widget with different buttons
 
-    Core::ToolBarWidget *toolBarWidget = new Core::ToolBarWidget();
+    auto toolBarWidget = new Core::ToolBarWidget();
 
     toolBarWidget->addAction(mGui->actionHome);
     toolBarWidget->addSeparator();
@@ -138,24 +138,24 @@ void FileBrowserWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::loadSettings(QSettings *pSettings)
+void FileBrowserWindowWindow::loadSettings(QSettings &pSettings)
 {
     // Retrieve the settings of the file browser widget
 
-    pSettings->beginGroup(mFileBrowserWindowWidget->objectName());
+    pSettings.beginGroup(mFileBrowserWindowWidget->objectName());
         mFileBrowserWindowWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void FileBrowserWindowWindow::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowWindow::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the settings of the file browser widget
 
-    pSettings->beginGroup(mFileBrowserWindowWidget->objectName());
+    pSettings.beginGroup(mFileBrowserWindowWidget->objectName());
         mFileBrowserWindowWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
@@ -223,8 +223,8 @@ void FileBrowserWindowWindow::itemDoubleClicked()
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
-}   // namespace OpenCOR
+} // namespace FileBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

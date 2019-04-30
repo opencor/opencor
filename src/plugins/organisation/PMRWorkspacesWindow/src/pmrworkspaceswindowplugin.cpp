@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 #include "pmrworkspaceswindowplugin.h"
 #include "pmrworkspaceswindowwindow.h"
@@ -46,10 +47,10 @@ PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to manage a user's <a href=\"https://models.physiomeproject.org/\">PMR</a> workspaces."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder les espaces de travail <a href=\"https://models.physiomeproject.org/\">PMR</a> d'un utilisateur."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to manage a user's <a href="https://models.physiomeproject.org/">PMR</a> workspaces.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder les espaces de travail <a href="https://models.physiomeproject.org/">PMR</a> d'un utilisateur.)"));
 
-    return new PluginInfo(PluginInfo::Organisation, true, false,
+    return new PluginInfo(PluginInfo::Category::Organisation, true, false,
                           QStringList() << "CellMLSupport" << "LibXDiff" << "PMRSupport",
                           descriptions,
                           QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
@@ -87,8 +88,8 @@ bool PMRWorkspacesWindowPlugin::definesPluginInterfaces()
 bool PMRWorkspacesWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                                    QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -119,38 +120,38 @@ void PMRWorkspacesWindowPlugin::finalizePlugin()
 
 void PMRWorkspacesWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PMRWorkspacesWindowPlugin::loadSettings(QSettings *pSettings)
+void PMRWorkspacesWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our PMR Workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWindow->objectName());
         mPmrWorkspacesWindowWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void PMRWorkspacesWindowPlugin::saveSettings(QSettings *pSettings) const
+void PMRWorkspacesWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our PMR Workspaces window settings
 
-    pSettings->beginGroup(mPmrWorkspacesWindowWindow->objectName());
+    pSettings.beginGroup(mPmrWorkspacesWindowWindow->objectName());
         mPmrWorkspacesWindowWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void PMRWorkspacesWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -211,8 +212,8 @@ QDockWidget * PMRWorkspacesWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -65,8 +65,9 @@ void TreeViewWidget::resizeColumnsToContents()
 {
     // Resize all our columns to their contents
 
-    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
         resizeColumnToContents(i);
+    }
 }
 
 //==============================================================================
@@ -75,13 +76,14 @@ void TreeViewWidget::selectItem(int pRow, int pColumn)
 {
     // Select the requested item, if any
 
-    QStandardItemModel *treeViewModel = qobject_cast<QStandardItemModel *>(model());
+    auto treeViewModel = qobject_cast<QStandardItemModel *>(model());
 
-    if (treeViewModel) {
+    if (treeViewModel != nullptr) {
         QStandardItem *treeViewItem = treeViewModel->invisibleRootItem()->child(pRow, pColumn);
 
-        if (treeViewItem)
+        if (treeViewItem != nullptr) {
             setCurrentIndex(treeViewItem->index());
+        }
     }
 }
 
@@ -118,7 +120,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
             QModelIndex crtIndex = currentIndex();
 
-            if (crtIndex.column()) {
+            if (crtIndex.column() != 0) {
                 // We are not dealing with the (row, 0) item, so make sure we do
 
                 crtIndex = crtIndex.sibling(crtIndex.row(), 0);
@@ -151,7 +153,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
             QModelIndex crtIndex = currentIndex();
 
-            if (crtIndex.column()) {
+            if (crtIndex.column() != 0) {
                 // We are not dealing with the (row, 0) item, so make sure we do
 
                 crtIndex = crtIndex.sibling(crtIndex.row(), 0);
@@ -207,8 +209,9 @@ void TreeViewWidget::mousePressEvent(QMouseEvent *pEvent)
     if (pEvent->button() == Qt::RightButton) {
         QModelIndex indexAtPosition = indexAt(pEvent->pos());
 
-        if (!selectedIndexes().contains(indexAtPosition))
+        if (!selectedIndexes().contains(indexAtPosition)) {
             setCurrentIndex(indexAtPosition);
+        }
     }
 }
 
@@ -231,8 +234,8 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
     QModelIndexList selectedDraggableIndexes = selectedIndexes();
 
     for (int i = selectedDraggableIndexes.count()-1; i >= 0; --i) {
-        if (   !(model()->flags(selectedDraggableIndexes[i]) & Qt::ItemIsDragEnabled)
-            || selectedDraggableIndexes[i].column()) {
+        if (   ((model()->flags(selectedDraggableIndexes[i]) & Qt::ItemIsDragEnabled) == 0)
+            || (selectedDraggableIndexes[i].column() != 0)) {
             // The current selected item is not draggable or is not in the first
             // column
             // Note: regarding the test on the column number, it is because we
@@ -250,14 +253,15 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
     // Start the dragging action is there is at least one selected draggable
     // item
 
-    if (selectedDraggableIndexes.count()) {
+    if (!selectedDraggableIndexes.isEmpty()) {
         // There is at least one selected draggable item, so create a QMimeData
         // object for it
 
         QMimeData *mimeData = model()->mimeData(selectedDraggableIndexes);
 
-        if (!mimeData)
+        if (mimeData == nullptr) {
             return;
+        }
 
         // Create the pixmap that will be associated with the dragging action
 
@@ -266,20 +270,20 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
         // Create the drag object
 
-        QDrag *drag = new QDrag(this);
+        auto drag = new QDrag(this);
 
         drag->setMimeData(mimeData);
         drag->setPixmap(pixmap);
-        drag->setHotSpot(QPoint(pixmap.width() >> 1, pixmap.height() >> 1));
+        drag->setHotSpot(QPoint(pixmap.width()/2, pixmap.height()/2));
 
         // Do the dragging itself
 
         Qt::DropAction realDefaultDropAction = Qt::IgnoreAction;
 
         if (   (defaultDropAction() != Qt::IgnoreAction)
-            && (pSupportedActions & defaultDropAction())) {
+            && ((pSupportedActions & defaultDropAction()) != 0)) {
             realDefaultDropAction = defaultDropAction();
-        } else if (   (pSupportedActions & Qt::CopyAction)
+        } else if (   ((pSupportedActions & Qt::CopyAction) != 0)
                    && (dragDropMode() != QAbstractItemView::InternalMove)) {
             realDefaultDropAction = Qt::CopyAction;
         }
@@ -295,7 +299,7 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
                 for (const auto &itemSelectionRange : selection) {
                     QModelIndex parent = itemSelectionRange.parent();
 
-                    if (   !itemSelectionRange.left()
+                    if (   (itemSelectionRange.left() == 0)
                         && (itemSelectionRange.right() == (model()->columnCount(parent)-1))) {
                         model()->removeRows(itemSelectionRange.top(),
                                             itemSelectionRange.bottom()-itemSelectionRange.top()+1,
@@ -323,8 +327,8 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

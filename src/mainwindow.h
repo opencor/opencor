@@ -38,11 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class MainWindow;
-}   // namespace Ui
-
-//==============================================================================
-
-class QSettings;
+} // namespace Ui
 
 //==============================================================================
 
@@ -51,6 +47,7 @@ namespace OpenCOR {
 //==============================================================================
 
 class CoreInterface;
+class FileHandlingInterface;
 class PluginManager;
 
 //==============================================================================
@@ -86,8 +83,6 @@ private:
 
     QString mApplicationDate;
 
-    QSettings *mSettings;
-
     PluginManager *mPluginManager;
 
     Plugins mLoadedPluginPlugins;
@@ -97,6 +92,7 @@ private:
     Plugins mLoadedWindowPlugins;
 
     CoreInterface *mCoreInterface;
+    FileHandlingInterface *mFileHandlingInterface;
 
     QString mRawLocale;
 
@@ -163,7 +159,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

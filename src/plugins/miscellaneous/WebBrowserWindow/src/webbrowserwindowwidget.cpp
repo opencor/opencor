@@ -50,7 +50,9 @@ bool WebBrowserWindowWidget::isUrlSchemeSupported(const QString &pUrlScheme)
     // We support all URL schemes, but the OpenCOR one (opencor://...), which we
     // want to be handled (i.e. opened) the default way
 
-    return pUrlScheme.compare("opencor");
+    static const QString Opencor = "opencor";
+
+    return pUrlScheme != Opencor;
 }
 
 //==============================================================================
@@ -66,8 +68,8 @@ void WebBrowserWindowWidget::clear()
 
 //==============================================================================
 
-}   // namespace WebBrowserWindow
-}   // namespace OpenCOR
+} // namespace WebBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

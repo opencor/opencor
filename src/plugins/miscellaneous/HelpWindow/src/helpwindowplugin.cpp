@@ -44,7 +44,7 @@ PLUGININFO_FUNC HelpWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to provide help."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour fournir de l'aide."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, true, false,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           QStringList() << "Core" << "WebViewerWidget",
                           descriptions);
 }
@@ -81,8 +81,8 @@ bool HelpWindowPlugin::definesPluginInterfaces()
 bool HelpWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                           QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -114,38 +114,38 @@ void HelpWindowPlugin::finalizePlugin()
 
 void HelpWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void HelpWindowPlugin::loadSettings(QSettings *pSettings)
+void HelpWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Help window settings
 
-    pSettings->beginGroup(mHelpWindow->objectName());
+    pSettings.beginGroup(mHelpWindow->objectName());
         mHelpWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
+void HelpWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Help window settings
 
-    pSettings->beginGroup(mHelpWindow->objectName());
+    pSettings.beginGroup(mHelpWindow->objectName());
         mHelpWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void HelpWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -181,8 +181,8 @@ QDockWidget * HelpWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-}   // namespace HelpWindow
-}   // namespace OpenCOR
+} // namespace HelpWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -13,11 +13,6 @@ add_plugin(FileBrowserWindow
         src/filebrowserwindowplugin.cpp
         src/filebrowserwindowwidget.cpp
         src/filebrowserwindowwindow.cpp
-    HEADERS_MOC
-        src/filebrowserwindowmodel.h
-        src/filebrowserwindowplugin.h
-        src/filebrowserwindowwidget.h
-        src/filebrowserwindowwindow.h
     UIS
         src/filebrowserwindowwindow.ui
     PLUGINS

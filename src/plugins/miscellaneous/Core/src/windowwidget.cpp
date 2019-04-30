@@ -51,8 +51,8 @@ void WindowWidget::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

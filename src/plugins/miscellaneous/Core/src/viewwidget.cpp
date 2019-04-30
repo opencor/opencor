@@ -41,13 +41,13 @@ QList<QWidget *> ViewWidget::statusBarWidgets() const
 {
     // No status bar widgets by default
 
-    return QList<QWidget *>();
+    return {};
 }
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

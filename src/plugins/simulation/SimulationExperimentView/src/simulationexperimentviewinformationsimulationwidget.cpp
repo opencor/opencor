@@ -151,8 +151,8 @@ double SimulationExperimentViewInformationSimulationWidget::pointInterval() cons
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

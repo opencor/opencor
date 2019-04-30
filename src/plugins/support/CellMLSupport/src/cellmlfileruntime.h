@@ -55,7 +55,7 @@ namespace OpenCOR {
 
 namespace Compiler {
     class CompilerEngine;
-}   // namespace Compiler
+} // namespace Compiler
 
 //==============================================================================
 
@@ -70,7 +70,7 @@ class CellmlFile;
 class CELLMLSUPPORT_EXPORT CellmlFileRuntimeParameter
 {
 public:
-    enum ParameterType {
+    enum class Type {
         Unknown,
         Voi,
         Constant,
@@ -79,13 +79,15 @@ public:
         State,
         Algebraic,
         Floating,
-        LocallyBound
+        LocallyBound,
+        Data
     };
 
     explicit CellmlFileRuntimeParameter(const QString &pName, int pDegree,
                                         const QString &pUnit,
                                         const QStringList &pComponentHierarchy,
-                                        ParameterType pType, int pIndex);
+                                        Type pType, int pIndex,
+                                        double *pData = nullptr);
 
     static bool compare(CellmlFileRuntimeParameter *pParameter1,
                         CellmlFileRuntimeParameter *pParameter2);
@@ -94,8 +96,9 @@ public:
     int degree() const;
     QString unit() const;
     QStringList componentHierarchy() const;
-    ParameterType type() const;
+    Type type() const;
     int index() const;
+    double * data() const;
 
     QString formattedName() const;
     QString formattedComponentHierarchy() const;
@@ -104,15 +107,16 @@ public:
     QString formattedUnit(const QString &pVoiUnit) const;
 
     static QMap<int, QIcon> icons();
-    static QIcon icon(ParameterType pParameterType);
+    static QIcon icon(Type pParameterType);
 
 private:
     QString mName;
     int mDegree;
     QString mUnit;
     QStringList mComponentHierarchy;
-    ParameterType mType;
+    Type mType;
     int mIndex;
+    double *mData;
 };
 
 //==============================================================================
@@ -134,13 +138,17 @@ public:
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime() override;
 
-    CellmlFile * cellmlFile();
+    void update(CellmlFile *pCellmlFile, bool pAll = true);
 
     QString address() const;
 
     bool isValid() const;
 
     bool needNlaSolver() const;
+
+    void importData(const QString &pName,
+                    const QStringList &pComponentHierarchy, int pIndex,
+                    double *pData);
 
     int constantsCount() const;
     int statesCount() const;
@@ -155,12 +163,11 @@ public:
     CellmlFileIssues issues() const;
 
     CellmlFileRuntimeParameters parameters() const;
+    CellmlFileRuntimeParameters dataParameters(const double *pData = nullptr) const;
 
     CellmlFileRuntimeParameter * voi() const;
 
 private:
-    CellmlFile *mCellmlFile;
-
     bool mAtLeastOneNlaSystem;
 
     ObjRef<iface::cellml_services::CodeInformation> mCodeInformation;
@@ -185,7 +192,7 @@ private:
 
     void resetFunctions();
 
-    void reset(bool pRecreateCompilerEngine, bool pResetIssues);
+    void reset(bool pRecreateCompilerEngine, bool pResetIssues, bool pResetAll);
 
     void couldNotGenerateModelCodeIssue(const QString &pExtraInfo);
     void unknownProblemDuringModelCodeGenerationIssue();
@@ -204,8 +211,8 @@ private:
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

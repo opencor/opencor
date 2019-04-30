@@ -21,10 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // CellML Annotation view plugin
 //==============================================================================
 
-#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
-#include "cellmlfilemanager.h"
+#include "cellmlfile.h"
 #include "cellmlsupportplugin.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
@@ -45,10 +44,10 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to annotate <a href=\"http://www.cellml.org/\">CellML</a> files."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers <a href=\"http://www.cellml.org/\">CellML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to annotate <a href="http://www.cellml.org/">CellML</a> files.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour annoter des fichiers <a href="http://www.cellml.org/">CellML</a>.)"));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "CellMLSupport" << "WebViewerWidget",
                           descriptions);
 }
@@ -57,11 +56,22 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool CellMLAnnotationViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
                                           const QString &pNewFileName,
                                           bool &pNeedFeedback)
 {
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pNeedFeedback)
 
     // Save the given file
 
@@ -72,7 +82,7 @@ bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
 
 void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -90,7 +100,7 @@ void CellMLAnnotationViewPlugin::filePermissionsChanged(const QString &pFileName
 
 void CellMLAnnotationViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -127,7 +137,7 @@ void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void CellMLAnnotationViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -159,8 +169,8 @@ bool CellMLAnnotationViewPlugin::definesPluginInterfaces()
 bool CellMLAnnotationViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                                     QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -194,38 +204,38 @@ void CellMLAnnotationViewPlugin::finalizePlugin()
 
 void CellMLAnnotationViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
+void CellMLAnnotationViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our CellML Annotation view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
+void CellMLAnnotationViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our CellML Annotation view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void CellMLAnnotationViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -238,7 +248,7 @@ ViewInterface::Mode CellMLAnnotationViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::Editing;
 }
 
 //==============================================================================
@@ -280,8 +290,8 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   Core::FileManager::instance()->isNew(pFileName)
-        || (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1))) {
+        || (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1))) {
         return nullptr;
     }
 
@@ -315,7 +325,7 @@ QString CellMLAnnotationViewPlugin::viewName() const
 
 QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -326,8 +336,8 @@ QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

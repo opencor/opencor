@@ -39,10 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <qnamespace.h>
-
-//==============================================================================
-
 #ifdef Q_OS_WIN
     #include <qt_windows.h>
 #else
@@ -97,8 +93,6 @@ SplashScreenWindow::SplashScreenWindow() :
     newFont.setPointSize(8);
 #elif defined(Q_OS_MAC)
     newFont.setPointSize(11);
-#else
-    #error Unsupported platform
 #endif
 
     mGui->copyrightValue->setFont(newFont);
@@ -145,8 +139,9 @@ void SplashScreenWindow::closeAndDeleteAfter(QWidget *pWindow)
     while (!window->isExposed()) {
         int remaining = int(TimeOut-timer.elapsed());
 
-        if (remaining <= 0)
+        if (remaining <= 0) {
             break;
+        }
 
         QCoreApplication::processEvents(QEventLoop::AllEvents, remaining);
         QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
@@ -187,7 +182,7 @@ void SplashScreenWindow::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

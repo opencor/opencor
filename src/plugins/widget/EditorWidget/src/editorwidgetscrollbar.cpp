@@ -66,8 +66,6 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
     int arrowButtonHeight = style()->subControlRect(QStyle::CC_ScrollBar, &styleOption, QStyle::SC_ScrollBarAddLine, this).height();
 #elif defined(Q_OS_MAC)
     int arrowButtonHeight = 0;
-#else
-    #error Unsupported platform
 #endif
 
     // Draw our highlights
@@ -76,7 +74,7 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
     static const QPen HighlightPen = QColor(0, 192, 0, PenAlpha);
 
     QPainter painter(this);
-    double positionScaling = double(height()-2*arrowButtonHeight-1)/mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->text().length());
+    double positionScaling = (height()-2*arrowButtonHeight-1)/double(mOwner->SendScintilla(QsciScintilla::SCI_LINEFROMPOSITION, mOwner->text().length()));
     int cursorPosition;
     QIntSet cursorPositions = QIntSet();
 
@@ -106,8 +104,8 @@ void EditorWidgetScrollBar::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

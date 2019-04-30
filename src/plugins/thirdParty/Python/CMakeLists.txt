@@ -559,8 +559,6 @@ add_plugin(Python
         ../../plugininfo.cpp
 
         src/pythonplugin.cpp
-    HEADERS_MOC
-        src/pythonplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

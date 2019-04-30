@@ -92,7 +92,7 @@ public:
     static DATASTORE_EXPORT PyObject *dataStoreVariablesDict(const DataStoreVariables &pDataStoreVariables);
 
 public slots:
-    double valueAt(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const quint64 &pPosition, const int &pRun = -1) const;
+    double value(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const quint64 &pPosition, const int &pRun = -1) const;
 
     PyObject * values(OpenCOR::DataStore::DataStoreVariable *pDataStoreVariable, const int &pRun = -1) const;
 

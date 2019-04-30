@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // PMR support preferences widget
 //==============================================================================
 
+#include "pmrsupportplugin.h"
 #include "pmrsupportpreferenceswidget.h"
 
 //==============================================================================
@@ -40,8 +41,8 @@ namespace PMRSupport {
 
 //==============================================================================
 
-static const auto StagingInstance  = QStringLiteral("https://staging.physiomeproject.org");
-static const auto TeachingInstance = QStringLiteral("https://teaching.physiomeproject.org");
+static const char *StagingInstance  = "https://staging.physiomeproject.org";
+static const char *TeachingInstance = "https://teaching.physiomeproject.org";
 
 //==============================================================================
 
@@ -67,9 +68,9 @@ PmrSupportPreferencesWidget::PmrSupportPreferencesWidget(QWidget *pParent) :
     mGui->emailValue->setAttribute(Qt::WA_MacShowFocusRect, false);
 #endif
 
-    mPmrUrl = mSettings->value(SettingsPreferencesPmrUrl, SettingsPreferencesPmrUrlDefault).toString();
-    mName = mSettings->value(SettingsPreferencesName, SettingsPreferencesNameDefault).toString();
-    mEmail = mSettings->value(SettingsPreferencesEmail, SettingsPreferencesEmailDefault).toString();
+    mPmrUrl = mSettings.value(SettingsPreferencesPmrUrl, SettingsPreferencesPmrUrlDefault).toString();
+    mName = mSettings.value(SettingsPreferencesName, SettingsPreferencesNameDefault).toString();
+    mEmail = mSettings.value(SettingsPreferencesEmail, SettingsPreferencesEmailDefault).toString();
 
     mGui->pmrUrlValue->setCurrentText(mPmrUrl);
     mGui->nameValue->setText(mName);
@@ -93,9 +94,9 @@ bool PmrSupportPreferencesWidget::preferencesChanged() const
 {
     // Return whether our preferences have changed
 
-    return    mGui->pmrUrlValue->currentText().compare(mPmrUrl)
-           || mGui->nameValue->text().compare(mName)
-           || mGui->emailValue->text().compare(mEmail);
+    return    (mGui->pmrUrlValue->currentText() != mPmrUrl)
+           || (mGui->nameValue->text() != mName)
+           || (mGui->emailValue->text() != mEmail);
 }
 
 //==============================================================================
@@ -115,9 +116,9 @@ void PmrSupportPreferencesWidget::savePreferences()
 {
     // Save our preferences
 
-    mSettings->setValue(SettingsPreferencesPmrUrl, mGui->pmrUrlValue->currentText());
-    mSettings->setValue(SettingsPreferencesName, mGui->nameValue->text());
-    mSettings->setValue(SettingsPreferencesEmail, mGui->emailValue->text());
+    mSettings.setValue(SettingsPreferencesPmrUrl, mGui->pmrUrlValue->currentText());
+    mSettings.setValue(SettingsPreferencesName, mGui->nameValue->text());
+    mSettings.setValue(SettingsPreferencesEmail, mGui->emailValue->text());
 }
 
 //==============================================================================
@@ -126,14 +127,15 @@ void PmrSupportPreferencesWidget::pmrUrlValueCurrentTextChanged(const QString &p
 {
     // Update our PMR URL note based on the PMR URL that is currently selected
 
-    if (!pCurrentText.compare(SettingsPreferencesPmrUrlDefault))
+    if (pCurrentText == SettingsPreferencesPmrUrlDefault) {
         mGui->noteValue->setText(tr("the primary instance is selected. Everything on this instance is permanent and persistent. It is always up and always stable."));
-    else if (!pCurrentText.compare(StagingInstance))
+    } else if (pCurrentText == StagingInstance) {
         mGui->noteValue->setText(tr("the staging instance is selected. It is used for public testing/preview of PMR developments. Data on this instance is wiped periodically whenever a new public testing/preview of the PMR software suite is released for the required testing exercise."));
-    else if (!pCurrentText.compare(TeachingInstance))
-        mGui->noteValue->setText(tr("the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the <a href=\"https://lists.cellml.org/sympa/info/cellml-discussion\">cellml-discussion mailing list</a>."));
-    else
+    } else if (pCurrentText == TeachingInstance) {
+        mGui->noteValue->setText(tr(R"(the teaching instance is selected. The functionality of this instance should match the primary instance, but without the data persistency guarantees. While data on this instance is also not permanent, any wipes to data stored will be announced on the <a href="https://lists.cellml.org/sympa/info/cellml-discussion">cellml-discussion mailing list</a>.)"));
+    } else {
         mGui->noteValue->setText(QString());
+    }
 
     mGui->noteLabel->setVisible(!mGui->noteValue->text().isEmpty());
 }
@@ -149,8 +151,8 @@ void PmrSupportPreferencesWidget::noteValueLinkActivated(const QString &pLink)
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

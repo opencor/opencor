@@ -41,7 +41,7 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter des simulations."));
 
 // TODO: we need a better way to include all the solver plugins...
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "COMBINESupport" << "DataStore" << "PythonQtSupport"
                                         << "CVODESolver" << "ForwardEulerSolver"
                                         << "FourthOrderRungeKuttaSolver" << "HeunSolver"
@@ -53,13 +53,24 @@ PLUGININFO_FUNC SimulationSupportPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool SimulationSupportPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool SimulationSupportPlugin::saveFile(const QString &pOldFileName,
                                        const QString &pNewFileName,
                                        bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback)
 
     // We don't handle this interface...
 
@@ -70,7 +81,7 @@ bool SimulationSupportPlugin::saveFile(const QString &pOldFileName,
 
 void SimulationSupportPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -79,7 +90,7 @@ void SimulationSupportPlugin::fileOpened(const QString &pFileName)
 
 void SimulationSupportPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -88,7 +99,7 @@ void SimulationSupportPlugin::filePermissionsChanged(const QString &pFileName)
 
 void SimulationSupportPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -128,7 +139,7 @@ void SimulationSupportPlugin::fileRenamed(const QString &pOldFileName,
 
 void SimulationSupportPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -156,8 +167,8 @@ void SimulationSupportPlugin::registerPythonClasses(PyObject *pModule)
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

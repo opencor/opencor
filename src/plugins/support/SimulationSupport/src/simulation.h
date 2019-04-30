@@ -48,19 +48,19 @@ namespace CellMLSupport {
     class CellmlFile;
     class CellmlFileRuntime;
     class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
 
 //==============================================================================
 
 namespace COMBINESupport {
     class CombineArchive;
-}   // namespace COMBINESupport
+} // namespace COMBINESupport
 
 //==============================================================================
 
 namespace SEDMLSupport {
     class SedmlFile;
-}   // namespace SEDMLSupport
+} // namespace SEDMLSupport
 
 //==============================================================================
 
@@ -98,6 +98,7 @@ class SimulationObject : public QObject
 
 public:
     explicit SimulationObject(Simulation *pSimulation);
+    ~SimulationObject() override;
 
 public slots:
     Simulation * simulation() const;
@@ -124,6 +125,9 @@ public:
     double * rates() const;
     double * states() const;
     double * algebraic() const;
+    double * data(DataStore::DataStore *pDataStore) const;
+
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     DataStore::DataStoreValues * constantsValues() const;
     DataStore::DataStoreValues * ratesValues() const;
@@ -190,6 +194,8 @@ public slots:
     void setGradientCalculation(const QString &pConstantUri, bool pCalculate = true);
     void setGradientCalculationByIndex(const int &pIndex, bool pCalculate);
 
+    void updateInitialValues();
+
 private:
     SimulationResults *mSimulationResults;
 
@@ -227,6 +233,8 @@ private:
 
     SimulationDataUpdatedFunction mSimulationDataUpdatedFunction;
 
+    QMap<DataStore::DataStore *, double *> mData;
+
     void createArrays();
     void deleteArrays();
 
@@ -257,6 +265,8 @@ public:
     explicit SimulationResults(Simulation *pSimulation);
     ~SimulationResults() override;
 
+    void importData(DataStore::DataStoreImportData *pImportData);
+
     bool addRun();
 
     void addPoint(double pPoint);
@@ -267,6 +277,7 @@ public:
     double * rates(int pIndex, int pRun = -1) const;
     double * states(int pIndex, int pRun = -1) const;
     double * algebraic(int pIndex, int pRun = -1) const;
+    double * data(double *pData, int pIndex, int pRun = -1) const;
 
     DataStore::DataStoreVariables constantVariables() const;
     DataStore::DataStoreVariables rateVariables() const;
@@ -299,10 +310,34 @@ private:
     DataStore::DataStore *mGradientsStore;
     DataStore::DataStoreVariables mGradients;
 
+    QMap<double *, DataStore::DataStoreVariables> mData;
+    QMap<double *, DataStore::DataStore *> mDataDataStores;
+
     void createDataStore();
     void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
+
+    double realPoint(double pPoint, int pRun = -1) const;
+
+    double realValue(double pPoint, DataStore::DataStoreVariable *pVoi,
+                     DataStore::DataStoreVariable *pVariable) const;
+};
+
+//==============================================================================
+
+class SIMULATIONSUPPORT_EXPORT SimulationImportData : public SimulationObject
+{
+    Q_OBJECT
+
+public:
+    explicit SimulationImportData(Simulation *pSimulation);
+    ~SimulationImportData();
+
+    DataStore::DataStore * addDataStore();
+
+private:
+    QList<DataStore::DataStore *> mDataStores;
 };
 
 //==============================================================================
@@ -312,7 +347,8 @@ class SIMULATIONSUPPORT_EXPORT Simulation : public QObject
     Q_OBJECT
 
 public:
-    enum FileType {
+    enum class FileType {
+        Unknown,
         CellmlFile,
         SedmlFile,
         CombineArchive
@@ -332,6 +368,10 @@ public:
     CellMLSupport::CellmlFile * cellmlFile() const;
     SEDMLSupport::SedmlFile * sedmlFile() const;
     COMBINESupport::CombineArchive * combineArchive() const;
+
+    SimulationImportData * importData() const;
+
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     bool addRun();
 
@@ -353,6 +393,7 @@ public slots:
     OpenCOR::SimulationSupport::SimulationResults * results() const;
 
     int runsCount() const;
+    quint64 runSize(int pRun = -1) const;
 
     bool isRunning() const;
     bool isPaused() const;
@@ -379,6 +420,7 @@ private:
 
     SimulationData *mData;
     SimulationResults *mResults;
+    SimulationImportData *mImportData;
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
@@ -394,12 +436,15 @@ signals:
     void done(qint64 pElapsedTime);
 
     void error(const QString &pMessage);
+
+private slots:
+    void fileManaged(const QString &pFileName);
 };
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+} // namespace SimulationSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

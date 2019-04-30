@@ -63,14 +63,16 @@ CellmlFileRuntimeParameter::CellmlFileRuntimeParameter(const QString &pName,
                                                        int pDegree,
                                                        const QString &pUnit,
                                                        const QStringList &pComponentHierarchy,
-                                                       ParameterType pType,
-                                                       int pIndex) :
+                                                       Type pType,
+                                                       int pIndex,
+                                                       double *pData) :
     mName(pName),
     mDegree(pDegree),
     mUnit(pUnit),
     mComponentHierarchy(pComponentHierarchy),
     mType(pType),
-    mIndex(pIndex)
+    mIndex(pIndex),
+    mData(pData)
 {
 }
 
@@ -86,14 +88,15 @@ bool CellmlFileRuntimeParameter::compare(CellmlFileRuntimeParameter *pParameter1
     QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
     QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
 
-    if (!componentHierarchy1.compare(componentHierarchy2)) {
-        if (!pParameter1->name().compare(pParameter2->name()))
+    if (componentHierarchy1 == componentHierarchy2) {
+        if (pParameter1->name() == pParameter2->name()) {
             return pParameter1->degree() < pParameter2->degree();
-        else
-            return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
-    } else {
-        return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
+        }
+
+        return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
     }
+
+    return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -134,7 +137,7 @@ QStringList CellmlFileRuntimeParameter::componentHierarchy() const
 
 //==============================================================================
 
-CellmlFileRuntimeParameter::ParameterType CellmlFileRuntimeParameter::type() const
+CellmlFileRuntimeParameter::Type CellmlFileRuntimeParameter::type() const
 {
     // Return our type
 
@@ -148,6 +151,15 @@ int CellmlFileRuntimeParameter::index() const
     // Return our index
 
     return mIndex;
+}
+
+//==============================================================================
+
+double * CellmlFileRuntimeParameter::data() const
+{
+    // Return our array
+
+    return mData;
 }
 
 //==============================================================================
@@ -185,11 +197,12 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
     QString perVoiUnitDegree = QString();
 
-    if (mDegree) {
+    if (mDegree != 0) {
         perVoiUnitDegree += "/"+pVoiUnit;
 
-        if (mDegree > 1)
+        if (mDegree > 1) {
             perVoiUnitDegree += "^"+QString::number(mDegree);
+        }
     }
 
     return mUnit+perVoiUnitDegree;
@@ -209,16 +222,18 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
     static const QIcon RateIcon             = QIcon(":/CellMLSupport/rate.png");
     static const QIcon StateIcon            = QIcon(":/CellMLSupport/state.png");
     static const QIcon AlgebraicIcon        = QIcon(":/CellMLSupport/algebraic.png");
+    static const QIcon DataIcon             = QIcon(":/CellMLSupport/data.png");
 
     // Initialise the mapping, if needed
 
     if (Icons.isEmpty()) {
-        Icons.insert(CellmlFileRuntimeParameter::Voi, VoiIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Constant, ConstantIcon);
-        Icons.insert(CellmlFileRuntimeParameter::ComputedConstant, ComputedConstantIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Rate, RateIcon);
-        Icons.insert(CellmlFileRuntimeParameter::State, StateIcon);
-        Icons.insert(CellmlFileRuntimeParameter::Algebraic, AlgebraicIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Voi), VoiIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Constant), ConstantIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::ComputedConstant), ComputedConstantIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Rate), RateIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::State), StateIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Algebraic), AlgebraicIcon);
+        Icons.insert(int(CellmlFileRuntimeParameter::Type::Data), DataIcon);
     }
 
     return Icons;
@@ -226,220 +241,258 @@ QMap<int, QIcon> CellmlFileRuntimeParameter::icons()
 
 //==============================================================================
 
-QIcon CellmlFileRuntimeParameter::icon(ParameterType pParameterType)
+QIcon CellmlFileRuntimeParameter::icon(Type pParameterType)
 {
     // Return our corresponding icon
 
-    return icons().value(pParameterType);
+    return icons().value(int(pParameterType));
 }
 
 //==============================================================================
 
 CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
-    mCellmlFile(pCellmlFile),
+    mAtLeastOneNlaSystem(false),
     mCodeInformation(nullptr),
     mConstantsCount(0),
     mStatesRatesCount(0),
     mAlgebraicCount(0),
     mCompilerEngine(nullptr),
     mVoi(nullptr),
-    mParameters(CellmlFileRuntimeParameters())
+    mParameters(CellmlFileRuntimeParameters()),
+    mInitializeConstants(nullptr),
+    mComputeComputedConstants(nullptr),
+    mComputeVariables(nullptr),
+    mComputeRates(nullptr)
+{
+    update(pCellmlFile);
+}
+
+//==============================================================================
+
+CellmlFileRuntime::~CellmlFileRuntime()
+{
+    // Reset our properties
+
+    try {
+        reset(false, true, true);
+    } catch (...) {
+    }
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::update(CellmlFile *pCellmlFile, bool pAll)
 {
     // Reset the runtime's properties
 
-    reset(true, true);
+    reset(true, true, pAll);
 
     // Retrieve the CellML model associated with the CellML file
 
-    iface::cellml_api::Model *model = mCellmlFile->model();
+    iface::cellml_api::Model *model = pCellmlFile->model();
 
-    if (!model)
+    if (model == nullptr) {
         return;
+    }
 
     // Retrieve the code information for the model
 
     retrieveCodeInformation(model);
 
-    if (!mCodeInformation)
+    if (mCodeInformation == nullptr) {
         return;
-
-    // Retrieve the number of constants, states/rates, algebraic variables in
-    // the model
-    // Note: this is to avoid having to go through the code information an
-    //       unnecessary number of times when we want to retrieve either of
-    //       those numbers (e.g. see SimulationResults::addPoint())...
-
-    mConstantsCount = int(mCodeInformation->constantIndexCount());
-    mStatesRatesCount = int(mCodeInformation->rateIndexCount());
-    mAlgebraicCount = int(mCodeInformation->algebraicIndexCount());
-
-    // Go through the variables defined or referenced in our main CellML file
-    // and do a mapping between the source of that variable and that variable
-    // itself
-    // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. not CellML
-    //       1.1 files that don't import any components), we only want to list
-    //       the parameters that are either defined or referenced in our main
-    //       CellML file. Not only does it make sense, but also only the
-    //       parameters listed in a main CellML file can be referenced in
-    //       SED-ML...
-
-    QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
-    QList<iface::cellml_api::CellMLVariable *> realMainVariables = QList<iface::cellml_api::CellMLVariable *>();
-    ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
-    ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
-
-    for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
-         component; component = localComponentsIter->nextComponent()) {
-        ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
-        ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
-
-        for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
-             variable; variable = variablesIter->nextVariable()) {
-            ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
-
-            mainVariables.insert(sourceVariable, variable);
-
-            // In CellML 1.0 models / some CellML 1.1 models, the source
-            // variable is / may be defined in the main CellML file and may be
-            // used (and therefore referenced) in different places in that same
-            // main CellML file, in which case we need to keep track of the real
-            // main variable, which is the one which source variable is the same
-
-            if (variable == sourceVariable)
-                realMainVariables << variable;
-        }
     }
 
-    // Go through all our computation targets and determine which ones are
-    // referenced in our main CellML file, and sort them by component and
-    // variable name
+    // Retrieve various additional things
+    // Note: this should only ever be needed when we are called from our
+    //       constructor...
 
-    ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = mCodeInformation->iterateTargets();
-    QString voiName = QString();
-    QStringList voiComponentHierarchy = QStringList();
+    if (pAll) {
+        // Retrieve the number of constants, states/rates, algebraic variables
+        // in the model
+        // Note: this is to avoid having to go through the code information an
+        //       unnecessary number of times when we want to retrieve either of
+        //       those numbers (e.g. see SimulationResults::addPoint())...
 
-    for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
-         computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
-        // Make sure that our computation target is defined or referenced in our
-        // main CellML file, if it has imports
+        mConstantsCount = int(mCodeInformation->constantIndexCount());
+        mStatesRatesCount = int(mCodeInformation->rateIndexCount());
+        mAlgebraicCount = int(mCodeInformation->algebraicIndexCount());
 
-        ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-        iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
-                                                              variable.getPointer():
-                                                              mainVariables.value(variable);
-        iface::cellml_api::CellMLVariable *realVariable = mainVariable?mainVariable:variable.getPointer();
+        // Go through the variables defined or referenced in our main CellML
+        // file and do a mapping between the source of that variable and that
+        // variable itself
+        // Note: indeed, when it comes to (real) CellML 1.1 files (i.e. not
+        //       CellML 1.1 files that don't import any components), we only
+        //       want to list the parameters that are either defined or
+        //       referenced in our main CellML file. Not only does it make
+        //       sense, but also only the parameters listed in a main CellML
+        //       file can be referenced in SED-ML...
 
-        if (   !mainVariable
-            &&  (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
-            continue;
-        }
+        QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *> mainVariables = QMap<iface::cellml_api::CellMLVariable *, iface::cellml_api::CellMLVariable *>();
+        QList<iface::cellml_api::CellMLVariable *> realMainVariables = QList<iface::cellml_api::CellMLVariable *>();
+        ObjRef<iface::cellml_api::CellMLComponentSet> localComponents = model->localComponents();
+        ObjRef<iface::cellml_api::CellMLComponentIterator> localComponentsIter = localComponents->iterateComponents();
 
-        // Determine the type of our computation target
+        for (ObjRef<iface::cellml_api::CellMLComponent> component = localComponentsIter->nextComponent();
+             component != nullptr; component = localComponentsIter->nextComponent()) {
+            ObjRef<iface::cellml_api::CellMLVariableSet> variables = component->variables();
+            ObjRef<iface::cellml_api::CellMLVariableIterator> variablesIter = variables->iterateVariables();
 
-        CellmlFileRuntimeParameter::ParameterType parameterType = CellmlFileRuntimeParameter::Unknown;
+            for (ObjRef<iface::cellml_api::CellMLVariable> variable = variablesIter->nextVariable();
+                 variable != nullptr; variable = variablesIter->nextVariable()) {
+                ObjRef<iface::cellml_api::CellMLVariable> sourceVariable = variable->sourceVariable();
 
-        switch (computationTarget->type()) {
-        case iface::cellml_services::VARIABLE_OF_INTEGRATION:
-            parameterType = CellmlFileRuntimeParameter::Voi;
+                mainVariables.insert(sourceVariable, variable);
 
-            break;
-        case iface::cellml_services::CONSTANT:
-            // We are dealing with a constant, but the question is whether that
-            // constant is a 'proper' constant, a 'computed' constant or even a
-            // rate, and this can be determined by checking whether the computed
-            // target has an initial value or even a degree
-            // Note: a state variable that is initialised using the initial
-            //       value of another variable will have its rate considered as
-            //       a constant. However, when it comes to the GUI, we really
-            //       want it to be seen as a rate hence we check for the degree
-            //       of the computed target...
+                // In CellML 1.0 models / some CellML 1.1 models, the source
+                // variable is / may be defined in the main CellML file and may
+                // be used (and therefore referenced) in different places in
+                // that same main CellML file, in which case we need to keep
+                // track of the real main variable, which is the one which
+                // source variable is the same
 
-            if (QString::fromStdWString(variable->initialValue()).isEmpty()) {
-                // The computed target doesn't have an initial value, so it must
-                // be a 'computed' constant
-
-                parameterType = CellmlFileRuntimeParameter::ComputedConstant;
-            } else if (computationTarget->degree()) {
-                // The computed target has a degree, so it is effectively a rate
-
-                parameterType = CellmlFileRuntimeParameter::Rate;
-            } else {
-                // The computed target has an initial value, so it must be a
-                // 'proper' constant
-
-                parameterType = CellmlFileRuntimeParameter::Constant;
-            }
-
-            break;
-        case iface::cellml_services::STATE_VARIABLE:
-        case iface::cellml_services::PSEUDOSTATE_VARIABLE:
-            parameterType = CellmlFileRuntimeParameter::State;
-
-            break;
-        case iface::cellml_services::ALGEBRAIC:
-            // We are dealing with either a 'proper' algebraic variable or a
-            // rate variable
-            // Note: if the variable's degree is equal to zero, then we are
-            //       dealing with a 'proper' algebraic variable otherwise we
-            //       are dealing with a rate variable...
-
-            if (computationTarget->degree())
-                parameterType = CellmlFileRuntimeParameter::Rate;
-            else
-                parameterType = CellmlFileRuntimeParameter::Algebraic;
-
-            break;
-        case iface::cellml_services::FLOATING:
-            parameterType = CellmlFileRuntimeParameter::Floating;
-
-            break;
-        case iface::cellml_services::LOCALLY_BOUND:
-            parameterType = CellmlFileRuntimeParameter::LocallyBound;
-
-            break;
-        }
-
-        // Keep track of our computation target, should its type be of interest
-
-        if (   (parameterType != CellmlFileRuntimeParameter::Floating)
-            && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
-            CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
-                                                                                   int(computationTarget->degree()),
-                                                                                   QString::fromStdWString(realVariable->unitsName()),
-                                                                                   componentHierarchy(realVariable),
-                                                                                   parameterType,
-                                                                                   int(computationTarget->assignedIndex()));
-
-            if (parameterType == CellmlFileRuntimeParameter::Voi) {
-                if (!mVoi) {
-                    mVoi = parameter;
-
-                    voiName = parameter->name();
-                    voiComponentHierarchy = parameter->componentHierarchy();
-                } else if (    parameter->name().compare(voiName)
-                           || (parameter->componentHierarchy() != voiComponentHierarchy)) {
-                    // The CellML API wrongly validated a model that has more
-                    // more than one VOI (at least, according to the CellML
-                    // API), but this is clearly wrong (not to mention that it
-                    // crashes OpenCOR), so let the user know about it
-                    // Note: we check the name and component hierarchy of the
-                    //       parameter against those of our current VOI since
-                    //       the CellML API may generate different targets that
-                    //       refer to the same CellML variable (!?), as is for
-                    //       example the case with
-                    //       [CellMLSupport]/tests/data/bond_graph_model_old.cellml...
-
-                    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                               tr("a model can have only one variable of integration"));
+                if (variable == sourceVariable) {
+                    realMainVariables << variable;
                 }
             }
-
-            if (realVariable == mainVariable)
-                mParameters << parameter;
         }
-    }
 
-    std::sort(mParameters.begin(), mParameters.end(), CellmlFileRuntimeParameter::compare);
+        // Go through all our computation targets and determine which ones are
+        // referenced in our main CellML file, and sort them by component and
+        // variable name
+
+        ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = mCodeInformation->iterateTargets();
+        QString voiName = QString();
+        QStringList voiComponentHierarchy = QStringList();
+
+        for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
+             computationTarget != nullptr; computationTarget = computationTargetIter->nextComputationTarget()) {
+            // Make sure that our computation target is defined or referenced in
+            // our main CellML file, if it has imports
+
+            ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
+            iface::cellml_api::CellMLVariable *mainVariable = realMainVariables.contains(variable)?
+                                                                  variable.getPointer():
+                                                                  mainVariables.value(variable);
+            iface::cellml_api::CellMLVariable *realVariable = (mainVariable != nullptr)?mainVariable:variable.getPointer();
+
+            if (   (mainVariable == nullptr)
+                && (computationTarget->type() != iface::cellml_services::VARIABLE_OF_INTEGRATION)) {
+                continue;
+            }
+
+            // Determine the type of our computation target
+
+            CellmlFileRuntimeParameter::Type parameterType = CellmlFileRuntimeParameter::Type::Unknown;
+
+            switch (computationTarget->type()) {
+            case iface::cellml_services::VARIABLE_OF_INTEGRATION:
+                parameterType = CellmlFileRuntimeParameter::Type::Voi;
+
+                break;
+            case iface::cellml_services::CONSTANT:
+                // We are dealing with a constant, but the question is whether
+                // that constant is a 'proper' constant, a 'computed' constant
+                // or even a rate, and this can be determined by checking
+                // whether the computed target has an initial value or even a
+                // degree
+                // Note: a state variable that is initialised using the initial
+                //       value of another variable will have its rate considered
+                //       as a constant. However, when it comes to the GUI, we
+                //       really want it to be seen as a rate hence we check for
+                //       the degree of the computed target...
+
+                if (QString::fromStdWString(variable->initialValue()).isEmpty()) {
+                    // The computed target doesn't have an initial value, so it
+                    // must be a 'computed' constant
+
+                    parameterType = CellmlFileRuntimeParameter::Type::ComputedConstant;
+                } else if (computationTarget->degree() != 0) {
+                    // The computed target has a degree, so it is effectively a
+                    // rate
+
+                    parameterType = CellmlFileRuntimeParameter::Type::Rate;
+                } else {
+                    // The computed target has an initial value, so it must be a
+                    // 'proper' constant
+
+                    parameterType = CellmlFileRuntimeParameter::Type::Constant;
+                }
+
+                break;
+            case iface::cellml_services::STATE_VARIABLE:
+            case iface::cellml_services::PSEUDOSTATE_VARIABLE:
+                parameterType = CellmlFileRuntimeParameter::Type::State;
+
+                break;
+            case iface::cellml_services::ALGEBRAIC:
+                // We are dealing with either a 'proper' algebraic variable or a
+                // rate variable
+                // Note: if the variable's degree is equal to zero, then we are
+                //       dealing with a 'proper' algebraic variable otherwise we
+                //       are dealing with a rate variable...
+
+                if (computationTarget->degree() != 0) {
+                    parameterType = CellmlFileRuntimeParameter::Type::Rate;
+                } else {
+                    parameterType = CellmlFileRuntimeParameter::Type::Algebraic;
+                }
+
+                break;
+            case iface::cellml_services::FLOATING:
+                parameterType = CellmlFileRuntimeParameter::Type::Floating;
+
+                break;
+            case iface::cellml_services::LOCALLY_BOUND:
+                parameterType = CellmlFileRuntimeParameter::Type::LocallyBound;
+
+                break;
+            }
+
+            // Keep track of our computation target, should its type be of
+            // interest
+
+            if (   (parameterType != CellmlFileRuntimeParameter::Type::Floating)
+                && (parameterType != CellmlFileRuntimeParameter::Type::LocallyBound)) {
+                auto parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(realVariable->name()),
+                                                                int(computationTarget->degree()),
+                                                                QString::fromStdWString(realVariable->unitsName()),
+                                                                componentHierarchy(realVariable),
+                                                                parameterType,
+                                                                int(computationTarget->assignedIndex()));
+
+                if (parameterType == CellmlFileRuntimeParameter::Type::Voi) {
+                    if (mVoi == nullptr) {
+                        mVoi = parameter;
+
+                        voiName = parameter->name();
+                        voiComponentHierarchy = parameter->componentHierarchy();
+                    } else if (   (parameter->name() != voiName)
+                               || (parameter->componentHierarchy() != voiComponentHierarchy)) {
+                        // The CellML API wrongly validated a model that has
+                        // more than one VOI (at least, according to the CellML
+                        // API), but this is clearly wrong (not to mention that
+                        // it crashes OpenCOR), so let the user know about it
+                        // Note: we check the name and component hierarchy of
+                        //       the parameter against those of our current VOI
+                        //       since the CellML API may generate different
+                        //       targets that refer to the same CellML variable
+                        //       (!?), as is for example the case with
+                        //       [CellMLSupport]/tests/data/bond_graph_model_old.cellml...
+
+                        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
+                                                   tr("a model can have only one variable of integration"));
+                    }
+                }
+
+                if (realVariable == mainVariable) {
+                    mParameters << parameter;
+                }
+            }
+        }
+
+        std::sort(mParameters.begin(), mParameters.end(), CellmlFileRuntimeParameter::compare);
+    }
 
     // Generate the model code
 
@@ -474,7 +527,7 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     //       distinguish between 'proper' and 'computed' constants...
     //       (See https://tracker.physiomeproject.org/show_bug.cgi?id=3499)
 
-    static const QRegularExpression InitializationStatementRegEx = QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$");
+    static const QRegularExpression InitializationStatementRegEx = QRegularExpression(R"(^(CONSTANTS|RATES|STATES)\[\d*\] = [+-]?\d*\.?\d+([eE][+-]?\d+)?;$)");
 
     QStringList initConstsList = cleanCode(mCodeInformation->initConstsString()).split('\n');
     QString initConsts = QString();
@@ -484,10 +537,11 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
-        if (InitializationStatementRegEx.match(initConst).hasMatch())
+        if (InitializationStatementRegEx.match(initConst).hasMatch()) {
             initConsts += (initConsts.isEmpty()?QString():"\n")+initConst;
-        else
+        } else {
             compCompConsts += (compCompConsts.isEmpty()?QString():"\n")+initConst;
+        }
     }
 
     modelCode += methodCode("initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
@@ -503,17 +557,17 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
     // compute it and check that everything went fine
 
     if (modelCode.contains("defint(func")) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    tr("definite integrals are not yet supported"));
     } else if (!mCompilerEngine->compileCode(modelCode)) {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    mCompilerEngine->error());
     }
 
     // Keep track of the ODE functions, but only if no issues were reported
 
-    if (mIssues.count()) {
-        reset(true, false);
+    if (!mIssues.isEmpty()) {
+        reset(true, false, true);
     } else {
         // Add the symbol of any required external function, if any
 
@@ -531,32 +585,14 @@ CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
 
         // Make sure that we managed to retrieve all the ODE functions
 
-        if (   !mInitializeConstants || !mComputeComputedConstants
-            || !mComputeVariables || !mComputeRates) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        if (   (mInitializeConstants == nullptr) || (mComputeComputedConstants == nullptr)
+            || (mComputeVariables == nullptr) || (mComputeRates == nullptr)) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("an unexpected problem occurred while trying to retrieve the model functions"));
 
-            reset(true, false);
+            reset(true, false, true);
         }
     }
-}
-
-//==============================================================================
-
-CellmlFileRuntime::~CellmlFileRuntime()
-{
-    // Reset our properties
-
-    reset(false, true);
-}
-
-//==============================================================================
-
-CellmlFile * CellmlFileRuntime::cellmlFile()
-{
-    // Return our CellML file
-
-    return mCellmlFile;
 }
 
 //==============================================================================
@@ -584,6 +620,18 @@ bool CellmlFileRuntime::needNlaSolver() const
     // Return whether the model needs an NLA solver
 
     return mAtLeastOneNlaSystem;
+}
+
+//==============================================================================
+
+void CellmlFileRuntime::importData(const QString &pName,
+                                   const QStringList &pComponentHierarchy,
+                                   int pIndex, double *pData)
+{
+    mParameters << new CellmlFileRuntimeParameter(pName, 0, QString(),
+                                                  pComponentHierarchy,
+                                                  CellmlFileRuntimeParameter::Type::Data,
+                                                  pIndex, pData);
 }
 
 //==============================================================================
@@ -678,6 +726,24 @@ CellmlFileRuntimeParameters CellmlFileRuntime::parameters() const
 
 //==============================================================================
 
+CellmlFileRuntimeParameters CellmlFileRuntime::dataParameters(const double *pData) const
+{
+    // Return the data parameter(s)
+
+    CellmlFileRuntimeParameters res = CellmlFileRuntimeParameters();
+
+    for (auto parameter : mParameters) {
+        if (   (parameter->type() == CellmlFileRuntimeParameter::Type::Data)
+            && ((pData == nullptr) || (parameter->data() == pData))) {
+            res << parameter;
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 void CellmlFileRuntime::resetCodeInformation()
 {
     // Reset the code information
@@ -701,7 +767,8 @@ void CellmlFileRuntime::resetFunctions()
 
 //==============================================================================
 
-void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
+void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues,
+                              bool pResetAll)
 {
     // Reset all of the runtime's properties
 
@@ -711,32 +778,38 @@ void CellmlFileRuntime::reset(bool pRecreateCompilerEngine, bool pResetIssues)
 
     delete mCompilerEngine;
 
-    if (pRecreateCompilerEngine)
+    if (pRecreateCompilerEngine) {
         mCompilerEngine = new Compiler::CompilerEngine();
-    else
+    } else {
         mCompilerEngine = nullptr;
+    }
 
     resetFunctions();
 
-    if (pResetIssues)
+    if (pResetIssues) {
         mIssues.clear();
+    }
 
-    if (!mParameters.contains(mVoi))
-        delete mVoi;
+    if (pResetAll) {
+        if (!mParameters.contains(mVoi)) {
+            delete mVoi;
+        }
 
-    for (auto parameter : mParameters)
-        delete parameter;
+        for (auto parameter : mParameters) {
+            delete parameter;
+        }
 
-    mVoi = nullptr;
+        mVoi = nullptr;
 
-    mParameters.clear();
+        mParameters.clear();
+    }
 }
 
 //==============================================================================
 
 void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo)
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                tr("the model code could not be generated (%1)").arg(pExtraInfo));
 }
 
@@ -744,7 +817,7 @@ void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo
 
 void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 {
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+    mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                tr("an unknown problem occurred while trying to generate the model code"));
 }
 
@@ -764,17 +837,17 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
         iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
         } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
         } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+            mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                        tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
         }
     } else {
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+        mIssues << CellmlFileIssue(CellmlFileIssue::Type::Error,
                                    tr("a problem occurred during the generation of the model code (%1)").arg(Core::formatMessage(errorMessage)));
     }
 }
@@ -804,8 +877,9 @@ void CellmlFileRuntime::retrieveCodeInformation(iface::cellml_api::Model *pModel
 
     // Check the outcome of the code generation
 
-    if (mIssues.count())
+    if (!mIssues.isEmpty()) {
         resetCodeInformation();
+    }
 }
 
 //==============================================================================
@@ -821,8 +895,9 @@ QString CellmlFileRuntime::methodCode(const QString &pCodeSignature,
     if (!pCodeBody.isEmpty()) {
         res += pCodeBody;
 
-        if (!pCodeBody.endsWith('\n'))
+        if (!pCodeBody.endsWith('\n')) {
             res += '\n';
+        }
     }
 
     res += "}\n\n";
@@ -846,8 +921,9 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 {
     // Make sure that we have a given element
 
-    if (!pElement)
-        return QStringList();
+    if (pElement == nullptr) {
+        return {};
+    }
 
     // Try to retrieve the component that owns the given element, unless the
     // given element is a component itself (which will be the case when we come
@@ -857,19 +933,19 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
     ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
 
-    if (!component && !parentComponent) {
+    if ((component == nullptr) && (parentComponent == nullptr)) {
         // The element isn't a component and neither is its parent, so it
         // doesn't have a hierarchy
 
-        return QStringList();
+        return {};
     }
 
     // Recursively retrieve the component hierarchy of the given element's
     // encapsulation parent, if any
 
-    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = component?component->encapsulationParent():parentComponent->encapsulationParent();
+    ObjRef<iface::cellml_api::CellMLComponent> componentEncapsulationParent = (component != nullptr)?component->encapsulationParent():parentComponent->encapsulationParent();
 
-    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString(component?component->name():parentComponent->name());
+    return componentHierarchy(componentEncapsulationParent) << QString::fromStdWString((component != nullptr)?component->name():parentComponent->name());
 }
 
 //==============================================================================
@@ -884,8 +960,9 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     QString res = QString();
 
     for (const auto &code : QString::fromStdWString(pCode).split("\r\n")) {
-        if (!CommentRegEx.match(code.trimmed()).hasMatch())
+        if (!CommentRegEx.match(code.trimmed()).hasMatch()) {
             res += (res.isEmpty()?QString():"\n")+code;
+        }
     }
 
     // Further clean up the given code by removing any reference to a 'return'
@@ -904,7 +981,7 @@ QString CellmlFileRuntime::cleanCode(const std::wstring &pCode)
     // new parameter to all our calls to doNonLinearSolve() so that
     // doNonLinearSolve() can retrieve the correct instance of our NLA solver
 
-    res.replace("do_nonlinearsolve(", QString("doNonLinearSolve(\"%1\", ").arg(address()));
+    res.replace("do_nonlinearsolve(", QString(R"(doNonLinearSolve("%1", )").arg(address()));
 
     return res;
 }
@@ -920,8 +997,8 @@ CellmlFileRuntimeParameter *CellmlFileRuntime::voi() const
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

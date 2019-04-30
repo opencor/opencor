@@ -10,9 +10,6 @@ add_plugin(Compiler
         src/compilerengine.cpp
         src/compilermath.cpp
         src/compilerplugin.cpp
-    HEADERS_MOC
-        src/compilerengine.h
-        src/compilerplugin.h
     PLUGINS
         Core
         LLVMClang

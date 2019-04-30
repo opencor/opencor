@@ -63,7 +63,7 @@ typedef QMap<QString, QString> Descriptions;
 class PluginInfo
 {
 public:
-    enum Category {
+    enum class Category {
 #ifdef ENABLE_SAMPLE_PLUGINS
         Sample = -3,
 #endif
@@ -118,7 +118,7 @@ private:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

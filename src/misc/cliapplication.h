@@ -45,12 +45,13 @@ class PluginManager;
 
 //==============================================================================
 
-class CliApplication {
+class CliApplication
+{
 public:
-    explicit CliApplication(int &pArgC, char **pArgV);
+    explicit CliApplication(int &pArgC, char *pArgV[]);
     ~CliApplication();
 
-    bool run(int *pRes);
+    bool run(int &pRes);
 
 private:
     QCoreApplication *mCliApplication;
@@ -66,7 +67,8 @@ private:
                         bool pInclude = true) const;
 
     void about() const;
-    bool command(const QStringList &pArguments, int *pRes) const;
+    bool command(const QString &pCommand, const QStringList &pArguments,
+                 int &pRes) const;
     void exclude(const QStringList &pPluginNames) const;
     void help() const;
     void include(const QStringList &pPluginNames) const;
@@ -78,7 +80,7 @@ private:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

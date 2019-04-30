@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "coreinterface.h"
 #include "plugin.h"
 #include "plugininfo.h"
 
@@ -75,7 +74,7 @@ private:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

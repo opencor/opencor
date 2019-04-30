@@ -44,13 +44,19 @@ namespace OpenCOR {
 
 namespace CellMLSupport {
     class CellmlFileRuntime;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
+
+//==============================================================================
+
+namespace DataStore {
+    class DataStoreImportData;
+} // namespace DataStore
 
 //==============================================================================
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace SimulationSupport
+} // namespace SimulationSupport
 
 //==============================================================================
 
@@ -69,7 +75,7 @@ class SimulationExperimentViewInformationGraphPanelAndGraphsWidget : public QSta
     Q_OBJECT
 
 public:
-    enum Mode {
+    enum class Mode {
         GraphPanel,
         Graphs
     };
@@ -82,6 +88,8 @@ public:
 
     void initialize(SimulationSupport::Simulation *pSimulation);
     void finalize();
+
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
@@ -111,6 +119,8 @@ private:
     SimulationExperimentViewWidget *mViewWidget;
     SimulationExperimentViewSimulationWidget *mSimulationWidget;
 
+    SimulationSupport::Simulation *mSimulation;
+
     QMap<Core::PropertyEditorWidget *, GraphPanelWidget::GraphPanelWidget *> mGraphPanels;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphPanelPropertyEditors;
     QMap<GraphPanelWidget::GraphPanelWidget *, Core::PropertyEditorWidget *> mGraphsPropertyEditors;
@@ -137,6 +147,8 @@ private:
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
     QMap<QString, QString> mRenamedModelListValues;
+
+    QMenu *mImportMenu;
 
     void retranslateGraphPanelPropertyEditor(Core::PropertyEditorWidget *pGraphPanelPropertyEditor);
 
@@ -219,8 +231,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

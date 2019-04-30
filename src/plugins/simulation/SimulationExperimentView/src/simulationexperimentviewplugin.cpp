@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cellmlsupportplugin.h"
 #include "combinefilemanager.h"
 #include "combinesupportplugin.h"
-#include "coreguiutils.h"
 #include "filemanager.h"
 #include "sedmlfilemanager.h"
 #include "sedmlsupportplugin.h"
@@ -55,7 +54,7 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit and run a simulation experiment."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer et exécuter une expérience de simulation."));
 
-    return new PluginInfo(PluginInfo::Simulation, true, false,
+    return new PluginInfo(PluginInfo::Category::Simulation, true, false,
                           QStringList() << "GraphPanelWidget" << "PythonQtSupport" << "SimulationSupport",
                           descriptions);
 }
@@ -64,11 +63,20 @@ PLUGININFO_FUNC SimulationExperimentViewPluginInfo()
 // File handling interface
 //==============================================================================
 
+bool SimulationExperimentViewPlugin::importFile(const QString &pFileName)
+{
+    // Let our view widget know that we want to import a file
+
+    return mViewWidget->importFile(pFileName);
+}
+
+//==============================================================================
+
 bool SimulationExperimentViewPlugin::saveFile(const QString &pOldFileName,
                                               const QString &pNewFileName,
                                               bool &pNeedFeedback)
 {
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pNeedFeedback)
 
     // Let our view widget know that we want to save a file
 
@@ -97,7 +105,7 @@ void SimulationExperimentViewPlugin::filePermissionsChanged(const QString &pFile
 
 void SimulationExperimentViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -166,8 +174,8 @@ bool SimulationExperimentViewPlugin::definesPluginInterfaces()
 bool SimulationExperimentViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                                         QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -200,17 +208,18 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
     for (auto plugin : pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-        if (   viewInterface
-            && (   (viewInterface->viewMode() == EditingMode)
-                || (viewInterface->viewMode() == SimulationMode))) {
+        if (   (viewInterface != nullptr)
+            && (   (viewInterface->viewMode() == ViewInterface::Mode::Editing)
+                || (viewInterface->viewMode() == ViewInterface::Mode::Simulation))) {
             QStringList viewMimeTypes = viewInterface->viewMimeTypes();
 
             if (   viewMimeTypes.isEmpty()
                 || viewMimeTypes.contains(CellMLSupport::CellmlMimeType)) {
-                if (viewInterface->viewMode() == EditingMode)
+                if (viewInterface->viewMode() == ViewInterface::Mode::Editing) {
                     cellmlEditingViewPlugins << plugin;
-                else
+                } else {
                     cellmlSimulationViewPlugins << plugin;
+                }
             }
         }
     }
@@ -236,31 +245,31 @@ void SimulationExperimentViewPlugin::pluginsInitialized(const Plugins &pLoadedPl
 
 //==============================================================================
 
-void SimulationExperimentViewPlugin::loadSettings(QSettings *pSettings)
+void SimulationExperimentViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Simulation Experiment view settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void SimulationExperimentViewPlugin::saveSettings(QSettings *pSettings) const
+void SimulationExperimentViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Simulation Experiment view settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void SimulationExperimentViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -280,7 +289,7 @@ Preferences::PreferencesWidget * SimulationExperimentViewPlugin::preferencesWidg
 
 void SimulationExperimentViewPlugin::preferencesChanged(const QStringList &pPluginNames)
 {
-    Q_UNUSED(pPluginNames);
+    Q_UNUSED(pPluginNames)
 
     // We don't handle this interface...
 }
@@ -293,7 +302,7 @@ ViewInterface::Mode SimulationExperimentViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return SimulationMode;
+    return ViewInterface::Mode::Simulation;
 }
 
 //==============================================================================
@@ -314,14 +323,19 @@ QString SimulationExperimentViewPlugin::viewMimeType(const QString &pFileName) c
     // Return the MIME type for the given CellML file
     // Note: we should never return an empty string...
 
-    if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+    if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName) != nullptr) {
         return CellMLSupport::CellmlMimeType;
-    else if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName))
+    }
+
+    if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName) != nullptr) {
         return SEDMLSupport::SedmlMimeType;
-    else if (COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))
+    }
+
+    if (COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName) != nullptr) {
         return COMBINESupport::CombineMimeType;
-    else
-        return QString();
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -331,7 +345,7 @@ QString SimulationExperimentViewPlugin::viewDefaultFileExtension() const
     // Return the default file extension we support, based on the file type of
     // our simulation
 
-    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::CellmlFile)?
+    return (mViewWidget->simulationWidget()->simulation()->fileType() == SimulationSupport::Simulation::FileType::CellmlFile)?
                CellMLSupport::CellmlFileExtension:
                SEDMLSupport::SedmlFileExtension;
 }
@@ -346,10 +360,10 @@ QWidget * SimulationExperimentViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   Core::FileManager::instance()->isNew(pFileName)
-        || (    (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)
-            && !SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName)
-            && !COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName))) {
+        || (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)
+            && (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(pFileName) == nullptr)
+            && (COMBINESupport::CombineFileManager::instance()->combineArchive(pFileName) == nullptr))) {
         return nullptr;
     }
 
@@ -421,8 +435,8 @@ SimulationExperimentViewWidget * SimulationExperimentViewPlugin::viewWidget() co
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

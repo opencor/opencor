@@ -8,8 +8,6 @@ add_plugin(JupyterKernel
         ../../plugininfo.cpp
 
         src/jupyterkernelplugin.cpp
-    HEADERS_MOC
-        src/jupyterkernelplugin.h
     PLUGINS
         Core
         PythonQtSupport

@@ -6,7 +6,7 @@ else
     echo "\033[44;37;1mCleaning OpenCOR...\033[0m"
 fi
 
-rm -fr build/* build/.ninja* > /dev/null 2>&1
+rm -fr build/.clang-tidy build/* build/.ninja* > /dev/null 2>&1
 
 if [ "$1" = "all" ]; then
     rm -fr ext/* > /dev/null 2>&1

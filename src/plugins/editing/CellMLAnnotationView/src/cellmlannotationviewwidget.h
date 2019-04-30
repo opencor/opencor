@@ -52,12 +52,10 @@ public:
     explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPlugin,
                                         QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
-
-    bool contains(const QString &pFileName) const;
 
     void initialize(const QString &pFileName);
     void finalize(const QString &pFileName);
@@ -87,8 +85,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -47,13 +47,13 @@ namespace OpenCOR {
 namespace EditorWidget {
     class EditorListItem;
     class EditorListWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
 namespace MathMLViewerWidget {
     class MathmlViewerWidget;
-}   // namespace MathMLViewerWidget
+} // namespace MathMLViewerWidget
 
 //==============================================================================
 
@@ -91,8 +91,8 @@ public:
     explicit CellmlEditingViewWidget(const QString &pContents, bool pReadOnly,
                                      QsciLexer *pLexer, QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
 
@@ -120,8 +120,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLEditingView
-}   // namespace OpenCOR
+} // namespace CellMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

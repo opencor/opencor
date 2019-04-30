@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMainWindow>
 #include <QMenu>
 #include <QPalette>
-#include <QSettings>
 
 //==============================================================================
 
@@ -58,7 +57,7 @@ PLUGININFO_FUNC CorePluginInfo()
     descriptions.insert("en", QString::fromUtf8("the core plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, false, false,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, false, false,
                           QStringList(),
                           descriptions);
 }
@@ -66,6 +65,26 @@ PLUGININFO_FUNC CorePluginInfo()
 //==============================================================================
 
 CorePlugin::CorePlugin() :
+    mCentralWidget(nullptr),
+    mFileNewFileAction(nullptr),
+    mFileOpenAction(nullptr),
+    mFileOpenRemoteAction(nullptr),
+    mFileReloadAction(nullptr),
+    mFileDuplicateAction(nullptr),
+    mFileLockedAction(nullptr),
+    mFileSaveAction(nullptr),
+    mFileSaveAsAction(nullptr),
+    mFileSaveAllAction(nullptr),
+    mFilePreviousAction(nullptr),
+    mFileNextAction(nullptr),
+    mFileCloseAction(nullptr),
+    mFileCloseAllAction(nullptr),
+    mFileOpenReloadSeparator(nullptr),
+    mFileReopenSubMenu(nullptr),
+    mFileReopenMostRecentFileAction(nullptr),
+    mFileReopenSubMenuSeparator1(nullptr),
+    mFileReopenSubMenuSeparator2(nullptr),
+    mFileClearReopenSubMenuAction(nullptr),
     mRecentFiles(QStringList()),
     mRecentFileActions(QList<QAction *>())
 {
@@ -94,14 +113,13 @@ void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CorePlugin::handleArguments(const QStringList &pArguments)
+void CorePlugin::openFile(const QString &pFileNameOrUrl)
 {
-    // All the arguments are files to open, so open them as if they were remote
-    // files since if they are not then CentralWidget::openRemoteFile() will
-    // open them as normal files
+    // Open the given file as if it was a remote file
+    // Note: if it is not then CentralWidget::openRemoteFile() will open it as
+    //       a normal file...
 
-    for (const auto &argument : pArguments)
-        mCentralWidget->openRemoteFile(argument);
+    mCentralWidget->openRemoteFile(pFileNameOrUrl);
 }
 
 //==============================================================================
@@ -117,13 +135,29 @@ bool CorePlugin::canClose()
 // File handling interface
 //==============================================================================
 
+bool CorePlugin::importFile(const QString &pFileName)
+{
+    // We rely on this interface not to import the given file as such, but to
+    // get the current view to import it, if it can, or open it as any normal
+    // file, if the current view cannot import it
+    // Note: we call CentralWidget::importRemoteFile() because pFileName can
+    //       actually be a remote file. If it isn't then the file will be
+    //       imported as a normal file...
+
+    mCentralWidget->importRemoteFile(pFileName);
+
+    return false;
+}
+
+//==============================================================================
+
 bool CorePlugin::saveFile(const QString &pOldFileName,
                           const QString &pNewFileName,
                           bool &pNeedFeedback)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pOldFileName)
+    Q_UNUSED(pNewFileName)
+    Q_UNUSED(pNeedFeedback)
 
     // We don't handle this interface...
 
@@ -151,8 +185,9 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
 {
     // Update the checked state of our Locked menu, if needed
 
-    if (!pFileName.compare(mCentralWidget->currentFileName()))
+    if (pFileName == mCentralWidget->currentFileName()) {
         updateNewModifiedSensitiveActions();
+    }
 }
 
 //==============================================================================
@@ -161,15 +196,16 @@ void CorePlugin::fileModified(const QString &pFileName)
 {
     // Update our new/modified sensitive actions, if needed
 
-    if (!pFileName.compare(mCentralWidget->currentFileName()))
+    if (pFileName == mCentralWidget->currentFileName()) {
         updateNewModifiedSensitiveActions();
+    }
 }
 
 //==============================================================================
 
 void CorePlugin::fileSaved(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -178,7 +214,7 @@ void CorePlugin::fileSaved(const QString &pFileName)
 
 void CorePlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -193,8 +229,9 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
     //       done in that case (thus avoiding us from having to test for its
     //       presence)...
 
-    if (mRecentFiles.removeOne(pNewFileName))
+    if (mRecentFiles.removeOne(pNewFileName)) {
         updateFileReopenMenu();
+    }
 
     // A file has been created or saved under a new name, so we want the old
     // file name to be added to our list of recent files, i.e. as if it had been
@@ -220,8 +257,9 @@ void CorePlugin::fileClosed(const QString &pFileName)
                                  fileManagerInstance->url(pFileName):
                                  pFileName);
 
-        while (mRecentFiles.count() > 10)
+        while (mRecentFiles.count() > 10) {
             mRecentFiles.removeLast();
+        }
 
         updateFileReopenMenu();
     }
@@ -233,8 +271,8 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
 void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pViewPlugin)
+    Q_UNUSED(pFileName)
 
     // Update our new/modified sensitive actions
 
@@ -247,7 +285,7 @@ Gui::Menus CorePlugin::guiMenus() const
 {
     // Return our menus
 
-    return Gui::Menus() << Gui::Menu(Gui::Menu::File, mFileOpenReloadSeparator, mFileReopenSubMenu);
+    return Gui::Menus() << Gui::Menu(Gui::Menu::Type::File, mFileOpenReloadSeparator, mFileReopenSubMenu);
 }
 
 //==============================================================================
@@ -256,26 +294,26 @@ Gui::MenuActions CorePlugin::guiMenuActions() const
 {
     // Return our menu actions
 
-    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenReloadSeparator)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileDuplicateAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileLockedAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAsAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
-                              << Gui::MenuAction(Gui::MenuAction::File, mFilePreviousAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileNextAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()))
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAllAction)
-                              << Gui::MenuAction(Gui::MenuAction::File, newSeparator(mainWindow()));
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Type::FileNew, mFileNewFileAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileOpenAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileOpenRemoteAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileOpenReloadSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileReloadAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, newSeparator(mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileDuplicateAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, newSeparator(mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileLockedAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, newSeparator(mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileSaveAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileSaveAsAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileSaveAllAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, newSeparator(mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFilePreviousAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileNextAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, newSeparator(mainWindow()))
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileCloseAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, mFileCloseAllAction)
+                              << Gui::MenuAction(Gui::MenuAction::Type::File, newSeparator(mainWindow()));
 }
 
 //==============================================================================
@@ -350,8 +388,8 @@ bool CorePlugin::definesPluginInterfaces()
 bool CorePlugin::pluginInterfacesOk(const QString &pFileName,
                                     QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -365,8 +403,9 @@ void CorePlugin::initializePlugin()
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!mainWindow())
+    if (mainWindow() == nullptr) {
         return;
+    }
 
     // Create our central widget
 
@@ -419,8 +458,6 @@ void CorePlugin::initializePlugin()
                                     QKeySequence(Qt::ControlModifier|Qt::ShiftModifier|Qt::Key_Tab),
 #elif defined(Q_OS_MAC)
                                     QKeySequence(Qt::MetaModifier|Qt::ShiftModifier|Qt::Key_Tab),
-#else
-    #error Unsupported platform
 #endif
                                     mainWindow());
     mFileNextAction = newAction(QIcon(":/oxygen/actions/go-next.png"),
@@ -428,8 +465,6 @@ void CorePlugin::initializePlugin()
                                 QKeySequence(Qt::ControlModifier|Qt::Key_Tab),
 #elif defined(Q_OS_MAC)
                                 QKeySequence(Qt::MetaModifier|Qt::Key_Tab),
-#else
-    #error Unsupported platform
 #endif
                                     mainWindow());
 
@@ -438,8 +473,6 @@ void CorePlugin::initializePlugin()
                                  QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::ControlModifier|Qt::Key_W),
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
                                  QKeySequence::Close,
-#else
-    #error Unsupported platform
 #endif
                                  mainWindow());
     mFileCloseAllAction = newAction(mainWindow());
@@ -550,6 +583,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     // are available to us
 
     FileTypeInterfaces fileTypeInterfaces = FileTypeInterfaces();
+    FileTypeInterfaces dataStoreFileTypeInterfaces = FileTypeInterfaces();
     SolverInterfaces solverInterfaces = SolverInterfaces();
     DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
 
@@ -558,34 +592,43 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
         DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
 
-        // Keep track of file types
+        // Keep track of file types, but disinguish between those that are also
+        // a data store and those that are not
 
-        if (fileTypeInterface)
-            fileTypeInterfaces << fileTypeInterface;
+        if (fileTypeInterface != nullptr) {
+            if (dataStoreInterface != nullptr) {
+                dataStoreFileTypeInterfaces << fileTypeInterface;
+            } else {
+                fileTypeInterfaces << fileTypeInterface;
+            }
+        }
 
         // Keep track of solvers
 
-        if (solverInterface)
+        if (solverInterface != nullptr) {
             solverInterfaces << solverInterface;
+        }
 
         // Keep track of data stores
 
-        if (dataStoreInterface)
+        if (dataStoreInterface != nullptr) {
             dataStoreInterfaces << dataStoreInterface;
+        }
     }
 
     // Keep track of our various interfaces
 
-    static InterfacesData data(fileTypeInterfaces, solverInterfaces,
-                               dataStoreInterfaces);
+    static InterfacesData data(fileTypeInterfaces, dataStoreFileTypeInterfaces,
+                               solverInterfaces, dataStoreInterfaces);
 
     globalInstance(InterfacesDataSignature, &data);
 
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!mainWindow())
+    if (mainWindow() == nullptr) {
         return;
+    }
 
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
@@ -593,7 +636,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
     for (auto plugin : pLoadedPlugins) {
         ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-        if (viewInterface) {
+        if (viewInterface != nullptr) {
             // The plugin implements our View interface, so add it to our
             // central widget
 
@@ -604,53 +647,55 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-static const auto SettingsRecentFiles = QStringLiteral("RecentFiles");
+static const char *SettingsRecentFiles = "RecentFiles";
 
 //==============================================================================
 
-void CorePlugin::loadSettings(QSettings *pSettings)
+void CorePlugin::loadSettings(QSettings &pSettings)
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!mainWindow())
+    if (mainWindow() == nullptr) {
         return;
+    }
 
     // Retrieve our recent files
     // Note: it's important to retrieve our recent files before retrieving our
     //       central widget settings since mRecentFiles gets updated as a result
     //       of opening/closing a file...
 
-    mRecentFiles = pSettings->value(SettingsRecentFiles).toStringList();
+    mRecentFiles = pSettings.value(SettingsRecentFiles).toStringList();
 
     updateFileReopenMenu();
 
     // Retrieve the central widget settings
 
-    pSettings->beginGroup(mCentralWidget->objectName());
+    pSettings.beginGroup(mCentralWidget->objectName());
         mCentralWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void CorePlugin::saveSettings(QSettings *pSettings) const
+void CorePlugin::saveSettings(QSettings &pSettings) const
 {
     // What we are doing below requires to be in GUI mode, so leave if we are
     // not in that mode
 
-    if (!mainWindow())
+    if (mainWindow() == nullptr) {
         return;
+    }
 
     // Keep track of our recent files
 
-    pSettings->setValue(SettingsRecentFiles, mRecentFiles);
+    pSettings.setValue(SettingsRecentFiles, mRecentFiles);
 
     // Keep track of the central widget settings
 
-    pSettings->beginGroup(mCentralWidget->objectName());
+    pSettings.beginGroup(mCentralWidget->objectName());
         mCentralWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
@@ -661,11 +706,11 @@ void CorePlugin::handleUrl(const QUrl &pUrl)
 
     QString actionName = pUrl.authority();
 
-    if (!actionName.compare("Core.selectMode", Qt::CaseInsensitive)) {
+    if (actionName.compare("Core.selectMode", Qt::CaseInsensitive) == 0) {
         // We want to select a given mode
 
         mCentralWidget->selectMode(urlArguments(pUrl));
-    } else if (!actionName.compare("Core.selectView", Qt::CaseInsensitive)) {
+    } else if (actionName.compare("Core.selectView", Qt::CaseInsensitive) == 0) {
         // We want to select a given view
 
         mCentralWidget->selectView(urlArguments(pUrl));
@@ -689,8 +734,9 @@ void CorePlugin::newFile()
 #ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-    if (createStatus != FileManager::Created)
+    if (createStatus != FileManager::Status::Created) {
         qFatal("FATAL ERROR | %s:%d: the new file did not get created.", __FILE__, __LINE__);
+    }
 #endif
 }
 
@@ -713,7 +759,7 @@ void CorePlugin::updateFileReopenMenu()
     bool enabled = mFileOpenAction->isEnabled();
 
     for (const auto &recentFile : mRecentFiles) {
-        QAction *action = newAction(mainWindow());
+        auto action = newAction(mainWindow());
 
         action->setEnabled(enabled);
         action->setText(recentFile);
@@ -775,8 +821,9 @@ void CorePlugin::reopenFile(const QString &pFileName)
 {
     // Remove the file from our list of recent files
 
-    if (mRecentFiles.removeOne(pFileName))
+    if (mRecentFiles.removeOne(pFileName)) {
         updateFileReopenMenu();
+    }
 
     // Open the recent file after checking that it still exists, if needed
 
@@ -832,8 +879,8 @@ void CorePlugin::clearReopenSubMenu()
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

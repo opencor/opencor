@@ -97,10 +97,10 @@ if(USE_PREBUILT_QWT_PACKAGE)
                                           95fb741efee4869580381ba2937ecd0844dbb690)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 381b0959620e75bbbba71a566f65edb7c72ab6fd
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 73e893669bb0e2cf334fcedc77dd1da70ad10f18
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 0bbc21646c80c63d37da95e5f6da131608f18649
-                                          20942273668742335d5ab5f754a26148ee331162)
+                              SHA1_VALUES 80ab718f8ad589a520d17c697205574cfa5c7dc1
+                                          b1194973180ae987f03b3d6fc639af736f4104a4)
     endif()
 else()
     # Set platform specific configuration options
@@ -157,17 +157,30 @@ else()
                                  WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                  DEPENDEES install)
 
-        if(APPLE)
-            # Fix the RPATH information
+        # Fix the RPATH information
 
+        if(APPLE)
             ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
-                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWT_SHARED_LIBRARY}
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWT_SHARED_LIBRARY}
-                                     COMMAND install_name_tool -add_rpath @executable_path/../Frameworks ${QWTMATHML_SHARED_LIBRARY}
                                      COMMAND install_name_tool -delete_rpath ${QT_LIBRARY_DIR} ${QWTMATHML_SHARED_LIBRARY}
                                      COMMAND install_name_tool -change ${QWT_SHARED_LIBRARY}
                                                                        @rpath/${QWT_SHARED_LIBRARY}
                                                                        ${QWTMATHML_SHARED_LIBRARY}
+                                     WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
+                                     DEPENDEES copyQwtmathmlLibrary)
+        else()
+            # Note: we wouldn't normally strip the library here since it's done
+            #       elsewhere in our build process, but it happens that there is
+            #       an issue with the system version of patchelf that prevents
+            #       the library from being stripped afterwards...
+
+            ExternalProject_Add_Step(${PACKAGE_BUILD} fixRpath
+                                     COMMAND strip -x ${QWT_SHARED_LIBRARY}
+                                     COMMAND patchelf --remove-rpath ${QWT_SHARED_LIBRARY}
+                                     COMMAND patchelf --set-rpath $ORIGIN --force-rpath ${QWT_SHARED_LIBRARY}
+                                     COMMAND strip -x ${QWTMATHML_SHARED_LIBRARY}
+                                     COMMAND patchelf --remove-rpath ${QWTMATHML_SHARED_LIBRARY}
+                                     COMMAND patchelf --set-rpath $ORIGIN --force-rpath ${QWTMATHML_SHARED_LIBRARY}
                                      WORKING_DIRECTORY ${EXTERNAL_BINARIES_DIR}
                                      DEPENDEES copyQwtmathmlLibrary)
         endif()
@@ -203,8 +216,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/qwtplugin.cpp
-    HEADERS_MOC
-        src/qwtplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

@@ -40,6 +40,10 @@ PLUGININFO_FUNC PMRSupportPluginInfo();
 
 //==============================================================================
 
+static const auto PluginName = QStringLiteral("PMRSupport");
+
+//==============================================================================
+
 class PMRSupportPlugin : public QObject, public I18nInterface,
                          public PreferencesInterface
 {
@@ -57,8 +61,8 @@ public:
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

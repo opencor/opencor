@@ -33,11 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "checkforupdatesdialog.h"
 #include "cliapplication.h"
 #include "cliutils.h"
 #include "guiapplication.h"
-#include "guiutils.h"
 #include "mainwindow.h"
 
 #ifdef Q_OS_MAC
@@ -45,16 +43,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifndef QT_DEBUG
+    #include "checkforupdatesdialog.h"
     #include "splashscreenwindow.h"
 #endif
 
 //==============================================================================
 
-#include <QDir>
-#include <QLocale>
 #include <QProcess>
 #include <QSettings>
-#include <QVariant>
 
 #if defined(Q_OS_WIN) && defined(USE_PREBUILT_QTWEBKIT_PACKAGE)
     #include <QWebSettings>
@@ -134,28 +130,22 @@ int main(int pArgC, char *pArgV[])
 #elif defined(Q_OS_LINUX)
     bool tryCliVersion = true;
 #elif defined(Q_OS_MAC)
-    bool tryCliVersion = (pArgC == 1) || memcmp(pArgV[1], "-psn_", 5);
-#else
-    #error Unsupported platform
+    bool tryCliVersion = (pArgC == 1) || (memcmp(pArgV[1], "-psn_", 5) != 0);
 #endif
 
     // Run the CLI version of OpenCOR, if possible/needed
 
     if (tryCliVersion) {
-        // Initialise the plugins path
-
-        OpenCOR::initPluginsPath(pArgC, pArgV);
-
         // Create and initialise the CLI version of OpenCOR
 
-        OpenCOR::CliApplication *cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
+        auto cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
 
         OpenCOR::initApplication();
 
         // Try to run the CLI version of OpenCOR
 
         int res;
-        bool runCliApplication = cliApp->run(&res);
+        bool runCliApplication = cliApp->run(res);
 
         delete cliApp;
 
@@ -170,18 +160,14 @@ int main(int pArgC, char *pArgV[])
         //       the GUI version of OpenCOR this time...
     }
 
-    // Initialise the plugins path
-
-    OpenCOR::initPluginsPath(pArgC, pArgV);
-
-    // Create the GUI version of OpenCOR, after making sure that on Windows
+    // Create the GUI version of OpenCOR, after making sure that, on Windows,
     // OpenCOR can handle scaled HiDPI screens
 
 #ifdef Q_OS_WIN
     SetProcessDPIAware();
 #endif
 
-    OpenCOR::GuiApplication *guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
+    auto guiApp = new OpenCOR::GuiApplication(pArgC, pArgV);
 
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR minus the first one since it corresponds to the full
@@ -190,7 +176,7 @@ int main(int pArgC, char *pArgV[])
     // carry on as normal, otherwise exit since we want only one instance of
     // OpenCOR at any given time)
 
-    QStringList appArguments = guiApp->arguments();
+    QStringList appArguments = OpenCOR::GuiApplication::arguments();
 
     appArguments.removeFirst();
 
@@ -215,65 +201,65 @@ int main(int pArgC, char *pArgV[])
     QSettings settings;
 
     settings.beginGroup(OpenCOR::SettingsCheckForUpdatesDialog);
-        bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
-        bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
 
-        if (checkForUpdatesAtStartup) {
-            OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
+    bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
+    bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
 
-            checkForUpdatesEngine->check();
+    if (checkForUpdatesAtStartup) {
+        auto checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
 
-            if (   ( includeSnapshots && checkForUpdatesEngine->hasNewerVersion())
-                || (!includeSnapshots && checkForUpdatesEngine->hasNewerOfficialVersion())) {
-                // Retrieve the language to be used to show the check for
-                // updates window
+        checkForUpdatesEngine->check();
 
-                QString locale = OpenCOR::locale();
+        if (   ( includeSnapshots && checkForUpdatesEngine->hasNewerVersion())
+            || (!includeSnapshots && checkForUpdatesEngine->hasNewerOfficialVersion())) {
+            // Retrieve the language to be used to show the check for updates
+            // window
 
-                QLocale::setDefault(QLocale(locale));
+            QString locale = OpenCOR::locale();
 
-                QTranslator qtBaseTranslator;
-                QTranslator qtHelpTranslator;
-                QTranslator qtXmlPatternsTranslator;
-                QTranslator appTranslator;
+            QLocale::setDefault(QLocale(locale));
 
-                qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtBaseTranslator);
+            QTranslator qtBaseTranslator;
+            QTranslator qtHelpTranslator;
+            QTranslator qtXmlPatternsTranslator;
+            QTranslator appTranslator;
 
-                qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtHelpTranslator);
+            qtBaseTranslator.load(QString(":/translations/qtbase_%1.qm").arg(locale));
+            QCoreApplication::installTranslator(&qtBaseTranslator);
 
-                qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
-                guiApp->installTranslator(&qtXmlPatternsTranslator);
+            qtHelpTranslator.load(QString(":/translations/qt_help_%1.qm").arg(locale));
+            QCoreApplication::installTranslator(&qtHelpTranslator);
 
-                appTranslator.load(":/app_"+locale);
-                guiApp->installTranslator(&appTranslator);
+            qtXmlPatternsTranslator.load(QString(":/translations/qtxmlpatterns_%1.qm").arg(locale));
+            QCoreApplication::installTranslator(&qtXmlPatternsTranslator);
 
-                // Show the check for updates window
-                // Note: checkForUpdatesEngine gets deleted by
-                //       checkForUpdatesDialog...
+            appTranslator.load(":/app_"+locale);
+            QCoreApplication::installTranslator(&appTranslator);
 
-                OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(&settings, checkForUpdatesEngine);
+            // Show the check for updates window
+            // Note: checkForUpdatesEngine gets deleted by
+            //       checkForUpdatesDialog...
 
-                checkForUpdatesDialog.exec();
-            } else {
-                delete checkForUpdatesEngine;
-            }
+            OpenCOR::CheckForUpdatesDialog checkForUpdatesDialog(checkForUpdatesEngine);
+
+            checkForUpdatesDialog.exec();
+        } else {
+            delete checkForUpdatesEngine;
         }
-    settings.endGroup();
+    }
 #endif
 
     // Create and show our splash screen, if we are not in debug mode
 
 #ifndef QT_DEBUG
-    OpenCOR::SplashScreenWindow *splashScreen = new OpenCOR::SplashScreenWindow();
+    auto splashScreen = new OpenCOR::SplashScreenWindow();
 
     splashScreen->show();
 #endif
 
     // Create our main window
 
-    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(appDate);
+    auto win = new OpenCOR::MainWindow(appDate);
 
     // Keep track of our main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
@@ -303,26 +289,28 @@ int main(int pArgC, char *pArgV[])
     // Note: indeed, on Linux, to show our splash screen may result in our main
     //       window being shown in the background...
 
-    if (!OpenCOR::aboutToQuit())
+    if (!OpenCOR::aboutToQuit()) {
         win->showSelf();
-    else
+    } else {
         canExecuteAplication = false;
+    }
 #endif
 
     // Execute our application, if possible
 
     int res;
 
-    if (canExecuteAplication)
-        res = guiApp->exec();
-    else
+    if (canExecuteAplication) {
+        res = OpenCOR::GuiApplication::exec();
+    } else {
         res = 0;
+    }
 
     // Keep track of our application file and directory paths (in case we need
     // to restart OpenCOR)
 
-    QString appFilePath = guiApp->applicationFilePath();
-    QString appDirPath = guiApp->applicationDirPath();
+    QString appFilePath = OpenCOR::GuiApplication::applicationFilePath();
+    QString appDirPath = OpenCOR::GuiApplication::applicationDirPath();
 
     // Delete our main window
 

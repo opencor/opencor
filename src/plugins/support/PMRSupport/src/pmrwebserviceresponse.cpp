@@ -30,6 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <array>
+
+//==============================================================================
+
 #include "zlib.h"
 
 //==============================================================================
@@ -73,22 +77,23 @@ void PmrWebServiceResponse::processResponse()
                 BufferSize = 32768
             };
 
-            Bytef buffer[BufferSize];
+            std::array<Bytef, BufferSize> buffer = {};
 
             stream.next_in = reinterpret_cast<Bytef *>(compressedJsonResponse.data());
             stream.avail_in = uint(compressedJsonResponse.size());
 
             do {
-                stream.next_out = buffer;
+                stream.next_out = buffer.data();
                 stream.avail_out = BufferSize;
 
                 inflate(&stream, Z_NO_FLUSH);
 
-                if (!stream.msg)
-                    jsonResponse += QByteArray::fromRawData(reinterpret_cast<char *>(buffer), int(BufferSize-stream.avail_out));
-                else
+                if (stream.msg == nullptr) {
+                    jsonResponse += QByteArray::fromRawData(reinterpret_cast<char *>(buffer.data()), int(BufferSize-stream.avail_out));
+                } else {
                     jsonResponse = QByteArray();
-            } while (!stream.avail_out);
+                }
+            } while (stream.avail_out == 0);
 
             inflateEnd(&stream);
         }
@@ -103,10 +108,11 @@ void PmrWebServiceResponse::processResponse()
     int httpStatusCode = mNetworkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
     if (mNetworkReply->error() != QNetworkReply::NoError) {
-        if (httpStatusCode == 403)
+        if (httpStatusCode == 403) {
             emit forbidden(mNetworkReply->url().toString());
-        else
+        } else {
             emit error(mNetworkReply->errorString());
+        }
     } else if (httpStatusCode == 302) {
         emit found(mNetworkReply->header(QNetworkRequest::LocationHeader).toString());
     } else if (!ResponseMimeTypes.contains(mNetworkReply->header(QNetworkRequest::ContentTypeHeader).toString())) {
@@ -114,15 +120,16 @@ void PmrWebServiceResponse::processResponse()
     } else {
         // Parse our response
 
-        QJsonParseError jsonParseError;
+        QJsonParseError jsonParseError = QJsonParseError();
         QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonResponse, &jsonParseError);
 
         // Check for parse errors
 
-        if (jsonParseError.error != QJsonParseError::NoError)
+        if (jsonParseError.error != QJsonParseError::NoError) {
             emit error(jsonParseError.errorString());
-        else
+        } else {
             emit response(jsonDocument);
+        }
     }
 
     emit busy(false);
@@ -133,8 +140,8 @@ void PmrWebServiceResponse::processResponse()
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

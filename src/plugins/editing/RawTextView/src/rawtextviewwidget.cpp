@@ -50,21 +50,21 @@ RawTextViewWidget::RawTextViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void RawTextViewWidget::loadSettings(QSettings *pSettings)
+void RawTextViewWidget::loadSettings(QSettings &pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
     // our settings' group and load them when initialising ourselves (see
     // initialize())...
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 }
 
 //==============================================================================
 
-void RawTextViewWidget::saveSettings(QSettings *pSettings) const
+void RawTextViewWidget::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
     // Note: our view is such that our settings are actually saved when calling
     //       finalize() on the last file...
 }
@@ -75,17 +75,9 @@ void RawTextViewWidget::retranslateUi()
 {
     // Retranslate our viewer and editor
 
-    if (mEditor)
+    if (mEditor != nullptr) {
         mEditor->retranslateUi();
-}
-
-//==============================================================================
-
-bool RawTextViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditors.contains(pFileName);
+    }
 }
 
 //==============================================================================
@@ -96,7 +88,7 @@ void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
     EditorWidget::EditorWidget *newEditor = mEditors.value(pFileName);
 
-    if (!newEditor) {
+    if (newEditor == nullptr) {
         // No editor exists for the given file, so create one
 
         QByteArray fileContents;
@@ -126,8 +118,8 @@ void RawTextViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                newEditor->loadSettings(&settings);
-            settings.endGroup();
+
+            newEditor->loadSettings(settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -159,7 +151,7 @@ void RawTextViewWidget::finalize(const QString &pFileName)
 
     EditorWidget::EditorWidget *editor = mEditors.value(pFileName);
 
-    if (editor) {
+    if (editor != nullptr) {
         // There is an editor for the given file name, so save our settings and
         // reset our memory of the current editor, if needed
 
@@ -167,8 +159,8 @@ void RawTextViewWidget::finalize(const QString &pFileName)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editor->saveSettings(&settings);
-            settings.endGroup();
+
+            editor->saveSettings(settings);
 
             mNeedLoadingSettings = true;
             mEditor = nullptr;
@@ -191,8 +183,9 @@ void RawTextViewWidget::fileSaved(const QString &pFileName)
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget && !crtWidget->isVisible())
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
         fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================
@@ -206,7 +199,7 @@ void RawTextViewWidget::fileReloaded(const QString &pFileName)
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (contains(pFileName)) {
+    if (mEditors.contains(pFileName)) {
         bool update = mEditor == mEditors.value(pFileName);
 
         finalize(pFileName);
@@ -223,7 +216,7 @@ void RawTextViewWidget::fileRenamed(const QString &pOldFileName,
 
     EditorWidget::EditorWidget *editor = mEditors.value(pOldFileName);
 
-    if (editor) {
+    if (editor != nullptr) {
         mEditors.insert(pNewFileName, editor);
         mEditors.remove(pOldFileName);
     }
@@ -253,18 +246,18 @@ QList<QWidget *> RawTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditor) {
+    if (mEditor != nullptr) {
         return QList<QWidget *>() << mEditor->cursorPositionWidget()
                                   << mEditor->editingModeWidget();
-    } else {
-        return QList<QWidget *>();
     }
+
+    return {};
 }
 
 //==============================================================================
 
-}   // namespace RawTextView
-}   // namespace OpenCOR
+} // namespace RawTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

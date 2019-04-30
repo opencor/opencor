@@ -52,8 +52,9 @@ void Tests::runtimeTest(const QString &pFileName, const QString &pCellmlVersion,
     QVERIFY(runtime);
     QVERIFY(pIsValid?runtime->isValid():!runtime->isValid());
 
-    if (!pIsValid)
+    if (!pIsValid) {
         return;
+    }
 
     // Retrieve the model parameters (i.e. the ones that would be shown in, say,
     // the Simulation Experiment view) for our model and check that they contain

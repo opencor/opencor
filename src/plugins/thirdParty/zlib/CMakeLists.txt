@@ -164,8 +164,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/zlibplugin.cpp
-    HEADERS_MOC
-        src/zlibplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

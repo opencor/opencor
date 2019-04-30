@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //       to updating the viewer (e.g. see the XSL transformation)...
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "cellmleditingviewwidget.h"
+#include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "editorlistwidget.h"
 #include "editorwidgeteditorwidget.h"
@@ -44,7 +44,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "Qsci/qscilexerxml.h"
+#include "qscintillabegin.h"
+    #include "Qsci/qscilexerxml.h"
+#include "qscintillaend.h"
 
 //==============================================================================
 
@@ -71,21 +73,21 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
+void RawCellmlViewWidget::loadSettings(QSettings &pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
     // our settings' group and load them when initialising ourselves (see
     // initialize())...
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 }
 
 //==============================================================================
 
-void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
+void RawCellmlViewWidget::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
     // Note: our view is such that our settings are actually saved when calling
     //       finalize() on the last file...
 }
@@ -96,17 +98,9 @@ void RawCellmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    for (auto editingWidget : mEditingWidgets.values())
+    for (auto editingWidget : mEditingWidgets.values()) {
         editingWidget->retranslateUi();
-}
-
-//==============================================================================
-
-bool RawCellmlViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditingWidgets.contains(pFileName);
+    }
 }
 
 //==============================================================================
@@ -117,7 +111,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (!editingWidget) {
+    if (editingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
         QByteArray fileContents;
@@ -155,8 +149,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editingWidget->loadSettings(&settings);
-            settings.endGroup();
+
+            editingWidget->loadSettings(settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -192,7 +186,7 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // There is an editing widget for the given file name, so save our
         // settings and reset our memory of the current editing widget, if
         // needed
@@ -201,8 +195,8 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editingWidget->saveSettings(&settings);
-            settings.endGroup();
+
+            editingWidget->saveSettings(settings);
 
             mNeedLoadingSettings = true;
             mEditingWidget = nullptr;
@@ -225,8 +219,9 @@ void RawCellmlViewWidget::fileSaved(const QString &pFileName)
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget && !crtWidget->isVisible())
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
         fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================
@@ -240,7 +235,7 @@ void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName)) {
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
@@ -257,7 +252,7 @@ void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
@@ -271,7 +266,7 @@ EditorWidget::EditorWidget * RawCellmlViewWidget::editorWidget(const QString &pF
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editorWidget():nullptr;
+    return (editingWidget != nullptr)?editingWidget->editorWidget():nullptr;
 }
 
 //==============================================================================
@@ -289,12 +284,12 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditingWidget) {
+    if (mEditingWidget != nullptr) {
         return QList<QWidget *>() << mEditingWidget->editorWidget()->cursorPositionWidget()
                                   << mEditingWidget->editorWidget()->editingModeWidget();
-    } else {
-        return QList<QWidget *>();
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -305,7 +300,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget && validate(pFileName, true)) {
+    if ((editingWidget != nullptr) && validate(pFileName, true)) {
         int line;
         int column;
 
@@ -333,7 +328,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
     CellMLEditingView::CellmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // Clear the list of CellML issues
 
         EditorWidget::EditorListWidget *editorList = editingWidget->editorListWidget();
@@ -344,7 +339,6 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
-
         bool res = cellmlFile->isValid(editingWidget->editorWidget()->contents(), cellmlFileIssues, true);
 
         // Warn the user about the CellML issues being maybe for a(n)
@@ -354,16 +348,16 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         int nbOfReportedIssues = 0;
 
         for (const auto &cellmlFileIssue : cellmlFileIssues) {
-            nbOfReportedIssues +=    !pOnlyErrors
-                                  ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error);
+            nbOfReportedIssues += int(   !pOnlyErrors
+                                      ||  (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error));
         }
 
         CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile->version();
 
-        if (   (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-            && cellmlFile->model() && cellmlFile->model()->imports()->length()
-            && nbOfReportedIssues) {
-            editorList->addItem(EditorWidget::EditorListItem::Information,
+        if (   (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            && (cellmlFile->model() != nullptr) && (cellmlFile->model()->imports()->length() != 0)
+            && (nbOfReportedIssues != 0)) {
+            editorList->addItem(EditorWidget::EditorListItem::Type::Information,
                                 (nbOfReportedIssues == 1)?
                                     tr("The issue reported below may be related to this CellML file or to one of its (in)directly imported CellML files."):
                                     tr("The issues reported below may be related to this CellML file and/or to one or several of its (in)directly imported CellML files."));
@@ -374,10 +368,10 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
 
         for (const auto &cellmlFileIssue : cellmlFileIssues) {
             if (   !pOnlyErrors
-                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
-                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
-                                        EditorWidget::EditorListItem::Error:
-                                        EditorWidget::EditorListItem::Warning,
+                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)) {
+                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?
+                                        EditorWidget::EditorListItem::Type::Error:
+                                        EditorWidget::EditorListItem::Type::Warning,
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
                                     qPrintable(cellmlFileIssue.formattedMessage()));
@@ -389,17 +383,17 @@ bool RawCellmlViewWidget::validate(const QString &pFileName, QString &pExtra,
         // Provide some extra information in case, if we are dealing with a
         // CellML 1.0/1.1 files and are therefore using the CellML API
 
-        if (   (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-            || (cellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1)) {
-            pExtra = tr("the <a href=\"https://github.com/cellmlapi/cellml-api/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
+        if (   (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_0)
+            || (cellmlVersion == CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
+            pExtra = tr(R"(the <a href="https://github.com/cellmlapi/cellml-api/">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.)");
         }
 
         return res;
-    } else {
-        // The file doesn't exist, so it can't be validated
-
-        return false;
     }
+
+    // The file doesn't exist, so it can't be validated
+
+    return false;
 }
 
 //==============================================================================
@@ -508,17 +502,17 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
             }
 
             return domDocument.toString(-1);
-        } else {
-            // We are not within a child node
-
-            return QString();
         }
-    } else {
-        // No DOM representation of the given Content MathML block could be
-        // retrieved
 
-        return QString();
+        // We are not within a child node
+
+        return {};
     }
+
+    // No DOM representation of the given Content MathML block could be
+    // retrieved
+
+    return {};
 }
 
 //==============================================================================
@@ -529,7 +523,7 @@ void RawCellmlViewWidget::updateViewer()
     // closed since the signal was emitted) and that its editor allows us to
     // handle connections
 
-    if (   !mEditingWidget
+    if (    (mEditingWidget == nullptr)
         || !mEditingWidget->editorWidget()->handleEditorChanges()) {
         return;
     }
@@ -586,7 +580,7 @@ void RawCellmlViewWidget::updateViewer()
                 // Now, check whether our Content MathML equation is the same as
                 // our previous one
 
-                if (contentMathmlEquation.compare(mContentMathmlEquation)) {
+                if (contentMathmlEquation != mContentMathmlEquation) {
                     // It's a different one, so check whether we have already
                     // retrieved its Presentation MathML version
 
@@ -594,10 +588,11 @@ void RawCellmlViewWidget::updateViewer()
 
                     QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
-                    if (!presentationMathmlEquation.isEmpty())
+                    if (!presentationMathmlEquation.isEmpty()) {
                         mEditingWidget->mathmlViewer()->setContents(presentationMathmlEquation);
-                    else
+                    } else {
                         mMathmlConverter.convert(contentMathmlEquation);
+                    }
                 }
             } else {
                 hasContentMathmlEquation = false;
@@ -620,8 +615,9 @@ void RawCellmlViewWidget::mathmlConversionDone(const QString &pContentMathml,
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)
 
-    if (!mEditingWidget)
+    if (mEditingWidget == nullptr) {
         return;
+    }
 
     // The XSL transformation is done, so update our viewer and keep track of
     // the mapping between the Content and Presentation MathML
@@ -634,16 +630,17 @@ void RawCellmlViewWidget::mathmlConversionDone(const QString &pContentMathml,
     //       where pInput is not our current Content MathML equation anymore, in
     //       which case the contents of our viewer shouldn't be updated...
 
-    if (!pContentMathml.compare(mContentMathmlEquation))
+    if (pContentMathml == mContentMathmlEquation) {
         mEditingWidget->mathmlViewer()->setContents(pPresentationMathml);
+    }
 
     mPresentationMathmlEquations.insert(pContentMathml, pPresentationMathml);
 }
 
 //==============================================================================
 
-}   // namespace RawCellMLView
-}   // namespace OpenCOR
+} // namespace RawCellMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

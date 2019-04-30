@@ -102,8 +102,9 @@ void PmrExposure::addExposureFile(const QString &pFileName)
 {
     // Keep track of the given exposure file, if it's not already tracked
 
-    if (!mExposureFiles.contains(pFileName))
+    if (!mExposureFiles.contains(pFileName)) {
         mExposureFiles << pFileName;
+    }
 }
 
 //==============================================================================
@@ -112,14 +113,14 @@ QString PmrExposure::toHtml() const
 {
     // Return an HTML description of ourselves
 
-    return QString("<a href=\"%1\">%2</a>").arg(mUrl)
-                                           .arg(mName);
+    return QString(R"(<a href="%1">%2</a>)").arg(mUrl)
+                                            .arg(mName);
 }
 
 //==============================================================================
 
-}   // namespace PMRSupport
-}   // namespace OpenCOR
+} // namespace PMRSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

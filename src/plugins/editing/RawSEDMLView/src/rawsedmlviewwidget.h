@@ -40,13 +40,13 @@ namespace OpenCOR {
 
 namespace SEDMLEditingView {
     class SedmlEditingViewWidget;
-}   // namespace SEDMLEditingView
+} // namespace SEDMLEditingView
 
 //==============================================================================
 
 namespace EditorWidget {
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -61,12 +61,10 @@ class RawSedmlViewWidget : public Core::ViewWidget
 public:
     explicit RawSedmlViewWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
-
-    bool contains(const QString &pFileName) const;
 
     void initialize(const QString &pFileName, bool pUpdate = true);
     void finalize(const QString &pFileName);
@@ -95,8 +93,8 @@ private:
 
 //==============================================================================
 
-}   // namespace RawSEDMLView
-}   // namespace OpenCOR
+} // namespace RawSEDMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

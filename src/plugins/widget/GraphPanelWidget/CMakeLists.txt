@@ -12,12 +12,6 @@ add_plugin(GraphPanelWidget
         src/graphpanelwidget.cpp
         src/graphpanelwidgetcustomaxesdialog.cpp
         src/graphpanelwidgetplugin.cpp
-    HEADERS_MOC
-        src/graphpanelplotwidget.h
-        src/graphpanelswidget.h
-        src/graphpanelwidget.h
-        src/graphpanelwidgetcustomaxesdialog.h
-        src/graphpanelwidgetplugin.h
     UIS
         src/graphpanelwidgetcustomaxesdialog.ui
     PLUGINS

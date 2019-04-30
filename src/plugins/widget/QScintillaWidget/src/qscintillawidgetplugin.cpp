@@ -18,37 +18,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// QScintilla support plugin
+// QScintilla widget plugin
 //==============================================================================
 
-#pragma once
-
-//==============================================================================
-
-#include "plugininfo.h"
+#include "qscintillawidgetplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace QScintillaSupport {
+namespace QScintillaWidget {
 
 //==============================================================================
 
-PLUGININFO_FUNC QScintillaSupportPluginInfo();
-
-//==============================================================================
-
-class QScintillaSupportPlugin : public QObject
+PLUGININFO_FUNC QScintillaWidgetPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.QScintillaSupportPlugin" FILE "qscintillasupportplugin.json")
-};
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to support <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour supporter <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
+
+    return new PluginInfo(PluginInfo::Category::Widget, false, false,
+                          QStringList() << "Core" << "QScintilla",
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace QScintillaSupport
-}   // namespace OpenCOR
+} // namespace QScintillaWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

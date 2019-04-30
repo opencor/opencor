@@ -47,7 +47,7 @@ PLUGININFO_FUNC PythonQtConsoleWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("the Python Qt Console window plugin."));
     descriptions.insert("fr", QString::fromUtf8("the Python Qt Console window plugin."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, true, false,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           QStringList() << "Core" << "PythonQtSupport",
                           descriptions);
 }

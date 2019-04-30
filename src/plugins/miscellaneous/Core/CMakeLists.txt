@@ -2,6 +2,10 @@ project(CorePlugin)
 
 # Add the plugin
 
+if(APPLE)
+    set(TABBARWIDGETMACSTYLE_CPP src/tabbarwidgetmacstyle.cpp)
+endif()
+
 add_plugin(Core
     SOURCES
         ../../cliinterface.cpp
@@ -21,6 +25,8 @@ add_plugin(Core
         ../../viewinterface.cpp
         ../../windowinterface.cpp
 
+        ${TABBARWIDGETMACSTYLE_CPP}
+
         src/borderedwidget.cpp
         src/busywidget.cpp
         src/centralwidget.cpp
@@ -36,6 +42,7 @@ add_plugin(Core
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
+        src/remotefiledialog.cpp
         src/splitterwidget.cpp
         src/tabbarwidget.cpp
         src/toolbarwidget.cpp
@@ -45,33 +52,6 @@ add_plugin(Core
         src/widget.cpp
         src/windowwidget.cpp
         src/xsltransformer.cpp
-    HEADERS_MOC
-        ../../datastoreinterface.h
-        ../../plugin.h
-        ../../pluginmanager.h
-        ../../preferencesinterface.h
-        ../../solverinterface.h
-
-        src/borderedwidget.h
-        src/busywidget.h
-        src/centralwidget.h
-        src/collapsiblewidget.h
-        src/corecliutils.h
-        src/coreguiutils.h
-        src/coreplugin.h
-        src/filemanager.h
-        src/mathmlconverter.h
-        src/organisationwidget.h
-        src/progressbarwidget.h
-        src/propertyeditorwidget.h
-        src/tabbarwidget.h
-        src/toolbarwidget.h
-        src/treeviewwidget.h
-        src/usermessagewidget.h
-        src/viewwidget.h
-        src/widget.h
-        src/windowwidget.h
-        src/xsltransformer.h
     QT_MODULES
         Network
         Widgets

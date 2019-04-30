@@ -53,8 +53,8 @@ namespace Core {
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 
@@ -129,6 +129,7 @@ QString CORE_EXPORT formatTime(qint64 pTime);
 
 QString CORE_EXPORT sha1(const QByteArray &pByteArray);
 QString CORE_EXPORT sha1(const QString &pString);
+QString CORE_EXPORT fileSha1(const QString &pFileName);
 
 void CORE_EXPORT stringPositionAsLineColumn(const QString &pString,
                                             const QString &pEol, int pPosition,
@@ -147,7 +148,7 @@ bool CORE_EXPORT isDirectory(const QString &pDirName);
 bool CORE_EXPORT isEmptyDirectory(const QString &pDirName);
 
 void CORE_EXPORT doNothing(quint64 pMax);
-void CORE_EXPORT doNothing(const quint64 *pMax, bool *pStopped = nullptr);
+void CORE_EXPORT doNothing(const quint64 *pMax, const bool *pStopped = nullptr);
 
 void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
                                     bool &pOutIsLocalFile,
@@ -186,8 +187,8 @@ QStringList CORE_EXPORT droppedFileNames(QDropEvent *pEvent);
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

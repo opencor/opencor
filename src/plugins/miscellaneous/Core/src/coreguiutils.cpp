@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "centralwidget.h"
-#include "corecliutils.h"
 #include "commonwidget.h"
+#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 
@@ -69,7 +69,7 @@ CentralWidget * centralWidget()
 
     if (firstTime) {
         for (auto object : mainWindow()->children()) {
-            if (!strcmp(object->metaObject()->className(), "OpenCOR::Core::CentralWidget")) {
+            if (strcmp(object->metaObject()->className(), "OpenCOR::Core::CentralWidget") == 0) {
                 res = qobject_cast<CentralWidget *>(object);
 
                 break;
@@ -117,8 +117,9 @@ QString getOpenFileName(const QString &pCaption, const QStringList &pFilters,
 
     dialog.setFileMode(QFileDialog::ExistingFile);
 
-    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+    if ((pSelectedFilter != nullptr) && !pSelectedFilter->isEmpty()) {
         dialog.selectNameFilter(*pSelectedFilter);
+    }
 
     if (dialog.exec() == QDialog::Accepted) {
         QString res = canonicalFileName(dialog.selectedFiles().first());
@@ -134,9 +135,9 @@ QString getOpenFileName(const QString &pCaption, const QStringList &pFilters,
         }
 
         return res;
-    } else {
-        return QString();
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -156,8 +157,9 @@ QStringList getOpenFileNames(const QString &pCaption,
 
     dialog.setFileMode(QFileDialog::ExistingFiles);
 
-    if (pSelectedFilter && !pSelectedFilter->isEmpty())
+    if ((pSelectedFilter != nullptr) && !pSelectedFilter->isEmpty()) {
         dialog.selectNameFilter(*pSelectedFilter);
+    }
 
     if (dialog.exec() == QDialog::Accepted) {
         QStringList res = canonicalFileNames(dialog.selectedFiles());
@@ -183,9 +185,9 @@ QStringList getOpenFileNames(const QString &pCaption,
         res.removeDuplicates();
 
         return res;
-    } else {
-        return QStringList();
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -199,9 +201,11 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     //       the case where a user cancels his/her action, so instead we create
     //       and execute our own QFileDialog object...
 
+    static const QString Dot = ".";
+
     QFileInfo fileInfo = pFileName;
     QFileDialog dialog(qApp->activeWindow(), pCaption,
-                       !fileInfo.canonicalPath().compare(".")?
+                       (fileInfo.canonicalPath() == Dot)?
                            activeDirectory()+"/"+fileInfo.fileName():
                            pFileName,
                        allFilters(pFilters));
@@ -211,14 +215,17 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
     dialog.setOption(QFileDialog::DontConfirmOverwrite);
 
     forever {
-        if (pSelectedFilter && !pSelectedFilter->isEmpty())
+        if ((pSelectedFilter != nullptr) && !pSelectedFilter->isEmpty()) {
             dialog.selectNameFilter(*pSelectedFilter);
+        }
 
-        if (dialog.exec() != QDialog::Accepted)
+        if (dialog.exec() != QDialog::Accepted) {
             break;
+        }
 
-        if (pSelectedFilter)
+        if (pSelectedFilter != nullptr) {
             *pSelectedFilter = dialog.selectedNameFilter();
+        }
 
         QString res = canonicalFileName(dialog.selectedFiles().first());
 
@@ -237,7 +244,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
             // Check whether the save file already exists and is opened
 
-            if (FileManager::instance()->file(res)) {
+            if (FileManager::instance()->file(res) != nullptr) {
                 warningMessageBox(pCaption,
                                   QObject::tr("<strong>%1</strong> already exists and is opened.").arg(QDir::toNativeSeparators(res)));
 
@@ -256,7 +263,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
         return res;
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -287,8 +294,9 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
     dialog.setOption(QFileDialog::ShowDirsOnly);
 
     forever {
-        if (dialog.exec() != QDialog::Accepted)
+        if (dialog.exec() != QDialog::Accepted) {
             break;
+        }
 
         QString res = canonicalDirName(dialog.selectedFiles().first());
 
@@ -297,7 +305,16 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
 
             setActiveDirectory(res);
 
-            // Check whether the directory should be empty
+            // Check whether the directory is writable
+
+            if (!Core::isDirectory(res)) {
+                Core::warningMessageBox(pCaption,
+                                        QObject::tr("Please choose a writable directory."));
+
+                continue;
+            }
+
+            // Check whether the directory should be and is empty
 
             if (pEmptyDir && !isEmptyDirectory(res)) {
                 warningMessageBox(pCaption,
@@ -310,7 +327,7 @@ QString getDirectory(const QString &pCaption, const QString &pDirName,
         return res;
     }
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -329,14 +346,15 @@ void setFocusTo(QWidget *pWidget)
     // Give the focus to pWidget, but then revert the focus back to whoever had
     // it before, if needed
 
-    if (!pWidget)
+    if (pWidget == nullptr) {
         return;
+    }
 
     QWidget *focusedWidget = qApp->activeWindow()?
                                  qApp->activeWindow()->focusWidget():
                                  nullptr;
 
-    if (   !focusedWidget
+    if (   (focusedWidget == nullptr)
         || (pWidget->parentWidget() == focusedWidget->parentWidget())) {
         // Either there is no currently focused widget or the currently focused
         // widget and the one to which we want to set the focus share the same
@@ -352,7 +370,7 @@ QMenu * newMenu(const QString &pName, QWidget *pParent)
 {
     // Create and return a menu
 
-    QMenu *res = new QMenu(pParent);
+    auto res = new QMenu(pParent);
 
     res->setObjectName("menu"+pName.left(1).toUpper()+pName.right(pName.length()-1));
 
@@ -365,7 +383,7 @@ QMenu * newMenu(const QIcon &pIcon, QWidget *pParent)
 {
     // Create and return a menu
 
-    QMenu *res = new QMenu(pParent);
+    auto res = new QMenu(pParent);
 
     res->menuAction()->setIcon(pIcon);
 
@@ -379,7 +397,7 @@ QAction * newAction(bool pCheckable, const QIcon &pIcon,
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setCheckable(pCheckable);
     res->setIcon(pIcon);
@@ -394,7 +412,7 @@ QAction * newAction(bool pCheckable, const QIcon &pIcon, QWidget *pParent)
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setCheckable(pCheckable);
     res->setIcon(pIcon);
@@ -409,7 +427,7 @@ QAction * newAction(bool pCheckable, const QKeySequence &pKeySequence,
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setCheckable(pCheckable);
     res->setShortcut(pKeySequence);
@@ -423,7 +441,7 @@ QAction * newAction(bool pCheckable, QWidget *pParent)
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setCheckable(pCheckable);
 
@@ -437,7 +455,7 @@ QAction * newAction(const QIcon &pIcon,
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setIcon(pIcon);
     res->setShortcuts(pKeySequences);
@@ -452,7 +470,7 @@ QAction * newAction(const QIcon &pIcon, const QKeySequence &pKeySequence,
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setIcon(pIcon);
     res->setShortcut(pKeySequence);
@@ -466,7 +484,7 @@ QAction * newAction(const QIcon &pIcon, QWidget *pParent)
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setIcon(pIcon);
 
@@ -479,7 +497,7 @@ QAction * newAction(const QKeySequence &pKeySequence, QWidget *pParent)
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setShortcut(pKeySequence);
 
@@ -493,7 +511,7 @@ QAction * newAction(const QKeySequence::StandardKey &pStandardKey,
 {
     // Create and return an action
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setShortcut(pStandardKey);
 
@@ -515,7 +533,7 @@ QAction * newSeparator(QWidget *pParent)
 {
     // Create and return a separator
 
-    QAction *res = new QAction(pParent);
+    auto res = new QAction(pParent);
 
     res->setSeparator(true);
 
@@ -524,18 +542,17 @@ QAction * newSeparator(QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
+QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
 {
-    // Create and return a 'real' line widget, i.e. one which is 1 pixel wide,
-    // using a QFrame widget
+    // Create and return a line widget, i.e. one which is 1 pixel wide, using a
+    // QFrame widget
 
-    QFrame *res = new QFrame(pParent);
+    auto res = new QFrame(pParent);
+    QString color = borderColor().name();
 
     res->setStyleSheet(QString("QFrame {"
-                               "    border: 1px solid rgb(%1, %2, %3);"
-                               "}").arg(pColor.red())
-                                   .arg(pColor.green())
-                                   .arg(pColor.blue()));
+                               "    border: 1px solid %1;"
+                               "}").arg(color));
 
     if (pHorizontal) {
         res->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -550,29 +567,11 @@ QFrame * newLineWidget(bool pHorizontal, const QColor &pColor, QWidget *pParent)
 
 //==============================================================================
 
-QFrame * newLineWidget(bool pHorizontal, QWidget *pParent)
-{
-    // Create and return a 'real' horizontal line widget
-
-    return newLineWidget(pHorizontal, borderColor(), pParent);
-}
-
-//==============================================================================
-
-QFrame * newLineWidget(const QColor &pColor, QWidget *pParent)
-{
-    // Create and return a 'real' horizontal line widget
-
-    return newLineWidget(true, pColor, pParent);
-}
-
-//==============================================================================
-
 QFrame * newLineWidget(QWidget *pParent)
 {
-    // Create and return a 'real' horizontal line widget
+    // Return a new horizontal line widget
 
-    return newLineWidget(true, borderColor(), pParent);
+    return newLineWidget(true, pParent);
 }
 
 //==============================================================================
@@ -580,11 +579,12 @@ QFrame * newLineWidget(QWidget *pParent)
 QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
-    if (pIcon.isNull())
-        return QString();
+    if (pIcon.isNull()) {
+        return {};
+    }
 
     QByteArray data;
     QBuffer buffer(&data);
@@ -601,8 +601,8 @@ QString iconDataUri(const QIcon &pIcon, int pWidth, int pHeight,
 QString iconDataUri(const QString &pIcon, int pWidth, int pHeight,
                     QIcon::Mode pMode)
 {
-    // Convert an icon, which resource name is given, to a data URI, after
-    // having resized it, if requested
+    // Convert and return an icon, which resource name and size are given, to a
+    // data URI
 
     return iconDataUri(QIcon(pIcon), pWidth, pHeight, pMode);
 }
@@ -619,41 +619,46 @@ QIcon standardIcon(QStyle::StandardPixmap pStandardIcon,
 
 //==============================================================================
 
-QIcon tintedIcon(const QIcon &pIcon, int pWidth, int pHeight,
-                 const QColor &pColor)
+QIcon tintedIcon(const QIcon &pIcon, const QColor &pColor)
 {
-    // Create and return a tinted icon using the given icon and colour
+    // Create and return a tinted icon using (all the sizes of) the given icon
+    // and colour
 
-    QGraphicsScene scene(0, 0, pWidth, pHeight);
-    QGraphicsPixmapItem pixmapItem;
-    QGraphicsColorizeEffect effect;
+    QIcon res = QIcon();
 
-    effect.setColor(pColor);
+    for (const auto &size : pIcon.availableSizes()) {
+        QGraphicsScene scene(0, 0, size.width(), size.height());
+        QGraphicsPixmapItem pixmapItem;
+        QGraphicsColorizeEffect effect;
 
-    pixmapItem.setGraphicsEffect(&effect);
-    pixmapItem.setPixmap(pIcon.pixmap(pWidth, pHeight));
+        effect.setColor(pColor);
 
-    scene.addItem(&pixmapItem);
+        pixmapItem.setGraphicsEffect(&effect);
+        pixmapItem.setPixmap(pIcon.pixmap(size));
 
-    QImage image(pWidth, pHeight, QImage::Format_ARGB32_Premultiplied);
-    QPainter painter(&image);
+        scene.addItem(&pixmapItem);
 
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.fillRect(image.rect(), Qt::transparent);
+        QImage image(size, QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&image);
 
-    scene.render(&painter);
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(image.rect(), Qt::transparent);
 
-    return QPixmap::fromImage(image);
+        scene.render(&painter);
+
+        res.addPixmap(QPixmap::fromImage(image));
+    }
+
+    return res;
 }
 
 //==============================================================================
 
-QIcon tintedIcon(const QString &pIcon, int pWidth, int pHeight,
-                 const QColor &pColor)
+QIcon tintedIcon(const QString &pIcon, const QColor &pColor)
 {
-    // Create and return a tinted icon using the given icon and colour
+    // Return a tinted icon using the given icon and colour
 
-    return tintedIcon(QIcon(pIcon), pWidth, pHeight, pColor);
+    return tintedIcon(QIcon(pIcon), pColor);
 }
 
 //==============================================================================
@@ -692,8 +697,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QIcon &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(QIcon(pBaseIcon), pOverlayIcon, pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -705,8 +709,7 @@ QIcon overlayedIcon(const QIcon &pBaseIcon, const QString &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(pBaseIcon, QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -718,8 +721,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
                     int pBaseWidth, int pBaseHeight, int pOverlayLeft,
                     int pOverlayTop, int pOverlayWidth, int pOverlayHeight)
 {
-    // Create and return an overlayed icon using the given base and overlay
-    // icons
+    // Return an overlayed icon using the given base and overlay icons
 
     return overlayedIcon(QIcon(pBaseIcon), QIcon(pOverlayIcon), pBaseWidth, pBaseHeight,
                          pOverlayLeft, pOverlayTop, pOverlayWidth, pOverlayHeight);
@@ -730,7 +732,7 @@ QIcon overlayedIcon(const QString &pBaseIcon, const QString &pOverlayIcon,
 QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
                  Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
 {
-    // Create and return a scaled version of the given icon
+    // Return a scaled version of the given icon
 
     return pIcon.pixmap(pIcon.availableSizes().first()).scaled(pWidth, pHeight,
                                                                pAspectMode,
@@ -742,7 +744,7 @@ QIcon scaledIcon(const QIcon &pIcon, int pWidth, int pHeight,
 QIcon scaledIcon(const QString &pIcon, int pWidth, int pHeight,
                  Qt::AspectRatioMode pAspectMode, Qt::TransformationMode pMode)
 {
-    // Create and return a scaled version of the given icon
+    // Return a scaled version of the given icon
 
     return scaledIcon(QIcon(pIcon), pWidth, pHeight, pAspectMode, pMode);
 }
@@ -776,9 +778,9 @@ QColor lockedColor(const QColor &pColor)
     static const double Alpha = 0.05;
     static const double OneMinusAlpha = 1.0-Alpha;
 
-    return QColor(int(Alpha*lockedRed+OneMinusAlpha*red),
-                  int(Alpha*lockedGreen+OneMinusAlpha*green),
-                  int(Alpha*lockedBlue+OneMinusAlpha*blue));
+    return { int(Alpha*lockedRed+OneMinusAlpha*red),
+             int(Alpha*lockedGreen+OneMinusAlpha*green),
+             int(Alpha*lockedBlue+OneMinusAlpha*blue) };
 }
 
 //==============================================================================
@@ -798,8 +800,8 @@ bool opencorActive()
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

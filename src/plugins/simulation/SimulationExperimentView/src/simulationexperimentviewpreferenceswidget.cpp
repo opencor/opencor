@@ -43,14 +43,14 @@ namespace SimulationExperimentView {
 
 //==============================================================================
 
-static const auto SettingsCategory        = QStringLiteral("Category");
-static const auto SettingsPropertiesWidth = QStringLiteral("PropertiesWidth");
+static const char *SettingsCategory        = "Category";
+static const char *SettingsPropertiesWidth = "PropertiesWidth";
 
 //==============================================================================
 
-static const auto SettingsCategoryDefault    = QStringLiteral("Graph Panel");
-static const auto SettingsCategoryGraphPanel = SettingsCategoryDefault;
-static const auto SettingsCategoryGraph      = QStringLiteral("Graph");
+static const char *SettingsCategoryDefault    = "Graph Panel";
+static const char *SettingsCategoryGraphPanel = SettingsCategoryDefault;
+static const char *SettingsCategoryGraph      = "Graph";
 
 //==============================================================================
 
@@ -71,11 +71,9 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     int graphPanelIndex = mCategoryTabs->addTab(tr("Graph Panel"));
     int graphIndex = mCategoryTabs->addTab(tr("Graph"));
 
-    QString category = mSettings->value(SettingsCategory, SettingsCategoryDefault).toString();
+    QString category = mSettings.value(SettingsCategory, SettingsCategoryDefault).toString();
 
-    mCategoryTabs->setCurrentIndex(!category.compare(SettingsCategoryGraphPanel)?
-                                       0:
-                                       1);
+    mCategoryTabs->setCurrentIndex(int(category != SettingsCategoryGraphPanel));
 
     mGui->layout->addWidget(mCategoryTabs);
 
@@ -84,16 +82,16 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     // Retrieve our preferences
 
-    mGraphPanelBackgroundColor = mSettings->value(SettingsPreferencesGraphPanelBackgroundColor, SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>();
-    mGraphPanelForegroundColor = mSettings->value(SettingsPreferencesGraphPanelForegroundColor, SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>();
-    mGraphPanelLegend = mSettings->value(SettingsPreferencesGraphPanelLegend, SettingsPreferencesGraphPanelLegendDefault).toBool();
+    mGraphPanelBackgroundColor = mSettings.value(SettingsPreferencesGraphPanelBackgroundColor, SettingsPreferencesGraphPanelBackgroundColorDefault).value<QColor>();
+    mGraphPanelForegroundColor = mSettings.value(SettingsPreferencesGraphPanelForegroundColor, SettingsPreferencesGraphPanelForegroundColorDefault).value<QColor>();
+    mGraphPanelLegend = mSettings.value(SettingsPreferencesGraphPanelLegend, SettingsPreferencesGraphPanelLegendDefault).toBool();
 
-    mGraphLineStyle = SEDMLSupport::lineStyle(mSettings->value(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString());
-    mGraphLineWidth = mSettings->value(SettingsPreferencesGraphLineWidth, SettingsPreferencesGraphLineWidthDefault).toInt();
-    mGraphSymbolStyle = SEDMLSupport::symbolStyle(mSettings->value(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString());
-    mGraphSymbolSize = mSettings->value(SettingsPreferencesGraphSymbolSize, SettingsPreferencesGraphSymbolSizeDefault).toInt();
-    mGraphSymbolFilled = mSettings->value(SettingsPreferencesGraphSymbolFilled, SettingsPreferencesGraphSymbolFilledDefault).toBool();
-    mGraphSymbolFillColor = mSettings->value(SettingsPreferencesGraphSymbolFillColor, SettingsPreferencesGraphSymbolFillColorDefault).value<QColor>();
+    mGraphLineStyle = SEDMLSupport::lineStyle(mSettings.value(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(SettingsPreferencesGraphLineStyleDefault)).toString());
+    mGraphLineWidth = mSettings.value(SettingsPreferencesGraphLineWidth, SettingsPreferencesGraphLineWidthDefault).toInt();
+    mGraphSymbolStyle = SEDMLSupport::symbolStyle(mSettings.value(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(SettingsPreferencesGraphSymbolStyleDefault)).toString());
+    mGraphSymbolSize = mSettings.value(SettingsPreferencesGraphSymbolSize, SettingsPreferencesGraphSymbolSizeDefault).toInt();
+    mGraphSymbolFilled = mSettings.value(SettingsPreferencesGraphSymbolFilled, SettingsPreferencesGraphSymbolFilledDefault).toBool();
+    mGraphSymbolFillColor = mSettings.value(SettingsPreferencesGraphSymbolFillColor, SettingsPreferencesGraphSymbolFillColorDefault).value<QColor>();
 
     // Create and customise our graph panel property editor
 
@@ -103,7 +101,7 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
     mGraphPanelProperties->addColorProperty(mGraphPanelForegroundColor)->setName(tr("Foreground colour"));
     mGraphPanelProperties->addBooleanProperty(mGraphPanelLegend)->setName(tr("Legend"));
 
-    int propertiesWidth = mSettings->value(SettingsPropertiesWidth, int(0.42*width())).toInt();
+    int propertiesWidth = mSettings.value(SettingsPropertiesWidth, int(0.42*width())).toInt();
 
     mGraphPanelProperties->setColumnWidth(0, propertiesWidth);
 
@@ -138,8 +136,8 @@ SimulationExperimentViewPreferencesWidget::SimulationExperimentViewPreferencesWi
 
     // Add our property editors (with a border) to our layout
 
-    Core::BorderedWidget *graphPanelBorderedWidget = new Core::BorderedWidget(mGraphPanelProperties, true, true, true, true);
-    Core::BorderedWidget *graphBorderedWidget = new Core::BorderedWidget(mGraphProperties, true, true, true, true);
+    auto graphPanelBorderedWidget = new Core::BorderedWidget(mGraphPanelProperties, true, true, true, true);
+    auto graphBorderedWidget = new Core::BorderedWidget(mGraphProperties, true, true, true, true);
 
     mPropertyEditors.insert(graphPanelIndex, graphPanelBorderedWidget);
     mPropertyEditors.insert(graphIndex, graphBorderedWidget);
@@ -162,14 +160,14 @@ SimulationExperimentViewPreferencesWidget::~SimulationExperimentViewPreferencesW
 {
     // Keep track of which category is selected
 
-    mSettings->setValue(SettingsCategory, (mCategoryTabs->currentIndex() == 0)?
-                                              SettingsCategoryGraphPanel:
-                                              SettingsCategoryGraph);
+    mSettings.setValue(SettingsCategory, (mCategoryTabs->currentIndex() == 0)?
+                                             SettingsCategoryGraphPanel:
+                                             SettingsCategoryGraph);
 
     // Keep track of the width of our property editors (using that of our graph
     // panel property editor since they all have the same width)
 
-    mSettings->setValue(SettingsPropertiesWidth, mGraphPanelProperties->columnWidth(0));
+    mSettings.setValue(SettingsPropertiesWidth, mGraphPanelProperties->columnWidth(0));
 
     // Delete the GUI
 
@@ -240,22 +238,22 @@ void SimulationExperimentViewPreferencesWidget::savePreferences()
 
     Core::Properties graphPanelProperties = mGraphPanelProperties->properties();
 
-    mSettings->setValue(SettingsPreferencesGraphPanelBackgroundColor, graphPanelProperties[0]->colorValue());
-    mSettings->setValue(SettingsPreferencesGraphPanelForegroundColor, graphPanelProperties[1]->colorValue());
-    mSettings->setValue(SettingsPreferencesGraphPanelLegend, graphPanelProperties[2]->booleanValue());
+    mSettings.setValue(SettingsPreferencesGraphPanelBackgroundColor, graphPanelProperties[0]->colorValue());
+    mSettings.setValue(SettingsPreferencesGraphPanelForegroundColor, graphPanelProperties[1]->colorValue());
+    mSettings.setValue(SettingsPreferencesGraphPanelLegend, graphPanelProperties[2]->booleanValue());
 
     Core::Properties graphProperties = mGraphProperties->properties();
     Core::Properties graphLineProperties = graphProperties[0]->properties();
 
-    mSettings->setValue(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(graphLineProperties[0]->listValueIndex()));
-    mSettings->setValue(SettingsPreferencesGraphLineWidth, graphLineProperties[1]->integerValue());
+    mSettings.setValue(SettingsPreferencesGraphLineStyle, SEDMLSupport::stringLineStyle(graphLineProperties[0]->listValueIndex()));
+    mSettings.setValue(SettingsPreferencesGraphLineWidth, graphLineProperties[1]->integerValue());
 
     Core::Properties graphSymbolProperties = graphProperties[1]->properties();
 
-    mSettings->setValue(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(graphSymbolProperties[0]->listValueIndex()));
-    mSettings->setValue(SettingsPreferencesGraphSymbolSize, graphSymbolProperties[1]->integerValue());
-    mSettings->setValue(SettingsPreferencesGraphSymbolFilled, graphSymbolProperties[2]->booleanValue());
-    mSettings->setValue(SettingsPreferencesGraphSymbolFillColor, graphSymbolProperties[3]->colorValue());
+    mSettings.setValue(SettingsPreferencesGraphSymbolStyle, SEDMLSupport::stringSymbolStyle(graphSymbolProperties[0]->listValueIndex()));
+    mSettings.setValue(SettingsPreferencesGraphSymbolSize, graphSymbolProperties[1]->integerValue());
+    mSettings.setValue(SettingsPreferencesGraphSymbolFilled, graphSymbolProperties[2]->booleanValue());
+    mSettings.setValue(SettingsPreferencesGraphSymbolFillColor, graphSymbolProperties[3]->colorValue());
 }
 
 //==============================================================================
@@ -264,8 +262,9 @@ void SimulationExperimentViewPreferencesWidget::updateGui()
 {
     // Update our GUI by showing the right property editor
 
-    for (int i = 0, iMax = mCategoryTabs->count(); i < iMax; ++i)
+    for (int i = 0, iMax = mCategoryTabs->count(); i < iMax; ++i) {
         mPropertyEditors.value(i)->setVisible(i == mCategoryTabs->currentIndex());
+    }
 }
 
 //==============================================================================
@@ -274,7 +273,7 @@ void SimulationExperimentViewPreferencesWidget::headerSectionResized(int pIndex,
                                                                      int pOldSize,
                                                                      int pNewSize)
 {
-    Q_UNUSED(pOldSize);
+    Q_UNUSED(pOldSize)
 
     // Update the column width of our property editors
 
@@ -294,8 +293,8 @@ void SimulationExperimentViewPreferencesWidget::headerSectionResized(int pIndex,
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

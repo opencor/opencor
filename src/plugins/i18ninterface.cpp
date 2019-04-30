@@ -43,9 +43,7 @@ extern "C" Q_DECL_EXPORT int i18nInterfaceVersion()
 
 //==============================================================================
 
-I18nInterface::~I18nInterface()
-{
-}
+I18nInterface::~I18nInterface() = default;
 
 //==============================================================================
 
@@ -85,7 +83,7 @@ void I18nInterface::retranslateAction(QAction *pAction,
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

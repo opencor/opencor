@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class SampleWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -57,8 +57,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SampleWindow
-}   // namespace OpenCOR
+} // namespace SampleWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

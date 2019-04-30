@@ -83,7 +83,7 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 {
     // Create and set our horizontal layout
 
-    QHBoxLayout *layout = new QHBoxLayout(this);
+    auto layout = new QHBoxLayout(this);
 
     layout->setContentsMargins(QMargins());
     layout->setSpacing(0);
@@ -117,8 +117,9 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     GraphPanelPlotWidgets neighbors = GraphPanelPlotWidgets();
 
-    for (auto neighbor : pNeighbors)
+    for (auto neighbor : pNeighbors) {
         neighbors << neighbor->plot();
+    }
 
     mPlot = new GraphPanelPlotWidget(neighbors, pSynchronizeXAxisAction,
                                      pSynchronizeYAxisAction, this);
@@ -135,8 +136,9 @@ GraphPanelWidget::GraphPanelWidget(const GraphPanelWidgets &pNeighbors,
 
     // Let our plot's neighbours know about our plot
 
-    for (auto neighbor : neighbors)
+    for (auto neighbor : neighbors) {
         neighbor->addNeighbor(mPlot);
+    }
 }
 
 //==============================================================================
@@ -155,8 +157,9 @@ GraphPanelWidget::~GraphPanelWidget()
     // neighbour anymore
 
     for (auto plot : mPlot->neighbors()) {
-        if (plot != mPlot)
+        if (plot != mPlot) {
             plot->removeNeighbor(mPlot);
+        }
     }
 }
 
@@ -175,13 +178,15 @@ void GraphPanelWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event
 
-    Widget::changeEvent(pEvent);
+    Core::Widget::changeEvent(pEvent);
 
-    // Check whether the palette has changed and if so then update the colour
-    // used to highlight the active graph panel
+    // Check whether the palette or our enabled state has changed and if so then
+    // update the colour used to highlight the active graph panel
 
-    if (pEvent->type() == QEvent::PaletteChange)
+    if (   (pEvent->type() == QEvent::PaletteChange)
+        || (pEvent->type() == QEvent::EnabledChange)) {
         updateMarkerColor();
+    }
 }
 
 //==============================================================================
@@ -224,8 +229,9 @@ void GraphPanelWidget::addGraph(GraphPanelPlotGraph *pGraph,
 {
     // Add the graph to our plot
 
-    if (mPlot->addGraph(pGraph))
+    if (mPlot->addGraph(pGraph)) {
         emit graphAdded(this, pGraph, pGraphProperties);
+    }
 }
 
 //==============================================================================
@@ -237,8 +243,9 @@ void GraphPanelWidget::removeGraphs(const GraphPanelPlotGraphs &pGraphs)
     GraphPanelPlotGraphs graphs = GraphPanelPlotGraphs();
 
     for (auto graph : pGraphs) {
-        if (mPlot->removeGraph(graph))
+        if (mPlot->removeGraph(graph)) {
             graphs << graph;
+        }
     }
 
     emit graphsRemoved(this, graphs);
@@ -271,16 +278,21 @@ void GraphPanelWidget::updateMarkerColor()
     mMarker->setStyleSheet(QString("QFrame {"
                                    "    color: %1;"
                                    "}").arg(mActive?
-                                                Core::highlightColor().name():
-                                                Core::windowColor().name()));
+                                                isEnabled()?
+                                                    Core::highlightColor().name():
+                                                    Core::highlightColor(QPalette::Disabled).name(QColor::HexArgb):
+                                                isEnabled()?
+                                                    Core::windowColor().name():
+                                                    Core::windowColor(QPalette::Disabled).name(QColor::HexArgb)));
 }
 
 //==============================================================================
 
 void GraphPanelWidget::setActive(bool pActive, bool pForce)
 {
-    if ((pActive == mActive) && !pForce)
+    if ((pActive == mActive) && !pForce) {
         return;
+    }
 
     // Set the graph panel's active state
 
@@ -292,16 +304,17 @@ void GraphPanelWidget::setActive(bool pActive, bool pForce)
 
     // Let people know if the graph panel has been activated or inactivated
 
-    if (pActive)
+    if (pActive) {
         emit activated(this);
-    else
+    } else {
         emit inactivated(this);
+    }
 }
 
 //==============================================================================
 
-}   // namespace GraphPanelWidget
-}   // namespace OpenCOR
+} // namespace GraphPanelWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

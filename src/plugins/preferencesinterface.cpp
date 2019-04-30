@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QRegularExpression>
-#include <QSettings>
 
 //==============================================================================
 
@@ -51,34 +50,23 @@ namespace Preferences {
 PreferencesWidget::PreferencesWidget(const QString &pName, QWidget *pParent) :
     QWidget(pParent)
 {
-    mSettings = new QSettings();
+    // Customise our settings
 
-    if (pName.compare(GeneralPreferences)) {
-        mSettings->beginGroup(SettingsPlugins);
-        mSettings->beginGroup(pName);
+    if (pName != GeneralPreferences) {
+        mSettings.beginGroup(SettingsPlugins);
+        mSettings.beginGroup(pName);
     }
 
-    mSettings->beginGroup(SettingsPreferences);
+    mSettings.beginGroup(SettingsPreferences);
 }
 
 //==============================================================================
 
-PreferencesWidget::~PreferencesWidget()
-{
-    // Delete some internal objects
-
-    delete mSettings;
-}
+} // namespace Preferences
 
 //==============================================================================
 
-}   // namespace Preferences
-
-//==============================================================================
-
-PreferencesInterface::~PreferencesInterface()
-{
-}
+PreferencesInterface::~PreferencesInterface() = default;
 
 //==============================================================================
 
@@ -92,7 +80,7 @@ QVariant PreferencesInterface::preference(const QString &pName,
 
     QSettings settings;
 
-    if (pName.compare(Preferences::GeneralPreferences)) {
+    if (pName != Preferences::GeneralPreferences) {
         settings.beginGroup(SettingsPlugins);
         settings.beginGroup(pName);
     }
@@ -104,7 +92,7 @@ QVariant PreferencesInterface::preference(const QString &pName,
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

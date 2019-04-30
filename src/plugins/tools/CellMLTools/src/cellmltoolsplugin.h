@@ -65,6 +65,11 @@ public:
 #include "plugininterface.inl"
 
 private:
+    enum class Command {
+        Export,
+        Validate
+    };
+
     QString mFileName;
 
     QMenu *mCellmlFileExportToMenu;
@@ -77,6 +82,9 @@ private:
 
     void runHelpCommand();
     int runExportCommand(const QStringList &pArguments);
+    int runValidateCommand(const QStringList &pArguments);
+
+    int runCommand(Command pCommand, const QStringList &pArguments);
 
 private slots:
     void exportToCellml10();
@@ -86,8 +94,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLTools
-}   // namespace OpenCOR
+} // namespace CellMLTools
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

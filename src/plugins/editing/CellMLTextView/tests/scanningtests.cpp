@@ -38,107 +38,107 @@ void ScanningTests::basicScanningTests()
 
     scanner.setText("   \t\r\n   \t   \r   \n   ");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // CellML Text keyword
 
     scanner.setText("def");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DefToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Def);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // Non-CellML Text keyword, but identifier, since within a parameter block
 
     scanner.setText("{ def }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // Non-CellML Text keyword, but identifier, since outside a parameter block
 
     scanner.setText("pref");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // CellML Text parameter keyword
 
     scanner.setText("{ pref }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PrefToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pref);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // Identifier
 
     scanner.setText("OpenCOR");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // Unknown token
 
     scanner.setText("_________");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // Miscellaneous tokens
 
     scanner.setText("' , = == <> < <= > >= + - * / : ; ( ) { }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::QuoteToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Quote);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CommaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Comma);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EqToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eq);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EqEqToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::EqEq);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NeqToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Neq);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LtToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Lt);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LeqToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Leq);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GtToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Gt);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GeqToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Geq);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PlusToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Plus);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MinusToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Minus);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TimesToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Times);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DivideToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Divide);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ColonToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Colon);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SemiColonToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::SemiColon);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 }
 
 //==============================================================================
@@ -151,87 +151,87 @@ void ScanningTests::scanningCommentTests()
 
     scanner.setText("Some stuff... // A single line comment...");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
-    QCOMPARE(scanner.tokenString(), QString("Some"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
+    QCOMPARE(scanner.string(), QString("Some"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
-    QCOMPARE(scanner.tokenString(), QString("stuff"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
+    QCOMPARE(scanner.string(), QString("stuff"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SingleLineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString(" A single line comment..."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::SingleLineComment);
+    QCOMPARE(scanner.string(), QString(" A single line comment..."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     // Multiline comments
 
     scanner.setText("/*A multiline comment...*/");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A multiline comment..."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::MultilineComment);
+    QCOMPARE(scanner.string(), QString("A multiline comment..."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("/*A\nmultiline\ncomment...*/");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A\nmultiline\ncomment..."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::MultilineComment);
+    QCOMPARE(scanner.string(), QString("A\nmultiline\ncomment..."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("/*A multi/*line* comment...*/");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A multi/*line* comment..."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::MultilineComment);
+    QCOMPARE(scanner.string(), QString("A multi/*line* comment..."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("/*A multi/*line*");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
-    QCOMPARE(scanner.tokenString(), QString("A multi/*line*"));
-    QCOMPARE(scanner.tokenComment(), QString("The comment is incomplete."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Invalid);
+    QCOMPARE(scanner.string(), QString("A multi/*line*"));
+    QCOMPARE(scanner.comment(), QString("The comment is incomplete."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("/*A multi/*line*/ comment...*/");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A multi/*line"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::MultilineComment);
+    QCOMPARE(scanner.string(), QString("A multi/*line"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
-    QCOMPARE(scanner.tokenString(), QString("comment"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
+    QCOMPARE(scanner.string(), QString("comment"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TimesToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Times);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DivideToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Divide);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("/*An incomplete multiline comment...");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
-    QCOMPARE(scanner.tokenString(), QString("An incomplete multiline comment..."));
-    QCOMPARE(scanner.tokenComment(), QString("The comment is incomplete."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Invalid);
+    QCOMPARE(scanner.string(), QString("An incomplete multiline comment..."));
+    QCOMPARE(scanner.comment(), QString("The comment is incomplete."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 }
 
 //==============================================================================
@@ -242,189 +242,189 @@ void ScanningTests::scanningKeywordTests()
 
     scanner.setText("and as between case comp def endcomp enddef endsel for group import incl map model otherwise sel unit using var vars");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AndToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::And);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AsToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::As);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BetweenToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Between);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CaseToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Case);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CompToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Comp);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DefToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Def);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EndCompToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::EndComp);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EndDefToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::EndDef);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EndSelToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::EndSel);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ForToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::For);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GroupToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Group);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ImportToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Import);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InclToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Incl);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MapToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Map);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ModelToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Model);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OtherwiseToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Otherwise);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SelToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sel);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnitToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unit);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UsingToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Using);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::VarToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Var);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::VarsToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Vars);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("abs ceil exp fact floor ln log pow rem root sqr sqrt");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AbsToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Abs);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CeilToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Ceil);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ExpToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Exp);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::FactToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Fact);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::FloorToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Floor);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LnToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Ln);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LogToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Log);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PowToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pow);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::RemToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Rem);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::RootToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Root);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SqrToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sqr);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SqrtToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sqrt);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("and or xor not");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AndToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::And);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OrToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Or);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::XorToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Xor);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NotToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Not);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("ode");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OdeToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Ode);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("min max");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MinToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Min);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MaxToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Max);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("gcd lcm");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GcdToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Gcd);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LcmToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Lcm);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("sin cos tan sec csc cot sinh cosh tanh sech csch coth asin acos atan asec acsc acot asinh acosh atanh asech acsch acoth");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SinToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sin);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CosToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Cos);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TanToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Tan);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SecToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sec);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CscToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Csc);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CotToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Cot);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SinhToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sinh);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CoshToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Cosh);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TanhToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Tanh);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SechToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sech);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CschToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Csch);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CothToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Coth);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AsinToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Asin);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AcosToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Acos);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AtanToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Atan);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AsecToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Asec);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AcscToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Acsc);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AcotToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Acot);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AsinhToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Asinh);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AcoshToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Acosh);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AtanhToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Atanh);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AsechToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Asech);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AcschToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Acsch);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AcothToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Acoth);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("true false nan pi inf e");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TrueToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::True);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::FalseToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::False);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NanToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Nan);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PiToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pi);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InfToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Inf);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::E);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("base encapsulation containment");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BaseToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Base);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EncapsulationToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Encapsulation);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ContainmentToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Containment);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 }
 
 //==============================================================================
@@ -435,151 +435,151 @@ void ScanningTests::scanningSiUnitKeywordTests()
 
     scanner.setText("ampere becquerel candela celsius coulomb dimensionless farad gram gray henry hertz joule katal kelvin kilogram liter litre lumen lux meter metre mole newton ohm pascal radian second siemens sievert steradian tesla volt watt weber");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AmpereToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Ampere);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BecquerelToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Becquerel);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CandelaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Candela);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CelsiusToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Celsius);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CoulombToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Coulomb);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DimensionlessToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Dimensionless);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::FaradToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Farad);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GramToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Gram);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GrayToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Gray);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::HenryToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Henry);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::HertzToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Hertz);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::JouleToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Joule);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::KatalToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Katal);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::KelvinToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Kelvin);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::KilogramToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Kilogram);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LiterToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Liter);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LitreToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Litre);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LumenToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Lumen);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LuxToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Lux);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MeterToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Meter);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MetreToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Metre);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MoleToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Mole);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NewtonToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Newton);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OhmToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Ohm);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PascalToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pascal);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::RadianToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Radian);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SecondToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Second);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SiemensToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Siemens);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SievertToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sievert);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SteradianToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Steradian);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TeslaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Tesla);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::VoltToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Volt);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::WattToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Watt);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::WeberToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Weber);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("{ ampere becquerel candela celsius coulomb dimensionless farad gram gray henry hertz joule katal kelvin kilogram liter litre lumen lux meter metre mole newton ohm pascal radian second siemens sievert steradian tesla volt watt weber }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AmpereToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Ampere);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BecquerelToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Becquerel);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CandelaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Candela);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CelsiusToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Celsius);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CoulombToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Coulomb);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DimensionlessToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Dimensionless);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::FaradToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Farad);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GramToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Gram);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GrayToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Gray);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::HenryToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Henry);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::HertzToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Hertz);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::JouleToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Joule);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::KatalToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Katal);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::KelvinToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Kelvin);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::KilogramToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Kilogram);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LiterToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Liter);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LitreToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Litre);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LumenToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Lumen);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LuxToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Lux);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MeterToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Meter);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MetreToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Metre);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MoleToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Mole);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NewtonToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Newton);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OhmToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Ohm);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PascalToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pascal);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::RadianToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Radian);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SecondToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Second);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SiemensToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Siemens);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SievertToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Sievert);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SteradianToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Steradian);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TeslaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Tesla);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::VoltToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Volt);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::WattToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Watt);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::WeberToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Weber);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 }
 
 //==============================================================================
@@ -590,95 +590,95 @@ void ScanningTests::scanningParameterKeywordTests()
 
     scanner.setText("{ pref expo mult off }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PrefToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pref);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ExpoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Expo);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Mult);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OffToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Off);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("{ init pub priv }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InitToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Init);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PubToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pub);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PrivToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Priv);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("{ yotta zetta exa peta tera giga mega kilo hecto deka deci centi milli micro nano pico femto atto zepto yocto }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::YottaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Yotta);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ZettaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Zetta);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ExaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Exa);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PetaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Peta);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TeraToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Tera);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GigaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Giga);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MegaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Mega);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::KiloToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Kilo);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::HectoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Hecto);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DekaToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Deka);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DeciToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Deci);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CentiToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Centi);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MilliToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Milli);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MicroToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Micro);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NanoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Nano);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PicoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Pico);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::FemtoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Femto);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AttoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Atto);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ZeptoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Zepto);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::YoctoToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Yocto);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("{ in out none }");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::OpeningCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::In);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OutToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Out);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NoneToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::None);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::ClosingCurlyBracket);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 }
 
 //==============================================================================
@@ -687,38 +687,38 @@ void ScanningTests::scanningStringTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewScanner scanner;
 
-    scanner.setText("\"This is a string...\"");
+    scanner.setText(R"("This is a string...")");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::StringToken);
-    QCOMPARE(scanner.tokenString(), QString("This is a string..."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::String);
+    QCOMPARE(scanner.string(), QString("This is a string..."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
-    scanner.setText("A string: \"This is a string...\".");
+    scanner.setText(R"(A string: "This is a string...".)");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
-    QCOMPARE(scanner.tokenString(), QString("A"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
+    QCOMPARE(scanner.string(), QString("A"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierOrCmetaIdToken);
-    QCOMPARE(scanner.tokenString(), QString("string"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::IdentifierOrCmetaId);
+    QCOMPARE(scanner.string(), QString("string"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ColonToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Colon);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::StringToken);
-    QCOMPARE(scanner.tokenString(), QString("This is a string..."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::String);
+    QCOMPARE(scanner.string(), QString("This is a string..."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
-    scanner.setText("\"This is an incomplete string...");
+    scanner.setText(R"("This is an incomplete string...)");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
-    QCOMPARE(scanner.tokenString(), QString("This is an incomplete string..."));
-    QCOMPARE(scanner.tokenComment(), QString("The string is incomplete."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Invalid);
+    QCOMPARE(scanner.string(), QString("This is an incomplete string..."));
+    QCOMPARE(scanner.comment(), QString("The string is incomplete."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 }
 
 //==============================================================================
@@ -729,91 +729,91 @@ void ScanningTests::scanningNumberTests()
 
     scanner.setText("123");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString("123"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.string(), QString("123"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("123.");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString("123."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.string(), QString("123."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("123.456");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString("123.456"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.string(), QString("123.456"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText(".");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText(".123");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString(".123"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.string(), QString(".123"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText(".123.");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString(".123"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.string(), QString(".123"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
-    QCOMPARE(scanner.tokenString(), QString("."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Unknown);
+    QCOMPARE(scanner.string(), QString("."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText(".123.456");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString(".123"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.string(), QString(".123"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString(".456"));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.string(), QString(".456"));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("123e");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
-    QCOMPARE(scanner.tokenString(), QString("123e"));
-    QCOMPARE(scanner.tokenComment(), QString("The exponent has no digits."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Invalid);
+    QCOMPARE(scanner.string(), QString("123e"));
+    QCOMPARE(scanner.comment(), QString("The exponent has no digits."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("123e45");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("123e+45");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("123e-45");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 
     scanner.setText("123e456789");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenComment(), QString("The number is not valid (e.g. too big, too small)."));
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Number);
+    QCOMPARE(scanner.comment(), QString("The number is not valid (e.g. too big, too small)."));
     scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.token(), OpenCOR::CellMLTextView::CellmlTextViewScanner::Token::Eof);
 }
 
 //==============================================================================

@@ -26,11 +26,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "combinesupportglobal.h"
-#include "filetypeinterface.h"
+
+//==============================================================================
+
+#include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+class FileTypeInterface;
+
+//==============================================================================
+
 namespace COMBINESupport {
 
 //==============================================================================
@@ -56,8 +66,8 @@ FileTypeInterface COMBINESUPPORT_EXPORT * fileTypeInterface();
 
 //==============================================================================
 
-}   // namespace COMBINESupport
-}   // namespace OpenCOR
+} // namespace COMBINESupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

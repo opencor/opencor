@@ -3,16 +3,16 @@ project(LLVMClangPlugin)
 # Name and version of our package
 
 set(PACKAGE_NAME LLVMClang)
-set(PACKAGE_VERSION 7.0.1)
+set(PACKAGE_VERSION 8.0.0)
 
 # Version of our library
 
-set(MAJOR_LIBRARY_VERSION 7)
-set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.1)
+set(MAJOR_LIBRARY_VERSION 8)
+set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.0.0)
 
 # Git tag for our library
 
-set(GIT_TAG v7.0.1)
+set(GIT_TAG v8.0.0)
 
 # Specify where our local package will be installed
 
@@ -59,27 +59,27 @@ if(USE_PREBUILT_LLVMCLANG_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 2a5a42e8f970b1f941bf07b47616456af55ead16
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 051ba18ff21a7cb9de0f5b6d1a3bb5b74546b669
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES 6486943ce3abed61e9c7cf6330413fc880ed040a
-                                              ceed33f9db7bbea85f6f0f183f1b63308daa4e72)
+                                  SHA1_VALUES 9712bfe792d407ada0f24f28742c8511a2bb8015
+                                              c3e8323dacc6ba400524da57ab4ac9352f081168)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} c6a8fb36d4f05dfffda21155a0cabde32072e421
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 111fe52d1c7daa53ce98bce7d9f72ab882d57c7b
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES a1913ad8fd77db6202237afed833f0b4a0b3d9d7
-                                              4ad085e6d0a7e9c10bb4bc30df09f66da5df4e15)
+                                  SHA1_VALUES 8ba8a24f8f74dc3eae88da27953f6f094efd2736
+                                              c7ae90a9be859db514fd7b275e058876edf021fc)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} f5692718fca5de03e606aa1b9c92dc16450c03bc
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 2176e081262efdde11a9471ee39dc469e9e07888
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES cd13142392f665fcf11f0137cbfcfa3d073cfbc9)
+                              SHA1_VALUES 86132b222789842bd5321cd73367cfe6fe21277a)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 4b3bcdb4e03a7a786df3bbf0941f5dc00ab1ddb8
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 0e4d3b3b9535e03a24cd8b7adf3a5f269c1065c3
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 584180a078aa3944f7d7fbcdf18054544b1c4c84)
+                              SHA1_VALUES c5918bf9995969c35b11a4d3d7a7ea3984d3cc2d)
     endif()
 else()
     # Allow for big objects and ignore some warnings
@@ -116,17 +116,21 @@ else()
             -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
             -DLLVMCLANG_BUILD_SHARED_LIB=ON
             -DLLVM_BUILD_RUNTIME=OFF
+            -DLLVM_BUILD_RUNTIMES=OFF
+            -DLLVM_BUILD_UTILS=OFF
             -DLLVM_ENABLE_ASSERTIONS=OFF
             -DLLVM_ENABLE_BACKTRACES=OFF
+            -DLLVM_ENABLE_BINDINGS=OFF
             -DLLVM_ENABLE_CRASH_OVERRIDES=OFF
             -DLLVM_ENABLE_DIA_SDK=OFF
             -DLLVM_ENABLE_LIBEDIT=OFF
+            -DLLVM_ENABLE_LIBPFM=OFF
             -DLLVM_ENABLE_LIBXML2=OFF
-            -DLLVM_ENABLE_MODULE_DEBUGGING=OFF
             -DLLVM_ENABLE_OCAMLDOC=OFF
             -DLLVM_ENABLE_PEDANTIC=OFF
             -DLLVM_ENABLE_TERMINFO=OFF
             -DLLVM_ENABLE_WARNINGS=OFF
+            -DLLVM_INCLUDE_BENCHMARKS=OFF
             -DLLVM_INCLUDE_DOCS=OFF
             -DLLVM_INCLUDE_EXAMPLES=OFF
             -DLLVM_INCLUDE_GO_TESTS=OFF
@@ -163,8 +167,6 @@ add_plugin(${PACKAGE_NAME}
         ../../plugininfo.cpp
 
         src/llvmclangplugin.cpp
-    HEADERS_MOC
-        src/llvmclangplugin.h
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

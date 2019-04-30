@@ -34,18 +34,18 @@ PLUGININFO_FUNC QScintillaPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://www.riverbankcomputing.co.uk/software/qscintilla/">QScintilla</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace QScintilla
-}   // namespace OpenCOR
+} // namespace QScintilla
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

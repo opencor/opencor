@@ -288,8 +288,6 @@ add_plugin(PythonPackages
         ../../plugininfo.cpp
 
         src/pythonpackagesplugin.cpp
-    HEADERS_MOC
-        src/pythonpackagesplugin.h
     PLUGINS
         Python
     EXTERNAL_DESTINATION_DIR

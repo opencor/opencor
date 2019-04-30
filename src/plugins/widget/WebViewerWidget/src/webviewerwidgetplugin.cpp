@@ -37,15 +37,15 @@ PLUGININFO_FUNC WebViewerWidgetPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to visualise Web documents."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des documents Web."));
 
-    return new PluginInfo(PluginInfo::Widget, false, false,
+    return new PluginInfo(PluginInfo::Category::Widget, false, false,
                           QStringList() << "Core",
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
-}   // namespace OpenCOR
+} // namespace WebViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

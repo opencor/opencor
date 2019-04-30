@@ -39,7 +39,7 @@ namespace OpenCOR {
 
 namespace Core {
     class FileManager;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -53,6 +53,7 @@ public:
     explicit FileOrganiserWindowItem(const QIcon &pIcon,
                                      const QString &pTextOrPath,
                                      bool pFolder = false);
+    ~FileOrganiserWindowItem() override;
 
     bool isFolder() const;
 
@@ -105,8 +106,8 @@ public:
     explicit FileOrganiserWindowWidget(QWidget *pParent);
     ~FileOrganiserWindowWidget() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void newFolder();
     void deleteItems();
@@ -123,8 +124,9 @@ private:
     Core::FileManager *mFileManager;
     FileOrganiserWindowModel *mModel;
 
-    void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
-    void saveItemSettings(QSettings *pSettings, QStandardItem *pItem,
+    void loadItemSettings(QSettings &pSettings,
+                          QStandardItem *pParentItem = nullptr);
+    void saveItemSettings(QSettings &pSettings, QStandardItem *pItem,
                           int pParentItemIndex) const;
 
     QString newFolderName(QStandardItem *pFolderItem) const;
@@ -180,8 +182,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

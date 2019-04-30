@@ -49,21 +49,20 @@ namespace OpenCOR {
 
 namespace Core {
     class SplitterWidget;
-}   // namespace Core
-
+} // namespace Core
 
 //==============================================================================
 
 namespace PMRSupport {
     class PmrWorkspace;
     class PmrWorkspaceFileNode;
-}   // namespace PMRSupport
+} // namespace PMRSupport
 
 //==============================================================================
 
 namespace WebViewerWidget {
     class WebViewerWidget;
-}   // namespace WebViewerWidget
+} // namespace WebViewerWidget
 
 //==============================================================================
 
@@ -75,6 +74,7 @@ class PmrWorkspacesWindowSynchronizeDialogItem : public QStandardItem
 {
 public:
     explicit PmrWorkspacesWindowSynchronizeDialogItem(PMRSupport::PmrWorkspaceFileNode *pFileNode);
+    ~PmrWorkspacesWindowSynchronizeDialogItem() override;
 
     PMRSupport::PmrWorkspaceFileNode * fileNode() const;
 
@@ -93,8 +93,7 @@ class PmrWorkspacesWindowSynchronizeDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowSynchronizeDialog(const QString &pSettingsGroup,
-                                                  PMRSupport::PmrWorkspace *pWorkspace,
+    explicit PmrWorkspacesWindowSynchronizeDialog(PMRSupport::PmrWorkspace *pWorkspace,
                                                   QTimer *pTimer,
                                                   QWidget *pParent);
     ~PmrWorkspacesWindowSynchronizeDialog() override;
@@ -117,8 +116,6 @@ private:
 
     typedef QList<DifferenceData> DifferencesData;
 
-    QString mSettingsGroup;
-
     PMRSupport::PmrWorkspace *mWorkspace;
 
     QString mDiffTemplate;
@@ -129,8 +126,8 @@ private:
     QStandardItemModel *mModel;
     QSortFilterProxyModel *mProxyModel;
 
-    QTextEdit *mMessageValue;
     QListView *mChangesValue;
+    QTextEdit *mMessageValue;
 
     WebViewerWidget::WebViewerWidget *mWebViewer;
     QAction *mWebViewerCellmlTextFormatAction;
@@ -183,8 +180,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

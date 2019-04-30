@@ -45,7 +45,7 @@ namespace SEDMLSupport {
 class SEDMLSUPPORT_EXPORT SedmlFileIssue
 {
 public:
-    enum Type {
+    enum class Type {
         Unknown,
         Information,
         Error,
@@ -56,6 +56,8 @@ public:
     explicit SedmlFileIssue(Type pType, int pLine, int pColumn,
                             const QString &pMessage);
     explicit SedmlFileIssue(Type pType, const QString &pMessage);
+
+    bool operator==(const SedmlFileIssue &pIssue) const;
 
     Type type() const;
     int line() const;
@@ -75,8 +77,8 @@ typedef QList<SedmlFileIssue> SedmlFileIssues;
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

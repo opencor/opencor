@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QPen>
 #include <QScreen>
-#include <QSettings>
 
 //==============================================================================
 
@@ -53,9 +52,7 @@ CommonWidget::CommonWidget(QWidget *pParent) :
 
 //==============================================================================
 
-CommonWidget::~CommonWidget()
-{
-}
+CommonWidget::~CommonWidget() = default;
 
 //==============================================================================
 
@@ -65,24 +62,24 @@ QSize CommonWidget::defaultSize(double pRatio) const
 
     QRect availableGeometry = qApp->primaryScreen()->availableGeometry();
 
-    return QSize(int(pRatio*availableGeometry.width()),
-                 int(pRatio*availableGeometry.height()));
+    return { int(pRatio*availableGeometry.width()),
+             int(pRatio*availableGeometry.height()) };
 }
 
 //==============================================================================
 
-void CommonWidget::loadSettings(QSettings *pSettings)
+void CommonWidget::loadSettings(QSettings &pSettings)
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // Nothing to do by default...
 }
 
 //==============================================================================
 
-void CommonWidget::saveSettings(QSettings *pSettings) const
+void CommonWidget::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
 
     // Nothing to do by default...
 }
@@ -100,7 +97,7 @@ bool CommonWidget::isBusyWidgetVisible() const
 {
     // Return whether our busy widget is visible, i.e. whether it exists
 
-    return mBusyWidget;
+    return mBusyWidget != nullptr;
 }
 
 //==============================================================================
@@ -115,10 +112,11 @@ void CommonWidget::showBusyWidget(double pProgress)
 
         resizeBusyWidget();
 
-        if (mParent == centralWidget())
+        if (mParent == centralWidget()) {
             mainWindow()->setEnabled(false);
-        else
+        } else {
             mParent->setEnabled(false);
+        }
 
         // Make sure that our busy widget is shown straightaway
         // Note: indeed, depending on the operating system (e.g. macOS) and on
@@ -154,22 +152,29 @@ void CommonWidget::hideBusyWidget(bool pForceHiding)
 {
     // Make sure that we have a busy widget
 
-    if (!mBusyWidget)
+    if (mBusyWidget == nullptr) {
         return;
+    }
 
     // Check whether we want to force hiding our busy widget
 
-    if (pForceHiding)
+    if (pForceHiding) {
         mCounter = 1;
+    }
 
     // Enable ourselves (or OpenCOR itself in case we are the central widget)
     // and hide our busy widget by deleting it
+    // Note: we call QCoreApplication::processEvents() in case we have a
+    //       progress busy widget, so that we can see its final state...
 
     if (--mCounter == 0) {
-        if (mParent == centralWidget())
+        QCoreApplication::processEvents();
+
+        if (mParent == centralWidget()) {
             mainWindow()->setEnabled(true);
-        else
+        } else {
             mParent->setEnabled(true);
+        }
 
         delete mBusyWidget;
 
@@ -183,8 +188,9 @@ void CommonWidget::resizeBusyWidget()
 {
     // Make sure that we have a busy widget
 
-    if (!mBusyWidget)
+    if (mBusyWidget == nullptr) {
         return;
+    }
 
     // Resize our busy widget
 
@@ -197,8 +203,9 @@ void CommonWidget::setBusyWidgetProgress(double pProgress)
 {
     // Make sure that we have a busy widget
 
-    if (!mBusyWidget)
+    if (mBusyWidget == nullptr) {
         return;
+    }
 
     // Set the progress of our busy widget
 
@@ -213,16 +220,16 @@ void CommonWidget::processEvents()
     // for it, and we or our central widget is not showing our or its busy
     // widget
 
-    if (    mParent->isVisible() && mParent->updatesEnabled()
-        && !mBusyWidget && !centralWidget()->isBusyWidgetVisible()) {
+    if (   mParent->isVisible() && mParent->updatesEnabled()
+        && (mBusyWidget == nullptr) && !centralWidget()->isBusyWidgetVisible()) {
         QCoreApplication::processEvents();
     }
 }
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

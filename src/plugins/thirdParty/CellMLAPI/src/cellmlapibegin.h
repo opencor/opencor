@@ -28,8 +28,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wdeprecated"
-#elif !defined(Q_OS_MAC)
-    #error Unsupported platform
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Watomic-implicit-seq-cst"
+    #pragma clang diagnostic ignored "-Wdeprecated"
+    #pragma clang diagnostic ignored "-Wdeprecated-dynamic-exception-spec"
+    #pragma clang diagnostic ignored "-Wreserved-id-macro"
+    #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
 //==============================================================================

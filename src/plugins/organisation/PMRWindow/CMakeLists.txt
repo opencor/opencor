@@ -13,12 +13,6 @@ add_plugin(PMRWindow
         src/pmrwindowplugin.cpp
         src/pmrwindowwidget.cpp
         src/pmrwindowwindow.cpp
-    HEADERS_MOC
-        ../../preferencesinterface.h
-
-        src/pmrwindowplugin.h
-        src/pmrwindowwidget.h
-        src/pmrwindowwindow.h
     UIS
         src/pmrwindowwindow.ui
     PLUGINS

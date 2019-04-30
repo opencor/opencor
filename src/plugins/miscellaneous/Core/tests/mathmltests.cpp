@@ -43,10 +43,10 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
                                         const QUrl &pIdentifier,
                                         const QSourceLocation &pSourceLocation)
 {
-    Q_UNUSED(pType);
-    Q_UNUSED(pDescription);
-    Q_UNUSED(pIdentifier);
-    Q_UNUSED(pSourceLocation);
+    Q_UNUSED(pType)
+    Q_UNUSED(pDescription)
+    Q_UNUSED(pIdentifier)
+    Q_UNUSED(pSourceLocation)
 
     // We ignore the message...
 }
@@ -62,8 +62,9 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
     // Handle, using the default message handler, all messages except warning
     // messages
 
-    if (type != QtWarningMsg)
+    if (type != QtWarningMsg) {
         gOrigMessageHandler(type, context, msg);
+    }
 }
 
 //==============================================================================
@@ -104,22 +105,25 @@ void MathmlTests::tests(const QString &pCategory)
             actualOutput = OpenCOR::Core::formatXml(OpenCOR::Core::cleanPresentationMathml(actualOutput));
             expectedOutput = OpenCOR::rawFileContents(QString(dirName+fileName).replace(".in", ".out"));
 
-            if (actualOutput.compare(expectedOutput)) {
-                if (!failMessage.isEmpty())
+            if (actualOutput != expectedOutput) {
+                if (!failMessage.isEmpty()) {
                     failMessage += QString("\nFAIL!  : MathmlTests::%1Tests() ").arg(pCategory);
+                }
 
                 failMessage += QString("Failed to convert '%1/%2'\n%3\n%4\n%5").arg(pCategory, fileName, focus, actualOutput, expectedOutput);
             }
         } else {
-            if (!failMessage.isEmpty())
+            if (!failMessage.isEmpty()) {
                 failMessage += QString("\nFAIL!  : MathmlTests::%1Tests() ").arg(pCategory);
+            }
 
             failMessage += QString("Could not convert '%1/%2'").arg(pCategory, fileName);
         }
     }
 
-    if (!failMessage.isEmpty())
+    if (!failMessage.isEmpty()) {
         QFAIL(qPrintable(failMessage));
+    }
 }
 
 //==============================================================================

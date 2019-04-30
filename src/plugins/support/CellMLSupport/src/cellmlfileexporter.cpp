@@ -38,6 +38,10 @@ CellmlFileExporter::CellmlFileExporter() :
 
 //==============================================================================
 
+CellmlFileExporter::~CellmlFileExporter() = default;
+
+//==============================================================================
+
 bool CellmlFileExporter::result() const
 {
     // Return the result of the conversion
@@ -56,8 +60,8 @@ QString CellmlFileExporter::errorMessage() const
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -116,7 +116,7 @@ QString fileSha1(const QString &pFileName)
 
 //==============================================================================
 
-QStringList runCli(const QStringList pArguments)
+int runCli(const QStringList &pArguments, QStringList &pOutput)
 {
     // Go to the directory where our tests are located
     // Note: see main()...
@@ -138,8 +138,6 @@ QStringList runCli(const QStringList pArguments)
     QString program = BuildDir+"/bin/OpenCOR";
 #elif defined(Q_OS_MAC)
     QString program = BuildDir+"/OpenCOR.app/Contents/MacOS/OpenCOR";
-#else
-    #error Unsupported platform
 #endif
 
     QProcess process;
@@ -152,8 +150,9 @@ QStringList runCli(const QStringList pArguments)
 
     QString output = QString();
 
-    while (process.waitForReadyRead())
+    while (process.waitForReadyRead()) {
         output += process.readAll();
+    }
 
     // Go back to our original directory
 
@@ -161,12 +160,14 @@ QStringList runCli(const QStringList pArguments)
     QDir::setCurrent(origPath);
 #endif
 
-    return output.remove('\r').split('\n');
+    pOutput = output.remove('\r').split('\n');
+
+    return process.exitCode();
 }
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

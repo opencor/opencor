@@ -50,6 +50,12 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
     Core::Dialog(pParent),
     mGui(new Ui::GraphPanelWidgetCustomAxesDialog)
 {
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup("GraphPanelWidget");
+    mSettings.beginGroup("GraphPanelWidgetCustomAxesDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -68,19 +74,9 @@ GraphPanelWidgetCustomAxesDialog::GraphPanelWidgetCustomAxesDialog(double pMinX,
     connect(mGui->buttonBox, &QDialogButtonBox::rejected,
             this, &GraphPanelWidgetCustomAxesDialog::reject);
 
-    // Create our 'special' settings
-    // Note: special in the sense that we don't retrieve them from the plugin
-    //       itself since this is not a view, a window or anything like that...
-
-    mSettings = new QSettings();
-
-    mSettings->beginGroup(SettingsPlugins);
-    mSettings->beginGroup("GraphPanelWidget");
-    mSettings->beginGroup("GraphPanelWidgetCustomAxesDialog");
-
     // Only allow double numbers
 
-    QRegularExpressionValidator *doubleRegExValidator = new QRegularExpressionValidator(QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$"), this);
+    auto doubleRegExValidator = new QRegularExpressionValidator(QRegularExpression(R"(^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$)"), this);
 
     mGui->xMinValue->setValidator(doubleRegExValidator);
     mGui->xMaxValue->setValidator(doubleRegExValidator);
@@ -159,10 +155,9 @@ void GraphPanelWidgetCustomAxesDialog::checkValue(QLineEdit *pValue)
 
 //==============================================================================
 
-
 void GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our X-min value
 
@@ -173,7 +168,7 @@ void GraphPanelWidgetCustomAxesDialog::xMinValueTextEdited(const QString &pValue
 
 void GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our X-max value
 
@@ -184,7 +179,7 @@ void GraphPanelWidgetCustomAxesDialog::xMaxValueTextEdited(const QString &pValue
 
 void GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our Y-min value
 
@@ -195,7 +190,7 @@ void GraphPanelWidgetCustomAxesDialog::yMinValueTextEdited(const QString &pValue
 
 void GraphPanelWidgetCustomAxesDialog::yMaxValueTextEdited(const QString &pValue)
 {
-    Q_UNUSED(pValue);
+    Q_UNUSED(pValue)
 
     // Check our Y-max value
 
@@ -229,8 +224,8 @@ void GraphPanelWidgetCustomAxesDialog::buttonBoxAccepted()
 
 //==============================================================================
 
-}   // namespace GraphPanelWidget
-}   // namespace OpenCOR
+} // namespace GraphPanelWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreinterface.h"
+#include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
 
@@ -40,25 +41,35 @@ PLUGININFO_FUNC BioSignalMLDataStorePluginInfo();
 
 //==============================================================================
 
+static const auto BiosignalmlMimeType      = QStringLiteral("application/biosignalml");
+static const auto BiosignalmlFileExtension = QStringLiteral("biosignalml");
+
+//==============================================================================
+
 class BioSignalMLDataStorePlugin : public QObject, public DataStoreInterface,
+                                   public FileTypeInterface,
                                    public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.BioSignalMLDataStorePlugin" FILE "biosignalmldatastoreplugin.json")
 
+    Q_INTERFACES(OpenCOR::FileTypeInterface)
     Q_INTERFACES(OpenCOR::DataStoreInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
 
 public:
+    explicit BioSignalMLDataStorePlugin();
+
 #include "datastoreinterface.inl"
+#include "filetypeinterface.inl"
 #include "i18ninterface.inl"
 };
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -34,18 +34,18 @@ PLUGININFO_FUNC libSBMLPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="http://sbml.org/Software/libSBML/">libSBML</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="http://sbml.org/Software/libSBML/">libSBML</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList(),
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace libSBML
-}   // namespace OpenCOR
+} // namespace libSBML
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

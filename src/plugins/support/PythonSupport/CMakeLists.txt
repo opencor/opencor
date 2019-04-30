@@ -10,11 +10,6 @@ ADD_PLUGIN(PythonSupport
         ../../pluginmanager.cpp
 
         src/pythonsupportplugin.cpp
-    HEADERS_MOC
-        ../../plugin.h
-        ../../pluginmanager.h
-
-        src/pythonsupportplugin.h
     PLUGINS
         Core
         Python

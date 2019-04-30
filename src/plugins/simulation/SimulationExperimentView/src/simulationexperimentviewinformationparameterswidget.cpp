@@ -50,6 +50,8 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     mGradientIndices(QSet<int>()),
     mToggleGradientsMenuAction(nullptr),
     mToggleGradientsMenuSeparator(nullptr)
+    mImportComponent(nullptr),
+    mImportMenu(nullptr)
 {
     // Create our context menu
 
@@ -67,14 +69,16 @@ void SimulationExperimentViewInformationParametersWidget::retranslateContextMenu
 {
     // Retranslate our context menu, if it exists / has been populated
 
-    if (mPlotAgainstVoiMenuAction)
+    if (mPlotAgainstVoiMenuAction != nullptr) {
         mPlotAgainstVoiMenuAction->setText(tr("Plot Against Variable Of Integration"));
+    }
 
-    if (mPlotAgainstMenu)
+    if (mPlotAgainstMenu != nullptr) {
         mPlotAgainstMenu->menuAction()->setText(tr("Plot Against"));
 
     if (mToggleGradientsMenuAction)
         mToggleGradientsMenuAction->setText(tr("Toggle gradient calculation for constant"));
+    }
 }
 
 //==============================================================================
@@ -102,13 +106,15 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 
     Core::Property *crtProperty = currentProperty();
 
-    if (!crtProperty)
+    if (crtProperty == nullptr) {
         return;
+    }
 
     // Make sure that our current property is not a section
 
-    if (crtProperty->type() == Core::Property::Section)
+    if (crtProperty->type() == Core::Property::Type::Section) {
         return;
+    }
 
     // Show separator and item to toggle constants having gradients calculated
 
@@ -155,13 +161,20 @@ void SimulationExperimentViewInformationParametersWidget::initialize(SimulationS
     //       we need to 'retranslate' them otherwise they will read "1", "2",
     //       "3", etc.
 
-    if (pReloadingView)
+    if (pReloadingView) {
         PropertyEditorWidget::retranslateUi();
+    }
 
     // Populate our property editor and context menu
 
     populateModel(runtime);
     populateContextMenu(runtime);
+
+    // Reset our import information, if we are reloading ourselves
+
+    if (pReloadingView) {
+        mImportComponent = nullptr;
+    }
 
     // Keep track of when some of the model's data has changed
 
@@ -186,6 +199,78 @@ void SimulationExperimentViewInformationParametersWidget::finalize()
 
 //==============================================================================
 
+void SimulationExperimentViewInformationParametersWidget::importData(DataStore::DataStoreImportData *pImportData)
+{
+    // Create our general import "component", if needed
+
+    if (mImportComponent == nullptr) {
+        mImportComponent = addSectionProperty("imports");
+    }
+
+    // Create our import "sub-component"
+
+    Core::Property *importSubComponent = addSectionProperty(pImportData->hierarchy().last(), mImportComponent);
+
+    // Add the given data to our model
+
+    CellMLSupport::CellmlFileRuntimeParameters parameters = mSimulation->runtime()->dataParameters(mSimulation->data()->data(pImportData->importDataStore()));
+
+    for (auto parameter : parameters) {
+        Core::Property *property = addDoubleProperty(importSubComponent);
+
+        property->setEditable(false);
+        property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
+        property->setName(parameter->formattedName(), false);
+
+        // Keep track of the link between our property value and parameter
+
+        mParameters.insert(property, parameter);
+    }
+
+    // Update (well, set for our imported data) the extra info of all our
+    // properties
+
+    updateExtraInfos();
+
+    // Expand our import component and sub-component
+
+    expand(mImportComponent->index());
+    expand(importSubComponent->index());
+
+    // Create our general import menu, if needed
+
+    if (mImportMenu == nullptr) {
+        mImportMenu = new QMenu("imports", mPlotAgainstMenu);
+
+        mPlotAgainstMenu->addMenu(mImportMenu);
+    }
+
+    // Create our import sub-menu
+
+    auto importSubMenu = new QMenu(pImportData->hierarchy().last(), mImportMenu);
+
+    mImportMenu->addMenu(importSubMenu);
+
+    // Populate our import sub-menu with the given data
+
+    for (auto parameter : parameters) {
+        QAction *parameterAction = importSubMenu->addAction(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()),
+                                                            parameter->formattedName());
+
+        // Create a connection to handle the graph requirement against our
+        // parameter
+
+        connect(parameterAction, &QAction::triggered,
+                this, &SimulationExperimentViewInformationParametersWidget::emitGraphRequired);
+
+        // Keep track of the parameter associated with our parameter action
+
+        mParameterActions.insert(parameterAction, parameter);
+    }
+}
+
+//==============================================================================
+
 void SimulationExperimentViewInformationParametersWidget::updateParameters(double pCurrentPoint)
 {
     // Update our data
@@ -193,33 +278,22 @@ void SimulationExperimentViewInformationParametersWidget::updateParameters(doubl
     for (auto property : allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
-        if (parameter) {
-            switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+        if (parameter != nullptr) {
+            CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
+
+            if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
                 property->setDoubleValue(pCurrentPoint, false);
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-            case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+            } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
+                       || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
                 property->setDoubleValue(mSimulation->data()->constants()[parameter->index()], false);
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Rate) {
                 property->setDoubleValue(mSimulation->data()->rates()[parameter->index()], false);
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::State:
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
                 property->setDoubleValue(mSimulation->data()->states()[parameter->index()], false);
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic) {
                 property->setDoubleValue(mSimulation->data()->algebraic()[parameter->index()], false);
-
-                break;
-            default:
-                // Not a relevant type, so do nothing
-
-                break;
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Data) {
+                property->setDoubleValue(parameter->data()[parameter->index()], false);
             }
         }
     }
@@ -237,20 +311,13 @@ void SimulationExperimentViewInformationParametersWidget::propertyChanged(Core::
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(pProperty);
 
-    if (parameter) {
-        switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+    if (parameter != nullptr) {
+        CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
+
+        if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant) {
             mSimulation->data()->constants()[parameter->index()] = pProperty->doubleValue();
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::State:
+        } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
             mSimulation->data()->states()[parameter->index()] = pProperty->doubleValue();
-
-            break;
-        default:
-            // Not a relevant type, so do nothing
-
-            ;
         }
     }
 
@@ -293,7 +360,7 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
         QString crtComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (crtComponentHierarchy.compare(componentHierarchy)) {
+        if (crtComponentHierarchy != componentHierarchy) {
             // The current parameter is in a different component hierarchy, so
             // create a new section hierarchy for our 'new' component, reusing
             // existing sections, whenever possible
@@ -306,16 +373,16 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
 
                 sectionProperty = nullptr;
 
-                if (parentSectionProperty) {
+                if (parentSectionProperty != nullptr) {
                     // We have a parent section, so go through its children and
                     // retrieve the one for our current component
 
                     for (auto object : parentSectionProperty->children()) {
-                        Core::Property *property = qobject_cast<Core::Property *>(object);
+                        auto property = qobject_cast<Core::Property *>(object);
 
-                        if (    property
-                            &&  (property->type() == Core::Property::Section)
-                            && !property->name().compare(component)) {
+                        if (   (property != nullptr)
+                            && (property->type() == Core::Property::Type::Section)
+                            && (property->name() == component)) {
                             sectionProperty = property;
 
                             break;
@@ -326,8 +393,8 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                     // properties and retrieve the one for our current component
 
                     for (auto property : properties()) {
-                        if (    (property->type() == Core::Property::Section)
-                            && !property->name().compare(component)) {
+                        if (   (property->type() == Core::Property::Type::Section)
+                            && (property->name() == component)) {
                             sectionProperty = property;
 
                             break;
@@ -338,8 +405,9 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
                 // Create a new section for our current component, if none could
                 // be found
 
-                if (!sectionProperty)
+                if (sectionProperty == nullptr) {
                     sectionProperty = addSectionProperty(component, parentSectionProperty);
+                }
 
                 // Get ready for the next component in our component hierarchy
 
@@ -355,39 +423,25 @@ void SimulationExperimentViewInformationParametersWidget::populateModel(CellMLSu
         // having retrieved its current value
 
         double propertyValue = 0.0;
+        CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
 
-        switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::Voi:
+        if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
             propertyValue = mSimulation->data()->startingPoint();
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+        } else if (   (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
+                   || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
             propertyValue = mSimulation->data()->constants()[parameter->index()];
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+        } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Rate) {
             propertyValue = mSimulation->data()->rates()[parameter->index()];
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::State:
+        } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
             propertyValue = mSimulation->data()->states()[parameter->index()];
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+        } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic) {
             propertyValue = mSimulation->data()->algebraic()[parameter->index()];
-
-            break;
-        default:
-            // Not a relevant type, so do nothing
-
-            ;
         }
 
         Core::Property *property = addDoubleProperty(propertyValue, sectionProperty);
 
-        property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
-                              || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State));
+        property->setEditable(   (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
+                              || (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::State));
         property->setIcon(CellMLSupport::CellmlFileRuntimeParameter::icon(parameter->type()));
         property->setName(parameter->formattedName(), false);
         property->setUnit(parameter->formattedUnit(pRuntime->voi()->unit()), false);
@@ -412,8 +466,9 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 {
     // Create our two main menu items
 
-    if (mVoiAccessible)
+    if (mVoiAccessible) {
         mPlotAgainstVoiMenuAction = mContextMenu->addAction(QString());
+    }
 
     mPlotAgainstMenu = new QMenu(mContextMenu);
 
@@ -454,7 +509,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
 
         QString crtComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (crtComponentHierarchy.compare(componentHierarchy)) {
+        if (crtComponentHierarchy != componentHierarchy) {
             // The current parameter is in a different component hierarchy, so
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
@@ -468,10 +523,10 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
                 componentMenu = nullptr;
 
                 for (auto object : menu->children()) {
-                    QMenu *subMenu = qobject_cast<QMenu *>(object);
+                    auto subMenu = qobject_cast<QMenu *>(object);
 
-                    if (    subMenu
-                        && !subMenu->menuAction()->text().compare(component)) {
+                    if (   (subMenu != nullptr)
+                        && (subMenu->menuAction()->text() == component)) {
                         componentMenu = subMenu;
 
                         break;
@@ -481,7 +536,7 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
                 // Create a new menu for our current component, if none could be
                 // found
 
-                if (!componentMenu) {
+                if (componentMenu == nullptr) {
                     componentMenu = new QMenu(component, menu);
 
                     menu->addMenu(componentMenu);
@@ -500,8 +555,9 @@ void SimulationExperimentViewInformationParametersWidget::populateContextMenu(Ce
         // Make sure that we have a 'current' component menu
         // Note: this should never happen, but we never know...
 
-        if (!componentMenu)
+        if (componentMenu == nullptr) {
             continue;
+        }
 
         // Add the current parameter to the 'current' component menu
 
@@ -529,41 +585,27 @@ void SimulationExperimentViewInformationParametersWidget::updateExtraInfos()
     for (auto property : allProperties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
-        if (parameter) {
-            QString parameterType = QString();
+        if (parameter != nullptr) {
+            QString extraInfo = QString();
+            CellMLSupport::CellmlFileRuntimeParameter::Type parameterType = parameter->type();
 
-            switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-                parameterType = tr("variable of integration");
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-                parameterType = tr("constant");
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-                parameterType = tr("computed constant");
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-                parameterType = tr("rate");
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::State:
-                parameterType = tr("state");
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-                parameterType = tr("algebraic");
-
-                break;
-            default:
-                // Not a relevant type, so do nothing
-
-                ;
+            if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Voi) {
+                extraInfo = tr("variable of integration");
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant) {
+                extraInfo = tr("constant");
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant) {
+                extraInfo = tr("computed constant");
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Rate) {
+                extraInfo = tr("rate");
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
+                extraInfo = tr("state");
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic) {
+                extraInfo = tr("algebraic");
+            } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Data) {
+                extraInfo = tr("data");
             }
 
-            property->setExtraInfo(parameterType);
+            property->setExtraInfo(extraInfo);
         }
     }
 }
@@ -623,8 +665,8 @@ void SimulationExperimentViewInformationParametersWidget::toggleGradientFlag()
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

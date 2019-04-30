@@ -47,6 +47,10 @@ BiosignalmlDataStoreData::BiosignalmlDataStoreData(const QString &pFileName,
 
 //==============================================================================
 
+BiosignalmlDataStoreData::~BiosignalmlDataStoreData() = default;
+
+//==============================================================================
+
 QString BiosignalmlDataStoreData::name() const
 {
     // Return our short name
@@ -83,8 +87,8 @@ QString BiosignalmlDataStoreData::comment() const
 
 //==============================================================================
 
-}   // namespace BioSignalMLDataStore
-}   // namespace OpenCOR
+} // namespace BioSignalMLDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

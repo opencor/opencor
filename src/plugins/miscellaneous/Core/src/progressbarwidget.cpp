@@ -53,11 +53,13 @@ void ProgressBarWidget::paintEvent(QPaintEvent *pEvent)
     if (isEnabled()) {
         int value = int(mValue*width());
 
-        if (value)
+        if (value != 0) {
             painter.fillRect(0, 0, value, height(), highlightColor());
+        }
 
-        if (value != width())
+        if (value != width()) {
             painter.fillRect(value, 0, width()-value, height(), windowColor());
+        }
     } else {
         painter.fillRect(0, 0, width(), height(), windowColor());
     }
@@ -87,15 +89,16 @@ void ProgressBarWidget::setValue(double pValue)
 
         mValue = value;
 
-        if (needUpdate)
+        if (needUpdate) {
             update();
+        }
     }
 }
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

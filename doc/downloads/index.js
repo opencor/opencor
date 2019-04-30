@@ -18,7 +18,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "major": 0, "minor": 0, "patch": 0, "day": 11, "month": 12, "year": 2018, "type": 2, "license": 2,
+                   { "major": 0, "minor": 0, "patch": 0, "day": 7, "month": 3, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
                          "files": [
@@ -37,11 +37,9 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>General:</strong> upgraded to Qt 5.12.0 LTS (see issue <a href=\"https://github.com/opencor/opencor/issues/1910\">#1910</a>)." },
-                       { "change": "<strong>COMBINE support:</strong> now recognise files that have a master attribute of \"1\" rather than \"true\" (see issue <a href=\"https://github.com/opencor/opencor/issues/1912\">#1912</a>)." },
-                       { "change": "<strong>Graph Panel widget:</strong> fixed a small problem with the scale range of an axis in some cases (see issue <a href=\"https://github.com/opencor/opencor/issues/1941\">#1941</a>)." },
-                       { "change": "<strong>CellML Text view:</strong> improved Unicode support (see issue <a href=\"https://github.com/opencor/opencor/issues/1926\">#1926</a>)." },
-                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 7.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1917\">#1917</a>). Upgraded the <a href=\"http://computation.llnl.gov/projects/sundials\">SUNDIALS</a> library to version 4.0.1 (see issue <a href=\"https://github.com/opencor/opencor/issues/1929\">#1929</a>). Upgraded the <a href=\"http://qwt.sourceforge.net/\">Qwt</a> library to version 6.1.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/1933\">#1933</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 18.2.8 (see issue <a href=\"https://github.com/opencor/opencor/issues/1945\">#1945</a>)." }
+                       { "change": "<strong>General:</strong> now rely on <a href=\"https://visualstudio.microsoft.com/downloads/\">Visual Studio 2017 Update 9</a> to build OpenCOR on <a href=\"https://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2041\">#2041</a>). Upgraded our minimum requirement to <a href=\"https://en.wikipedia.org/wiki/Ubuntu_version_history#Ubuntu_18.04_LTS_(Bionic_Beaver)\">Ubuntu 18.04 LTS</a> on Linux (see issue <a href=\"https://github.com/opencor/opencor/issues/2050\">#2050</a>). Renamed QScintillaSupport to QScintillaWidget (see issue <a href=\"https://github.com/opencor/opencor/issues/2066\">#2066</a>)." },
+                       { "change": "<strong>PMR Workspaces window:</strong> first list changed files and then show the user's comment (in the synchronisation dialog; see issue <a href=\"https://github.com/opencor/opencor/issues/2065\">#2065</a>)." },
+                       { "change": "<strong>Third-party libraries:</strong> upgraded <a href=\"http://www.llvm.org/\">LLVM</a>+<a href=\"http://clang.llvm.org/\">Clang</a> to version 8.0.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2040\">#2040</a>). Upgraded <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a> to version 0.4.4 (see issue <a href=\"https://github.com/opencor/opencor/issues/2042\">#2042</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 18.3.5 (see issue <a href=\"https://github.com/opencor/opencor/issues/2044\">#2044</a>). Upgraded <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a> to version 5.18.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2064\">#2064</a>). Upgraded <a href=\"https://jquery.com/\">jQuery</a> to version 3.4.0 (see issue <a href=\"https://github.com/opencor/opencor/issues/2068\">#2068</a>). Upgraded <a href=\"https://www.mesa3d.org/\">Mesa</a> to version 19.0.2 (see issue <a href=\"https://github.com/opencor/opencor/issues/2070\">#2070</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,

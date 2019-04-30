@@ -12,12 +12,6 @@ add_plugin(DataStore
         src/datastoredialog.cpp
         src/datastoreplugin.cpp
         src/datastorepythonwrapper.cpp
-    HEADERS_MOC
-        ../../datastoreinterface.h
-
-        src/datastoredialog.h
-        src/datastoreplugin.h
-        src/datastorepythonwrapper.h
     UIS
         src/datastoredialog.ui
     PLUGINS

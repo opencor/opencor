@@ -56,12 +56,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
 //==============================================================================
 
-static const auto SettingsCellmlAnnotationViewEditingWidgetSizes         = QStringLiteral("EditingWidgetSizes");
-static const auto SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes = QStringLiteral("MetadataDetailsWidgetSizes");
+static const char *SettingsCellmlAnnotationViewEditingWidgetSizes         = "EditingWidgetSizes";
+static const char *SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes = "MetadataDetailsWidgetSizes";
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::loadSettings(QSettings *pSettings)
+void CellmlAnnotationViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve the sizes of our editing widget and of its metadata details
     // Note: we would normally do this in CellmlAnnotationViewEditingWidget, but
@@ -76,18 +76,18 @@ void CellmlAnnotationViewWidget::loadSettings(QSettings *pSettings)
                                                                     << 0.25*availableGeometry.height()
                                                                     << 0.50*availableGeometry.height();
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
-    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
+    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings.value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::saveSettings(QSettings *pSettings) const
+void CellmlAnnotationViewWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the sizes of our editing widget and of its metadata details
 
-    pSettings->setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
-    pSettings->setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, qIntListToVariantList(mMetadataDetailsWidgetSizes));
+    pSettings.setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
+    pSettings.setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, qIntListToVariantList(mMetadataDetailsWidgetSizes));
 }
 
 //==============================================================================
@@ -96,17 +96,9 @@ void CellmlAnnotationViewWidget::retranslateUi()
 {
     // Retranslate our editing widgets
 
-    for (auto editingWidget : mEditingWidgets.values())
+    for (auto editingWidget : mEditingWidgets.values()) {
         editingWidget->retranslateUi();
-}
-
-//==============================================================================
-
-bool CellmlAnnotationViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditingWidgets.contains(pFileName);
+    }
 }
 
 //==============================================================================
@@ -117,7 +109,7 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
 
     mEditingWidget = mEditingWidgets.value(pFileName);
 
-    if (!mEditingWidget) {
+    if (mEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
         mEditingWidget = new CellmlAnnotationViewEditingWidget(mPlugin, pFileName, this, this);
@@ -162,7 +154,7 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // There is an editing widget for the given file name, so delete it and
         // remove it from our list
 
@@ -172,8 +164,9 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
 
         // Reset our memory of the current editor, if needed
 
-        if (editingWidget == mEditingWidget)
+        if (editingWidget == mEditingWidget) {
             mEditingWidget = nullptr;
+        }
     }
 }
 
@@ -186,8 +179,9 @@ void CellmlAnnotationViewWidget::filePermissionsChanged(const QString &pFileName
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget)
+    if (editingWidget != nullptr) {
         editingWidget->filePermissionsChanged();
+    }
 }
 
 //==============================================================================
@@ -199,8 +193,9 @@ void CellmlAnnotationViewWidget::fileSaved(const QString &pFileName)
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget && !crtWidget->isVisible())
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
         fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================
@@ -209,7 +204,7 @@ void CellmlAnnotationViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
 
-    if (contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName)) {
         finalize(pFileName);
         initialize(pFileName);
     }
@@ -224,7 +219,7 @@ void CellmlAnnotationViewWidget::fileRenamed(const QString &pOldFileName,
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
@@ -248,7 +243,7 @@ bool CellmlAnnotationViewWidget::saveFile(const QString &pOldFileName,
 
     CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    return editingWidget?editingWidget->cellmlFile()->update(pNewFileName):false;
+    return (editingWidget != nullptr)?editingWidget->cellmlFile()->update(pNewFileName):false;
 }
 
 //==============================================================================
@@ -273,8 +268,8 @@ void CellmlAnnotationViewWidget::metadataDetailsWidgetSplitterMoved(const QIntLi
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
-}   // namespace OpenCOR
+} // namespace CellMLAnnotationView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

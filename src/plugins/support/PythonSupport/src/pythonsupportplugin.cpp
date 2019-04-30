@@ -51,7 +51,7 @@ PLUGININFO_FUNC PythonSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("the Python support plugin."));
     descriptions.insert("fr", QString::fromUtf8("the Python support plugin."));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo(PluginInfo::Category::Support, false, false,
                           QStringList() << "Python",
                           descriptions);
 }

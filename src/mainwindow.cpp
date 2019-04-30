@@ -24,7 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "checkforupdatesdialog.h"
 #include "cliutils.h"
+#include "coreinterface.h"
+#include "filehandlinginterface.h"
 #include "guiapplication.h"
+#include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
@@ -53,7 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLocale>
 #include <QRect>
 #include <QScreen>
-#include <QSettings>
 #include <QShortcut>
 #include <QTimer>
 #include <QUrl>
@@ -77,13 +79,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const auto EnglishLocale = QStringLiteral("en");
-static const auto FrenchLocale  = QStringLiteral("fr");
+static const char *EnglishLocale = "en";
+static const char *FrenchLocale  = "fr";
 
 //==============================================================================
 
 MainWindow::MainWindow(const QString &pApplicationDate) :
-    QMainWindow(),
     mGui(new Ui::MainWindow),
     mApplicationDate(pApplicationDate),
     mLoadedPluginPlugins(Plugins()),
@@ -104,7 +105,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // operating system), as well as a message sent by another instance of
     // itself
 
-    GuiApplication *guiApplication = qobject_cast<GuiApplication *>(qApp);
+    auto guiApplication = qobject_cast<GuiApplication *>(qApp);
 
     connect(guiApplication, &GuiApplication::fileOpenRequest,
             this, &MainWindow::openFileOrHandleUrl);
@@ -125,10 +126,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     registerOpencorUrlScheme();
 
-    // Create our settings object
-
-    mSettings = new QSettings();
-
     // Create our plugin manager (which will automatically load our various
     // plugins)
 
@@ -137,26 +134,37 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Retrieve some categories of plugins
 
     for (auto plugin : mPluginManager->loadedPlugins()) {
-        if (qobject_cast<PluginInterface *>(plugin->instance()))
+        if (qobject_cast<PluginInterface *>(plugin->instance()) != nullptr) {
             mLoadedPluginPlugins << plugin;
+        }
 
-        if (qobject_cast<I18nInterface *>(plugin->instance()))
+        if (qobject_cast<I18nInterface *>(plugin->instance()) != nullptr) {
             mLoadedI18nPlugins << plugin;
+        }
 
-        if (qobject_cast<GuiInterface *>(plugin->instance()))
+        if (qobject_cast<GuiInterface *>(plugin->instance()) != nullptr) {
             mLoadedGuiPlugins << plugin;
+        }
 
-        if (qobject_cast<PreferencesInterface *>(plugin->instance()))
+        if (qobject_cast<PreferencesInterface *>(plugin->instance()) != nullptr) {
             mLoadedPreferencesPlugins << plugin;
+        }
 
-        if (qobject_cast<WindowInterface *>(plugin->instance()))
+        if (qobject_cast<WindowInterface *>(plugin->instance()) != nullptr) {
             mLoadedWindowPlugins << plugin;
+        }
     }
 
     // Retrieve our Core plugin's interface, should the Core plugin be loaded
 
-    if (mPluginManager->corePlugin())
-        mCoreInterface = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance());
+    Plugin *corePlugin = mPluginManager->corePlugin();
+
+    if (corePlugin != nullptr) {
+        QObject *corePluginInstance = corePlugin->instance();
+
+        mCoreInterface = qobject_cast<CoreInterface *>(corePluginInstance);
+        mFileHandlingInterface = qobject_cast<FileHandlingInterface *>(corePluginInstance);
+    }
 
     // Set up the GUI
 
@@ -247,8 +255,6 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
                                        << QKeySequence(Qt::ControlModifier|Qt::Key_Q));
 #elif defined(Q_OS_MAC)
     mGui->actionQuit->setShortcut(QKeySequence::Quit);
-#else
-    #error Unsupported platform
 #endif
 
 #ifdef Q_OS_MAC
@@ -264,14 +270,16 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
 
     // Initialise the plugins themselves
 
-    for (auto plugin : mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins) {
         qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
+    }
 
     // Initialise the plugin further by doing things that can only be done by
     // OpenCOR itself (e.g. set the central widget, create some menus)
 
-    for (auto plugin : mPluginManager->loadedPlugins())
+    for (auto plugin : mPluginManager->loadedPlugins()) {
         initializeGuiPlugin(plugin);
+    }
 
     // Let our various plugins know that all of them have been initialised
     // Note: this is important to do since the initialisation of a plugin is
@@ -282,8 +290,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       (e.g. the SimulationExperimentView plugin needs to know which
     //       solvers, if any, are available to it)...
 
-    for (auto plugin : mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins) {
         qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
+    }
 
     // Keep track of the showing/hiding of the different window widgets
 
@@ -295,7 +304,7 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     // Show/hide and enable/disable the windows action depending on whether
     // there are window widgets
 
-    showEnableAction(mGui->actionDockedWindows, mLoadedWindowPlugins.count());
+    showEnableAction(mGui->actionDockedWindows, !mLoadedWindowPlugins.isEmpty());
 
     // Retrieve the user settings from the previous session, if any
 
@@ -313,8 +322,9 @@ MainWindow::MainWindow(const QString &pApplicationDate) :
     //       start opening/handling those that we have in stock, and this in the
     //       correct order...
 
-    while (guiApplication->hasFileNamesOrOpencorUrls())
+    while (guiApplication->hasFileNamesOrOpencorUrls()) {
         openFileOrHandleUrl(guiApplication->firstFileNameOrOpencorUrl());
+    }
 
     guiApplication->updateCanEmitFileOpenRequestSignal();
 }
@@ -350,7 +360,6 @@ MainWindow::~MainWindow()
     // Delete some internal objects
 
     delete mPluginManager;
-    delete mSettings;
 
     // Delete the GUI
 
@@ -393,8 +402,9 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
     bool canClose = true;
 
-    if (mCoreInterface)
+    if (mCoreInterface != nullptr) {
         canClose = mCoreInterface->canClose();
+    }
 
     // Close ourselves, if possible
 
@@ -402,9 +412,12 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
         // Delete any Web inspector window (which may have been created through
         // our use of QtWebKit)
 
+        static const QString QWebInspectorClassWindow = "QWebInspectorClassWindow";
+
         for (auto window : QGuiApplication::topLevelWindows()) {
-            if (!window->objectName().compare("QWebInspectorClassWindow"))
+            if (window->objectName() == QWebInspectorClassWindow) {
                 window->close();
+            }
         }
 
         // Keep track of our default settings
@@ -438,8 +451,9 @@ void MainWindow::keyPressEvent(QKeyEvent *pEvent)
 
     if (   (pEvent->modifiers() == Qt::NoModifier)
         && (pEvent->key() == Qt::Key_Escape)) {
-        if (isFullScreen())
+        if (isFullScreen()) {
             showNormal();
+        }
 
         pEvent->accept();
     } else {
@@ -463,13 +477,13 @@ void MainWindow::registerOpencorUrlScheme()
     settings.setValue("opencor/Default", QString("URL:%1 link").arg(qApp->applicationName()));
     settings.setValue("opencor/Content Type", "x-scheme-handler/opencor");
     settings.setValue("opencor/URL Protocol", "");
-    settings.setValue("opencor/DefaultIcon/Default", "\""+applicationFileName+"\",1");
+    settings.setValue("opencor/DefaultIcon/Default", R"(")"+applicationFileName+R"(",1)");
     settings.setValue("opencor/shell/Default", "open");
-    settings.setValue("opencor/shell/open/command/Default", "\""+applicationFileName+"\" \"%1\"");
+    settings.setValue("opencor/shell/open/command/Default", R"(")"+applicationFileName+R"(" "%1")");
 
-    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
+    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, nullptr, nullptr);
 #elif defined(Q_OS_LINUX)
-    if (!exec("which", QStringList() << "xdg-mime")) {
+    if (exec("which", QStringList() << "xdg-mime") == 0) {
         QString iconPath = canonicalFileName(QString("%1/.local/share/%2/%3/%3.png").arg(QDir::homePath())
                                                                                     .arg(qApp->organizationName())
                                                                                     .arg(qApp->applicationName()));
@@ -492,11 +506,9 @@ void MainWindow::registerOpencorUrlScheme()
 #elif defined(Q_OS_MAC)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
-    LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),
+    LSSetDefaultHandlerForURLScheme(CFSTR("opencor"),                                // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
                                     CFBundleGetIdentifier(CFBundleGetMainBundle()));
 #pragma clang diagnostic pop
-#else
-    #error Unsupported platform
 #endif
 }
 
@@ -508,7 +520,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
 
-    if (guiInterface) {
+    if (guiInterface != nullptr) {
         // Add the menus before the View menu or merge them to an existing menu,
         // if needed
         // Note: we must do that in reverse order since we are inserting menus,
@@ -517,13 +529,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         Gui::Menus guiMenus = guiInterface->guiMenus();
 
         for (int i = guiMenus.count()-1; i >= 0; --i) {
-            if (guiMenus[i].type() == Gui::Menu::View) {
+            if (guiMenus[i].type() == Gui::Menu::Type::View) {
                 QMenu *newMenu = guiMenus[i].menu();
                 QString newMenuName = newMenu->objectName();
 
                 QMenu *oldMenu = mMenus.value(newMenuName);
 
-                if (oldMenu && !guiMenus[i].action()) {
+                if ((oldMenu != nullptr) && (guiMenus[i].action() == nullptr)) {
                     // A menu with the same name already exists, so add the
                     // contents of our new menu to the existing one
 
@@ -542,8 +554,9 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                     // Keep track of our new menu, but only if it has a name
 
-                    if (!newMenuName.isEmpty())
+                    if (!newMenuName.isEmpty()) {
                         mMenus.insert(newMenuName, newMenu);
+                    }
                 }
             }
         }
@@ -559,12 +572,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
             QMenu *menu = nullptr;
 
-            if (guiMenuActions[i].type() == Gui::MenuAction::File)
+            if (guiMenuActions[i].type() == Gui::MenuAction::Type::File) {
                 menu = mGui->menuFile;
-            else if (guiMenuActions[i].type() == Gui::MenuAction::Tools)
+            } else if (guiMenuActions[i].type() == Gui::MenuAction::Type::Tools) {
                 menu = mGui->menuTools;
+            }
 
-            if (menu) {
+            if (menu != nullptr) {
                 menu->insertAction((menu == mGui->menuTools)?
                                        menu->actions()[2]:
                                        menu->actions().first(),
@@ -576,10 +590,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         QMenu *menuFile = mGui->menuFile;
 
-        if (menuFile) {
+        if (menuFile != nullptr) {
             for (const auto &guiMenu : guiMenus) {
-                if (guiMenu.action() && (guiMenu.type() == Gui::Menu::File))
+                if ((guiMenu.action() != nullptr) && (guiMenu.type() == Gui::Menu::Type::File)) {
                     menuFile->insertMenu(guiMenu.action(), guiMenu.menu());
+                }
             }
         }
 
@@ -588,11 +603,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         static QString pluginForFileNewMenu = QString();
 
         for (const auto &guiMenuAction : guiMenuActions) {
-            if (guiMenuAction.type() == Gui::MenuAction::FileNew) {
+            if (guiMenuAction.type() == Gui::MenuAction::Type::FileNew) {
                 // Check whether the File|New menu has been created and if not,
                 // then create it
 
-                if (!mFileNewMenu) {
+                if (mFileNewMenu == nullptr) {
                     // The menu doesn't already exist, so create it
 
                     mFileNewMenu = new QMenu(this);
@@ -607,7 +622,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                     mGui->menuFile->insertSeparator(mGui->menuFile->actions()[1]);
 
                     pluginForFileNewMenu = pPlugin->name();
-                } else if (pluginForFileNewMenu.compare(pPlugin->name())) {
+                } else if (pluginForFileNewMenu != pPlugin->name()) {
                     // The File|New menu already exists, so add a separator to
                     // it so that previous menu items (from a different plugin)
                     // don't get mixed up with the new one
@@ -636,14 +651,16 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
     WindowInterface *windowInterface = qobject_cast<WindowInterface *>(pPlugin->instance());
 
-    if (windowInterface) {
+    if (windowInterface != nullptr) {
         // Dock the window to its default dock area
 
         addDockWidget(windowInterface->windowDefaultDockArea(), windowInterface->windowWidget());
 
         // Add an action to our menu to show/hide the window
 
-        if (!pPlugin->name().compare("HelpWindow")) {
+        static const QString HelpWindow = "HelpWindow";
+
+        if (pPlugin->name() == HelpWindow) {
             // Special case of the help window
 
             mGui->menuHelp->insertAction(mGui->actionHomePage,
@@ -667,11 +684,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
 //==============================================================================
 
-static const auto SettingsGeometry             = QStringLiteral("Geometry");
-static const auto SettingsState                = QStringLiteral("State");
-static const auto SettingsDockedWindowsVisible = QStringLiteral("DockedWindowsVisible");
-static const auto SettingsDockedWindowsState   = QStringLiteral("DockedWindowsState");
-static const auto SettingsStatusBarVisible     = QStringLiteral("StatusBarVisible");
+static const char *SettingsGeometry             = "Geometry";
+static const char *SettingsState                = "State";
+static const char *SettingsDockedWindowsVisible = "DockedWindowsVisible";
+static const char *SettingsDockedWindowsState   = "DockedWindowsState";
+static const char *SettingsStatusBarVisible     = "StatusBarVisible";
 
 //==============================================================================
 
@@ -683,10 +700,36 @@ void MainWindow::loadSettings()
 
     setLocale(rawLocale(), true);
 
-    // Retrieve the geometry and state of the main window
+    // Have our various plugins load their settings
 
-    if (   !restoreGeometry(mSettings->value(SettingsGeometry).toByteArray())
-        || !restoreState(mSettings->value(SettingsState).toByteArray())) {
+    QSettings settings;
+
+    settings.beginGroup(SettingsPlugins);
+        for (auto plugin : mLoadedPluginPlugins) {
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
+            settings.endGroup();
+        }
+    settings.endGroup();
+
+    // Let our Core plugin know that all of the plugins have loaded their
+    // settings
+    // Note: this is similar to initializePlugin() vs. pluginsInitialized()...
+
+    if (mCoreInterface != nullptr) {
+        mCoreInterface->settingsLoaded(mPluginManager->loadedPlugins());
+    }
+
+    // Retrieve the geometry and state of the main window
+    // Note: we must do this after our various plugins have loaded their
+    //       settings. Indeed, as part of this process, the Core plugin loads
+    //       previously laoded files, which in the case of remote files involves
+    //       relying on SynchronousFileDownloader, which in turn relies on using
+    //       a QEventLoop object to wait for the file to be downloaded and, on
+    //       macOS, this prevents the geometry from being properly applied...
+
+    if (   !restoreGeometry(settings.value(SettingsGeometry).toByteArray())
+        || !restoreState(settings.value(SettingsState).toByteArray())) {
         // The geometry and/or state of the main window couldn't be retrieved,
         // so go with some default settings
 
@@ -704,40 +747,23 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the docked windows are to be shown
 
-    showDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
+    showDockedWindows(settings.value(SettingsDockedWindowsVisible, true).toBool(), true);
 
     // Retrieve the state of the docked windows
 
-    mDockedWindowsState = mSettings->value(SettingsDockedWindowsState, QByteArray()).toByteArray();
-
-    // Retrieve the settings of our various plugins
-
-    for (auto plugin : mLoadedPluginPlugins) {
-        mSettings->beginGroup(SettingsPlugins);
-            mSettings->beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(mSettings);
-            mSettings->endGroup();
-        mSettings->endGroup();
-    }
-
-    // Let our core plugin know that all of the plugins have loaded their
-    // settings
-    // Note: this is similar to initializePlugin() vs. pluginsInitialized()...
-
-    if (mCoreInterface)
-        mCoreInterface->settingsLoaded(mPluginManager->loadedPlugins());
+    mDockedWindowsState = settings.value(SettingsDockedWindowsState, QByteArray()).toByteArray();
 
     // Remove the File menu when on macOS, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on macOS
     //       that menu item gets automatically moved to the application menu...
 
 #ifdef Q_OS_MAC
-    mGui->menuFile->menuAction()->setVisible(mPluginManager->loadedPlugins().count());
+    mGui->menuFile->menuAction()->setVisible(!mPluginManager->loadedPlugins().isEmpty());
 #endif
 
     // Retrieve whether the status bar is to be shown
 
-    mGui->actionStatusBar->setChecked(mSettings->value(SettingsStatusBarVisible, true).toBool());
+    mGui->actionStatusBar->setChecked(settings.value(SettingsStatusBarVisible, true).toBool());
 }
 
 //==============================================================================
@@ -746,31 +772,32 @@ void MainWindow::saveSettings() const
 {
     // Keep track of the geometry and state of the main window
 
-    mSettings->setValue(SettingsGeometry, saveGeometry());
-    mSettings->setValue(SettingsState, saveState());
+    QSettings settings;
+
+    settings.setValue(SettingsGeometry, saveGeometry());
+    settings.setValue(SettingsState, saveState());
 
     // Keep track of whether the docked windows are to be shown
 
-    mSettings->setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
+    settings.setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
 
     // Keep track of the state of the docked windows
 
-    mSettings->setValue(SettingsDockedWindowsState, mDockedWindowsState);
-
-    // Keep track of whether the status bar is to be shown
-
-    mSettings->setValue(SettingsStatusBarVisible,
-                        mGui->statusBar->isVisible());
+    settings.setValue(SettingsDockedWindowsState, mDockedWindowsState);
 
     // Keep track of the settings of our various plugins
 
-    for (auto plugin : mLoadedPluginPlugins) {
-        mSettings->beginGroup(SettingsPlugins);
-            mSettings->beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(mSettings);
-            mSettings->endGroup();
-        mSettings->endGroup();
-    }
+    settings.beginGroup(SettingsPlugins);
+        for (auto plugin : mLoadedPluginPlugins) {
+            settings.beginGroup(plugin->name());
+                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
+            settings.endGroup();
+        }
+    settings.endGroup();
+
+    // Keep track of whether the status bar is to be shown
+
+    settings.setValue(SettingsStatusBarVisible, mGui->statusBar->isVisible());
 }
 
 //==============================================================================
@@ -784,7 +811,7 @@ void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
 
     // Keep track of the new locale, if needed
 
-    if (pRawLocale.compare(mRawLocale) || pForceSetting) {
+    if ((pRawLocale != mRawLocale) || pForceSetting) {
         mRawLocale = pRawLocale;
 
         // Also keep a copy of the new raw locale in our settings (so that the
@@ -796,7 +823,7 @@ void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
     // Check whether the new locale is different from the old one and if so,
     // then retranslate everything
 
-    if (oldLocale.compare(newLocale) || pForceSetting) {
+    if ((oldLocale != newLocale) || pForceSetting) {
         // Specify the language to be used by OpenCOR
 
         QLocale::setDefault(QLocale(newLocale));
@@ -824,25 +851,29 @@ void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
         // Retranslate some widgets that are not originally part of our user
         // interface
 
-        if (mFileNewMenu)
+        if (mFileNewMenu != nullptr) {
             I18nInterface::retranslateMenu(mFileNewMenu, tr("New"));
+        }
 
-        if (mViewWindowsMenu)
+        if (mViewWindowsMenu != nullptr) {
             I18nInterface::retranslateMenu(mViewWindowsMenu, tr("Windows"));
+        }
 
         // Update the translator of our various loaded plugins
         // Note: we must update the translator of all our plugins before we can
         //       safely retranslate them since a plugin may require another
         //       plugin to work properly...
 
-        for (auto plugin : mLoadedI18nPlugins)
+        for (auto plugin : mLoadedI18nPlugins) {
             qobject_cast<I18nInterface *>(plugin->instance())->updateTranslator(QString(":/%1_%2").arg(plugin->name())
                                                                                                   .arg(newLocale));
+        }
 
         // Retranslate our various plugins
 
-        for (auto plugin : mLoadedI18nPlugins)
+        for (auto plugin : mLoadedI18nPlugins) {
             qobject_cast<I18nInterface *>(plugin->instance())->retranslateUi();
+        }
 
         // Reorder our various View|Windows menu items, just in case
 
@@ -855,8 +886,8 @@ void MainWindow::setLocale(const QString &pRawLocale, bool pForceSetting)
 
     mGui->actionSystem->setChecked(pRawLocale.isEmpty());
 
-    mGui->actionEnglish->setChecked(!pRawLocale.compare(EnglishLocale));
-    mGui->actionFrench->setChecked(!pRawLocale.compare(FrenchLocale));
+    mGui->actionEnglish->setChecked(pRawLocale == EnglishLocale);
+    mGui->actionFrench->setChecked(pRawLocale == FrenchLocale);
 }
 
 //==============================================================================
@@ -867,7 +898,7 @@ void MainWindow::reorderViewWindowsMenu()
     // Note: this is useful after having added a new menu item or after having
     //       changed the locale
 
-    if (mViewWindowsMenu) {
+    if (mViewWindowsMenu != nullptr) {
         // Retrieve the title of the menu items and keep track of their actions
 
         QStringList menuItemTitles;
@@ -881,8 +912,9 @@ void MainWindow::reorderViewWindowsMenu()
             QString menuItemTitle = menuItemAction->text().remove('&').normalized(QString::NormalizationForm_KD);
 
             for (int i = menuItemTitle.length()-1; i >= 0; --i) {
-                if (menuItemTitle[i].category() == QChar::Mark_NonSpacing)
+                if (menuItemTitle[i].category() == QChar::Mark_NonSpacing) {
                     menuItemTitle.remove(i, 1);
+                }
             }
 
             // Keep track of the menu item title and the action to which it is
@@ -901,8 +933,9 @@ void MainWindow::reorderViewWindowsMenu()
         //       end of the menu, so since we do it in the right order, we end
         //       up with the menu items being properly ordered...
 
-        for (const auto &menuItemTitle : menuItemTitles)
+        for (const auto &menuItemTitle : menuItemTitles) {
             mViewWindowsMenu->addAction(menuItemActions.value(menuItemTitle));
+        }
     }
 }
 
@@ -913,12 +946,13 @@ void MainWindow::updateViewWindowsMenu(QAction *pAction)
     // Check whether we need to insert a separator before the docked windows
     // menu item
 
-    if (!mViewSeparator)
+    if (mViewSeparator == nullptr) {
         mViewSeparator = mGui->menuView->insertSeparator(mGui->actionDockedWindows);
+    }
 
     // Check whether the View|Windows menu already exists and create it if not
 
-    if (!mViewWindowsMenu) {
+    if (mViewWindowsMenu == nullptr) {
         // The View|Windows menu doesn't already exist, so create it
 
         mViewWindowsMenu = new QMenu(this);
@@ -952,20 +986,20 @@ void MainWindow::showSelf()
 
     // Bring OpenCOR to the foreground
 
-    DWORD foregroundThreadProcId = GetWindowThreadProcessId(GetForegroundWindow(), 0);
-    DWORD mainThreadProcId = GetWindowThreadProcessId(mainWinId, 0);
+    DWORD foregroundThreadProcId = GetWindowThreadProcessId(GetForegroundWindow(), nullptr);
+    DWORD mainThreadProcId = GetWindowThreadProcessId(mainWinId, nullptr);
 
     if (foregroundThreadProcId != mainThreadProcId) {
         // OpenCOR's thread process Id is not that of the foreground window, so
         // attach the foreground thread to OpenCOR's, set OpenCOR to the
         // foreground, and detach the foreground thread from OpenCOR's
 
-        AttachThreadInput(foregroundThreadProcId, mainThreadProcId, true);
+        AttachThreadInput(foregroundThreadProcId, mainThreadProcId, 1);
 
         SetForegroundWindow(mainWinId);
         SetFocus(mainWinId);
 
-        AttachThreadInput(foregroundThreadProcId, mainThreadProcId, false);
+        AttachThreadInput(foregroundThreadProcId, mainThreadProcId, 0);
     } else {
         // OpenCOR's thread process Id is that of the foreground window, so
         // just set OpenCOR to the foreground
@@ -975,10 +1009,11 @@ void MainWindow::showSelf()
 
     // Show/restore OpenCOR, depending on its current state
 
-    if (IsIconic(mainWinId))
+    if (IsIconic(mainWinId) == TRUE) {
         ShowWindow(mainWinId, SW_RESTORE);
-    else
+    } else {
         ShowWindow(mainWinId, SW_SHOW);
+    }
 
     // Note: under Windows, to use activateWindow() will only highlight the
     //       application in the taskbar, since under Windows no application
@@ -992,8 +1027,6 @@ void MainWindow::showSelf()
 
     activateWindow();
     raise();
-#else
-    #error Unsupported platform
 #endif
 }
 
@@ -1005,19 +1038,25 @@ void MainWindow::handleArguments(const QStringList &pArguments)
     // URL if they are an OpenCOR URL or by passing them to the Core plugin,
     // should it be loaded
 
+    static QString Opencor = "opencor";
+
     QStringList arguments = QStringList();
 
     for (const auto &argument : pArguments) {
         QUrl url = argument;
 
-        if (!url.scheme().compare("opencor"))
+        if (url.scheme() == Opencor) {
             handleUrl(url);
-        else if (!argument.isEmpty())
+        } else if (!argument.isEmpty()) {
             arguments << stringFromPercentEncoding(argument);
+        }
     }
 
-    if (!arguments.isEmpty() && mCoreInterface)
-        mCoreInterface->handleArguments(arguments);
+    if ((mCoreInterface != nullptr) && !arguments.isEmpty()) {
+        for (const auto &argument : arguments) {
+            mCoreInterface->openFile(argument);
+        }
+    }
 
     // Make sure that our status bar is shown/hidden, depending on its action's
     // status
@@ -1044,26 +1083,27 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
 {
     // Make sure that no modal dialog is active
 
-    if (qApp->activeModalWidget())
+    if (qApp->activeModalWidget()) {
         return;
+    }
 
     // Handle the action that was passed to OpenCOR
 
     QString actionName = pUrl.authority();
 
-    if (!actionName.compare("openPluginsDialog", Qt::CaseInsensitive)) {
+    if (actionName.compare("openPluginsDialog", Qt::CaseInsensitive) == 0) {
         // We want to open the Plugins dialog
 
         actionPluginsTriggered();
-    } else if (!actionName.compare("openPreferencesDialog", Qt::CaseInsensitive)) {
+    } else if (actionName.compare("openPreferencesDialog", Qt::CaseInsensitive) == 0) {
         // We want to open the Preferences dialog
 
         showPreferencesDialog(urlArguments(pUrl));
-    } else if (!actionName.compare("openAboutDialog", Qt::CaseInsensitive)) {
+    } else if (actionName.compare("openAboutDialog", Qt::CaseInsensitive) == 0) {
         // We want to open the About dialog
 
         actionAboutTriggered();
-    } else if (!actionName.compare("openFile", Qt::CaseInsensitive)) {
+    } else if (actionName.compare("openFile", Qt::CaseInsensitive) == 0) {
         // We want to open a file, so handle it as an argument that is passed to
         // OpenCOR
         // Note: the file name is contained in the path of the URL minus the
@@ -1071,7 +1111,7 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
         //       opencor://openFile//home/user/file...
 
         handleArguments(QStringList() << urlArguments(pUrl));
-    } else if (!actionName.compare("openFiles", Qt::CaseInsensitive)) {
+    } else if (actionName.compare("openFiles", Qt::CaseInsensitive) == 0) {
         // We want to open some files, so handle them as a series of arguments
         // that were passed to OpenCOR
         // Note: the file names are contained in the path of the URL minus the
@@ -1079,6 +1119,26 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
         //       opencor://openFiles//home/user/file1|/home/user/file2...
 
         handleArguments(urlArguments(pUrl).split('|'));
+    } else if (actionName.compare("importFile", Qt::CaseInsensitive) == 0) {
+        // We want to import a file
+        // Note: the file name is contained in the path of the URL minus the
+        //       leading forward slash. Indeed, an import file request looks
+        //       like opencor://importFile//home/user/file...
+
+        if (mFileHandlingInterface != nullptr) {
+            mFileHandlingInterface->importFile(urlArguments(pUrl));
+        }
+    } else if (actionName.compare("importFiles", Qt::CaseInsensitive) == 0) {
+        // We want to import some files
+        // Note: the file names are contained in the path of the URL minus the
+        //       leading forward slash. Indeed, an import files request looks
+        //       like opencor://importFiles//home/user/file1|/home/user/file2...
+
+        if (mFileHandlingInterface != nullptr) {
+            for (const auto &fileName : urlArguments(pUrl).split('|')) {
+                mFileHandlingInterface->importFile(fileName);
+            }
+        }
     } else {
         // We are dealing with an action that OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
@@ -1086,14 +1146,15 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
         QString pluginName = actionName.split('.').first();
 
         for (auto plugin : mLoadedPluginPlugins) {
-            if (!plugin->name().compare(pluginName, Qt::CaseInsensitive)) {
+            if (plugin->name().compare(pluginName, Qt::CaseInsensitive) == 0) {
                 // This is an action for the current plugin, so forward the
                 // action to it, should it support the Plugin interface
 
                 PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-                if (pluginInterface)
+                if (pluginInterface != nullptr) {
                     pluginInterface->handleUrl(pUrl);
+                }
 
                 break;
             }
@@ -1105,20 +1166,18 @@ void MainWindow::doHandleUrl(const QUrl &pUrl)
 
 void MainWindow::handleUrl(const QUrl &pUrl)
 {
-    // Handle the action that was passed to OpenCOR
-    // Note: we want to make sure that we are visible before handling a URL,
-    //       hence we do this through a single shot. Indeed, otherwise to start
-    //       OpenCOR through our URL scheme (e.g. opencor://openAboutDialog)
-    //       will result in the dialog appearing before we become visible, which
-    //       doesn't look neat. Not only that, but it might in some cases (e.g.
-    //       opencor://openPreferencesDialog) result in some GUI problems (see
-    //       issue #1802). When it comes to opening a file / files through our
-    //       URL scheme, it's kind of the same in the sense that without a
-    //       single shot, the file/s will get opened in the "background", which
-    //       is not neat either...
+    // Handle the action that was passed to OpenCOR, but only once we are
+    // visible
+    // Note: indeed, otherwise to start OpenCOR through our URL scheme (e.g.
+    //       opencor://openAboutDialog) will result in the dialog appearing
+    //       before we become visible, which doesn't look neat. Not only that,
+    //       but it might in some cases (e.g. opencor://openPreferencesDialog)
+    //       result in some GUI problems (see issue #1802). When it comes to
+    //       opening a file / files through our URL scheme, it's kind of the
+    //       same in the sense that without a single shot, the file/s will get
+    //       opened in the "background", which is not neat either...
 
-    QTimer::singleShot(0, this, std::bind(&MainWindow::doHandleUrl,
-                                          this, pUrl));
+    QTimer::singleShot(0, this, std::bind(&MainWindow::doHandleUrl, this, pUrl));
 }
 
 //==============================================================================
@@ -1141,10 +1200,11 @@ void MainWindow::actionFullScreenTriggered()
 {
     // Switch to / back from full screen mode
 
-    if (isFullScreen())
+    if (isFullScreen()) {
         showNormal();
-    else
+    } else {
         showFullScreen();
+    }
 }
 
 //==============================================================================
@@ -1178,20 +1238,19 @@ void MainWindow::actionFrenchTriggered()
 
 void MainWindow::actionPluginsTriggered()
 {
-    if (mPluginManager->plugins().count()) {
+    if (!mPluginManager->plugins().isEmpty()) {
         // There are some plugins, so we can show the plugins dialog
 
-        mSettings->beginGroup("PluginsDialog");
-            PluginsDialog pluginsDialog(mSettings, mPluginManager, this);
+        PluginsDialog pluginsDialog(mPluginManager, this);
 
-            pluginsDialog.exec();
-        mSettings->endGroup();
+        pluginsDialog.exec();
 
         // Restart OpenCOR (after having saved its settings) in case the user
         // asked for his/her plugin-related settings to be  applied
 
-        if (pluginsDialog.result() == QMessageBox::Apply)
+        if (pluginsDialog.result() == QMessageBox::Apply) {
             restart(true);
+        }
     } else {
         warningMessageBox(tr("Plugins"),
                           tr("No plugins could be found."));
@@ -1204,12 +1263,9 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
 {
     // Show the preferences dialog
 
-    mSettings->beginGroup("PreferencesDialog");
-        PreferencesDialog preferencesDialog(mSettings, mPluginManager,
-                                            pPluginName, this);
+    PreferencesDialog preferencesDialog(mPluginManager, pPluginName, this);
 
-        preferencesDialog.exec();
-    mSettings->endGroup();
+    preferencesDialog.exec();
 
     // Let people know about the plugins that had their preferences changed, if
     // any and if requested
@@ -1219,8 +1275,9 @@ void MainWindow::showPreferencesDialog(const QString &pPluginName)
         for (auto plugin : mPluginManager->loadedPlugins()) {
             PreferencesInterface *preferencesInterface = qobject_cast<PreferencesInterface *>(plugin->instance());
 
-            if (preferencesInterface)
+            if (preferencesInterface != nullptr) {
                 preferencesInterface->preferencesChanged(preferencesDialog.pluginNames());
+            }
         }
     }
 }
@@ -1249,11 +1306,9 @@ void MainWindow::actionCheckForUpdatesTriggered()
 {
     // Show the check for updates dialog
 
-    mSettings->beginGroup(SettingsCheckForUpdatesDialog);
-        CheckForUpdatesDialog checkForUpdatesDialog(mSettings, mApplicationDate, this);
+    CheckForUpdatesDialog checkForUpdatesDialog(mApplicationDate, this);
 
-        checkForUpdatesDialog.exec();
-    mSettings->endGroup();
+    checkForUpdatesDialog.exec();
 }
 
 //==============================================================================
@@ -1278,8 +1333,9 @@ void MainWindow::restart(bool pSaveSettings) const
     //       this is exactly what we want in case we don't want to save its
     //       settings (e.g. when resetting all)
 
-    if (pSaveSettings)
+    if (pSaveSettings) {
         saveSettings();
+    }
 
     qApp->exit(pSaveSettings?NormalRestart:CleanRestart);
 }
@@ -1291,18 +1347,21 @@ void MainWindow::showDockedWindows(bool pShow, bool pInitialisation)
     // Show/hide the docked windows
 
     if (!pInitialisation) {
-        if (!pShow)
+        if (!pShow) {
             mDockedWindowsState = saveState();
+        }
 
         for (auto plugin : mLoadedWindowPlugins) {
             WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
 
-            if (!windowInterface->windowWidget()->isFloating())
+            if (!windowInterface->windowWidget()->isFloating()) {
                 windowInterface->windowWidget()->setVisible(pShow);
+            }
         }
 
-        if (pShow && !mDockedWindowsState.isEmpty())
+        if (pShow && !mDockedWindowsState.isEmpty()) {
             restoreState(mDockedWindowsState);
+        }
     }
 
     // Keep track of the docked windows visible state
@@ -1369,7 +1428,7 @@ void MainWindow::resetAll()
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

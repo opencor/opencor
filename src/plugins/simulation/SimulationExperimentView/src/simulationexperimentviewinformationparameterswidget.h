@@ -36,13 +36,19 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFileRuntime;
     class CellmlFileRuntimeParameter;
-}   // namespace CellMLSupport
+} // namespace CellMLSupport
+
+//==============================================================================
+
+namespace DataStore {
+    class DataStoreImportData;
+} // namespace DataStore
 
 //==============================================================================
 
 namespace SimulationSupport {
     class Simulation;
-}   // namespace SimulationSupport
+} // namespace SimulationSupport
 
 //==============================================================================
 
@@ -62,6 +68,8 @@ public:
     void initialize(SimulationSupport::Simulation *pSimulation,
                     bool pReloadingView = false);
     void finalize();
+
+    void importData(DataStore::DataStoreImportData *pImportData);
 
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> parameters() const;
 
@@ -85,6 +93,9 @@ private:
 
     QAction *mToggleGradientsMenuAction;
     QAction *mToggleGradientsMenuSeparator;
+
+    Core::Property *mImportComponent;
+    QMenu *mImportMenu;
 
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(CellMLSupport::CellmlFileRuntime *pRuntime);
@@ -114,8 +125,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

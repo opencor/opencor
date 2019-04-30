@@ -33,7 +33,6 @@ namespace StandardSupport {
 //==============================================================================
 
 StandardFile::StandardFile(const QString &pFileName) :
-    QObject(),
     mFileName(Core::canonicalFileName(pFileName)),
     mNew(Core::FileManager::instance()->isNew(pFileName))
 {
@@ -67,8 +66,9 @@ bool StandardFile::save(const QString &pFileName)
 
     // Make sure that mFileName is up to date
 
-    if (!pFileName.isEmpty())
+    if (!pFileName.isEmpty()) {
         setFileName(pFileName);
+    }
 
     return true;
 }
@@ -120,8 +120,8 @@ void StandardFile::setModified(bool pModified) const
 
 //==============================================================================
 
-}   // namespace StandardSupport
-}   // namespace OpenCOR
+} // namespace StandardSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

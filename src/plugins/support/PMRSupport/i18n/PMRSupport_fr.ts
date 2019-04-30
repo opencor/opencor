@@ -82,6 +82,13 @@
     </message>
 </context>
 <context>
+    <name>OpenCOR::PMRSupport::PmrWebViewerDialog</name>
+    <message>
+        <source>PMR Authentication</source>
+        <translation>Authentification PMR</translation>
+    </message>
+</context>
+<context>
     <name>OpenCOR::PMRSupport::PmrWorkspace</name>
     <message>
         <source>An error occurred while trying to clone the workspace.</source>
@@ -184,6 +191,10 @@ Message Git : %2.</translation>
     <message>
         <source>Select Directory</source>
         <translation>Sélectionner Répertoire</translation>
+    </message>
+    <message>
+        <source>Please choose a writable directory.</source>
+        <translation>Veuillez choisir un répertoire accessible en écriture.</translation>
     </message>
     <message>
         <source>Please choose a non-Git directory.</source>

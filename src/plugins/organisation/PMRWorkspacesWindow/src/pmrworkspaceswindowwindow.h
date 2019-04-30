@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrWorkspacesWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -50,7 +50,7 @@ namespace OpenCOR {
 namespace PMRSupport {
     class PmrWebService;
     class PmrWorkspace;
-}   // namespace PMRSupport
+} // namespace PMRSupport
 
 //==============================================================================
 
@@ -72,8 +72,8 @@ public:
 
     void retranslateUi() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     Ui::PmrWorkspacesWindowWindow * gui() const;
 
@@ -86,8 +86,6 @@ private:
     Ui::PmrWorkspacesWindowWindow *mGui;
 
     bool mInitialized;
-
-    QString mSettingsGroup;
 
     QLabel *mPmrInstanceLabel;
 
@@ -128,8 +126,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

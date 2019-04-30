@@ -22,8 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "coreguiutils.h"
-#include "datastoreinterface.h"
 #include "datastoredialog.h"
+#include "datastoreinterface.h"
+#include "plugin.h"
 
 //==============================================================================
 
@@ -32,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include <QPushButton>
+#include <QSettings>
 #include <QStandardItemModel>
 
 //==============================================================================
@@ -49,8 +51,8 @@ DataItemDelegate::DataItemDelegate(QObject *pParent) :
 //==============================================================================
 
 void DataItemDelegate::paint(QPainter *pPainter,
-                               const QStyleOptionViewItem &pOption,
-                               const QModelIndex &pIndex) const
+                             const QStyleOptionViewItem &pOption,
+                             const QModelIndex &pIndex) const
 {
     // Paint the item as normal unless it's a hierarchy item, in which case we
     // make it bold
@@ -61,15 +63,17 @@ void DataItemDelegate::paint(QPainter *pPainter,
 
     initStyleOption(&option, pIndex);
 
-    if (dataItem->hasChildren())
+    if (dataItem->hasChildren()) {
         option.font.setBold(true);
+    }
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
 }
 
 //==============================================================================
 
-DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
+DataStoreDialog::DataStoreDialog(const QString &pDataStoreName,
+                                 DataStore *pDataStore, bool pIncludeVoi,
                                  const QMap<int, QIcon> &pIcons,
                                  QWidget *pParent) :
     Core::Dialog(pParent),
@@ -77,6 +81,12 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
     mData(QMap<QStandardItem *, DataStoreVariable*>()),
     mNbOfData(0)
 {
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsPlugins);
+    mSettings.beginGroup(pDataStoreName);
+    mSettings.beginGroup("DataStoreDialog");
+
     // Set up the GUI
 
     mGui->setupUi(this);
@@ -122,7 +132,7 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
 
             QString crtDataHierarchy = variable->uri().remove(VariableNameRegEx);
 
-            if (crtDataHierarchy.compare(dataHierarchy)) {
+            if (crtDataHierarchy != dataHierarchy) {
                 // The variable is in a different component hierarchy, so create
                 // a new section hierarchy for our 'new' component, reusing
                 // existing sections, whenever possible
@@ -135,14 +145,14 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
                     for (int i = 0, iMax = parentHierarchyItem->rowCount(); i < iMax; ++i) {
                         QStandardItem *childHierarchyItem = parentHierarchyItem->child(i);
 
-                        if (!childHierarchyItem->text().compare(hierarchyPart)) {
+                        if (childHierarchyItem->text() == hierarchyPart) {
                             hierarchyItem = childHierarchyItem;
 
                             break;
                         }
                     }
 
-                    if (!hierarchyItem) {
+                    if (hierarchyItem == nullptr) {
                         hierarchyItem = new QStandardItem(hierarchyPart);
 
                         hierarchyItem->setAutoTristate(true);
@@ -161,14 +171,14 @@ DataStoreDialog::DataStoreDialog(DataStore *pDataStore, bool pIncludeVoi,
             // Create a new item and add it to our hierarchy, but only if it
             // really exists
 
-            if (hierarchyItem) {
+            if (hierarchyItem != nullptr) {
                 static const QIcon ErrorNodeIcon = QIcon(":/oxygen/emblems/emblem-important.png");
 
                 QIcon variableIcon = pIcons.value(variable->type());
-                QStandardItem *dataItem = new QStandardItem(variableIcon.isNull()?
-                                                                ErrorNodeIcon:
-                                                                variableIcon,
-                                                            variable->label());
+                auto dataItem = new QStandardItem(variableIcon.isNull()?
+                                                      ErrorNodeIcon:
+                                                      variableIcon,
+                                                  variable->label());
 
                 dataItem->setCheckable(true);
                 dataItem->setCheckState(Qt::Checked);
@@ -231,8 +241,9 @@ DataStoreVariables DataStoreDialog::selectedData(QStandardItem *pItem) const
     DataStoreVariables res = DataStoreVariables();
 
     if (pItem->hasChildren()) {
-        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i)
+        for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
             res << selectedData(pItem->child(i));
+        }
     } else if (pItem->checkState() == Qt::Checked) {
         res << mData.value(pItem);
     }
@@ -248,8 +259,9 @@ DataStoreVariables DataStoreDialog::selectedData() const
 
     DataStoreVariables res = DataStoreVariables();
 
-    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i)
+    for (int i = 0, iMax = mModel->invisibleRootItem()->rowCount(); i < iMax; ++i) {
         res << selectedData(mModel->invisibleRootItem()->child(i));
+    }
 
     return res;
 }
@@ -267,21 +279,24 @@ void DataStoreDialog::checkDataSelectedState(QStandardItem *pItem,
     for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
         QStandardItem *childItem = pItem->child(i);
 
-        if (childItem->hasChildren())
+        if (childItem->hasChildren()) {
             checkDataSelectedState(childItem, pNbOfselectedData);
+        }
 
         if (childItem->checkState() == Qt::Checked) {
             ++nbOfSelectedChildItems;
 
-            if (!childItem->hasChildren())
+            if (!childItem->hasChildren()) {
                 ++pNbOfselectedData;
+            }
         }
 
-        if (childItem->checkState() == Qt::PartiallyChecked)
+        if (childItem->checkState() == Qt::PartiallyChecked) {
             partiallySelectedChildItems = true;
+        }
     }
 
-    pItem->setCheckState(nbOfSelectedChildItems?
+    pItem->setCheckState((nbOfSelectedChildItems != 0)?
                              (nbOfSelectedChildItems == pItem->rowCount())?
                                  Qt::Checked:
                                  Qt::PartiallyChecked:
@@ -302,8 +317,9 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem,
 
         childItem->setCheckState(pCheckState);
 
-        if (childItem->hasChildren())
+        if (childItem->hasChildren()) {
             updateDataSelectedState(childItem, pCheckState);
+        }
     }
 }
 
@@ -321,8 +337,9 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
     // it accordingly, or keep track of the number of selected data, if we
     // un/select some data
 
-    if (pItem && pItem->isAutoTristate())
+    if ((pItem != nullptr) && pItem->isAutoTristate()) {
         updateDataSelectedState(pItem, (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked);
+    }
 
     // Update the selected state of all our hierarchies
 
@@ -334,7 +351,7 @@ void DataStoreDialog::updateDataSelectedState(QStandardItem *pItem)
         checkDataSelectedState(childItem, nbOfSelectedData);
     }
 
-    mGui->allDataCheckBox->setCheckState(nbOfSelectedData?
+    mGui->allDataCheckBox->setCheckState((nbOfSelectedData != 0)?
                                              (nbOfSelectedData == mNbOfData)?
                                                  Qt::Checked:
                                                  Qt::PartiallyChecked:
@@ -353,8 +370,9 @@ void DataStoreDialog::allDataCheckBoxClicked()
     // If our checked state is partially checked, then we want to make it fully
     // so
 
-    if (mGui->allDataCheckBox->checkState() == Qt::PartiallyChecked)
+    if (mGui->allDataCheckBox->checkState() == Qt::PartiallyChecked) {
         mGui->allDataCheckBox->setCheckState(Qt::Checked);
+    }
 
     // Un/select all the data
     // Note: we temporally disable the handling of the itemChanged() signal
@@ -372,8 +390,8 @@ void DataStoreDialog::allDataCheckBoxClicked()
 
 //==============================================================================
 
-}   // namespace DataStore
-}   // namespace OpenCOR
+} // namespace DataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

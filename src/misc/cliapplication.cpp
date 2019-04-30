@@ -44,7 +44,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CliApplication::CliApplication(int &pArgC, char **pArgV) :
+CliApplication::CliApplication(int &pArgC, char *pArgV[]) : // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
     mPluginManager(nullptr),
     mLoadedPluginPlugins(Plugins()),
     mLoadedSolverPlugins(Plugins()),
@@ -63,18 +63,19 @@ CliApplication::~CliApplication()
 
     QSettings settings;
 
-    for (auto plugin : mLoadedPluginPlugins) {
-        settings.beginGroup(SettingsPlugins);
+    settings.beginGroup(SettingsPlugins);
+        for (auto plugin : mLoadedPluginPlugins) {
             settings.beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(&settings);
+                qobject_cast<PluginInterface *>(plugin->instance())->saveSettings(settings);
             settings.endGroup();
-        settings.endGroup();
-    }
+        }
+    settings.endGroup();
 
     // Finalise our loaded plugins, if any
 
-    for (auto plugin : mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins) {
         qobject_cast<PluginInterface *>(plugin->instance())->finalizePlugin();
+    }
 
     // Delete some internal objects
 
@@ -93,37 +94,41 @@ void CliApplication::loadPlugins()
     // Retrieve some categories of plugins
 
     for (auto plugin : mPluginManager->loadedPlugins()) {
-        if (qobject_cast<PluginInterface *>(plugin->instance()))
+        if (qobject_cast<PluginInterface *>(plugin->instance()) != nullptr) {
             mLoadedPluginPlugins << plugin;
+        }
 
-        if (qobject_cast<SolverInterface *>(plugin->instance()))
+        if (qobject_cast<SolverInterface *>(plugin->instance()) != nullptr) {
             mLoadedSolverPlugins << plugin;
 
-        if (qobject_cast<CliInterface *>(plugin->instance()))
+        if (qobject_cast<CliInterface *>(plugin->instance()) != nullptr) {
             mLoadedCliPlugins << plugin;
+        }
     }
 
     // Initialise the plugins themselves
 
-    for (auto plugin : mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins) {
         qobject_cast<PluginInterface *>(plugin->instance())->initializePlugin();
+    }
 
     // Let our various plugins know that all of them have been initialised
 
-    for (auto plugin : mLoadedPluginPlugins)
+    for (auto plugin : mLoadedPluginPlugins) {
         qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
+    }
 
     // Retrieve the settings of our various plugins
 
     QSettings settings;
 
-    for (auto plugin : mLoadedPluginPlugins) {
-        settings.beginGroup(SettingsPlugins);
+    settings.beginGroup(SettingsPlugins);
+        for (auto plugin : mLoadedPluginPlugins) {
             settings.beginGroup(plugin->name());
-                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(&settings);
+                qobject_cast<PluginInterface *>(plugin->instance())->loadSettings(settings);
             settings.endGroup();
-        settings.endGroup();
-    }
+        }
+    settings.endGroup();
 }
 
 //==============================================================================
@@ -137,8 +142,9 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
     QFileInfoList fileInfoList = QDir(pluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList availablePluginNames = QStringList();
 
-    for (const auto &fileInfo : fileInfoList)
+    for (const auto &fileInfo : fileInfoList) {
         availablePluginNames << Plugin::name(fileInfo.canonicalFilePath());
+    }
 
     // Include/exclude the given plugins to/from the GUI version of OpenCOR,
     // after having sorted them and made sure that they actually exist
@@ -156,7 +162,7 @@ void CliApplication::includePlugins(const QStringList &pPluginNames,
             QString errorMessage;
             PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pluginsDir, pluginName), &errorMessage);
 
-            if (pluginInfo) {
+            if (pluginInfo != nullptr) {
                 if (pluginInfo->isSelectable()) {
                     Plugin::setLoad(pluginName, pInclude);
 
@@ -197,19 +203,15 @@ void CliApplication::about() const
 
 //==============================================================================
 
-bool CliApplication::command(const QStringList &pArguments, int *pRes) const
+bool CliApplication::command(const QString &pCommand,
+                             const QStringList &pArguments, int &pRes) const
 {
-    // Make sure that we have at least one argument
-
-    if (!pArguments.count())
-        return false;
-
     // Determine whether the command is to be executed by all the CLI plugins or
     // only a given CLI plugin
 
     static const QString CommandSeparator = "::";
 
-    QString commandName = pArguments.first();
+    QString commandName = pCommand;
     QString commandPlugin = commandName;
     int commandSeparatorPosition = commandName.indexOf(CommandSeparator);
 
@@ -227,9 +229,9 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
         bool pluginHasCliSupport = false;
 
         for (auto plugin : mPluginManager->loadedPlugins()) {
-            if (!commandPlugin.compare(plugin->name())) {
+            if (commandPlugin == plugin->name()) {
                 pluginFound = true;
-                pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance());
+                pluginHasCliSupport = qobject_cast<CliInterface *>(plugin->instance()) != nullptr;
 
                 break;
             }
@@ -238,9 +240,15 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
         if (!pluginFound) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
 
+            pRes = -1;
+
             return true;
-        } else if (!pluginHasCliSupport) {
+        }
+
+        if (!pluginHasCliSupport) {
             std::cout << "The " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
+
+            pRes = -1;
 
             return true;
         }
@@ -251,6 +259,8 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
     if (mLoadedCliPlugins.isEmpty()) {
         std::cout << "No plugins could be found to run the command." << std::endl;
 
+        pRes = -1;
+
         return true;
     }
 
@@ -260,20 +270,16 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
     for (auto plugin : mLoadedCliPlugins) {
         if (    commandPlugin.isEmpty()
-            || !commandPlugin.compare(plugin->name())) {
-            QStringList arguments = pArguments;
-
-            arguments.removeFirst();
-            // Note: since the first argument corresponds to the command
-            //       itself...
-
-            if (firstPlugin)
+            || (commandPlugin == plugin->name())) {
+            if (firstPlugin) {
                 firstPlugin = false;
-            else
+            } else {
                 std::cout << std::endl;
+            }
 
-            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, arguments))
-                *pRes = -1;
+            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, pArguments) != 0) {
+                pRes = -1;
+            }
         }
     }
 
@@ -296,7 +302,7 @@ void CliApplication::help() const
     // Output some help
 
     std::cout << "Usage: " << qAppName().toStdString()
-              << " [-a|--about] [-c|--command [<plugin>]::<command> <options>] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>]::<command> [<argument> ...]] [-e|--exclude <plugins>] [-h|--help] [-i|--include <plugins>] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
@@ -350,8 +356,9 @@ void CliApplication::plugins() const
         QString pluginInfo = plugin->name();
         QString pluginDesc = plainString(plugin->info()->description());
 
-        if (!pluginDesc.isEmpty())
+        if (!pluginDesc.isEmpty()) {
             pluginInfo += ": "+pluginDesc;
+        }
 
         // Add the plugin information to our list
 
@@ -362,13 +369,15 @@ void CliApplication::plugins() const
 
     pluginsInfo.sort(Qt::CaseInsensitive);
 
-    if (pluginsInfo.count() == 1)
+    if (pluginsInfo.count() == 1) {
         std::cout << "The following CLI plugin is available:" << std::endl;
-    else
+    } else {
         std::cout << "The following CLI plugins are available:" << std::endl;
+    }
 
-    for (const auto &pluginInfo : pluginsInfo)
+    for (const auto &pluginInfo : pluginsInfo) {
         std::cout << " - " << pluginInfo.toStdString() << std::endl;
+    }
 }
 
 //==============================================================================
@@ -407,52 +416,53 @@ void CliApplication::status() const
         // Retrieve the plugin's status
 
         switch (plugin->status()) {
-        case Plugin::NotWanted:
+        case Plugin::Status::NotWanted:
             pluginInfo += "the plugin is not wanted.";
 
             break;
-        case Plugin::NotNeeded:
+        case Plugin::Status::NotNeeded:
             pluginInfo += "the plugin is not needed.";
 
             break;
-        case Plugin::Loaded:
+        case Plugin::Status::Loaded:
 
             pluginInfo += "the plugin is loaded and fully functional.";
 
             break;
-        case Plugin::NotLoaded:
+        case Plugin::Status::NotLoaded:
             pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(plugin->statusErrors()));
 
             break;
-        case Plugin::NotPlugin:
+        case Plugin::Status::NotPlugin:
             pluginInfo += "this is not a plugin.";
 
             break;
-        case Plugin::OldPlugin:
+        case Plugin::Status::OldPlugin:
             pluginInfo += "the plugin could not be loaded (one or several of the interfaces it supports are too old).";
 
             break;
-        case Plugin::NotCorePlugin:
+        case Plugin::Status::NotCorePlugin:
             pluginInfo += "the plugin claims to be the core plugin, but it is not.";
 
             break;
-        case Plugin::InvalidCorePlugin:
+        case Plugin::Status::InvalidCorePlugin:
             pluginInfo += "the plugin should be the core plugin, but it does not support the core interface.";
 
             break;
-        case Plugin::NotCliPluginNoCliSupport:
+        case Plugin::Status::NotCliPluginNoCliSupport:
             pluginInfo += "the plugin supports the CLI interface, but it does not claim to be CLI-capable.";
 
             break;
-        case Plugin::NotCliPluginNoCliInterface:
+        case Plugin::Status::NotCliPluginNoCliInterface:
             pluginInfo += "the plugin claims to be CLI-capable, but it does not support the CLI interface.";
 
             break;
-        case Plugin::MissingOrInvalidDependencies:
-            if (plugin->statusErrorsCount() == 1)
+        case Plugin::Status::MissingOrInvalidDependencies:
+            if (plugin->statusErrorsCount() == 1) {
                 pluginInfo += QString("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(plugin->statusErrors());
-            else
+            } else {
                 pluginInfo += QString("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(plugin->statusErrors());
+            }
 
             break;
         }
@@ -466,13 +476,15 @@ void CliApplication::status() const
 
     pluginsInfo.sort(Qt::CaseInsensitive);
 
-    if (pluginsInfo.count() == 1)
+    if (pluginsInfo.count() == 1) {
         std::cout << "The following plugin is available:" << std::endl;
-    else
+    } else {
         std::cout << "The following plugins are available:" << std::endl;
+    }
 
-    for (const auto &pluginInfo : pluginsInfo)
+    for (const auto &pluginInfo : pluginsInfo) {
         std::cout << " - " << pluginInfo.toStdString() << std::endl;
+    }
 }
 
 //==============================================================================
@@ -486,11 +498,11 @@ void CliApplication::version() const
 
 //==============================================================================
 
-bool CliApplication::run(int *pRes)
+bool CliApplication::run(int &pRes)
 {
     // See what needs doing with the CLI options, if anything
 
-    *pRes = 0;   // By default, everything is fine
+    pRes = 0;   // By default, everything is fine
 
     enum Option {
         NoOption,
@@ -514,6 +526,16 @@ bool CliApplication::run(int *pRes)
     // Note: we remove the first argument since it corresponds to the full path
     //       to our executable, which we are not interested in...
 
+    static const QString A = "-a"; static const QString About   = "--about";
+    static const QString C = "-c"; static const QString Command = "--command";
+    static const QString E = "-e"; static const QString Exclude = "--exclude";
+    static const QString H = "-h"; static const QString Help    = "--help";
+    static const QString I = "-i"; static const QString Include = "--include";
+    static const QString P = "-p"; static const QString Plugins = "--plugins";
+    static const QString R = "-r"; static const QString Reset   = "--reset";
+    static const QString S = "-s"; static const QString Status  = "--status";
+    static const QString V = "-v"; static const QString Version = "--version";
+
     for (const auto &appArgument : appArguments) {
         if (   (option == CommandOption)
             || (option == ExcludeOption)
@@ -522,64 +544,64 @@ bool CliApplication::run(int *pRes)
             // include call
 
             arguments << appArgument;
-        } else if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
+        } else if ((appArgument == A) || (appArgument == About)) {
             if (option == NoOption) {
                 option = AboutOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-c") || !appArgument.compare("--command")) {
+        } else if ((appArgument == C) || (appArgument == Command)) {
             if (option == NoOption) {
                 option = CommandOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-e") || !appArgument.compare("--exclude")) {
+        } else if ((appArgument == E) || (appArgument == Exclude)) {
             if (option == NoOption) {
                 option = ExcludeOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-h") || !appArgument.compare("--help")) {
+        } else if ((appArgument == H) || (appArgument == Help)) {
             if (option == NoOption) {
                 option = HelpOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-i") || !appArgument.compare("--include")) {
+        } else if ((appArgument == I) || (appArgument == Include)) {
             if (option == NoOption) {
                 option = IncludeOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-p") || !appArgument.compare("--plugins")) {
+        } else if ((appArgument == P) || (appArgument == Plugins)) {
             if (option == NoOption) {
                 option = PluginsOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-r") || !appArgument.compare("--reset")) {
+        } else if ((appArgument == R) || (appArgument == Reset)) {
             if (option == NoOption) {
                 option = ResetOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-s") || !appArgument.compare("--status")) {
+        } else if ((appArgument == S) || (appArgument == Status)) {
             if (option == NoOption) {
                 option = StatusOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
-        } else if (!appArgument.compare("-v") || !appArgument.compare("--version")) {
+        } else if ((appArgument == V) || (appArgument == Version)) {
             if (option == NoOption) {
                 option = VersionOption;
             } else {
-                *pRes = -1;
+                pRes = -1;
             }
         } else if (appArgument.startsWith('-')) {
             // The user provided at least one unknown option
 
-            *pRes = -1;
+            pRes = -1;
 
             break;
         }
@@ -587,12 +609,18 @@ bool CliApplication::run(int *pRes)
 
     // Handle the option the user requested, if any
 
-    if (!*pRes) {
+    if (pRes == 0) {
         switch (option) {
         case NoOption:
             return false;
         case AboutOption:
-            about();
+            if (appArguments.count() != 1) {
+                pRes = -1;
+
+                help();
+            } else {
+                about();
+            }
 
             break;
         case CommandOption:
@@ -601,14 +629,18 @@ bool CliApplication::run(int *pRes)
             // command to the plugin(s)
 
             if (arguments.isEmpty()) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
                 loadPlugins();
 
-                if (!command(arguments, pRes)) {
-                    *pRes = -1;
+                QString command = arguments.first();
+
+                arguments.removeFirst();
+
+                if (!CliApplication::command(command, arguments, pRes)) {
+                    pRes = -1;
 
                     help();
                 }
@@ -620,7 +652,7 @@ bool CliApplication::run(int *pRes)
             // plugin)
 
             if (arguments.isEmpty()) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -629,7 +661,13 @@ bool CliApplication::run(int *pRes)
 
             break;
         case HelpOption:
-            help();
+            if (appArguments.count() != 1) {
+                pRes = -1;
+
+                help();
+            } else {
+                help();
+            }
 
             break;
         case IncludeOption:
@@ -637,7 +675,7 @@ bool CliApplication::run(int *pRes)
             // plugin)
 
             if (arguments.isEmpty()) {
-                *pRes = -1;
+                pRes = -1;
 
                 help();
             } else {
@@ -646,23 +684,47 @@ bool CliApplication::run(int *pRes)
 
             break;
         case PluginsOption:
-            loadPlugins();
+            if (appArguments.count() != 1) {
+                pRes = -1;
 
-            plugins();
+                help();
+            } else {
+                loadPlugins();
+
+                plugins();
+            }
 
             break;
         case ResetOption:
-            reset();
+            if (appArguments.count() != 1) {
+                pRes = -1;
+
+                help();
+            } else {
+                reset();
+            }
 
             break;
         case StatusOption:
-            loadPlugins();
+            if (appArguments.count() != 1) {
+                pRes = -1;
 
-            status();
+                help();
+            } else {
+                loadPlugins();
+
+                status();
+            }
 
             break;
         case VersionOption:
-            version();
+            if (appArguments.count() != 1) {
+                pRes = -1;
+
+                help();
+            } else {
+                version();
+            }
 
             break;
         }
@@ -675,7 +737,7 @@ bool CliApplication::run(int *pRes)
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

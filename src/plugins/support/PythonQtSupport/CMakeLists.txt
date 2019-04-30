@@ -13,12 +13,6 @@ ADD_PLUGIN(PythonQtSupport
         src/pythonqtsupport.cpp
         src/pythonqtsupportplugin.cpp
 
-    HEADERS_MOC
-        ../../plugin.h
-        ../../pluginmanager.h
-
-        src/CTK/ctkAbstractPythonManager.h
-        src/pythonqtsupportplugin.h
     PLUGINS
         PythonSupport
         PythonQtAPI

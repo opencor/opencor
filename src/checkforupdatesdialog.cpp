@@ -67,7 +67,7 @@ void CheckForUpdatesEngine::check()
     mNewerVersions.clear();
 
     if (readFile("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
-        QJsonParseError jsonParseError;
+        QJsonParseError jsonParseError = QJsonParseError();
         QJsonDocument versions = QJsonDocument::fromJson(fileVersionsContents.mid(15, fileVersionsContents.length()-17), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
@@ -92,29 +92,31 @@ void CheckForUpdatesEngine::check()
 
                 versionDate = QDate(versionYear, versionMonth, versionDay).toString("yyyy-MM-dd");
 
-                if (!versionMajor && !versionMinor && !versionPatch) {
+                if ((versionMajor == 0) && (versionMinor == 0) && (versionPatch == 0)) {
                     versionVersion = versionDate;
                 } else {
                     versionVersion = QString("%1.%2").arg(versionMajor)
                                                      .arg(versionMinor);
 
-                    if (versionPatch)
+                    if (versionPatch != 0) {
                         versionVersion = QString("%1.%2").arg(versionVersion)
                                                          .arg(versionPatch);
+                    }
                 }
 
                 // Check whether the version is newer and, if so, add it to our
                 // list
 
-                if (mApplicationDate.compare(versionDate) < 0)
+                if (mApplicationDate.compare(versionDate) < 0) {
                     mNewerVersions << versionVersion;
+                }
             }
 
             mStatus = QString();
         } else {
             mStatus =  tr("The version information is mal-formatted.")
                       +"<br/>"
-                      +tr("Please <a href=\"http://opencor.ws/user/contactUs.html\">contact us</a> about this error.");
+                      +tr(R"(Please <a href="http://opencor.ws/user/contactUs.html">contact us</a> about this error.)");
         }
     } else {
         mStatus = formatMessage(errorMessage, false, true);
@@ -155,8 +157,9 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
     // Return whether we have a newer official version
 
     for (const auto &newerVersion : mNewerVersions) {
-        if (!newerVersion.contains('-'))
+        if (!newerVersion.contains('-')) {
             return true;
+        }
     }
 
     return false;
@@ -164,15 +167,18 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 
 //==============================================================================
 
-CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
-                                             const QString &pApplicationDate,
+CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
                                              CheckForUpdatesEngine *pEngine,
                                              QWidget *pParent) :
-    Dialog(pSettings, pParent)
+    Dialog(pParent)
 {
     // We are not yet initialised
 
     mInitialized = false;
+
+    // Customise our settings
+
+    mSettings.beginGroup(SettingsCheckForUpdatesDialog);
 
     // Set up the GUI
 
@@ -193,7 +199,7 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 
     // Create/set our engine and check for updates in the former case
 
-    if (pEngine) {
+    if (pEngine != nullptr) {
         mEngine = pEngine;
     } else {
         mEngine = new CheckForUpdatesEngine(pApplicationDate);
@@ -203,8 +209,8 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 
     // Retrieve and set some properties
 
-    mGui->checkForUpdatesAtStartupCheckBox->setChecked(mSettings->value(SettingsCheckForUpdatesAtStartup, true).toBool());
-    mGui->includeSnapshotsCheckBox->setChecked(mSettings->value(SettingsIncludeSnapshots, false).toBool());
+    mGui->checkForUpdatesAtStartupCheckBox->setChecked(mSettings.value(SettingsCheckForUpdatesAtStartup, true).toBool());
+    mGui->includeSnapshotsCheckBox->setChecked(mSettings.value(SettingsIncludeSnapshots, false).toBool());
 
     // Update our GUI
 
@@ -215,18 +221,16 @@ CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
 
 //==============================================================================
 
-CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
-                                             const QString &pApplicationDate,
+CheckForUpdatesDialog::CheckForUpdatesDialog(const QString &pApplicationDate,
                                              QWidget *pParent) :
-    CheckForUpdatesDialog(pSettings, pApplicationDate, nullptr, pParent)
+    CheckForUpdatesDialog(pApplicationDate, nullptr, pParent)
 {
 }
 
 //==============================================================================
 
-CheckForUpdatesDialog::CheckForUpdatesDialog(QSettings *pSettings,
-                                             CheckForUpdatesEngine *pEngine) :
-    CheckForUpdatesDialog(pSettings, QString(), pEngine, nullptr)
+CheckForUpdatesDialog::CheckForUpdatesDialog(CheckForUpdatesEngine *pEngine) :
+    CheckForUpdatesDialog(QString(), pEngine, nullptr)
 {
 }
 
@@ -251,8 +255,8 @@ void CheckForUpdatesDialog::updateGui()
 
     static const QString WhatIsNewUrl = "http://opencor.ws/user/whatIsNew.html?#";
 
-    QString versionInformation = tr("<a href=\"%1\">%2 %3</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
-    QString snapshotInformation = tr("The <a href=\"%1\">latest snapshot</a> (%2) is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
+    QString versionInformation = tr(R"(<a href="%1">%2 %3</a> is ready for you to <a href="http://opencor.ws/downloads/">download</a>.)");
+    QString snapshotInformation = tr(R"(The <a href="%1">latest snapshot</a> (%2) is ready for you to <a href="http://opencor.ws/downloads/">download</a>.)");
 
     if (mEngine->status().isEmpty()) {
         if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked) {
@@ -271,8 +275,9 @@ void CheckForUpdatesDialog::updateGui()
                     }
                 }
 
-                if (version.isEmpty())
+                if (version.isEmpty()) {
                     version = mEngine->newerVersions().first();
+                }
 
                 if (version.contains('-')) {
                     mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest")
@@ -334,31 +339,31 @@ void CheckForUpdatesDialog::recheckButtonClicked()
 
 void CheckForUpdatesDialog::checkForUpdatesAtStartupCheckBoxToggled(bool pChecked)
 {
-    Q_UNUSED(pChecked);
+    Q_UNUSED(pChecked)
 
     // Keep track of our property
 
-    mSettings->setValue(SettingsCheckForUpdatesAtStartup,
-                        mGui->checkForUpdatesAtStartupCheckBox->isChecked());
+    mSettings.setValue(SettingsCheckForUpdatesAtStartup,
+                       mGui->checkForUpdatesAtStartupCheckBox->isChecked());
 }
 
 //==============================================================================
 
 void CheckForUpdatesDialog::includeSnapshotsCheckBoxToggled(bool pChecked)
 {
-    Q_UNUSED(pChecked);
+    Q_UNUSED(pChecked)
 
     // Keep track of our property
 
-    mSettings->setValue(SettingsIncludeSnapshots,
-                        mGui->includeSnapshotsCheckBox->isChecked());
+    mSettings.setValue(SettingsIncludeSnapshots,
+                       mGui->includeSnapshotsCheckBox->isChecked());
 
     updateGui();
 }
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

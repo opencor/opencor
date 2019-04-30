@@ -46,7 +46,7 @@ PLUGININFO_FUNC RawTextViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit text-based files using a text editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers textes à l'aide d'un éditeur de texte."));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "EditingView",
                           descriptions);
 }
@@ -66,7 +66,7 @@ EditorWidget::EditorWidget * RawTextViewPlugin::editorWidget(const QString &pFil
 
 bool RawTextViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -82,7 +82,7 @@ bool RawTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileName)
 
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pFileName);
 
-    return crtEditorWidget?
+    return (crtEditorWidget != nullptr)?
                Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents()):
                false;
 }
@@ -91,17 +91,28 @@ bool RawTextViewPlugin::isEditorWidgetContentsModified(const QString &pFileName)
 // File handling interface
 //==============================================================================
 
+bool RawTextViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
                                  const QString &pNewFileName,
                                  bool &pNeedFeedback)
 {
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pNeedFeedback)
 
     // Save the given file
 
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
-    return crtEditorWidget?
+    return (crtEditorWidget != nullptr)?
                Core::writeFile(pNewFileName, crtEditorWidget->contents()):
                false;
 }
@@ -110,7 +121,7 @@ bool RawTextViewPlugin::saveFile(const QString &pOldFileName,
 
 void RawTextViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -119,7 +130,7 @@ void RawTextViewPlugin::fileOpened(const QString &pFileName)
 
 void RawTextViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -128,7 +139,7 @@ void RawTextViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void RawTextViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -165,7 +176,7 @@ void RawTextViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void RawTextViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -197,8 +208,8 @@ bool RawTextViewPlugin::definesPluginInterfaces()
 bool RawTextViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                            QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -232,38 +243,38 @@ void RawTextViewPlugin::finalizePlugin()
 
 void RawTextViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void RawTextViewPlugin::loadSettings(QSettings *pSettings)
+void RawTextViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Raw Text view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void RawTextViewPlugin::saveSettings(QSettings *pSettings) const
+void RawTextViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Raw Text view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void RawTextViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -276,7 +287,7 @@ ViewInterface::Mode RawTextViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::Editing;
 }
 
 //==============================================================================
@@ -285,7 +296,7 @@ QStringList RawTextViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support, i.e. any in our case
 
-    return QStringList();
+    return {};
 }
 
 //==============================================================================
@@ -296,7 +307,7 @@ QString RawTextViewPlugin::viewMimeType(const QString &pFileName) const
 
     // Return the MIME type for the given file
 
-    return QString();
+    return {};
 }
 
 //==============================================================================
@@ -314,8 +325,9 @@ QWidget * RawTextViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a text file (be it new or not)
 
-    if (!Core::isTextFile(pFileName))
+    if (!Core::isTextFile(pFileName)) {
         return nullptr;
+    }
 
     // Update and return our Raw Text view widget using the given file
 
@@ -346,7 +358,7 @@ QString RawTextViewPlugin::viewName() const
 
 QIcon RawTextViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -357,8 +369,8 @@ QIcon RawTextViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace RawTextView
-}   // namespace OpenCOR
+} // namespace RawTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

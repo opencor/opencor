@@ -13,6 +13,8 @@ Commands supported by the CellMLTools plugin:
       export <file> <predefined_format>|<user_defined_format_file>
    <predefined_format> can take one of the following values:
       cellml_1_0: to export a CellML 1.1 file to CellML 1.0
+ * Validate <file>:
+      validate <file>
 
 Commands supported by the SampleTools plugin:
  * Display the commands supported by the SampleTools plugin:

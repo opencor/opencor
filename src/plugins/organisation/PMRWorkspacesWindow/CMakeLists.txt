@@ -15,14 +15,6 @@ add_plugin(PMRWorkspacesWindow
         src/pmrworkspaceswindowsynchronizedialog.cpp
         src/pmrworkspaceswindowwidget.cpp
         src/pmrworkspaceswindowwindow.cpp
-    HEADERS_MOC
-        ../../preferencesinterface.h
-
-        src/pmrworkspaceswindownewworkspacedialog.h
-        src/pmrworkspaceswindowplugin.h
-        src/pmrworkspaceswindowsynchronizedialog.h
-        src/pmrworkspaceswindowwidget.h
-        src/pmrworkspaceswindowwindow.h
     UIS
         src/pmrworkspaceswindownewworkspacedialog.ui
         src/pmrworkspaceswindowwindow.ui

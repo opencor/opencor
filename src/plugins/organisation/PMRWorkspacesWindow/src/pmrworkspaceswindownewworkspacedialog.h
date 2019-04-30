@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class PmrWorkspacesWindowNewWorkspaceDialog;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -45,8 +45,7 @@ class PmrWorkspacesWindowNewWorkspaceDialog : public Core::Dialog
     Q_OBJECT
 
 public:
-    explicit PmrWorkspacesWindowNewWorkspaceDialog(QSettings *pSettings,
-                                                   QWidget *pParent);
+    explicit PmrWorkspacesWindowNewWorkspaceDialog(QWidget *pParent);
     ~PmrWorkspacesWindowNewWorkspaceDialog() override;
 
     virtual void retranslateUi();
@@ -66,8 +65,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

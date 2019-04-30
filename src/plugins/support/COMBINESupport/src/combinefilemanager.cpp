@@ -83,8 +83,8 @@ StandardSupport::StandardFile * CombineFileManager::create(const QString &pFileN
 
 //==============================================================================
 
-}   // namespace COMBINESupport
-}   // namespace OpenCOR
+} // namespace COMBINESupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

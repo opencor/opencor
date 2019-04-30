@@ -36,7 +36,7 @@ class QMenu;
 
 namespace Ui {
     class WebBrowserWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -59,8 +59,8 @@ public:
 
     void retranslateUi() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     WebBrowserWindowWidget * widget() const;
 
@@ -93,8 +93,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace WebBrowserWindow
-}   // namespace OpenCOR
+} // namespace WebBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

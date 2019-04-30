@@ -51,6 +51,10 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; importe &lt;strong&gt;%2&lt;/strong&gt;, dont le contenu n&apos;a pas pu être retrouvé</translation>
     </message>
     <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; imports &lt;strong&gt;%2&lt;/strong&gt;, which contents could not be retrieved (%3)</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; importe &lt;strong&gt;%2&lt;/strong&gt;, dont le contenu n&apos;a pas pu être retrouvé (%3)</translation>
+    </message>
+    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; imports &lt;strong&gt;%2&lt;/strong&gt;, which CellML object could not be retrieved</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; importe &lt;strong&gt;%2&lt;/strong&gt;, dont l&apos;objet CellML n&apos;a pas pu être retrouvé</translation>
     </message>

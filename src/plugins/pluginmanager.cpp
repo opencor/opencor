@@ -49,7 +49,7 @@ PluginManager::PluginManager(bool pGuiMode) :
     // Retrieve OpenCOR's plugins directory
     // Note #1: the plugin's directory is retrieved in main()...
     // Note #2: we use QDir().canonicalPath() to ensure that our plugins
-    //          directory uses "/" (and not a mixture of "/" and "\"), which is
+    //          directory use / (and not a mixture of / and \), which is
     //          critical on Windows...
 
     mPluginsDir = QDir(QCoreApplication::libraryPaths().first()).canonicalPath()+"/"+qAppName();
@@ -59,8 +59,9 @@ PluginManager::PluginManager(bool pGuiMode) :
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension), QDir::Files);
     QStringList fileNames = QStringList();
 
-    for (const auto &fileInfo : fileInfoList)
+    for (const auto &fileInfo : fileInfoList) {
         fileNames << fileInfo.canonicalFilePath();
+    }
 
     // Retrieve and initialise some information about the plugins
 
@@ -82,8 +83,9 @@ PluginManager::PluginManager(bool pGuiMode) :
         //       the plugin itself. So, it will be the plugin's responsibility
         //       to delete it (see Plugin::~Plugin())...
 
-        if (pluginInfo)
+        if (pluginInfo != nullptr) {
             pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
+        }
     }
 
     // Determine in which order the plugins files should be analysed (i.e. take
@@ -94,14 +96,15 @@ PluginManager::PluginManager(bool pGuiMode) :
     for (const auto &fileName : fileNames) {
         PluginInfo *pluginInfo = pluginsInfo.value(Plugin::name(fileName));
 
-        if (pluginInfo) {
+        if (pluginInfo != nullptr) {
             int index = sortedFileNames.count();
 
             for (const auto &loadBefore : pluginInfo->loadBefore()) {
                 int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
 
-                if (loadBeforeIndex < index)
+                if (loadBeforeIndex < index) {
                     index = loadBeforeIndex;
+                }
             }
 
             sortedFileNames.insert(index, fileName);
@@ -118,7 +121,7 @@ PluginManager::PluginManager(bool pGuiMode) :
         QString pluginName = Plugin::name(fileName);
         PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
 
-        if (pluginInfo) {
+        if (pluginInfo != nullptr) {
             // Keep track of the plugin itself, should it be selectable and
             // requested by the user (if we are in GUI mode) or have CLI support
             // (if we are in CLI mode)
@@ -150,8 +153,9 @@ PluginManager::PluginManager(bool pGuiMode) :
     //       wantedPlugins) might be (wrongly) needed by another plugin (i.e.
     //       listed in neededPlugins)...
 
-    for (const auto &plugin : plugins)
+    for (const auto &plugin : plugins) {
         pluginFileNames << Plugin::fileName(mPluginsDir, plugin);
+    }
 
     // If we are in GUI mode, then we want to know about all the plugins,
     // including the ones that are not to be loaded (so that we can refer to
@@ -167,21 +171,22 @@ PluginManager::PluginManager(bool pGuiMode) :
 
     for (const auto &pluginFileName : pluginFileNames) {
         QString pluginName = Plugin::name(pluginFileName);
-        Plugin *plugin = new Plugin(pluginFileName,
-                                    pluginsInfo.value(pluginName),
-                                    pluginsError.value(pluginName),
-                                    plugins.contains(pluginName), this);
+        auto plugin = new Plugin(pluginFileName,
+                                 pluginsInfo.value(pluginName),
+                                 pluginsError.value(pluginName),
+                                 plugins.contains(pluginName), this);
 
         // Keep track of the plugin and of the Core plugin, in particular, if it
         // is loaded
 
         mPlugins << plugin;
 
-        if (plugin->status() == Plugin::Loaded) {
+        if (plugin->status() == Plugin::Status::Loaded) {
             mLoadedPlugins << plugin;
 
-            if (!pluginName.compare(CorePluginName))
+            if (pluginName == CorePluginName) {
                 mCorePlugin = plugin;
+            }
         }
     }
 }
@@ -192,8 +197,9 @@ PluginManager::~PluginManager()
 {
     // Delete some internal objects
 
-    for (auto plugin : mPlugins)
+    for (auto plugin : mPlugins) {
         delete plugin;
+    }
 }
 
 //==============================================================================
@@ -256,8 +262,9 @@ Plugin * PluginManager::plugin(const QString &pName) const
     // Return the plugin, if any, which name is the one we have been passed
 
     for (auto plugin : mPlugins) {
-        if (!pName.compare(plugin->name()))
+        if (pName == plugin->name()) {
             return plugin;
+        }
     }
 
     return nullptr;
@@ -274,7 +281,7 @@ Plugin * PluginManager::corePlugin() const
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

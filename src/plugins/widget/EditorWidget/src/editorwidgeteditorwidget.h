@@ -42,7 +42,7 @@ class EditorWidgetScrollBar;
 
 //==============================================================================
 
-class EDITORWIDGET_EXPORT EditorWidgetEditorWidget : public QScintillaSupport::QScintillaWidget
+class EDITORWIDGET_EXPORT EditorWidgetEditorWidget : public QScintillaWidget::QScintillaWidget
 {
     Q_OBJECT
 
@@ -69,7 +69,7 @@ protected:
     void mousePressEvent(QMouseEvent *pEvent) override;
 
 private:
-    enum Action {
+    enum class Action {
         HighlightAll,
         ReplaceAll
     };
@@ -120,8 +120,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace EditorWidget
-}   // namespace OpenCOR
+} // namespace EditorWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

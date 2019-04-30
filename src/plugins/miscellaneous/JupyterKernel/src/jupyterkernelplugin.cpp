@@ -44,7 +44,7 @@ PLUGININFO_FUNC JupyterKernelPluginInfo()
     descriptions.insert("en", QString::fromUtf8("the Jupyter kernel plugin."));
     descriptions.insert("fr", QString::fromUtf8("the Jupyter kernel plugin."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, true, true,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, true, true,
                           QStringList() << "Core" << "DataStore"
                                         << "SimulationSupport"
                                         << "PythonQtSupport",

@@ -18,34 +18,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// QScintilla support plugin
+// Tab bar widget Mac style
 //==============================================================================
 
-#include "qscintillasupportplugin.h"
+#pragma once
+
+//==============================================================================
+
+#include <QProxyStyle>
+#include <QStyleOptionTab>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace QScintillaSupport {
+namespace Core {
 
 //==============================================================================
 
-PLUGININFO_FUNC QScintillaSupportPluginInfo()
+class TabBarWidgetMacStyle : public QProxyStyle
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
+public:
+    void drawControl(ControlElement pElement, const QStyleOption *pOption,
+                     QPainter *pPainter, const QWidget *pWidget = nullptr) const override;
 
-    return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "Core" << "QScintilla",
-                          descriptions);
-}
+    QRect subElementRect(SubElement pElement, const QStyleOption *pOption,
+                         const QWidget *pWidget) const override;
+
+private:
+    void tabLayout(const QStyleOptionTab *pOption, const QWidget *pWidget,
+                   QRect *pTextRect, QRect *pIconRect) const;
+};
 
 //==============================================================================
 
-}   // namespace QScintillaSupport
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -72,8 +72,8 @@ int indexLineStyle(const QString &pStringLineStyle)
     int res = lineStyles().indexOf(pStringLineStyle);
 
     return (res != -1)?
-                res:
-                1;
+               res :
+               1;
 }
 
 //==============================================================================
@@ -188,8 +188,8 @@ int indexSymbolStyle(const QString &pStringSymbolStyle)
     int res = symbolStyles().indexOf(pStringSymbolStyle);
 
     return (res != -1)?
-                res:
-                0;
+               res :
+               0;
 }
 
 //==============================================================================
@@ -269,8 +269,8 @@ QwtSymbol::Style symbolStyle(const QString &pStringSymbolStyle)
 
 //==============================================================================
 
-}   // namespace SEDMLSupport
-}   // namespace OpenCOR
+} // namespace SEDMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

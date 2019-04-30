@@ -53,7 +53,6 @@ protected:
     QMap<QString, StandardFile *> mFiles;
 
     explicit StandardFileManager();
-    ~StandardFileManager() override;
 
     virtual bool canLoad(const QString &pFileName) const = 0;
 
@@ -75,8 +74,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace StandardSupport
-}   // namespace OpenCOR
+} // namespace StandardSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

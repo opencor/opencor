@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "guiutils.h"
-#include "coreinterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -39,11 +38,15 @@ class QStandardItemModel;
 
 namespace Ui {
     class PluginsDialog;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+class Plugin;
 
 //==============================================================================
 
@@ -67,8 +70,7 @@ class PluginsDialog : public Dialog
     Q_OBJECT
 
 public:
-    explicit PluginsDialog(QSettings *pSettings, PluginManager *pPluginManager,
-                           QWidget *pParent);
+    explicit PluginsDialog(PluginManager *pPluginManager, QWidget *pParent);
     ~PluginsDialog() override;
 
 private:
@@ -110,7 +112,7 @@ private slots:
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

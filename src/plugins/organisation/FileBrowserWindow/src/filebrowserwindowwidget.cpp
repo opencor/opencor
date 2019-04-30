@@ -59,8 +59,6 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
     setFrameShape(QFrame::StyledPanel);
 #elif defined(Q_OS_MAC)
     setFrameShape(QFrame::Panel);
-#else
-    #error Unsupported platform
 #endif
     setModel(mModel);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -79,14 +77,14 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
 
 //==============================================================================
 
-static const auto SettingsColumnWidth = QStringLiteral("ColumnWidth%1");
-static const auto SettingsInitialPath = QStringLiteral("InitialPath");
-static const auto SettingsSortColumn  = QStringLiteral("SortColumn");
-static const auto SettingsSortOrder   = QStringLiteral("SortOrder");
+static const char *SettingsColumnWidth = "ColumnWidth%1";
+static const char *SettingsInitialPath = "InitialPath";
+static const char *SettingsSortColumn  = "SortColumn";
+static const char *SettingsSortOrder   = "SortOrder";
 
 //==============================================================================
 
-void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
+void FileBrowserWindowWidget::loadSettings(QSettings &pSettings)
 {
     // We are about to begin loading the settings, so we don't want to keep
     // track of the change of item
@@ -99,25 +97,22 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     QString columnWidthKey;
 
     for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
-        columnWidthKey = SettingsColumnWidth.arg(i);
+        columnWidthKey = QString(SettingsColumnWidth).arg(i);
 
         mNeedDefColWidth =     mNeedDefColWidth
-                           && !pSettings->contains(columnWidthKey);
+                           && !pSettings.contains(columnWidthKey);
 
-        setColumnWidth(i, pSettings->value(columnWidthKey,
-                                           columnWidth(i)).toInt());
+        setColumnWidth(i, pSettings.value(columnWidthKey, columnWidth(i)).toInt());
     }
 
     // Retrieve the sorting information
 
-    sortByColumn(pSettings->value(SettingsSortColumn, 0).toInt(),
-                 Qt::SortOrder(pSettings->value(SettingsSortOrder,
-                                                Qt::AscendingOrder).toInt()));
+    sortByColumn(pSettings.value(SettingsSortColumn, 0).toInt(),
+                 Qt::SortOrder(pSettings.value(SettingsSortOrder, Qt::AscendingOrder).toInt()));
 
     // Retrieve the initial path
 
-    mInitPath = pSettings->value(SettingsInitialPath,
-                                 QDir::homePath()).toString();
+    mInitPath = pSettings.value(SettingsInitialPath, QDir::homePath()).toString();
 
     QFileInfo initPathFileInfo = mInitPath;
 
@@ -168,8 +163,9 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
 
     QDir initPathDir = mInitPathDir;
 
-    while (initPathDir.cdUp())
+    while (initPathDir.cdUp()) {
         mInitPathDirs << initPathDir.canonicalPath();
+    }
 
     // Set the current index to that of the folder (and file, if it exists) in
     // which we are interested
@@ -179,16 +175,18 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
 
     setCurrentIndex(mModel->index(mInitPathDir));
 
-    if (!mInitPath.isEmpty())
+    if (!mInitPath.isEmpty()) {
         setCurrentIndex(mModel->index(mInitPath));
+    }
 
     // Make sure that the current path is expanded
     // Note: this is important in case the current path is that of the C: drive
     //       or the root of the file system, in which case this won't result in
     //       the directoryLoaded signal being emitted
 
-    if (!isExpanded(currentIndex()))
+    if (!isExpanded(currentIndex())) {
         setExpanded(currentIndex(), true);
+    }
 
     // Make sure that the current path is visible
     // Note: indeed, to process pending events only in directoryLoaded() is not
@@ -204,23 +202,22 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileBrowserWindowWidget::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of the width of each column
 
-    for (int i = 0, iMax = header()->count(); i < iMax; ++i)
-        pSettings->setValue(SettingsColumnWidth.arg(i), columnWidth(i));
+    for (int i = 0, iMax = header()->count(); i < iMax; ++i) {
+        pSettings.setValue(QString(SettingsColumnWidth).arg(i), columnWidth(i));
+    }
 
     // Keep track of the sorting information
 
-    pSettings->setValue(SettingsSortColumn,
-                        header()->sortIndicatorSection());
-    pSettings->setValue(SettingsSortOrder, header()->sortIndicatorOrder());
+    pSettings.setValue(SettingsSortColumn, header()->sortIndicatorSection());
+    pSettings.setValue(SettingsSortOrder, header()->sortIndicatorOrder());
 
     // Keep track of what will be our future initial folder/file path
 
-    pSettings->setValue(SettingsInitialPath,
-                        mModel->filePath(currentIndex()));
+    pSettings.setValue(SettingsInitialPath, mModel->filePath(currentIndex()));
 }
 
 //==============================================================================
@@ -246,8 +243,9 @@ QStringList FileBrowserWindowWidget::selectedFiles() const
 
                 fileName = fileInfo.symLinkTarget();
 
-                if (QFile::exists(fileName))
+                if (QFile::exists(fileName)) {
                     res << fileName;
+                }
             } else {
                 // The current item is a file, so just add to the list
 
@@ -296,13 +294,13 @@ void FileBrowserWindowWidget::emitItemChangedRelatedSignals()
     // Let the user know whether the path of the new item is that of our home
     // folder, as well as whether we could go to the parent item
 
-    emit homeFolder(!currentPath().compare(QDir::homePath()));
+    emit homeFolder(currentPath() == QDir::homePath());
     emit goToParentFolderEnabled(!currentPathParent().isEmpty());
 
     // Let the user know whether we can go to the previous/next file/folder
 
-    emit goToPreviousFileOrFolderEnabled(mPreviousItems.count());
-    emit goToNextFileOrFolderEnabled(mNextItems.count());
+    emit goToPreviousFileOrFolderEnabled(!mPreviousItems.isEmpty());
+    emit goToNextFileOrFolderEnabled(!mNextItems.isEmpty());
 }
 
 //==============================================================================
@@ -347,8 +345,9 @@ void FileBrowserWindowWidget::updateItems(const QString &pItemPath,
 void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
                                             QStringList &pOtherItems)
 {
-    if (pItems.isEmpty())
+    if (pItems.isEmpty()) {
         return;
+    }
 
     // Go to the previous/next item and move the last item from our list of
     // items to our list of other items
@@ -389,10 +388,11 @@ void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
             while (!pItems.isEmpty() && (newItemPath == crtPath)) {
                 pItems.removeLast();
 
-                if (!pItems.isEmpty())
+                if (!pItems.isEmpty()) {
                     newItemPath = pItems.last();
-                else
+                } else {
                     newItemPath = "";
+                }
             }
         } else {
             newItemPath = "";
@@ -414,11 +414,13 @@ void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
 
     crtPath = currentPath();
 
-    if (!pItems.isEmpty() && (pItems.last() == crtPath))
+    if (!pItems.isEmpty() && (pItems.last() == crtPath)) {
         pItems.removeLast();
+    }
 
-    if (!pOtherItems.isEmpty() && (pOtherItems.last() == crtPath))
+    if (!pOtherItems.isEmpty() && (pOtherItems.last() == crtPath)) {
         pOtherItems.removeLast();
+    }
 
     // Now that we are done, we can once again keep track of the change of item
 
@@ -447,8 +449,8 @@ void FileBrowserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 
     QStringList crtSelectedFiles = selectedFiles();
 
-    if (   crtSelectedFiles.count()
-        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
+    if (   !crtSelectedFiles.isEmpty()
+        &&  ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
@@ -490,7 +492,7 @@ bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
         // We need to show a tool tip, so make sure that it's up to date by
         // setting it to the path of the current item
 
-        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
+        auto helpEvent = static_cast<QHelpEvent *>(pEvent);
 
         setToolTip(QDir::toNativeSeparators(Core::canonicalFileName(mModel->filePath(indexAt(helpEvent->pos())))));
     }
@@ -505,7 +507,7 @@ bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
 void FileBrowserWindowWidget::itemChanged(const QModelIndex &pNewIndex,
                                           const QModelIndex &pOldIndex)
 {
-    Q_UNUSED(pNewIndex);
+    Q_UNUSED(pNewIndex)
 
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
@@ -555,8 +557,9 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         // Set the default width of the columns, if needed, so that it fits
         // their contents
 
-        if (mNeedDefColWidth)
+        if (mNeedDefColWidth) {
             resizeColumnsToContents();
+        }
 
         // Remove the loaded directory from mInitPathDirs
 
@@ -593,8 +596,9 @@ void FileBrowserWindowWidget::goToPath(const QString &pPath, bool pExpand)
     if ((pathIndex.isValid()) && (pathIndex != currentIndex())) {
         // The path exists, so we can go to it
 
-        if (pExpand)
+        if (pExpand) {
             setExpanded(pathIndex, true);
+        }
 
         setCurrentIndex(pathIndex);
     }
@@ -667,8 +671,8 @@ QString FileBrowserWindowWidget::pathOf(const QModelIndex &pIndex) const
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
-}   // namespace OpenCOR
+} // namespace FileBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

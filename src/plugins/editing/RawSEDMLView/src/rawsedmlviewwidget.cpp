@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rawsedmlviewwidget.h"
 #include "sedmleditingviewwidget.h"
 #include "sedmlfile.h"
-#include "sedmlfilemanager.h"
 #include "sedmlfileissue.h"
+#include "sedmlfilemanager.h"
 
 //==============================================================================
 
@@ -42,7 +42,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include "Qsci/qscilexerxml.h"
+#include "qscintillabegin.h"
+    #include "Qsci/qscilexerxml.h"
+#include "qscintillaend.h"
 
 //==============================================================================
 
@@ -62,21 +64,21 @@ RawSedmlViewWidget::RawSedmlViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-void RawSedmlViewWidget::loadSettings(QSettings *pSettings)
+void RawSedmlViewWidget::loadSettings(QSettings &pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
     // our settings' group and load them when initialising ourselves (see
     // initialize())...
 
-    mSettingsGroup = pSettings->group();
+    mSettingsGroup = pSettings.group();
 }
 
 //==============================================================================
 
-void RawSedmlViewWidget::saveSettings(QSettings *pSettings) const
+void RawSedmlViewWidget::saveSettings(QSettings &pSettings) const
 {
-    Q_UNUSED(pSettings);
+    Q_UNUSED(pSettings)
     // Note: our view is such that our settings are actually saved when calling
     //       finalize() on the last file...
 }
@@ -87,17 +89,9 @@ void RawSedmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    for (auto editingWidget : mEditingWidgets)
+    for (auto editingWidget : mEditingWidgets) {
         editingWidget->retranslateUi();
-}
-
-//==============================================================================
-
-bool RawSedmlViewWidget::contains(const QString &pFileName) const
-{
-    // Return whether we know about the given file
-
-    return mEditingWidgets.contains(pFileName);
+    }
 }
 
 //==============================================================================
@@ -108,7 +102,7 @@ void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
 
     SEDMLEditingView::SedmlEditingViewWidget *newEditingWidget = mEditingWidgets.value(pFileName);
 
-    if (!newEditingWidget) {
+    if (newEditingWidget == nullptr) {
         // No editing widget exists for the given file, so create one
 
         QByteArray fileContents;
@@ -139,8 +133,8 @@ void RawSedmlViewWidget::initialize(const QString &pFileName, bool pUpdate)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                newEditingWidget->loadSettings(&settings);
-            settings.endGroup();
+
+            newEditingWidget->loadSettings(settings);
 
             mNeedLoadingSettings = false;
         } else {
@@ -172,7 +166,7 @@ void RawSedmlViewWidget::finalize(const QString &pFileName)
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // There is an editing widget for the given file name, so save our
         // settings and reset our memory of the current editing widget, if
         // needed
@@ -181,8 +175,8 @@ void RawSedmlViewWidget::finalize(const QString &pFileName)
             QSettings settings;
 
             settings.beginGroup(mSettingsGroup);
-                editingWidget->saveSettings(&settings);
-            settings.endGroup();
+
+            editingWidget->saveSettings(settings);
 
             mNeedLoadingSettings = true;
             mEditingWidget = nullptr;
@@ -205,8 +199,9 @@ void RawSedmlViewWidget::fileSaved(const QString &pFileName)
 
     QWidget *crtWidget = widget(pFileName);
 
-    if (crtWidget && !crtWidget->isVisible())
+    if ((crtWidget != nullptr) && !crtWidget->isVisible()) {
         fileReloaded(pFileName);
+    }
 }
 
 //==============================================================================
@@ -220,7 +215,7 @@ void RawSedmlViewWidget::fileReloaded(const QString &pFileName)
     //       file). However, we want to the 'old' file to remain the active one,
     //       hence the extra argument we pass to initialize()...
 
-    if (contains(pFileName)) {
+    if (mEditingWidgets.contains(pFileName)) {
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
@@ -237,7 +232,7 @@ void RawSedmlViewWidget::fileRenamed(const QString &pOldFileName,
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
         mEditingWidgets.remove(pOldFileName);
     }
@@ -251,7 +246,7 @@ EditorWidget::EditorWidget * RawSedmlViewWidget::editorWidget(const QString &pFi
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return editingWidget?editingWidget->editorWidget():nullptr;
+    return (editingWidget != nullptr)?editingWidget->editorWidget():nullptr;
 }
 
 //==============================================================================
@@ -269,12 +264,12 @@ QList<QWidget *> RawSedmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
-    if (mEditingWidget) {
+    if (mEditingWidget != nullptr) {
         return QList<QWidget *>() << mEditingWidget->editorWidget()->cursorPositionWidget()
                                   << mEditingWidget->editorWidget()->editingModeWidget();
-    } else {
-        return QList<QWidget *>();
     }
+
+    return {};
 }
 
 //==============================================================================
@@ -285,7 +280,7 @@ void RawSedmlViewWidget::reformat(const QString &pFileName)
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget && validate(pFileName, true)) {
+    if ((editingWidget != nullptr) && validate(pFileName, true)) {
         int line;
         int column;
 
@@ -308,7 +303,7 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 
     SEDMLEditingView::SedmlEditingViewWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
+    if (editingWidget != nullptr) {
         // Clear the list of SED-ML issues
 
         EditorWidget::EditorListWidget *editorList = editingWidget->editorListWidget();
@@ -327,11 +322,11 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 
         for (const auto &sedmlFileIssue : sedmlFileIssues) {
             if (   !pOnlyErrors
-                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Error)) {
-                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Unknown;
+                || (sedmlFileIssue.type() == SEDMLSupport::SedmlFileIssue::Type::Error)) {
+                EditorWidget::EditorListItem::Type issueType = EditorWidget::EditorListItem::Type::Unknown;
 
                 switch (sedmlFileIssue.type()) {
-                case SEDMLSupport::SedmlFileIssue::Unknown:
+                case SEDMLSupport::SedmlFileIssue::Type::Unknown:
                     // We should never come here...
 
 #ifdef QT_DEBUG
@@ -339,20 +334,20 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
 #else
                     break;
 #endif
-                case SEDMLSupport::SedmlFileIssue::Information:
-                    issueType = EditorWidget::EditorListItem::Information;
+                case SEDMLSupport::SedmlFileIssue::Type::Information:
+                    issueType = EditorWidget::EditorListItem::Type::Information;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Error:
-                    issueType = EditorWidget::EditorListItem::Error;
+                case SEDMLSupport::SedmlFileIssue::Type::Error:
+                    issueType = EditorWidget::EditorListItem::Type::Error;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Warning:
-                    issueType = EditorWidget::EditorListItem::Warning;
+                case SEDMLSupport::SedmlFileIssue::Type::Warning:
+                    issueType = EditorWidget::EditorListItem::Type::Warning;
 
                     break;
-                case SEDMLSupport::SedmlFileIssue::Fatal:
-                    issueType = EditorWidget::EditorListItem::Fatal;
+                case SEDMLSupport::SedmlFileIssue::Type::Fatal:
+                    issueType = EditorWidget::EditorListItem::Type::Fatal;
 
                     break;
                 }
@@ -365,17 +360,17 @@ bool RawSedmlViewWidget::validate(const QString &pFileName, bool pOnlyErrors) co
         editorList->selectFirstItem();
 
         return res;
-    } else {
-        // The file doesn't exist, so it can't be validated
-
-        return false;
     }
+
+    // The file doesn't exist, so it can't be validated
+
+    return false;
 }
 
 //==============================================================================
 
-}   // namespace RawSEDMLView
-}   // namespace OpenCOR
+} // namespace RawSEDMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

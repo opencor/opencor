@@ -210,6 +210,7 @@ class PropertyItem : public QStandardItem
 {
 public:
     explicit PropertyItem(Property *pOwner);
+    ~PropertyItem() override;
 
     Property *owner() const;
 
@@ -228,7 +229,7 @@ class CORE_EXPORT Property : public QObject
     Q_OBJECT
 
 public:
-    enum Type {
+    enum class Type {
         Section,
         String,
         Integer,
@@ -285,7 +286,7 @@ public:
     void setValue(const QString &pValue, bool pForce = false,
                   bool pEmitSignal = true);
 
-    QVariant variantValue() const;
+    QVariant variantValue(bool pListValueIndex = true) const;
     QString stringValue() const;
 
     int integerValue() const;
@@ -482,8 +483,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

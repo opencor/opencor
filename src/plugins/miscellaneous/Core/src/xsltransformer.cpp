@@ -63,8 +63,9 @@ void XslTransformerWorker::run()
 
     QString output;
 
-    if (!xmlQuery.evaluateTo(&output))
+    if (!xmlQuery.evaluateTo(&output)) {
         output = QString();
+    }
 
     // Let people know that our XSL transformation is done
 
@@ -77,8 +78,8 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 {
     // Create and move our worker to a thread
 
-    QThread *thread = new QThread();
-    XslTransformerWorker *worker = new XslTransformerWorker(pInput, pXsl);
+    auto thread = new QThread();
+    auto worker = new XslTransformerWorker(pInput, pXsl);
 
     worker->moveToThread(thread);
 
@@ -102,8 +103,8 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

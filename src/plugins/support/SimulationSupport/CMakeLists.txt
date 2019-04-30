@@ -16,15 +16,6 @@ add_plugin(SimulationSupport
         src/simulationsupportplugin.cpp
         src/simulationsupportpythonwrapper.cpp
         src/simulationworker.cpp
-    HEADERS_MOC
-        ../../datastoreinterface.h
-        ../../solverinterface.h
-
-        src/simulation.h
-        src/simulationmanager.h
-        src/simulationsupportplugin.h
-        src/simulationsupportpythonwrapper.h
-        src/simulationworker.h
     PLUGINS
         COMBINESupport
         DataStore

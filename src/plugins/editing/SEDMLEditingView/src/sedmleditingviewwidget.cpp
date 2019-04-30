@@ -79,11 +79,11 @@ SedmlEditingViewWidget::SedmlEditingViewWidget(const QString &pContents,
 
 //==============================================================================
 
-static const auto SettingsSedmlEditingViewWidgetSizes = QStringLiteral("SedmlEditingViewWidgetSizes");
+static const char *SettingsSedmlEditingViewWidgetSizes = "SedmlEditingViewWidgetSizes";
 
 //==============================================================================
 
-void SedmlEditingViewWidget::loadSettings(QSettings *pSettings)
+void SedmlEditingViewWidget::loadSettings(QSettings &pSettings)
 {
     // Retrieve and set our sizes
     // Note #1: the editor list widget's default height is 13% of the desktop's
@@ -97,30 +97,30 @@ void SedmlEditingViewWidget::loadSettings(QSettings *pSettings)
     QVariantList defaultSedmlEditingViewWidgetSizes = QVariantList() << availableGeometryHeight
                                                                      << 0.13*availableGeometryHeight;
 
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSedmlEditingViewWidgetSizes, defaultSedmlEditingViewWidgetSizes).toList());
+    mEditingWidgetSizes = qVariantListToIntList(pSettings.value(SettingsSedmlEditingViewWidgetSizes, defaultSedmlEditingViewWidgetSizes).toList());
 
     setSizes(mEditingWidgetSizes);
 
     // Retrieve our editor widget's settings
 
-    pSettings->beginGroup(mEditorWidget->objectName());
+    pSettings.beginGroup(mEditorWidget->objectName());
         mEditorWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void SedmlEditingViewWidget::saveSettings(QSettings *pSettings) const
+void SedmlEditingViewWidget::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our sizes
 
-    pSettings->setValue(SettingsSedmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
+    pSettings.setValue(SettingsSedmlEditingViewWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
 
     // Keep track of our editor widget's settings
 
-    pSettings->beginGroup(mEditorWidget->objectName());
+    pSettings.beginGroup(mEditorWidget->objectName());
         mEditorWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
@@ -139,8 +139,9 @@ void SedmlEditingViewWidget::updateSettings(SedmlEditingViewWidget *pEditingWidg
 {
     // Make sure that we are given another editing widget
 
-    if (!pEditingWidget || (pEditingWidget == this))
+    if ((pEditingWidget == nullptr) || (pEditingWidget == this)) {
         return;
+    }
 
     // Update our sizes and editor widget's settings
 
@@ -202,8 +203,8 @@ void SedmlEditingViewWidget::itemRequested(EditorWidget::EditorListItem *pItem)
 
 //==============================================================================
 
-}   // namespace SEDMLEditingView
-}   // namespace OpenCOR
+} // namespace SEDMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

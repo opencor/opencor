@@ -46,7 +46,7 @@ namespace OpenCOR {
 namespace Core {
     class BorderedWidget;
     class ProgressBarWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -82,8 +82,8 @@ class WEBVIEWERWIDGET_EXPORT WebViewerWidget : public QWidget,
 public:
     explicit WebViewerWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     QWebView * webView() const;
     Core::ProgressBarWidget * progressBarWidget() const;
@@ -163,8 +163,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace WebViewerWidget
-}   // namespace OpenCOR
+} // namespace WebViewerWidget
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

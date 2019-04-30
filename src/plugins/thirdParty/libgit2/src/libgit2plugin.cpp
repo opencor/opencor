@@ -34,18 +34,18 @@ PLUGININFO_FUNC libgit2PluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"https://libgit2.github.com/\">libgit2</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder <a href=\"https://libgit2.github.com/\">libgit2</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to access <a href="https://libgit2.github.com/">libgit2</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour accéder <a href="https://libgit2.github.com/">libgit2</a>.)"));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo(PluginInfo::Category::ThirdParty, false, false,
                           QStringList() << "OpenSSL" << "zlib",
                           descriptions);
 }
 
 //==============================================================================
 
-}   // namespace libgit2
-}   // namespace OpenCOR
+} // namespace libgit2
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

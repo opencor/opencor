@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Ui {
     class FileOrganiserWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -62,8 +62,8 @@ public:
 
     void retranslateUi() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
 private:
     Ui::FileOrganiserWindowWindow *mGui;
@@ -82,8 +82,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace FileOrganiserWindow
-}   // namespace OpenCOR
+} // namespace FileOrganiserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

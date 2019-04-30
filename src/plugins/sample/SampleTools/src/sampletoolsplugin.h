@@ -73,8 +73,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SampleTools
-}   // namespace OpenCOR
+} // namespace SampleTools
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

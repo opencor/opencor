@@ -42,8 +42,8 @@ class FileBrowserWindowWidget : public Core::TreeViewWidget
 public:
     explicit FileBrowserWindowWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     QString currentPath() const;
 
@@ -104,8 +104,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
-}   // namespace OpenCOR
+} // namespace FileBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -81,7 +81,7 @@ void SampleViewWidget::retranslateUi()
 
 QWidget * SampleViewWidget::widget(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // Return the requested (self) widget
 
@@ -112,8 +112,8 @@ void SampleViewWidget::update(const QString &pFileName)
 
 //==============================================================================
 
-}   // namespace SampleView
-}   // namespace OpenCOR
+} // namespace SampleView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

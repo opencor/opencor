@@ -78,8 +78,9 @@ void CsvDataStoreExporterWorker::run()
 
         QList<DataStore::DataStoreVariables> variablesRuns = QList<DataStore::DataStoreVariables>();
 
-        for (int i = 0, iMax = variables.count(); i < iMax; ++i)
+        for (int i = 0, iMax = variables.count(); i < iMax; ++i) {
             variablesRuns << DataStore::DataStoreVariables();
+        }
 
         int nbOfRuns = dataStore->runsCount();
         QList<quint64> runsIndex = QList<quint64>();
@@ -92,15 +93,17 @@ void CsvDataStoreExporterWorker::run()
 
             // VOI values
 
-            for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j)
-                voiValues << dataStore->voi()->valueAt(j, i);
+            for (quint64 j = 0, jMax = dataStore->size(i); j < jMax; ++j) {
+                voiValues << dataStore->voi()->value(j, i);
+            }
 
             // Variables
 
             int j = -1;
 
-            for (auto variable : variables)
+            for (auto variable : variables) {
                 variablesRuns[++j] << variable;
+            }
         }
 
         voiValues = voiValues.toSet().toList();
@@ -116,11 +119,12 @@ void CsvDataStoreExporterWorker::run()
         // Output our header
 
         static const QString Header = "%1 (%2)%3";
-        static const QString RunNb = " | Run #%1";
+        static const QString RunNb  = " | Run #%1";
+        static const QString CrLf   = "\r\n";
 
         QString header = QString();
 
-        if (voi) {
+        if (voi != nullptr) {
             header += Header.arg(voi->uri().replace("/prime", "'").replace('/', " | "))
                             .arg(voi->unit())
                             .arg(QString());
@@ -128,8 +132,9 @@ void CsvDataStoreExporterWorker::run()
 
         for (auto variable : variables) {
             for (int i = 0; i < nbOfRuns; ++i) {
-                if (!header.isEmpty())
+                if (!header.isEmpty()) {
                     header += ',';
+                }
 
                 header += Header.arg(variable->uri().replace("/prime", "'").replace('/', " | "))
                                 .arg(variable->unit())
@@ -139,7 +144,7 @@ void CsvDataStoreExporterWorker::run()
             }
         }
 
-        header += '\n';
+        header += CrLf;
 
         bool res = file.write(header.toUtf8()) != -1;
 
@@ -153,27 +158,30 @@ void CsvDataStoreExporterWorker::run()
                 QString rowData = QString();
                 double voiValue = voiValues[i];
 
-                if (voi)
+                if (voi != nullptr) {
                     rowData += QString::number(voiValue);
+                }
 
                 bool firstRowData = true;
                 QBoolList updateRunsIndex = QBoolList();
 
-                for (int j = 0; j < nbOfRuns; ++j)
+                for (int j = 0; j < nbOfRuns; ++j) {
                     updateRunsIndex << false;
+                }
 
                 for (const auto &variableRuns : variablesRuns) {
                     int j = 0;
 
                     for (auto variableRun : variableRuns) {
-                        if (firstRowData && rowData.isEmpty())
+                        if (firstRowData && rowData.isEmpty()) {
                             firstRowData = false;
-                        else
+                        } else {
                             rowData += ',';
+                        }
 
                         if (   (runsIndex[j] < dataStore->size(j))
-                            && qFuzzyCompare(dataStore->voi()->valueAt(runsIndex[j], j), voiValue)) {
-                            rowData += QString::number(variableRun->valueAt(runsIndex[j], j));
+                            && qFuzzyCompare(dataStore->voi()->value(runsIndex[j], j), voiValue)) {
+                            rowData += QString::number(variableRun->value(runsIndex[j], j));
 
                             updateRunsIndex[j] = true;
                         }
@@ -183,16 +191,18 @@ void CsvDataStoreExporterWorker::run()
                 }
 
                 for (int j = 0; j < nbOfRuns; ++j) {
-                    if (updateRunsIndex[j])
+                    if (updateRunsIndex[j]) {
                         ++runsIndex[j];
+                    }
                 }
 
-                rowData += "\n";
+                rowData += CrLf;
 
                 res = file.write(rowData.toUtf8()) != -1;
 
-                if (!res)
+                if (!res) {
                     break;
+                }
 
                 emit progress(mDataStoreData, ++stepNb*oneOverNbOfSteps);
             }
@@ -209,8 +219,9 @@ void CsvDataStoreExporterWorker::run()
             res = dir.exists() || dir.mkpath(dir.dirName());
 
             if (res) {
-                if (QFile::exists(mDataStoreData->fileName()))
+                if (QFile::exists(mDataStoreData->fileName())) {
                     QFile::remove(mDataStoreData->fileName());
+                }
 
                 res = file.rename(mDataStoreData->fileName());
             }
@@ -241,8 +252,8 @@ DataStore::DataStoreExporterWorker * CsvDataStoreExporter::workerInstance(DataSt
 
 //==============================================================================
 
-}   // namespace CSVDataStore
-}   // namespace OpenCOR
+} // namespace CSVDataStore
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

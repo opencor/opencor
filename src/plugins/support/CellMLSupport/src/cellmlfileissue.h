@@ -42,7 +42,7 @@ namespace CellMLSupport {
 class CELLMLSUPPORT_EXPORT CellmlFileIssue
 {
 public:
-    enum Type {
+    enum class Type {
         Error,
         Warning
     };
@@ -76,8 +76,8 @@ typedef QList<CellmlFileIssue> CellmlFileIssues;
 
 //==============================================================================
 
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+} // namespace CellMLSupport
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

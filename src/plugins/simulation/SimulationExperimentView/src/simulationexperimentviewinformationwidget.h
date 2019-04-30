@@ -40,7 +40,7 @@ namespace OpenCOR {
 
 namespace Core {
     class CollapsibleWidget;
-}   // namespace Core
+} // namespace Core
 
 //==============================================================================
 
@@ -98,8 +98,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SimulationExperimentView
-}   // namespace OpenCOR
+} // namespace SimulationExperimentView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

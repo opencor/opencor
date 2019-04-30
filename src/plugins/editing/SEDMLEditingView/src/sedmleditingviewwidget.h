@@ -47,7 +47,7 @@ namespace EditorWidget {
     class EditorListItem;
     class EditorListWidget;
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
@@ -63,8 +63,8 @@ public:
     explicit SedmlEditingViewWidget(const QString &pContents, bool pReadOnly,
                                     QsciLexer *pLexer, QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
 
@@ -88,8 +88,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace SEDMLEditingView
-}   // namespace OpenCOR
+} // namespace SEDMLEditingView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

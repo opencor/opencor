@@ -36,7 +36,7 @@ class QUrl;
 
 namespace Ui {
     class HelpWindowWindow;
-}   // namespace Ui
+} // namespace Ui
 
 //==============================================================================
 
@@ -59,8 +59,8 @@ public:
 
     void retranslateUi() override;
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
 private:
     Ui::HelpWindowWindow *mGui;
@@ -84,8 +84,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace HelpWindow
-}   // namespace OpenCOR
+} // namespace HelpWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

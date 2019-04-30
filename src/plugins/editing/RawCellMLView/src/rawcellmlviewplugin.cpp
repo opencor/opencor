@@ -21,9 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Raw CellML view plugin
 //==============================================================================
 
-#include "cellmlfilemanager.h"
+#include "cellmlfile.h"
 #include "cellmlsupportplugin.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "rawcellmlviewplugin.h"
@@ -45,10 +44,10 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an <a href=\"https://www.w3.org/XML/\">XML</a> editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur <a href=\"https://www.w3.org/XML/\">XML</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin to edit <a href="http://www.cellml.org/">CellML</a> files using an <a href="https://www.w3.org/XML/">XML</a> editor.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension pour éditer des fichiers <a href="http://www.cellml.org/">CellML</a> à l'aide d'un éditeur <a href="https://www.w3.org/XML/">XML</a>.)"));
 
-    return new PluginInfo(PluginInfo::Editing, true, false,
+    return new PluginInfo(PluginInfo::Category::Editing, true, false,
                           QStringList() << "CellMLEditingView",
                           descriptions);
 }
@@ -89,7 +88,7 @@ EditorWidget::EditorWidget * RawCellMLViewPlugin::editorWidget(const QString &pF
 
 bool RawCellMLViewPlugin::isEditorWidgetUseable(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -105,7 +104,7 @@ bool RawCellMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileNam
 
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pFileName);
 
-    return crtEditorWidget?
+    return (crtEditorWidget != nullptr)?
                Core::FileManager::instance()->isDifferent(pFileName, crtEditorWidget->contents()):
                false;
 }
@@ -114,17 +113,28 @@ bool RawCellMLViewPlugin::isEditorWidgetContentsModified(const QString &pFileNam
 // File handling interface
 //==============================================================================
 
+bool RawCellMLViewPlugin::importFile(const QString &pFileName)
+{
+    Q_UNUSED(pFileName)
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                    const QString &pNewFileName,
                                    bool &pNeedFeedback)
 {
-    Q_UNUSED(pNeedFeedback);
+    Q_UNUSED(pNeedFeedback)
 
     // Save the given file
 
     EditorWidget::EditorWidget *crtEditorWidget = editorWidget(pOldFileName);
 
-    return crtEditorWidget?
+    return (crtEditorWidget != nullptr)?
                Core::writeFile(pNewFileName, crtEditorWidget->contents()):
                false;
 }
@@ -133,7 +143,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
 
 void RawCellMLViewPlugin::fileOpened(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -142,7 +152,7 @@ void RawCellMLViewPlugin::fileOpened(const QString &pFileName)
 
 void RawCellMLViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -151,7 +161,7 @@ void RawCellMLViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 void RawCellMLViewPlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -188,7 +198,7 @@ void RawCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void RawCellMLViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 }
@@ -220,8 +230,8 @@ bool RawCellMLViewPlugin::definesPluginInterfaces()
 bool RawCellMLViewPlugin::pluginInterfacesOk(const QString &pFileName,
                                              QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -255,38 +265,38 @@ void RawCellMLViewPlugin::finalizePlugin()
 
 void RawCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
+void RawCellMLViewPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Raw CellML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
+void RawCellMLViewPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Raw CellML view widget settings
 
-    pSettings->beginGroup(mViewWidget->objectName());
+    pSettings.beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void RawCellMLViewPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -299,7 +309,7 @@ ViewInterface::Mode RawCellMLViewPlugin::viewMode() const
 {
     // Return our mode
 
-    return EditingMode;
+    return ViewInterface::Mode::Editing;
 }
 
 //==============================================================================
@@ -341,8 +351,8 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
     CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::fileVersion(pFileName);
 
     if (   !Core::FileManager::instance()->isNew(pFileName)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0)
-        &&  (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1)) {
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_0)
+        &&  (cellmlVersion != CellMLSupport::CellmlFile::Version::Cellml_1_1)) {
         return nullptr;
     }
 
@@ -375,7 +385,7 @@ QString RawCellMLViewPlugin::viewName() const
 
 QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+    Q_UNUSED(pFileName)
 
     // We don't handle this interface...
 
@@ -386,8 +396,8 @@ QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace RawCellMLView
-}   // namespace OpenCOR
+} // namespace RawCellMLView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

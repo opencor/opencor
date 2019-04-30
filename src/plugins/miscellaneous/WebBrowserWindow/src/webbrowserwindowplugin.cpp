@@ -46,7 +46,7 @@ PLUGININFO_FUNC WebBrowserWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to browse the Web."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour naviguer sur le Web."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous, true, false,
+    return new PluginInfo(PluginInfo::Category::Miscellaneous, true, false,
                           QStringList() << "Core" << "PythonQtSupport" << "WebViewerWidget",
                           descriptions);
 }
@@ -84,8 +84,8 @@ bool WebBrowserWindowPlugin::definesPluginInterfaces()
 bool WebBrowserWindowPlugin::pluginInterfacesOk(const QString &pFileName,
                                                 QObject *pInstance)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pInstance);
+    Q_UNUSED(pFileName)
+    Q_UNUSED(pInstance)
 
     // We don't handle this interface...
 
@@ -122,38 +122,38 @@ void WebBrowserWindowPlugin::finalizePlugin()
 
 void WebBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    Q_UNUSED(pLoadedPlugins);
+    Q_UNUSED(pLoadedPlugins)
 
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void WebBrowserWindowPlugin::loadSettings(QSettings *pSettings)
+void WebBrowserWindowPlugin::loadSettings(QSettings &pSettings)
 {
     // Retrieve our Web Browser window settings
 
-    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+    pSettings.beginGroup(mWebBrowserWindowWindow->objectName());
         mWebBrowserWindowWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
-void WebBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
+void WebBrowserWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     // Keep track of our Web Browser window settings
 
-    pSettings->beginGroup(mWebBrowserWindowWindow->objectName());
+    pSettings.beginGroup(mWebBrowserWindowWindow->objectName());
         mWebBrowserWindowWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    pSettings.endGroup();
 }
 
 //==============================================================================
 
 void WebBrowserWindowPlugin::handleUrl(const QUrl &pUrl)
 {
-    Q_UNUSED(pUrl);
+    Q_UNUSED(pUrl)
 
     // We don't handle this interface...
 }
@@ -221,8 +221,8 @@ WebBrowserWindowWidget * WebBrowserWindowPlugin::browserWidget(void) const
 
 //==============================================================================
 
-}   // namespace WebBrowserWindow
-}   // namespace OpenCOR
+} // namespace WebBrowserWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

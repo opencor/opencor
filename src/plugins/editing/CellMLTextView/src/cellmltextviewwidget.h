@@ -46,13 +46,13 @@ namespace OpenCOR {
 namespace EditorWidget {
     class EditorListWidget;
     class EditorWidget;
-}   // namespace EditorWidget
+} // namespace EditorWidget
 
 //==============================================================================
 
-namespace QScintillaSupport {
+namespace QScintillaWidget {
     class QScintillaWidget;
-}   // namespace QScintillaSupport
+} // namespace QScintillaWidget
 
 //==============================================================================
 
@@ -134,12 +134,10 @@ class CellmlTextViewWidget : public Core::ViewWidget
 public:
     explicit CellmlTextViewWidget(QWidget *pParent);
 
-    void loadSettings(QSettings *pSettings) override;
-    void saveSettings(QSettings *pSettings) const override;
+    void loadSettings(QSettings &pSettings) override;
+    void saveSettings(QSettings &pSettings) const override;
 
     void retranslateUi() override;
-
-    bool contains(const QString &pFileName) const;
 
     void initialize(const QString &pFileName, bool pUpdate = true);
     void finalize(const QString &pFileName);
@@ -205,8 +203,8 @@ private slots:
 
 //==============================================================================
 
-}   // namespace CellMLTextView
-}   // namespace OpenCOR
+} // namespace CellMLTextView
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

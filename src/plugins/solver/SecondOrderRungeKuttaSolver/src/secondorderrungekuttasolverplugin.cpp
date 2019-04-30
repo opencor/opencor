@@ -35,10 +35,10 @@ PLUGININFO_FUNC SecondOrderRungeKuttaSolverPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin that implements the second-order <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">Runge-Kutta method</a> to solve <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">ODEs</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui implémente la <a href=\"http://en.wikipedia.org/wiki/Runge–Kutta_methods\">méthode Runge-Kutta</a> du deuxième ordre pour résoudre des <a href=\"https://en.wikipedia.org/wiki/Ordinary_differential_equation\">EDOs</a>."));
+    descriptions.insert("en", QString::fromUtf8(R"(a plugin that implements the second-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta method</a> to solve <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">ODEs</a>.)"));
+    descriptions.insert("fr", QString::fromUtf8(R"(une extension qui implémente la <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">méthode Runge-Kutta</a> du deuxième ordre pour résoudre des <a href="https://en.wikipedia.org/wiki/Ordinary_differential_equation">EDOs</a>.)"));
 
-    return new PluginInfo(PluginInfo::Solver, true, false,
+    return new PluginInfo(PluginInfo::Category::Solver, true, false,
                           QStringList(),
                           descriptions);
 }
@@ -72,12 +72,18 @@ QString SecondOrderRungeKuttaSolverPlugin::id(const QString &pKisaoId) const
 {
     // Return the id for the given KiSAO id
 
-    if (!pKisaoId.compare("KISAO:0000381"))
-        return solverName();
-    else if (!pKisaoId.compare("KISAO:0000483"))
-        return StepId;
+    static const QString Kisao0000381 = "KISAO:0000381";
+    static const QString Kisao0000483 = "KISAO:0000483";
 
-    return QString();
+    if (pKisaoId == Kisao0000381) {
+        return solverName();
+    }
+
+    if (pKisaoId == Kisao0000483) {
+        return StepId;
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -88,12 +94,15 @@ QString SecondOrderRungeKuttaSolverPlugin::kisaoId(const QString &pId) const
     // Note: our second-order Runge-Kutta method is effectively the midpoint
     //       method...
 
-    if (!pId.compare(solverName()))
+    if (pId == solverName()) {
         return "KISAO:0000381";
-    else if (!pId.compare(StepId))
-        return "KISAO:0000483";
+    }
 
-    return QString();
+    if (pId == StepId) {
+        return "KISAO:0000483";
+    }
+
+    return {};
 }
 
 //==============================================================================
@@ -102,7 +111,7 @@ Solver::Type SecondOrderRungeKuttaSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
-    return Solver::Ode;
+    return Solver::Type::Ode;
 }
 
 //==============================================================================
@@ -125,24 +134,24 @@ Solver::Properties SecondOrderRungeKuttaSolverPlugin::solverProperties() const
     stepDescriptions.insert("en", QString::fromUtf8("Step"));
     stepDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
+    return Solver::Properties() << Solver::Property(Solver::Property::Type::DoubleGt0, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
 }
 
 //==============================================================================
 
 QMap<QString, bool> SecondOrderRungeKuttaSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
-    Q_UNUSED(pSolverPropertiesValues);
+    Q_UNUSED(pSolverPropertiesValues)
 
     // We don't handle this interface...
 
-    return QMap<QString, bool>();
+    return {};
 }
 
 //==============================================================================
 
-}   // namespace SecondOrderRungeKuttaSolver
-}   // namespace OpenCOR
+} // namespace SecondOrderRungeKuttaSolver
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

@@ -16,22 +16,10 @@ add_plugin(PMRSupport
         src/pmrwebservice.cpp
         src/pmrwebservicemanager.cpp
         src/pmrwebserviceresponse.cpp
+        src/pmrwebviewerdialog.cpp
         src/pmrworkspace.cpp
         src/pmrworkspacefilenode.cpp
         src/pmrworkspacemanager.cpp
-    HEADERS_MOC
-        ../../preferencesinterface.h
-
-        src/pmrauthentication.h
-        src/pmrexposure.h
-        src/pmrsupportplugin.h
-        src/pmrsupportpreferenceswidget.h
-        src/pmrwebservice.h
-        src/pmrwebservicemanager.h
-        src/pmrwebserviceresponse.h
-        src/pmrworkspace.h
-        src/pmrworkspacefilenode.h
-        src/pmrworkspacemanager.h
     UIS
         src/pmrsupportpreferenceswidget.ui
     PLUGINS

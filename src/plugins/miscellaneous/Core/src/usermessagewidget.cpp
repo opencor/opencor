@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QBuffer>
 #include <QFont>
 #include <QIcon>
@@ -130,9 +131,9 @@ void UserMessageWidget::updateGui()
                                        "%3"
                                        "    </tbody>\n"
                                        "</table>\n";
-        static const QString Icon = "            <td>\n"
-                                    "                <img src=\"%1\">\n"
-                                    "            </td>\n";
+        static const QString Icon =  "            <td>\n"
+                                    R"(                <img src="%1">)""\n"
+                                     "            </td>\n";
         static const QString ExtraMessage = "        <tr valign=middle>\n"
                                             "%1"
                                             "            <td align=center>\n"
@@ -141,9 +142,11 @@ void UserMessageWidget::updateGui()
                                             "        </tr>\n";
         static const QString IconSpace = "            <td/>\n";
 
+        int iconSize = int(mScale*32/qApp->devicePixelRatio());
+
         setText(Message.arg(mIcon.isEmpty()?
                                 QString():
-                                Icon.arg(iconDataUri(mIcon, int(mScale*32), int(mScale*32))))
+                                Icon.arg(iconDataUri(mIcon, iconSize, iconSize)))
                        .arg(mMessage)
                        .arg(mExtraMessage.isEmpty()?
                                 QString():
@@ -171,9 +174,9 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
 {
     // Set our message, if needed
 
-    if (   pIcon.compare(mIcon)
-        || pMessage.compare(mMessage)
-        || pExtraMessage.compare(mExtraMessage)) {
+    if (   (pIcon != mIcon)
+        || (pMessage != mMessage)
+        || (pExtraMessage != mExtraMessage)) {
         // Keep track of the new values for our icon, message and extra message
 
         mIcon = pIcon;
@@ -207,8 +210,8 @@ void UserMessageWidget::resetMessage()
 
 //==============================================================================
 
-}   // namespace Core
-}   // namespace OpenCOR
+} // namespace Core
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

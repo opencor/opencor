@@ -227,8 +227,6 @@ add_plugin(PythonQtAPI
         ../../plugininfo.cpp
 
         src/pythonqtapiplugin.cpp
-    HEADERS_MOC
-        src/pythonqtapiplugin.h
     PLUGINS
         Core
     EXTERNAL_BINARIES_DIR

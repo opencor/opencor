@@ -53,7 +53,7 @@ GeneralPreferencesWidget::GeneralPreferencesWidget(QWidget *pParent) :
 
     mGui->styleValue->addItems(styles);
 
-    mStyle = mSettings->value(SettingsPreferencesStyle, SettingsPreferencesStyleDefault).toString();
+    mStyle = mSettings.value(SettingsPreferencesStyle, SettingsPreferencesStyleDefault).toString();
 
     mGui->styleValue->setCurrentText(mStyle);
 
@@ -75,7 +75,7 @@ bool GeneralPreferencesWidget::preferencesChanged() const
 {
     // Return whether our preferences have changed
 
-    return mGui->styleValue->currentText().compare(mStyle);
+    return mGui->styleValue->currentText() != mStyle;
 }
 
 //==============================================================================
@@ -95,7 +95,7 @@ void GeneralPreferencesWidget::savePreferences()
 
     QString style = mGui->styleValue->currentText();
 
-    mSettings->setValue(SettingsPreferencesStyle, style);
+    mSettings.setValue(SettingsPreferencesStyle, style);
 
     // Update our style
 
@@ -104,7 +104,7 @@ void GeneralPreferencesWidget::savePreferences()
 
 //==============================================================================
 
-}   // namespace OpenCOR
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file

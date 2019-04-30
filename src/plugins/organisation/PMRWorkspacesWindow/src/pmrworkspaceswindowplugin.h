@@ -42,6 +42,10 @@ PLUGININFO_FUNC PMRWorkspacesWindowPluginInfo();
 
 //==============================================================================
 
+static const auto PluginName = QStringLiteral("PMRWorkspacesWindow");
+
+//==============================================================================
+
 class PmrWorkspacesWindowWindow;
 
 //==============================================================================
@@ -74,8 +78,8 @@ private:
 
 //==============================================================================
 
-}   // namespace PMRWorkspacesWindow
-}   // namespace OpenCOR
+} // namespace PMRWorkspacesWindow
+} // namespace OpenCOR
 
 //==============================================================================
 // End of file
