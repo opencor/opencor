@@ -1059,7 +1059,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
                 }
 
-            // Arythmetic operators
+            // Arithmetic operators
 
             } else if (   mathmlNode(domNode, "plus")
                        || mathmlNode(domNode, "minus")) {
