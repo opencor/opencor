@@ -1195,6 +1195,9 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                 return {};
             }
         }
+
+    // Piecewise statement
+
     } else if (mathmlNode(domNode, "piecewise")) {
         if (mPiecewiseStatementUsed) {
             mErrorMessage = tr("A 'piecewise' element cannot be used within another 'piecewise' element.");
