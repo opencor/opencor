@@ -1483,7 +1483,6 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
     MathmlNode operatorNodeType = MathmlNode::Unknown;
 
     if (childNodesCount(pDomNode) == 2) {
-
         for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
             childNode = childNodes.item(i);
 
