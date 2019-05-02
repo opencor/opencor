@@ -85,7 +85,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
             PyErr_SetString(PyExc_ValueError, QObject::tr("unable to get simulations's runtime").toStdString().c_str());
 
-            return NULL;
+            return nullptr;
         }
 
         // Set the default properties for each of our solvers
@@ -136,7 +136,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
                 PyErr_SetString(PyExc_ValueError, initialisationError.toStdString().c_str());
 
-                return NULL;
+                return nullptr;
             }
         }
         // Reset both the simulation's data and results (well, initialise in the
@@ -174,7 +174,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
 
-        return NULL;
+        return nullptr;
     }
 
     return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
@@ -201,7 +201,7 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
 
-        return NULL;
+        return nullptr;
     }
 
     return initializeSimulation(Core::localFileName(url));
@@ -240,7 +240,7 @@ static PyMethodDef pythonSimulationSupportMethods[] = {
     {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
     {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
     {"closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation."},
-    {NULL, NULL, 0, NULL}
+    {nullptr, nullptr, 0, nullptr}
 };
 
 //==============================================================================

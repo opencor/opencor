@@ -73,7 +73,7 @@ static bool init_numpy()
 
 static DataStoreValue *getDataStoreValue(PyObject *valuesDict, PyObject *key)
 {
-    DataStoreValue *dataStoreValue = 0;
+    DataStoreValue *dataStoreValue = nullptr;
 
     PyObject *object = PyDict_GetItem(valuesDict, key);
     PythonQtInstanceWrapper *wrappedObject = PythonQtSupport::getInstanceWrapper(object);
@@ -106,7 +106,7 @@ static PyObject *DataStoreValuesDict_subscript(PyObject *valuesDict, PyObject *k
 
 static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key, PyObject *value)
 {
-    if (value == 0) {
+    if (value == nullptr) {
         return PyDict_DelItem(valuesDict, key);
     }
 
@@ -154,13 +154,13 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
     PyDictObject *mp = (PyDictObject *)valuesDict;
 
     Py_ssize_t i;
-    PyObject *key = NULL, *value = NULL;
+    PyObject *key = nullptr, *value = nullptr;
     _PyUnicodeWriter writer;
     int first;
 
     i = Py_ReprEnter((PyObject *)mp);
     if (i != 0) {
-        return i > 0 ? PyUnicode_FromString("{...}") : NULL;
+        return i > 0 ? PyUnicode_FromString("{...}") : nullptr;
     }
 
     if (mp->ma_used == 0) {
@@ -195,7 +195,7 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
         first = 0;
 
         s = PyObject_Repr(key);
-        if (s == NULL)
+        if (s == nullptr)
             goto error;
         res = _PyUnicodeWriter_WriteStr(&writer, s);
         Py_DECREF(s);
@@ -214,7 +214,7 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
         }
 
         s = PyObject_Repr(value);
-        if (s == NULL)
+        if (s == nullptr)
             goto error;
         res = _PyUnicodeWriter_WriteStr(&writer, s);
         Py_DECREF(s);
@@ -238,7 +238,7 @@ error:
     _PyUnicodeWriter_Dealloc(&writer);
     Py_XDECREF(key);
     Py_XDECREF(value);
-    return NULL;
+    return nullptr;
 }
 
 //==============================================================================
@@ -297,7 +297,7 @@ DataStorePythonWrapper::DataStorePythonWrapper(PyObject *pModule, QObject *pPare
 
     // Initialise NumPy
 
-    if (OpenCOR_Python_Wrapper_PyArray_API == NULL) {
+    if (OpenCOR_Python_Wrapper_PyArray_API == nullptr) {
         if (!init_numpy()) qFatal("Unable to initialise NumPy API...");
     }
 
@@ -317,9 +317,9 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreArray *pDataStoreArray
     if (pDataStoreArray) {
         auto numpyArray = new NumpyPythonWrapper(pDataStoreArray);
         return numpyArray->numpyArray();
-    } else {
-        Py_RETURN_NONE;
     }
+
+    Py_RETURN_NONE;
 }
 
 //==============================================================================
@@ -329,9 +329,9 @@ PyObject * DataStorePythonWrapper::newNumPyArray(DataStoreVariable *pDataStoreVa
     if (pDataStoreVariable && pDataStoreVariable->array(pRun)) {
         auto numpyArray = new NumpyPythonWrapper(pDataStoreVariable->array(pRun), pDataStoreVariable->size());
         return numpyArray->numpyArray();
-    } else {
-        Py_RETURN_NONE;
     }
+
+    Py_RETURN_NONE;
 }
 
 
@@ -342,10 +342,9 @@ double DataStorePythonWrapper::value(DataStoreVariable *pDataStoreVariable,
 {
     if (pDataStoreVariable && pDataStoreVariable->array()) {
         return pDataStoreVariable->value(pPosition, pRun);
-    } else {
-        throw std::runtime_error("'NoneType' object is not subscriptable");
-        return 0.0;
     }
+
+    throw std::runtime_error("'NoneType' object is not subscriptable");
 }
 
 //==============================================================================
@@ -361,7 +360,7 @@ PyObject * DataStorePythonWrapper::dataStoreValuesDict(
     const DataStoreValues *pDataStoreValues,
     SimulationSupport::SimulationDataUpdatedFunction *pSimulationDataUpdatedFunction)
 {
-    PyObject *valuesDict = PyDict_Type.tp_new(&DataStoreValuesDict_Type, NULL, NULL);
+    PyObject *valuesDict = PyDict_Type.tp_new(&DataStoreValuesDict_Type, nullptr, nullptr);
     valuesDict->ob_type = &DataStoreValuesDict_Type;
 
     ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;

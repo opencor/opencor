@@ -71,7 +71,7 @@ static PyObject *getSimulation(const QString &pFileName,
 
             PyErr_SetString(PyExc_ValueError, QObject::tr("unable to get simulations's runtime").toStdString().c_str());
 
-            return NULL;
+            return nullptr;
         }
         // Let the simulation's widget know when we start running
         // Note: connect is also in the PythonQt namespace
@@ -127,7 +127,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
 
-        return NULL;
+        return nullptr;
     }
 
     return initializeSimulation(QFileInfo(fileName).canonicalFilePath());
@@ -154,7 +154,7 @@ static PyObject *openRemoteSimulation(PyObject *self, PyObject *args)
     if (!ioError.isEmpty()) {
         PyErr_SetString(PyExc_IOError, ioError.toStdString().c_str());
 
-        return NULL;
+        return nullptr;
     }
 
     return initializeSimulation(Core::localFileName(url));
@@ -178,7 +178,7 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
             if (!Core::centralWidget()->closeFile(simulation->fileName())) {
                 PyErr_SetString(PyExc_IOError, "unable to close file");
 
-                return NULL;
+                return nullptr;
             }
         }
     }
@@ -209,7 +209,7 @@ static PyMethodDef pythonSimulationExperimentViewMethods[] = {
     {"openSimulation", openSimulation, METH_VARARGS, "Open a simulation."},
     {"openRemoteSimulation", openRemoteSimulation, METH_VARARGS, "Open a remote simulation."},
     {"closeSimulation", closeSimulation, METH_VARARGS, "Close a simulation."},
-    {NULL, NULL, 0, NULL}
+    {nullptr, nullptr, 0, nullptr}
 };
 
 //==============================================================================
