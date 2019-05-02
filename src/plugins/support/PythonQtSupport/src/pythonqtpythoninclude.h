@@ -25,7 +25,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#if defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wreserved-id-macro"
+#endif
+
 #include <PythonQt/PythonQtPythonInclude.h>
+
+#if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 // End of file
