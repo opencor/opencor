@@ -1523,8 +1523,8 @@ QString Simulation::furtherInitialize() const
 
     for (unsigned int i = 0, iMax = sedmlAlgorithm->getNumAlgorithmParameters(); i < iMax; ++i) {
         const libsedml::SedAlgorithmParameter *sedmlAlgorithmParameter = sedmlAlgorithm->getAlgorithmParameter(i);
-        QString kisaoId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
-        QString id = odeSolverInterface->id(kisaoId);
+        QString kisaoParameterId = QString::fromStdString(sedmlAlgorithmParameter->getKisaoID());
+        QString id = odeSolverInterface->id(kisaoParameterId);
 
         QVariant solverPropertyValue = QString::fromStdString(sedmlAlgorithmParameter->getValue());
 
