@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python Qt Support plugin
 //==============================================================================
 
-#include "CTK/ctkAbstractPythonManager.h"
 #include "corecliutils.h"
 #include "pythoninterface.h"
 #include "pythonqtsupportplugin.h"

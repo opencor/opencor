@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#include "CTK/ctkAbstractPythonManager.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
 #include "pythonqtsupportglobal.h"
