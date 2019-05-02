@@ -31,7 +31,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#if defined(__GNUC__)
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wold-style-cast"
+	#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+	#pragma GCC diagnostic ignored "-Wshift-sign-overflow"
+#endif
+
 #include <PythonQt/PythonQt.h>
+
+#if defined(__GNUC__)
+	#pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 

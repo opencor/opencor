@@ -29,7 +29,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NPY_NO_DEPRECATED_API NPY_1_8_API_VERSION
 #define PY_ARRAY_UNIQUE_SYMBOL OpenCOR_Python_Wrapper_PyArray_API
 
+#if defined(__GNUC__)
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wcast-qual"
+	#pragma GCC diagnostic ignored "-Wduplicate-enum"
+	#pragma GCC diagnostic ignored "-Wextra-semi"
+	#pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
+	#pragma GCC diagnostic ignored "-Wold-style-cast"
+	#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+	#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+	#pragma GCC diagnostic ignored "-Wundef"
+#endif
+
 #include <numpy/arrayobject.h>
+
+#if defined(__GNUC__)
+	#pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 // End of file

@@ -28,7 +28,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#if defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wfloat-equal"
+    #pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
+
+//==============================================================================
+
+#if defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wcast-qual"
+    #pragma GCC diagnostic ignored "-Wextra-semi"
+    #pragma GCC diagnostic ignored "-Wreserved-id-macro"
+    #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+ #endif
+
 #include <PythonQt/PythonQtConversion.h>
+
+#if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 
@@ -420,6 +440,12 @@ PyObject * NumpyPythonWrapper::pythonObject() const
 
 }   // namespace DataStore
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 // End of file

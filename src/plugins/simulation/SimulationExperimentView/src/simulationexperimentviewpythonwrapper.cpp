@@ -37,6 +37,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#if defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wfloat-equal"
+    #pragma GCC diagnostic ignored "-Wold-style-cast"
+    #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -216,8 +225,15 @@ SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyO
 }
 
 //==============================================================================
+
 }   // namespace SimulationExperimentView
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 // End of file

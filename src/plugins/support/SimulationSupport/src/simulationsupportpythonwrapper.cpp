@@ -48,6 +48,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
+#if defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wfloat-equal"
+    #pragma GCC diagnostic ignored "-Wold-style-cast"
+    #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+#endif
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SimulationSupport {
 
@@ -516,6 +525,12 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
     }
     return gradientsDict;
 }
+
+//==============================================================================
+
+#if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#endif
 
 //==============================================================================
 

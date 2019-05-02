@@ -28,7 +28,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma push_macro("slots")
 #undef slots
 
+#if defined(__GNUC__)
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+#endif
+
 #include "Python.h"
+
+#if defined(__GNUC__)
+	#pragma GCC diagnostic pop
+#endif
 
 #pragma pop_macro("slots")
 

@@ -18,8 +18,14 @@
 
 =========================================================================*/
 
-#ifndef __ctkAbstractPythonManager_h
-#define __ctkAbstractPythonManager_h
+#pragma once
+
+#if defined(__GNUC__)
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wreserved-id-macro"
+  #pragma GCC diagnostic ignored "-Wextra-semi"
+  #pragma GCC diagnostic ignored "-Wshadow-field"
+#endif
 
 // Qt includes
 #include <QObject>
@@ -172,4 +178,7 @@ private:
   Q_DISABLE_COPY(ctkAbstractPythonManager);
 
 };
+
+#if defined(__GNUC__)
+  #pragma GCC diagnostic pop
 #endif
