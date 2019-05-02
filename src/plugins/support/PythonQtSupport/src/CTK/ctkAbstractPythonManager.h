@@ -20,18 +20,13 @@
 
 #pragma once
 
-#if defined(__GNUC__)
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wreserved-id-macro"
-  #pragma GCC diagnostic ignored "-Wextra-semi"
-  #pragma GCC diagnostic ignored "-Wshadow-field"
-#endif
-
 // Qt includes
 #include <QObject>
 #include <QList>
 #include <QStringList>
 #include <QVariant>
+
+#include "pythonbegin.h"
 
 // PythonQt includes
 #include <PythonQt/PythonQtPythonInclude.h> // For PyObject
@@ -179,6 +174,5 @@ private:
 
 };
 
-#if defined(__GNUC__)
-  #pragma GCC diagnostic pop
-#endif
+#include "pythonend.h"
+

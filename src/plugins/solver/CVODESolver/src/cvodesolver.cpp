@@ -417,14 +417,9 @@ void CvodeSolver::initialize(double pVoi, int pRatesStatesCount,
 
         mSensitivityVectors = N_VCloneVectorArrayEmpty_Serial(mSensitivityVectorsSize, mStatesVector);
         for (int i = 0; i < mSensitivityVectorsSize; i++) {
-#ifdef __GNUC__
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
+#include "sundialsbegin.h"
             NV_DATA_S(mSensitivityVectors[i]) = pGradients;
-#ifdef __GNUC__
-    #pragma GCC diagnostic pop
-#endif
+#include "sundialsend.h"
             pGradients += pRatesStatesCount;
         }
 

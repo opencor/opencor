@@ -21,6 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python Qt support functions
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+
+//==============================================================================
+
 #include "pythonqtsupport.h"
 
 //==============================================================================
@@ -67,18 +75,9 @@ PyObject *wrapQObject(QObject *pQObject)
 
 PythonQtInstanceWrapper *getInstanceWrapper(PyObject *self)
 {
-#if defined(__GNUC__)
-	#pragma GCC diagnostic push
-	#pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
-
     if (self && PyObject_TypeCheck(self, &PythonQtInstanceWrapper_Type)) {
         return (PythonQtInstanceWrapper *)self;
     }
-
-#if defined(__GNUC__)
-	#pragma GCC diagnostic pop
-#endif
 
     return nullptr;
 }
@@ -87,6 +86,10 @@ PythonQtInstanceWrapper *getInstanceWrapper(PyObject *self)
 
 }   // namespace PythonQtSupport
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#include "pythonend.h"
 
 //==============================================================================
 // End of file

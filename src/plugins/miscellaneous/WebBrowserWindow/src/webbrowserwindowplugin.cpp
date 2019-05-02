@@ -24,13 +24,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "webbrowserwindowplugin.h"
-#include "webbrowserwindowpythonwrapper.h"
 #include "webbrowserwindowwindow.h"
 
 //==============================================================================
 
 #include <QMainWindow>
 #include <QSettings>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+    #include "webbrowserwindowpythonwrapper.h"
+#include "pythonend.h"
 
 //==============================================================================
 

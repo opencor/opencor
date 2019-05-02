@@ -22,19 +22,11 @@
 #include <QDir>
 #include <QDebug>
 
+// Setup compiler pragmas for Python
+#include "pythonbegin.h"
+
 // CTK includes
 #include "CTK/ctkAbstractPythonManager.h"
-
-#if defined(__GNUC__)
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wcovered-switch-default"
-  #pragma GCC diagnostic ignored "-Wextra-semi"
-  #pragma GCC diagnostic ignored "-Wold-style-cast"
-  #pragma GCC diagnostic ignored "-Wreserved-id-macro"
-  #pragma GCC diagnostic ignored "-Wshadow"
-  #pragma GCC diagnostic ignored "-Wshift-sign-overflow"
-  #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#endif
 
 // PythonQT includes
 #include <PythonQt/PythonQt.h>
@@ -45,13 +37,6 @@
 
 // STD includes
 #include <csignal>
-
-#ifdef __GNUC__
-// Disable warnings related to signal() function
-// See http://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Pragmas.html
-// Note: Ideally the incriminated functions and macros should be fixed upstream ...
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
 
 //-----------------------------------------------------------------------------
 class ctkAbstractPythonManagerPrivate
@@ -584,6 +569,8 @@ void ctkAbstractPythonManager::printStderr(const QString& text)
   std::cerr << qPrintable(text);
 }
 
-#if defined(__GNUC__)
-  #pragma GCC diagnostic pop
-#endif
+//-----------------------------------------------------------------------------
+
+#include "pythonend.h"
+
+//-----------------------------------------------------------------------------

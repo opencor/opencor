@@ -22,13 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "jupyterkernelplugin.h"
-#include "pythonqtsupport.h"
 
 //==============================================================================
 
 #include <QCoreApplication>
 #include <QSettings>
 #include <QTimer>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+    #include "pythonqtsupport.h"
+#include "pythonend.h"
 
 //==============================================================================
 

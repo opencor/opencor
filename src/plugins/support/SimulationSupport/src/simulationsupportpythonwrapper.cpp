@@ -24,14 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "corecliutils.h"
 #include "cellmlfileruntime.h"
 #include "datastoreinterface.h"
-#include "datastorepythonwrapper.h"
 #include "filemanager.h"
 #include "interfaces.h"
-#include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationmanager.h"
 #include "simulationsupportplugin.h"
-#include "simulationsupportpythonwrapper.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -44,16 +41,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <stdexcept>
+#include "pythonbegin.h"
+
+#include "datastorepythonwrapper.h"
+#include "pythonqtsupport.h"
+#include "simulationsupportpythonwrapper.h"
 
 //==============================================================================
 
-#if defined(__GNUC__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wfloat-equal"
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
-    #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#endif
+#include <stdexcept>
 
 //==============================================================================
 
@@ -523,14 +519,12 @@ PyObject * SimulationSupportPythonWrapper::gradients(SimulationResults *pSimulat
 
 //==============================================================================
 
-#if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-#endif
+}   // namespace SimulationSupport
+}   // namespace OpenCOR
 
 //==============================================================================
 
-}   // namespace SimulationSupport
-}   // namespace OpenCOR
+#include "pythonend.h"
 
 //==============================================================================
 // End of file

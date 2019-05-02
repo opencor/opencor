@@ -22,12 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "pythonqtconsolewindow.h"
-#include "pythonqtsupport.h"
 
 //==============================================================================
 
-#include <PythonQt/PythonQt.h>
+#include "pythonbegin.h"
+
+#include "pythonqtconsolewindow.h"
+#include "pythonqtsupport.h"
+
+#include "PythonQt/PythonQt.h"
 
 //==============================================================================
 
@@ -164,6 +167,10 @@ PythonQtConsoleWindow::~PythonQtConsoleWindow()
 
 }   // namespace PythonQtConsoleWindow
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#include "pythonend.h"
 
 //==============================================================================
 // End of file

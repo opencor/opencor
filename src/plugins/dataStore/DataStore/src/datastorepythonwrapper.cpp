@@ -22,33 +22,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreinterface.h"
+
+//==============================================================================
+
+#include <Qt>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+
 #include "datastorepythonwrapper.h"  // Needs to come before numpy includes
 #include "datastorenumpy.h"
+
 #include "pythonqtsupport.h"
 
-//==============================================================================
-
-#if defined(__GNUC__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wfloat-equal"
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
-
-//==============================================================================
-
-#if defined(__GNUC__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wcast-qual"
-    #pragma GCC diagnostic ignored "-Wextra-semi"
-    #pragma GCC diagnostic ignored "-Wreserved-id-macro"
-    #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
- #endif
-
-#include <PythonQt/PythonQtConversion.h>
-
-#if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-#endif
+#include "PythonQt/PythonQtConversion.h"
 
 //==============================================================================
 
@@ -115,10 +103,15 @@ static int DataStoreValuesDict_ass_subscript(PyObject *valuesDict, PyObject *key
 
         if (dataStoreValue) {
             auto newValue = PyFloat_AS_DOUBLE(PyNumber_Float(value));
-
+#if defined(__GNUC__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
             if (dataStoreValue->value() != newValue) {
                 dataStoreValue->setValue(newValue);
-
+#if defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#endif
                 // Let our SimulationData object know that data values have changed
 
                 SimulationSupport::SimulationDataUpdatedFunction *simulationDataUpdatedFunction =
@@ -243,11 +236,6 @@ error:
 
 //==============================================================================
 
-#if defined(__GNUC__)
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#endif
-
 // A `DataStoreValuesDict` is a dictionary sub-class for mapping between the values
 // of a DataStoreValues list and Python.
 
@@ -284,10 +272,6 @@ PyTypeObject DataStorePythonWrapper::DataStoreValuesDict_Type = {
     0,                                          /* tp_getset */
     &PyDict_Type,                               /* tp_base */
 };
-
-#if defined(__GNUC__)
-#   pragma GCC diagnostic pop
-#endif
 
 //==============================================================================
 
@@ -443,9 +427,7 @@ PyObject * NumpyPythonWrapper::pythonObject() const
 
 //==============================================================================
 
-#if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-#endif
+#include "pythonend.h"
 
 //==============================================================================
 // End of file

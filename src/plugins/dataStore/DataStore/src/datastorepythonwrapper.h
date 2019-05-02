@@ -26,11 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreglobal.h"
-#include "pythonqtpythoninclude.h"
 
 //==============================================================================
 
 #include <QObject>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+    #include "PythonQt/PythonQtPythonInclude.h"
+#include "pythonend.h"
 
 //==============================================================================
 

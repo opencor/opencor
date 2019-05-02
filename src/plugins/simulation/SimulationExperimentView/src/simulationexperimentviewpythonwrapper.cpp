@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "centralwidget.h"
 #include "coreguiutils.h"
 #include "file.h"
-#include "pythonqtsupport.h"
 #include "simulation.h"
 #include "simulationexperimentviewplugin.h"
 #include "simulationexperimentviewpythonwrapper.h"
@@ -33,16 +32,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //==============================================================================
 
-#include <stdexcept>
+#include "pythonbegin.h"
+
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
-#if defined(__GNUC__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wfloat-equal"
-    #pragma GCC diagnostic ignored "-Wold-style-cast"
-    #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#endif
+#include <stdexcept>
 
 //==============================================================================
 
@@ -226,9 +222,7 @@ SimulationExperimentViewPythonWrapper::SimulationExperimentViewPythonWrapper(PyO
 
 //==============================================================================
 
-#if defined(__GNUC__)
-    #pragma GCC diagnostic pop
-#endif
+#include "pythonend.h"
 
 //==============================================================================
 // End of file

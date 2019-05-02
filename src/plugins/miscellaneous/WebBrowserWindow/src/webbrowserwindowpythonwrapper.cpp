@@ -21,14 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Python wrapper for web browser window
 //==============================================================================
 
-#include "pythonqtsupport.h"
 #include "webbrowserwindowplugin.h"
-#include "webbrowserwindowpythonwrapper.h"
 #include "webbrowserwindowwidget.h"
 
 //==============================================================================
 
 #include <QWebView>
+
+//==============================================================================
+
+#include "pythonbegin.h"
+
+#include "pythonqtsupport.h"
+#include "webbrowserwindowpythonwrapper.h"
 
 //==============================================================================
 
@@ -62,6 +67,10 @@ WebBrowserWindowPythonWrapper::WebBrowserWindowPythonWrapper(PyObject *pModule, 
 //==============================================================================
 }   // namespace WebBrowserWindow
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#include "pythonend.h"
 
 //==============================================================================
 // End of file
