@@ -49,7 +49,7 @@ SimulationExperimentViewInformationParametersWidget::SimulationExperimentViewInf
     mVoiAccessible(false),
     mGradientIndices(QSet<int>()),
     mToggleGradientsMenuAction(nullptr),
-    mToggleGradientsMenuSeparator(nullptr)
+    mToggleGradientsMenuSeparator(nullptr),
     mImportComponent(nullptr),
     mImportMenu(nullptr)
 {

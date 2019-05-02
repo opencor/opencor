@@ -188,7 +188,7 @@ DataStoreValues::DataStoreValues(DataStoreArray *pDataStoreArray)
     // Create a list of DataStoreValues
 
     double *d = pDataStoreArray->data();
-    int i = pDataStoreArray->size();
+    quint64 i = pDataStoreArray->size();
 
     while (i-- > 0) {
         auto v = new DataStoreValue(d);

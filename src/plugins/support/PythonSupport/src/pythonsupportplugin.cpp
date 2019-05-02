@@ -157,7 +157,7 @@ void PythonSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void PythonSupportPlugin::loadSettings(QSettings *pSettings)
+void PythonSupportPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -166,7 +166,7 @@ void PythonSupportPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PythonSupportPlugin::saveSettings(QSettings *pSettings) const
+void PythonSupportPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

@@ -918,11 +918,12 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
 
             // Make sure that the file has indeed been created
 
-#ifdef QT_DEBUG
             if (status != FileManager::Status::Created) {
-                return tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
-            }
+#ifdef QT_DEBUG
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
 #endif
+                return tr("%s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
+            }
             return QString("");
         } else {
             // We were not able to retrieve the contents of the remote file, so

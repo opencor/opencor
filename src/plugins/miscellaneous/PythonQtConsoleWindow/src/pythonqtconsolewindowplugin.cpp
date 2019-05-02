@@ -120,7 +120,7 @@ void PythonQtConsoleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugi
 
 //==============================================================================
 
-void PythonQtConsoleWindowPlugin::loadSettings(QSettings *pSettings)
+void PythonQtConsoleWindowPlugin::loadSettings(QSettings &pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -129,7 +129,7 @@ void PythonQtConsoleWindowPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PythonQtConsoleWindowPlugin::saveSettings(QSettings *pSettings) const
+void PythonQtConsoleWindowPlugin::saveSettings(QSettings &pSettings) const
 {
     Q_UNUSED(pSettings);
 

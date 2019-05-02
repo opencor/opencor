@@ -137,10 +137,6 @@ public:
     static bool compare(DataStoreVariable *pVariable1,
                         DataStoreVariable *pVariable2);
 
-    bool isVisible() const;
-
-    int runsCount() const;
-
     bool addRun(quint64 pCapacity);
     void keepRuns(int pRunsCount);
 

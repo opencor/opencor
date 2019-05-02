@@ -100,6 +100,7 @@ void CliApplication::loadPlugins()
 
         if (qobject_cast<SolverInterface *>(plugin->instance()) != nullptr) {
             mLoadedSolverPlugins << plugin;
+        }
 
         if (qobject_cast<CliInterface *>(plugin->instance()) != nullptr) {
             mLoadedCliPlugins << plugin;

@@ -111,7 +111,7 @@ public:
                      const File::Type &pType = File::Type::Local,
                      const QString &pUrl = QString(),
                      bool pShowWarning = true);
-    void openRemoteFile(const QString &pUrl, bool pShowWarning = true);
+    QString openRemoteFile(const QString &pUrl, bool pShowWarning = true);
 
     bool canClose();
     bool closeFile(const QString &pFileName);

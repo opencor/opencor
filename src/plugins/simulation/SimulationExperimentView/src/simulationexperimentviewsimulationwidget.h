@@ -343,6 +343,9 @@ signals:
     void importDone(DataStore::DataStoreImporter *pDataStoreImporter);
     void exportDone(DataStore::DataStoreExporter *pDataStoreExporter);
 
+public slots:
+    void clearSimulationResults();
+
 private slots:
     void runPauseResumeSimulation();
     void stopSimulation();

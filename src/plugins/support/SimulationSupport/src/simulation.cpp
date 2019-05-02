@@ -602,7 +602,7 @@ bool SimulationData::doIsModified(bool pCheckConstants) const
 
     if (pCheckConstants) {
         for (quint64 i = 0, iMax = mConstantsArray->size(); i < iMax; ++i) {
-            if (!qFuzzyCompare(mConstantsArray->data(i), mInitialConstants[i]))
+            if (!qFuzzyCompare(mConstantsArray->data(i), mInitialConstants[i])) {
                 return true;
             }
         }
@@ -846,7 +846,7 @@ SimulationResults::SimulationResults(Simulation *pSimulation) :
     mStates(DataStore::DataStoreVariables()),
     mAlgebraic(DataStore::DataStoreVariables()),
     mGradientsStore(nullptr),
-    mGradients(DataStore::DataStoreVariables())
+    mGradients(DataStore::DataStoreVariables()),
     mData(QMap<double *, DataStore::DataStoreVariables>()),
     mDataDataStores(QMap<double *, DataStore::DataStore *>())
 {
@@ -904,10 +904,10 @@ void SimulationResults::createDataStore()
     mStates = mDataStore->addVariables(simulationData->states(), runtime->statesCount());
     mAlgebraic = mDataStore->addVariables(simulationData->algebraic(), runtime->algebraicCount());
 
-    DataStore::DataStoreValues *constantsValues = data->constantsValues();
-    DataStore::DataStoreValues *ratesValues = data->ratesValues();
-    DataStore::DataStoreValues *statesValues = data->statesValues();
-    DataStore::DataStoreValues *algebraicValues = data->algebraicValues();
+    DataStore::DataStoreValues *constantsValues = simulationData->constantsValues();
+    DataStore::DataStoreValues *ratesValues = simulationData->ratesValues();
+    DataStore::DataStoreValues *statesValues = simulationData->statesValues();
+    DataStore::DataStoreValues *algebraicValues = simulationData->algebraicValues();
 
     // Customise our VOI, as well as our constant, rate, state and algebraic
     // variables
@@ -927,27 +927,15 @@ void SimulationResults::createDataStore()
                    || (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::ComputedConstant)) {
             variable = mConstants[parameter->index()];
             value = constantsValues->at(parameter->index());
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+        } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Rate) {
             variable = mRates[parameter->index()];
             value = ratesValues->at(parameter->index());
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::State:
+        } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::State) {
             variable = mStates[parameter->index()];
             value = statesValues->at(parameter->index());
-
-            break;
-        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+        } else if (parameterType == CellMLSupport::CellmlFileRuntimeParameter::Type::Algebraic) {
             variable = mAlgebraic[parameter->index()];
             value = algebraicValues->at(parameter->index());
-
-            break;
-        default:
-            // Not a relevant type, so do nothing
-
-            ;
         }
 
         if (value != nullptr) {
@@ -982,7 +970,7 @@ void SimulationResults::createDataStore()
     // Let people know that our (imported) data, if any, has been updated
 
     if (!mDataDataStores.isEmpty()) {
-        emit simulationData->updated(mSimulation->currentPoint());
+        emit simulationData->updatedParameters(mSimulation->currentPoint());
     }
 }
 
