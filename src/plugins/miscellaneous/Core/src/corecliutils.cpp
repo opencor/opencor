@@ -576,7 +576,7 @@ QString openFile(const QString &pFileName, const File::Type &pType,
 
     FileManager::Status fileStatus = FileManager::instance()->manage(pFileName, pType, pUrl);
 
-    if (fileStatus == FileManager::DoesNotExist)
+    if (fileStatus == FileManager::Status::DoesNotExist)
         return QObject::tr("'%1' could not be opened.").arg(pUrl.isEmpty()?
                                                                 QDir::toNativeSeparators(pFileName):
                                                                 pFileName);
@@ -636,7 +636,7 @@ QString openRemoteFile(const QString &pUrl)
     }
     // We now have the file so open it, which will add it to the file manager
 
-    return openFile(fileName, File::Remote, fileNameOrUrl);
+    return openFile(fileName, File::Type::Remote, fileNameOrUrl);
 }
 
 //==============================================================================

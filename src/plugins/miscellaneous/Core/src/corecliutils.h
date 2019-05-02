@@ -155,7 +155,7 @@ void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
                                     QString &pOutFileNameOrUrl);
 
 QString CORE_EXPORT openFile(const QString &pFileName,
-                             const File::Type &pType = File::Local,
+                             const File::Type &pType = File::Type::Local,
                              const QString &pUrl = QString());
 QString CORE_EXPORT openRemoteFile(const QString &pUrl);
 

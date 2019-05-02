@@ -591,7 +591,7 @@ void SimulationExperimentViewWidget::checkSimulationResults(const QString &pFile
 
 void SimulationExperimentViewWidget::startingRun(const QString &pFileName)
 {
-    checkSimulationResults(pFileName, SimulationExperimentViewSimulationWidget::AddRun);
+    checkSimulationResults(pFileName, SimulationExperimentViewSimulationWidget::Task::AddRun);
 }
 
 //==============================================================================

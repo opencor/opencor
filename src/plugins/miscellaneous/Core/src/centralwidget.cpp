@@ -888,7 +888,7 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         //     /home/me/mymodel.cellml
         // so open the file as a local file and leave
 
-        return openFile(fileNameOrUrl, File::Local, QString(), pShowWarning);
+        return openFile(fileNameOrUrl, File::Type::Local, QString(), pShowWarning);
     }
 
     // Check whether the remote file is already opened and if so select it,
@@ -940,7 +940,7 @@ QString CentralWidget::openRemoteFile(const QString &pUrl, bool pShowWarning)
         }
     }
 
-    return openFile(fileName, File::Remote, fileNameOrUrl);
+    return openFile(fileName, File::Type::Remote, fileNameOrUrl);
 }
 
 //==============================================================================

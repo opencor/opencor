@@ -756,7 +756,7 @@ void SimulationData::setGradientCalculation(const QString &pConstantUri, bool pC
     for (int i = 0, iMax = runtime->parameters().count(); i < iMax; ++i) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = runtime->parameters()[i];
 
-        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant
+        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant
               && pConstantUri == mSimulationResults->constantVariables()[parameter->index()]->uri()) {
             setGradientCalculationByIndex(parameter->index(), pCalculate);
 

@@ -120,7 +120,7 @@ void SimulationExperimentViewInformationParametersWidget::contextMenuEvent(QCont
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(crtProperty);
 
-    bool gradientActionVisible = (parameter && parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant);
+    bool gradientActionVisible = (parameter && parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant);
 
     mToggleGradientsMenuSeparator->setVisible(gradientActionVisible);
 
@@ -657,7 +657,7 @@ void SimulationExperimentViewInformationParametersWidget::toggleGradientFlag()
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(crtProperty);
 
-    if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
+    if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Type::Constant)
         gradientToggled(parameter, !mGradientIndices.contains(parameter->index()));
 
     emit calculateGradients(parameter->index(), mGradientIndices.contains(parameter->index()));

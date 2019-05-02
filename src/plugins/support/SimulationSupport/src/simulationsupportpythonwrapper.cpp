@@ -82,7 +82,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
         // Set the default properties for each of our solvers
 
         foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
-            if (solverInterface->solverType() == Solver::Ode) {
+            if (solverInterface->solverType() == Solver::Type::Ode) {
                 // Set the ODE solver's name
 
                 simulation->data()->setOdeSolverName(solverInterface->solverName());
@@ -91,11 +91,11 @@ static PyObject *initializeSimulation(const QString &pFileName)
                          solverInterface->solverProperties()) {
                     // Set each ODE solver property's default value
 
-                    if (solverInterfaceProperty.type() != Solver::Property::List) {
+                    if (solverInterfaceProperty.type() != Solver::Property::Type::List) {
                         simulation->data()->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
                     }
                 }
-            } else if (solverInterface->solverType() == Solver::Nla) {
+            } else if (solverInterface->solverType() == Solver::Type::Nla) {
                 // Set the NLA solver's name
 
                 simulation->data()->setNlaSolverName(solverInterface->solverName());
@@ -104,7 +104,7 @@ static PyObject *initializeSimulation(const QString &pFileName)
                          solverInterface->solverProperties()) {
                     // Set each NLA solver property's default value
 
-                    if (solverInterfaceProperty.type() != Solver::Property::List) {
+                    if (solverInterfaceProperty.type() != Solver::Property::Type::List) {
                         simulation->data()->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue(), true);
                     }
                 }
@@ -113,8 +113,8 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
         // Complete initialisation by loading any SED-ML properties
 
-        if (simulation->fileType() == SimulationSupport::Simulation::SedmlFile
-         || simulation->fileType() == SimulationSupport::Simulation::CombineArchive) {
+        if (simulation->fileType() == SimulationSupport::Simulation::FileType::SedmlFile
+         || simulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive) {
 
             const QString initialisationError = simulation->furtherInitialize();
 

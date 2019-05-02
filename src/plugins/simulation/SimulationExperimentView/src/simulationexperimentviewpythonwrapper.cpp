@@ -112,7 +112,7 @@ static PyObject *openSimulation(PyObject *self, PyObject *args)
     QString fileName = QString::fromUtf8(name, len);
     Py_DECREF(bytes);
 
-    QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Local,
+    QString ioError = Core::centralWidget()->openFile(fileName, Core::File::Type::Local,
                                                       QString(), false);
 
     if (!ioError.isEmpty()) {
