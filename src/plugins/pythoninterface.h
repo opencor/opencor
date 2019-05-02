@@ -41,6 +41,8 @@ extern "C" Q_DECL_EXPORT int pythonInterfaceVersion();
 class PythonInterface
 {
 public:
+    virtual ~PythonInterface();
+
 #define INTERFACE_DEFINITION
     #include "pythoninterface.inl"
 #undef INTERFACE_DEFINITION
