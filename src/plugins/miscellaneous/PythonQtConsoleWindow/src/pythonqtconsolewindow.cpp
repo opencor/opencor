@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "borderedwidget.h"
 #include "pythonqtconsolewindow.h"
-#include "pythonqtsupportplugin.h"
+#include "pythonqtsupport.h"
 
 //==============================================================================
 
@@ -130,10 +130,9 @@ PythonQtConsoleWindow::PythonQtConsoleWindow(QWidget *pParent) :
 
     PyObject *ipythonWidget = pythonQtInstance->callAndReturnPyObject(createWidget);
 
-    if (ipythonWidget && PyObject_TypeCheck(ipythonWidget, &PythonQtInstanceWrapper_Type)) {
+    PythonQtInstanceWrapper *widgetWrapper = PythonQtSupport::getInstanceWrapper(ipythonWidget);
 
-        PythonQtInstanceWrapper *widgetWrapper = reinterpret_cast<PythonQtInstanceWrapper*>(ipythonWidget);
-
+    if (widgetWrapper) {
         mPythonQtConsoleWidget = static_cast<QWidget*>(widgetWrapper->_objPointerCopy);
 
         this->setFocusProxy(mPythonQtConsoleWidget);

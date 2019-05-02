@@ -75,11 +75,11 @@ static DataStoreValue *getDataStoreValue(PyObject *valuesDict, PyObject *key)
 {
     DataStoreValue *dataStoreValue = 0;
 
-    PyObject *obj = PyDict_GetItem(valuesDict, key);
+    PyObject *object = PyDict_GetItem(valuesDict, key);
+    PythonQtInstanceWrapper *wrappedObject = PythonQtSupport::getInstanceWrapper(object);
 
-    if (obj && PyObject_TypeCheck(obj, &PythonQtInstanceWrapper_Type)) {
-        PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)obj;
-        dataStoreValue = (DataStoreValue *)wrap->_objPointerCopy;
+    if (wrappedObject) {
+        dataStoreValue = (DataStoreValue *)wrappedObject->_objPointerCopy;
     }
 
     return dataStoreValue;
@@ -205,9 +205,10 @@ static PyObject *DataStoreValuesDict_repr(DataStoreValuesDictObject *valuesDict)
         if (_PyUnicodeWriter_WriteASCIIString(&writer, ": ", 2) < 0)
             goto error;
 
-        if (PyObject_TypeCheck(value, &PythonQtInstanceWrapper_Type)) {
-            PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper*)value;
-            DataStoreValue *dataStoreValue = (DataStoreValue *)wrap->_objPointerCopy;
+        PythonQtInstanceWrapper *wrappedValue = PythonQtSupport::getInstanceWrapper(value);
+
+        if (wrappedValue) {
+            DataStoreValue *dataStoreValue = (DataStoreValue *)wrappedValue->_objPointerCopy;
             Py_CLEAR(value);
             value = PyFloat_FromDouble(dataStoreValue->value());
         }

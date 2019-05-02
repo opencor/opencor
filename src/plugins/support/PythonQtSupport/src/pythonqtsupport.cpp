@@ -65,6 +65,26 @@ PyObject *wrapQObject(QObject *pQObject)
 
 //==============================================================================
 
+PythonQtInstanceWrapper *getInstanceWrapper(PyObject *self)
+{
+#if defined(__GNUC__)
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
+
+    if (self && PyObject_TypeCheck(self, &PythonQtInstanceWrapper_Type)) {
+        return (PythonQtInstanceWrapper *)self;
+    }
+
+#if defined(__GNUC__)
+	#pragma GCC diagnostic pop
+#endif
+
+    return nullptr;
+}
+
+//==============================================================================
+
 }   // namespace PythonQtSupport
 }   // namespace OpenCOR
 

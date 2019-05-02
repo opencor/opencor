@@ -166,18 +166,13 @@ static PyObject *closeSimulation(PyObject *self, PyObject *args)
 {
     Q_UNUSED(self);
 
-    Py_ssize_t argc = PyTuple_Size(args);
-    if (argc >  0) {
-        PyObject *self = PyTuple_GET_ITEM(args, 0);
+    if (PyTuple_Size(args) > 0) {
+        PythonQtInstanceWrapper *wrappedSimulation = PythonQtSupport::getInstanceWrapper(PyTuple_GET_ITEM(args, 0));
 
-        if (PyObject_TypeCheck(self, &PythonQtInstanceWrapper_Type)) {
-            PythonQtInstanceWrapper* wrap = (PythonQtInstanceWrapper *)self;
+        if (wrappedSimulation) {
+            SimulationSupport::Simulation *simulation = (SimulationSupport::Simulation *)wrappedSimulation->_objPointerCopy;
 
-            // Get the wrapped simulation
-
-            SimulationSupport::Simulation *simulation = (SimulationSupport::Simulation *)wrap->_objPointerCopy;
-
-            // Close it by closing its file, raising an exception if we
+            // Close the simulation by closing its file, raising an exception if we
             // are unable to do so
 
             if (!Core::centralWidget()->closeFile(simulation->fileName())) {

@@ -71,6 +71,9 @@ void registerClass(const QMetaObject *pMetaObject);
 PYTHONQTSUPPORT_EXPORT
 PyObject *wrapQObject(QObject *pQObject);
 
+PYTHONQTSUPPORT_EXPORT
+PythonQtInstanceWrapper *getInstanceWrapper(PyObject *self);
+
 //==============================================================================
 
 }   // namespace PythonQtSupport
