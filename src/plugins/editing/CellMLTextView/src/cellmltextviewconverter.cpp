@@ -2694,16 +2694,3 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
 //==============================================================================
 // End of file
 //==============================================================================
-  && (pDomNode.namespaceURI() == CellMLSupport::TmpDocumentation)) {
-        mDocumentationNode = pDomNode.cloneNode();
-    }
-}
-
-//==============================================================================
-
-} // namespace CellMLTextView
-} // namespace OpenCOR
-
-//==============================================================================
-// End of file
-//==============================================================================
