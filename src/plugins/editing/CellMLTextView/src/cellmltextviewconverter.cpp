@@ -1598,7 +1598,8 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                         MathmlNode mathmlNode = CellMLTextViewConverter::mathmlNode(childNode);
 
                         if (   isRelationalOperator(mathmlNode)
-                            || isPlusOperator(mathmlNode) || isMinusOperator(mathmlNode)
+                            || isPlusOperator(mathmlNode)
+                            || isMinusOperator(mathmlNode)
                             || isLogicalOrBitwiseOperator(mathmlNode)) {
                             res = pOperator+"("+operand+")";
                         } else {
@@ -1685,7 +1686,8 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                         if (   isRelationalOperator(leftOperandNodeType)
                             || isLogicalOrBitwiseOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if (isPlusOperator(leftOperandNodeType) || isMinusOperator(leftOperandNodeType)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
@@ -1694,7 +1696,8 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                         if (   isRelationalOperator(rightOperandNodeType)
                             || isLogicalOrBitwiseOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if (isPlusOperator(rightOperandNodeType) || isMinusOperator(rightOperandNodeType)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
@@ -1703,71 +1706,86 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
                         if (   isRelationalOperator(leftOperandNodeType)
                             || isLogicalOrBitwiseOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if (isPlusOperator(leftOperandNodeType) || isMinusOperator(leftOperandNodeType)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
                         if (   isRelationalOperator(rightOperandNodeType)
-                            || isTimesOperator(rightOperandNodeType) || isDivideOperator(rightOperandNodeType)
+                            || isTimesOperator(rightOperandNodeType)
+                            || isDivideOperator(rightOperandNodeType)
                             || isLogicalOrBitwiseOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if (isPlusOperator(rightOperandNodeType) || isMinusOperator(rightOperandNodeType)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
                     } else if (isAndOperator(operatorNodeType)) {
                         if (   isRelationalOperator(leftOperandNodeType)
-                            || isOrOperator(leftOperandNodeType) || isXorOperator(leftOperandNodeType)) {
+                            || isOrOperator(leftOperandNodeType)
+                            || isXorOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if (isPlusOperator(leftOperandNodeType) || isMinusOperator(leftOperandNodeType)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
                         if (   isRelationalOperator(rightOperandNodeType)
-                            || isOrOperator(rightOperandNodeType) || isXorOperator(rightOperandNodeType)) {
+                            || isOrOperator(rightOperandNodeType)
+                            || isXorOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if (isPlusOperator(rightOperandNodeType) || isMinusOperator(rightOperandNodeType)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
                     } else if (isOrOperator(operatorNodeType)) {
                         if (   isRelationalOperator(leftOperandNodeType)
-                            || isAndOperator(leftOperandNodeType) || isXorOperator(leftOperandNodeType)) {
+                            || isAndOperator(leftOperandNodeType)
+                            || isXorOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if (isPlusOperator(leftOperandNodeType) || isMinusOperator(leftOperandNodeType)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
                         if (   isRelationalOperator(rightOperandNodeType)
-                            || isAndOperator(rightOperandNodeType) || isXorOperator(rightOperandNodeType)) {
+                            || isAndOperator(rightOperandNodeType)
+                            || isXorOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if (isPlusOperator(rightOperandNodeType) || isMinusOperator(rightOperandNodeType)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
                         }
                     } else if (isXorOperator(operatorNodeType)) {
                         if (   isRelationalOperator(leftOperandNodeType)
-                            || isAndOperator(leftOperandNodeType) || isOrOperator(leftOperandNodeType)) {
+                            || isAndOperator(leftOperandNodeType)
+                            || isOrOperator(leftOperandNodeType)) {
                             leftOperand = "("+leftOperand+")";
-                        } else if (isPlusOperator(leftOperandNodeType) || isMinusOperator(leftOperandNodeType)) {
+                        } else if (   isPlusOperator(leftOperandNodeType)
+                                   || isMinusOperator(leftOperandNodeType)) {
                             if (childNodesCount(leftOperandNode) > 2) {
                                 leftOperand = "("+leftOperand+")";
                             }
                         }
 
                         if (   isRelationalOperator(rightOperandNodeType)
-                            || isAndOperator(rightOperandNodeType) || isOrOperator(rightOperandNodeType)) {
+                            || isAndOperator(rightOperandNodeType)
+                            || isOrOperator(rightOperandNodeType)) {
                             rightOperand = "("+rightOperand+")";
-                        } else if (isPlusOperator(rightOperandNodeType) || isMinusOperator(rightOperandNodeType)) {
+                        } else if (   isPlusOperator(rightOperandNodeType)
+                                   || isMinusOperator(rightOperandNodeType)) {
                             if (childNodesCount(rightOperandNode) > 2) {
                                 rightOperand = "("+rightOperand+")";
                             }
