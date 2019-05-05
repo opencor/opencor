@@ -11,7 +11,7 @@ var jsonData = { "versions": [
                            { "extension": ".tar.gz" }
                          ]
                        },
-                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
                          "files": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
@@ -37,7 +37,7 @@ var jsonData = { "versions": [
                            { "extension": ".tar.gz" }
                          ]
                        },
-                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
                          "files": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
