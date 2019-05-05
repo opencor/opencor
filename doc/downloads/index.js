@@ -25,12 +25,12 @@ var jsonData = { "versions": [
                            { "extension": ".exe" }, { "extension": ".zip" }
                          ]
                        },
-                       { "name": "Linux", "supported": "Ubuntu 16.04 LTS (Xenial Xerus) and later",
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
                          "files": [
                            { "extension": ".tar.gz" }
                          ]
                        },
-                       { "name": "macOS", "supported": "OS X 10.10 (Yosemite) and later",
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
                          "files": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
