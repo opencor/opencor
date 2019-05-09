@@ -57,7 +57,7 @@ namespace SimulationExperimentView {
 //==============================================================================
 
 static PyObject *getSimulation(const QString &pFileName,
-                                                    SimulationExperimentViewWidget *pSimulationExperimentViewWidget)
+                               SimulationExperimentViewWidget *pSimulationExperimentViewWidget)
 {
     SimulationSupport::Simulation *simulation = pSimulationExperimentViewWidget->simulation(pFileName);
 
