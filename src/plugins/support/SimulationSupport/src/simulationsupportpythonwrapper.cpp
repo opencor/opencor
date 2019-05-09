@@ -84,35 +84,51 @@ static PyObject *initializeSimulation(const QString &pFileName)
             return nullptr;
         }
 
-        // Set the default properties for each of our solvers
+        // Find the solver whose name is first in alphabetical order, as this
+        // is the simulation's solver
 
-        foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
-            if (solverInterface->solverType() == Solver::Type::Ode) {
-                // Set the ODE solver's name
+        SolverInterfaces solverInterfaces = Core::solverInterfaces();
 
-                simulation->data()->setOdeSolverName(solverInterface->solverName());
+        QString firstSolverName = QString();
 
-                foreach (const Solver::Property &solverInterfaceProperty,
-                         solverInterface->solverProperties()) {
-                    // Set each ODE solver property's default value
+        foreach (SolverInterface *solverInterface, solverInterfaces) {
+            QString solverName = solverInterface->solverName();
 
-                    if (solverInterfaceProperty.type() != Solver::Property::Type::List) {
+            if (firstSolverName.isEmpty()
+             || firstSolverName.compare(solverName, Qt::CaseInsensitive) > 0) {
+                firstSolverName = solverName;
+            }
+        }
+
+        // Set our solver and its default properties
+
+        foreach (SolverInterface *solverInterface, solverInterfaces) {
+            if (!firstSolverName.compare(solverInterface->solverName())) {
+                if (solverInterface->solverType() == Solver::Type::Ode) {
+                    // Set the ODE solver's name
+
+                    simulation->data()->setOdeSolverName(solverInterface->solverName());
+
+                    foreach (const Solver::Property &solverInterfaceProperty,
+                             solverInterface->solverProperties()) {
+                        // Set each ODE solver property's default value
+
                         simulation->data()->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
                     }
-                }
-            } else if (solverInterface->solverType() == Solver::Type::Nla) {
-                // Set the NLA solver's name
+                } else if (solverInterface->solverType() == Solver::Type::Nla) {
+                    // Set the NLA solver's name
 
-                simulation->data()->setNlaSolverName(solverInterface->solverName());
+                    simulation->data()->setNlaSolverName(solverInterface->solverName());
 
-                foreach (const Solver::Property &solverInterfaceProperty,
-                         solverInterface->solverProperties()) {
-                    // Set each NLA solver property's default value
+                    foreach (const Solver::Property &solverInterfaceProperty,
+                             solverInterface->solverProperties()) {
+                        // Set each NLA solver property's default value
 
-                    if (solverInterfaceProperty.type() != Solver::Property::Type::List) {
                         simulation->data()->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue(), true);
                     }
                 }
+
+                break;
             }
         }
 
