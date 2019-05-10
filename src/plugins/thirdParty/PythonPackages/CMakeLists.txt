@@ -107,11 +107,11 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                               SHA1_VALUES de6bb8d119560aabd31d97cd1def0545ec3d88a6)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 406e903965be368081c1bb6e77776ef938ba7564
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c3dccf74c7d7ed11634839b17d0390a150e2ac1a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 33fb4135c8ec6fcd725bd1478dadab322ff8c012)
+                              SHA1_VALUES 28a5b99a80b0d746764e3ac8c0f455787328a90f)
     endif()
 else()
     # Install Python packages using pip
