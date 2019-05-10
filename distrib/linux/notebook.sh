@@ -6,4 +6,4 @@ OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
 # Start Jupyter notebook
 
-${OPENCOR_DIR}/jupyter.sh notebook $*
+${OPENCOR_DIR}/run_jupyter.sh notebook --ip 127.0.0.1 $*

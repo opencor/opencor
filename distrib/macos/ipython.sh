@@ -4,6 +4,6 @@
 
 OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
-# Start Jupyter Lab
+# Start an IPython console attached to an OpenCOR kernel
 
-${OPENCOR_DIR}/run_jupyter.sh lab --ip 127.0.0.1 $*
+${OPENCOR_DIR}/run_jupyter.sh console --kernel OpenCOR $*

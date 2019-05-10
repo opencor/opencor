@@ -6,4 +6,4 @@ OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
 # Start Jupyter Lab
 
-${OPENCOR_DIR}/jupyter.sh lab $*
+${OPENCOR_DIR}/run_jupyter.sh lab --ip 127.0.0.1 $*

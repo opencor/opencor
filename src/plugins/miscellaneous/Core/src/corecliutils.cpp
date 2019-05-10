@@ -624,8 +624,9 @@ QString openRemoteFile(const QString &pUrl)
             if (!fileManagerInstance->newFile(fileName, fileContents)) {
 #ifdef QT_DEBUG
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get created.", __FILE__, __LINE__, qPrintable(fileNameOrUrl));
-#endif
+#else
                 return QObject::tr("FATAL ERROR | %s:%d: '%s' did not get created.").arg(__FILE__, __LINE__).arg(fileNameOrUrl);
+#endif
             }
         } else {
             // We were not able to retrieve the contents of the remote file, so

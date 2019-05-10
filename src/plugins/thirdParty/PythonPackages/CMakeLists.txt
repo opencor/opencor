@@ -32,7 +32,7 @@ set(TRAITLETS_VERSION 4.3.2)
 set(TRAITLETS_PYTHONQT 4.3.2.1)
 
 set(JUPYTER_VERSION 1.0.0)
-set(JUPYTERLAB_VERSION 0.35.4)
+set(JUPYTERLAB_VERSION 0.35.6)
 
 set(LXML_VERSION 4.2.5)
 
@@ -100,18 +100,18 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 5746debc970cb333effb9b002e9045c443222031
+                              ${RELATIVE_PROJECT_SOURCE_DIR} a80af462b750441b6a48294f920fd65817f3acde
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 13f1ca249d663cd76ea70873b659fa2a0c90e6bc)
+                              SHA1_VALUES de6bb8d119560aabd31d97cd1def0545ec3d88a6)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 406e903965be368081c1bb6e77776ef938ba7564
+                              ${RELATIVE_PROJECT_SOURCE_DIR} c3dccf74c7d7ed11634839b17d0390a150e2ac1a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
-                              SHA1_VALUES 33fb4135c8ec6fcd725bd1478dadab322ff8c012)
+                              SHA1_VALUES 28a5b99a80b0d746764e3ac8c0f455787328a90f)
     endif()
 else()
     # Install Python packages using pip
@@ -139,6 +139,19 @@ else()
                     --upgrade --upgrade-strategy only-if-needed
                     --no-warn-script-location)
 
+    # Make sure pip is up to date
+
+    add_custom_target(upgradePip
+        COMMAND ${PIP_INSTALL_COMMAND}
+            pip
+        WORKING_DIRECTORY
+            ${FULL_DEST_EXTERNAL_BINARIES_DIR}
+        VERBATIM
+    )
+
+    add_dependencies(${PACKAGE_BUILD} upgradePip)
+    add_dependencies(upgradePip ${BUILD_DEPENDENCIES})
+
     # Install numpy, scipy, and matplotlib
 
     add_custom_target(sciencePackages
@@ -152,6 +165,7 @@ else()
     )
 
     add_dependencies(${PACKAGE_BUILD} sciencePackages)
+    add_dependencies(sciencePackages upgradePip)
     add_dependencies(sciencePackages ${BUILD_DEPENDENCIES})
 
     # Copy the numpy include directory to a place that OpenCOR can use

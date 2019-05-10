@@ -584,7 +584,8 @@ endif()
 # Copy a script to update the Python path in copied scripts
 
 file(COPY ${PROJECT_SOURCE_DIR}/scripts/set_python_path.py
-     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR})
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}
+     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # And run it
 
@@ -592,3 +593,9 @@ add_custom_command(TARGET ${PROJECT_NAME}
                    COMMAND ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${PYTHON_EXECUTABLE}
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}/set_python_path.py
                            ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR} -s)
+
+# Copy a script to run Python code from the command line
+
+file(COPY ${PROJECT_SOURCE_DIR}/scripts/run_python.py
+     DESTINATION ${FULL_LOCAL_EXTERNAL_PACKAGE_DIR}/${SCRIPT_DIR}
+     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
