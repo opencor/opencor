@@ -1457,12 +1457,12 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
-    install(FILES ${CMAKE_SOURCE_DIR}/distrib/macos/ipython.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/jupyterlab.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/notebook.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/run_jupyter.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/run_python.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/macos/set_python_path.sh
+    install(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/ipython.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/jupyterlab.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/notebook.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/run_jupyter.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/run_python.sh
+                  ${CMAKE_SOURCE_DIR}/distrib/linux/set_python_path.sh
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
