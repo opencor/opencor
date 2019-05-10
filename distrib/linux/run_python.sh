@@ -10,4 +10,4 @@ ${OPENCOR_DIR}/set_python_path.sh
 
 # Start our script that runs Python code in OpenCOR
 
-${OPENCOR_DIR}/python/bin/python ${OPENCOR_DIR}/run_python.py $*
+${OPENCOR_DIR}/python/bin/run_python.py $*
