@@ -22,16 +22,20 @@ set(SCIPY_VERSION 1.1.0)
 set(IPYKERNEL_VERSION 5.1.0)
 set(IPYKERNEL_PYTHONQT 5.1.0.1)
 
-set(IPYTHON_VERSION 7.1.1)
-set(IPYTHON_PYTHONQT 7.1.1.1)
+set(IPYTHON_VERSION 7.5.0)
+set(IPYTHON_PYTHONQT 7.5.0.1)
 
-set(QTCONSOLE_VERSION 4.4.3)
-set(QTCONSOLE_PYTHONQT 4.4.3.1)
+set(QTCONSOLE_VERSION 4.4.4)
+set(QTCONSOLE_PYTHONQT 4.4.4.1)
 
 set(TRAITLETS_VERSION 4.3.2)
 set(TRAITLETS_PYTHONQT 4.3.2.1)
 
-set(JUPYTER_VERSION 1.0.0)
+set(NOTEBOOK_VERSION 5.7.8)
+set(IPYWIDGETS_VERSION 7.4.2)
+set(NBCONVERT_VERSION 5.5.0)
+set(JUPYTER_CONSOLE_VERSION 6.0.0)
+
 set(JUPYTERLAB_VERSION 0.35.6)
 
 set(LXML_VERSION 4.2.5)
@@ -100,7 +104,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} a80af462b750441b6a48294f920fd65817f3acde
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 1b52d2a7320c27e0f4cd45bf98decde08d156969
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
@@ -190,7 +194,10 @@ else()
             ipython==${IPYTHON_VERSION}
             ipykernel==${IPYKERNEL_VERSION}
             qtconsole==${QTCONSOLE_VERSION}
-            jupyter==${JUPYTER_VERSION}
+            notebook==${NOTEBOOK_VERSION}
+            jupyter_console==${JUPYTER_CONSOLE_VERSION}
+            nbconvert==${NBCONVERT_VERSION}
+            ipywidgets==${IPYWIDGETS_VERSION}
             jupyterlab==${JUPYTERLAB_VERSION}
         WORKING_DIRECTORY
             ${FULL_DEST_EXTERNAL_BINARIES_DIR}
