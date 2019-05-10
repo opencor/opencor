@@ -4,6 +4,6 @@
 
 OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
-# Start our script that runs Python code in OpenCOR
+# Start an IPython console attached to an OpenCOR kernel
 
-${OPENCOR_DIR}/python/bin/python ${OPENCOR_DIR}/run_python.py $*
+${OPENCOR_DIR}/run_jupyter.sh console --kernel OpenCOR $*

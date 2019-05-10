@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
     Based on `move-virtualenv`, updated for Python 3 and Windows with
     activation script processing removed.
@@ -86,9 +87,11 @@ def update_script(script_filename, new_path, clear_args, extra_args):
     if not args:
         return
 
-    if not args[0].endswith(bin_python) \
-    or '/usr/bin/env python' in args[0]:
+    if not (args[0].endswith(bin_python) or '/usr/bin/env python' in line):
         return
+
+    if '/usr/bin/env python' in line:
+        del args[0]
 
     if clear_args: del args[1:]
     arg_set = OrderedDict([(a, None) for a in args[1:]])
