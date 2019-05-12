@@ -154,11 +154,14 @@ bool SedmlFile::isSedmlFile() const
     // Return whether our current SED-ML document is indeed a SED-ML file
     // Note: a non-SED-ML file results in our SED-ML document having at least
     //       one error, the first of which being of id
-    //       libsedml::SedNotSchemaConformant. So, we use this fact to determine
+    //       libsedml::SedNotSchemaConformant (e.g. a CellML file, i.e. an XML
+    //       file, but not a SED-ML one) or XMLContentEmpty (e.g. a COMBINE
+    //       archive, i.e. not an XML file). So, we use this fact to determine
     //       whether our current SED-ML document is indeed a SED-ML file...
 
     return    (mSedmlDocument->getNumErrors() == 0)
-           || (mSedmlDocument->getError(0)->getErrorId() != libsedml::SedNotSchemaConformant);
+           || (   (mSedmlDocument->getError(0)->getErrorId() != libsedml::SedNotSchemaConformant)
+               && (mSedmlDocument->getError(0)->getErrorId() != XMLContentEmpty));
 }
 
 //==============================================================================
