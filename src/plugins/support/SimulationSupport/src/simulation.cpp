@@ -1720,7 +1720,7 @@ QString Simulation::fileName() const
 
 //==============================================================================
 
-bool Simulation::checkForIssues()
+void Simulation::checkForIssues()
 {
     // Reset our list of issues
 
@@ -1864,9 +1864,18 @@ bool Simulation::checkForIssues()
         }
     }
 
-    // Return true if there is a blocking SED-ML or Combine issue
+    // Remember if there is a blocking SED-ML or Combine issue
 
-    return atLeastOneBlockingSedmlIssue || atLeastOneBlockingCombineIssue;
+    mHasBlockingIssues = atLeastOneBlockingSedmlIssue || atLeastOneBlockingCombineIssue;
+}
+
+//==============================================================================
+
+bool Simulation::hasBlockingIssues()
+{
+    // Return if we have blocking issues
+
+    return mHasBlockingIssues;
 }
 
 //==============================================================================

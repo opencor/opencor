@@ -948,9 +948,11 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():nullptr;
 
-        bool atLeastOneBlockingIssue = mSimulation->checkForIssues();
+        mSimulation->checkForIssues();
 
-        if (!atLeastOneBlockingIssue) {
+        bool hasBlockingIssues = mSimulation->hasBlockingIssues();
+
+        if (!hasBlockingIssues) {
             information += QString()+OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
             if (voi != nullptr) {
@@ -1032,7 +1034,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         mValidSimulationEnvironment = false;
 
-        if (!atLeastOneBlockingIssue) {
+        if (!hasBlockingIssues) {
             // Enable/disable our run/pause action depending on whether we have
             // a VOI
 

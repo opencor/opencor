@@ -390,7 +390,8 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
 
-    bool checkForIssues();
+    void checkForIssues();
+    bool hasBlockingIssues();
     SimulationIssues issues() const;
 
     QString furtherInitialize() const;
@@ -450,6 +451,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
+    bool mHasBlockingIssues;
     SimulationIssues mIssues;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
