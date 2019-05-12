@@ -11,5 +11,9 @@
         <source>the starting point cannot be greater than the ending point</source>
         <translation>le point de départ ne peut pas être plus grand que le point d&apos;arrivée</translation>
     </message>
+    <message>
+        <source>the model must have at least one ODE or DAE</source>
+        <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
+    </message>
 </context>
 </TS>
