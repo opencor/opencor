@@ -92,6 +92,39 @@ class SimulationWorker;
 
 //==============================================================================
 
+class SIMULATIONSUPPORT_EXPORT SimulationIssue
+{
+public:
+    enum class Type {
+        Unknown,
+        Information,
+        Error,
+        Warning,
+        Fatal
+    };
+
+    explicit SimulationIssue(Type pType, int pLine, int pColumn,
+                             const QString &pMessage);
+    explicit SimulationIssue(Type pType, const QString &pMessage);
+
+    Type type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
+
+private:
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
+};
+
+//==============================================================================
+
+typedef QList<SimulationIssue> SimulationIssues;
+
+//==============================================================================
+
 class SimulationObject : public QObject
 {
     Q_OBJECT
@@ -357,6 +390,9 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
 
+    bool checkForIssues();
+    SimulationIssues issues() const;
+
     QString furtherInitialize() const;
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
@@ -413,6 +449,8 @@ private:
     CellMLSupport::CellmlFile *mCellmlFile;
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
+
+    SimulationIssues mIssues;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
