@@ -303,7 +303,8 @@ public:
 
     QString fileName() const;
 
-    bool checkForIssues();
+    void checkForIssues();
+    bool hasBlockingIssues();
     SimulationIssues issues() const;
 
     void save();
@@ -357,6 +358,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
+    bool mHasBlockingIssues;
     SimulationIssues mIssues;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
