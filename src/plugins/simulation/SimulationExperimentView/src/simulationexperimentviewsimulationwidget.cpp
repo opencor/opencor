@@ -979,7 +979,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         if (!simulationIssues.isEmpty()) {
             // There is one or several issues with our Simulation, so list
-             // it/them
+            // it/them
 
             for (const auto &simulationIssue : simulationIssues) {
                 QString issueType;
@@ -1015,7 +1015,8 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                     information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>[%1:%2] %3</strong> %4.</span>"+OutputBrLn).arg(simulationIssue.line())
                                                                                                                                       .arg(simulationIssue.column())
                                                                                                                                       .arg(issueType)
-                                                                                                                                      .arg(Core::formatMessage(simulationIssue.message().toHtmlEscaped()));                } else {
+                                                                                                                                      .arg(Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
+                } else {
                     information += QString(QString()+OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2.</span>"+OutputBrLn).arg(issueType)
                                                                                                                               .arg(Core::formatMessage(simulationIssue.message().toHtmlEscaped()));
                 }
