@@ -56,6 +56,19 @@ class SimulationResults;
 
 //==============================================================================
 
+// We bind the SimulationData object to the the first parameter of `updateParameters()`
+// to create a function object to be called when simulation parameters are updated
+
+#if defined(_MSC_VER)
+    typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+#elif defined(__APPLE__)
+    typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+#else
+    typedef std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type SimulationDataUpdatedFunction;
+#endif
+
+//==============================================================================
+
 class SimulationSupportPythonWrapper : public QObject
 {
     Q_OBJECT

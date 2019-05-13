@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 #include "datastoreglobal.h"
+#include "simulationsupportpythonwrapper.h"
 
 //==============================================================================
 
@@ -44,23 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace SimulationSupport {
-    class SimulationData;
-
-#if defined(_MSC_VER)
-    typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
-#elif defined(__APPLE__)
-    typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
-#else
-    typedef std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type SimulationDataUpdatedFunction;
-#endif
-}   // namespace SimulationSupport
-
-//==============================================================================
-
 namespace DataStore {
 
 //==============================================================================

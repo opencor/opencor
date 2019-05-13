@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "datastoreinterface.h"
 #include "simulationsupportglobal.h"
+#include "simulationsupportpythonwrapper.h"
 #include "solverinterface.h"
 
 //==============================================================================
@@ -76,19 +77,6 @@ class Simulation;
 class SimulationData;
 class SimulationResults;
 class SimulationWorker;
-
-//==============================================================================
-
-// We bind the SimulationData object to the the first parameter of `updateParameters()`
-// to create a function object to be called when simulation parameters are updated
-
-#if defined(_MSC_VER)
-    typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
-#elif defined(__APPLE__)
-    typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
-#else
-    typedef std::_Bind_helper<false, void (*)(SimulationData *), SimulationData *>::type SimulationDataUpdatedFunction;
-#endif
 
 //==============================================================================
 
