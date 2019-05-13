@@ -60,7 +60,13 @@ class SimulationResults;
 // to create a function object to be called when simulation parameters are updated
 
 #if defined(_MSC_VER)
-    typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+    #if _MSC_VER > 1900
+        // Visual Studio 2017
+        typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
+    #else
+        // Visual Studio 2015
+        typedef std::_Binder<std::_Unforced, void (*)(SimulationData *), SimulationData * const> SimulationDataUpdatedFunction;
+    #endif
 #elif defined(__APPLE__)
     typedef std::__bind<void (*)(SimulationData *), SimulationData *> SimulationDataUpdatedFunction;
 #else
