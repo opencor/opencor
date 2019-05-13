@@ -4,8 +4,8 @@
 <context>
     <name>OpenCOR::SimulationSupport::Simulation</name>
     <message>
-        <source>the model must have at least one ODE or DAE</source>
-        <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
+        <source>The model must have at least one ODE or DAE.</source>
+        <translation>Le modèle doit avoir au moins une EDO ou EAD.</translation>
     </message>
     <message>
         <source>the starting and ending points cannot have the same value</source>
