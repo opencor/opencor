@@ -12,12 +12,16 @@ set(RELEASE_TAG v${PYTHON_VERSION}_devel)
 
 # The versions of the Python packages we bundle
 
+# Science packages
+
 set(NUMPY_VERSION 1.15.4)
 
 set(MATPLOTLIB_VERSION 3.0.2)
 set(MATPLOTLIB_OPENCOR 3.0.2.1)
 
 set(SCIPY_VERSION 1.1.0)
+
+# IPython, Jupyter, and friends
 
 set(IPYKERNEL_VERSION 5.1.0)
 set(IPYKERNEL_PYTHONQT 5.1.0.3)
@@ -38,10 +42,10 @@ set(JUPYTER_CONSOLE_VERSION 6.0.0)
 
 set(JUPYTERLAB_VERSION 0.35.6)
 
+# Documentation packages
+
 set(LXML_VERSION 4.2.5)
-
 set(SPHINX_VERSION 1.8.2)
-
 
 # Our GitHub organisation
 
@@ -65,7 +69,6 @@ set(PACKAGED_FILES
     ${LOCAL_SITE_PACKAGES_DIR}
     ${PYTHON_RELATIVE_SCRIPT_DIR}
 )
-
 
 # Specify the files that need to have their SHA-1 value checked
 # Note: at least one file must have its SHA-1 value checked...
