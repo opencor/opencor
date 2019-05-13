@@ -313,8 +313,83 @@ void SimulationSupportPythonWrapper::simulationFinished(const qint64 &pElapsedTi
 
 //==============================================================================
 
+bool SimulationSupportPythonWrapper::valid(Simulation *pSimulation)
+{
+    // Is the simulation's model valid?
+
+    if (!pSimulation->hasBlockingIssues()) {
+        CellMLSupport::CellmlFileRuntime *runtime = pSimulation->runtime();
+        return (runtime != nullptr) && runtime->isValid();
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
+{
+    // Return a list of any issues the simulation has
+
+    PyObject *issuesList = PyList_New(0);
+
+    auto simulationIssues = pSimulation->issues();
+
+    for (const auto &simulationIssue : simulationIssues) {
+        QString issueType;
+        QString information;
+
+        switch (simulationIssue.type()) {
+        case SimulationSupport::SimulationIssue::Type::Unknown:
+            // We should never come here...
+#ifdef QT_DEBUG
+            qFatal("FATAL ERROR | %s:%d: a simulation issue cannot be of unknown type.", __FILE__, __LINE__);
+#else
+            break;
+#endif
+        case SimulationSupport::SimulationIssue::Type::Information:
+            issueType = tr("Information");
+
+            break;
+        case SimulationSupport::SimulationIssue::Type::Error:
+            issueType = tr("Error");
+
+            break;
+        case SimulationSupport::SimulationIssue::Type::Warning:
+            issueType = tr("Warning");
+
+            break;
+        case SimulationSupport::SimulationIssue::Type::Fatal:
+            issueType = tr("Fatal");
+
+            break;
+        }
+
+        if ((simulationIssue.line() != 0) && (simulationIssue.column() != 0)) {
+            information = QString("[%1:%2] %3: %4.").arg(simulationIssue.line())
+                                                     .arg(simulationIssue.column())
+                                                     .arg(issueType)
+                                                     .arg(Core::formatMessage(simulationIssue.message()));
+        } else {
+            information = QString("%1: %2.").arg(issueType)
+                                             .arg(Core::formatMessage(simulationIssue.message()));
+        }
+
+        PyList_Append(issuesList, PyUnicode_FromString(information.toUtf8().constData()));
+    }
+
+    return issuesList;
+}
+
+//==============================================================================
+
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
+    if (!SimulationSupportPythonWrapper::valid(pSimulation)) {
+        throw std::runtime_error(
+            tr("Cannot run an invalid simulation.").toStdString());
+    }
+
     QWidget *focusWidget = 0;
 
     // A successful run will set elapsed time

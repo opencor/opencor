@@ -391,7 +391,6 @@ public:
     ~Simulation() override;
 
     void checkForIssues();
-    bool hasBlockingIssues();
     SimulationIssues issues() const;
 
     QString furtherInitialize() const;
@@ -421,6 +420,8 @@ public:
 
 public slots:
     QString fileName() const;
+
+    bool hasBlockingIssues();
 
     void save();
     void reload();

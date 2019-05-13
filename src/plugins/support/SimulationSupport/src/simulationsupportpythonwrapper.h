@@ -68,6 +68,10 @@ private:
     QString mErrorMessage;
 
 public slots:
+    bool valid(OpenCOR::SimulationSupport::Simulation *pSimulation);
+
+    PyObject * issues(OpenCOR::SimulationSupport::Simulation *pSimulation) const;
+
     void clearResults(OpenCOR::SimulationSupport::Simulation *pSimulation);
 
     void resetParameters(OpenCOR::SimulationSupport::Simulation *pSimulation);
