@@ -20,7 +20,7 @@ set(MATPLOTLIB_OPENCOR 3.0.2.1)
 set(SCIPY_VERSION 1.1.0)
 
 set(IPYKERNEL_VERSION 5.1.0)
-set(IPYKERNEL_PYTHONQT 5.1.0.1)
+set(IPYKERNEL_PYTHONQT 5.1.0.3)
 
 set(IPYTHON_VERSION 7.5.0)
 set(IPYTHON_PYTHONQT 7.5.0.1)
@@ -104,7 +104,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
         endif()
     elseif(APPLE)
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} 1b52d2a7320c27e0f4cd45bf98decde08d156969
+                              ${RELATIVE_PROJECT_SOURCE_DIR} f1ca5d10b5a4f8d7ead2a151f2a64e91f5847f4a
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
