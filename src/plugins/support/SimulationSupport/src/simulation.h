@@ -302,12 +302,12 @@ public:
 
     QString fileName() const;
 
-    SimulationIssues issues();
-    bool hasBlockingIssues();
-
     void save();
     void reload();
     void rename(const QString &pFileName);
+
+    SimulationIssues issues();
+    bool hasBlockingIssues();
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 

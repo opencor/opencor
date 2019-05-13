@@ -1257,6 +1257,67 @@ QString Simulation::fileName() const
 
 //==============================================================================
 
+void Simulation::save()
+{
+    // Retrieve our file details
+
+    bool needReloading = mRuntime == nullptr;
+
+    retrieveFileDetails(false);
+
+    // Ask our data and results to update themselves, if needed
+    // Note: this is, for example, needed when we open an invalid file (in which
+    //       case mRuntime is null), fix it (resulting in a valid mRuntime
+    //       value) and then save it...
+
+    if (needReloading) {
+        mData->reload();
+        mResults->reload();
+    }
+
+    // Make sure that our initial values are up to date and check for
+    // modifications (which results in people being told that there are no
+    // modifications, meaning that a view like the Simulation Experiment view
+    // will disable its reset buttons), but only if we have / still have a
+    // runtime
+
+    if (mRuntime != nullptr) {
+        mData->updateInitialValues();
+        mData->checkForModifications();
+    }
+}
+
+//==============================================================================
+
+void Simulation::reload()
+{
+    // Stop our worker
+    // Note: we don't need to delete mWorker since it will be done as part of
+    //       its thread being stopped...
+
+    stop();
+
+    // Retrieve our file details
+
+    retrieveFileDetails();
+
+    // Ask our data and results to update themselves
+
+    mData->reload();
+    mResults->reload();
+}
+
+//==============================================================================
+
+void Simulation::rename(const QString &pFileName)
+{
+    // Rename ourselves by simply updating our file name
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
 SimulationIssues Simulation::issues()
 {
     // Reset a couple of things
@@ -1393,67 +1454,6 @@ bool Simulation::hasBlockingIssues()
     // Return whether we have blocking issues
 
     return mHasBlockingIssues;
-}
-
-//==============================================================================
-
-void Simulation::save()
-{
-    // Retrieve our file details
-
-    bool needReloading = mRuntime == nullptr;
-
-    retrieveFileDetails(false);
-
-    // Ask our data and results to update themselves, if needed
-    // Note: this is, for example, needed when we open an invalid file (in which
-    //       case mRuntime is null), fix it (resulting in a valid mRuntime
-    //       value) and then save it...
-
-    if (needReloading) {
-        mData->reload();
-        mResults->reload();
-    }
-
-    // Make sure that our initial values are up to date and check for
-    // modifications (which results in people being told that there are no
-    // modifications, meaning that a view like the Simulation Experiment view
-    // will disable its reset buttons), but only if we have / still have a
-    // runtime
-
-    if (mRuntime != nullptr) {
-        mData->updateInitialValues();
-        mData->checkForModifications();
-    }
-}
-
-//==============================================================================
-
-void Simulation::reload()
-{
-    // Stop our worker
-    // Note: we don't need to delete mWorker since it will be done as part of
-    //       its thread being stopped...
-
-    stop();
-
-    // Retrieve our file details
-
-    retrieveFileDetails();
-
-    // Ask our data and results to update themselves
-
-    mData->reload();
-    mResults->reload();
-}
-
-//==============================================================================
-
-void Simulation::rename(const QString &pFileName)
-{
-    // Rename ourselves by simply updating our file name
-
-    mFileName = pFileName;
 }
 
 //==============================================================================
