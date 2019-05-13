@@ -44,12 +44,11 @@ class EDITORWIDGET_EXPORT EditorListItem : public QStandardItem
 {
 public:
     enum class Type {
-        Unknown     = QStandardItem::UserType,
-        Error       = QStandardItem::UserType+1,
-        Warning     = QStandardItem::UserType+2,
-        Hint        = QStandardItem::UserType+3,
-        Information = QStandardItem::UserType+4,
-        Fatal       = QStandardItem::UserType+5
+        Error       = QStandardItem::UserType,
+        Warning     = QStandardItem::UserType+1,
+        Hint        = QStandardItem::UserType+2,
+        Information = QStandardItem::UserType+3,
+        Fatal       = QStandardItem::UserType+4
     };
 
     explicit EditorListItem(Type pType, int pLine, int pColumn,
