@@ -295,7 +295,7 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
     for (uint i = 0, iMax = sedmlDocument->getNumErrors(); i < iMax; ++i) {
         const libsedml::SedError *error = sedmlDocument->getError(i);
-        SedmlFileIssue::Type issueType = SedmlFileIssue::Type::Unknown;
+        SedmlFileIssue::Type issueType = SedmlFileIssue::Type::Fatal;
 
         switch (error->getSeverity()) {
         case LIBSBML_SEV_INFO:
@@ -322,11 +322,10 @@ bool SedmlFile::isValid(const QString &pFileContents, SedmlFileIssues &pIssues)
 
         static const QRegularExpression TrailingEmptyLinesRegEx = QRegularExpression("[\\n]*$");
 
-        QString errorMessage = QString::fromStdString(error->getMessage()).remove(TrailingEmptyLinesRegEx);
         SedmlFileIssue issue = SedmlFileIssue(issueType,
                                               int(error->getLine()),
                                               int(error->getColumn()),
-                                              errorMessage);
+                                              QString::fromStdString(error->getMessage()).remove(TrailingEmptyLinesRegEx));
 
         if (!pIssues.contains(issue)) {
             pIssues << issue;

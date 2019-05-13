@@ -69,14 +69,6 @@ EditorListItem::EditorListItem(Type pType, int pLine, int pColumn,
     setToolTip(text());
 
     switch (pType) {
-    case Type::Unknown:
-        // We should never come here...
-
-#ifdef QT_DEBUG
-        qFatal("FATAL ERROR | %s:%d: a list item cannot be of unknown type.", __FILE__, __LINE__);
-#else
-        break;
-#endif
     case Type::Error:
         setIcon(ErrorIcon);
 
@@ -302,8 +294,6 @@ void EditorListWidget::copyToClipboard()
         QString itemType;
 
         switch (EditorListItem::Type(item->type())) {
-        case EditorListItem::Type::Unknown:
-            break;
         case EditorListItem::Type::Error:
             itemType = tr("Error");
 
