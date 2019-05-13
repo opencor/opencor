@@ -1156,6 +1156,7 @@ Simulation::Simulation(const QString &pFileName) :
     mCellmlFile(nullptr),
     mSedmlFile(nullptr),
     mCombineArchive(nullptr),
+    mNeedCheckIssues(true),
     mIssues(SimulationIssues()),
     mHasBlockingIssues(false),
     mRuntime(nullptr),
@@ -1244,6 +1245,14 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
             mRuntime->update(mCellmlFile, false);
         }
     }
+
+    // Update our issues, if we had previously checked for them
+
+    if (!mNeedCheckIssues) {
+        mNeedCheckIssues = true;
+
+        checkIssues();
+    }
 }
 
 //==============================================================================
@@ -1318,10 +1327,17 @@ void Simulation::rename(const QString &pFileName)
 
 //==============================================================================
 
-SimulationIssues Simulation::issues()
+void Simulation::checkIssues()
 {
-    // Reset a couple of things
+    // Make sure that we haven't already checked for issues
 
+    if (!mNeedCheckIssues) {
+        return;
+    }
+
+    // Reset our issues
+
+    mNeedCheckIssues = false;
     mIssues = SimulationIssues();
     mHasBlockingIssues = false;
 
@@ -1443,6 +1459,15 @@ SimulationIssues Simulation::issues()
             }
         }
     }
+}
+
+//==============================================================================
+
+SimulationIssues Simulation::issues()
+{
+    // Return our issues, after having checked for them
+
+    checkIssues();
 
     return mIssues;
 }
@@ -1451,7 +1476,9 @@ SimulationIssues Simulation::issues()
 
 bool Simulation::hasBlockingIssues()
 {
-    // Return whether we have blocking issues
+    // Return whether we have blocking issues, after having checked for them
+
+    checkIssues();
 
     return mHasBlockingIssues;
 }
