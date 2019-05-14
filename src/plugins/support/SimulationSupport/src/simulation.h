@@ -84,7 +84,6 @@ class SIMULATIONSUPPORT_EXPORT SimulationIssue
 {
 public:
     enum class Type {
-        Unknown,
         Information,
         Error,
         Warning,
@@ -378,8 +377,8 @@ public:
     explicit Simulation(const QString &pFileName);
     ~Simulation() override;
 
-    void checkForIssues();
-    SimulationIssues issues() const;
+    void checkIssues();
+    SimulationIssues issues();
 
     QString furtherInitialize() const;
 
@@ -440,8 +439,9 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
-    bool mHasBlockingIssues;
+    bool mNeedCheckIssues;
     SimulationIssues mIssues;
+    bool mHasBlockingIssues;
 
     CellMLSupport::CellmlFileRuntime *mRuntime;
 

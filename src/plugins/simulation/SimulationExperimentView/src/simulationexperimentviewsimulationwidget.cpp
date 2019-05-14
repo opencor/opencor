@@ -942,17 +942,12 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                                    fileManagerInstance->url(simulationFileName):
                                    simulationFileName;
         QString information = "<strong>"+QDir::toNativeSeparators(fileName)+"</strong>"+OutputBrLn;
-
+        SimulationSupport::SimulationIssues simulationIssues = mSimulation->issues();
         CellMLSupport::CellmlFileRuntime *runtime = mSimulation->runtime();
         bool validRuntime = (runtime != nullptr) && runtime->isValid();
-
         CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?runtime->voi():nullptr;
 
-        mSimulation->checkForIssues();
-
-        bool hasBlockingIssues = mSimulation->hasBlockingIssues();
-
-        if (!hasBlockingIssues) {
+        if (!mSimulation->hasBlockingIssues()) {
             information += QString()+OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
             if (voi != nullptr) {
@@ -977,8 +972,6 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
             }
         }
 
-        auto simulationIssues = mSimulation->issues();
-
         if (!simulationIssues.isEmpty()) {
             // There is one or several issues with our Simulation, so list
             // it/them
@@ -987,14 +980,6 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
                 QString issueType;
 
                 switch (simulationIssue.type()) {
-                case SimulationSupport::SimulationIssue::Type::Unknown:
-                    // We should never come here...
-
-#ifdef QT_DEBUG
-                    qFatal("FATAL ERROR | %s:%d: a simulation issue cannot be of unknown type.", __FILE__, __LINE__);
-#else
-                    break;
-#endif
                 case SimulationSupport::SimulationIssue::Type::Information:
                     issueType = tr("Information:");
 
@@ -1034,7 +1019,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
 
         mValidSimulationEnvironment = false;
 
-        if (!hasBlockingIssues) {
+        if (!mSimulation->hasBlockingIssues()) {
             // Enable/disable our run/pause action depending on whether we have
             // a VOI
 

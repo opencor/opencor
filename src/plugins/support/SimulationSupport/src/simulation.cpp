@@ -1487,7 +1487,9 @@ Simulation::Simulation(const QString &pFileName) :
     mCellmlFile(nullptr),
     mSedmlFile(nullptr),
     mCombineArchive(nullptr),
+    mNeedCheckIssues(true),
     mIssues(SimulationIssues()),
+    mHasBlockingIssues(false),
     mRuntime(nullptr),
     mWorker(nullptr)
 {
@@ -1707,6 +1709,14 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
             mRuntime->update(mCellmlFile, false);
         }
     }
+
+    // Update our issues, if we had previously checked for them
+
+    if (!mNeedCheckIssues) {
+        mNeedCheckIssues = true;
+
+        checkIssues();
+    }
 }
 
 //==============================================================================
@@ -1716,175 +1726,6 @@ QString Simulation::fileName() const
     // Return our file name
 
     return mFileName;
-}
-
-//==============================================================================
-
-void Simulation::checkForIssues()
-{
-    // Reset our list of issues
-
-    mIssues = SimulationIssues();
-
-    SEDMLSupport::SedmlFileIssues sedmlFileIssues = (sedmlFile() != nullptr)?
-                                                     sedmlFile()->issues():
-                                                     SEDMLSupport::SedmlFileIssues();
-    COMBINESupport::CombineArchiveIssues combineArchiveIssues = (combineArchive() != nullptr)?
-                                                                 combineArchive()->issues():
-                                                                 COMBINESupport::CombineArchiveIssues();
-    bool atLeastOneBlockingSedmlIssue = false;
-    bool atLeastOneBlockingCombineIssue = false;
-
-    if (!combineArchiveIssues.isEmpty()) {
-        // There is one or several issues with our COMBINE archive, so list
-        // it/them
-
-        for (const auto &combineArchiveIssue : combineArchiveIssues) {
-            SimulationIssue::Type issueType = SimulationIssue::Type::Unknown;
-
-            switch (combineArchiveIssue.type()) {
-            case COMBINESupport::CombineArchiveIssue::Type::Information:
-                issueType = SimulationIssue::Type::Information;
-
-                break;
-            case COMBINESupport::CombineArchiveIssue::Type::Error:
-                issueType = SimulationIssue::Type::Error;
-
-                atLeastOneBlockingCombineIssue = true;
-
-                break;
-            case COMBINESupport::CombineArchiveIssue::Type::Warning:
-                issueType = SimulationIssue::Type::Warning;
-
-                break;
-            case COMBINESupport::CombineArchiveIssue::Type::Fatal:
-                issueType = SimulationIssue::Type::Fatal;
-
-                atLeastOneBlockingCombineIssue = true;
-
-                break;
-            }
-
-            if (issueType != SimulationIssue::Type::Unknown) {
-                mIssues.append(SimulationIssue(issueType, combineArchiveIssue.message()));
-            }
-        }
-    }
-
-    if (!sedmlFileIssues.isEmpty()) {
-        // There is one or several issues with our SED-ML file, so list
-        // it/them
-
-        for (const auto &sedmlFileIssue : sedmlFileIssues) {
-            SimulationIssue::Type issueType = SimulationIssue::Type::Unknown;
-
-            switch (sedmlFileIssue.type()) {
-            case SEDMLSupport::SedmlFileIssue::Type::Unknown:
-                // We should never come here...
-
-#ifdef QT_DEBUG
-                qFatal("FATAL ERROR | %s:%d: a SED-ML file issue cannot be of unknown type.", __FILE__, __LINE__);
-#else
-                break;
-#endif
-            case SEDMLSupport::SedmlFileIssue::Type::Information:
-                issueType = SimulationIssue::Type::Information;
-
-                break;
-            case SEDMLSupport::SedmlFileIssue::Type::Error:
-                issueType = SimulationIssue::Type::Error;
-
-                atLeastOneBlockingSedmlIssue = true;
-
-                break;
-            case SEDMLSupport::SedmlFileIssue::Type::Warning:
-                issueType = SimulationIssue::Type::Warning;
-
-                break;
-            case SEDMLSupport::SedmlFileIssue::Type::Fatal:
-                issueType = SimulationIssue::Type::Fatal;
-
-                atLeastOneBlockingSedmlIssue = true;
-
-                break;
-            }
-
-            if (issueType != SimulationIssue::Type::Unknown) {
-                if ((sedmlFileIssue.line() != 0) && (sedmlFileIssue.column() != 0)) {
-                    mIssues.append(SimulationIssue(issueType,
-                                                   sedmlFileIssue.line(),
-                                                   sedmlFileIssue.column(),
-                                                   sedmlFileIssue.message()));
-                } else {
-                    mIssues.append(SimulationIssue(issueType, sedmlFileIssue.message()));
-                }
-            }
-        }
-    }
-
-    bool validRuntime = (mRuntime != nullptr) && mRuntime->isValid();
-
-    CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?mRuntime->voi():nullptr;
-
-    if (!atLeastOneBlockingSedmlIssue && !atLeastOneBlockingCombineIssue) {
-        if (voi == nullptr) {
-            // We couldn't retrieve a VOI, which means that we either don't
-            // have a runtime or we have one, but it's not valid or it's
-            // valid but we really don't have a VOI
-            // Note: in the case of a valid runtime and no VOI, we really
-            //       shouldn't consider the runtime to be valid, hence we
-            //       handle this case here...
-
-
-            if (validRuntime) {
-                // We have a valid runtime, but no VOI, which means that the
-                // model doesn't contain any ODE or DAE
-
-                mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("the model must have at least one ODE or DAE")));
-            } else {
-                // We don't have a valid runtime, so either there are some
-                // problems with the CellML file, its runtime, or even the
-                // parent SED-ML file and/or COMBINE archive
-                // Note: in the case of problems with the SED-ML file and/or
-                //       COMBINE archive, we will already have listed the
-                //       problems, so no need to do anything more in those
-                //       cases...
-
-                if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
-                    for (const auto &issue : (mRuntime != nullptr)?
-                                                 mRuntime->issues():
-                                                 (cellmlFile() != nullptr)?
-                                                     cellmlFile()->issues():
-                                                     CellMLSupport::CellmlFileIssues()) {
-                        mIssues.append(SimulationIssue((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?SimulationIssue::Type::Error:SimulationIssue::Type::Warning,
-                                                       issue.message()));
-                    }
-                }
-            }
-        }
-    }
-
-    // Remember if there is a blocking SED-ML or Combine issue
-
-    mHasBlockingIssues = atLeastOneBlockingSedmlIssue || atLeastOneBlockingCombineIssue;
-}
-
-//==============================================================================
-
-bool Simulation::hasBlockingIssues()
-{
-    // Return if we have blocking issues
-
-    return mHasBlockingIssues;
-}
-
-//==============================================================================
-
-SimulationIssues Simulation::issues() const
-{
-    // Return our issues
-
-    return mIssues;
 }
 
 //==============================================================================
@@ -1946,6 +1787,164 @@ void Simulation::rename(const QString &pFileName)
     // Rename ourselves by simply updating our file name
 
     mFileName = pFileName;
+}
+
+//==============================================================================
+
+void Simulation::checkIssues()
+{
+    // Make sure that we haven't already checked for issues
+
+    if (!mNeedCheckIssues) {
+        return;
+    }
+
+    // Reset our issues
+
+    mNeedCheckIssues = false;
+    mIssues = SimulationIssues();
+    mHasBlockingIssues = false;
+
+    // Determine whether we have issues with our SED-ML and our COMBINE archive
+
+    SEDMLSupport::SedmlFileIssues sedmlFileIssues = (mSedmlFile != nullptr)?
+                                                        mSedmlFile->issues():
+                                                        SEDMLSupport::SedmlFileIssues();
+    COMBINESupport::CombineArchiveIssues combineArchiveIssues = (mCombineArchive != nullptr)?
+                                                                    mCombineArchive->issues():
+                                                                    COMBINESupport::CombineArchiveIssues();
+
+    if (!combineArchiveIssues.isEmpty()) {
+        // There is one or several issues with our COMBINE archive, so list
+        // it/them
+
+        for (const auto &combineArchiveIssue : combineArchiveIssues) {
+            SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
+
+            switch (combineArchiveIssue.type()) {
+            case COMBINESupport::CombineArchiveIssue::Type::Information:
+                issueType = SimulationIssue::Type::Information;
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Type::Error:
+                issueType = SimulationIssue::Type::Error;
+
+                mHasBlockingIssues = true;
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Type::Warning:
+                issueType = SimulationIssue::Type::Warning;
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Type::Fatal:
+                issueType = SimulationIssue::Type::Fatal;
+
+                mHasBlockingIssues = true;
+
+                break;
+            }
+
+            mIssues.append(SimulationIssue(issueType, combineArchiveIssue.message()));
+        }
+    }
+
+    if (!sedmlFileIssues.isEmpty()) {
+        // There is one or several issues with our SED-ML file, so list it/them
+
+        for (const auto &sedmlFileIssue : sedmlFileIssues) {
+            SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
+
+            switch (sedmlFileIssue.type()) {
+            case SEDMLSupport::SedmlFileIssue::Type::Information:
+                issueType = SimulationIssue::Type::Information;
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Type::Error:
+                issueType = SimulationIssue::Type::Error;
+
+                mHasBlockingIssues = true;
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Type::Warning:
+                issueType = SimulationIssue::Type::Warning;
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Type::Fatal:
+                issueType = SimulationIssue::Type::Fatal;
+
+                mHasBlockingIssues = true;
+
+                break;
+            }
+
+            mIssues.append(SimulationIssue(issueType,
+                                           sedmlFileIssue.line(),
+                                           sedmlFileIssue.column(),
+                                           sedmlFileIssue.message()));
+        }
+    }
+
+    if (!mHasBlockingIssues) {
+        bool validRuntime = (mRuntime != nullptr) && mRuntime->isValid();
+        CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?mRuntime->voi():nullptr;
+
+        if (voi == nullptr) {
+            // We couldn't retrieve a VOI, which means that we either don't have
+            // a runtime or we have one, but it's not valid or it's valid but we
+            // really don't have a VOI
+            // Note: in the case of a valid runtime and no VOI, we really
+            //       shouldn't consider the runtime to be valid, hence we handle
+            //       this case here...
+
+            if (validRuntime) {
+                // We have a valid runtime, but no VOI, which means that the
+                // model doesn't contain any ODE or DAE
+
+                mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("The model must have at least one ODE or DAE.")));
+            } else {
+                // We don't have a valid runtime, so either there are some
+                // problems with the CellML file, its runtime, or even the
+                // parent SED-ML file and/or COMBINE archive
+                // Note: in the case of problems with the SED-ML file and/or
+                //       COMBINE archive, we will already have listed the
+                //       problems, so no need to do anything more in those
+                //       cases...
+
+                if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
+                    for (const auto &issue : (mRuntime != nullptr)?
+                                                 mRuntime->issues():
+                                                 (mCellmlFile != nullptr)?
+                                                     mCellmlFile->issues():
+                                                     CellMLSupport::CellmlFileIssues()) {
+                        mIssues.append(SimulationIssue((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?SimulationIssue::Type::Error:SimulationIssue::Type::Warning,
+                                                       issue.message()));
+                    }
+                }
+            }
+        }
+    }
+}
+
+//==============================================================================
+
+SimulationIssues Simulation::issues()
+{
+    // Return our issues, after having checked for them
+
+    checkIssues();
+
+    return mIssues;
+}
+
+//==============================================================================
+
+bool Simulation::hasBlockingIssues()
+{
+    // Return whether we have blocking issues, after having checked for them
+
+    checkIssues();
+
+    return mHasBlockingIssues;
 }
 
 //==============================================================================
