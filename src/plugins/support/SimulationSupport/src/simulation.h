@@ -302,12 +302,12 @@ public:
 
     QString fileName() const;
 
-    SimulationIssues issues();
-    bool hasBlockingIssues();
-
     void save();
     void reload();
     void rename(const QString &pFileName);
+
+    SimulationIssues issues();
+    bool hasBlockingIssues();
 
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
@@ -356,6 +356,7 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
+    bool mNeedCheckIssues;
     SimulationIssues mIssues;
     bool mHasBlockingIssues;
 
@@ -366,6 +367,8 @@ private:
     SimulationData *mData;
     SimulationResults *mResults;
     SimulationImportData *mImportData;
+
+    void checkIssues();
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 
