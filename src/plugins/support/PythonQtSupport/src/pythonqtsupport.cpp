@@ -52,9 +52,23 @@ void addObject(PyObject *pObject, const QString &pName, QObject *pQObject)
 
 //==============================================================================
 
+void evalFile(const QString &pFilename)
+{
+    PythonQt::self()->evalFile(PythonQt::self()->getMainModule(), pFilename);
+}
+
+//==============================================================================
+
 QVariant evalScript(const QString &pScript)
 {
     return PythonQt::self()->evalScript(PythonQt::self()->getMainModule(), pScript);
+}
+
+//==============================================================================
+
+PythonQtObjectPtr importModule(const QString &pModule)
+{
+    return PythonQt::self()->importModule(pModule);
 }
 
 //==============================================================================

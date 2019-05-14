@@ -18,63 +18,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 
 //==============================================================================
-// Python Qt support functions
+// Run Python script plugin
 //==============================================================================
 
 #pragma once
 
 //==============================================================================
 
-#include "pythonqtsupportglobal.h"
-
-//==============================================================================
-
-#include "PythonQt/PythonQt.h"
-
-//==============================================================================
-
-#include <QObject>
-#include <QMetaObject>
-#include <QString>
-#include <QVariant>
+#include "cliinterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace PythonQtSupport {
+namespace PythonRunScript {
 
 //==============================================================================
 
-PYTHONQTSUPPORT_EXPORT
-void addInstanceDecorators(QObject *pQObject);
-
-PYTHONQTSUPPORT_EXPORT
-void addObject(PyObject *pObject, const QString &pName, QObject *pQObject);
-
-PYTHONQTSUPPORT_EXPORT
-void evalFile(const QString &pFileName);
-
-PYTHONQTSUPPORT_EXPORT
-QVariant evalScript(const QString &pScript);
-
-PYTHONQTSUPPORT_EXPORT
-PythonQtObjectPtr importModule(const QString &pModule);
-
-PYTHONQTSUPPORT_EXPORT
-void registerClass(const QMetaObject *pMetaObject);
-
-PYTHONQTSUPPORT_EXPORT
-PyObject *wrapQObject(QObject *pQObject);
-
-PYTHONQTSUPPORT_EXPORT
-PythonQtInstanceWrapper *getInstanceWrapper(PyObject *self);
+PLUGININFO_FUNC PythonRunScriptPluginInfo();
 
 //==============================================================================
 
-}   // namespace PythonQtSupport
+class PythonRunScriptPlugin : public QObject, public CliInterface
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.PythonRunScriptPlugin" FILE "pythonrunscriptplugin.json")
+
+    Q_INTERFACES(OpenCOR::CliInterface)
+
+public:
+#include "cliinterface.inl"
+
+private:
+    void runHelpCommand();
+    int runScript(const QStringList &pArguments);
+};
+
+//==============================================================================
+
+}   // namespace PythonRunScript
 }   // namespace OpenCOR
 
 //==============================================================================
 // End of file
 //==============================================================================
-

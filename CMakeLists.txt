@@ -893,6 +893,7 @@ set(PLUGINS
     miscellaneous/HelpWindow
     miscellaneous/JupyterKernel
     miscellaneous/PythonQtConsoleWindow
+    miscellaneous/PythonRunScript
     miscellaneous/WebBrowserWindow
 
     organisation/FileBrowserWindow
