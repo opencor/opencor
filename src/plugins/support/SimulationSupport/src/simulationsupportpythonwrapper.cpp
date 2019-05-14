@@ -70,16 +70,19 @@ static PyObject *initializeSimulation(const QString &pFileName)
     Simulation *simulation = simulationManager->simulation(pFileName);
 
     if (simulation) {
-        // Do we have a valid runtime?
 
-        if (!simulation->runtime()) {
-            // The simulation is missing a runtime so no longer manage it
+        // See if the simulation has any issues
+
+        simulation->checkIssues();
+
+        if (simulation->hasBlockingIssues()) {
+            // The simulation has blocking issues so no longer manage it
 
             simulationManager->unmanage(pFileName);
 
             // And raise a Python exception
 
-            PyErr_SetString(PyExc_ValueError, QObject::tr("unable to get simulations's runtime").toStdString().c_str());
+            PyErr_SetString(PyExc_ValueError, QObject::tr("The simulation has blocking issues").toStdString().c_str());
 
             return nullptr;
         }
@@ -151,6 +154,23 @@ static PyObject *initializeSimulation(const QString &pFileName)
                 return nullptr;
             }
         }
+
+        // Do we have a valid simulation?
+
+        CellMLSupport::CellmlFileRuntime *runtime = simulation->runtime();
+
+        if ((runtime == nullptr) || !runtime->isValid()) {
+            // The simulation is invalid so no longer manage it
+
+            simulationManager->unmanage(pFileName);
+
+            // And raise a Python exception
+
+            PyErr_SetString(PyExc_ValueError, QObject::tr("Unable to get a valid runtime for the simulation").toStdString().c_str());
+
+            return nullptr;
+        }
+
         // Reset both the simulation's data and results (well, initialise in the
         // case of its data)
 
@@ -340,13 +360,6 @@ PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
         QString information;
 
         switch (simulationIssue.type()) {
-        case SimulationSupport::SimulationIssue::Type::Unknown:
-            // We should never come here...
-#ifdef QT_DEBUG
-            qFatal("FATAL ERROR | %s:%d: a simulation issue cannot be of unknown type.", __FILE__, __LINE__);
-#else
-            break;
-#endif
         case SimulationSupport::SimulationIssue::Type::Information:
             issueType = tr("Information");
 
@@ -385,7 +398,7 @@ PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
-    if (!SimulationSupportPythonWrapper::valid(pSimulation)) {
+    if (!valid(pSimulation)) {
         throw std::runtime_error(
             tr("Cannot run an invalid simulation.").toStdString());
     }
