@@ -6,5 +6,5 @@ SET OPENCOR_DIR=%~dp0
 REM Make sure the path to Python is correct before starting Jupyter
 CALL "%OPENCOR_DIR%set_python_path.bat"
 
-REM Start our script that runs Python code in OpenCOR
-"%OPENCOR_DIR%Python\bin\Python.exe" "%OPENCOR_DIR%Python\Scripts\run_python.py" %*
+REM Start the OpenCOR plugin that runs Python code
+bin\${CMAKE_PROJECT_NAME} -c PythonRunScript::script %*

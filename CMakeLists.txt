@@ -1302,14 +1302,18 @@ if(WIN32)
     INSTALL(DIRECTORY ${PROJECT_BUILD_DIR}/Python
             DESTINATION .)
 
-    # Scripts to start Jupyter
+    # Scripts to setup and run Python and Jupyter
+
+    set(RUN_PYTHON ${PROJECT_BUILD_DIR}/run_python.bat)
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/run_python.bat.in
+                   ${RUN_PYTHON} @ONLY)
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/IPython.bat
                   ${CMAKE_SOURCE_DIR}/distrib/windows/JupyterLab.bat
                   ${CMAKE_SOURCE_DIR}/distrib/windows/Notebook.bat
                   ${CMAKE_SOURCE_DIR}/distrib/windows/run_jupyter.bat
-                  ${CMAKE_SOURCE_DIR}/distrib/windows/run_python.bat
                   ${CMAKE_SOURCE_DIR}/distrib/windows/set_python_path.bat
+                  ${RUN_PYTHON}
             DESTINATION .)
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/start_jupyter.py
@@ -1458,12 +1462,16 @@ else()
 
     # Shell scripts to setup and run Python and Jupyter
 
+    set(RUN_PYTHON ${PROJECT_BUILD_DIR}/run_python.sh)
+    configure_file(${CMAKE_SOURCE_DIR}/distrib/linux/run_python.sh.in
+                   ${RUN_PYTHON} @ONLY)
+
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/ipython.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/jupyterlab.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/notebook.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/run_jupyter.sh
-                  ${CMAKE_SOURCE_DIR}/distrib/linux/run_python.sh
                   ${CMAKE_SOURCE_DIR}/distrib/linux/set_python_path.sh
+                  ${RUN_PYTHON}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 

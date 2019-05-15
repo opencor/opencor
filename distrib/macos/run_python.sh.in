@@ -8,6 +8,6 @@ OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
 ${OPENCOR_DIR}/set_python_path.sh
 
-# Start our script that runs Python code in OpenCOR
+# Start the OpenCOR plugin that runs Python code
 
-${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/Frameworks/Python/bin/run_python.py $*
+${OPENCOR_DIR}/@CMAKE_PROJECT_NAME@.app/Contents/MacOS/@CMAKE_PROJECT_NAME@ -c PythonRunScript::script $*
