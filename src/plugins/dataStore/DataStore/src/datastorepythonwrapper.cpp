@@ -349,10 +349,12 @@ PyObject * DataStorePythonWrapper::dataStoreValuesDict(
 
     ((DataStoreValuesDictObject *)valuesDict)->mSimulationDataUpdatedFunction = pSimulationDataUpdatedFunction;
 
-    for (int i = 0; i < pDataStoreValues->size(); ++i) {
-        DataStoreValue *value = pDataStoreValues->at(i);
+    if (pDataStoreValues != nullptr) {
+        for (int i = 0; i < pDataStoreValues->size(); ++i) {
+            DataStoreValue *value = pDataStoreValues->at(i);
 
-        PythonQtSupport::addObject(valuesDict, value->uri(), value);
+            PythonQtSupport::addObject(valuesDict, value->uri(), value);
+        }
     }
 
     return valuesDict;
