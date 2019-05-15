@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
     IPKernelApp.connection_file = '%1'
     IPKernelApp.launch_instance(kernel_class=OpenCORKernel)
-    )PYTHON";
+)PYTHON";
 
 //==============================================================================
 
