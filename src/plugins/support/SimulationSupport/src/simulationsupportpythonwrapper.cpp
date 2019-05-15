@@ -71,20 +71,14 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
     if (simulation) {
 
-        // See if the simulation has any issues
+        // Check for issues with the simulation
 
         simulation->checkIssues();
 
         if (simulation->hasBlockingIssues()) {
-            // The simulation has blocking issues so no longer manage it
+            // We return the simulation to allow the user to view its issues
 
-            simulationManager->unmanage(pFileName);
-
-            // And raise a Python exception
-
-            PyErr_SetString(PyExc_ValueError, QObject::tr("The simulation has blocking issues").toStdString().c_str());
-
-            return nullptr;
+            return PythonQt::priv()->wrapQObject(simulation);
         }
 
         // Find the solver whose name is first in alphabetical order, as this
@@ -159,23 +153,13 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
         CellMLSupport::CellmlFileRuntime *runtime = simulation->runtime();
 
-        if ((runtime == nullptr) || !runtime->isValid()) {
-            // The simulation is invalid so no longer manage it
+        if ((runtime != nullptr) && runtime->isValid()) {
+            // Reset both the simulation's data and results (well, initialise in the
+            // case of its data)
 
-            simulationManager->unmanage(pFileName);
-
-            // And raise a Python exception
-
-            PyErr_SetString(PyExc_ValueError, QObject::tr("Unable to get a valid runtime for the simulation").toStdString().c_str());
-
-            return nullptr;
+            simulation->data()->reset();
+            simulation->results()->reset();
         }
-
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data)
-
-        simulation->data()->reset();
-        simulation->results()->reset();
 
         // Return the simulation as a Python object
 
@@ -398,9 +382,12 @@ PyObject *SimulationSupportPythonWrapper::issues(Simulation *pSimulation) const
 
 bool SimulationSupportPythonWrapper::run(Simulation *pSimulation)
 {
-    if (!valid(pSimulation)) {
+    if (pSimulation->hasBlockingIssues()) {
         throw std::runtime_error(
-            tr("Cannot run an invalid simulation.").toStdString());
+            tr("Cannot run because simulation has blocking issues.").toStdString());
+    } else if (!valid(pSimulation)) {
+        throw std::runtime_error(
+            tr("Cannot run because simulation has an invalid runtime.").toStdString());
     }
 
     QWidget *focusWidget = 0;
