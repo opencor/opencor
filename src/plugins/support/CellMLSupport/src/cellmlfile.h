@@ -171,7 +171,7 @@ private:
 
     bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                  CellmlFileIssues &pIssues,
-                                 bool pWithBusyWidget = false);
+                                 bool pWithBusyWidget);
 
     bool load(const QString &pFileContents,
               ObjRef<iface::cellml_api::Model> *pModel,
