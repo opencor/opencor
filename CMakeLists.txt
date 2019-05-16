@@ -1306,7 +1306,7 @@ if(WIN32)
 
     set(RUN_PYTHON_FILENAME "${PROJECT_BUILD_DIR}/run_python.bat")
     configure_file(${CMAKE_SOURCE_DIR}/distrib/windows/run_python.bat.in
-                   ${RUN_PYTHON_FILENAME} @ONLY)
+                   ${RUN_PYTHON_FILENAME})
 
     install(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/IPython.bat
                   ${CMAKE_SOURCE_DIR}/distrib/windows/JupyterLab.bat
