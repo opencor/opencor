@@ -1348,7 +1348,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
             QByteArray fileContents;
             QString errorMessage;
 
-            Core::centralWidget()->showBusyWidget();
+            Core::showCentralBusyWidget();
 
             if (Core::readFile(modelSource, fileContents, &errorMessage)) {
                 // Save the contents of our model source to a local file and use
@@ -1372,7 +1372,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                                                                               .arg(Core::formatMessage(errorMessage)));
             }
 
-            Core::centralWidget()->hideBusyWidget();
+            Core::hideCentralBusyWidget();
         }
     }
 

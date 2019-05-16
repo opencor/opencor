@@ -247,13 +247,13 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         QString fileContents;
 
                         if (showAndHideBusyWidget) {
-                            Core::centralWidget()->showBusyWidget();
+                            Core::showCentralBusyWidget();
                         }
 
                         bool res = Core::readFile(fileNameOrUrl, fileContents);
 
                         if (showAndHideBusyWidget) {
-                            Core::centralWidget()->hideBusyWidget();
+                            Core::hideCentralBusyWidget();
                         }
 
                         if (res) {

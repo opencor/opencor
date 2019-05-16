@@ -86,6 +86,58 @@ CentralWidget * centralWidget()
 
 //==============================================================================
 
+void showCentralBusyWidget()
+{
+    // Show our central busy widget, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget) {
+        centralWidget->showBusyWidget();
+    }
+}
+
+//==============================================================================
+
+void showCentralProgressBusyWidget()
+{
+    // Show our central progress busy widget, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget) {
+        centralWidget->showProgressBusyWidget();
+    }
+}
+
+//==============================================================================
+
+void setCentralBusyWidgetProgress(double pProgress)
+{
+    // Set our central busy widget progress, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget) {
+        centralWidget->setBusyWidgetProgress(pProgress);
+    }
+}
+
+//==============================================================================
+
+void hideCentralBusyWidget()
+{
+    // Hide our central busy widget, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget) {
+        centralWidget->hideBusyWidget();
+    }
+}
+
+//==============================================================================
+
 QString allFilters(const QStringList &pFilters)
 {
     QStringList filters = pFilters;
