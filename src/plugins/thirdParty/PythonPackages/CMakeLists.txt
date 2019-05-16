@@ -92,11 +92,11 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
     if(WIN32)
         if(RELEASE_MODE)
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                                  ${RELATIVE_PROJECT_SOURCE_DIR} 652416df79cc3df5f658ce5960fb3bafe51fca6d
+                                  ${RELATIVE_PROJECT_SOURCE_DIR} 5f1f3000a339a722de6cd9ff486ce80e727989f2
                                   PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                                   RELEASE_TAG ${RELEASE_TAG}
                                   SHA1_FILES ${SHA1_FILES}
-                                  SHA1_VALUES bd2befaf0efacb2d4ee4957ab58a4315290ec804)
+                                  SHA1_VALUES cf9f9b247398d159a6658ec50787d71ea6e6ba0b)
         else()
             retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
                                   ${RELATIVE_PROJECT_SOURCE_DIR} 077f8f0f162fe54d1d4743b4ad43869d3683b8c7
@@ -114,7 +114,7 @@ if(USE_PREBUILT_PYTHON_PACKAGES_PACKAGE)
                               SHA1_VALUES de6bb8d119560aabd31d97cd1def0545ec3d88a6)
     else()
         retrieve_package_file(${PACKAGE_NAME} ${PACKAGE_VERSION}
-                              ${RELATIVE_PROJECT_SOURCE_DIR} c3dccf74c7d7ed11634839b17d0390a150e2ac1a
+                              ${RELATIVE_PROJECT_SOURCE_DIR} 86529b1557f22b13bf3822d8d906b6c436be19fc
                               PACKAGE_REPOSITORY ${PACKAGE_REPOSITORY}
                               RELEASE_TAG ${RELEASE_TAG}
                               SHA1_FILES ${SHA1_FILES}
