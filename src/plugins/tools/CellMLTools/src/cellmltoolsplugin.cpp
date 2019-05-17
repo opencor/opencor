@@ -298,7 +298,7 @@ void CellMLToolsPlugin::exportTo(CellMLSupport::CellmlFile::Version pVersion)
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, pVersion, true)) {
+    if (!cellmlFile->exportTo(fileName, pVersion)) {
         QString errorMessage = QString();
 
         if (!cellmlFile->issues().isEmpty()) {
@@ -550,7 +550,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName, true)) {
+    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
         QString errorMessage = QString();
 
         if (!cellmlFile->issues().isEmpty()) {

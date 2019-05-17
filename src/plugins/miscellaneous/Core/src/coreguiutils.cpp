@@ -62,15 +62,22 @@ namespace Core {
 
 CentralWidget * centralWidget()
 {
+    // Make sure that we have a main window, i.e. that we are running the GUI
+    // version of OpenCOR
+
+    if (mainWindow() == nullptr) {
+        return nullptr;
+    }
+
     // Retrieve and return our central widget
 
     static bool firstTime = true;
     static CentralWidget *res = nullptr;
 
     if (firstTime) {
-        for (auto object : mainWindow()->children()) {
-            if (strcmp(object->metaObject()->className(), "OpenCOR::Core::CentralWidget") == 0) {
-                res = qobject_cast<CentralWidget *>(object);
+        for (const auto &child : mainWindow()->children()) {
+            if (strcmp(child->metaObject()->className(), "OpenCOR::Core::CentralWidget") == 0) {
+                res = qobject_cast<CentralWidget *>(child);
 
                 break;
             }
@@ -82,6 +89,58 @@ CentralWidget * centralWidget()
     Q_ASSERT(res);
 
     return res;
+}
+
+//==============================================================================
+
+void showCentralBusyWidget()
+{
+    // Show our central busy widget, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->showBusyWidget();
+    }
+}
+
+//==============================================================================
+
+void showCentralProgressBusyWidget()
+{
+    // Show our central progress busy widget, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->showProgressBusyWidget();
+    }
+}
+
+//==============================================================================
+
+void setCentralBusyWidgetProgress(double pProgress)
+{
+    // Set our central busy widget progress, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->setBusyWidgetProgress(pProgress);
+    }
+}
+
+//==============================================================================
+
+void hideCentralBusyWidget()
+{
+    // Hide our central busy widget, if possible
+
+    CentralWidget *centralWidget = Core::centralWidget();
+
+    if (centralWidget != nullptr) {
+        centralWidget->hideBusyWidget();
+    }
 }
 
 //==============================================================================
