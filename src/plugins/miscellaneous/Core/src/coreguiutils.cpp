@@ -92,7 +92,7 @@ void showCentralBusyWidget()
 
     CentralWidget *centralWidget = Core::centralWidget();
 
-    if (centralWidget) {
+    if (centralWidget != nullptr) {
         centralWidget->showBusyWidget();
     }
 }
@@ -105,7 +105,7 @@ void showCentralProgressBusyWidget()
 
     CentralWidget *centralWidget = Core::centralWidget();
 
-    if (centralWidget) {
+    if (centralWidget != nullptr) {
         centralWidget->showProgressBusyWidget();
     }
 }
@@ -118,7 +118,7 @@ void setCentralBusyWidgetProgress(double pProgress)
 
     CentralWidget *centralWidget = Core::centralWidget();
 
-    if (centralWidget) {
+    if (centralWidget != nullptr) {
         centralWidget->setBusyWidgetProgress(pProgress);
     }
 }
@@ -131,7 +131,7 @@ void hideCentralBusyWidget()
 
     CentralWidget *centralWidget = Core::centralWidget();
 
-    if (centralWidget) {
+    if (centralWidget != nullptr) {
         centralWidget->hideBusyWidget();
     }
 }
