@@ -62,6 +62,13 @@ namespace Core {
 
 CentralWidget * centralWidget()
 {
+    // Make sure that we have a main window, i.e. that we are running the GUI
+    // version of OpenCOR
+
+    if (mainWindow() == nullptr) {
+        return nullptr;
+    }
+
     // Retrieve and return our central widget
 
     static bool firstTime = true;
