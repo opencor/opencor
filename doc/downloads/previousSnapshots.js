@@ -1,4 +1,27 @@
 var jsonData = { "versions": [
+                   { "major": 0, "minor": 0, "patch": 0, "day": 13, "month": 5, "year": 2019, "type": 2, "license": 2,
+                     "platforms": [
+                       { "name": "Windows", "supported": "Windows 7 and later",
+                         "files": [
+                           { "extension": ".exe" }, { "extension": ".zip" }
+                         ]
+                       },
+                       { "name": "Linux", "supported": "Ubuntu 18.04 LTS (Bionic Beaver) and later",
+                         "files": [
+                           { "extension": ".tar.gz" }
+                         ]
+                       },
+                       { "name": "macOS", "supported": "macOS 10.12 (Sierra) and later",
+                         "files": [
+                           { "extension": ".dmg" }, { "extension": ".zip" }
+                         ]
+                       }
+                     ],
+                     "changes": [
+                       { "change": "<strong>SED-ML support:</strong> fixed our detection of SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/2082\">#2082</a>)." },
+                       { "change": "<strong>Simulation support:</strong> generalised the reporting of a simulation's issues (see issue <a href=\"https://github.com/opencor/opencor/issues/2080\">#2080</a>)." }
+                     ]
+                   },
                    { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 5, "year": 2019, "type": 2, "license": 2,
                      "platforms": [
                        { "name": "Windows", "supported": "Windows 7 and later",
