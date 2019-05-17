@@ -37,8 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>SED-ML support:</strong> fixed our detection of SED-ML file (see issue <a href=\"https://github.com/opencor/opencor/issues/2082\">#2082</a>)." },
-                       { "change": "<strong>Simulation support:</strong> generalised the reporting of a simulation's issues (see issue <a href=\"https://github.com/opencor/opencor/issues/2080\">#2080</a>)." }
+                       { "change": "<strong>Simulation support:</strong> allow a remote SED-ML file to be run headless (see issue <a href=\"https://github.com/opencor/opencor/issues/2085\">#2085</a>)." }
                      ]
                    },
                    { "major": 0, "minor": 5, "patch": 0, "day": 15, "month": 10, "year": 2016, "type": 0, "license": 1,

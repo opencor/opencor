@@ -903,7 +903,7 @@ void SimulationExperimentViewSimulationWidget::initialize(bool pReloadingView)
     bool isCombineArchive = mSimulation->fileType() == SimulationSupport::Simulation::FileType::CombineArchive;
 
     if (isVisible() && (isSedmlFile || isCombineArchive)) {
-        Core::centralWidget()->showBusyWidget();
+        Core::showCentralBusyWidget();
     }
 
     processEvents();
@@ -3397,7 +3397,7 @@ bool SimulationExperimentViewSimulationWidget::import(const QString &pFileName,
     if (problem == None) {
         // Everything is fine, so do the actual import
 
-        Core::centralWidget()->showProgressBusyWidget();
+        Core::showCentralProgressBusyWidget();
 
         DataStore::DataStoreImporter *dataStoreImporter = dataStoreInterface->dataStoreImporterInstance();
 
@@ -3509,7 +3509,7 @@ void SimulationExperimentViewSimulationWidget::simulationResultsExport()
     if (dataStoreExportData != nullptr) {
         // We have got the data we need, so do the actual export
 
-        Core::centralWidget()->showProgressBusyWidget();
+        Core::showCentralProgressBusyWidget();
 
         DataStore::DataStoreExporter *dataStoreExporter = dataStoreInterface->dataStoreExporterInstance();
 
@@ -4475,7 +4475,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportProgress(DataStore
 
     // There has been some progress with our import, so update our busy widget
 
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+    Core::setCentralBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
@@ -4493,7 +4493,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreImportDone(DataStore::Da
 
     // Hide our busy widget
 
-    Core::centralWidget()->hideBusyWidget();
+    Core::hideCentralBusyWidget();
 
     // Let people know about any error that we came across
 
@@ -4515,7 +4515,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportProgress(DataStore
 
     // There has been some progress with our export, so update our busy widget
 
-    Core::centralWidget()->setBusyWidgetProgress(pProgress);
+    Core::setCentralBusyWidgetProgress(pProgress);
 }
 
 //==============================================================================
@@ -4527,7 +4527,7 @@ void SimulationExperimentViewSimulationWidget::dataStoreExportDone(DataStore::Da
 
     // We are done with the export, so hide our busy widget
 
-    Core::centralWidget()->hideBusyWidget();
+    Core::hideCentralBusyWidget();
 
     // Display the given error message, if any
 

@@ -148,6 +148,21 @@ void CommonWidget::showProgressBusyWidget()
 
 //==============================================================================
 
+void CommonWidget::setBusyWidgetProgress(double pProgress)
+{
+    // Make sure that we have a busy widget
+
+    if (mBusyWidget == nullptr) {
+        return;
+    }
+
+    // Set the progress of our busy widget
+
+    mBusyWidget->setProgress(pProgress);
+}
+
+//==============================================================================
+
 void CommonWidget::hideBusyWidget(bool pForceHiding)
 {
     // Make sure that we have a busy widget
@@ -195,21 +210,6 @@ void CommonWidget::resizeBusyWidget()
     // Resize our busy widget
 
     mBusyWidget->resize();
-}
-
-//==============================================================================
-
-void CommonWidget::setBusyWidgetProgress(double pProgress)
-{
-    // Make sure that we have a busy widget
-
-    if (mBusyWidget == nullptr) {
-        return;
-    }
-
-    // Set the progress of our busy widget
-
-    mBusyWidget->setProgress(pProgress);
 }
 
 //==============================================================================

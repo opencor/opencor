@@ -43,6 +43,11 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
                              ]
+                           },
+                           { "type": "subCategory", "name": "Simulation support",
+                             "entries": [
+                               { "type": "fixed", "description": "Issue with a remote SED-ML file being run headless." }
+                             ]
                            }
                          ]
                        },
