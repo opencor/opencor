@@ -102,6 +102,11 @@ public:
 
 CentralWidget CORE_EXPORT * centralWidget();
 
+void CORE_EXPORT showCentralBusyWidget();
+void CORE_EXPORT showCentralProgressBusyWidget();
+void CORE_EXPORT setCentralBusyWidgetProgress(double pProgress);
+void CORE_EXPORT hideCentralBusyWidget();
+
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QStringList &pFilters = QStringList(),
                                     QString *pSelectedFilter = nullptr);

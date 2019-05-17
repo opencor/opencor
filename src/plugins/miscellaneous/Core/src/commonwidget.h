@@ -83,12 +83,9 @@ private:
 public slots:
     void showBusyWidget();
     void showProgressBusyWidget();
-
-    void hideBusyWidget(bool pForceHiding = false);
-
-    void resizeBusyWidget();
-
     void setBusyWidgetProgress(double pProgress);
+    void hideBusyWidget(bool pForceHiding = false);
+    void resizeBusyWidget();
 };
 
 //==============================================================================
