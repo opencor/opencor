@@ -1328,7 +1328,7 @@ CellMLSupport::CellmlFile * SedmlFile::cellmlFile()
                 if (!hasOwner) {
                     fileManagerInstance->setDependencies(realFileName,
                                                          QStringList() << mCellmlFile->fileName()
-                                                                       << mCellmlFile->dependencies(true));
+                                                                       << mCellmlFile->dependencies());
                 }
             } else {
                 mIssues << SedmlFileIssue(SedmlFileIssue::Type::Error,

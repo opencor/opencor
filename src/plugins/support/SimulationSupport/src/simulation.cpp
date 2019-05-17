@@ -1239,7 +1239,7 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     if (pRecreateRuntime) {
         delete mRuntime;
 
-        mRuntime = (mCellmlFile != nullptr)?mCellmlFile->runtime(true):nullptr;
+        mRuntime = (mCellmlFile != nullptr)?mCellmlFile->runtime():nullptr;
     } else {
         if ((mCellmlFile != nullptr) && (mRuntime != nullptr)) {
             mRuntime->update(mCellmlFile, false);
