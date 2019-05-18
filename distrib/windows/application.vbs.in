@@ -4,6 +4,11 @@ For Each arg in WScript.Arguments
     args = args&" "&arg
 Next
 
+Set shell = CreateObject("WScript.Shell")
+
+Set env = shell.Environment("PROCESS")
+env( "QT_QPA_PLATFORM_PLUGIN_PATH") = "plugins\platforms"
+
 cmd = "bin\${CMAKE_PROJECT_NAME}.exe"&args
 
-CreateObject("WScript.Shell").Run cmd, 1, False
+shell.Run cmd, 1, False
