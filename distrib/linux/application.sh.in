@@ -2,4 +2,6 @@
 
 OPENCOR_DIR="$(cd "$(dirname "$0")"; pwd)"
 
+export QT_QPA_PLATFORM_PLUGIN_PATH=${OPENCOR_DIR}/plugins/platforms
+
 ${OPENCOR_DIR}/bin/@CMAKE_PROJECT_NAME@ $*
