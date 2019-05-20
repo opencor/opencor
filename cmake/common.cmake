@@ -215,13 +215,9 @@ macro(add_plugin PLUGIN_NAME)
 
     # Generate and add the different files needed by the plugin
 
-    if(NOT "${RESOURCES}" STREQUAL "")
-        qt5_add_resources(SOURCES_RCS ${RESOURCES})
-    endif()
-
     add_library(${PROJECT_NAME} SHARED
         ${ARG_SOURCES}
-        ${SOURCES_RCS}
+        ${RESOURCES}
     )
 
     set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -440,8 +436,6 @@ macro(add_plugin PLUGIN_NAME)
                            LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
                 endif()
 
-                qt5_add_resources(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
-
                 add_executable(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
 
@@ -449,7 +443,7 @@ macro(add_plugin PLUGIN_NAME)
                     ${SOURCES_RCS}
 
                     ${TEST_SOURCE}
-                    ${TEST_SOURCES_RCS}
+                    ${TESTS_QRC_FILENAME}
                 )
 
                 set_target_properties(${TEST_NAME} PROPERTIES
