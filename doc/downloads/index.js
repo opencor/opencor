@@ -37,6 +37,7 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
+                       { "change": "<strong>General:</strong> make sure that Qt can find its platform plugin  (see issue <a href=\"https://github.com/opencor/opencor/issues/2089\">#2089</a>)." },
                        { "change": "<strong>Simulation support:</strong> allow a remote SED-ML file to be run headless (see issue <a href=\"https://github.com/opencor/opencor/issues/2085\">#2085</a>)." }
                      ]
                    },
