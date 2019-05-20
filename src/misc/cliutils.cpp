@@ -166,6 +166,10 @@ void initApplication(QString *pAppDate)
 #endif
 
     QCoreApplication::setLibraryPaths(QStringList() << canonicalDirName(pluginsDir));
+
+    // Make sure that Qt can find its platform plugin
+
+    qputenv("QT_QPA_PLATFORM_PLUGIN_PATH", qPrintable(pluginsDir+"/platforms"));
 }
 
 //==============================================================================
