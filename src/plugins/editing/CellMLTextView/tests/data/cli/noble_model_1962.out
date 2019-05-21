@@ -117,7 +117,6 @@ def model noble_model_1962 as
         var i_Leak: microA_per_cm2 {pub: out};
         var g_L: milliS_per_cm2 {init: 0.075};
         var E_L: millivolt {init: -60};
-        var time: millisecond {pub: in};
         var V: millivolt {pub: in};
 
         i_Leak = g_L*(V-E_L);
@@ -158,10 +157,6 @@ def model noble_model_1962 as
     enddef;
 
     def map between potassium_channel and environment for
-        vars time and time;
-    enddef;
-
-    def map between leakage_current and environment for
         vars time and time;
     enddef;
 

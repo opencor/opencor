@@ -13,11 +13,11 @@ set(LIBRARY_VERSION ${MAJOR_LIBRARY_VERSION}.${MINOR_LIBRARY_VERSION}.1)
 
 # Git tag for our library
 
-set(GIT_TAG v0.28.1-opencor)
+set(GIT_TAG v0.28.1-opencor-2)
 
 # Release tag
 
-set(RELEASE_TAG v0.28.1-opencor)
+set(RELEASE_TAG v0.28.1-opencor-2)
 
 # Specify where our local package will be installed
 
@@ -137,7 +137,8 @@ else()
             -DUSE_HTTPS=OpenSSL
             -DUSE_SSH=OFF
             -DWINHTTP=OFF
-            -DZLIB_ROOT=${ZLIB_ROOT_DIR}
+            -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
