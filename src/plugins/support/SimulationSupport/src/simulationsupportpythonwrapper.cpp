@@ -81,51 +81,70 @@ static PyObject *initializeSimulation(const QString &pFileName)
             return PythonQt::priv()->wrapQObject(simulation);
         }
 
+        // Get our runtime
+
+        CellMLSupport::CellmlFileRuntime *runtime = simulation->runtime();
+
         // Find the solver whose name is first in alphabetical order, as this
         // is the simulation's solver
 
         SolverInterfaces solverInterfaces = Core::solverInterfaces();
 
-        QString firstSolverName = QString();
+        QString odeSolverName = QString();
+        QString nlaSolverName = QString();
 
         foreach (SolverInterface *solverInterface, solverInterfaces) {
             QString solverName = solverInterface->solverName();
-
-            if (firstSolverName.isEmpty()
-             || firstSolverName.compare(solverName, Qt::CaseInsensitive) > 0) {
-                firstSolverName = solverName;
+            if (solverInterface->solverType() == Solver::Type::Ode) {
+                if (odeSolverName.isEmpty()
+                 || odeSolverName.compare(solverName, Qt::CaseInsensitive) > 0) {
+                    odeSolverName = solverName;
+                }
+            } else if (solverInterface->solverType() == Solver::Type::Nla) {
+                if (nlaSolverName.isEmpty()
+                 || nlaSolverName.compare(solverName, Qt::CaseInsensitive) > 0) {
+                    nlaSolverName = solverName;
+                }
             }
         }
 
         // Set our solver and its default properties
 
         foreach (SolverInterface *solverInterface, solverInterfaces) {
-            if (!firstSolverName.compare(solverInterface->solverName())) {
-                if (solverInterface->solverType() == Solver::Type::Ode) {
-                    // Set the ODE solver's name
+            if (!odeSolverName.compare(solverInterface->solverName())) {
+                // Set the ODE solver's name
 
-                    simulation->data()->setOdeSolverName(solverInterface->solverName());
+                simulation->data()->setOdeSolverName(odeSolverName);
 
-                    foreach (const Solver::Property &solverInterfaceProperty,
-                             solverInterface->solverProperties()) {
-                        // Set each ODE solver property's default value
+                foreach (const Solver::Property &solverInterfaceProperty,
+                         solverInterface->solverProperties()) {
+                    // Set each ODE solver property's default value
 
-                        simulation->data()->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
-                    }
-                } else if (solverInterface->solverType() == Solver::Type::Nla) {
+                    simulation->data()->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
+                }
+
+                break;
+            }
+        }
+
+        // Set our NLA solver if we need one
+
+        if ((runtime != nullptr) && runtime->needNlaSolver()) {
+            foreach (SolverInterface *solverInterface, solverInterfaces) {
+                if (!nlaSolverName.compare(solverInterface->solverName())) {
                     // Set the NLA solver's name
 
-                    simulation->data()->setNlaSolverName(solverInterface->solverName());
+                    simulation->data()->setNlaSolverName(nlaSolverName);
 
                     foreach (const Solver::Property &solverInterfaceProperty,
                              solverInterface->solverProperties()) {
                         // Set each NLA solver property's default value
 
-                        simulation->data()->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue(), true);
+                        simulation->data()->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
                     }
-                }
 
-                break;
+                    break;
+                }
             }
         }
 
@@ -150,8 +169,6 @@ static PyObject *initializeSimulation(const QString &pFileName)
         }
 
         // Do we have a valid simulation?
-
-        CellMLSupport::CellmlFileRuntime *runtime = simulation->runtime();
 
         if ((runtime != nullptr) && runtime->isValid()) {
             // Reset both the simulation's data and results (well, initialise in the
