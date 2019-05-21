@@ -917,6 +917,7 @@ set(PLUGINS
     support/PythonQtSupport
     support/SEDMLSupport
     support/SimulationSupport
+    support/SolverSupport
     support/StandardSupport
     support/ZIPSupport
 
