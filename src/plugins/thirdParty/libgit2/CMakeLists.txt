@@ -137,7 +137,8 @@ else()
             -DUSE_HTTPS=OpenSSL
             -DUSE_SSH=OFF
             -DWINHTTP=OFF
-            -DZLIB_ROOT=${ZLIB_ROOT_DIR}
+            -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+            -DZLIB_LIBRARY=${ZLIB_LIBRARY}
         BUILD_BYPRODUCTS
             <INSTALL_DIR>/lib/${IMPORT_LIBRARY}
     )
