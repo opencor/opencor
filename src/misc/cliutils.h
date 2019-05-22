@@ -71,7 +71,7 @@ private slots:
 //==============================================================================
 
 void initQtMessagePattern();
-
+void initPluginsPath();
 void initApplication(QString *pAppDate = nullptr);
 
 QString applicationDescription(bool pGuiMode = true);

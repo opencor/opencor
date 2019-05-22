@@ -93,38 +93,8 @@ void initQtMessagePattern()
 
 //==============================================================================
 
-void initApplication(QString *pAppDate)
+void initPluginsPath()
 {
-    // Use the system's proxy settings
-
-    QNetworkProxyFactory::setUseSystemConfiguration(true);
-
-    // Ignore SSL-related warnings
-    // Note #1: this is to address an issue with QSslSocket not being able to
-    //          resolve some methods...
-    // Note #2: see issue #516 for more information...
-
-    qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
-
-    // Set the organisation and application names of our application
-
-    qApp->setOrganizationName("Physiome");
-    qApp->setApplicationName("OpenCOR");
-
-    // Retrieve and set the version of the application
-
-    QString versionData;
-
-    readFile(":/app_versiondate", versionData);
-
-    QStringList versionDataList = versionData.split(eolString());
-
-    qApp->setApplicationVersion(versionDataList.first());
-
-    if (pAppDate != nullptr) {
-        *pAppDate = versionDataList.last();
-    }
-
     // Initialise the plugins path
 
     QFileInfo appFileInfo = QCoreApplication::applicationFilePath();
@@ -166,6 +136,41 @@ void initApplication(QString *pAppDate)
 #endif
 
     QCoreApplication::setLibraryPaths(QStringList() << canonicalDirName(pluginsDir));
+}
+
+//==============================================================================
+
+void initApplication(QString *pAppDate)
+{
+    // Use the system's proxy settings
+
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
+
+    // Ignore SSL-related warnings
+    // Note #1: this is to address an issue with QSslSocket not being able to
+    //          resolve some methods...
+    // Note #2: see issue #516 for more information...
+
+    qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
+
+    // Set the organisation and application names of our application
+
+    qApp->setOrganizationName("Physiome");
+    qApp->setApplicationName("OpenCOR");
+
+    // Retrieve and set the version of the application
+
+    QString versionData;
+
+    readFile(":/app_versiondate", versionData);
+
+    QStringList versionDataList = versionData.split(eolString());
+
+    qApp->setApplicationVersion(versionDataList.first());
+
+    if (pAppDate != nullptr) {
+        *pAppDate = versionDataList.last();
+    }
 }
 
 //==============================================================================
