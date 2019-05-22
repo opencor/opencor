@@ -113,9 +113,9 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
-        # Make ourselves depend on our Python and PythonPackages plugins
+        # Make our project build target depend on our local target
 
-        add_dependencies(${DOCUMENTATION_BUILD} PythonPlugin PythonPackagesPlugin)
+        add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
     endif()
 endmacro()
 
