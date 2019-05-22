@@ -1,10 +1,15 @@
 project(HelpWindowPlugin)
 
 # Generate the help files that will be embedded in OpenCOR as a resource
+# Note: the documentation can only be built once we have handled our different
+#       plugins (the Python and PythonPackages plugins to be more precise). Yet,
+#       this plugin relies on the user documentation having been generated. So,
+#       we have no choice but to hardcode the fact that our GenerateQtHelpFiles
+#       target depends on userDocumentationBuild...
 
 add_custom_target(GenerateQtHelpFiles)
 
-add_dependencies(GenerateQtHelpFiles ${PROJECT_BUILD_TARGET})
+add_dependencies(GenerateQtHelpFiles userDocumentationBuild)
 
 add_custom_command(TARGET GenerateQtHelpFiles
                    COMMAND ${SILENTRUN}
