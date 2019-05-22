@@ -93,7 +93,7 @@ void initQtMessagePattern()
 
 //==============================================================================
 
-void initPluginsPath(int pArgC, char *pArgV[])
+void initPluginsPath(int pArgC, char *pArgV[]) // NOLINT(hicpp-avoid-c-arrays, modernize-avoid-c-arrays)
 {
     // Initialise the plugins path
     // Note: a user might have set the OpenCOR path in his/her PATH environment
@@ -105,7 +105,7 @@ void initPluginsPath(int pArgC, char *pArgV[])
     //       directory, thus making it possible to run OpenCOR (and load its
     //       various plugins)...
 
-    QFileInfo appFileInfo = QCoreApplication(pArgC, pArgV).applicationFilePath();
+    QFileInfo appFileInfo = QCoreApplication(pArgC, pArgV).applicationFilePath(); // NOLINT(readability-static-accessed-through-instance)
     QString appDir;
 
 #ifdef Q_OS_WIN
