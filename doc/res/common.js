@@ -49,8 +49,9 @@ if (   document.location.protocol !== "file:"
                     elementEvent.category = "External links";
                     elementEvent.action = "Click external link";
                     elementEvent.nonInter = true;
-                } else
+                } else {
                     track = false;
+                }
 
                 if (track) {
                     _gaq.push([ "_trackEvent",
