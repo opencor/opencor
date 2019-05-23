@@ -840,6 +840,13 @@ set(PROJECT_BUILD_TARGET ${PROJECT_NAME}Build)
 
 add_custom_target(${PROJECT_BUILD_TARGET} ALL)
 
+# Specify a target to help us take advantage of our documentation (e.g. by Help
+# window plugin)
+
+set(DOCUMENTATION_BUILD_TARGET DocumentationBuild)
+
+add_custom_target(${DOCUMENTATION_BUILD_TARGET} ALL)
+
 # Build our plugins
 # Note #1: hard dependencies (i.e. OpenSSL and zlib) must be listed before any
 #          other plugins, and zlib before OpenSSL since the latter needs the
