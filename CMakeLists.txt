@@ -478,6 +478,11 @@ else()
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
         set(LINK_FLAGS_PROPERTIES "-stdlib=libc++")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie")
+        # Note: needed so that the OpenCOR binary doesn't get considered as a
+        #       shared library file on Ubuntu when using Nautilus (see
+        #       https://stackoverflow.com/a/45332687)...
     endif()
 endif()
 
