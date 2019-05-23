@@ -113,9 +113,9 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
-        # Make ourselves depend on our Python and PythonPackages plugins
+        # Make our project build target depend on our local target
 
-        add_dependencies(${DOCUMENTATION_BUILD} PythonPlugin PythonPackagesPlugin)
+        add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
     endif()
 endmacro()
 
@@ -216,13 +216,9 @@ macro(add_plugin PLUGIN_NAME)
 
     # Generate and add the different files needed by the plugin
 
-    if(NOT "${RESOURCES}" STREQUAL "")
-        qt5_add_resources(SOURCES_RCS ${RESOURCES})
-    endif()
-
     add_library(${PROJECT_NAME} SHARED
         ${ARG_SOURCES}
-        ${SOURCES_RCS}
+        ${RESOURCES}
     )
 
     set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -447,16 +443,14 @@ macro(add_plugin PLUGIN_NAME)
                            LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES}")
                 endif()
 
-                qt5_add_resources(TEST_SOURCES_RCS ${TESTS_QRC_FILENAME})
-
                 add_executable(${TEST_NAME}
                     ../../../tests/src/testsutils.cpp
 
                     ${ARG_SOURCES}
-                    ${SOURCES_RCS}
+                    ${RESOURCES}
 
                     ${TEST_SOURCE}
-                    ${TEST_SOURCES_RCS}
+                    ${TESTS_QRC_FILENAME}
                 )
 
                 set_target_properties(${TEST_NAME} PROPERTIES

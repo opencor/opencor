@@ -1,8 +1,9 @@
 function twoDigits(number) {
-    if (number < 10)
+    if (number < 10) {
         return "0"+number;
-    else
+    } else {
         return number;
+    }
 }
 
 function fileSize(size) {
@@ -19,8 +20,9 @@ function fileSize(size) {
 function versions(downloads) {
     // Make sure that the jsonData variable is available
 
-    if (typeof jsonData === "undefined")
+    if (typeof jsonData === "undefined") {
         return;
+    }
 
     // Retrieve the size of our various downloadable files, should we be
     // running this script from opencor.ws
@@ -225,10 +227,11 @@ function versions(downloads) {
 
                 versionAnchor = versionFolder;
             } else {
-                if (downloads)
+                if (downloads) {
                     versionTitle = "Latest snapshot";
-                else
+                } else {
                     versionTitle = versionDay+" "+month(versionMonth)+" "+versionYear;
+                }
 
                 versionFolder = "snapshots/"+versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
                 versionVersion = versionYear+"-"+twoDigits(versionMonth)+"-"+twoDigits(versionDay);
@@ -239,12 +242,13 @@ function versions(downloads) {
 
             var downloadClass = "download";
 
-            if (versionType === 1)
+            if (versionType === 1) {
                 downloadClass += " official officialDownload";
-            else if ((versionType === 2) && downloads)
+            } else if ((versionType === 2) && downloads) {
                 downloadClass += " latest latestDownload";
-            else
+            } else {
                 downloadClass += " old oldDownload";
+            }
 
             document.write("<div class=\""+downloadClass+"\">\n");
             document.write("    <table>\n");
@@ -253,10 +257,11 @@ function versions(downloads) {
             document.write("                <td>\n");
             document.write("                    "+versionTitle+"\n");
 
-            if (versionLicense == 1)
+            if (versionLicense == 1) {
                 document.write("                    <span class=\"license\"><a href=\"https://opensource.org/licenses/Apache-2.0\">Apache v2.0</a></span>\n");
-            else if (versionLicense == 2)
+            } else if (versionLicense == 2) {
                 document.write("                    <span class=\"license\"><a href=\"https://opensource.org/licenses/GPL-3.0\">GPL v3.0</a></span>\n");
+            }
 
             document.write("                </td>\n");
 
@@ -269,10 +274,11 @@ function versions(downloads) {
             document.write("                <td class=\"date\">\n");
 
             if (downloads) {
-                if (versionDay && versionMonth && versionYear)
+                if (versionDay && versionMonth && versionYear) {
                     document.write("                    ("+versionDay+" "+month(versionMonth)+" "+versionYear+")\n");
-                else
+                } else {
                     document.write("                    (???)\n");
+                }
             }
 
             document.write("                </td>\n");
@@ -285,12 +291,13 @@ function versions(downloads) {
 
             var versionClass;
 
-            if (versionType === 1)
+            if (versionType === 1) {
                 versionClass = "official";
-            else if ((versionType === 2) && downloads)
+            } else if ((versionType === 2) && downloads) {
                 versionClass = "latest";
-            else
+            } else {
                 versionClass = "old";
+            }
 
             document.write("<div class=\"contents "+versionClass+"\">\n");
             document.write("    <table class=\"version\">\n");
@@ -304,8 +311,9 @@ function versions(downloads) {
             var nbOfPlatformsPerRow = 3;
             var nbOfPlatforms = versionPlatforms.length;
 
-            while (nbOfPlatforms % nbOfPlatformsPerRow)
+            while (nbOfPlatforms % nbOfPlatformsPerRow) {
                 ++nbOfPlatforms;
+            }
 
             // Percentage of the total width to use for each platform
 
@@ -343,11 +351,13 @@ function versions(downloads) {
 
                 var platformClasses = "platform";
 
-                if (platformIndex >= nbOfPlatformsPerRow)
+                if (platformIndex >= nbOfPlatformsPerRow) {
                     platformClasses += " topSeparator";
+                }
 
-                if (platformLocalIndex)
+                if (platformLocalIndex) {
                     platformClasses += " leftSeparator";
+                }
 
                 document.write("                <td class=\""+platformClasses+"\" style=\"width: "+platformWidth+"\">\n");
 
@@ -390,19 +400,21 @@ function versions(downloads) {
                         var fileType;
 
                         if (   (fileExtension === ".exe")
-                            || (fileExtension === ".dmg"))
+                            || (fileExtension === ".dmg")) {
                             fileType = "Installer";
-                        else if (fileExtension === ".zip")
+                        } else if (fileExtension === ".zip") {
                             fileType = "ZIP file";
-                        else if (fileExtension === ".tar.gz")
+                        } else if (fileExtension === ".tar.gz") {
                             fileType = "Tarball file";
-                        else
+                        } else {
                             fileType = "???";
+                        }
 
-                        if (typeof fileBitness !== "undefined")
+                        if (typeof fileBitness !== "undefined") {
                             fileBitness = " ("+fileBitness+"-bit)";
-                        else
+                        } else {
                             fileBitness = "";
+                        }
 
                         // List the file for download
 
@@ -472,8 +484,9 @@ function versions(downloads) {
                     document.write("                <td class=\"topSeparator\">\n");
                     document.write("                    <ul>\n");
 
-                    for (var changeIndex = 0; changeIndex < versionChanges.length; ++changeIndex)
+                    for (var changeIndex = 0; changeIndex < versionChanges.length; ++changeIndex) {
                         document.write("                        <li><span class=\"changes\">"+versionChanges[changeIndex].change+"</span></li>");
+                    }
 
                     document.write("                    </ul>\n");
                     document.write("                </td>\n");
@@ -490,8 +503,9 @@ function versions(downloads) {
         // anywhere on the document
 
         $(document).keyup(function(event) {
-            if (event.keyCode === 27)
+            if (event.keyCode === 27) {
                 $("ul.downloadsMenu").css("visibility", "hidden");
+            }
         });
 
         $(document).click(function() {
