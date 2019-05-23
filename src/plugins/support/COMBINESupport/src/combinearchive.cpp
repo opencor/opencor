@@ -424,7 +424,7 @@ bool CombineArchive::isValid()
 
         if (!QFile::exists(fileName)) {
             mIssues << CombineArchiveIssue(CombineArchiveIssue::Type::Error,
-                                           tr("<strong>%1</strong> could not be found").arg(location));
+                                           tr("'%1' could not be found").arg(location));
 
             mFiles.clear();
 

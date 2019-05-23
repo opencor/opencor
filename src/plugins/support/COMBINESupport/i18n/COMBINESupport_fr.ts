@@ -35,8 +35,8 @@
         <translation>le manifeste n&apos;est pas un fichier OMEX valide</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be found</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être trouvé</translation>
+        <source>&apos;%1&apos; could not be found</source>
+        <translation>&apos;%1&apos; n&apos;a pas pu être trouvé</translation>
     </message>
     <message>
         <source>no reference to the COMBINE archive itself could be found</source>
