@@ -161,15 +161,10 @@ public:
     void setPointInterval(double pPointInterval);
 
     SolverInterface * odeSolverInterface() const;
-
-    Solver::Solver::Properties odeSolverProperties() const;
-    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
+    void setOdeSolverName(const QString &pOdeSolverName);
 
     SolverInterface * nlaSolverInterface() const;
-
-    Solver::Solver::Properties nlaSolverProperties() const;
-    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
-                              bool pReset = true);
+    void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
 
     int * gradientIndices();
 
@@ -195,11 +190,14 @@ public slots:
 
     double pointInterval() const;
 
+    void addOdeSolverProperty(const QString &pName, const QVariant &pValue);
     QString odeSolverName() const;
-    void setOdeSolverName(const QString &pOdeSolverName);
+    Solver::Solver::Properties odeSolverProperties() const;
 
+    void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
+                              bool pReset = true);
     QString nlaSolverName() const;
-    void setNlaSolverName(const QString &pNlaSolverName, bool pReset = true);
+    Solver::Solver::Properties nlaSolverProperties() const;
 
     void reset(bool pInitialize = true, bool pAll = true);
 

@@ -58,6 +58,52 @@ namespace SimulationSupport {
 
 //==============================================================================
 
+static void setOdeSolver_(SimulationData *pSimulationData, const QString &pOdeSolverName)
+{
+    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+        if (!pOdeSolverName.compare(solverInterface->solverName())) {
+            // Set the ODE solver's name
+
+            pSimulationData->setOdeSolverName(pOdeSolverName);
+
+            foreach (const Solver::Property &solverInterfaceProperty,
+                     solverInterface->solverProperties()) {
+                // Set each ODE solver property's default value
+
+                pSimulationData->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
+            }
+
+            return;
+        }
+    }
+    throw std::runtime_error(QObject::tr("Unknown ODE solver.").toStdString());
+}
+
+//==============================================================================
+
+static void setNlaSolver_(SimulationData *pSimulationData, const QString &pNlaSolverName)
+{
+    foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
+        if (!pNlaSolverName.compare(solverInterface->solverName())) {
+            // Set the NLA solver's name
+
+            pSimulationData->setNlaSolverName(pNlaSolverName);
+
+            foreach (const Solver::Property &solverInterfaceProperty,
+                     solverInterface->solverProperties()) {
+                // Set each NLA solver property's default value
+
+                pSimulationData->addNlaSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
+            }
+
+            return;
+        }
+    }
+    throw std::runtime_error(QObject::tr("Unknown NLA solver.").toStdString());
+}
+
+//==============================================================================
+
 static PyObject *initializeSimulation(const QString &pFileName)
 {
     // Ask our simulation manager to manage our file and then retrieve the
@@ -88,12 +134,10 @@ static PyObject *initializeSimulation(const QString &pFileName)
         // Find the solver whose name is first in alphabetical order, as this
         // is the simulation's solver
 
-        SolverInterfaces solverInterfaces = Core::solverInterfaces();
-
         QString odeSolverName = QString();
         QString nlaSolverName = QString();
 
-        foreach (SolverInterface *solverInterface, solverInterfaces) {
+        foreach (SolverInterface *solverInterface, Core::solverInterfaces()) {
             QString solverName = solverInterface->solverName();
             if (solverInterface->solverType() == Solver::Type::Ode) {
                 if (odeSolverName.isEmpty()
@@ -110,42 +154,12 @@ static PyObject *initializeSimulation(const QString &pFileName)
 
         // Set our solver and its default properties
 
-        foreach (SolverInterface *solverInterface, solverInterfaces) {
-            if (!odeSolverName.compare(solverInterface->solverName())) {
-                // Set the ODE solver's name
-
-                simulation->data()->setOdeSolverName(odeSolverName);
-
-                foreach (const Solver::Property &solverInterfaceProperty,
-                         solverInterface->solverProperties()) {
-                    // Set each ODE solver property's default value
-
-                    simulation->data()->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
-                }
-
-                break;
-            }
-        }
+        setOdeSolver_(simulation->data(), odeSolverName);
 
         // Set our NLA solver if we need one
 
         if ((runtime != nullptr) && runtime->needNlaSolver()) {
-            foreach (SolverInterface *solverInterface, solverInterfaces) {
-                if (!nlaSolverName.compare(solverInterface->solverName())) {
-                    // Set the NLA solver's name
-
-                    simulation->data()->setNlaSolverName(nlaSolverName);
-
-                    foreach (const Solver::Property &solverInterfaceProperty,
-                             solverInterface->solverProperties()) {
-                        // Set each NLA solver property's default value
-
-                        simulation->data()->addOdeSolverProperty(solverInterfaceProperty.id(), solverInterfaceProperty.defaultValue());
-                    }
-
-                    break;
-                }
-            }
+            setNlaSolver_(simulation->data(), nlaSolverName);
         }
 
         // Complete initialisation by loading any SED-ML properties
@@ -504,6 +518,21 @@ void SimulationSupportPythonWrapper::setPointInterval(SimulationData *pSimulatio
     pSimulationData->setPointInterval(pPointInterval);
 
     emit pSimulationData->updatedPointData();
+}
+
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::setOdeSolver(SimulationData *pSimulationData, const QString &pOdeSolverName)
+{
+    setOdeSolver_(pSimulationData, pOdeSolverName);
+}
+
+//==============================================================================
+
+void SimulationSupportPythonWrapper::setNlaSolver(SimulationData *pSimulationData, const QString &pNlaSolverName)
+{
+    setNlaSolver_(pSimulationData, pNlaSolverName);
 }
 
 //==============================================================================

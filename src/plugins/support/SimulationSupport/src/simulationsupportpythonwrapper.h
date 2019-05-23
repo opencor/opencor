@@ -107,6 +107,11 @@ public slots:
     void setPointInterval(OpenCOR::SimulationSupport::SimulationData *pSimulationData,
                           const double &pPointInterval);
 
+    // Assign a solver
+
+    void setOdeSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData, const QString &pOdeSolverName);
+    void setNlaSolver(OpenCOR::SimulationSupport::SimulationData *pSimulationData, const QString &pNlaSolverName);
+
     // Access a simulation's parameter data
 
     PyObject * algebraic(OpenCOR::SimulationSupport::SimulationData *pSimulationData) const;
