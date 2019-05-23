@@ -6,9 +6,6 @@ Next
 
 Set shell = CreateObject("WScript.Shell")
 
-Set env = shell.Environment("PROCESS")
-env( "QT_QPA_PLATFORM_PLUGIN_PATH") = "plugins\platforms"
-
 cmd = "bin\${CMAKE_PROJECT_NAME}.exe"&args
 
 shell.Run cmd, 1, False
