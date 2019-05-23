@@ -700,7 +700,7 @@ void SimulationData::updateParameters(SimulationData *pSimulationData)
 
     pSimulationData->reset(false);
 
-    // Let the simultaion view know parameters have changed
+    // Let the simulation view know parameters have changed
 
     emit pSimulationData->updatedParameters(pSimulationData->mStartingPoint);
 }
