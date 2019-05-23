@@ -2,8 +2,4 @@
 
 TITLE Running the ${CMAKE_PROJECT_NAME} environment...
 
-setlocal
-
 bin\${CMAKE_PROJECT_NAME} %*
-
-endlocal
