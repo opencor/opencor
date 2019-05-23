@@ -37,7 +37,8 @@ var jsonData = { "versions": [
                        }
                      ],
                      "changes": [
-                       { "change": "<strong>Simulation support:</strong> allow a remote SED-ML file to be run headless (see issue <a href=\"https://github.com/opencor/opencor/issues/2085\">#2085</a>)." },
+                       { "change": "<strong>General:</strong> fixed an issue with <a href=\"https://www.qt.io/\">Qt</a> not being able to find its platform plugin anymore (see issue <a href=\"https://github.com/opencor/opencor/issues/2089\">#2089</a>)." },
+                       { "change": "<strong>Simulation support:</strong> allow a remote <a href=\"https://sed-ml.github.io/\">SED-ML</a> file to be run headless (see issue <a href=\"https://github.com/opencor/opencor/issues/2085\">#2085</a>)." },
                        { "change": "<strong>Third-party libraries:</strong> fixed an issue with <a href=\"https://libgit2.github.com/\">libgit2</a> referencing two different copies of <a href=\"https://zlib.net/\">zlib</a> (see issue <a href=\"https://github.com/opencor/opencor/issues/2088\">#2088</a>)." }
                      ]
                    },
