@@ -54,11 +54,15 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initQtMessagePattern();
 
+    // Initialise the plugins path
+
+    OpenCOR::initPluginsPath(pArgC, pArgV);
+
     // Create our application
 
     auto cliApp = new OpenCOR::CliApplication(pArgC, pArgV);
 
-    // Some general initialisations
+    // Initialise our application
 
     OpenCOR::initApplication();
 

@@ -244,6 +244,7 @@ get_target_property(QMAKE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
 set(QMAKE_COMMAND ${QMAKE} -Wnone)
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -477,6 +478,11 @@ else()
     if(APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
         set(LINK_FLAGS_PROPERTIES "-stdlib=libc++")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie")
+        # Note: needed so that the OpenCOR binary doesn't get considered as a
+        #       shared library file on Ubuntu when using Nautilus (see
+        #       https://stackoverflow.com/a/45332687)...
     endif()
 endif()
 
@@ -791,13 +797,11 @@ if(ENABLE_TESTS)
     configure_file(${CMAKE_SOURCE_DIR}/src/tests/res/tests.qrc.in
                    ${TESTS_QRC_FILENAME})
 
-    qt5_add_resources(RUNTESTS_SOURCES_RCS ${TESTS_QRC_FILENAME})
-
     add_executable(${RUNTESTS_NAME}
         src/tests/src/main.cpp
         src/tests/src/testsutils.cpp
 
-        ${RUNTESTS_SOURCES_RCS}
+        ${TESTS_QRC_FILENAME}
     )
 
     set_target_properties(${RUNTESTS_NAME} PROPERTIES
@@ -974,8 +978,6 @@ build_documentation(developer)
 
 # Build the GUI version of OpenCOR
 
-qt5_add_resources(SOURCES_RCS ${RESOURCES})
-
 if(APPLE)
     list(APPEND SOURCES
         src/misc/macos.mm
@@ -984,7 +986,7 @@ endif()
 
 add_executable(${CMAKE_PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES}
-    ${SOURCES_RCS}
+    ${RESOURCES}
 )
 
 add_definitions(-D${CMAKE_PROJECT_NAME}_MAIN)
@@ -1014,13 +1016,11 @@ endforeach()
 #       command), so now we use '_' instead...
 
 if(WIN32)
-    qt5_add_resources(WINDOWS_CLI_SOURCES_RCS ${WINDOWS_CLI_RESOURCES})
-
     set(WINDOWS_CLI_PROJECT_NAME ${CMAKE_PROJECT_NAME}_com)
 
     add_executable(${WINDOWS_CLI_PROJECT_NAME}
         ${WINDOWS_CLI_SOURCES}
-        ${WINDOWS_CLI_SOURCES_RCS}
+        ${WINDOWS_CLI_RESOURCES}
     )
 
     target_compile_definitions(${WINDOWS_CLI_PROJECT_NAME}
