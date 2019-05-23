@@ -440,7 +440,7 @@ macro(add_plugin PLUGIN_NAME)
                     ../../../tests/src/testsutils.cpp
 
                     ${ARG_SOURCES}
-                    ${SOURCES_RCS}
+                    ${RESOURCES}
 
                     ${TEST_SOURCE}
                     ${TESTS_QRC_FILENAME}
