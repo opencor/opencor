@@ -4,7 +4,7 @@ project(HelpWindowPlugin)
 
 add_custom_target(GenerateQtHelpFiles)
 
-add_dependencies(GenerateQtHelpFiles ${PROJECT_BUILD_TARGET})
+add_dependencies(GenerateQtHelpFiles ${DOCUMENTATION_BUILD_TARGET})
 
 add_custom_command(TARGET GenerateQtHelpFiles
                    COMMAND ${SILENTRUN}

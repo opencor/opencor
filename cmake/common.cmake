@@ -113,9 +113,11 @@ macro(build_documentation DOCUMENTATION_NAME)
                                                    ${PROJECT_BUILD_DIR}/doc/${DOCUMENTATION_NAME}
         )
 
-        # Make our project build target depend on our local target
+        # Make our local target depend on our project build target and make our
+        # documentation build target depend on our local target
 
-        add_dependencies(${PROJECT_BUILD_TARGET} ${DOCUMENTATION_BUILD})
+        add_dependencies(${DOCUMENTATION_BUILD} ${PROJECT_BUILD_TARGET})
+        add_dependencies(${DOCUMENTATION_BUILD_TARGET} ${DOCUMENTATION_BUILD})
     endif()
 endmacro()
 
