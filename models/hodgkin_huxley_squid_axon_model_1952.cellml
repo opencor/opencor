@@ -421,7 +421,6 @@
         <variable name="i_L" public_interface="out" units="microA_per_cm2"/>
         <variable initial_value="0.3" name="g_L" units="milliS_per_cm2"/>
         <variable name="E_L" units="millivolt"/>
-        <variable name="time" public_interface="in" units="millisecond"/>
         <variable name="V" public_interface="in" units="millivolt"/>
         <variable name="E_R" public_interface="in" units="millivolt"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -482,10 +481,6 @@
     </connection>
     <connection>
         <map_components component_1="potassium_channel" component_2="environment"/>
-        <map_variables variable_1="time" variable_2="time"/>
-    </connection>
-    <connection>
-        <map_components component_1="leakage_current" component_2="environment"/>
         <map_variables variable_1="time" variable_2="time"/>
     </connection>
     <connection>

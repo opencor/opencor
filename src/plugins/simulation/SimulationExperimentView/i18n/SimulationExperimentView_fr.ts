@@ -573,10 +573,6 @@
         <translation>aucun</translation>
     </message>
     <message>
-        <source>the model must have at least one ODE or DAE</source>
-        <translation>le modèle doit avoir au moins une EDO ou EAD</translation>
-    </message>
-    <message>
         <source>the model needs both an ODE and an NLA solver, but none are available</source>
         <translation>le modèle a besoin à la fois d&apos;un solveur EDO et d&apos;un solveur ALN, mais aucun n&apos;est disponible</translation>
     </message>

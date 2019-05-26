@@ -228,7 +228,7 @@ void Tests::loadingErrorTests()
     QVERIFY(!combineArchive.isValid());
     QVERIFY(combineArchive.issues().count() == 1);
     QCOMPARE(combineArchive.issues().first().message(),
-             QString("<strong>nonexistentfile.txt</strong> could not be found"));
+             QString("'nonexistentfile.txt' could not be found"));
 
     // Try to load a COMBINE archive which manifest doesn't reference the
     // COMBINE archive itself

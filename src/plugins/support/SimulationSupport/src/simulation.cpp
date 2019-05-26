@@ -41,6 +41,60 @@ namespace SimulationSupport {
 
 //==============================================================================
 
+SimulationIssue::SimulationIssue(Type pType, int pLine, int pColumn,
+                                 const QString &pMessage) :
+    mType(pType),
+    mLine(pLine),
+    mColumn(pColumn),
+    mMessage(pMessage)
+{
+}
+
+//==============================================================================
+
+SimulationIssue::SimulationIssue(Type pType, const QString &pMessage) :
+    SimulationIssue(pType, 0, 0, pMessage)
+{
+}
+
+//==============================================================================
+
+SimulationIssue::Type SimulationIssue::type() const
+{
+    // Return the issue's type
+
+    return mType;
+}
+
+//==============================================================================
+
+int SimulationIssue::line() const
+{
+    // Return the issue's line
+
+    return mLine;
+}
+
+//==============================================================================
+
+int SimulationIssue::column() const
+{
+    // Return the issue's column
+
+    return mColumn;
+}
+
+//==============================================================================
+
+QString SimulationIssue::message() const
+{
+    // Return the issue's message
+
+    return mMessage;
+}
+
+//==============================================================================
+
 SimulationObject::SimulationObject(Simulation *pSimulation) :
     mSimulation(pSimulation)
 {
@@ -1102,6 +1156,9 @@ Simulation::Simulation(const QString &pFileName) :
     mCellmlFile(nullptr),
     mSedmlFile(nullptr),
     mCombineArchive(nullptr),
+    mNeedCheckIssues(true),
+    mIssues(SimulationIssues()),
+    mHasBlockingIssues(false),
     mRuntime(nullptr),
     mWorker(nullptr)
 {
@@ -1182,11 +1239,19 @@ void Simulation::retrieveFileDetails(bool pRecreateRuntime)
     if (pRecreateRuntime) {
         delete mRuntime;
 
-        mRuntime = (mCellmlFile != nullptr)?mCellmlFile->runtime(true):nullptr;
+        mRuntime = (mCellmlFile != nullptr)?mCellmlFile->runtime():nullptr;
     } else {
         if ((mCellmlFile != nullptr) && (mRuntime != nullptr)) {
             mRuntime->update(mCellmlFile, false);
         }
+    }
+
+    // Update our issues, if we had previously checked for them
+
+    if (!mNeedCheckIssues) {
+        mNeedCheckIssues = true;
+
+        checkIssues();
     }
 }
 
@@ -1258,6 +1323,164 @@ void Simulation::rename(const QString &pFileName)
     // Rename ourselves by simply updating our file name
 
     mFileName = pFileName;
+}
+
+//==============================================================================
+
+void Simulation::checkIssues()
+{
+    // Make sure that we haven't already checked for issues
+
+    if (!mNeedCheckIssues) {
+        return;
+    }
+
+    // Reset our issues
+
+    mNeedCheckIssues = false;
+    mIssues = SimulationIssues();
+    mHasBlockingIssues = false;
+
+    // Determine whether we have issues with our SED-ML and our COMBINE archive
+
+    SEDMLSupport::SedmlFileIssues sedmlFileIssues = (mSedmlFile != nullptr)?
+                                                        mSedmlFile->issues():
+                                                        SEDMLSupport::SedmlFileIssues();
+    COMBINESupport::CombineArchiveIssues combineArchiveIssues = (mCombineArchive != nullptr)?
+                                                                    mCombineArchive->issues():
+                                                                    COMBINESupport::CombineArchiveIssues();
+
+    if (!combineArchiveIssues.isEmpty()) {
+        // There is one or several issues with our COMBINE archive, so list
+        // it/them
+
+        for (const auto &combineArchiveIssue : combineArchiveIssues) {
+            SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
+
+            switch (combineArchiveIssue.type()) {
+            case COMBINESupport::CombineArchiveIssue::Type::Information:
+                issueType = SimulationIssue::Type::Information;
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Type::Error:
+                issueType = SimulationIssue::Type::Error;
+
+                mHasBlockingIssues = true;
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Type::Warning:
+                issueType = SimulationIssue::Type::Warning;
+
+                break;
+            case COMBINESupport::CombineArchiveIssue::Type::Fatal:
+                issueType = SimulationIssue::Type::Fatal;
+
+                mHasBlockingIssues = true;
+
+                break;
+            }
+
+            mIssues.append(SimulationIssue(issueType, combineArchiveIssue.message()));
+        }
+    }
+
+    if (!sedmlFileIssues.isEmpty()) {
+        // There is one or several issues with our SED-ML file, so list it/them
+
+        for (const auto &sedmlFileIssue : sedmlFileIssues) {
+            SimulationIssue::Type issueType = SimulationIssue::Type::Fatal;
+
+            switch (sedmlFileIssue.type()) {
+            case SEDMLSupport::SedmlFileIssue::Type::Information:
+                issueType = SimulationIssue::Type::Information;
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Type::Error:
+                issueType = SimulationIssue::Type::Error;
+
+                mHasBlockingIssues = true;
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Type::Warning:
+                issueType = SimulationIssue::Type::Warning;
+
+                break;
+            case SEDMLSupport::SedmlFileIssue::Type::Fatal:
+                issueType = SimulationIssue::Type::Fatal;
+
+                mHasBlockingIssues = true;
+
+                break;
+            }
+
+            mIssues.append(SimulationIssue(issueType,
+                                           sedmlFileIssue.line(),
+                                           sedmlFileIssue.column(),
+                                           sedmlFileIssue.message()));
+        }
+    }
+
+    if (!mHasBlockingIssues) {
+        bool validRuntime = (mRuntime != nullptr) && mRuntime->isValid();
+        CellMLSupport::CellmlFileRuntimeParameter *voi = validRuntime?mRuntime->voi():nullptr;
+
+        if (voi == nullptr) {
+            // We couldn't retrieve a VOI, which means that we either don't have
+            // a runtime or we have one, but it's not valid or it's valid but we
+            // really don't have a VOI
+            // Note: in the case of a valid runtime and no VOI, we really
+            //       shouldn't consider the runtime to be valid, hence we handle
+            //       this case here...
+
+            if (validRuntime) {
+                // We have a valid runtime, but no VOI, which means that the
+                // model doesn't contain any ODE or DAE
+
+                mIssues.append(SimulationIssue(SimulationIssue::Type::Error, tr("The model must have at least one ODE or DAE.")));
+            } else {
+                // We don't have a valid runtime, so either there are some
+                // problems with the CellML file, its runtime, or even the
+                // parent SED-ML file and/or COMBINE archive
+                // Note: in the case of problems with the SED-ML file and/or
+                //       COMBINE archive, we will already have listed the
+                //       problems, so no need to do anything more in those
+                //       cases...
+
+                if (sedmlFileIssues.isEmpty() && combineArchiveIssues.isEmpty()) {
+                    for (const auto &issue : (mRuntime != nullptr)?
+                                                 mRuntime->issues():
+                                                 (mCellmlFile != nullptr)?
+                                                     mCellmlFile->issues():
+                                                     CellMLSupport::CellmlFileIssues()) {
+                        mIssues.append(SimulationIssue((issue.type() == CellMLSupport::CellmlFileIssue::Type::Error)?SimulationIssue::Type::Error:SimulationIssue::Type::Warning,
+                                                       issue.message()));
+                    }
+                }
+            }
+        }
+    }
+}
+
+//==============================================================================
+
+SimulationIssues Simulation::issues()
+{
+    // Return our issues, after having checked for them
+
+    checkIssues();
+
+    return mIssues;
+}
+
+//==============================================================================
+
+bool Simulation::hasBlockingIssues()
+{
+    // Return whether we have blocking issues, after having checked for them
+
+    checkIssues();
+
+    return mHasBlockingIssues;
 }
 
 //==============================================================================

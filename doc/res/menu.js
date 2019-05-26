@@ -162,8 +162,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             var menuItemIndent = "";
 
-            for (j = 0; j < menuItem.level; ++j)
+            for (j = 0; j < menuItem.level; ++j) {
                 menuItemIndent += "&nbsp;&nbsp;&nbsp;&nbsp;"
+            }
 
             var menuItemLink = "";
 
@@ -174,19 +175,22 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             var tableRowClasses = "menuItemTableRow";
 
-            if (i === menuItems.length-1)
+            if (i === menuItems.length-1) {
                 tableRowClasses += " lastMenuItem";
+            }
 
             if (selectedMenuItem) {
                 tableRowClasses += " selectedMenuItem";
 
-                if (liId.length)
+                if (liId.length) {
                     subMenuSelected = subMenuCounter;
+                }
             } else {
-                if (menuItemLink.length)
+                if (menuItemLink.length) {
                     tableRowClasses += " clickableMenuItem";
-                else
+                } else {
                     tableRowClasses += " nonClickableMenuItem";
+                }
             }
 
             var subMenuButton = "";
@@ -203,8 +207,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             document.write("                            <a href=\""+menuItemLink+"\">"+menuItemIndent+menuItem.label+"</a>\n");
             document.write("                        </div>\n");
 
-            if (subMenuButton.length)
+            if (subMenuButton.length) {
                 document.write("                        "+subMenuButton+"\n");
+            }
 
             document.write("                    </div>\n");
             document.write("                </div>\n");
@@ -226,8 +231,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     for (i = 1; i <= subMenuCounter; ++i) {
         var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
-        if (i === subMenuSelected)
+        if (i === subMenuSelected) {
             subMenuButton.css("display", "none");
+        }
 
         showContentsSubMenu(subMenuButton, i === subMenuSelected);
     }
@@ -242,8 +248,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         if ($("ul.contentsMenu > li > ul").css("visibility") === "visible") {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
         } else {
-            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i)
+            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
                 showContentsSubMenu($("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i), i === subMenuSelected);
+            }
 
             $("ul.contentsMenu > li > ul").css("visibility", "visible");
         }
@@ -269,8 +276,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // Hide our contents menu if the ESC key is pressed
 
     $(document).keyup(function(event) {
-        if (event.keyCode === 27)
+        if (event.keyCode === 27) {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
+        }
     });
 
     // Show/hide a given sub-menu
@@ -282,8 +290,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
                 var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
-                if (subMenuButton.hasClass("subMenuOpened"))
+                if (subMenuButton.hasClass("subMenuOpened")) {
                     showContentsSubMenu(subMenuButton, i === subMenuSelected);
+                }
             }
 
             showContentsSubMenu($(this), true);

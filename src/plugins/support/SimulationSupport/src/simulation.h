@@ -63,6 +63,38 @@ class SimulationWorker;
 
 //==============================================================================
 
+class SIMULATIONSUPPORT_EXPORT SimulationIssue
+{
+public:
+    enum class Type {
+        Information,
+        Error,
+        Warning,
+        Fatal
+    };
+
+    explicit SimulationIssue(Type pType, int pLine, int pColumn,
+                             const QString &pMessage);
+    explicit SimulationIssue(Type pType, const QString &pMessage);
+
+    Type type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
+
+private:
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
+};
+
+//==============================================================================
+
+typedef QList<SimulationIssue> SimulationIssues;
+
+//==============================================================================
+
 class SimulationObject : public QObject
 {
 public:
@@ -274,6 +306,9 @@ public:
     void reload();
     void rename(const QString &pFileName);
 
+    SimulationIssues issues();
+    bool hasBlockingIssues();
+
     CellMLSupport::CellmlFileRuntime * runtime() const;
 
     SimulationWorker * worker() const;
@@ -321,6 +356,10 @@ private:
     SEDMLSupport::SedmlFile *mSedmlFile;
     COMBINESupport::CombineArchive *mCombineArchive;
 
+    bool mNeedCheckIssues;
+    SimulationIssues mIssues;
+    bool mHasBlockingIssues;
+
     CellMLSupport::CellmlFileRuntime *mRuntime;
 
     SimulationWorker *mWorker;
@@ -328,6 +367,8 @@ private:
     SimulationData *mData;
     SimulationResults *mResults;
     SimulationImportData *mImportData;
+
+    void checkIssues();
 
     void retrieveFileDetails(bool pRecreateRuntime = true);
 

@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 7, "month": 3, "year": 2019,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 23, "month": 5, "year": 2019,
                      "categories": [
                        { "name": "Editing",
                          "entries": [
@@ -42,6 +42,11 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "COMBINE support",
                              "entries": [
                                { "type": "fixed", "description": "Files with a master attribute of \"1\" (rather than \"true\")." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "Simulation support",
+                             "entries": [
+                               { "type": "fixed", "description": "Issue with a remote SED-ML file being run headless." }
                              ]
                            }
                          ]
